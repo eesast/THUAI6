@@ -4,7 +4,7 @@ on:
     branches: [dev, main, master]
 
 jobs:
-  mirror-to-gitee:
+  mirror:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,3 +16,10 @@ jobs:
         source-repo: "git@github.com:eesast/THUAI6.git"
         destination-repo: "git@gitee.com:eesast/THUAI6.git"
         
+    - name: Mirror to GitLink
+      uses: wearerequired/git-mirror-action@master
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.GITEE_SSH_PRIVATE_KEY }}
+      with:
+        source-repo: "git@github.com:eesast/THUAI6.git"
+        destination-repo: "git@code.gitlink.org.cn:EESAST/THUAI6.git"

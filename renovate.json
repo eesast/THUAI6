@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "dependencyDashboard": true,
+  "timezone": "Asia/Shanghai",
+  "schedule": "after 4am and before 8am every saturday",
+  "labels": ["dependencies", "bot"],
+}

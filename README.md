@@ -64,6 +64,7 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
   | refactor | 改变代码结构，但没有增加新功能                 |
   | docs     | 修改文档，如 README、CONTRIBUTE 等             |
   | revert   | 版本回退                                       |
+  | style    | 仅仅修改了空格、格式缩进、逗号等等             |
   | ...      | ...                                            |
 
 - 鼓励开发组成员之间互相 review 并 merge 代码到 dev 分支上。merge 前建议简单检查其 pull request 是否符合上述规范  

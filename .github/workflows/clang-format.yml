@@ -9,5 +9,5 @@ jobs:
       with:
         source: '.'
         extensions: 'cs,c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx,i,ixx,ipp,i++'
-        clangFormatVersion: 12
+        clangFormatVersion: 14
         inplace: False

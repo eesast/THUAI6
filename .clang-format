@@ -1,7 +1,7 @@
 ---
 BasedOnStyle:  Microsoft
 Language:   CSharp
-AccessModifierOffset: -2
+AccessModifierOffset: -4
 AlignAfterOpenBracket: BlockIndent
 AlignArrayOfStructures: None
 AlignConsecutiveMacros: None
@@ -143,7 +143,7 @@ UseTab:  Never
 ---
 BasedOnStyle: Google
 Language:   Cpp
-AccessModifierOffset: -2
+AccessModifierOffset: -4
 AlignAfterOpenBracket: BlockIndent
 AlignArrayOfStructures: None
 AlignConsecutiveMacros: None

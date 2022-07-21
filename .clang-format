@@ -99,7 +99,6 @@ IndentPPDirectives: None
 IndentRequires:  false
 IndentWidth:     4
 IndentWrappedFunctionNames: true
-InsertBraces: false
 InsertTrailingCommas: None
 LambdaBodyIndentation: Signature
 MaxEmptyLinesToKeep: 1
@@ -241,7 +240,6 @@ IndentPPDirectives: None
 IndentRequires:  false
 IndentWidth:     4
 IndentWrappedFunctionNames: true
-InsertBraces: false
 InsertTrailingCommas: None
 LambdaBodyIndentation: Signature
 MaxEmptyLinesToKeep: 1

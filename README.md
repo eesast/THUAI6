@@ -25,7 +25,17 @@ GitLink 镜像地址：[THUAI6: GitLink Image](https://www.gitlink.org.cn/EESAST
 
 ### 目录分配
 
-待定
+|   子目录   |                            说明                            |           主要开发组           |
+| :--------: | :--------------------------------------------------------: | :----------------------------: |
+|  .github   |           CI，用于选手包同步到服务器上供选手下载           |             运维组             |
+|    CAPI    |                C++ 选手接口，生成可执行文件                |         通信组、运维组         |
+| dependency | 项目依赖文件，如 proto、dll、lib、dockerfile、shell 脚本等 | 逻辑组、通信组、运维组、界面组 |
+| installer  |       下载器，用于选手包的下载与更新，生成可执行文件       |             运维组             |
+| interface  |                         Unity 界面                         |             界面组             |
+|  launcher  |        游戏启动器，用于快速启动游戏，生成可执行文件        |             运维组             |
+|   logic    |                  游戏逻辑，生成可执行文件                  |             逻辑组             |
+|  playback  |                   游戏回放组件，生成类库                   |             逻辑组             |
+|  resource  |       资源文件目录，用于存储主目录下 README 所用图片       |            端茶倒水            |
 
 ### 分支管理
 
@@ -57,15 +67,15 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 
   常用的 commit message type 包括：
 
-  | Type     | Explanation                                    |
-  | -------- | ---------------------------------------------- |
-  | chore    | 日常代码开发；改变构建流程；增加依赖库、工具等 |
-  | fix      | 修复bug                                        |
-  | refactor | 改变代码结构，但没有增加新功能                 |
-  | docs     | 修改文档，如 README、CONTRIBUTE 等             |
-  | revert   | 版本回退                                       |
-  | style    | 仅仅修改了空格、格式缩进、逗号等等             |
-  | ...      | ...                                            |
+  |   Type   |                  Explanation                   |
+  | :------: | :--------------------------------------------: |
+  |  chore   | 日常代码开发；改变构建流程；增加依赖库、工具等 |
+  |   fix    |                    修复bug                     |
+  | refactor |         改变代码结构，但没有增加新功能         |
+  |   docs   |       修改文档，如 README、CONTRIBUTE 等       |
+  |  revert  |                    版本回退                    |
+  |  style   |       仅仅修改了空格、格式缩进、逗号等等       |
+  |   ...    |                      ...                       |
 
 - 鼓励开发组成员之间互相 review 并 merge 代码到 dev 分支上。merge 前建议简单检查其 pull request 是否符合上述规范  
 - 一般情况下，不要向 main 分支提出 pull request，更不要 merge 到 main 分支上  

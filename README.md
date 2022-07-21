@@ -87,6 +87,56 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 + 统一使用 4 个空格进行缩进而非 2 个  
 + 统一使用 UTF-8 字符编码  
 
+## 代码风格
+
+本仓库严格规定了`C++`与`CSharp`代码风格，具体配置请参见 [.clang-format](.clang-format)
+
+### 风格说明
+
+几项重要规定如下：
+
+- 需严格按照要求缩进
+
+  ~~~csharp
+  namespace Exp
+  {
+      public class Program
+      {
+          public static void Main()
+          {            
+          }
+      }
+  }
+  ~~~
+
+- `if`、`while`等关键字后须加空格
+
+  ~~~csharp
+  while (1)
+  {
+      // code
+  }
+  ~~~
+
+- 大括号须换行书写
+
+  ~~~csharp
+  // Allowed
+  if (...)
+  {
+     // ... 
+  }
+  
+  // Forbidden !!!
+  if (...) {
+      // ...
+  }
+  ~~~
+
+### 规范风格
+
+- 请按照配置文件 [.clang-format](.clang-format) 对代码进行规范；可以使用脚本 [dependency/shell/format.sh](./dependency/shell/format.sh) 规范代码风格
+
 ## 其他注意事项
 
 + 文件的字符编码格式须统一使用 UTF-8 编码，并用 4 空格缩进，尤其是 C/C++：Visual Studio 创建 cpp 文件时默认使用 GB2312 编码、TAB 缩进，因此每创建一个文件都需要注意手动设置字符编码（当代码文件中出现中文时）和缩进方式  

@@ -1,6 +1,10 @@
 # THUAI6
 清华大学第六届人工智能挑战赛电子系赛道（原电子系第 24 届队式程序设计大赛 teamstyle24）
 
+Gitee 镜像地址：[THUAI6: Gitee Image](https://gitee.com/eesast/THUAI6)
+
+GitLink 镜像地址：[THUAI6: GitLink Image](https://www.gitlink.org.cn/EESAST/THUAI6)
+
 ## 赛题背景
 
 待定
@@ -17,11 +21,11 @@
 
 ### 配置说明
 
-本仓库使用 git 进行版本控制，为所有开发工作共用仓库，请勿上传不必要的文件。主目录文件结构非必要请勿修改，且主目录中已配置的`.gitignore`、`.gitattributes`文件非必要请勿修改；各子目录已预先包含使用`Visual Studio`开发的`.gitignore`模板，可以根据自身需要增加忽略规则；如有必要，可在子目录下自定义`.gitattributes`文件。
+本仓库使用 git 进行版本控制，为所有开发工作共用仓库，请勿上传不必要的文件。主目录文件结构非必要请勿修改，且主目录中已配置的`.gitignore`、`.gitattributes`文件非必要请勿修改；各子目录已预先包含使用`Visual Studio`开发的`.gitignore`模板，可以根据自身需要增加忽略规则；如有必要，可在子目录下自定义`.gitattributes`文件
 
 ### 目录分配
 
-待定。
+待定
 
 ### 分支管理
 
@@ -88,14 +92,11 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 
     常用的缩写有：  
 
-    
-
     > address-addr、answer-ans、application-app、arguments-args、array-arr、assemble-asm、(a)synchronize-(a)sync、attribute-attr、begin-beg、bitmap-bmp、buffer-buf、button-btn、clock-clk、command-cmd、coordinates-coord、copy-cpy、count-cnt、current-cur、database-db、decrease-dec、default/define-def、delete-del、dependency-dep、destination-dest、device-dev、dialog-dlg、dictionary-dict、display-disp、divide-div、document-doc、educate-edu、equal-eq、error-err、extend-ext、format-fmt、frequency-freq、function-func、horizon-horz、image-img、implement-impl、increment-inc、index-idx、information-info、initialize-init、instance-inst、iterator-itr、length-len、list-lst、memory-mem、message-msg、middle-mid、number-num、object-obj、package-pkg、parameter-param、password-pwd、pointer-ptr、position-pos、previous-prev、receive-recv、reference-ref、resource/result-res、return-ret、second-sec、select-sel、semaphore-sem、signal-sig、source-src、stack-stk、standard-std、statistic/state-stat、string-str、system-sys、temporary-temp/tmp、text-txt、user-usr、value-val、variable-var、version-ver、vertical-vert、window-win  
-    >
-    > 
+>
 
 - 命名允许较长，但不应过于啰嗦冗余，能完整表明意图即可。
-- 代码应保证良好的可读性；**禁止**中学 OI 竞赛的各种“卡常”奇技淫巧！！！效率并非总是最重要的，良好的可读性与可维护性往往更加重要。
+- 代码应保证良好的可读性；**禁止**中学 OI 竞赛的各种“卡常”奇技淫巧！！！效率并非总是最重要的，良好的可读性与可维护性往往更加重要
 - 熟练运用面向对象编程的思想，设计架构时尽可能降低模块与模块的耦合性，保证代码的可维护性
   - 慎用全局变量、全局函数等
   - 尽可能将各功能模块化，便于日后复用；尽可能降低类与类的耦合，善用继承与多态
@@ -105,7 +106,7 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 - 注意维护开发文档，便于后来者快速了解本仓库代码结构
 - 小组内合理分工，避免个人任务量过重或过轻
 - 做好部会记录，及时完成工作任务，避免拖延到ddl
-- 各组间多交流，相互了解各自的开发进度，加强协作，遇到困难互相帮助。
+- 各组间多交流，相互了解各自的开发进度，加强协作，遇到困难互相帮助
 - 加油，奥里给  
 
 ## 开发组成员

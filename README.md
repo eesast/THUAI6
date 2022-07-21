@@ -11,7 +11,7 @@
 
 ## 软件架构
 
-待定
+![structure](resource/structure.png)
 
 ## 仓库说明
 

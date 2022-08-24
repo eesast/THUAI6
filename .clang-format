@@ -277,7 +277,7 @@ SpacesInLineCommentPrefix:
   Minimum:         1
 SpacesInParentheses: false
 SpaceBeforeSquareBrackets: false
-Standard:        Latest
+Standard:        c++17
 TabWidth:        4
 UseTab:  Never
 

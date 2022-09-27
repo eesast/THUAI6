@@ -92,10 +92,10 @@ message BoolRes // 用于只需要判断执行操作是否成功的行为，如�
 
 service AvailableService
 {
-    // 游戏开局调用一次的接口
-    rpc AddPlayer(PlayerMsg) returns(BoolRes);
+    // 游戏开局调用一次的服务
+    rpc AddPlayer(PlayerMsg) returns(stream MessageToClient); // 连接上后等待游戏开始，server会定时通过该服务向所有client发送消息。
 
-    // 游戏过程中玩家执行操作的接口
+    // 游戏过程中玩家执行操作的服务
     rpc Move(MoveMsg) returns (MoveRes);
     rpc PickProp(PickMsg) returns (BoolRes);
     rpc UseProp(IDMsg) returns (BoolRes);
@@ -108,6 +108,4 @@ service AvailableService
     rpc ReleaseHuman (IDMsg) returns (BoolRes);
     rpc HangHuman (IDMsg) returns (BoolRes);
 
-    // 游戏过程中玩家获取信息的接口
-    rpc GetInfo(google.protobuf.Empty) returns (stream MessageToClient); // 可直接获取全部的信息
 }

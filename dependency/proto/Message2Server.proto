@@ -1,43 +1,43 @@
 // Message2Server
 syntax = "proto3";
-package Protobuf;
+package protobuf;
 
 import "MessageType.proto";
 
 message PlayerMsg
 {
-    int64 playerID = 1;
-    PlayerType playerType = 2;
-    oneof jobType
+    int64 player_id = 1;
+    PlayerType player_type = 2;
+    oneof job_type
     {
-        HumanType humanType = 3;
-        ButcherType butcherType = 4;
+        HumanType human_type = 3;
+        ButcherType butcher_type = 4;
     }
 }
 
 message MoveMsg
 {
-    int64 playerID = 1;
+    int64 player_id = 1;
     double angle = 2;
-    int64 timeInMilliseconds = 3;
+    int64 time_in_milliseconds = 3;
 }
 
 message PickMsg
 {
-    int64 playerID = 1;
-    PropType propType = 2;
+    int64 player_id = 1;
+    PropType prop_type = 2;
 }
 
 message SendMsg
 {
-    int64 playerID = 1;
-    int64 toPlayerID = 2;
+    int64 player_id = 1;
+    int64 to_player_id = 2;
     string message = 3;
 }
 
 message AttackMsg
 {
-    int64 playerID = 1;
+    int64 player_id = 1;
     double angle = 2;
 }
 

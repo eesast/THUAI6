@@ -1,80 +1,80 @@
 // MessageType
 syntax = "proto3";
-package Protobuf;
+package protobuf;
 
 enum PlaceType // 地图中的所有物件类型
 {
-    NullPlaceType = 0;
+    NULL_PLACE_TYPE = 0;
     
     // 地图情况，其中Gate是总体的大门，HiddenGate是地窖
-    Wall = 1;
-    Grass = 2;
-    Machine = 3;
-    Gate = 4;
-    HiddenGate = 5;
+    WALL = 1;
+    GRASS = 2;
+    MACHINE = 3;
+    GATE = 4;
+    HIDDEN_GATE = 5;
     // 待补充有特殊效果的地形
 
 }
 
 enum ShapeType // 形状类型
 {
-    NullShapeType = 0;
-    Circle = 1; // 人类、屠夫、可拾取道具等为圆形
-    Square = 2; // 地形均为方形
+    NULL_SHAPE_TYPE = 0;
+    CIRCLE = 1; // 人类、屠夫、可拾取道具等为圆形
+    SQUARE = 2; // 地形均为方形
 }
 
 enum PropType // 地图中的可拾取道具类型
 {
-    NullPropType = 0;
-    PType1 = 1;
-    PType2 = 2;
-    PType3 = 3;
-    PType4 = 4;
+    NULL_PROP_TYPE = 0;
+    PTYPE1 = 1;
+    PTYPE2 = 2;
+    PTYPE3 = 3;
+    PTYPE4 = 4;
 
 }
 
 enum HumanBuffType // 人类可用的增益效果类型
 {
-    NullHBuffType = 0;
-    HBuffType1 = 1;
-    HBuffType2 = 2;
-    HBuffType3 = 3;
-    HBuffType4 = 4;
+    NULL_HBUFF_TYPE = 0;
+    HBUFFTYPE1 = 1;
+    HBUFFTYPE2 = 2;
+    HBUFFTYPE3 = 3;
+    HBUFFTYPE4 = 4;
 }
 
 enum ButcherBuffType // 屠夫可用的增益效果类型
 {
-    NullBBuffType = 0;
-    BBuffType1 = 1;
-    BBuffType2 = 2;
-    BBuffType3 = 3;
-    BBuffType4 = 4;
+    NULL_BBUFF_TYPE = 0;
+    BBUFFTYPE1 = 1;
+    BBUFFTYPE2 = 2;
+    BBUFFTYPE3 = 3;
+    BBUFFTYPE4 = 4;
 }
 
 // 特别说明：由于Human阵营和Butcher阵营有显著的隔离，且暂定职业、主动技能和被动效果相互绑定，故不按照THUAI5的方式区分ActiveSkillType和PassiveSkillType，而是选择了按照阵营来给不同阵营赋予不同的职业（及技能）。
 
 enum PlayerType
 {
-    HumanPlayer = 0;
-    ButcherPlayer = 1;
+    HUMAN_PLAYER = 0;
+    BUTCHER_PLAYER = 1;
 }
 
 enum HumanType
 {
-    NullHumanType = 0;
-    HumanType1 = 1;
-    HumanType2 = 2;
-    HumanType3 = 3;
-    HumanType4 = 4;
+    NULL_HUMAN_TYPE = 0;
+    HUMANTYPE1 = 1;
+    HUMANTYPE2 = 2;
+    HUMANTYPE3 = 3;
+    HUMANTYPE4 = 4;
 }
 
 enum ButcherType
 {
-    NullButcherType = 0;
-    ButcherType1 = 1;
-    ButcherType2 = 2;
-    ButcherType3 = 3;
-    ButcherType4 = 4;
+    NULL_BUTCHER_TYPE = 0;
+    BUTCHERTYPE1 = 1;
+    BUTCHERTYPE2 = 2;
+    BUTCHERTYPE3 = 3;
+    BUTCHERTYPE4 = 4;
 }
 
 // 取消了大包之后，MessageType的枚举是否有必要保留还有待商榷

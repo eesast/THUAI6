@@ -1,0 +1,113 @@
+// Message2Client
+syntax = "proto3";
+package Protobuf;
+
+import "MessageType.proto";
+import "Message2Server.proto";
+import "google/protobuf/empty.proto";
+
+message MessageOfHuman
+{
+    int32 x = 1;
+    int32 y = 2;
+    int32 speed = 3;
+    int32 life = 4; // 本次未倒地前的血量，也即还可以受的伤害
+    int32 hangedTime = 5; // 被挂上的次数
+    double timeUntilSkillAvailable = 6;
+    PlaceType place = 7;
+    PropType prop = 8;
+    HumanType humanType = 9;
+    int64 guid = 10;
+    bool onChair = 11; // 是否被挂
+    double chairTime = 12; // 被挂的时间
+    bool onGround = 13; // 是否倒地
+    double groundTime = 14; // 倒地时间
+    int64 playerID = 15;
+    repeated HumanBuffType buff = 16;
+}
+
+message MessageOfButcher
+{
+    int32 x = 1;
+    int32 y = 2;
+    int32 speed = 3;
+    int32 damage = 4;
+    double timeUntilSkillAvailable = 5;
+    PlaceType place = 6;
+    PropType prop = 7;
+    ButcherType butcherType = 8;
+    int64 guid = 9;
+    bool movable = 10; // 是否进入了攻击后摇
+    int64 playerID = 11;
+    repeated ButcherBuffType buff = 12;
+
+}
+
+message MessageOfProp // 可拾取道具的信息
+{
+    PropType type = 1;
+    int32 x = 2;
+    int32 y = 3;
+    double facingDirection = 4;
+    int64 guid = 5;
+    PlaceType place = 6;
+}
+
+message MessageOfPickedProp  //for Unity，直接继承自THUAI5
+{
+    PropType type = 1;
+    int32 x = 2;
+    int32 y = 3;
+    double facingDirection = 4;
+    int64 mappingID = 5;
+}
+
+message MessageOfMap
+{
+    message Row
+    {
+        repeated PlaceType col = 1;
+    }
+    repeated Row row = 2;
+}
+
+message MessageToClient
+{
+    repeated MessageOfHuman humanMessage = 1;
+    repeated MessageOfButcher butcherMessage = 2;
+    repeated MessageOfProp propMessage = 3;
+    MessageOfMap mapMassage = 4;
+}
+
+message MoveRes // 如果打算设计撞墙保留平行速度分量，且需要返回值则可用这个（大概没啥用）
+{
+    int64 actualSpeed = 1;
+    double actualAngle = 2;
+}
+
+message BoolRes // 用于只需要判断执行操作是否成功的行为，如捡起道具、使用道具
+{
+    bool actSuccess = 1;
+}
+
+service AvailableService
+{
+    // 游戏开局调用一次的接口
+    rpc AddPlayer(PlayerMsg) returns(BoolRes);
+
+    // 游戏过程中玩家执行操作的接口
+    rpc Move(MoveMsg) returns (MoveRes);
+    rpc PickProp(PickMsg) returns (BoolRes);
+    rpc UseProp(IDMsg) returns (BoolRes);
+    rpc UseSkill(IDMsg) returns (BoolRes);
+    rpc SendMessage(SendMsg) returns (BoolRes);
+    rpc FixMachine(stream IDMsg) returns (stream BoolRes); // 若正常修复且未被打断则返回修复成功，位置错误/被打断则返回修复失败，下同
+    rpc SaveHuman(stream IDMsg) returns (stream BoolRes);
+    rpc Attack (AttackMsg) returns (BoolRes);
+    rpc CarryHuman (IDMsg) returns (BoolRes);
+    rpc ReleaseHuman (IDMsg) returns (BoolRes);
+    rpc HangHuman (IDMsg) returns (BoolRes);
+
+    // 游戏过程中玩家获取信息的接口
+    rpc GetInfo(google.protobuf.Empty) returns (stream MessageToClient); // 可直接获取全部的信息
+}

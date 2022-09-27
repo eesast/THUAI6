@@ -1,0 +1,108 @@
+// MessageType
+syntax = "proto3";
+package Protobuf;
+
+enum PlaceType // 地图中的所有物件类型
+{
+    NullPlaceType = 0;
+    
+    // 地图情况，其中Gate是总体的大门，HiddenGate是地窖
+    Wall = 1;
+    Grass = 2;
+    Machine = 3;
+    Gate = 4;
+    HiddenGate = 5;
+    // 待补充有特殊效果的地形
+
+}
+
+enum ShapeType // 形状类型
+{
+    NullShapeType = 0;
+    Circle = 1; // 人类、屠夫、可拾取道具等为圆形
+    Square = 2; // 地形均为方形
+}
+
+enum PropType // 地图中的可拾取道具类型
+{
+    NullPropType = 0;
+    PType1 = 1;
+    PType2 = 2;
+    PType3 = 3;
+    PType4 = 4;
+
+}
+
+enum HumanBuffType // 人类可用的增益效果类型
+{
+    NullHBuffType = 0;
+    HBuffType1 = 1;
+    HBuffType2 = 2;
+    HBuffType3 = 3;
+    HBuffType4 = 4;
+}
+
+enum ButcherBuffType // 屠夫可用的增益效果类型
+{
+    NullBBuffType = 0;
+    BBuffType1 = 1;
+    BBuffType2 = 2;
+    BBuffType3 = 3;
+    BBuffType4 = 4;
+}
+
+// 特别说明：由于Human阵营和Butcher阵营有显著的隔离，且暂定职业、主动技能和被动效果相互绑定，故不按照THUAI5的方式区分ActiveSkillType和PassiveSkillType，而是选择了按照阵营来给不同阵营赋予不同的职业（及技能）。
+
+enum PlayerType
+{
+    HumanPlayer = 0;
+    ButcherPlayer = 1;
+}
+
+enum HumanType
+{
+    NullHumanType = 0;
+    HumanType1 = 1;
+    HumanType2 = 2;
+    HumanType3 = 3;
+    HumanType4 = 4;
+}
+
+enum ButcherType
+{
+    NullButcherType = 0;
+    ButcherType1 = 1;
+    ButcherType2 = 2;
+    ButcherType3 = 3;
+    ButcherType4 = 4;
+}
+
+// 取消了大包之后，MessageType的枚举是否有必要保留还有待商榷
+// enum MessageType
+// {
+//     // 公共信息类型
+//     Move = 0;
+//     PickProp = 1;
+//     UseProp = 2;
+//     UseSkill = 3;
+//     Map = 4;
+//     Send = 5;
+
+//     // 人类限定信息类型
+//     FixMachine = 6;
+//     SaveHuman = 7;
+
+//     // 屠夫限定信息类型
+//     Attack = 8;
+//     CarryHuman = 9;
+//     ReleaseHuman = 10;
+//     HangHuman = 11;
+
+//     // 游戏相关信息类型
+//     AddPlayer = 12;
+//     InvalidPlayer = 13;
+//     ValidPlayer = 14;
+//     StartGame = 15;
+//     Gaming = 16;
+//     EndGame = 17;
+// }

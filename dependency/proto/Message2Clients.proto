@@ -4,7 +4,6 @@ package protobuf;
 
 import "MessageType.proto";
 import "Message2Server.proto";
-import "google/protobuf/empty.proto";
 
 message MessageOfHuman
 {

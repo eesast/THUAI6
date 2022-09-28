@@ -19,7 +19,7 @@
 #include <grpcpp/impl/codegen/server_context.h>
 #include <grpcpp/impl/codegen/service_type.h>
 #include <grpcpp/impl/codegen/sync_stream.h>
-namespace protobuf {
+namespace protobuf
+{
 
 }  // namespace protobuf
-

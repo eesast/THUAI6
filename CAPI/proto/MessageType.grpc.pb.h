@@ -27,9 +27,9 @@
 #include <grpcpp/impl/codegen/stub_options.h>
 #include <grpcpp/impl/codegen/sync_stream.h>
 
-namespace protobuf {
+namespace protobuf
+{
 
 }  // namespace protobuf
-
 
 #endif  // GRPC_MessageType_2eproto__INCLUDED

@@ -40,10 +40,11 @@ namespace protobuf
         ,
         guid_(int64_t{0}),
         chair_time_(0),
-        ground_time_(0),
-        player_id_(int64_t{0}),
         on_chair_(false),
-        on_ground_(false)
+        on_ground_(false),
+        view_range_(0),
+        ground_time_(0),
+        player_id_(int64_t{0})
     {
     }
     struct MessageOfHumanDefaultTypeInternal
@@ -82,7 +83,8 @@ namespace protobuf
 
         ,
         movable_(false),
-        playerid_(int64_t{0})
+        playerid_(int64_t{0}),
+        view_range_(0)
     {
     }
     struct MessageOfButcherDefaultTypeInternal
@@ -294,6 +296,7 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, on_ground_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, ground_time_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, player_id_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, view_range_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, buff_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, _internal_metadata_),
@@ -312,6 +315,7 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, guid_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, movable_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, playerid_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, view_range_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, buff_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfProp, _internal_metadata_),
@@ -378,14 +382,14 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
     {0, -1, -1, sizeof(::protobuf::MessageOfHuman)},
-    {22, -1, -1, sizeof(::protobuf::MessageOfButcher)},
-    {40, -1, -1, sizeof(::protobuf::MessageOfProp)},
-    {52, -1, -1, sizeof(::protobuf::MessageOfPickedProp)},
-    {63, -1, -1, sizeof(::protobuf::MessageOfMap_Row)},
-    {70, -1, -1, sizeof(::protobuf::MessageOfMap)},
-    {77, -1, -1, sizeof(::protobuf::MessageToClient)},
-    {87, -1, -1, sizeof(::protobuf::MoveRes)},
-    {95, -1, -1, sizeof(::protobuf::BoolRes)},
+    {23, -1, -1, sizeof(::protobuf::MessageOfButcher)},
+    {42, -1, -1, sizeof(::protobuf::MessageOfProp)},
+    {54, -1, -1, sizeof(::protobuf::MessageOfPickedProp)},
+    {65, -1, -1, sizeof(::protobuf::MessageOfMap_Row)},
+    {72, -1, -1, sizeof(::protobuf::MessageOfMap)},
+    {79, -1, -1, sizeof(::protobuf::MessageToClient)},
+    {89, -1, -1, sizeof(::protobuf::MoveRes)},
+    {97, -1, -1, sizeof(::protobuf::BoolRes)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const* const file_default_instances[] = {
@@ -402,7 +406,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const* const file_default_instances[] = 
 
 const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
     "\n\025Message2Clients.proto\022\010protobuf\032\021Messa"
-    "geType.proto\032\024Message2Server.proto\"\201\003\n\016M"
+    "geType.proto\032\024Message2Server.proto\"\225\003\n\016M"
     "essageOfHuman\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\r\n\005s"
     "peed\030\003 \001(\005\022\014\n\004life\030\004 \001(\005\022\023\n\013hanged_time\030"
     "\005 \001(\005\022\"\n\032time_until_skill_available\030\006 \001("
@@ -411,15 +415,16 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     "_type\030\t \001(\0162\023.protobuf.HumanType\022\014\n\004guid"
     "\030\n \001(\003\022\020\n\010on_chair\030\013 \001(\010\022\022\n\nchair_time\030\014"
     " \001(\001\022\021\n\ton_ground\030\r \001(\010\022\023\n\013ground_time\030\016"
-    " \001(\001\022\021\n\tplayer_id\030\017 \001(\003\022%\n\004buff\030\020 \003(\0162\027."
-    "protobuf.HumanBuffType\"\270\002\n\020MessageOfButc"
-    "her\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\r\n\005speed\030\003 \001(\005"
-    "\022\016\n\006damage\030\004 \001(\005\022\"\n\032time_until_skill_ava"
-    "ilable\030\005 \001(\001\022\"\n\005place\030\006 \001(\0162\023.protobuf.P"
-    "laceType\022 \n\004prop\030\007 \001(\0162\022.protobuf.PropTy"
-    "pe\022+\n\014butcher_type\030\010 \001(\0162\025.protobuf.Butc"
-    "herType\022\014\n\004guid\030\t \001(\003\022\017\n\007movable\030\n \001(\010\022\020"
-    "\n\010playerID\030\013 \001(\003\022\'\n\004buff\030\014 \003(\0162\031.protobu"
+    " \001(\001\022\021\n\tplayer_id\030\017 \001(\003\022\022\n\nview_range\030\020 "
+    "\001(\005\022%\n\004buff\030\021 \003(\0162\027.protobuf.HumanBuffTy"
+    "pe\"\314\002\n\020MessageOfButcher\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030"
+    "\002 \001(\005\022\r\n\005speed\030\003 \001(\005\022\016\n\006damage\030\004 \001(\005\022\"\n\032"
+    "time_until_skill_available\030\005 \001(\001\022\"\n\005plac"
+    "e\030\006 \001(\0162\023.protobuf.PlaceType\022 \n\004prop\030\007 \001"
+    "(\0162\022.protobuf.PropType\022+\n\014butcher_type\030\010"
+    " \001(\0162\025.protobuf.ButcherType\022\014\n\004guid\030\t \001("
+    "\003\022\017\n\007movable\030\n \001(\010\022\020\n\010playerID\030\013 \001(\003\022\022\n\n"
+    "view_range\030\014 \001(\005\022\'\n\004buff\030\r \003(\0162\031.protobu"
     "f.ButcherBuffType\"\223\001\n\rMessageOfProp\022 \n\004t"
     "ype\030\001 \001(\0162\022.protobuf.PropType\022\t\n\001x\030\002 \001(\005"
     "\022\t\n\001y\030\003 \001(\005\022\030\n\020facing_direction\030\004 \001(\001\022\014\n"
@@ -462,7 +467,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Message2Cli
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Message2Clients_2eproto = {
     false,
     false,
-    2095,
+    2135,
     descriptor_table_protodef_Message2Clients_2eproto,
     "Message2Clients.proto",
     &descriptor_table_Message2Clients_2eproto_once,
@@ -509,13 +514,13 @@ namespace protobuf
         buff_(from.buff_)
     {
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-        ::memcpy(&x_, &from.x_, static_cast<size_t>(reinterpret_cast<char*>(&on_ground_) - reinterpret_cast<char*>(&x_)) + sizeof(on_ground_));
+        ::memcpy(&x_, &from.x_, static_cast<size_t>(reinterpret_cast<char*>(&player_id_) - reinterpret_cast<char*>(&x_)) + sizeof(player_id_));
         // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfHuman)
     }
 
     inline void MessageOfHuman::SharedCtor()
     {
-        ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(reinterpret_cast<char*>(&x_) - reinterpret_cast<char*>(this)), 0, static_cast<size_t>(reinterpret_cast<char*>(&on_ground_) - reinterpret_cast<char*>(&x_)) + sizeof(on_ground_));
+        ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(reinterpret_cast<char*>(&x_) - reinterpret_cast<char*>(this)), 0, static_cast<size_t>(reinterpret_cast<char*>(&player_id_) - reinterpret_cast<char*>(&x_)) + sizeof(player_id_));
     }
 
     MessageOfHuman::~MessageOfHuman()
@@ -553,7 +558,7 @@ namespace protobuf
         (void)cached_has_bits;
 
         buff_.Clear();
-        ::memset(&x_, 0, static_cast<size_t>(reinterpret_cast<char*>(&on_ground_) - reinterpret_cast<char*>(&x_)) + sizeof(on_ground_));
+        ::memset(&x_, 0, static_cast<size_t>(reinterpret_cast<char*>(&player_id_) - reinterpret_cast<char*>(&x_)) + sizeof(player_id_));
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -721,14 +726,24 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // repeated .protobuf.HumanBuffType buff = 16;
+                // int32 view_range = 16;
                 case 16:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 130))
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 128))
+                    {
+                        view_range_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // repeated .protobuf.HumanBuffType buff = 17;
+                case 17:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 138))
                     {
                         ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedEnumParser(_internal_mutable_buff(), ptr, ctx);
                         CHK_(ptr);
                     }
-                    else if (static_cast<uint8_t>(tag) == 128)
+                    else if (static_cast<uint8_t>(tag) == 136)
                     {
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
@@ -894,13 +909,20 @@ namespace protobuf
             target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(15, this->_internal_player_id(), target);
         }
 
-        // repeated .protobuf.HumanBuffType buff = 16;
+        // int32 view_range = 16;
+        if (this->_internal_view_range() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(16, this->_internal_view_range(), target);
+        }
+
+        // repeated .protobuf.HumanBuffType buff = 17;
         {
             int byte_size = _buff_cached_byte_size_.load(std::memory_order_relaxed);
             if (byte_size > 0)
             {
                 target = stream->WriteEnumPacked(
-                    16, buff_, byte_size, target
+                    17, buff_, byte_size, target
                 );
             }
         }
@@ -924,7 +946,7 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        // repeated .protobuf.HumanBuffType buff = 16;
+        // repeated .protobuf.HumanBuffType buff = 17;
         {
             size_t data_size = 0;
             unsigned int count = static_cast<unsigned int>(this->_internal_buff_size());
@@ -1023,6 +1045,27 @@ namespace protobuf
             total_size += 1 + 8;
         }
 
+        // bool on_chair = 11;
+        if (this->_internal_on_chair() != 0)
+        {
+            total_size += 1 + 1;
+        }
+
+        // bool on_ground = 13;
+        if (this->_internal_on_ground() != 0)
+        {
+            total_size += 1 + 1;
+        }
+
+        // int32 view_range = 16;
+        if (this->_internal_view_range() != 0)
+        {
+            total_size += 2 +
+                          ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+                              this->_internal_view_range()
+                          );
+        }
+
         // double ground_time = 14;
         static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
         double tmp_ground_time = this->_internal_ground_time();
@@ -1037,18 +1080,6 @@ namespace protobuf
         if (this->_internal_player_id() != 0)
         {
             total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_player_id());
-        }
-
-        // bool on_chair = 11;
-        if (this->_internal_on_chair() != 0)
-        {
-            total_size += 1 + 1;
-        }
-
-        // bool on_ground = 13;
-        if (this->_internal_on_ground() != 0)
-        {
-            total_size += 1 + 1;
         }
 
         return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -1129,6 +1160,18 @@ namespace protobuf
         {
             _internal_set_chair_time(from._internal_chair_time());
         }
+        if (from._internal_on_chair() != 0)
+        {
+            _internal_set_on_chair(from._internal_on_chair());
+        }
+        if (from._internal_on_ground() != 0)
+        {
+            _internal_set_on_ground(from._internal_on_ground());
+        }
+        if (from._internal_view_range() != 0)
+        {
+            _internal_set_view_range(from._internal_view_range());
+        }
         static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
         double tmp_ground_time = from._internal_ground_time();
         uint64_t raw_ground_time;
@@ -1140,14 +1183,6 @@ namespace protobuf
         if (from._internal_player_id() != 0)
         {
             _internal_set_player_id(from._internal_player_id());
-        }
-        if (from._internal_on_chair() != 0)
-        {
-            _internal_set_on_chair(from._internal_on_chair());
-        }
-        if (from._internal_on_ground() != 0)
-        {
-            _internal_set_on_ground(from._internal_on_ground());
         }
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
@@ -1172,7 +1207,7 @@ namespace protobuf
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
         buff_.InternalSwap(&other->buff_);
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-            PROTOBUF_FIELD_OFFSET(MessageOfHuman, on_ground_) + sizeof(MessageOfHuman::on_ground_) - PROTOBUF_FIELD_OFFSET(MessageOfHuman, x_)>(
+            PROTOBUF_FIELD_OFFSET(MessageOfHuman, player_id_) + sizeof(MessageOfHuman::player_id_) - PROTOBUF_FIELD_OFFSET(MessageOfHuman, x_)>(
             reinterpret_cast<char*>(&x_),
             reinterpret_cast<char*>(&other->x_)
         );
@@ -1208,13 +1243,13 @@ namespace protobuf
         buff_(from.buff_)
     {
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-        ::memcpy(&x_, &from.x_, static_cast<size_t>(reinterpret_cast<char*>(&playerid_) - reinterpret_cast<char*>(&x_)) + sizeof(playerid_));
+        ::memcpy(&x_, &from.x_, static_cast<size_t>(reinterpret_cast<char*>(&view_range_) - reinterpret_cast<char*>(&x_)) + sizeof(view_range_));
         // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfButcher)
     }
 
     inline void MessageOfButcher::SharedCtor()
     {
-        ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(reinterpret_cast<char*>(&x_) - reinterpret_cast<char*>(this)), 0, static_cast<size_t>(reinterpret_cast<char*>(&playerid_) - reinterpret_cast<char*>(&x_)) + sizeof(playerid_));
+        ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(reinterpret_cast<char*>(&x_) - reinterpret_cast<char*>(this)), 0, static_cast<size_t>(reinterpret_cast<char*>(&view_range_) - reinterpret_cast<char*>(&x_)) + sizeof(view_range_));
     }
 
     MessageOfButcher::~MessageOfButcher()
@@ -1252,7 +1287,7 @@ namespace protobuf
         (void)cached_has_bits;
 
         buff_.Clear();
-        ::memset(&x_, 0, static_cast<size_t>(reinterpret_cast<char*>(&playerid_) - reinterpret_cast<char*>(&x_)) + sizeof(playerid_));
+        ::memset(&x_, 0, static_cast<size_t>(reinterpret_cast<char*>(&view_range_) - reinterpret_cast<char*>(&x_)) + sizeof(view_range_));
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -1380,14 +1415,24 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // repeated .protobuf.ButcherBuffType buff = 12;
+                // int32 view_range = 12;
                 case 12:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 98))
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 96))
+                    {
+                        view_range_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // repeated .protobuf.ButcherBuffType buff = 13;
+                case 13:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 106))
                     {
                         ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedEnumParser(_internal_mutable_buff(), ptr, ctx);
                         CHK_(ptr);
                     }
-                    else if (static_cast<uint8_t>(tag) == 96)
+                    else if (static_cast<uint8_t>(tag) == 104)
                     {
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
@@ -1517,13 +1562,20 @@ namespace protobuf
             target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(11, this->_internal_playerid(), target);
         }
 
-        // repeated .protobuf.ButcherBuffType buff = 12;
+        // int32 view_range = 12;
+        if (this->_internal_view_range() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(12, this->_internal_view_range(), target);
+        }
+
+        // repeated .protobuf.ButcherBuffType buff = 13;
         {
             int byte_size = _buff_cached_byte_size_.load(std::memory_order_relaxed);
             if (byte_size > 0)
             {
                 target = stream->WriteEnumPacked(
-                    12, buff_, byte_size, target
+                    13, buff_, byte_size, target
                 );
             }
         }
@@ -1547,7 +1599,7 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        // repeated .protobuf.ButcherBuffType buff = 12;
+        // repeated .protobuf.ButcherBuffType buff = 13;
         {
             size_t data_size = 0;
             unsigned int count = static_cast<unsigned int>(this->_internal_buff_size());
@@ -1642,6 +1694,12 @@ namespace protobuf
             total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_playerid());
         }
 
+        // int32 view_range = 12;
+        if (this->_internal_view_range() != 0)
+        {
+            total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_view_range());
+        }
+
         return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
     }
 
@@ -1716,6 +1774,10 @@ namespace protobuf
         {
             _internal_set_playerid(from._internal_playerid());
         }
+        if (from._internal_view_range() != 0)
+        {
+            _internal_set_view_range(from._internal_view_range());
+        }
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
 
@@ -1739,7 +1801,7 @@ namespace protobuf
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
         buff_.InternalSwap(&other->buff_);
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-            PROTOBUF_FIELD_OFFSET(MessageOfButcher, playerid_) + sizeof(MessageOfButcher::playerid_) - PROTOBUF_FIELD_OFFSET(MessageOfButcher, x_)>(
+            PROTOBUF_FIELD_OFFSET(MessageOfButcher, view_range_) + sizeof(MessageOfButcher::view_range_) - PROTOBUF_FIELD_OFFSET(MessageOfButcher, x_)>(
             reinterpret_cast<char*>(&x_),
             reinterpret_cast<char*>(&other->x_)
         );

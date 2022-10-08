@@ -268,7 +268,7 @@ namespace protobuf
 
         enum : int
         {
-            kBuffFieldNumber = 16,
+            kBuffFieldNumber = 17,
             kXFieldNumber = 1,
             kYFieldNumber = 2,
             kSpeedFieldNumber = 3,
@@ -280,12 +280,13 @@ namespace protobuf
             kHumanTypeFieldNumber = 9,
             kGuidFieldNumber = 10,
             kChairTimeFieldNumber = 12,
-            kGroundTimeFieldNumber = 14,
-            kPlayerIdFieldNumber = 15,
             kOnChairFieldNumber = 11,
             kOnGroundFieldNumber = 13,
+            kViewRangeFieldNumber = 16,
+            kGroundTimeFieldNumber = 14,
+            kPlayerIdFieldNumber = 15,
         };
-        // repeated .protobuf.HumanBuffType buff = 16;
+        // repeated .protobuf.HumanBuffType buff = 17;
         int buff_size() const;
 
     private:
@@ -416,26 +417,6 @@ namespace protobuf
         void _internal_set_chair_time(double value);
 
     public:
-        // double ground_time = 14;
-        void clear_ground_time();
-        double ground_time() const;
-        void set_ground_time(double value);
-
-    private:
-        double _internal_ground_time() const;
-        void _internal_set_ground_time(double value);
-
-    public:
-        // int64 player_id = 15;
-        void clear_player_id();
-        int64_t player_id() const;
-        void set_player_id(int64_t value);
-
-    private:
-        int64_t _internal_player_id() const;
-        void _internal_set_player_id(int64_t value);
-
-    public:
         // bool on_chair = 11;
         void clear_on_chair();
         bool on_chair() const;
@@ -454,6 +435,36 @@ namespace protobuf
     private:
         bool _internal_on_ground() const;
         void _internal_set_on_ground(bool value);
+
+    public:
+        // int32 view_range = 16;
+        void clear_view_range();
+        int32_t view_range() const;
+        void set_view_range(int32_t value);
+
+    private:
+        int32_t _internal_view_range() const;
+        void _internal_set_view_range(int32_t value);
+
+    public:
+        // double ground_time = 14;
+        void clear_ground_time();
+        double ground_time() const;
+        void set_ground_time(double value);
+
+    private:
+        double _internal_ground_time() const;
+        void _internal_set_ground_time(double value);
+
+    public:
+        // int64 player_id = 15;
+        void clear_player_id();
+        int64_t player_id() const;
+        void set_player_id(int64_t value);
+
+    private:
+        int64_t _internal_player_id() const;
+        void _internal_set_player_id(int64_t value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfHuman)
@@ -478,10 +489,11 @@ namespace protobuf
         int human_type_;
         int64_t guid_;
         double chair_time_;
-        double ground_time_;
-        int64_t player_id_;
         bool on_chair_;
         bool on_ground_;
+        int32_t view_range_;
+        double ground_time_;
+        int64_t player_id_;
         mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         friend struct ::TableStruct_Message2Clients_2eproto;
     };
@@ -646,7 +658,7 @@ namespace protobuf
 
         enum : int
         {
-            kBuffFieldNumber = 12,
+            kBuffFieldNumber = 13,
             kXFieldNumber = 1,
             kYFieldNumber = 2,
             kSpeedFieldNumber = 3,
@@ -658,8 +670,9 @@ namespace protobuf
             kButcherTypeFieldNumber = 8,
             kMovableFieldNumber = 10,
             kPlayerIDFieldNumber = 11,
+            kViewRangeFieldNumber = 12,
         };
-        // repeated .protobuf.ButcherBuffType buff = 12;
+        // repeated .protobuf.ButcherBuffType buff = 13;
         int buff_size() const;
 
     private:
@@ -790,6 +803,16 @@ namespace protobuf
         void _internal_set_playerid(int64_t value);
 
     public:
+        // int32 view_range = 12;
+        void clear_view_range();
+        int32_t view_range() const;
+        void set_view_range(int32_t value);
+
+    private:
+        int32_t _internal_view_range() const;
+        void _internal_set_view_range(int32_t value);
+
+    public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfButcher)
 
     private:
@@ -812,6 +835,7 @@ namespace protobuf
         int butcher_type_;
         bool movable_;
         int64_t playerid_;
+        int32_t view_range_;
         mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         friend struct ::TableStruct_Message2Clients_2eproto;
     };
@@ -2718,7 +2742,31 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfHuman.player_id)
     }
 
-    // repeated .protobuf.HumanBuffType buff = 16;
+    // int32 view_range = 16;
+    inline void MessageOfHuman::clear_view_range()
+    {
+        view_range_ = 0;
+    }
+    inline int32_t MessageOfHuman::_internal_view_range() const
+    {
+        return view_range_;
+    }
+    inline int32_t MessageOfHuman::view_range() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfHuman.view_range)
+        return _internal_view_range();
+    }
+    inline void MessageOfHuman::_internal_set_view_range(int32_t value)
+    {
+        view_range_ = value;
+    }
+    inline void MessageOfHuman::set_view_range(int32_t value)
+    {
+        _internal_set_view_range(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfHuman.view_range)
+    }
+
+    // repeated .protobuf.HumanBuffType buff = 17;
     inline int MessageOfHuman::_internal_buff_size() const
     {
         return buff_.size();
@@ -3040,7 +3088,31 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfButcher.playerID)
     }
 
-    // repeated .protobuf.ButcherBuffType buff = 12;
+    // int32 view_range = 12;
+    inline void MessageOfButcher::clear_view_range()
+    {
+        view_range_ = 0;
+    }
+    inline int32_t MessageOfButcher::_internal_view_range() const
+    {
+        return view_range_;
+    }
+    inline int32_t MessageOfButcher::view_range() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfButcher.view_range)
+        return _internal_view_range();
+    }
+    inline void MessageOfButcher::_internal_set_view_range(int32_t value)
+    {
+        view_range_ = value;
+    }
+    inline void MessageOfButcher::set_view_range(int32_t value)
+    {
+        _internal_set_view_range(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfButcher.view_range)
+    }
+
+    // repeated .protobuf.ButcherBuffType buff = 13;
     inline int MessageOfButcher::_internal_buff_size() const
     {
         return buff_.size();

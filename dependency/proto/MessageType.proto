@@ -7,11 +7,12 @@ enum PlaceType // 地图中的所有物件类型
     NULL_PLACE_TYPE = 0;
     
     // 地图情况，其中Gate是总体的大门，HiddenGate是地窖
-    WALL = 1;
-    GRASS = 2;
-    MACHINE = 3;
-    GATE = 4;
-    HIDDEN_GATE = 5;
+    LAND = 1;
+    WALL = 2;
+    GRASS = 3;
+    MACHINE = 4;
+    GATE = 5;
+    HIDDEN_GATE = 6;
     // 待补充有特殊效果的地形
 
 }
@@ -55,8 +56,9 @@ enum ButcherBuffType // 屠夫可用的增益效果类型
 
 enum PlayerType
 {
-    HUMAN_PLAYER = 0;
-    BUTCHER_PLAYER = 1;
+    NULL_PLAYER_TYPE = 0;
+    HUMAN_PLAYER = 1;
+    BUTCHER_PLAYER = 2;
 }
 
 enum HumanType

@@ -164,6 +164,15 @@ namespace protobuf
             {
                 return std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>>(PrepareAsyncHangHumanRaw(context, request, cq));
             }
+            virtual ::grpc::Status Escape(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response) = 0;
+            std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>> AsyncEscape(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+            {
+                return std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>>(AsyncEscapeRaw(context, request, cq));
+            }
+            std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>> PrepareAsyncEscape(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+            {
+                return std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>>(PrepareAsyncEscapeRaw(context, request, cq));
+            }
             class async_interface
             {
             public:
@@ -195,6 +204,8 @@ namespace protobuf
                 virtual void ReleaseHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) = 0;
                 virtual void HangHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) = 0;
                 virtual void HangHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+                virtual void Escape(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) = 0;
+                virtual void Escape(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) = 0;
             };
             typedef class async_interface experimental_async_interface;
             virtual class async_interface* async()
@@ -234,6 +245,8 @@ namespace protobuf
             virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* PrepareAsyncReleaseHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
             virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* AsyncHangHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
             virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* PrepareAsyncHangHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
+            virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* AsyncEscapeRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
+            virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* PrepareAsyncEscapeRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
         };
         class Stub final : public StubInterface
         {
@@ -356,6 +369,15 @@ namespace protobuf
             {
                 return std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>>(PrepareAsyncHangHumanRaw(context, request, cq));
             }
+            ::grpc::Status Escape(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response) override;
+            std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>> AsyncEscape(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+            {
+                return std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>>(AsyncEscapeRaw(context, request, cq));
+            }
+            std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>> PrepareAsyncEscape(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+            {
+                return std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>>(PrepareAsyncEscapeRaw(context, request, cq));
+            }
             class async final :
                 public StubInterface::async_interface
             {
@@ -381,6 +403,8 @@ namespace protobuf
                 void ReleaseHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) override;
                 void HangHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) override;
                 void HangHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) override;
+                void Escape(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) override;
+                void Escape(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) override;
 
             private:
                 friend class Stub;
@@ -432,6 +456,8 @@ namespace protobuf
             ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* PrepareAsyncReleaseHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
             ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AsyncHangHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
             ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* PrepareAsyncHangHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
+            ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AsyncEscapeRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
+            ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* PrepareAsyncEscapeRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
             const ::grpc::internal::RpcMethod rpcmethod_AddPlayer_;
             const ::grpc::internal::RpcMethod rpcmethod_Move_;
             const ::grpc::internal::RpcMethod rpcmethod_PickProp_;
@@ -444,6 +470,7 @@ namespace protobuf
             const ::grpc::internal::RpcMethod rpcmethod_CarryHuman_;
             const ::grpc::internal::RpcMethod rpcmethod_ReleaseHuman_;
             const ::grpc::internal::RpcMethod rpcmethod_HangHuman_;
+            const ::grpc::internal::RpcMethod rpcmethod_Escape_;
         };
         static std::unique_ptr<Stub> NewStub(const std::shared_ptr<::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -468,6 +495,7 @@ namespace protobuf
             virtual ::grpc::Status CarryHuman(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response);
             virtual ::grpc::Status ReleaseHuman(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response);
             virtual ::grpc::Status HangHuman(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response);
+            virtual ::grpc::Status Escape(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response);
         };
         template<class BaseClass>
         class WithAsyncMethod_AddPlayer : public BaseClass
@@ -805,7 +833,35 @@ namespace protobuf
                 ::grpc::Service::RequestAsyncUnary(11, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
-        typedef WithAsyncMethod_AddPlayer<WithAsyncMethod_Move<WithAsyncMethod_PickProp<WithAsyncMethod_UseProp<WithAsyncMethod_UseSkill<WithAsyncMethod_SendMessage<WithAsyncMethod_FixMachine<WithAsyncMethod_SaveHuman<WithAsyncMethod_Attack<WithAsyncMethod_CarryHuman<WithAsyncMethod_ReleaseHuman<WithAsyncMethod_HangHuman<Service>>>>>>>>>>>> AsyncService;
+        template<class BaseClass>
+        class WithAsyncMethod_Escape : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithAsyncMethod_Escape()
+            {
+                ::grpc::Service::MarkMethodAsync(12);
+            }
+            ~WithAsyncMethod_Escape() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status Escape(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            void RequestEscape(::grpc::ServerContext* context, ::protobuf::IDMsg* request, ::grpc::ServerAsyncResponseWriter<::protobuf::BoolRes>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
+            {
+                ::grpc::Service::RequestAsyncUnary(12, context, request, response, new_call_cq, notification_cq, tag);
+            }
+        };
+        typedef WithAsyncMethod_AddPlayer<WithAsyncMethod_Move<WithAsyncMethod_PickProp<WithAsyncMethod_UseProp<WithAsyncMethod_UseSkill<WithAsyncMethod_SendMessage<WithAsyncMethod_FixMachine<WithAsyncMethod_SaveHuman<WithAsyncMethod_Attack<WithAsyncMethod_CarryHuman<WithAsyncMethod_ReleaseHuman<WithAsyncMethod_HangHuman<WithAsyncMethod_Escape<Service>>>>>>>>>>>>> AsyncService;
         template<class BaseClass>
         class WithCallbackMethod_AddPlayer : public BaseClass
         {
@@ -1250,7 +1306,46 @@ namespace protobuf
                 return nullptr;
             }
         };
-        typedef WithCallbackMethod_AddPlayer<WithCallbackMethod_Move<WithCallbackMethod_PickProp<WithCallbackMethod_UseProp<WithCallbackMethod_UseSkill<WithCallbackMethod_SendMessage<WithCallbackMethod_FixMachine<WithCallbackMethod_SaveHuman<WithCallbackMethod_Attack<WithCallbackMethod_CarryHuman<WithCallbackMethod_ReleaseHuman<WithCallbackMethod_HangHuman<Service>>>>>>>>>>>> CallbackService;
+        template<class BaseClass>
+        class WithCallbackMethod_Escape : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithCallbackMethod_Escape()
+            {
+                ::grpc::Service::MarkMethodCallback(12, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+                                                                                                                                           { return this->Escape(context, request, response); }));
+            }
+            void SetMessageAllocatorFor_Escape(
+                ::grpc::MessageAllocator<::protobuf::IDMsg, ::protobuf::BoolRes>* allocator
+            )
+            {
+                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(12);
+                static_cast<::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>*>(handler)
+                    ->SetMessageAllocator(allocator);
+            }
+            ~WithCallbackMethod_Escape() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status Escape(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            virtual ::grpc::ServerUnaryReactor* Escape(
+                ::grpc::CallbackServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/
+            )
+            {
+                return nullptr;
+            }
+        };
+        typedef WithCallbackMethod_AddPlayer<WithCallbackMethod_Move<WithCallbackMethod_PickProp<WithCallbackMethod_UseProp<WithCallbackMethod_UseSkill<WithCallbackMethod_SendMessage<WithCallbackMethod_FixMachine<WithCallbackMethod_SaveHuman<WithCallbackMethod_Attack<WithCallbackMethod_CarryHuman<WithCallbackMethod_ReleaseHuman<WithCallbackMethod_HangHuman<WithCallbackMethod_Escape<Service>>>>>>>>>>>>> CallbackService;
         typedef CallbackService ExperimentalCallbackService;
         template<class BaseClass>
         class WithGenericMethod_AddPlayer : public BaseClass
@@ -1535,6 +1630,30 @@ namespace protobuf
             }
             // disable synchronous version of this method
             ::grpc::Status HangHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+        };
+        template<class BaseClass>
+        class WithGenericMethod_Escape : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithGenericMethod_Escape()
+            {
+                ::grpc::Service::MarkMethodGeneric(12);
+            }
+            ~WithGenericMethod_Escape() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status Escape(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
             {
                 abort();
                 return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
@@ -1874,6 +1993,34 @@ namespace protobuf
             void RequestHangHuman(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
                 ::grpc::Service::RequestAsyncUnary(11, context, request, response, new_call_cq, notification_cq, tag);
+            }
+        };
+        template<class BaseClass>
+        class WithRawMethod_Escape : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithRawMethod_Escape()
+            {
+                ::grpc::Service::MarkMethodRaw(12);
+            }
+            ~WithRawMethod_Escape() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status Escape(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            void RequestEscape(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
+            {
+                ::grpc::Service::RequestAsyncUnary(12, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -2249,6 +2396,37 @@ namespace protobuf
             }
         };
         template<class BaseClass>
+        class WithRawCallbackMethod_Escape : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithRawCallbackMethod_Escape()
+            {
+                ::grpc::Service::MarkMethodRawCallback(12, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
+                                                                                                                                              { return this->Escape(context, request, response); }));
+            }
+            ~WithRawCallbackMethod_Escape() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status Escape(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            virtual ::grpc::ServerUnaryReactor* Escape(
+                ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/
+            )
+            {
+                return nullptr;
+            }
+        };
+        template<class BaseClass>
         class WithStreamedUnaryMethod_Move : public BaseClass
         {
         private:
@@ -2491,7 +2669,34 @@ namespace protobuf
             // replace default version of method with streamed unary
             virtual ::grpc::Status StreamedHangHuman(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* server_unary_streamer) = 0;
         };
-        typedef WithStreamedUnaryMethod_Move<WithStreamedUnaryMethod_PickProp<WithStreamedUnaryMethod_UseProp<WithStreamedUnaryMethod_UseSkill<WithStreamedUnaryMethod_SendMessage<WithStreamedUnaryMethod_Attack<WithStreamedUnaryMethod_CarryHuman<WithStreamedUnaryMethod_ReleaseHuman<WithStreamedUnaryMethod_HangHuman<Service>>>>>>>>> StreamedUnaryService;
+        template<class BaseClass>
+        class WithStreamedUnaryMethod_Escape : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithStreamedUnaryMethod_Escape()
+            {
+                ::grpc::Service::MarkMethodStreamed(12, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
+                                                                                                                                           { return this->StreamedEscape(context, streamer); }));
+            }
+            ~WithStreamedUnaryMethod_Escape() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable regular version of this method
+            ::grpc::Status Escape(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            // replace default version of method with streamed unary
+            virtual ::grpc::Status StreamedEscape(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* server_unary_streamer) = 0;
+        };
+        typedef WithStreamedUnaryMethod_Move<WithStreamedUnaryMethod_PickProp<WithStreamedUnaryMethod_UseProp<WithStreamedUnaryMethod_UseSkill<WithStreamedUnaryMethod_SendMessage<WithStreamedUnaryMethod_Attack<WithStreamedUnaryMethod_CarryHuman<WithStreamedUnaryMethod_ReleaseHuman<WithStreamedUnaryMethod_HangHuman<WithStreamedUnaryMethod_Escape<Service>>>>>>>>>> StreamedUnaryService;
         template<class BaseClass>
         class WithSplitStreamingMethod_AddPlayer : public BaseClass
         {
@@ -2520,7 +2725,7 @@ namespace protobuf
             virtual ::grpc::Status StreamedAddPlayer(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer<::protobuf::PlayerMsg, ::protobuf::MessageToClient>* server_split_streamer) = 0;
         };
         typedef WithSplitStreamingMethod_AddPlayer<Service> SplitStreamedService;
-        typedef WithSplitStreamingMethod_AddPlayer<WithStreamedUnaryMethod_Move<WithStreamedUnaryMethod_PickProp<WithStreamedUnaryMethod_UseProp<WithStreamedUnaryMethod_UseSkill<WithStreamedUnaryMethod_SendMessage<WithStreamedUnaryMethod_Attack<WithStreamedUnaryMethod_CarryHuman<WithStreamedUnaryMethod_ReleaseHuman<WithStreamedUnaryMethod_HangHuman<Service>>>>>>>>>> StreamedService;
+        typedef WithSplitStreamingMethod_AddPlayer<WithStreamedUnaryMethod_Move<WithStreamedUnaryMethod_PickProp<WithStreamedUnaryMethod_UseProp<WithStreamedUnaryMethod_UseSkill<WithStreamedUnaryMethod_SendMessage<WithStreamedUnaryMethod_Attack<WithStreamedUnaryMethod_CarryHuman<WithStreamedUnaryMethod_ReleaseHuman<WithStreamedUnaryMethod_HangHuman<WithStreamedUnaryMethod_Escape<Service>>>>>>>>>>> StreamedService;
     };
 
 }  // namespace protobuf

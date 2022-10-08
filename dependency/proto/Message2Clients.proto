@@ -107,5 +107,6 @@ service AvailableService
     rpc CarryHuman (IDMsg) returns (BoolRes);
     rpc ReleaseHuman (IDMsg) returns (BoolRes);
     rpc HangHuman (IDMsg) returns (BoolRes);
+    rpc Escape (IDMsg) returns (BoolRes);
 
 }

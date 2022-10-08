@@ -442,7 +442,7 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     "+\n\013map_massage\030\004 \001(\0132\026.protobuf.MessageO"
     "fMap\"5\n\007MoveRes\022\024\n\014actual_speed\030\001 \001(\003\022\024\n"
     "\014actual_angle\030\002 \001(\001\"\036\n\007BoolRes\022\023\n\013act_su"
-    "ccess\030\001 \001(\0102\371\004\n\020AvailableService\022=\n\tAddP"
+    "ccess\030\001 \001(\0102\247\005\n\020AvailableService\022=\n\tAddP"
     "layer\022\023.protobuf.PlayerMsg\032\031.protobuf.Me"
     "ssageToClient0\001\022,\n\004Move\022\021.protobuf.MoveM"
     "sg\032\021.protobuf.MoveRes\0220\n\010PickProp\022\021.prot"
@@ -458,7 +458,8 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     "f.IDMsg\032\021.protobuf.BoolRes\0222\n\014ReleaseHum"
     "an\022\017.protobuf.IDMsg\032\021.protobuf.BoolRes\022/"
     "\n\tHangHuman\022\017.protobuf.IDMsg\032\021.protobuf."
-    "BoolResb\006proto3";
+    "BoolRes\022,\n\006Escape\022\017.protobuf.IDMsg\032\021.pro"
+    "tobuf.BoolResb\006proto3";
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* const descriptor_table_Message2Clients_2eproto_deps[2] = {
     &::descriptor_table_Message2Server_2eproto,
     &::descriptor_table_MessageType_2eproto,
@@ -467,7 +468,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Message2Cli
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Message2Clients_2eproto = {
     false,
     false,
-    2135,
+    2181,
     descriptor_table_protodef_Message2Clients_2eproto,
     "Message2Clients.proto",
     &descriptor_table_Message2Clients_2eproto_once,

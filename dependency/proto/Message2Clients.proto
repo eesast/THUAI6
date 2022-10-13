@@ -22,7 +22,8 @@ message MessageOfHuman
     bool on_ground = 13; // 是否倒地
     double ground_time = 14; // 倒地时间
     int64 player_id = 15;
-    repeated HumanBuffType buff = 16;
+    int32 view_range = 16; // 视野距离
+    repeated HumanBuffType buff = 17;
 }
 
 message MessageOfButcher
@@ -38,8 +39,8 @@ message MessageOfButcher
     int64 guid = 9;
     bool movable = 10; // 是否进入了攻击后摇
     int64 playerID = 11;
-    repeated ButcherBuffType buff = 12;
-
+    int32 view_range = 12; // 视野距离
+    repeated ButcherBuffType buff = 13;
 }
 
 message MessageOfProp // 可拾取道具的信息
@@ -106,5 +107,6 @@ service AvailableService
     rpc CarryHuman (IDMsg) returns (BoolRes);
     rpc ReleaseHuman (IDMsg) returns (BoolRes);
     rpc HangHuman (IDMsg) returns (BoolRes);
+    rpc Escape (IDMsg) returns (BoolRes);
 
 }

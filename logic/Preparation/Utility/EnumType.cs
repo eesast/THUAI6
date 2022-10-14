@@ -15,19 +15,19 @@ namespace Preparation.Utility
 
         Wall = 6,
         Grass = 7,
-        Generator = 8,//发电机
+        Generator = 8,  // 发电机
         BirthPoint = 9,
         Exit = 10,
         EmergencyExit = 11,
-        OutOfBoundBlock = 12,//范围外
+        OutOfBoundBlock = 12,  // 范围外
     }
     public enum ShapeType
     {
         Null = 0,
-        Circle = 1,      //子弹和人物为圆形，格子为方形
+        Circle = 1,  // 子弹和人物为圆形，格子为方形
         Square = 2
     }
-    public enum PlaceType  //位置标志，包括陆地（一般默认为陆地，如墙体等），草丛。游戏中每一帧都要刷新各个物体的该属性
+    public enum PlaceType  // 位置标志，包括陆地（一般默认为陆地，如墙体等），草丛。游戏中每一帧都要刷新各个物体的该属性
     {
         Null = 0,
         Land = 1,
@@ -37,24 +37,24 @@ namespace Preparation.Utility
         Grass4 = 5,
         Grass5 = 6,
     }
-    public enum BulletType //子弹类型
+    public enum BulletType  // 子弹类型
     {
         Null = 0,
-        OrdinaryBullet = 1,    //普通子弹
-        AtomBomb = 2,     //原子弹
-        FastBullet = 3,      //快速子弹
-        LineBullet = 4      //直线子弹
+        OrdinaryBullet = 1,  // 普通子弹
+        AtomBomb = 2,        // 原子弹
+        FastBullet = 3,      // 快速子弹
+        LineBullet = 4       // 直线子弹
     }
-    public enum PropType    // 道具类型
+    public enum PropType  // 道具类型
     {
         Null = 0,
         addSpeed = 1,
         addLIFE = 2,
         Shield = 3,
         Spear = 4,
-        Gem = 5,    // 新增：宝石
+        Gem = 5,  // 新增：宝石
     }
-    public enum PassiveSkillType   // 被动技能
+    public enum PassiveSkillType  // 被动技能
     {
         Null = 0,
         RecoverAfterBattle = 1,
@@ -64,7 +64,7 @@ namespace Preparation.Utility
         PSkill4 = 5,
         PSkill5 = 6
     }
-    public enum ActiveSkillType    // 主动技能
+    public enum ActiveSkillType  // 主动技能
     {
         Null = 0,
         BecomeVampire = 1,
@@ -74,7 +74,7 @@ namespace Preparation.Utility
         ASkill4 = 5,
         ASkill5 = 6
     }
-    public enum BuffType    //buff
+    public enum BuffType  // buff
     {
         Null = 0,
         AddSpeed = 1,

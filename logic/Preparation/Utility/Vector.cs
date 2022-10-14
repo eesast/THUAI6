@@ -41,7 +41,7 @@ namespace Preparation.Utility
             this.y = y;
         }
 
-        public static double operator *(Vector2 v1, Vector2 v2)
+        public static double operator*(Vector2 v1, Vector2 v2)
         {
             return (v1.x * v2.x) + (v1.y * v2.y);
         }

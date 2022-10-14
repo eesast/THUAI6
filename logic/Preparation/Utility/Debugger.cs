@@ -6,7 +6,7 @@ namespace Preparation.Utility
     {
         static public void Output(object current, string str)
         {
-#if DEBUG 
+#if DEBUG
             Console.WriteLine(current.GetType() + " " + current.ToString() + " " + str);
 #endif
         }

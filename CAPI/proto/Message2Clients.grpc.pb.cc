@@ -35,6 +35,7 @@ namespace protobuf
         "/protobuf.AvailableService/CarryHuman",
         "/protobuf.AvailableService/ReleaseHuman",
         "/protobuf.AvailableService/HangHuman",
+        "/protobuf.AvailableService/Escape",
     };
 
     std::unique_ptr<AvailableService::Stub> AvailableService::NewStub(const std::shared_ptr<::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
@@ -57,7 +58,8 @@ namespace protobuf
         rpcmethod_Attack_(AvailableService_method_names[8], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
         rpcmethod_CarryHuman_(AvailableService_method_names[9], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
         rpcmethod_ReleaseHuman_(AvailableService_method_names[10], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_HangHuman_(AvailableService_method_names[11], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+        rpcmethod_HangHuman_(AvailableService_method_names[11], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_Escape_(AvailableService_method_names[12], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
     {
     }
 
@@ -373,6 +375,34 @@ namespace protobuf
         return result;
     }
 
+    ::grpc::Status AvailableService::Stub::Escape(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
+    {
+        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_Escape_, context, request, response);
+    }
+
+    void AvailableService::Stub::async::Escape(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
+    {
+        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_Escape_, context, request, response, std::move(f));
+    }
+
+    void AvailableService::Stub::async::Escape(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
+    {
+        ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_Escape_, context, request, response, reactor);
+    }
+
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncEscapeRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    {
+        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_Escape_, context, request);
+    }
+
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncEscapeRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    {
+        auto* result =
+            this->PrepareAsyncEscapeRaw(context, request, cq);
+        result->StartCall();
+        return result;
+    }
+
     AvailableService::Service::Service()
     {
         AddMethod(new ::grpc::internal::RpcServiceMethod(
@@ -541,6 +571,20 @@ namespace protobuf
                 this
             )
         ));
+        AddMethod(new ::grpc::internal::RpcServiceMethod(
+            AvailableService_method_names[12],
+            ::grpc::internal::RpcMethod::NORMAL_RPC,
+            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+                [](AvailableService::Service* service,
+                   ::grpc::ServerContext* ctx,
+                   const ::protobuf::IDMsg* req,
+                   ::protobuf::BoolRes* resp)
+                {
+                    return service->Escape(ctx, req, resp);
+                },
+                this
+            )
+        ));
     }
 
     AvailableService::Service::~Service()
@@ -634,6 +678,14 @@ namespace protobuf
     }
 
     ::grpc::Status AvailableService::Service::HangHuman(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+    {
+        (void)context;
+        (void)request;
+        (void)response;
+        return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+
+    ::grpc::Status AvailableService::Service::Escape(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
     {
         (void)context;
         (void)request;

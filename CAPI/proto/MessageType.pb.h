@@ -59,11 +59,12 @@ namespace protobuf
     enum PlaceType : int
     {
         NULL_PLACE_TYPE = 0,
-        WALL = 1,
-        GRASS = 2,
-        MACHINE = 3,
-        GATE = 4,
-        HIDDEN_GATE = 5,
+        LAND = 1,
+        WALL = 2,
+        GRASS = 3,
+        MACHINE = 4,
+        GATE = 5,
+        HIDDEN_GATE = 6,
         PlaceType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         PlaceType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
@@ -217,13 +218,14 @@ namespace protobuf
     }
     enum PlayerType : int
     {
-        HUMAN_PLAYER = 0,
-        BUTCHER_PLAYER = 1,
+        NULL_PLAYER_TYPE = 0,
+        HUMAN_PLAYER = 1,
+        BUTCHER_PLAYER = 2,
         PlayerType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         PlayerType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool PlayerType_IsValid(int value);
-    constexpr PlayerType PlayerType_MIN = HUMAN_PLAYER;
+    constexpr PlayerType PlayerType_MIN = NULL_PLAYER_TYPE;
     constexpr PlayerType PlayerType_MAX = BUTCHER_PLAYER;
     constexpr int PlayerType_ARRAYSIZE = PlayerType_MAX + 1;
 

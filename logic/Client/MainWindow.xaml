@@ -37,14 +37,14 @@
         <Button x:Name="PorC" Content="▶"  Margin="0,16,0,0" Background="Green" BorderBrush="Green" FontFamily="Microsoft YaHei" Click="ClickToPauseOrContinue" Grid.Column="4" Grid.Row="2" HorizontalAlignment="Left" Width="24" Height="26" VerticalAlignment="Top"/>
         <Button Name="Connect" Content="🔗" Margin="0,11,0,0" VerticalAlignment="Top" Background="Aqua" Click="ClickToConnect" Height="25" Grid.Column="4" HorizontalAlignment="Left" Width="25" Grid.Row="1"/>
         <!--右上角的最大化、关闭、最小化按钮-->
-        <Button Name="MaxButton" Content="🗖" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToMaxmize" Grid.Column="4" Height="38" VerticalAlignment="Center" HorizontalAlignment="Left" Width="44" Margin="51,0,0,0"/>
-        <Button Content="❎" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToClose" Grid.Column="4" Height="38" VerticalAlignment="Center" Margin="97,0,0,0" HorizontalAlignment="Left" Width="44"/>
-        <Button Content="—" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToMinimize" Grid.Column="4" Height="38" VerticalAlignment="Center" Margin="5,0,0,0" HorizontalAlignment="Left" Width="44"/>
+        <Button Name="MaxButton" Content="🗖" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToMaxmize" Grid.Column="4" Height="38" VerticalAlignment="Center" Margin="0,0,47,0" HorizontalAlignment="Right" Width="44"/>
+        <Button Content="❎" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToClose" Grid.Column="4" Height="38" VerticalAlignment="Center" Margin="0,0,1,0" HorizontalAlignment="Right" Width="44"/>
+        <Button Content="—" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToMinimize" Grid.Column="4" Height="38" VerticalAlignment="Center" Margin="0,0,93,0" HorizontalAlignment="Right" Width="44"/>
         <!--右侧“帮助”、“关于我们”按钮-->
         <Button Content=" 帮&#xA; 助&#xA;(H)" Margin="66,50,0,0"  Background="Ivory" Click="ClickForHelp" Grid.Row="2" Grid.Column="4" HorizontalAlignment="Left" Width="46" Height="80" VerticalAlignment="Top"/>
         <Button Content="关&#xA;于&#xA;我&#xA;们&#xA;(F)" Margin="68,115,0,0" Background="Ivory" Click="ClickToVisitEESAST" Grid.Row="4" Grid.Column="4" Grid.RowSpan="2" HorizontalAlignment="Left" Width="38" Height="97" VerticalAlignment="Top" />
         <!--左上角的EESAST标志、THUAI6文字提示语以及其他按钮-->
-        <Image Stretch="Fill" Source="/Logo.png" HorizontalAlignment="Left" Width="40" Height="40" VerticalAlignment="Center"/>
+        <Image Stretch="Fill" Source="/Logo.png" HorizontalAlignment="Left" Width="39" Height="38" VerticalAlignment="Center"/>
         <Label Content="THUAI6 Client for players " Margin="37,0,0,0"  FontSize="15" Grid.ColumnSpan="2" Grid.Column="0" HorizontalAlignment="Left" Width="194" Height="32" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
             <Label.RenderTransform>
                 <TransformGroup>

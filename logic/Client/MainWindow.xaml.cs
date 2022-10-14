@@ -56,7 +56,7 @@ namespace Client
                 isClientStocked = true;
                 PorC.Content = "▶";
             }
-            else 
+            else
             {
                 isClientStocked = false;
                 PorC.Content = "⏸";
@@ -65,7 +65,7 @@ namespace Client
         //未复现
         private void ClickToConnect(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         //窗口最大化、关闭、最小化、拖拽
@@ -101,16 +101,16 @@ namespace Client
             }
             catch (Exception exc)
             {
- //               ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
- //               error.Show();
+                //               ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
+                //               error.Show();
             }
         }
 
         //配置连接（未复原）、我的AI（THUAI5未实现）、获取更新、天梯信息（可能需要网站协助）
         private void ClickToSetConnect(object sender, RoutedEventArgs e)
         {
- //           ConnectRegister crg = new();
- //           crg.Show();
+            //           ConnectRegister crg = new();
+            //           crg.Show();
         }
         private void ClickToEnterVS(object sender, RoutedEventArgs e)
         {
@@ -150,11 +150,12 @@ namespace Client
             }
             catch (Exception exc)
             {
- //               ErrorDisplayer error = new(exc.Message);
- //               error.Show();
+                //               ErrorDisplayer error = new(exc.Message);
+                //               error.Show();
             }
         }
         private bool isClientStocked;
         private bool isPlaybackMode;
     }
 }
+

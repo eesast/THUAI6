@@ -8,7 +8,7 @@ namespace Preparation.Interface
         object MoveLock { get; }
         public int MoveSpeed { get; }
         public long Move(Vector moveVec);
-        //   protected bool IgnoreCollide(IGameObj targetObj);   // 忽略碰撞，在具体类中实现
+        protected bool IgnoreCollide(IGameObj targetObj);                     // 忽略碰撞，在具体类中实现
         public bool WillCollideWith(IGameObj? targetObj, XYPosition nextPos)  // 检查下一位置是否会和目标物碰撞
         {
             if (targetObj == null)
@@ -16,7 +16,8 @@ namespace Preparation.Interface
             // 会移动的只有子弹和人物，都是Circle
             if (!targetObj.IsRigid || targetObj.ID == ID)
                 return false;
-            // if (IgnoreCollide(targetObj))       return false;
+            if (IgnoreCollide(targetObj))
+                return false;
             if (targetObj.Shape == ShapeType.Circle)
             {
                 return XYPosition.Distance(nextPos, targetObj.Position) < targetObj.Radius + Radius;

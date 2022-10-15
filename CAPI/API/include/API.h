@@ -128,9 +128,24 @@ protected:
     ILogic& logic;
 };
 
-class IHumanAPI : public IAPI
+// 给Logic使用的IAPI接口，为了保证面向对象的设计模式
+class IAPIForLogic : public IAPI
+{
+    IAPIForLogic(ILogic& logic) :
+        IAPI(logic)
+    {
+    }
+    virtual void StartTimer() = 0;
+    virtual void EndTimer() = 0;
+};
+
+class IHumanAPI : public IAPIForLogic
 {
 public:
+    HumanAPI(ILogic& logic) :
+        IAPIForLogic(logic)
+    {
+    }
     virtual std::future<bool> StartFixMachine() = 0;
     virtual std::future<bool> EndFixMachine() = 0;
     virtual std::future<bool> GetFixStatus() = 0;
@@ -141,14 +156,54 @@ public:
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const = 0;
 };
 
-class IButcherAPI : public IAPI
+class IButcherAPI : public IAPIForLogic
 {
 public:
+    ButcherAPI(Logic& logic) :
+        IAPIForLogic(logic)
+    {
+    }
     virtual std::future<bool> Attack(double angleInRadian) = 0;
     virtual std::future<bool> CarryHuman() = 0;
     virtual std::future<bool> ReleaseHuman() = 0;
     virtual std::future<bool> HangHuman() = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Buthcer> GetSelfInfo() const = 0;
+};
+
+class HumanAPI : public IHumanAPI
+{
+public:
+    HumanAPI(Logic& logic) :
+        logic(logic)
+    {
+    }
+};
+
+class DebugHumanAPI : public IHumanAPI
+{
+public:
+    DebugHumanAPI(Logic& logic) :
+        logic(logic)
+    {
+    }
+};
+
+class ButhcerAPI : public IButcherAPI
+{
+public:
+    ButhcerAPI(Logic& logic) :
+        logic(logic)
+    {
+    }
+};
+
+class DebugButcherAPI : public IButcherAPI
+{
+public:
+    DebugButcherAPI(Logic& logic) :
+        logic(logic)
+    {
+    }
 };
 
 #endif

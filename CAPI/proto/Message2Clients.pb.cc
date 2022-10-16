@@ -114,7 +114,9 @@ namespace protobuf
         place_(0)
 
         ,
-        guid_(int64_t{0})
+        guid_(int64_t{0}),
+        size_(0),
+        is_moving_(false)
     {
     }
     struct MessageOfPropDefaultTypeInternal
@@ -352,6 +354,8 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfProp, facing_direction_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfProp, guid_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfProp, place_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfProp, size_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfProp, is_moving_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfPickedProp, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -416,13 +420,13 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
     {0, -1, -1, sizeof(::protobuf::MessageOfHuman)},
     {23, -1, -1, sizeof(::protobuf::MessageOfButcher)},
     {42, -1, -1, sizeof(::protobuf::MessageOfProp)},
-    {54, -1, -1, sizeof(::protobuf::MessageOfPickedProp)},
-    {65, -1, -1, sizeof(::protobuf::MessageOfMap_Row)},
-    {72, -1, -1, sizeof(::protobuf::MessageOfMap)},
-    {79, -1, -1, sizeof(::protobuf::MessageToClient)},
-    {89, -1, -1, sizeof(::protobuf::MoveRes)},
-    {97, -1, -1, sizeof(::protobuf::BoolRes)},
-    {104, -1, -1, sizeof(::protobuf::MsgRes)},
+    {56, -1, -1, sizeof(::protobuf::MessageOfPickedProp)},
+    {67, -1, -1, sizeof(::protobuf::MessageOfMap_Row)},
+    {74, -1, -1, sizeof(::protobuf::MessageOfMap)},
+    {81, -1, -1, sizeof(::protobuf::MessageToClient)},
+    {91, -1, -1, sizeof(::protobuf::MoveRes)},
+    {99, -1, -1, sizeof(::protobuf::BoolRes)},
+    {106, -1, -1, sizeof(::protobuf::MsgRes)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const* const file_default_instances[] = {
@@ -459,46 +463,46 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     " \001(\0162\025.protobuf.ButcherType\022\014\n\004guid\030\t \001("
     "\003\022\017\n\007movable\030\n \001(\010\022\020\n\010playerID\030\013 \001(\003\022\022\n\n"
     "view_range\030\014 \001(\005\022\'\n\004buff\030\r \003(\0162\031.protobu"
-    "f.ButcherBuffType\"\223\001\n\rMessageOfProp\022 \n\004t"
+    "f.ButcherBuffType\"\264\001\n\rMessageOfProp\022 \n\004t"
     "ype\030\001 \001(\0162\022.protobuf.PropType\022\t\n\001x\030\002 \001(\005"
     "\022\t\n\001y\030\003 \001(\005\022\030\n\020facing_direction\030\004 \001(\001\022\014\n"
     "\004guid\030\005 \001(\003\022\"\n\005place\030\006 \001(\0162\023.protobuf.Pl"
-    "aceType\"{\n\023MessageOfPickedProp\022 \n\004type\030\001"
-    " \001(\0162\022.protobuf.PropType\022\t\n\001x\030\002 \001(\005\022\t\n\001y"
-    "\030\003 \001(\005\022\030\n\020facing_direction\030\004 \001(\001\022\022\n\nmapp"
-    "ing_id\030\005 \001(\003\"`\n\014MessageOfMap\022\'\n\003row\030\002 \003("
-    "\0132\032.protobuf.MessageOfMap.Row\032\'\n\003Row\022 \n\003"
-    "col\030\001 \003(\0162\023.protobuf.PlaceType\"\323\001\n\017Messa"
-    "geToClient\022/\n\rhuman_message\030\001 \003(\0132\030.prot"
-    "obuf.MessageOfHuman\0223\n\017butcher_message\030\002"
-    " \003(\0132\032.protobuf.MessageOfButcher\022-\n\014prop"
-    "_message\030\003 \003(\0132\027.protobuf.MessageOfProp\022"
-    "+\n\013map_massage\030\004 \001(\0132\026.protobuf.MessageO"
-    "fMap\"5\n\007MoveRes\022\024\n\014actual_speed\030\001 \001(\003\022\024\n"
-    "\014actual_angle\030\002 \001(\001\"\036\n\007BoolRes\022\023\n\013act_su"
-    "ccess\030\001 \001(\010\"P\n\006MsgRes\022\024\n\014have_message\030\001 "
-    "\001(\010\022\026\n\016from_player_id\030\002 \001(\003\022\030\n\020message_r"
-    "eceived\030\003 \001(\t2\213\006\n\020AvailableService\022=\n\tAd"
-    "dPlayer\022\023.protobuf.PlayerMsg\032\031.protobuf."
-    "MessageToClient0\001\022,\n\004Move\022\021.protobuf.Mov"
-    "eMsg\032\021.protobuf.MoveRes\0220\n\010PickProp\022\021.pr"
-    "otobuf.PickMsg\032\021.protobuf.BoolRes\022-\n\007Use"
-    "Prop\022\017.protobuf.IDMsg\032\021.protobuf.BoolRes"
-    "\022.\n\010UseSkill\022\017.protobuf.IDMsg\032\021.protobuf"
-    ".BoolRes\0223\n\013SendMessage\022\021.protobuf.SendM"
-    "sg\032\021.protobuf.BoolRes\0221\n\013HaveMessage\022\017.p"
-    "rotobuf.IDMsg\032\021.protobuf.BoolRes\022/\n\nGetM"
-    "essage\022\017.protobuf.IDMsg\032\020.protobuf.MsgRe"
-    "s\0224\n\nFixMachine\022\017.protobuf.IDMsg\032\021.proto"
-    "buf.BoolRes(\0010\001\0223\n\tSaveHuman\022\017.protobuf."
-    "IDMsg\032\021.protobuf.BoolRes(\0010\001\0220\n\006Attack\022\023"
-    ".protobuf.AttackMsg\032\021.protobuf.BoolRes\0220"
-    "\n\nCarryHuman\022\017.protobuf.IDMsg\032\021.protobuf"
-    ".BoolRes\0222\n\014ReleaseHuman\022\017.protobuf.IDMs"
-    "g\032\021.protobuf.BoolRes\022/\n\tHangHuman\022\017.prot"
-    "obuf.IDMsg\032\021.protobuf.BoolRes\022,\n\006Escape\022"
-    "\017.protobuf.IDMsg\032\021.protobuf.BoolResb\006pro"
-    "to3";
+    "aceType\022\014\n\004size\030\007 \001(\005\022\021\n\tis_moving\030\010 \001(\010"
+    "\"{\n\023MessageOfPickedProp\022 \n\004type\030\001 \001(\0162\022."
+    "protobuf.PropType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022"
+    "\030\n\020facing_direction\030\004 \001(\001\022\022\n\nmapping_id\030"
+    "\005 \001(\003\"`\n\014MessageOfMap\022\'\n\003row\030\002 \003(\0132\032.pro"
+    "tobuf.MessageOfMap.Row\032\'\n\003Row\022 \n\003col\030\001 \003"
+    "(\0162\023.protobuf.PlaceType\"\323\001\n\017MessageToCli"
+    "ent\022/\n\rhuman_message\030\001 \003(\0132\030.protobuf.Me"
+    "ssageOfHuman\0223\n\017butcher_message\030\002 \003(\0132\032."
+    "protobuf.MessageOfButcher\022-\n\014prop_messag"
+    "e\030\003 \003(\0132\027.protobuf.MessageOfProp\022+\n\013map_"
+    "massage\030\004 \001(\0132\026.protobuf.MessageOfMap\"5\n"
+    "\007MoveRes\022\024\n\014actual_speed\030\001 \001(\003\022\024\n\014actual"
+    "_angle\030\002 \001(\001\"\036\n\007BoolRes\022\023\n\013act_success\030\001"
+    " \001(\010\"P\n\006MsgRes\022\024\n\014have_message\030\001 \001(\010\022\026\n\016"
+    "from_player_id\030\002 \001(\003\022\030\n\020message_received"
+    "\030\003 \001(\t2\213\006\n\020AvailableService\022=\n\tAddPlayer"
+    "\022\023.protobuf.PlayerMsg\032\031.protobuf.Message"
+    "ToClient0\001\022,\n\004Move\022\021.protobuf.MoveMsg\032\021."
+    "protobuf.MoveRes\0220\n\010PickProp\022\021.protobuf."
+    "PickMsg\032\021.protobuf.BoolRes\022-\n\007UseProp\022\017."
+    "protobuf.IDMsg\032\021.protobuf.BoolRes\022.\n\010Use"
+    "Skill\022\017.protobuf.IDMsg\032\021.protobuf.BoolRe"
+    "s\0223\n\013SendMessage\022\021.protobuf.SendMsg\032\021.pr"
+    "otobuf.BoolRes\0221\n\013HaveMessage\022\017.protobuf"
+    ".IDMsg\032\021.protobuf.BoolRes\022/\n\nGetMessage\022"
+    "\017.protobuf.IDMsg\032\020.protobuf.MsgRes\0224\n\nFi"
+    "xMachine\022\017.protobuf.IDMsg\032\021.protobuf.Boo"
+    "lRes(\0010\001\0223\n\tSaveHuman\022\017.protobuf.IDMsg\032\021"
+    ".protobuf.BoolRes(\0010\001\0220\n\006Attack\022\023.protob"
+    "uf.AttackMsg\032\021.protobuf.BoolRes\0220\n\nCarry"
+    "Human\022\017.protobuf.IDMsg\032\021.protobuf.BoolRe"
+    "s\0222\n\014ReleaseHuman\022\017.protobuf.IDMsg\032\021.pro"
+    "tobuf.BoolRes\022/\n\tHangHuman\022\017.protobuf.ID"
+    "Msg\032\021.protobuf.BoolRes\022,\n\006Escape\022\017.proto"
+    "buf.IDMsg\032\021.protobuf.BoolResb\006proto3";
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* const descriptor_table_Message2Clients_2eproto_deps[2] = {
     &::descriptor_table_Message2Server_2eproto,
     &::descriptor_table_MessageType_2eproto,
@@ -507,7 +511,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Message2Cli
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Message2Clients_2eproto = {
     false,
     false,
-    2363,
+    2396,
     descriptor_table_protodef_Message2Clients_2eproto,
     "Message2Clients.proto",
     &descriptor_table_Message2Clients_2eproto_once,
@@ -1875,13 +1879,13 @@ namespace protobuf
         ::PROTOBUF_NAMESPACE_ID::Message()
     {
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-        ::memcpy(&type_, &from.type_, static_cast<size_t>(reinterpret_cast<char*>(&guid_) - reinterpret_cast<char*>(&type_)) + sizeof(guid_));
+        ::memcpy(&type_, &from.type_, static_cast<size_t>(reinterpret_cast<char*>(&is_moving_) - reinterpret_cast<char*>(&type_)) + sizeof(is_moving_));
         // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfProp)
     }
 
     inline void MessageOfProp::SharedCtor()
     {
-        ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(reinterpret_cast<char*>(&type_) - reinterpret_cast<char*>(this)), 0, static_cast<size_t>(reinterpret_cast<char*>(&guid_) - reinterpret_cast<char*>(&type_)) + sizeof(guid_));
+        ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(reinterpret_cast<char*>(&type_) - reinterpret_cast<char*>(this)), 0, static_cast<size_t>(reinterpret_cast<char*>(&is_moving_) - reinterpret_cast<char*>(&type_)) + sizeof(is_moving_));
     }
 
     MessageOfProp::~MessageOfProp()
@@ -1918,7 +1922,7 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        ::memset(&type_, 0, static_cast<size_t>(reinterpret_cast<char*>(&guid_) - reinterpret_cast<char*>(&type_)) + sizeof(guid_));
+        ::memset(&type_, 0, static_cast<size_t>(reinterpret_cast<char*>(&is_moving_) - reinterpret_cast<char*>(&type_)) + sizeof(is_moving_));
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -1991,6 +1995,26 @@ namespace protobuf
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
                         _internal_set_place(static_cast<::protobuf::PlaceType>(val));
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 size = 7;
+                case 7:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56))
+                    {
+                        size_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // bool is_moving = 8;
+                case 8:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64))
+                    {
+                        is_moving_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        CHK_(ptr);
                     }
                     else
                         goto handle_unusual;
@@ -2079,6 +2103,20 @@ namespace protobuf
             );
         }
 
+        // int32 size = 7;
+        if (this->_internal_size() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(7, this->_internal_size(), target);
+        }
+
+        // bool is_moving = 8;
+        if (this->_internal_is_moving() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(8, this->_internal_is_moving(), target);
+        }
+
         if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
         {
             target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -2140,6 +2178,18 @@ namespace protobuf
             total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_guid());
         }
 
+        // int32 size = 7;
+        if (this->_internal_size() != 0)
+        {
+            total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_size());
+        }
+
+        // bool is_moving = 8;
+        if (this->_internal_is_moving() != 0)
+        {
+            total_size += 1 + 1;
+        }
+
         return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
     }
 
@@ -2193,6 +2243,14 @@ namespace protobuf
         {
             _internal_set_guid(from._internal_guid());
         }
+        if (from._internal_size() != 0)
+        {
+            _internal_set_size(from._internal_size());
+        }
+        if (from._internal_is_moving() != 0)
+        {
+            _internal_set_is_moving(from._internal_is_moving());
+        }
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
 
@@ -2215,7 +2273,7 @@ namespace protobuf
         using std::swap;
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-            PROTOBUF_FIELD_OFFSET(MessageOfProp, guid_) + sizeof(MessageOfProp::guid_) - PROTOBUF_FIELD_OFFSET(MessageOfProp, type_)>(
+            PROTOBUF_FIELD_OFFSET(MessageOfProp, is_moving_) + sizeof(MessageOfProp::is_moving_) - PROTOBUF_FIELD_OFFSET(MessageOfProp, type_)>(
             reinterpret_cast<char*>(&type_),
             reinterpret_cast<char*>(&other->type_)
         );

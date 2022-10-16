@@ -1011,6 +1011,8 @@ namespace protobuf
             kYFieldNumber = 3,
             kPlaceFieldNumber = 6,
             kGuidFieldNumber = 5,
+            kSizeFieldNumber = 7,
+            kIsMovingFieldNumber = 8,
         };
         // .protobuf.PropType type = 1;
         void clear_type();
@@ -1072,6 +1074,26 @@ namespace protobuf
         void _internal_set_guid(int64_t value);
 
     public:
+        // int32 size = 7;
+        void clear_size();
+        int32_t size() const;
+        void set_size(int32_t value);
+
+    private:
+        int32_t _internal_size() const;
+        void _internal_set_size(int32_t value);
+
+    public:
+        // bool is_moving = 8;
+        void clear_is_moving();
+        bool is_moving() const;
+        void set_is_moving(bool value);
+
+    private:
+        bool _internal_is_moving() const;
+        void _internal_set_is_moving(bool value);
+
+    public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfProp)
 
     private:
@@ -1087,6 +1109,8 @@ namespace protobuf
         int32_t y_;
         int place_;
         int64_t guid_;
+        int32_t size_;
+        bool is_moving_;
         mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         friend struct ::TableStruct_Message2Clients_2eproto;
     };
@@ -3532,6 +3556,54 @@ namespace protobuf
     {
         _internal_set_place(value);
         // @@protoc_insertion_point(field_set:protobuf.MessageOfProp.place)
+    }
+
+    // int32 size = 7;
+    inline void MessageOfProp::clear_size()
+    {
+        size_ = 0;
+    }
+    inline int32_t MessageOfProp::_internal_size() const
+    {
+        return size_;
+    }
+    inline int32_t MessageOfProp::size() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfProp.size)
+        return _internal_size();
+    }
+    inline void MessageOfProp::_internal_set_size(int32_t value)
+    {
+        size_ = value;
+    }
+    inline void MessageOfProp::set_size(int32_t value)
+    {
+        _internal_set_size(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfProp.size)
+    }
+
+    // bool is_moving = 8;
+    inline void MessageOfProp::clear_is_moving()
+    {
+        is_moving_ = false;
+    }
+    inline bool MessageOfProp::_internal_is_moving() const
+    {
+        return is_moving_;
+    }
+    inline bool MessageOfProp::is_moving() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfProp.is_moving)
+        return _internal_is_moving();
+    }
+    inline void MessageOfProp::_internal_set_is_moving(bool value)
+    {
+        is_moving_ = value;
+    }
+    inline void MessageOfProp::set_is_moving(bool value)
+    {
+        _internal_set_is_moving(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfProp.is_moving)
     }
 
     // -------------------------------------------------------------------

@@ -142,7 +142,7 @@ class IAPIForLogic : public IAPI
 class IHumanAPI : public IAPIForLogic
 {
 public:
-    HumanAPI(ILogic& logic) :
+    IHumanAPI(ILogic& logic) :
         IAPIForLogic(logic)
     {
     }
@@ -159,7 +159,7 @@ public:
 class IButcherAPI : public IAPIForLogic
 {
 public:
-    ButcherAPI(Logic& logic) :
+    IButcherAPI(Logic& logic) :
         IAPIForLogic(logic)
     {
     }
@@ -174,7 +174,7 @@ class HumanAPI : public IHumanAPI
 {
 public:
     HumanAPI(Logic& logic) :
-        logic(logic)
+        IHumanAPI(logic)
     {
     }
 };
@@ -183,7 +183,7 @@ class DebugHumanAPI : public IHumanAPI
 {
 public:
     DebugHumanAPI(Logic& logic) :
-        logic(logic)
+        IHumanAPI(logic)
     {
     }
 };
@@ -192,7 +192,7 @@ class ButhcerAPI : public IButcherAPI
 {
 public:
     ButhcerAPI(Logic& logic) :
-        logic(logic)
+        IButcherAPI(logic)
     {
     }
 };
@@ -201,7 +201,7 @@ class DebugButcherAPI : public IButcherAPI
 {
 public:
     DebugButcherAPI(Logic& logic) :
-        logic(logic)
+        IButcherAPI(logic)
     {
     }
 };

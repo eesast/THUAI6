@@ -5,6 +5,8 @@ project(THUAI6_CAPI VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -pthread")
+
 aux_source_directory(./API/src CPP_LIST)
 aux_source_directory(./proto PROTO_CPP_LIST)
 

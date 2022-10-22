@@ -7,7 +7,7 @@
 class IAI
 {
 public:
-    virtual void play(IAPI& appi) = 0;
+    virtual void play(IAPI& api) = 0;
 };
 
 #endif

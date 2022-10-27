@@ -118,7 +118,7 @@ public:
     virtual std::future<bool> CarryHuman() = 0;
     virtual std::future<bool> ReleaseHuman() = 0;
     virtual std::future<bool> HangHuman() = 0;
-    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Buthcer> GetSelfInfo() const = 0;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Buthcer> ButcherGetSelfInfo() const = 0;
 
     /*****选手可能用的辅助函数*****/
 

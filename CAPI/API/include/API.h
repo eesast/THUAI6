@@ -101,6 +101,25 @@ public:
     // 获取游戏目前所进行的帧数
     [[nodiscard]] virtual int GetFrameCount() const = 0;
 
+    /*****人类阵营的特定函数*****/
+
+    virtual std::future<bool> StartFixMachine() = 0;
+    virtual std::future<bool> EndFixMachine() = 0;
+    virtual std::future<bool> GetFixStatus() = 0;
+    virtual std::future<bool> StartSaveHuman() = 0;
+    virtual std::future<bool> EndSaveHuman() = 0;
+    virtual std::future<bool> GetSaveStatus() = 0;
+    virtual std::future<bool> Escape() = 0;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> HumanGetSelfInfo() const = 0;
+
+    /*****屠夫阵营的特定函数*****/
+
+    virtual std::future<bool> Attack(double angleInRadian) = 0;
+    virtual std::future<bool> CarryHuman() = 0;
+    virtual std::future<bool> ReleaseHuman() = 0;
+    virtual std::future<bool> HangHuman() = 0;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Buthcer> GetSelfInfo() const = 0;
+
     /*****选手可能用的辅助函数*****/
 
     // 获取指定格子中心的坐标
@@ -131,6 +150,7 @@ protected:
 // 给Logic使用的IAPI接口，为了保证面向对象的设计模式
 class IAPIForLogic : public IAPI
 {
+public:
     IAPIForLogic(ILogic& logic) :
         IAPI(logic)
     {
@@ -139,71 +159,89 @@ class IAPIForLogic : public IAPI
     virtual void EndTimer() = 0;
 };
 
-class IHumanAPI : public IAPIForLogic
+class HumanAPI : public IAPIForLogic
 {
 public:
-    IHumanAPI(ILogic& logic) :
+    HumanAPI(ILogic& logic) :
         IAPIForLogic(logic)
     {
     }
-    virtual std::future<bool> StartFixMachine() = 0;
-    virtual std::future<bool> EndFixMachine() = 0;
-    virtual std::future<bool> GetFixStatus() = 0;
-    virtual std::future<bool> StartSaveHuman() = 0;
-    virtual std::future<bool> EndSaveHuman() = 0;
-    virtual std::future<bool> GetSaveStatus() = 0;
-    virtual std::future<bool> Escape() = 0;
-    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const = 0;
 };
 
-class IButcherAPI : public IAPIForLogic
+class ButcherAPI : public IAPIForLogic
 {
 public:
-    IButcherAPI(Logic& logic) :
+    ButcherAPI(ILogic& logic) :
         IAPIForLogic(logic)
     {
     }
-    virtual std::future<bool> Attack(double angleInRadian) = 0;
-    virtual std::future<bool> CarryHuman() = 0;
-    virtual std::future<bool> ReleaseHuman() = 0;
-    virtual std::future<bool> HangHuman() = 0;
-    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Buthcer> GetSelfInfo() const = 0;
 };
 
-class HumanAPI : public IHumanAPI
-{
-public:
-    HumanAPI(Logic& logic) :
-        IHumanAPI(logic)
-    {
-    }
-};
+// class IHumanAPI : public IAPIForLogic
+// {
+// public:
+//     IHumanAPI(ILogic& logic) :
+//         IAPIForLogic(logic)
+//     {
+//     }
+//     virtual std::future<bool> StartFixMachine() = 0;
+//     virtual std::future<bool> EndFixMachine() = 0;
+//     virtual std::future<bool> GetFixStatus() = 0;
+//     virtual std::future<bool> StartSaveHuman() = 0;
+//     virtual std::future<bool> EndSaveHuman() = 0;
+//     virtual std::future<bool> GetSaveStatus() = 0;
+//     virtual std::future<bool> Escape() = 0;
+//     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const = 0;
+// };
 
-class DebugHumanAPI : public IHumanAPI
-{
-public:
-    DebugHumanAPI(Logic& logic) :
-        IHumanAPI(logic)
-    {
-    }
-};
+// class IButcherAPI : public IAPIForLogic
+// {
+// public:
+//     IButcherAPI(Logic& logic) :
+//         IAPIForLogic(logic)
+//     {
+//     }
+//     virtual std::future<bool> Attack(double angleInRadian) = 0;
+//     virtual std::future<bool> CarryHuman() = 0;
+//     virtual std::future<bool> ReleaseHuman() = 0;
+//     virtual std::future<bool> HangHuman() = 0;
+//     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Buthcer> GetSelfInfo() const = 0;
+// };
 
-class ButhcerAPI : public IButcherAPI
-{
-public:
-    ButhcerAPI(Logic& logic) :
-        IButcherAPI(logic)
-    {
-    }
-};
+// class HumanAPI : public IHumanAPI
+// {
+// public:
+//     HumanAPI(Logic& logic) :
+//         IHumanAPI(logic)
+//     {
+//     }
+// };
 
-class DebugButcherAPI : public IButcherAPI
-{
-public:
-    DebugButcherAPI(Logic& logic) :
-        IButcherAPI(logic)
-    {
-    }
-};
+// class DebugHumanAPI : public IHumanAPI
+// {
+// public:
+//     DebugHumanAPI(Logic& logic) :
+//         IHumanAPI(logic)
+//     {
+//     }
+// };
+
+// class ButhcerAPI : public IButcherAPI
+// {
+// public:
+//     ButhcerAPI(Logic& logic) :
+//         IButcherAPI(logic)
+//     {
+//     }
+// };
+
+// class DebugButcherAPI : public IButcherAPI
+// {
+// public:
+//     DebugButcherAPI(Logic& logic) :
+//         IButcherAPI(logic)
+//     {
+//     }
+// };
 
 #endif

@@ -101,6 +101,8 @@ message MsgRes // 用于获取队友发来的消息
 
 service AvailableService
 {
+    rpc TryConnection(IDMsg) returns(BoolRes);
+
     // 游戏开局调用一次的服务
     rpc AddPlayer(PlayerMsg) returns(stream MessageToClient); // 连接上后等待游戏开始，server会定时通过该服务向所有client发送消息。
 

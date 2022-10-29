@@ -55,7 +55,7 @@ namespace Preparation.Utility
         Spear = 4,
         Gem = 5,  // 新增：宝石
     }
-    public enum PassiveSkillType  // 被动技能
+    public enum CharacterType  // 职业
     {
         Null = 0,
         RecoverAfterBattle = 1,

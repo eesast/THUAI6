@@ -2,56 +2,40 @@
 
 namespace Preparation.Utility
 {
-    public struct Vector
+   
+    public class Vector
     {
-        public double angle;
-        public double length;
-
-        public static XYPosition VectorToXY(Vector v)
-        {
-            return new XYPosition((int)(v.length * Math.Cos(v.angle)), (int)(v.length * Math.Sin(v.angle)));
-        }
-        public Vector2 ToVector2()
-        {
-            return new Vector2((int)(this.length * Math.Cos(this.angle)), (int)(this.length * Math.Sin(this.angle)));
-        }
-        public static Vector XYToVector(double x, double y)
-        {
-            return new Vector(Math.Atan2(y, x), Math.Sqrt((x * x) + (y * y)));
-        }
-        public Vector(double angle, double length)
-        {
-            if (length < 0)
-            {
-                angle += Math.PI;
-                length = -length;
-            }
-            this.angle = Tools.CorrectAngle(angle);
-            this.length = length;
-        }
-    }
-
-    public struct Vector2
-    {
-        public double x;
-        public double y;
-        public Vector2(double x, double y)
+        public int x;
+        public int y;
+        public Vector(int x, int y)
         {
             this.x = x;
             this.y = y;
         }
-
-        public static double operator*(Vector2 v1, Vector2 v2)
+        public override string ToString()
+        {
+            return "(" + x.ToString() + "," + y.ToString() + ")";
+        }
+        public static int operator*(Vector v1, Vector v2)
         {
             return (v1.x * v2.x) + (v1.y * v2.y);
         }
-        public static Vector2 operator +(Vector2 v1, Vector2 v2)
+        public static Vector operator +(Vector v1, Vector v2)
         {
-            return new Vector2(v1.x + v2.x, v1.y + v2.y);
+            return new Vector(v1.x + v2.x, v1.y + v2.y);
         }
-        public static Vector2 operator -(Vector2 v1, Vector2 v2)
+        public static Vector operator -(Vector v1, Vector v2)
         {
-            return new Vector2(v1.x - v2.x, v1.y - v2.y);
+            return new Vector(v1.x - v2.x, v1.y - v2.y);
         }
+    }
+    public class XYPosition: Vector
+    {
+        public XYPosition(int x, int y):base(x,y){}
+       
+        public static double Distance(XYPosition p1, XYPosition p2)
+        {
+            return Math.Sqrt(((long)(p1.x - p2.x) * (p1.x - p2.x)) + ((long)(p1.y - p2.y) * (p1.y - p2.y)));
+        } 
     }
 }

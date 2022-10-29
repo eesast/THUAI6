@@ -55,7 +55,7 @@ namespace GameClass.GameObj
             get => score;
         }
 
-        //public double AttackRange => BulletFactory.BulletAttackRange(this.BulletOfPlayer);
+        // public double AttackRange => BulletFactory.BulletAttackRange(this.BulletOfPlayer);
 
         private double vampire = 0;  // 回血率：0-1之间
         public double Vampire
@@ -100,7 +100,7 @@ namespace GameClass.GameObj
                 }
             }
         }
-        
+
         /// <summary>
         /// 使用物品栏中的道具
         /// </summary>
@@ -428,9 +428,9 @@ namespace GameClass.GameObj
             this.MoveSpeed = OrgMoveSpeed;
             HP = MaxHp;
             PropInventory = null;
-            //BulletOfPlayer = OriBulletOfPlayer;
-            //lock (gameObjLock)
-              //  bulletNum = maxBulletNum;
+            // BulletOfPlayer = OriBulletOfPlayer;
+            // lock (gameObjLock)
+            //   bulletNum = maxBulletNum;
 
             buffManeger.ClearAll();
             IsInvisible = false;

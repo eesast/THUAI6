@@ -1,0 +1,30 @@
+syntax = "proto3";
+package protobuf;
+
+import "Message2Clients.proto";
+import "Message2Server.proto";
+
+service AvailableService
+{
+    rpc TryConnection(IDMsg) returns(BoolRes);
+
+    // 游戏开局调用一次的服务
+    rpc AddPlayer(PlayerMsg) returns(stream MessageToClient); // 连接上后等待游戏开始，server会定时通过该服务向所有client发送消息。
+
+    // 游戏过程中玩家执行操作的服务
+    rpc Move(MoveMsg) returns (MoveRes);
+    rpc PickProp(PickMsg) returns (BoolRes);
+    rpc UseProp(IDMsg) returns (BoolRes);
+    rpc UseSkill(IDMsg) returns (BoolRes);
+    rpc SendMessage(SendMsg) returns (BoolRes);
+    rpc HaveMessage(IDMsg) returns (BoolRes);
+    rpc GetMessage(IDMsg) returns (MsgRes);
+    rpc FixMachine(stream IDMsg) returns (stream BoolRes); // 若正常修复且未被打断则返回修复成功，位置错误/被打断则返回修复失败，下同
+    rpc SaveHuman(stream IDMsg) returns (stream BoolRes);
+    rpc Attack (AttackMsg) returns (BoolRes);
+    rpc CarryHuman (IDMsg) returns (BoolRes);
+    rpc ReleaseHuman (IDMsg) returns (BoolRes);
+    rpc HangHuman (IDMsg) returns (BoolRes);
+    rpc Escape (IDMsg) returns (BoolRes);
+    
+}

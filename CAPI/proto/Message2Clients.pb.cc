@@ -444,81 +444,58 @@ static ::PROTOBUF_NAMESPACE_ID::Message const* const file_default_instances[] = 
 
 const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
     "\n\025Message2Clients.proto\022\010protobuf\032\021Messa"
-    "geType.proto\032\024Message2Server.proto\"\225\003\n\016M"
-    "essageOfHuman\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\r\n\005s"
-    "peed\030\003 \001(\005\022\014\n\004life\030\004 \001(\005\022\023\n\013hanged_time\030"
-    "\005 \001(\005\022\"\n\032time_until_skill_available\030\006 \001("
-    "\001\022\"\n\005place\030\007 \001(\0162\023.protobuf.PlaceType\022 \n"
-    "\004prop\030\010 \001(\0162\022.protobuf.PropType\022\'\n\nhuman"
-    "_type\030\t \001(\0162\023.protobuf.HumanType\022\014\n\004guid"
-    "\030\n \001(\003\022\020\n\010on_chair\030\013 \001(\010\022\022\n\nchair_time\030\014"
-    " \001(\001\022\021\n\ton_ground\030\r \001(\010\022\023\n\013ground_time\030\016"
-    " \001(\001\022\021\n\tplayer_id\030\017 \001(\003\022\022\n\nview_range\030\020 "
-    "\001(\005\022%\n\004buff\030\021 \003(\0162\027.protobuf.HumanBuffTy"
-    "pe\"\314\002\n\020MessageOfButcher\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030"
-    "\002 \001(\005\022\r\n\005speed\030\003 \001(\005\022\016\n\006damage\030\004 \001(\005\022\"\n\032"
-    "time_until_skill_available\030\005 \001(\001\022\"\n\005plac"
-    "e\030\006 \001(\0162\023.protobuf.PlaceType\022 \n\004prop\030\007 \001"
-    "(\0162\022.protobuf.PropType\022+\n\014butcher_type\030\010"
-    " \001(\0162\025.protobuf.ButcherType\022\014\n\004guid\030\t \001("
-    "\003\022\017\n\007movable\030\n \001(\010\022\020\n\010playerID\030\013 \001(\003\022\022\n\n"
-    "view_range\030\014 \001(\005\022\'\n\004buff\030\r \003(\0162\031.protobu"
-    "f.ButcherBuffType\"\264\001\n\rMessageOfProp\022 \n\004t"
-    "ype\030\001 \001(\0162\022.protobuf.PropType\022\t\n\001x\030\002 \001(\005"
-    "\022\t\n\001y\030\003 \001(\005\022\030\n\020facing_direction\030\004 \001(\001\022\014\n"
-    "\004guid\030\005 \001(\003\022\"\n\005place\030\006 \001(\0162\023.protobuf.Pl"
-    "aceType\022\014\n\004size\030\007 \001(\005\022\021\n\tis_moving\030\010 \001(\010"
-    "\"{\n\023MessageOfPickedProp\022 \n\004type\030\001 \001(\0162\022."
-    "protobuf.PropType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022"
-    "\030\n\020facing_direction\030\004 \001(\001\022\022\n\nmapping_id\030"
-    "\005 \001(\003\"`\n\014MessageOfMap\022\'\n\003row\030\002 \003(\0132\032.pro"
-    "tobuf.MessageOfMap.Row\032\'\n\003Row\022 \n\003col\030\001 \003"
-    "(\0162\023.protobuf.PlaceType\"\323\001\n\017MessageToCli"
-    "ent\022/\n\rhuman_message\030\001 \003(\0132\030.protobuf.Me"
-    "ssageOfHuman\0223\n\017butcher_message\030\002 \003(\0132\032."
-    "protobuf.MessageOfButcher\022-\n\014prop_messag"
-    "e\030\003 \003(\0132\027.protobuf.MessageOfProp\022+\n\013map_"
-    "massage\030\004 \001(\0132\026.protobuf.MessageOfMap\"5\n"
-    "\007MoveRes\022\024\n\014actual_speed\030\001 \001(\003\022\024\n\014actual"
-    "_angle\030\002 \001(\001\"\036\n\007BoolRes\022\023\n\013act_success\030\001"
-    " \001(\010\"P\n\006MsgRes\022\024\n\014have_message\030\001 \001(\010\022\026\n\016"
-    "from_player_id\030\002 \001(\003\022\030\n\020message_received"
-    "\030\003 \001(\t2\300\006\n\020AvailableService\0223\n\rTryConnec"
-    "tion\022\017.protobuf.IDMsg\032\021.protobuf.BoolRes"
-    "\022=\n\tAddPlayer\022\023.protobuf.PlayerMsg\032\031.pro"
-    "tobuf.MessageToClient0\001\022,\n\004Move\022\021.protob"
-    "uf.MoveMsg\032\021.protobuf.MoveRes\0220\n\010PickPro"
-    "p\022\021.protobuf.PickMsg\032\021.protobuf.BoolRes\022"
-    "-\n\007UseProp\022\017.protobuf.IDMsg\032\021.protobuf.B"
-    "oolRes\022.\n\010UseSkill\022\017.protobuf.IDMsg\032\021.pr"
-    "otobuf.BoolRes\0223\n\013SendMessage\022\021.protobuf"
-    ".SendMsg\032\021.protobuf.BoolRes\0221\n\013HaveMessa"
-    "ge\022\017.protobuf.IDMsg\032\021.protobuf.BoolRes\022/"
-    "\n\nGetMessage\022\017.protobuf.IDMsg\032\020.protobuf"
-    ".MsgRes\0224\n\nFixMachine\022\017.protobuf.IDMsg\032\021"
-    ".protobuf.BoolRes(\0010\001\0223\n\tSaveHuman\022\017.pro"
-    "tobuf.IDMsg\032\021.protobuf.BoolRes(\0010\001\0220\n\006At"
-    "tack\022\023.protobuf.AttackMsg\032\021.protobuf.Boo"
-    "lRes\0220\n\nCarryHuman\022\017.protobuf.IDMsg\032\021.pr"
-    "otobuf.BoolRes\0222\n\014ReleaseHuman\022\017.protobu"
-    "f.IDMsg\032\021.protobuf.BoolRes\022/\n\tHangHuman\022"
-    "\017.protobuf.IDMsg\032\021.protobuf.BoolRes\022,\n\006E"
-    "scape\022\017.protobuf.IDMsg\032\021.protobuf.BoolRe"
-    "sb\006proto3";
-static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* const descriptor_table_Message2Clients_2eproto_deps[2] = {
-    &::descriptor_table_Message2Server_2eproto,
+    "geType.proto\"\225\003\n\016MessageOfHuman\022\t\n\001x\030\001 \001"
+    "(\005\022\t\n\001y\030\002 \001(\005\022\r\n\005speed\030\003 \001(\005\022\014\n\004life\030\004 \001"
+    "(\005\022\023\n\013hanged_time\030\005 \001(\005\022\"\n\032time_until_sk"
+    "ill_available\030\006 \001(\001\022\"\n\005place\030\007 \001(\0162\023.pro"
+    "tobuf.PlaceType\022 \n\004prop\030\010 \001(\0162\022.protobuf"
+    ".PropType\022\'\n\nhuman_type\030\t \001(\0162\023.protobuf"
+    ".HumanType\022\014\n\004guid\030\n \001(\003\022\020\n\010on_chair\030\013 \001"
+    "(\010\022\022\n\nchair_time\030\014 \001(\001\022\021\n\ton_ground\030\r \001("
+    "\010\022\023\n\013ground_time\030\016 \001(\001\022\021\n\tplayer_id\030\017 \001("
+    "\003\022\022\n\nview_range\030\020 \001(\005\022%\n\004buff\030\021 \003(\0162\027.pr"
+    "otobuf.HumanBuffType\"\314\002\n\020MessageOfButche"
+    "r\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\r\n\005speed\030\003 \001(\005\022\016"
+    "\n\006damage\030\004 \001(\005\022\"\n\032time_until_skill_avail"
+    "able\030\005 \001(\001\022\"\n\005place\030\006 \001(\0162\023.protobuf.Pla"
+    "ceType\022 \n\004prop\030\007 \001(\0162\022.protobuf.PropType"
+    "\022+\n\014butcher_type\030\010 \001(\0162\025.protobuf.Butche"
+    "rType\022\014\n\004guid\030\t \001(\003\022\017\n\007movable\030\n \001(\010\022\020\n\010"
+    "playerID\030\013 \001(\003\022\022\n\nview_range\030\014 \001(\005\022\'\n\004bu"
+    "ff\030\r \003(\0162\031.protobuf.ButcherBuffType\"\264\001\n\r"
+    "MessageOfProp\022 \n\004type\030\001 \001(\0162\022.protobuf.P"
+    "ropType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\030\n\020facing_"
+    "direction\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\022\"\n\005place\030\006"
+    " \001(\0162\023.protobuf.PlaceType\022\014\n\004size\030\007 \001(\005\022"
+    "\021\n\tis_moving\030\010 \001(\010\"{\n\023MessageOfPickedPro"
+    "p\022 \n\004type\030\001 \001(\0162\022.protobuf.PropType\022\t\n\001x"
+    "\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\030\n\020facing_direction\030\004 "
+    "\001(\001\022\022\n\nmapping_id\030\005 \001(\003\"`\n\014MessageOfMap\022"
+    "\'\n\003row\030\002 \003(\0132\032.protobuf.MessageOfMap.Row"
+    "\032\'\n\003Row\022 \n\003col\030\001 \003(\0162\023.protobuf.PlaceTyp"
+    "e\"\323\001\n\017MessageToClient\022/\n\rhuman_message\030\001"
+    " \003(\0132\030.protobuf.MessageOfHuman\0223\n\017butche"
+    "r_message\030\002 \003(\0132\032.protobuf.MessageOfButc"
+    "her\022-\n\014prop_message\030\003 \003(\0132\027.protobuf.Mes"
+    "sageOfProp\022+\n\013map_massage\030\004 \001(\0132\026.protob"
+    "uf.MessageOfMap\"5\n\007MoveRes\022\024\n\014actual_spe"
+    "ed\030\001 \001(\003\022\024\n\014actual_angle\030\002 \001(\001\"\036\n\007BoolRe"
+    "s\022\023\n\013act_success\030\001 \001(\010\"P\n\006MsgRes\022\024\n\014have"
+    "_message\030\001 \001(\010\022\026\n\016from_player_id\030\002 \001(\003\022\030"
+    "\n\020message_received\030\003 \001(\tb\006proto3";
+static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* const descriptor_table_Message2Clients_2eproto_deps[1] = {
     &::descriptor_table_MessageType_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Message2Clients_2eproto = {
     false,
     false,
-    2449,
+    1592,
     descriptor_table_protodef_Message2Clients_2eproto,
     "Message2Clients.proto",
     &descriptor_table_Message2Clients_2eproto_once,
     descriptor_table_Message2Clients_2eproto_deps,
-    2,
+    1,
     10,
     schemas,
     file_default_instances,

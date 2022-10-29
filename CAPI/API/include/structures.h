@@ -45,7 +45,7 @@ namespace THUAI6
     {
         NullPlayerType = 0,
         HumanPlayer = 1,
-        ButcherType = 2,
+        ButcherPlayer = 2,
     };
 
     // 人类类型
@@ -76,6 +76,15 @@ namespace THUAI6
         HumanBuffType2 = 2,
         HumanBuffType3 = 3,
         HumanBuffType4 = 4,
+    };
+
+    enum class ButcherBuffType : unsigned char
+    {
+        NullButcherBuffType = 0,
+        ButcherBuffType1 = 1,
+        ButcherBuffType2 = 2,
+        ButcherBuffType3 = 3,
+        ButcherBuffType4 = 4,
     };
 
     // 玩家类

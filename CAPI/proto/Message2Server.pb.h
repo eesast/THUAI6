@@ -1331,16 +1331,16 @@ namespace protobuf
 
         enum : int
         {
-            kPlayerIDFieldNumber = 1,
+            kPlayerIdFieldNumber = 1,
         };
-        // int64 playerID = 1;
-        void clear_playerid();
-        int64_t playerid() const;
-        void set_playerid(int64_t value);
+        // int64 player_id = 1;
+        void clear_player_id();
+        int64_t player_id() const;
+        void set_player_id(int64_t value);
 
     private:
-        int64_t _internal_playerid() const;
-        void _internal_set_playerid(int64_t value);
+        int64_t _internal_player_id() const;
+        void _internal_set_player_id(int64_t value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.IDMsg)
@@ -1352,7 +1352,7 @@ namespace protobuf
         friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
         typedef void InternalArenaConstructable_;
         typedef void DestructorSkippable_;
-        int64_t playerid_;
+        int64_t player_id_;
         mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         friend struct ::TableStruct_Message2Server_2eproto;
     };
@@ -1817,28 +1817,28 @@ namespace protobuf
 
     // IDMsg
 
-    // int64 playerID = 1;
-    inline void IDMsg::clear_playerid()
+    // int64 player_id = 1;
+    inline void IDMsg::clear_player_id()
     {
-        playerid_ = int64_t{0};
+        player_id_ = int64_t{0};
     }
-    inline int64_t IDMsg::_internal_playerid() const
+    inline int64_t IDMsg::_internal_player_id() const
     {
-        return playerid_;
+        return player_id_;
     }
-    inline int64_t IDMsg::playerid() const
+    inline int64_t IDMsg::player_id() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.IDMsg.playerID)
-        return _internal_playerid();
+        // @@protoc_insertion_point(field_get:protobuf.IDMsg.player_id)
+        return _internal_player_id();
     }
-    inline void IDMsg::_internal_set_playerid(int64_t value)
+    inline void IDMsg::_internal_set_player_id(int64_t value)
     {
-        playerid_ = value;
+        player_id_ = value;
     }
-    inline void IDMsg::set_playerid(int64_t value)
+    inline void IDMsg::set_player_id(int64_t value)
     {
-        _internal_set_playerid(value);
-        // @@protoc_insertion_point(field_set:protobuf.IDMsg.playerID)
+        _internal_set_player_id(value);
+        // @@protoc_insertion_point(field_set:protobuf.IDMsg.player_id)
     }
 
 #ifdef __GNUC__

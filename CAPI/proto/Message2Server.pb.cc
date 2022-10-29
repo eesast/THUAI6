@@ -136,7 +136,7 @@ namespace protobuf
     constexpr IDMsg::IDMsg(
         ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized
     ) :
-        playerid_(int64_t{0})
+        player_id_(int64_t{0})
     {
     }
     struct IDMsgDefaultTypeInternal
@@ -211,7 +211,7 @@ const uint32_t TableStruct_Message2Server_2eproto::offsets[] PROTOBUF_SECTION_VA
     ~0u,  // no _oneof_case_
     ~0u,  // no _weak_field_map_
     ~0u,  // no _inlined_string_donated_
-    PROTOBUF_FIELD_OFFSET(::protobuf::IDMsg, playerid_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::IDMsg, player_id_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
     {0, -1, -1, sizeof(::protobuf::PlayerMsg)},
@@ -244,8 +244,8 @@ const char descriptor_table_protodef_Message2Server_2eproto[] PROTOBUF_SECTION_V
     "obuf.PropType\"C\n\007SendMsg\022\021\n\tplayer_id\030\001 "
     "\001(\003\022\024\n\014to_player_id\030\002 \001(\003\022\017\n\007message\030\003 \001"
     "(\t\"-\n\tAttackMsg\022\021\n\tplayer_id\030\001 \001(\003\022\r\n\005an"
-    "gle\030\002 \001(\001\"\031\n\005IDMsg\022\020\n\010playerID\030\001 \001(\003b\006pr"
-    "oto3";
+    "gle\030\002 \001(\001\"\032\n\005IDMsg\022\021\n\tplayer_id\030\001 \001(\003b\006p"
+    "roto3";
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* const descriptor_table_Message2Server_2eproto_deps[1] = {
     &::descriptor_table_MessageType_2eproto,
 };
@@ -253,7 +253,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Message2Ser
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Message2Server_2eproto = {
     false,
     false,
-    524,
+    525,
     descriptor_table_protodef_Message2Server_2eproto,
     "Message2Server.proto",
     &descriptor_table_Message2Server_2eproto_once,
@@ -1773,13 +1773,13 @@ namespace protobuf
         ::PROTOBUF_NAMESPACE_ID::Message()
     {
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-        playerid_ = from.playerid_;
+        player_id_ = from.player_id_;
         // @@protoc_insertion_point(copy_constructor:protobuf.IDMsg)
     }
 
     inline void IDMsg::SharedCtor()
     {
-        playerid_ = int64_t{0};
+        player_id_ = int64_t{0};
     }
 
     IDMsg::~IDMsg()
@@ -1816,7 +1816,7 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        playerid_ = int64_t{0};
+        player_id_ = int64_t{0};
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -1831,11 +1831,11 @@ namespace protobuf
             ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
             switch (tag >> 3)
             {
-                // int64 playerID = 1;
+                // int64 player_id = 1;
                 case 1:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8))
                     {
-                        playerid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        player_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
                     }
                     else
@@ -1875,11 +1875,11 @@ namespace protobuf
         uint32_t cached_has_bits = 0;
         (void)cached_has_bits;
 
-        // int64 playerID = 1;
-        if (this->_internal_playerid() != 0)
+        // int64 player_id = 1;
+        if (this->_internal_player_id() != 0)
         {
             target = stream->EnsureSpace(target);
-            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(1, this->_internal_playerid(), target);
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(1, this->_internal_player_id(), target);
         }
 
         if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
@@ -1901,10 +1901,10 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        // int64 playerID = 1;
-        if (this->_internal_playerid() != 0)
+        // int64 player_id = 1;
+        if (this->_internal_player_id() != 0)
         {
-            total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_playerid());
+            total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_player_id());
         }
 
         return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -1932,9 +1932,9 @@ namespace protobuf
         uint32_t cached_has_bits = 0;
         (void)cached_has_bits;
 
-        if (from._internal_playerid() != 0)
+        if (from._internal_player_id() != 0)
         {
-            _internal_set_playerid(from._internal_playerid());
+            _internal_set_player_id(from._internal_player_id());
         }
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
@@ -1957,7 +1957,7 @@ namespace protobuf
     {
         using std::swap;
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-        swap(playerid_, other->playerid_);
+        swap(player_id_, other->player_id_);
     }
 
     ::PROTOBUF_NAMESPACE_ID::Metadata IDMsg::GetMetadata() const

@@ -12,5 +12,4 @@ extern const THUAI6::HumanType humanType = THUAI6::HumanType::HumanType1;
 
 void AI::play(IAPI& api)
 {
-    
 }

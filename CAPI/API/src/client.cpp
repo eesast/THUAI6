@@ -5,5 +5,4 @@ extern const THUAI6::ButcherType butcherType;
 extern const THUAI6::HumanType humanType;
 int main()
 {
-    
 }

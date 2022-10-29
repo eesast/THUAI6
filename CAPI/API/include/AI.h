@@ -11,8 +11,11 @@ public:
     IAI()
     {
     }
-    virtual void play(IAPI& api) = 0;
+    virtual void play(IHumanAPI& api) = 0;
+    virtual void play(IButcherAPI& api) = 0;
 };
+
+using CreateAIFunc = std::unique_ptr<IAI> (*)();
 
 class AI : public IAI
 {
@@ -21,7 +24,8 @@ public:
         IAI()
     {
     }
-    void play(IAPI& api) override;
+    void play(IHumanAPI& api) override;
+    void play(IButcherAPI& api) override;
 };
 
 #endif

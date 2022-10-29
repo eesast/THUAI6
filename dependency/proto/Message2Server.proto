@@ -43,7 +43,7 @@ message AttackMsg
 
 message IDMsg
 {
-    int64 playerID = 1;
+    int64 player_id = 1;
 }
 
 // 基本继承于THUAI5，为了使发送的信息尽可能不被浪费，暂定不发这类大包。

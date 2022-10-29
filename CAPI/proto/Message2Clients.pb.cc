@@ -483,26 +483,28 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     "_angle\030\002 \001(\001\"\036\n\007BoolRes\022\023\n\013act_success\030\001"
     " \001(\010\"P\n\006MsgRes\022\024\n\014have_message\030\001 \001(\010\022\026\n\016"
     "from_player_id\030\002 \001(\003\022\030\n\020message_received"
-    "\030\003 \001(\t2\213\006\n\020AvailableService\022=\n\tAddPlayer"
-    "\022\023.protobuf.PlayerMsg\032\031.protobuf.Message"
-    "ToClient0\001\022,\n\004Move\022\021.protobuf.MoveMsg\032\021."
-    "protobuf.MoveRes\0220\n\010PickProp\022\021.protobuf."
-    "PickMsg\032\021.protobuf.BoolRes\022-\n\007UseProp\022\017."
-    "protobuf.IDMsg\032\021.protobuf.BoolRes\022.\n\010Use"
-    "Skill\022\017.protobuf.IDMsg\032\021.protobuf.BoolRe"
-    "s\0223\n\013SendMessage\022\021.protobuf.SendMsg\032\021.pr"
-    "otobuf.BoolRes\0221\n\013HaveMessage\022\017.protobuf"
-    ".IDMsg\032\021.protobuf.BoolRes\022/\n\nGetMessage\022"
-    "\017.protobuf.IDMsg\032\020.protobuf.MsgRes\0224\n\nFi"
-    "xMachine\022\017.protobuf.IDMsg\032\021.protobuf.Boo"
-    "lRes(\0010\001\0223\n\tSaveHuman\022\017.protobuf.IDMsg\032\021"
-    ".protobuf.BoolRes(\0010\001\0220\n\006Attack\022\023.protob"
-    "uf.AttackMsg\032\021.protobuf.BoolRes\0220\n\nCarry"
-    "Human\022\017.protobuf.IDMsg\032\021.protobuf.BoolRe"
-    "s\0222\n\014ReleaseHuman\022\017.protobuf.IDMsg\032\021.pro"
-    "tobuf.BoolRes\022/\n\tHangHuman\022\017.protobuf.ID"
-    "Msg\032\021.protobuf.BoolRes\022,\n\006Escape\022\017.proto"
-    "buf.IDMsg\032\021.protobuf.BoolResb\006proto3";
+    "\030\003 \001(\t2\300\006\n\020AvailableService\0223\n\rTryConnec"
+    "tion\022\017.protobuf.IDMsg\032\021.protobuf.BoolRes"
+    "\022=\n\tAddPlayer\022\023.protobuf.PlayerMsg\032\031.pro"
+    "tobuf.MessageToClient0\001\022,\n\004Move\022\021.protob"
+    "uf.MoveMsg\032\021.protobuf.MoveRes\0220\n\010PickPro"
+    "p\022\021.protobuf.PickMsg\032\021.protobuf.BoolRes\022"
+    "-\n\007UseProp\022\017.protobuf.IDMsg\032\021.protobuf.B"
+    "oolRes\022.\n\010UseSkill\022\017.protobuf.IDMsg\032\021.pr"
+    "otobuf.BoolRes\0223\n\013SendMessage\022\021.protobuf"
+    ".SendMsg\032\021.protobuf.BoolRes\0221\n\013HaveMessa"
+    "ge\022\017.protobuf.IDMsg\032\021.protobuf.BoolRes\022/"
+    "\n\nGetMessage\022\017.protobuf.IDMsg\032\020.protobuf"
+    ".MsgRes\0224\n\nFixMachine\022\017.protobuf.IDMsg\032\021"
+    ".protobuf.BoolRes(\0010\001\0223\n\tSaveHuman\022\017.pro"
+    "tobuf.IDMsg\032\021.protobuf.BoolRes(\0010\001\0220\n\006At"
+    "tack\022\023.protobuf.AttackMsg\032\021.protobuf.Boo"
+    "lRes\0220\n\nCarryHuman\022\017.protobuf.IDMsg\032\021.pr"
+    "otobuf.BoolRes\0222\n\014ReleaseHuman\022\017.protobu"
+    "f.IDMsg\032\021.protobuf.BoolRes\022/\n\tHangHuman\022"
+    "\017.protobuf.IDMsg\032\021.protobuf.BoolRes\022,\n\006E"
+    "scape\022\017.protobuf.IDMsg\032\021.protobuf.BoolRe"
+    "sb\006proto3";
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* const descriptor_table_Message2Clients_2eproto_deps[2] = {
     &::descriptor_table_Message2Server_2eproto,
     &::descriptor_table_MessageType_2eproto,
@@ -511,7 +513,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Message2Cli
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Message2Clients_2eproto = {
     false,
     false,
-    2396,
+    2449,
     descriptor_table_protodef_Message2Clients_2eproto,
     "Message2Clients.proto",
     &descriptor_table_Message2Clients_2eproto_once,

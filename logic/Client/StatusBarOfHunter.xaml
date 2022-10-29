@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="Client.StatusBarOfHunter"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        mc:Ignorable="d"
+        d:DesignHeight="174" d:DesignWidth="180">
+    <Grid Name="background" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35*"/>
+            <RowDefinition Height="67*"/>
+            <RowDefinition Height="22*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="26*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="53*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox Name="serial" IsReadOnly="True" BorderBrush="White" TextWrapping="Wrap" Text="👥null🤡null&#xD;&#xA;Skill："  Grid.Row="0" Grid.ColumnSpan="2" FontSize="12" Margin="0,0,0,68" Grid.RowSpan="2"/>
+        <TextBox Name="status" IsReadOnly="True" BorderBrush="White" TextWrapping="Wrap" Text="🏹：&#xA;🏃：&#xA;🤺：&#xA;🗡：" Grid.Row="1" Grid.ColumnSpan="2"/>
+        <TextBox Name="scores" IsReadOnly="True" BorderBrush="White" TextWrapping="Wrap" Text="Scores：" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,68,0,20" Grid.RowSpan="3"/>
+        <TextBox Name="star" IsReadOnly="True" BorderBrush="White" TextWrapping="Wrap" Text="" Grid.Row="3" Grid.ColumnSpan="2"/>
+        <TextBox Name="prop" IsReadOnly="True" BorderBrush="Gray" Text="" FontSize="12" Margin="0,20,0,0" TextWrapping="Wrap" Grid.Row="3" Grid.Column="0" Grid.RowSpan="2"></TextBox>
+        <ProgressBar Name="skillprogress" Background="White" Margin="0,20,0,0" Grid.Row="3" Grid.Column="1" Grid.RowSpan="2"/>
+    </Grid>
+</UserControl>

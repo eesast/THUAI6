@@ -51,6 +51,8 @@ message MessageOfProp // 可拾取道具的信息
     double facing_direction = 4;
     int64 guid = 5;
     PlaceType place = 6;
+    int32 size = 7;
+    bool is_moving = 8;
 }
 
 message MessageOfPickedProp  //for Unity，直接继承自THUAI5
@@ -90,6 +92,13 @@ message BoolRes // 用于只需要判断执行操作是否成功的行为，如�
     bool act_success = 1;
 }
 
+message MsgRes // 用于获取队友发来的消息
+{
+    bool have_message = 1; // 是否有待接收的消息
+    int64 from_player_id = 2;
+    string message_received = 3;
+}
+
 service AvailableService
 {
     // 游戏开局调用一次的服务
@@ -101,6 +110,8 @@ service AvailableService
     rpc UseProp(IDMsg) returns (BoolRes);
     rpc UseSkill(IDMsg) returns (BoolRes);
     rpc SendMessage(SendMsg) returns (BoolRes);
+    rpc HaveMessage(IDMsg) returns (BoolRes);
+    rpc GetMessage(IDMsg) returns (MsgRes);
     rpc FixMachine(stream IDMsg) returns (stream BoolRes); // 若正常修复且未被打断则返回修复成功，位置错误/被打断则返回修复失败，下同
     rpc SaveHuman(stream IDMsg) returns (stream BoolRes);
     rpc Attack (AttackMsg) returns (BoolRes);
@@ -108,5 +119,5 @@ service AvailableService
     rpc ReleaseHuman (IDMsg) returns (BoolRes);
     rpc HangHuman (IDMsg) returns (BoolRes);
     rpc Escape (IDMsg) returns (BoolRes);
-
+    
 }

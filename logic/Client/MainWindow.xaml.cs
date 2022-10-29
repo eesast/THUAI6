@@ -16,7 +16,7 @@ using System.Diagnostics;
 
 // 留意初始化
 // 目前MainWindow还未复现的功能：
-// 左侧信息private void SetStatusBar()，
+
 // private void ReactToCommandline()，
 // private void Playback(string fileName, double pbSpeed = 2.0)
 // 绘图函数private void DrawLaser(Point source, double theta, double range,double Width)//三个参数分别为攻击者的位置，攻击方位角（窗口坐标）和攻击半径
@@ -43,11 +43,27 @@ namespace Client
         public MainWindow()
         {
             InitializeComponent();
+            SetStatusBar();
             isClientStocked = true;
             isPlaybackMode = false;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
 
+        private void SetStatusBar()
+        {
+            StatusBarsOfSurvivor = new StatusBarOfSurvivor[4];
+            StatusBarsOfHunter = new StatusBarOfHunter(MainGrid, 3, 0);
+            StatusBarsOfCircumstance = new StatusBarOfCircumstance(MainGrid, 1, 0);
+            for (int i = 4; i < 8; i++)
+            {
+                StatusBarsOfSurvivor[i - 4] = new(MainGrid, i / 2 + 2, i % 2);
+            }
+        }
+
+        // 连接Server
+        private void ConnectToServer(string[] comInfo)
+        {
+        }
         // 之后需要修改，现在只具有修改按钮形状的功能，并不能实现暂停/继续
         private void ClickToPauseOrContinue(object sender, RoutedEventArgs e)
         {
@@ -154,7 +170,14 @@ namespace Client
                 //               error.Show();
             }
         }
+        private StatusBarOfSurvivor[] StatusBarsOfSurvivor;
+        private StatusBarOfHunter StatusBarsOfHunter;
+        private StatusBarOfCircumstance StatusBarsOfCircumstance;
+
         private bool isClientStocked;
         private bool isPlaybackMode;
+
+        private long playerID;
+        private long teamID;
     }
 }

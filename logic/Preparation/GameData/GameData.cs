@@ -16,20 +16,20 @@ namespace Preparation.GameData
         public const int MinSpeed = 1;             // 最小速度
         public const int MaxSpeed = int.MaxValue;  // 最大速度
 
-        public static XYPosition GetCellCenterPos(int x, int y)  // 求格子的中心坐标
+        public static XY GetCellCenterPos(int x, int y)  // 求格子的中心坐标
         {
-            XYPosition ret = new((x * numOfPosGridPerCell) + (numOfPosGridPerCell / 2), (y * numOfPosGridPerCell) + (numOfPosGridPerCell / 2));
+            XY ret = new((x * numOfPosGridPerCell) + (numOfPosGridPerCell / 2), (y * numOfPosGridPerCell) + (numOfPosGridPerCell / 2));
             return ret;
         }
-        public static int PosGridToCellX(XYPosition pos)  // 求坐标所在的格子的x坐标
+        public static int PosGridToCellX(XY pos)  // 求坐标所在的格子的x坐标
         {
             return pos.x / numOfPosGridPerCell;
         }
-        public static int PosGridToCellY(XYPosition pos)  // 求坐标所在的格子的y坐标
+        public static int PosGridToCellY(XY pos)  // 求坐标所在的格子的y坐标
         {
             return pos.y / numOfPosGridPerCell;
         }
-        public static bool IsInTheSameCell(XYPosition pos1, XYPosition pos2)
+        public static bool IsInTheSameCell(XY pos1, XY pos2)
         {
             return PosGridToCellX(pos1) == PosGridToCellX(pos2) && PosGridToCellY(pos1) == PosGridToCellY(pos2);
         }

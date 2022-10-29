@@ -20,8 +20,8 @@ namespace GameClass.GameObj
         private GameObjType type;
         public GameObjType Type => type;
 
-        private static long currentMaxID = 0;           //目前游戏对象的最大ID
-        public const long invalidID = long.MaxValue;            //无效的ID
+        private static long currentMaxID = 0;         // 目前游戏对象的最大ID
+        public const long invalidID = long.MaxValue;  // 无效的ID
         public const long noneID = long.MinValue;
         public long ID { get; }
 
@@ -29,8 +29,8 @@ namespace GameClass.GameObj
         public XY Position
         {
             get => position;
-            protected set
-            {
+        protected
+            set {
                 lock (gameObjLock)
                 {
                     position = value;
@@ -39,12 +39,11 @@ namespace GameClass.GameObj
         }
         public abstract bool IsRigid { get; }
 
-        private XY facingDirection = new(1,0);
+        private XY facingDirection = new(1, 0);
         public XY FacingDirection
         {
             get => facingDirection;
-            set
-            {
+            set {
                 lock (gameObjLock)
                     facingDirection = value;
             }
@@ -55,8 +54,7 @@ namespace GameClass.GameObj
         public bool CanMove
         {
             get => canMove;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     canMove = value;
@@ -68,8 +66,7 @@ namespace GameClass.GameObj
         public bool IsMoving
         {
             get => isMoving;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     isMoving = value;
@@ -81,23 +78,21 @@ namespace GameClass.GameObj
         public bool IsResetting
         {
             get => isResetting;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     isResetting = value;
                 }
             }
         }
-        public bool IsAvailable => !IsMoving && CanMove && !IsResetting;    //是否能接收指令
+        public bool IsAvailable => !IsMoving && CanMove && !IsResetting;  // 是否能接收指令
         public int Radius { get; }
 
         private PlaceType place;
         public PlaceType Place
         {
             get => place;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     place = value;
@@ -111,8 +106,7 @@ namespace GameClass.GameObj
         public int MoveSpeed
         {
             get => moveSpeed;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     moveSpeed = value;
@@ -123,7 +117,14 @@ namespace GameClass.GameObj
         /// 原初移动速度
         /// </summary>
         private int orgMoveSpeed;
-        public int OrgMoveSpeed { get => orgMoveSpeed; protected set { orgMoveSpeed = value; } }
+        public int OrgMoveSpeed
+        {
+            get => orgMoveSpeed;
+        protected
+            set {
+                orgMoveSpeed = value;
+            }
+        }
 
         // 移动，改变坐标
         public long Move(XY moveVec)
@@ -158,7 +159,7 @@ namespace GameClass.GameObj
         {
             lock (gameObjLock)
             {
-                facingDirection = new XY(1,0);
+                facingDirection = new XY(1, 0);
                 isMoving = false;
                 canMove = false;
                 isResetting = true;
@@ -169,7 +170,7 @@ namespace GameClass.GameObj
         /// 为了使IgnoreCollide多态化并使GameObj能不报错地继承IMoveable
         /// 在xfgg点播下设计了这个抽象辅助方法，在具体类中实现
         /// </summary>
-        /// <returns> 依具体类及该方法参数而定，默认为false </returns> 
+        /// <returns> 依具体类及该方法参数而定，默认为false </returns>
         protected virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
         bool IMoveable.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
         public GameObj(XY initPos, int initRadius, PlaceType initPlace, GameObjType initType)

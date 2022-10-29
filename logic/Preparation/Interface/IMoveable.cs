@@ -8,7 +8,7 @@ namespace Preparation.Interface
         object MoveLock { get; }
         public int MoveSpeed { get; }
         public long Move(XY moveVec);
-        protected bool IgnoreCollide(IGameObj targetObj);                     // 忽略碰撞，在具体类中实现
+        protected bool IgnoreCollide(IGameObj targetObj);             // 忽略碰撞，在具体类中实现
         public bool WillCollideWith(IGameObj? targetObj, XY nextPos)  // 检查下一位置是否会和目标物碰撞
         {
             if (targetObj == null)

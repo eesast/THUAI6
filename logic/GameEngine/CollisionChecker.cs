@@ -24,26 +24,29 @@ namespace GameEngine
                     return gameMap.GetOutOfBound(nextPos);
                 return null;
             }
-            //在列表中检查碰撞
+            // 在列表中检查碰撞
             Func<IEnumerable<IGameObj>, ReaderWriterLockSlim, IGameObj?> CheckCollisionInList =
                 (IEnumerable<IGameObj> lst, ReaderWriterLockSlim listLock) =>
+            {
+                IGameObj? collisionObj = null;
+                listLock.EnterReadLock();
+                try
                 {
-                    IGameObj? collisionObj = null;
-                    listLock.EnterReadLock();
-                    try
+                    foreach (var listObj in lst)
                     {
-                        foreach (var listObj in lst)
+                        if (obj.WillCollideWith(listObj, nextPos))
                         {
-                            if (obj.WillCollideWith(listObj, nextPos))
-                            {
-                                collisionObj = listObj;
-                                break;
-                            }
+                            collisionObj = listObj;
+                            break;
                         }
                     }
-                    finally { listLock.ExitReadLock(); }
-                    return collisionObj;
-                };
+                }
+                finally
+                {
+                    listLock.ExitReadLock();
+                }
+                return collisionObj;
+            };
 
             IGameObj? collisionObj = null;
             foreach (var list in lists)
@@ -62,51 +65,51 @@ namespace GameEngine
         /// <param name="obj"></param>
         /// <param name="square">矩形的中心坐标</param>
         /// <returns></returns>
-        //private double MaxMoveToSquare(IMoveable obj, IGameObj square)
+        // private double MaxMoveToSquare(IMoveable obj, IGameObj square)
         //{
-        //    double tmpMax;
-        //    double angle = Math.Atan2(square.Position.y - obj.Position.y, square.Position.x - obj.Position.x);
-        //    if (obj.WillCollideWith(square, obj.Position))
-        //        tmpMax = 0;
-        //    else tmpMax =
-        //        Math.Abs(XYPosition.Distance(obj.Position, square.Position) - obj.Radius -
-        //        (square.Radius / Math.Min(Math.Abs(Math.Cos(angle)), Math.Abs(Math.Sin(angle)))));
-        //    return tmpMax;
-        //}
+        //     double tmpMax;
+        //     double angle = Math.Atan2(square.Position.y - obj.Position.y, square.Position.x - obj.Position.x);
+        //     if (obj.WillCollideWith(square, obj.Position))
+        //         tmpMax = 0;
+        //     else tmpMax =
+        //         Math.Abs(XYPosition.Distance(obj.Position, square.Position) - obj.Radius -
+        //         (square.Radius / Math.Min(Math.Abs(Math.Cos(angle)), Math.Abs(Math.Sin(angle)))));
+        //     return tmpMax;
+        // }
 
-        //private double FindMaxOnlyConsiderWall(IMoveable obj, Vector moveVec)
+        // private double FindMaxOnlyConsiderWall(IMoveable obj, Vector moveVec)
         //{
-        //    var desination = moveVec;
-        //    double maxOnlyConsiderWall = moveVec.length; 
-        //    if (desination.length > 0)  //如果length足够长，还是有可能穿墙的
-        //    {
-        //        XYPosition nextXY = Vector.Vector2XY(desination) + obj.Position + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle)), (int)(obj.Radius * Math.Sin(moveVec.angle)));
-        //        if (gameMap.IsWall(nextXY)) //对下一步的位置进行检查，但这里只是考虑移动物体的宽度，只是考虑下一步能达到的最远位置
-        //        {
-        //            maxOnlyConsiderWall = MaxMoveToSquare(obj, gameMap.GetCell(nextXY));
-        //        }
-        //        else //考虑物体宽度
-        //        {
-        //            double dist = 0;
-        //            XYPosition nextXYConsiderWidth;
-        //            nextXYConsiderWidth = nextXY + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle + Math.PI / 4)), (int)(obj.Radius * Math.Sin(moveVec.angle + Math.PI / 4)));
-        //            if (gameMap.IsWall(nextXYConsiderWidth)) //对下一步的位置进行检查，但这里只是考虑移动物体的宽度，只是考虑下一步能达到的最远位置
-        //            {
-        //                dist = MaxMoveToSquare(obj, gameMap.GetCell(nextXYConsiderWidth));
-        //                if (dist < maxOnlyConsiderWall)
-        //                    maxOnlyConsiderWall = dist;
-        //            }
-        //            nextXYConsiderWidth = nextXY + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle - Math.PI / 4)), (int)(obj.Radius * Math.Sin(moveVec.angle - Math.PI / 4)));
-        //            if (gameMap.IsWall(nextXYConsiderWidth)) //对下一步的位置进行检查，但这里只是考虑移动物体的宽度，只是考虑下一步能达到的最远位置
-        //            {
-        //                dist = MaxMoveToSquare(obj, gameMap.GetCell(nextXYConsiderWidth));
-        //                if (dist < maxOnlyConsiderWall)
-        //                    maxOnlyConsiderWall = dist;
-        //            }
-        //        }
-        //    }
-        //    return maxOnlyConsiderWall;
-        //}
+        //     var desination = moveVec;
+        //     double maxOnlyConsiderWall = moveVec.length;
+        //     if (desination.length > 0)  //如果length足够长，还是有可能穿墙的
+        //     {
+        //         XYPosition nextXY = Vector.Vector2XY(desination) + obj.Position + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle)), (int)(obj.Radius * Math.Sin(moveVec.angle)));
+        //         if (gameMap.IsWall(nextXY)) //对下一步的位置进行检查，但这里只是考虑移动物体的宽度，只是考虑下一步能达到的最远位置
+        //         {
+        //             maxOnlyConsiderWall = MaxMoveToSquare(obj, gameMap.GetCell(nextXY));
+        //         }
+        //         else //考虑物体宽度
+        //         {
+        //             double dist = 0;
+        //             XYPosition nextXYConsiderWidth;
+        //             nextXYConsiderWidth = nextXY + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle + Math.PI / 4)), (int)(obj.Radius * Math.Sin(moveVec.angle + Math.PI / 4)));
+        //             if (gameMap.IsWall(nextXYConsiderWidth)) //对下一步的位置进行检查，但这里只是考虑移动物体的宽度，只是考虑下一步能达到的最远位置
+        //             {
+        //                 dist = MaxMoveToSquare(obj, gameMap.GetCell(nextXYConsiderWidth));
+        //                 if (dist < maxOnlyConsiderWall)
+        //                     maxOnlyConsiderWall = dist;
+        //             }
+        //             nextXYConsiderWidth = nextXY + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle - Math.PI / 4)), (int)(obj.Radius * Math.Sin(moveVec.angle - Math.PI / 4)));
+        //             if (gameMap.IsWall(nextXYConsiderWidth)) //对下一步的位置进行检查，但这里只是考虑移动物体的宽度，只是考虑下一步能达到的最远位置
+        //             {
+        //                 dist = MaxMoveToSquare(obj, gameMap.GetCell(nextXYConsiderWidth));
+        //                 if (dist < maxOnlyConsiderWall)
+        //                     maxOnlyConsiderWall = dist;
+        //             }
+        //         }
+        //     }
+        //     return maxOnlyConsiderWall;
+        // }
 
         /// <summary>
         /// 寻找最大可能移动距离
@@ -118,10 +121,10 @@ namespace GameEngine
         public double FindMax(IMoveable obj, XY nextPos, XY moveVec)
         {
             double maxLen = (double)uint.MaxValue;
-            double tmpMax = maxLen; //暂存最大值
+            double tmpMax = maxLen;  // 暂存最大值
 
             // 先找只考虑墙的最大距离
-            //double maxOnlyConsiderWall = FindMaxOnlyConsiderWall(obj, moveVec);
+            // double maxOnlyConsiderWall = FindMaxOnlyConsiderWall(obj, moveVec);
             double maxDistance = maxLen;
             foreach (var listWithLock in lists)
             {
@@ -132,47 +135,48 @@ namespace GameEngine
                 {
                     foreach (IGameObj listObj in lst)
                     {
-                        //如果再走一步发生碰撞
+                        // 如果再走一步发生碰撞
                         if (obj.WillCollideWith(listObj, nextPos))
                         {
                             {
-                                switch (listObj.Shape)  //默认obj为圆形
+                                switch (listObj.Shape)  // 默认obj为圆形
                                 {
                                     case ShapeType.Circle:
                                         {
-                                            //计算两者之间的距离
+                                            // 计算两者之间的距离
                                             double mod = XY.Distance(listObj.Position, obj.Position);
                                             int orgDeltaX = listObj.Position.x - obj.Position.x;
                                             int orgDeltaY = listObj.Position.y - obj.Position.y;
 
-                                            if (mod < listObj.Radius + obj.Radius)    //如果两者已经重叠
+                                            if (mod < listObj.Radius + obj.Radius)  // 如果两者已经重叠
                                             {
                                                 tmpMax = 0;
                                             }
                                             else
                                             {
                                                 double tmp = mod - obj.Radius - listObj.Radius;
-                                                //计算能走的最长距离，好像这么算有一点误差？
+                                                // 计算能走的最长距离，好像这么算有一点误差？
                                                 tmp = tmp / Math.Cos(Math.Atan2(orgDeltaY, orgDeltaX) - moveVec.angle);
                                                 if (tmp < 0 || tmp > uint.MaxValue || tmp == double.NaN)
                                                 {
                                                     tmpMax = uint.MaxValue;
                                                 }
-                                                else tmpMax = tmp;
+                                                else
+                                                    tmpMax = tmp;
                                             }
                                             break;
                                         }
                                     case ShapeType.Square:
                                         {
-                                            //if (obj.WillCollideWith(listObj, obj.Position))
-                                            //    tmpMax = 0;
-                                            //else tmpMax = MaxMoveToSquare(obj, listObj);
-                                            //break;
+                                            // if (obj.WillCollideWith(listObj, obj.Position))
+                                            //     tmpMax = 0;
+                                            // else tmpMax = MaxMoveToSquare(obj, listObj);
+                                            // break;
                                             if (obj.WillCollideWith(listObj, obj.Position))
                                                 tmpMax = 0;
                                             else
                                             {
-                                                //二分查找最大可能移动距离
+                                                // 二分查找最大可能移动距离
                                                 int left = 0, right = (int)moveVec.length;
                                                 while (left < right - 1)
                                                 {
@@ -181,7 +185,8 @@ namespace GameEngine
                                                     {
                                                         right = mid;
                                                     }
-                                                    else left = mid;
+                                                    else
+                                                        left = mid;
                                                 }
                                                 tmpMax = (uint)left;
                                             }
@@ -199,11 +204,11 @@ namespace GameEngine
                 }
                 finally
                 {
-                    //maxLen = Math.Min(maxOnlyConsiderWall, maxDistance); //最大可能距离的最小值
+                    // maxLen = Math.Min(maxOnlyConsiderWall, maxDistance); //最大可能距离的最小值
                     listLock.ExitReadLock();
                 }
             }
-            //return maxLen;
+            // return maxLen;
             return maxDistance;
         }
 
@@ -215,9 +220,9 @@ namespace GameEngine
             this.gameMap = gameMap;
             lists = new Tuple<IEnumerable<IGameObj>, ReaderWriterLockSlim>[gameMap.GameObjDict.Count];
             int i = 0;
-            foreach(var keyValuePair in gameMap.GameObjDict)
+            foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                lists[i++] = new Tuple<IEnumerable<IGameObj>, ReaderWriterLockSlim>(keyValuePair.Value as IList<IGameObj>, gameMap.GameObjLockDict[keyValuePair.Key]); 
+                lists[i++] = new Tuple<IEnumerable<IGameObj>, ReaderWriterLockSlim>(keyValuePair.Value as IList<IGameObj>, gameMap.GameObjLockDict[keyValuePair.Key]);
             }
         }
     }

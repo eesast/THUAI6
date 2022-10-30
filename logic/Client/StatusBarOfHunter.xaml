@@ -18,7 +18,7 @@
             <ColumnDefinition Width="7*"/>
             <ColumnDefinition Width="53*"/>
         </Grid.ColumnDefinitions>
-        <TextBox Name="serial" IsReadOnly="True" BorderBrush="White" TextWrapping="Wrap" Text="👥null🤡null&#xD;&#xA;Skill："  Grid.Row="0" Grid.ColumnSpan="2" FontSize="12" Margin="0,0,0,68" Grid.RowSpan="2"/>
+        <TextBox Name="serial" IsReadOnly="True" BorderBrush="White" TextWrapping="Wrap" Text="👥null👻null&#xD;&#xA;Skill："  Grid.Row="0" Grid.ColumnSpan="2" FontSize="12" Margin="0,0,0,68" Grid.RowSpan="2"/>
         <TextBox Name="status" IsReadOnly="True" BorderBrush="White" TextWrapping="Wrap" Text="🏹：&#xA;🏃：&#xA;🤺：&#xA;🗡：" Grid.Row="1" Grid.ColumnSpan="2"/>
         <TextBox Name="scores" IsReadOnly="True" BorderBrush="White" TextWrapping="Wrap" Text="Scores：" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,68,0,20" Grid.RowSpan="3"/>
         <TextBox Name="star" IsReadOnly="True" BorderBrush="White" TextWrapping="Wrap" Text="" Grid.Row="3" Grid.ColumnSpan="2"/>

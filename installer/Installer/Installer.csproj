@@ -7,4 +7,9 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Tencent.QCloud.Cos.Sdk" Version="5.4.32" />
+  </ItemGroup>
+
 </Project>

@@ -42,26 +42,26 @@ namespace Downloader
 {
     class Program
     {
-        static List<string> newFileName = new List<string>();       //新文件名
-        static List<string> updateFileName = new List<string>();    //更新文件名
-        static string ProgramName = "THUAI6";                       //要运行或下载的程序名称
-        static string playerFolder = "player";                      //选手代码保存文件夹路径
-        static string startName = "maintest.exe";                   //启动的程序名
+        static List<string> newFileName = new List<string>();     //新文件名
+        static List<string> updateFileName = new List<string>();  //更新文件名
+        static string ProgramName = "THUAI6";                     //要运行或下载的程序名称
+        static string playerFolder = "player";                    //选手代码保存文件夹路径
+        static string startName = "maintest.exe";                 //启动的程序名
 
         public class Data
         {
             public static string path = "";      //标记路径记录文件THUAI6.dat的路径
             public static string FilePath = "";  //最后一级为THUAI6文件夹所在目录
-            public static string dataPath = "";  //C盘的文档文件夹
+            public static string dataPath = "";  // C盘的文档文件夹
             public Data(string path)
             {
-                //dataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                dataPath= new DirectoryInfo(".").FullName;
-                Data.path=System.IO.Path.Combine(dataPath, "THUAI6.dat");
+                // dataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                dataPath = new DirectoryInfo(".").FullName;
+                Data.path = System.IO.Path.Combine(dataPath, "THUAI6.dat");
                 if (File.Exists(Data.path))
                 {
                     using (StreamReader r = new StreamReader(Data.path))
-                        FilePath = r.ReadLine().Replace('\\', '/'); //读取THUAI6.dat文件的第一行
+                        FilePath = r.ReadLine().Replace('\\', '/');  //读取THUAI6.dat文件的第一行
                 }
                 else
                 {
@@ -83,7 +83,7 @@ namespace Downloader
                     Console.Write($"是否创建新路径 {newLine}？y/n:");
                     if (Console.Read() != 'y')
                     {
-                        Console.WriteLine("创建取消!"); 
+                        Console.WriteLine("创建取消!");
                         return;
                     }
 
@@ -105,7 +105,6 @@ namespace Downloader
                 sw.Close();
                 fs.Close();
             }
-
         }
         public class Tencent_cos_download
         {
@@ -136,10 +135,10 @@ namespace Downloader
                 //创建存储桶
                 try
                 {
-                   string bucket = "thuai6-1314234950";                              //格式：BucketName-APPID
+                    string bucket = "thuai6-1314234950";                              //格式：BucketName-APPID
                     string localDir = System.IO.Path.GetDirectoryName(download_dir);  //本地文件夹
                     string localFileName = System.IO.Path.GetFileName(download_dir);  //指定本地保存的文件名
-                    string localFileName = System.IO.Path.GetFileName(download_dir);    //指定本地保存的文件名
+                    string localFileName = System.IO.Path.GetFileName(download_dir);  //指定本地保存的文件名
                     GetObjectRequest request = new GetObjectRequest(bucket, key, localDir, localFileName);
 
                     Dictionary<string, string> test = request.GetRequestHeaders();
@@ -191,7 +190,7 @@ namespace Downloader
                     return "";
                 }
                 finally
-               {
+                {
                 }
             }
 

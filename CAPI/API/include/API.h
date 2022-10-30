@@ -6,12 +6,11 @@
 #pragma warning(disable : 4996)
 #endif
 
-#include <Message2Server.pb.h>
-#include <Message2Clients.pb.h>
-#include <MessageType.pb.h>
-#include <Message2Server.grpc.pb.h>
-#include <Message2Clients.grpc.pb.h>
-#include <MessageType.grpc.pb.h>
+#include "Message2Server.pb.h"
+#include "Message2Clients.pb.h"
+#include "MessageType.pb.h"
+#include "Services.grpc.pb.h"
+#include "Services.pb.h"
 #include <future>
 #include <iostream>
 #include <vector>

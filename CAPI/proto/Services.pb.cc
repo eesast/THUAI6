@@ -16,14 +16,18 @@
 #include <google/protobuf/port_def.inc>
 
 PROTOBUF_PRAGMA_INIT_SEG
+
+namespace _pb = ::PROTOBUF_NAMESPACE_ID;
+namespace _pbi = _pb::internal;
+
 namespace protobuf
 {
 }  // namespace protobuf
-static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_Services_2eproto = nullptr;
-static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_Services_2eproto = nullptr;
+static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_Services_2eproto = nullptr;
+static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_Services_2eproto = nullptr;
 const uint32_t TableStruct_Services_2eproto::offsets[1] = {};
-static constexpr ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema* schemas = nullptr;
-static constexpr ::PROTOBUF_NAMESPACE_ID::Message* const* file_default_instances = nullptr;
+static constexpr ::_pbi::MigrationSchema* schemas = nullptr;
+static constexpr ::_pb::Message* const* file_default_instances = nullptr;
 
 const char descriptor_table_protodef_Services_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
     "\n\016Services.proto\022\010protobuf\032\025Message2Clie"
@@ -49,12 +53,12 @@ const char descriptor_table_protodef_Services_2eproto[] PROTOBUF_SECTION_VARIABL
     "buf.BoolRes\022/\n\tHangHuman\022\017.protobuf.IDMs"
     "g\032\021.protobuf.BoolRes\022,\n\006Escape\022\017.protobu"
     "f.IDMsg\032\021.protobuf.BoolResb\006proto3";
-static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* const descriptor_table_Services_2eproto_deps[2] = {
+static const ::_pbi::DescriptorTable* const descriptor_table_Services_2eproto_deps[2] = {
     &::descriptor_table_Message2Clients_2eproto,
     &::descriptor_table_Message2Server_2eproto,
 };
-static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Services_2eproto_once;
-const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Services_2eproto = {
+static ::_pbi::once_flag descriptor_table_Services_2eproto_once;
+const ::_pbi::DescriptorTable descriptor_table_Services_2eproto = {
     false,
     false,
     914,
@@ -71,13 +75,13 @@ const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Servic
     file_level_enum_descriptors_Services_2eproto,
     file_level_service_descriptors_Services_2eproto,
 };
-PROTOBUF_ATTRIBUTE_WEAK const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* descriptor_table_Services_2eproto_getter()
+PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_Services_2eproto_getter()
 {
     return &descriptor_table_Services_2eproto;
 }
 
 // Force running AddDescriptors() at dynamic initialization time.
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY static ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptorsRunner dynamic_init_dummy_Services_2eproto(&descriptor_table_Services_2eproto);
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_Services_2eproto(&descriptor_table_Services_2eproto);
 namespace protobuf
 {
 

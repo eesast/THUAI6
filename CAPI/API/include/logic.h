@@ -14,12 +14,11 @@
 #include <condition_variable>
 #include <atomic>
 
-#include <Message2Server.pb.h>
-#include <Message2Clients.pb.h>
-#include <MessageType.pb.h>
-#include <Message2Server.grpc.pb.h>
-#include <Message2Clients.grpc.pb.h>
-#include <MessageType.grpc.pb.h>
+#include "Message2Server.pb.h"
+#include "Message2Clients.pb.h"
+#include "MessageType.pb.h"
+#include "Services.grpc.pb.h"
+#include "Services.pb.h"
 #include "API.h"
 #include "AI.h"
 #include "structures.h"

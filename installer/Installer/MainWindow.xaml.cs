@@ -42,17 +42,17 @@ namespace Downloader
 {
     class Program
     {
-        static List<string> newFileName = new List<string>();         //新文件名
-        static List<string> updateFileName = new List<string>();      //更新文件名
+        static List<string> newFileName = new List<string>();       //新文件名
+        static List<string> updateFileName = new List<string>();    //更新文件名
         static string ProgramName = "THUAI6";                       //要运行或下载的程序名称
         static string playerFolder = "player";                      //选手代码保存文件夹路径
         static string startName = "maintest.exe";                   //启动的程序名
 
         public class Data
         {
-            public static string path = "";       //标记路径记录文件THUAI6.dat的路径
+            public static string path = "";      //标记路径记录文件THUAI6.dat的路径
             public static string FilePath = "";  //最后一级为THUAI6文件夹所在目录
-            public static string dataPath = "";   //C盘的文档文件夹
+            public static string dataPath = "";  //C盘的文档文件夹
             public Data(string path)
             {
                 //dataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -61,7 +61,7 @@ namespace Downloader
                 if (File.Exists(Data.path))
                 {
                     using (StreamReader r = new StreamReader(Data.path))
-                        FilePath = r.ReadLine().Replace('\\', '/');           //读取THUAI6.dat文件的第一行
+                        FilePath = r.ReadLine().Replace('\\', '/'); //读取THUAI6.dat文件的第一行
                 }
                 else
                 {
@@ -83,7 +83,8 @@ namespace Downloader
                     Console.Write($"是否创建新路径 {newLine}？y/n:");
                     if (Console.Read() != 'y')
                     {
-                        Console.WriteLine("创建取消!"); return;
+                        Console.WriteLine("创建取消!"); 
+                        return;
                     }
 
                     using (StreamWriter w = new StreamWriter(path))
@@ -94,8 +95,8 @@ namespace Downloader
 
             public static void ResetFilepath(string newPath)
             {
-                FilePath=newPath.Replace('\\', '/');
-                path=System.IO.Path.Combine(dataPath, "THUAI6.dat");
+                FilePath = newPath.Replace('\\', '/');
+                path = System.IO.Path.Combine(dataPath, "THUAI6.dat");
                 FileStream fs = new FileStream(Data.path, FileMode.Create, FileAccess.ReadWrite);
                 StreamWriter sw = new StreamWriter(fs);
                 fs.SetLength(0);
@@ -110,39 +111,39 @@ namespace Downloader
         {
             public void download(string download_dir, string key)
             {
-                //download_dir标记根文件夹路径，key为相对根文件夹的路径（不带./）
+                // download_dir标记根文件夹路径，key为相对根文件夹的路径（不带./）
                 //初始化CosXmlConfig（提供配置SDK接口）
-                string appid = "1314234950";  //设置腾讯云账户的账户标识（APPID）
-                string region = "ap-beijing";   //设置一个默认的存储桶地域
+                string appid = "1314234950";   //设置腾讯云账户的账户标识（APPID）
+                string region = "ap-beijing";  //设置一个默认的存储桶地域
                 CosXmlConfig config = new CosXmlConfig.Builder()
-                  .IsHttps(true)  //设置默认 HTTPS 请求
-                  .SetAppid(appid)  //设置腾讯云账户的账户标识 APPID
-                  .SetRegion(region)  //设置一个默认的存储桶地域
-                  .SetDebugLog(true)  //显示日志
-                  .Build();  //创建 CosXmlConfig 对象
+                                          .IsHttps(true)      //设置默认 HTTPS 请求
+                                          .SetAppid(appid)    //设置腾讯云账户的账户标识 APPID
+                                          .SetRegion(region)  //设置一个默认的存储桶地域
+                                          .SetDebugLog(true)  //显示日志
+                                          .Build();           //创建 CosXmlConfig 对象
 
                 //永久密钥访问凭证
-                string secretId = "***"; //"云 API 密钥 SecretId";
-                string secretKey = "***"; //"云 API 密钥 SecretKey";
+                string secretId = "***";   //"云 API 密钥 SecretId";
+                string secretKey = "***";  //"云 API 密钥 SecretKey";
 
                 long durationSecond = 1000;  //每次请求签名有效时长，单位为秒
                 QCloudCredentialProvider cosCredentialProvider = new DefaultQCloudCredentialProvider(
-                    secretId, secretKey, durationSecond);
-
+                    secretId, secretKey, durationSecond
+                );
                 //初始化 CosXmlServer
                 CosXmlServer cosXml = new CosXmlServer(config, cosCredentialProvider);
 
                 //创建存储桶
                 try
                 {
-                    string bucket = "thuai6-1314234950"; //格式：BucketName-APPID
-                    string localDir = System.IO.Path.GetDirectoryName(download_dir);    //本地文件夹
+                   string bucket = "thuai6-1314234950";                              //格式：BucketName-APPID
+                    string localDir = System.IO.Path.GetDirectoryName(download_dir);  //本地文件夹
+                    string localFileName = System.IO.Path.GetFileName(download_dir);  //指定本地保存的文件名
                     string localFileName = System.IO.Path.GetFileName(download_dir);    //指定本地保存的文件名
                     GetObjectRequest request = new GetObjectRequest(bucket, key, localDir, localFileName);
 
                     Dictionary<string, string> test = request.GetRequestHeaders();
-                    request.SetCosProgressCallback(delegate (long completed, long total)
-                    {
+                    request.SetCosProgressCallback(delegate(long completed, long total) {
                         Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
                     });
                     //执行请求
@@ -170,7 +171,7 @@ namespace Downloader
                 FileStream fst = null;
                 try
                 {
-                    fst=new FileStream(strFileFullPath, FileMode.Open);
+                    fst = new FileStream(strFileFullPath, FileMode.Open);
                     byte[] data = MD5.Create().ComputeHash(fst);
 
                     StringBuilder sBuilder = new StringBuilder();
@@ -189,7 +190,9 @@ namespace Downloader
                         fst.Close();
                     return "";
                 }
-                finally { }
+                finally
+               {
+                }
             }
 
             private static void Check()
@@ -233,10 +236,10 @@ namespace Downloader
                 Dictionary<string, string> jsonDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
                 foreach (KeyValuePair<string, string> pair in jsonDict)
                 {
-                    MD5=GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key));
-                    if (MD5.Length == 0)    //文档不存在
+                    MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key));
+                    if (MD5.Length == 0)  //文档不存在
                         newFileName.Add(pair.Key);
-                    else if (MD5 != pair.Value)     //MD5不匹配
+                    else if (MD5 != pair.Value)  // MD5不匹配
                         updateFileName.Add(pair.Key);
                 }
 
@@ -247,7 +250,8 @@ namespace Downloader
                 if (newFile + updateFile == 0)
                 {
                     Console.WriteLine("当前平台已是最新版本！" + Environment.NewLine);
-                    newFileName.Clear(); updateFileName.Clear();
+                    newFileName.Clear();
+                    updateFileName.Clear();
                 }
                 else
                 {
@@ -262,8 +266,10 @@ namespace Downloader
                         Console.WriteLine(filename);
                     }
                     Console.Write(Environment.NewLine + "是否下载新文件？ y/n：");
-                    if (Console.Read() != 'y') Console.WriteLine("下载取消!");
-                    else Download();
+                    if (Console.Read() != 'y')
+                        Console.WriteLine("下载取消!");
+                    else
+                        Download();
                 }
             }
             private static void Download()
@@ -310,25 +316,26 @@ namespace Downloader
                         throw;
                     }
                 }
-                else Console.WriteLine("当前平台已是最新版本！" + Environment.NewLine);
+                else
+                    Console.WriteLine("当前平台已是最新版本！" + Environment.NewLine);
                 newFileName.Clear();
                 updateFileName.Clear();
             }
 
-            public static bool CheckAlreadyDownload()   //检查是否已经下载
+            public static bool CheckAlreadyDownload()  //检查是否已经下载
             {
                 string existpath = System.IO.Path.Combine(Data.dataPath, "Exists.txt");
-                if (!File.Exists(existpath))    //文件不存在
+                if (!File.Exists(existpath))  //文件不存在
                 {
                     FileStream fs = new FileStream(existpath, FileMode.Create, FileAccess.ReadWrite);
                     fs.Close();
                     return false;
                 }
-                else        //文件存在
+                else  //文件存在
                 {
                     FileStream fs = new FileStream(existpath, FileMode.Open, FileAccess.Read);
                     StreamReader sr = new StreamReader(fs);
-                    if ("true"==sr.ReadLine())
+                    if ("true" == sr.ReadLine())
                     {
                         sr.Close();
                         fs.Close();
@@ -343,7 +350,7 @@ namespace Downloader
                 }
             }
 
-            public static void DownloadAll()            //下载全部文件
+            public static void DownloadAll()  //下载全部文件
             {
                 string jsonName = "hash.json";
                 string json;
@@ -396,7 +403,7 @@ namespace Downloader
                 fs.Close();
             }
 
-            public static void Change_all_hash(string topDir, Dictionary<string, string> jsonDict)    //更改HASH
+            public static void Change_all_hash(string topDir, Dictionary<string, string> jsonDict)  //更改HASH
             {
                 DirectoryInfo theFolder = new DirectoryInfo(@topDir);
                 bool ifexist = false;
@@ -404,7 +411,7 @@ namespace Downloader
                 //遍历文件
                 foreach (FileInfo NextFile in theFolder.GetFiles())
                 {
-                    string filepath = topDir+@"/"+NextFile.Name;//文件路径
+                    string filepath = topDir + @"/" + NextFile.Name;  //文件路径
                     Console.WriteLine(filepath);
                     foreach (KeyValuePair<string, string> pair in jsonDict)
                     {
@@ -415,10 +422,10 @@ namespace Downloader
                             jsonDict[pair.Key] = MD5;
                         }
                     }
-                    if (!ifexist && NextFile.Name!="hash.json")
+                    if (!ifexist && NextFile.Name != "hash.json")
                     {
                         string MD5 = GetFileMd5Hash(filepath);
-                        string relapath = filepath.Replace(Data.FilePath+'/', string.Empty);
+                        string relapath = filepath.Replace(Data.FilePath + '/', string.Empty);
                         jsonDict.Add(relapath, MD5);
                     }
                     ifexist = false;
@@ -427,19 +434,18 @@ namespace Downloader
                 //遍历文件夹
                 foreach (DirectoryInfo NextFolder in theFolder.GetDirectories())
                 {
-                    if (System.IO.Path.Equals(NextFolder.FullName, 
-                        System.IO.Path.GetFullPath(System.IO.Path.Combine(Data.FilePath, playerFolder))))
+                    if (System.IO.Path.Equals(NextFolder.FullName, System.IO.Path.GetFullPath(System.IO.Path.Combine(Data.FilePath, playerFolder))))
                     {
                         foreach (FileInfo NextFile in NextFolder.GetFiles())
                         {
-                            if (NextFile.Name=="README.md")
+                            if (NextFile.Name == "README.md")
                             {
                                 string MD5 = GetFileMd5Hash(NextFile.FullName);
-                                string relapath = NextFile.FullName.Replace('\\', '/').Replace(Data.FilePath+'/', string.Empty);
+                                string relapath = NextFile.FullName.Replace('\\', '/').Replace(Data.FilePath + '/', string.Empty);
                                 jsonDict.Add(relapath, MD5);
                             }
                         }
-                        continue;       //如果是选手文件夹就忽略
+                        continue;  //如果是选手文件夹就忽略
                     }
                     Change_all_hash(NextFolder.FullName.Replace('\\', '/'), jsonDict);
                 }
@@ -475,8 +481,7 @@ namespace Downloader
             public static void DeleteAll()
             {
                 DirectoryInfo di = new DirectoryInfo(Data.FilePath);
-                DirectoryInfo player = new DirectoryInfo(System.IO.
-                    Path.GetFullPath(System.IO.Path.Combine(Data.FilePath, playerFolder)));
+                DirectoryInfo player = new DirectoryInfo(System.IO.Path.GetFullPath(System.IO.Path.Combine(Data.FilePath, playerFolder)));
                 try
                 {
                     foreach (FileInfo file in di.GetFiles())
@@ -485,7 +490,7 @@ namespace Downloader
                     }
                     foreach (FileInfo file in player.GetFiles())
                     {
-                        if (file.Name=="README.md")
+                        if (file.Name == "README.md")
                         {
                             continue;
                         }
@@ -546,7 +551,7 @@ namespace Downloader
             public static void OverwriteHash(Dictionary<string, string> jsonDict)
             {
                 string Contentjson = JsonConvert.SerializeObject(jsonDict);
-                Contentjson=Contentjson.Replace("\r", String.Empty).Replace("\n", String.Empty).Replace(@"\\", "/");
+                Contentjson = Contentjson.Replace("\r", String.Empty).Replace("\n", String.Empty).Replace(@"\\", "/");
                 File.WriteAllText(@System.IO.Path.Combine(Data.FilePath, "hash.json"), Contentjson);
             }
 
@@ -602,7 +607,7 @@ namespace Downloader
                 {
                     Console.WriteLine($"1. 更新hash.json   2. 检查更新   3.下载{ProgramName}  4.删除{ProgramName}  5.启动进程  6.移动{ProgramName}到其它路径");
                     string choose = Console.ReadLine();
-                    if (choose=="1")
+                    if (choose == "1")
                     {
                         if (!CheckAlreadyDownload())
                         {
@@ -611,7 +616,7 @@ namespace Downloader
                         }
                         UpdateHash();
                     }
-                    else if (choose=="2")
+                    else if (choose == "2")
                     {
                         if (!CheckAlreadyDownload())
                         {
@@ -620,7 +625,7 @@ namespace Downloader
                         }
                         while (true)
                         {
-                            if (Data.FilePath!=null && Directory.Exists(Data.FilePath))
+                            if (Data.FilePath != null && Directory.Exists(Data.FilePath))
                             {
                                 Check();
                                 break;
@@ -632,27 +637,26 @@ namespace Downloader
                             }
                         }
                     }
-                    else if (choose =="3")
+                    else if (choose == "3")
                     {
                         if (CheckAlreadyDownload())
                         {
                             Console.WriteLine($"已经将{ProgramName}下载到{Data.FilePath}！若要重新下载请先完成删除操作！");
-
                         }
                         else
                         {
                             string newpath;
                             Console.WriteLine("请输入下载路径：");
-                            newpath=Console.ReadLine();
+                            newpath = Console.ReadLine();
                             Data.ResetFilepath(newpath);
                             DownloadAll();
                         }
                     }
-                    else if (choose=="4")
+                    else if (choose == "4")
                     {
                         DeleteAll();
                     }
-                    else if (choose=="5")
+                    else if (choose == "5")
                     {
                         if (CheckAlreadyDownload())
                         {
@@ -663,11 +667,11 @@ namespace Downloader
                             Console.WriteLine($"未下载{ProgramName}，请先执行下载操作！");
                         }
                     }
-                    else if (choose=="6")
+                    else if (choose == "6")
                     {
                         MoveProgram();
                     }
-                    else if (choose=="exit")
+                    else if (choose == "exit")
                     {
                         return;
                     }
@@ -676,4 +680,3 @@ namespace Downloader
         }
     }
 }
-

@@ -1,11 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Message2Clients.proto" />
+    <None Remove="Message2Server.proto" />
+    <None Remove="MessageType.proto" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FrameRateTask" Version="1.1.2" />
@@ -19,7 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Protos\Protos.csproj" />
+    <Protobuf Include="Message2Clients.proto" />
+    <Protobuf Include="Message2Server.proto" />
+    <Protobuf Include="MessageType.proto" />
   </ItemGroup>
 
 </Project>

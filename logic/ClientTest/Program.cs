@@ -16,14 +16,14 @@ namespace ClientTest
             while (await call.ResponseStream.MoveNext())
             {
                 var currentGameInfo = call.ResponseStream.Current;
-                if (playerInfo.PlayerType == PlayerType.HumanPlayer)
+                //if (playerInfo.PlayerType == PlayerType.HumanPlayer)
                 {
                     for (int i = 0; i < currentGameInfo.HumanMessage.Count; i++)
                     {
                         Console.WriteLine($"Human is at ({currentGameInfo.HumanMessage[i].X}, {currentGameInfo.HumanMessage[i].Y})");
                     }
                 }
-                if (playerInfo.PlayerType == PlayerType.ButcherPlayer)
+                //if (playerInfo.PlayerType == PlayerType.ButcherPlayer)
                 {
                     for (int i = 0; i < currentGameInfo.ButcherMessage.Count; i++)
                     {

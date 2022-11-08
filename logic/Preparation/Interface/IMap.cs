@@ -13,6 +13,6 @@ namespace Preparation.Interface
         Dictionary<GameObjIdx, ReaderWriterLockSlim> GameObjLockDict { get; }
 
         public bool IsOutOfBound(IGameObj obj);
-        public IOutOfBound GetOutOfBound(XYPosition pos);  // 返回新建的一个OutOfBound对象
+        public IOutOfBound GetOutOfBound(XY pos);  // 返回新建的一个OutOfBound对象
     }
 }

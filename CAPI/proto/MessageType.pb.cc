@@ -16,14 +16,18 @@
 #include <google/protobuf/port_def.inc>
 
 PROTOBUF_PRAGMA_INIT_SEG
+
+namespace _pb = ::PROTOBUF_NAMESPACE_ID;
+namespace _pbi = _pb::internal;
+
 namespace protobuf
 {
 }  // namespace protobuf
-static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_MessageType_2eproto[8];
-static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_MessageType_2eproto = nullptr;
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_MessageType_2eproto[8];
+static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_MessageType_2eproto = nullptr;
 const uint32_t TableStruct_MessageType_2eproto::offsets[1] = {};
-static constexpr ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema* schemas = nullptr;
-static constexpr ::PROTOBUF_NAMESPACE_ID::Message* const* file_default_instances = nullptr;
+static constexpr ::_pbi::MigrationSchema* schemas = nullptr;
+static constexpr ::_pb::Message* const* file_default_instances = nullptr;
 
 const char descriptor_table_protodef_MessageType_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
     "\n\021MessageType.proto\022\010protobuf*g\n\tPlaceTy"
@@ -46,8 +50,8 @@ const char descriptor_table_protodef_MessageType_2eproto[] PROTOBUF_SECTION_VARI
     "R_TYPE\020\000\022\020\n\014BUTCHERTYPE1\020\001\022\020\n\014BUTCHERTYP"
     "E2\020\002\022\020\n\014BUTCHERTYPE3\020\003\022\020\n\014BUTCHERTYPE4\020\004"
     "b\006proto3";
-static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_MessageType_2eproto_once;
-const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_MessageType_2eproto = {
+static ::_pbi::once_flag descriptor_table_MessageType_2eproto_once;
+const ::_pbi::DescriptorTable descriptor_table_MessageType_2eproto = {
     false,
     false,
     768,
@@ -64,13 +68,13 @@ const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Messag
     file_level_enum_descriptors_MessageType_2eproto,
     file_level_service_descriptors_MessageType_2eproto,
 };
-PROTOBUF_ATTRIBUTE_WEAK const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable* descriptor_table_MessageType_2eproto_getter()
+PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_MessageType_2eproto_getter()
 {
     return &descriptor_table_MessageType_2eproto;
 }
 
 // Force running AddDescriptors() at dynamic initialization time.
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY static ::PROTOBUF_NAMESPACE_ID::internal::AddDescriptorsRunner dynamic_init_dummy_MessageType_2eproto(&descriptor_table_MessageType_2eproto);
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_MessageType_2eproto(&descriptor_table_MessageType_2eproto);
 namespace protobuf
 {
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PlaceType_descriptor()

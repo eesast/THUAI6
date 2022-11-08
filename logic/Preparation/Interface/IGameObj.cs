@@ -4,10 +4,10 @@ namespace Preparation.Interface
 {
     public interface IGameObj
     {
-        public GameObjType Type { get; set; }
+        public GameObjType Type { get; }
         public long ID { get; }
-        public XYPosition Position { get; }  // if Square, Pos equals the center
-        public double FacingDirection { get; }
+        public XY Position { get; }  // if Square, Pos equals the center
+        public XY FacingDirection { get; }
         public bool IsRigid { get; }
         public ShapeType Shape { get; }
         public bool CanMove { get; set; }

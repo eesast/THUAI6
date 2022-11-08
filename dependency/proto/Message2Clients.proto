@@ -22,7 +22,8 @@ message MessageOfHuman
     double ground_time = 14; // 倒地时间
     int64 player_id = 15;
     int32 view_range = 16; // 视野距离
-    repeated HumanBuffType buff = 17;
+    int32 radius = 17; // 半径
+    repeated HumanBuffType buff = 18;
 }
 
 message MessageOfButcher
@@ -39,7 +40,8 @@ message MessageOfButcher
     bool movable = 10; // 是否进入了攻击后摇
     int64 playerID = 11;
     int32 view_range = 12; // 视野距离
-    repeated ButcherBuffType buff = 13;
+    int32 radius = 13; // 半径
+    repeated ButcherBuffType buff = 14;
 }
 
 message MessageOfProp // 可拾取道具的信息

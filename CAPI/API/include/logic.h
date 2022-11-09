@@ -47,7 +47,8 @@ private:
 
     std::unique_ptr<IGameTimer> timer;
 
-    std::thread tAI;
+    std::thread tAI;       // 用于运行AI的线程
+    std::thread tMessage;  // 用于读取服务器发来消息的线程
 
     mutable std::mutex mtxAI;
     mutable std::mutex mtxState;
@@ -80,8 +81,27 @@ private:
 
     // 提供给API使用的函数
 
-    // 获取服务器发来的所有消息，要注意线程安全问题
-    protobuf::MessageToClient GetFullMessage() override;
+    // 获取服务器发来的消息
+
+    std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override
+    {
+    }
+    std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override
+    {
+    }
+    std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override
+    {
+    }
+    std::shared_ptr<const THUAI6::Human> HumanGetSelfInfo() const override
+    {
+    }
+    std::shared_ptr<const THUAI6::Butcher> ButcherGetSelfInfo() const override
+    {
+    }
+
+    std::array<std::array<THUAI6::PlaceType, 50>, 50> GetFullMap() const override
+    {
+    }
 
     // 供IAPI使用的操作相关的部分
     bool Move(protobuf::MoveMsg) override
@@ -159,8 +179,10 @@ private:
 
     // THUAI5中的一系列用于处理信息的函数可能也不会再用
 
+    void ProcessMessage();
+
     // 将信息加载到buffer
-    void LoadBuffer(std::shared_ptr<protobuf::MessageToClient>);
+    void LoadBuffer(protobuf::MessageToClient&);
 
     // 解锁状态更新线程
     void UnBlockBuffer();
@@ -176,9 +198,11 @@ private:
 
 public:
     // 构造函数还需要传更多参数，有待补充
-    Logic(THUAI6::PlayerType type, int playerID, THUAI6::ButcherType butcher, THUAI6::HumanType human);
+    Logic(THUAI6::PlayerType type, int ID, THUAI6::ButcherType butcher, THUAI6::HumanType human);
 
-    ~Logic() = default;
+    ~Logic()
+    {
+    }
 
     // Main函数同上
     void Main(CreateAIFunc createAI, std::string IP, std::string port);

@@ -3,6 +3,7 @@
 #define STATE_H
 
 #include <vector>
+#include <array>
 
 #include "structures.h"
 
@@ -19,7 +20,7 @@ struct State
     std::vector<std::shared_ptr<THUAI6::Butcher>> butchers;
     std::vector<std::shared_ptr<THUAI6::Prop>> props;
 
-    THUAI6::PlaceType gamemap[51][51];
+    std::array<std::array<THUAI6::PlaceType, 51>, 51> gamemap;
 
     std::vector<int64_t> guids;
 };

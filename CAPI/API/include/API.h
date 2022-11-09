@@ -26,8 +26,14 @@ class ILogic
     // API中依赖Logic的部分
 
 public:
-    // 获取服务器发来的所有消息，要注意线程安全问题
-    virtual protobuf::MessageToClient GetFullMessage() = 0;
+    // 获取服务器发来的消息
+    virtual std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const = 0;
+    virtual std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const = 0;
+    virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
+    virtual std::shared_ptr<const THUAI6::Human> HumanGetSelfInfo() const = 0;
+    virtual std::shared_ptr<const THUAI6::Butcher> ButcherGetSelfInfo() const = 0;
+
+    virtual std::array<std::array<THUAI6::PlaceType, 50>, 50> GetFullMap() const = 0;
 
     // 供IAPI使用的操作相关的部分
     virtual bool Move(protobuf::MoveMsg) = 0;

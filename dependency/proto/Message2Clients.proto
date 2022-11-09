@@ -38,7 +38,7 @@ message MessageOfButcher
     ButcherType butcher_type = 8;
     int64 guid = 9;
     bool movable = 10; // 是否进入了攻击后摇
-    int64 playerID = 11;
+    int64 player_id = 11;
     int32 view_range = 12; // 视野距离
     int32 radius = 13; // 半径
     repeated ButcherBuffType buff = 14;

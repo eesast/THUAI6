@@ -48,7 +48,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.buff_)*/ {}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, /*decltype(_impl_.x_)*/ 0, /*decltype(_impl_.y_)*/ 0, /*decltype(_impl_.speed_)*/ 0, /*decltype(_impl_.damage_)*/ 0, /*decltype(_impl_.time_until_skill_available_)*/ 0, /*decltype(_impl_.place_)*/ 0, /*decltype(_impl_.prop_)*/ 0, /*decltype(_impl_.guid_)*/ int64_t{0}, /*decltype(_impl_.butcher_type_)*/ 0, /*decltype(_impl_.movable_)*/ false, /*decltype(_impl_.playerid_)*/ int64_t{0}, /*decltype(_impl_.view_range_)*/ 0, /*decltype(_impl_.radius_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.buff_)*/ {}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, /*decltype(_impl_.x_)*/ 0, /*decltype(_impl_.y_)*/ 0, /*decltype(_impl_.speed_)*/ 0, /*decltype(_impl_.damage_)*/ 0, /*decltype(_impl_.time_until_skill_available_)*/ 0, /*decltype(_impl_.place_)*/ 0, /*decltype(_impl_.prop_)*/ 0, /*decltype(_impl_.guid_)*/ int64_t{0}, /*decltype(_impl_.butcher_type_)*/ 0, /*decltype(_impl_.movable_)*/ false, /*decltype(_impl_.player_id_)*/ int64_t{0}, /*decltype(_impl_.view_range_)*/ 0, /*decltype(_impl_.radius_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
     struct MessageOfButcherDefaultTypeInternal
@@ -288,7 +288,7 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, _impl_.butcher_type_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, _impl_.guid_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, _impl_.movable_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, _impl_.playerid_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, _impl_.player_id_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, _impl_.view_range_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, _impl_.radius_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfButcher, _impl_.buff_),
@@ -404,36 +404,36 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     "(\010\022\022\n\nchair_time\030\014 \001(\001\022\021\n\ton_ground\030\r \001("
     "\010\022\023\n\013ground_time\030\016 \001(\001\022\021\n\tplayer_id\030\017 \001("
     "\003\022\022\n\nview_range\030\020 \001(\005\022\016\n\006radius\030\021 \001(\005\022%\n"
-    "\004buff\030\022 \003(\0162\027.protobuf.HumanBuffType\"\334\002\n"
+    "\004buff\030\022 \003(\0162\027.protobuf.HumanBuffType\"\335\002\n"
     "\020MessageOfButcher\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022"
     "\r\n\005speed\030\003 \001(\005\022\016\n\006damage\030\004 \001(\005\022\"\n\032time_u"
     "ntil_skill_available\030\005 \001(\001\022\"\n\005place\030\006 \001("
     "\0162\023.protobuf.PlaceType\022 \n\004prop\030\007 \001(\0162\022.p"
     "rotobuf.PropType\022+\n\014butcher_type\030\010 \001(\0162\025"
     ".protobuf.ButcherType\022\014\n\004guid\030\t \001(\003\022\017\n\007m"
-    "ovable\030\n \001(\010\022\020\n\010playerID\030\013 \001(\003\022\022\n\nview_r"
-    "ange\030\014 \001(\005\022\016\n\006radius\030\r \001(\005\022\'\n\004buff\030\016 \003(\016"
-    "2\031.protobuf.ButcherBuffType\"\264\001\n\rMessageO"
-    "fProp\022 \n\004type\030\001 \001(\0162\022.protobuf.PropType\022"
-    "\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\030\n\020facing_directio"
-    "n\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\022\"\n\005place\030\006 \001(\0162\023.p"
-    "rotobuf.PlaceType\022\014\n\004size\030\007 \001(\005\022\021\n\tis_mo"
-    "ving\030\010 \001(\010\"{\n\023MessageOfPickedProp\022 \n\004typ"
-    "e\030\001 \001(\0162\022.protobuf.PropType\022\t\n\001x\030\002 \001(\005\022\t"
-    "\n\001y\030\003 \001(\005\022\030\n\020facing_direction\030\004 \001(\001\022\022\n\nm"
-    "apping_id\030\005 \001(\003\"`\n\014MessageOfMap\022\'\n\003row\030\002"
-    " \003(\0132\032.protobuf.MessageOfMap.Row\032\'\n\003Row\022"
-    " \n\003col\030\001 \003(\0162\023.protobuf.PlaceType\"\323\001\n\017Me"
-    "ssageToClient\022/\n\rhuman_message\030\001 \003(\0132\030.p"
-    "rotobuf.MessageOfHuman\0223\n\017butcher_messag"
-    "e\030\002 \003(\0132\032.protobuf.MessageOfButcher\022-\n\014p"
-    "rop_message\030\003 \003(\0132\027.protobuf.MessageOfPr"
-    "op\022+\n\013map_massage\030\004 \001(\0132\026.protobuf.Messa"
-    "geOfMap\"5\n\007MoveRes\022\024\n\014actual_speed\030\001 \001(\003"
-    "\022\024\n\014actual_angle\030\002 \001(\001\"\036\n\007BoolRes\022\023\n\013act"
-    "_success\030\001 \001(\010\"P\n\006MsgRes\022\024\n\014have_message"
-    "\030\001 \001(\010\022\026\n\016from_player_id\030\002 \001(\003\022\030\n\020messag"
-    "e_received\030\003 \001(\tb\006proto3";
+    "ovable\030\n \001(\010\022\021\n\tplayer_id\030\013 \001(\003\022\022\n\nview_"
+    "range\030\014 \001(\005\022\016\n\006radius\030\r \001(\005\022\'\n\004buff\030\016 \003("
+    "\0162\031.protobuf.ButcherBuffType\"\264\001\n\rMessage"
+    "OfProp\022 \n\004type\030\001 \001(\0162\022.protobuf.PropType"
+    "\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\030\n\020facing_directi"
+    "on\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\022\"\n\005place\030\006 \001(\0162\023."
+    "protobuf.PlaceType\022\014\n\004size\030\007 \001(\005\022\021\n\tis_m"
+    "oving\030\010 \001(\010\"{\n\023MessageOfPickedProp\022 \n\004ty"
+    "pe\030\001 \001(\0162\022.protobuf.PropType\022\t\n\001x\030\002 \001(\005\022"
+    "\t\n\001y\030\003 \001(\005\022\030\n\020facing_direction\030\004 \001(\001\022\022\n\n"
+    "mapping_id\030\005 \001(\003\"`\n\014MessageOfMap\022\'\n\003row\030"
+    "\002 \003(\0132\032.protobuf.MessageOfMap.Row\032\'\n\003Row"
+    "\022 \n\003col\030\001 \003(\0162\023.protobuf.PlaceType\"\323\001\n\017M"
+    "essageToClient\022/\n\rhuman_message\030\001 \003(\0132\030."
+    "protobuf.MessageOfHuman\0223\n\017butcher_messa"
+    "ge\030\002 \003(\0132\032.protobuf.MessageOfButcher\022-\n\014"
+    "prop_message\030\003 \003(\0132\027.protobuf.MessageOfP"
+    "rop\022+\n\013map_massage\030\004 \001(\0132\026.protobuf.Mess"
+    "ageOfMap\"5\n\007MoveRes\022\024\n\014actual_speed\030\001 \001("
+    "\003\022\024\n\014actual_angle\030\002 \001(\001\"\036\n\007BoolRes\022\023\n\013ac"
+    "t_success\030\001 \001(\010\"P\n\006MsgRes\022\024\n\014have_messag"
+    "e\030\001 \001(\010\022\026\n\016from_player_id\030\002 \001(\003\022\030\n\020messa"
+    "ge_received\030\003 \001(\tb\006proto3";
 static const ::_pbi::DescriptorTable* const descriptor_table_Message2Clients_2eproto_deps[1] = {
     &::descriptor_table_MessageType_2eproto,
 };
@@ -441,7 +441,7 @@ static ::_pbi::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Message2Clients_2eproto = {
     false,
     false,
-    1624,
+    1625,
     descriptor_table_protodef_Message2Clients_2eproto,
     "Message2Clients.proto",
     &descriptor_table_Message2Clients_2eproto_once,
@@ -1235,7 +1235,7 @@ namespace protobuf
         MessageOfButcher* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.buff_){from._impl_.buff_}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){}, decltype(_impl_.y_){}, decltype(_impl_.speed_){}, decltype(_impl_.damage_){}, decltype(_impl_.time_until_skill_available_){}, decltype(_impl_.place_){}, decltype(_impl_.prop_){}, decltype(_impl_.guid_){}, decltype(_impl_.butcher_type_){}, decltype(_impl_.movable_){}, decltype(_impl_.playerid_){}, decltype(_impl_.view_range_){}, decltype(_impl_.radius_){}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.buff_){from._impl_.buff_}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){}, decltype(_impl_.y_){}, decltype(_impl_.speed_){}, decltype(_impl_.damage_){}, decltype(_impl_.time_until_skill_available_){}, decltype(_impl_.place_){}, decltype(_impl_.prop_){}, decltype(_impl_.guid_){}, decltype(_impl_.butcher_type_){}, decltype(_impl_.movable_){}, decltype(_impl_.player_id_){}, decltype(_impl_.view_range_){}, decltype(_impl_.radius_){}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
         ::memcpy(&_impl_.x_, &from._impl_.x_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.radius_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.radius_));
@@ -1249,7 +1249,7 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.buff_){arena}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){0}, decltype(_impl_.y_){0}, decltype(_impl_.speed_){0}, decltype(_impl_.damage_){0}, decltype(_impl_.time_until_skill_available_){0}, decltype(_impl_.place_){0}, decltype(_impl_.prop_){0}, decltype(_impl_.guid_){int64_t{0}}, decltype(_impl_.butcher_type_){0}, decltype(_impl_.movable_){false}, decltype(_impl_.playerid_){int64_t{0}}, decltype(_impl_.view_range_){0}, decltype(_impl_.radius_){0}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.buff_){arena}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){0}, decltype(_impl_.y_){0}, decltype(_impl_.speed_){0}, decltype(_impl_.damage_){0}, decltype(_impl_.time_until_skill_available_){0}, decltype(_impl_.place_){0}, decltype(_impl_.prop_){0}, decltype(_impl_.guid_){int64_t{0}}, decltype(_impl_.butcher_type_){0}, decltype(_impl_.movable_){false}, decltype(_impl_.player_id_){int64_t{0}}, decltype(_impl_.view_range_){0}, decltype(_impl_.radius_){0}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
     MessageOfButcher::~MessageOfButcher()
@@ -1400,11 +1400,11 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // int64 playerID = 11;
+                // int64 player_id = 11;
                 case 11:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 88))
                     {
-                        _impl_.playerid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        _impl_.player_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
                     }
                     else
@@ -1560,11 +1560,11 @@ namespace protobuf
             target = ::_pbi::WireFormatLite::WriteBoolToArray(10, this->_internal_movable(), target);
         }
 
-        // int64 playerID = 11;
-        if (this->_internal_playerid() != 0)
+        // int64 player_id = 11;
+        if (this->_internal_player_id() != 0)
         {
             target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteInt64ToArray(11, this->_internal_playerid(), target);
+            target = ::_pbi::WireFormatLite::WriteInt64ToArray(11, this->_internal_player_id(), target);
         }
 
         // int32 view_range = 12;
@@ -1698,10 +1698,10 @@ namespace protobuf
             total_size += 1 + 1;
         }
 
-        // int64 playerID = 11;
-        if (this->_internal_playerid() != 0)
+        // int64 player_id = 11;
+        if (this->_internal_player_id() != 0)
         {
-            total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_playerid());
+            total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_player_id());
         }
 
         // int32 view_range = 12;
@@ -1781,9 +1781,9 @@ namespace protobuf
         {
             _this->_internal_set_movable(from._internal_movable());
         }
-        if (from._internal_playerid() != 0)
+        if (from._internal_player_id() != 0)
         {
-            _this->_internal_set_playerid(from._internal_playerid());
+            _this->_internal_set_player_id(from._internal_player_id());
         }
         if (from._internal_view_range() != 0)
         {

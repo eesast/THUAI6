@@ -142,13 +142,17 @@ namespace Proto2THUAI6
         return prop;
     }
 
-    inline std::array<std::array<THUAI6::PlaceType, 51>, 51> Protobuf2THUAI6Map(const protobuf::MessageOfMap& mapMsg)
+    inline std::vector<std::vector<THUAI6::PlaceType>> Protobuf2THUAI6Map(const protobuf::MessageOfMap& mapMsg)
     {
-        std::array<std::array<THUAI6::PlaceType, 51>, 51> map;
-        for (int i = 0; i < 51; i++)
+        std::vector<std::vector<THUAI6::PlaceType>> map;
+        for (int i = 0; i < mapMsg.row_size(); i++)
         {
-            for (int j = 0; j < 51; j++)
-                map[i][j] = placeTypeDict[mapMsg.row(i).col(j)];
+            std::vector<THUAI6::PlaceType> row;
+            for (int j = 0; j < mapMsg.row(i).col_size(); j++)
+            {
+                row.push_back(placeTypeDict[mapMsg.row(i).col(j)]);
+            }
+            map.push_back(row);
         }
         return map;
     }

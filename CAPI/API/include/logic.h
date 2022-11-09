@@ -99,7 +99,7 @@ private:
     {
     }
 
-    std::array<std::array<THUAI6::PlaceType, 50>, 50> GetFullMap() const override
+    std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override
     {
     }
 

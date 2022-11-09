@@ -20,7 +20,7 @@ struct State
     std::vector<std::shared_ptr<THUAI6::Butcher>> butchers;
     std::vector<std::shared_ptr<THUAI6::Prop>> props;
 
-    std::array<std::array<THUAI6::PlaceType, 51>, 51> gamemap;
+    std::vector<std::vector<THUAI6::PlaceType>> gamemap;
 
     std::vector<int64_t> guids;
 };

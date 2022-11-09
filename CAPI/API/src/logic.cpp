@@ -35,8 +35,7 @@ void Logic::ProcessMessage()
             LoadBuffer(clientMsg);
         }
     };
-    tMessage = std::thread(messageThread);
-    tMessage.join();
+    std::thread(messageThread).join();
 }
 
 void Logic::LoadBuffer(protobuf::MessageToClient& message)

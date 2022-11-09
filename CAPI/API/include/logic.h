@@ -47,8 +47,7 @@ private:
 
     std::unique_ptr<IGameTimer> timer;
 
-    std::thread tAI;       // 用于运行AI的线程
-    std::thread tMessage;  // 用于读取服务器发来消息的线程
+    std::thread tAI;  // 用于运行AI的线程
 
     mutable std::mutex mtxAI;
     mutable std::mutex mtxState;

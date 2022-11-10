@@ -26,8 +26,14 @@ class ILogic
     // API中依赖Logic的部分
 
 public:
-    // 获取服务器发来的所有消息，要注意线程安全问题
-    virtual protobuf::MessageToClient GetFullMessage() = 0;
+    // 获取服务器发来的消息
+    virtual std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const = 0;
+    virtual std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const = 0;
+    virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
+    virtual std::shared_ptr<const THUAI6::Human> HumanGetSelfInfo() const = 0;
+    virtual std::shared_ptr<const THUAI6::Butcher> ButcherGetSelfInfo() const = 0;
+
+    virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
 
     // 供IAPI使用的操作相关的部分
     virtual bool Move(protobuf::MoveMsg) = 0;
@@ -93,7 +99,7 @@ public:
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
 
     // 获取地图信息，视野外的地图统一为Land
-    [[nodiscard]] virtual std::array<std::array<THUAI6::PlaceType, 50>, 50> GetFullMap() const = 0;
+    [[nodiscard]] virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
     [[nodiscard]] virtual THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const = 0;
 
     // 获取所有玩家的GUID
@@ -223,7 +229,7 @@ public:
     {
     }
 
-    [[nodiscard]] std::array<std::array<THUAI6::PlaceType, 50>, 50> GetFullMap() const override
+    [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override
     {
     }
     [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override
@@ -334,7 +340,7 @@ public:
     {
     }
 
-    [[nodiscard]] std::array<std::array<THUAI6::PlaceType, 50>, 50> GetFullMap() const override
+    [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override
     {
     }
     [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override
@@ -436,7 +442,7 @@ public:
     {
     }
 
-    [[nodiscard]] std::array<std::array<THUAI6::PlaceType, 50>, 50> GetFullMap() const override
+    [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override
     {
     }
     [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override
@@ -547,7 +553,7 @@ public:
     {
     }
 
-    [[nodiscard]] std::array<std::array<THUAI6::PlaceType, 50>, 50> GetFullMap() const override
+    [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override
     {
     }
     [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override

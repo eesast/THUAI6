@@ -158,7 +158,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.human_message_)*/ {}, /*decltype(_impl_.butcher_message_)*/ {}, /*decltype(_impl_.prop_message_)*/ {}, /*decltype(_impl_.map_massage_)*/ nullptr, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.human_message_)*/ {}, /*decltype(_impl_.butcher_message_)*/ {}, /*decltype(_impl_.prop_message_)*/ {}, /*decltype(_impl_.map_message_)*/ nullptr, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
     struct MessageToClientDefaultTypeInternal
@@ -340,7 +340,7 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.human_message_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.butcher_message_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.prop_message_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.map_massage_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.map_message_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MoveRes, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -428,7 +428,7 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     "protobuf.MessageOfHuman\0223\n\017butcher_messa"
     "ge\030\002 \003(\0132\032.protobuf.MessageOfButcher\022-\n\014"
     "prop_message\030\003 \003(\0132\027.protobuf.MessageOfP"
-    "rop\022+\n\013map_massage\030\004 \001(\0132\026.protobuf.Mess"
+    "rop\022+\n\013map_message\030\004 \001(\0132\026.protobuf.Mess"
     "ageOfMap\"5\n\007MoveRes\022\024\n\014actual_speed\030\001 \001("
     "\003\022\024\n\014actual_angle\030\002 \001(\001\"\036\n\007BoolRes\022\023\n\013ac"
     "t_success\030\001 \001(\010\"P\n\006MsgRes\022\024\n\014have_messag"
@@ -3046,13 +3046,13 @@ namespace protobuf
     class MessageToClient::_Internal
     {
     public:
-        static const ::protobuf::MessageOfMap& map_massage(const MessageToClient* msg);
+        static const ::protobuf::MessageOfMap& map_message(const MessageToClient* msg);
     };
 
     const ::protobuf::MessageOfMap&
-        MessageToClient::_Internal::map_massage(const MessageToClient* msg)
+        MessageToClient::_Internal::map_message(const MessageToClient* msg)
     {
-        return *msg->_impl_.map_massage_;
+        return *msg->_impl_.map_message_;
     }
     MessageToClient::MessageToClient(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned) :
         ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned)
@@ -3066,12 +3066,12 @@ namespace protobuf
         MessageToClient* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.human_message_){from._impl_.human_message_}, decltype(_impl_.butcher_message_){from._impl_.butcher_message_}, decltype(_impl_.prop_message_){from._impl_.prop_message_}, decltype(_impl_.map_massage_){nullptr}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.human_message_){from._impl_.human_message_}, decltype(_impl_.butcher_message_){from._impl_.butcher_message_}, decltype(_impl_.prop_message_){from._impl_.prop_message_}, decltype(_impl_.map_message_){nullptr}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-        if (from._internal_has_map_massage())
+        if (from._internal_has_map_message())
         {
-            _this->_impl_.map_massage_ = new ::protobuf::MessageOfMap(*from._impl_.map_massage_);
+            _this->_impl_.map_message_ = new ::protobuf::MessageOfMap(*from._impl_.map_message_);
         }
         // @@protoc_insertion_point(copy_constructor:protobuf.MessageToClient)
     }
@@ -3083,7 +3083,7 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.human_message_){arena}, decltype(_impl_.butcher_message_){arena}, decltype(_impl_.prop_message_){arena}, decltype(_impl_.map_massage_){nullptr}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.human_message_){arena}, decltype(_impl_.butcher_message_){arena}, decltype(_impl_.prop_message_){arena}, decltype(_impl_.map_message_){nullptr}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
     MessageToClient::~MessageToClient()
@@ -3104,7 +3104,7 @@ namespace protobuf
         _impl_.butcher_message_.~RepeatedPtrField();
         _impl_.prop_message_.~RepeatedPtrField();
         if (this != internal_default_instance())
-            delete _impl_.map_massage_;
+            delete _impl_.map_message_;
     }
 
     void MessageToClient::SetCachedSize(int size) const
@@ -3122,11 +3122,11 @@ namespace protobuf
         _impl_.human_message_.Clear();
         _impl_.butcher_message_.Clear();
         _impl_.prop_message_.Clear();
-        if (GetArenaForAllocation() == nullptr && _impl_.map_massage_ != nullptr)
+        if (GetArenaForAllocation() == nullptr && _impl_.map_message_ != nullptr)
         {
-            delete _impl_.map_massage_;
+            delete _impl_.map_message_;
         }
-        _impl_.map_massage_ = nullptr;
+        _impl_.map_message_ = nullptr;
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -3192,11 +3192,11 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // .protobuf.MessageOfMap map_massage = 4;
+                // .protobuf.MessageOfMap map_message = 4;
                 case 4:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34))
                     {
-                        ptr = ctx->ParseMessage(_internal_mutable_map_massage(), ptr);
+                        ptr = ctx->ParseMessage(_internal_mutable_map_message(), ptr);
                         CHK_(ptr);
                     }
                     else
@@ -3269,11 +3269,11 @@ namespace protobuf
                 InternalWriteMessage(3, repfield, repfield.GetCachedSize(), target, stream);
         }
 
-        // .protobuf.MessageOfMap map_massage = 4;
-        if (this->_internal_has_map_massage())
+        // .protobuf.MessageOfMap map_message = 4;
+        if (this->_internal_has_map_message())
         {
             target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-                InternalWriteMessage(4, _Internal::map_massage(this), _Internal::map_massage(this).GetCachedSize(), target, stream);
+                InternalWriteMessage(4, _Internal::map_message(this), _Internal::map_message(this).GetCachedSize(), target, stream);
         }
 
         if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
@@ -3319,12 +3319,12 @@ namespace protobuf
                 ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
         }
 
-        // .protobuf.MessageOfMap map_massage = 4;
-        if (this->_internal_has_map_massage())
+        // .protobuf.MessageOfMap map_message = 4;
+        if (this->_internal_has_map_message())
         {
             total_size += 1 +
                           ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-                              *_impl_.map_massage_
+                              *_impl_.map_message_
                           );
         }
 
@@ -3351,10 +3351,10 @@ namespace protobuf
         _this->_impl_.human_message_.MergeFrom(from._impl_.human_message_);
         _this->_impl_.butcher_message_.MergeFrom(from._impl_.butcher_message_);
         _this->_impl_.prop_message_.MergeFrom(from._impl_.prop_message_);
-        if (from._internal_has_map_massage())
+        if (from._internal_has_map_message())
         {
-            _this->_internal_mutable_map_massage()->::protobuf::MessageOfMap::MergeFrom(
-                from._internal_map_massage()
+            _this->_internal_mutable_map_message()->::protobuf::MessageOfMap::MergeFrom(
+                from._internal_map_message()
             );
         }
         _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
@@ -3381,7 +3381,7 @@ namespace protobuf
         _impl_.human_message_.InternalSwap(&other->_impl_.human_message_);
         _impl_.butcher_message_.InternalSwap(&other->_impl_.butcher_message_);
         _impl_.prop_message_.InternalSwap(&other->_impl_.prop_message_);
-        swap(_impl_.map_massage_, other->_impl_.map_massage_);
+        swap(_impl_.map_message_, other->_impl_.map_message_);
     }
 
     ::PROTOBUF_NAMESPACE_ID::Metadata MessageToClient::GetMetadata() const

@@ -10,7 +10,7 @@
 // 存储场上的状态
 struct State
 {
-    uint32_t teamScore;
+    int32_t teamScore;
 
     // 自身信息，根据playerType的不同，可以调用的值也不同。
     std::shared_ptr<THUAI6::Human> humanSelf;

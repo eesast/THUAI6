@@ -2238,6 +2238,7 @@ namespace protobuf
         {
             kActualSpeedFieldNumber = 1,
             kActualAngleFieldNumber = 2,
+            kActSuccessFieldNumber = 3,
         };
         // int64 actual_speed = 1;
         void clear_actual_speed();
@@ -2259,6 +2260,16 @@ namespace protobuf
         void _internal_set_actual_angle(double value);
 
     public:
+        // bool act_success = 3;
+        void clear_act_success();
+        bool act_success() const;
+        void set_act_success(bool value);
+
+    private:
+        bool _internal_act_success() const;
+        void _internal_set_act_success(bool value);
+
+    public:
         // @@protoc_insertion_point(class_scope:protobuf.MoveRes)
 
     private:
@@ -2272,6 +2283,7 @@ namespace protobuf
         {
             int64_t actual_speed_;
             double actual_angle_;
+            bool act_success_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -4282,6 +4294,30 @@ namespace protobuf
     {
         _internal_set_actual_angle(value);
         // @@protoc_insertion_point(field_set:protobuf.MoveRes.actual_angle)
+    }
+
+    // bool act_success = 3;
+    inline void MoveRes::clear_act_success()
+    {
+        _impl_.act_success_ = false;
+    }
+    inline bool MoveRes::_internal_act_success() const
+    {
+        return _impl_.act_success_;
+    }
+    inline bool MoveRes::act_success() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MoveRes.act_success)
+        return _internal_act_success();
+    }
+    inline void MoveRes::_internal_set_act_success(bool value)
+    {
+        _impl_.act_success_ = value;
+    }
+    inline void MoveRes::set_act_success(bool value)
+    {
+        _internal_set_act_success(value);
+        // @@protoc_insertion_point(field_set:protobuf.MoveRes.act_success)
     }
 
     // -------------------------------------------------------------------

@@ -225,7 +225,7 @@ namespace THUAI62Proto
     };
 
     // 用于将THUAI6的类转换为Protobuf的消息
-    inline protobuf::PlayerMsg THUAI62ProtobufPlayer(int playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType)
+    inline protobuf::PlayerMsg THUAI62ProtobufPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType)
     {
         protobuf::PlayerMsg playerMsg;
         playerMsg.set_player_id(playerID);
@@ -245,6 +245,32 @@ namespace THUAI62Proto
         protobuf::IDMsg idMsg;
         idMsg.set_player_id(playerID);
         return idMsg;
+    }
+
+    inline protobuf::MoveMsg THUAI62ProtobufMove(int64_t time, double angle, int64_t id)
+    {
+        protobuf::MoveMsg moveMsg;
+        moveMsg.set_time_in_milliseconds(time);
+        moveMsg.set_angle(angle);
+        moveMsg.set_player_id(id);
+        return moveMsg;
+    }
+
+    inline protobuf::PickMsg THUAI62ProtobufPick(THUAI6::PropType prop, int64_t id)
+    {
+        protobuf::PickMsg pickMsg;
+        pickMsg.set_prop_type(propTypeDict[prop]);
+        pickMsg.set_player_id(id);
+        return pickMsg;
+    }
+
+    inline protobuf::SendMsg THUAI62ProtobufSend(std::string msg, int64_t toID, int64_t id)
+    {
+        protobuf::SendMsg sendMsg;
+        sendMsg.set_message(msg);
+        sendMsg.set_to_player_id(toID);
+        sendMsg.set_player_id(id);
+        return sendMsg;
     }
 }  // namespace THUAI62Proto
 

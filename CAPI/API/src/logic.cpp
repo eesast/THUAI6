@@ -9,7 +9,7 @@ using grpc::Status;
 
 extern const THUAI6::PlayerType playerType;
 
-Logic::Logic(THUAI6::PlayerType type, int ID, THUAI6::ButcherType butcher, THUAI6::HumanType human) :
+Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::ButcherType butcher, THUAI6::HumanType human) :
     playerType(type),
     playerID(ID),
     butcherType(butcher),
@@ -17,6 +17,143 @@ Logic::Logic(THUAI6::PlayerType type, int ID, THUAI6::ButcherType butcher, THUAI
 {
     currentState = &state[0];
     bufferState = &state[1];
+}
+
+std::vector<std::shared_ptr<THUAI6::Butcher>> Logic::GetButchers() const
+{
+    std::lock_guard<std::mutex> lock(mtxState);
+    return currentState->butchers;
+}
+
+std::vector<std::shared_ptr<THUAI6::Human>> Logic::GetHumans() const
+{
+    std::lock_guard<std::mutex> lock(mtxState);
+    return currentState->humans;
+}
+
+std::vector<std::shared_ptr<THUAI6::Prop>> Logic::GetProps() const
+{
+    std::lock_guard<std::mutex> lock(mtxState);
+    return currentState->props;
+}
+
+std::shared_ptr<THUAI6::Human> Logic::HumanGetSelfInfo() const
+{
+    std::lock_guard<std::mutex> lock(mtxState);
+    return currentState->humanSelf;
+}
+
+std::shared_ptr<THUAI6::Butcher> Logic::ButcherGetSelfInfo() const
+{
+    std::lock_guard<std::mutex> lock(mtxState);
+    return currentState->butcherSelf;
+}
+
+std::vector<std::vector<THUAI6::PlaceType>> Logic::GetFullMap() const
+{
+    std::lock_guard<std::mutex> lock(mtxState);
+    return currentState->gamemap;
+}
+
+bool Logic::Move(int64_t time, double angle)
+{
+    protobuf::MoveRes moveResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufMove(time, angle, playerID);
+    auto status = THUAI6Stub->Move(&context, request, &moveResult);
+    if (status.ok())
+        return moveResult.act_success();
+    else
+        return false;
+}
+
+bool Logic::PickProp(THUAI6::PropType prop)
+{
+    protobuf::BoolRes pickPropResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufPick(prop, playerID);
+    auto status = THUAI6Stub->PickProp(&context, request, &pickPropResult);
+    if (status.ok())
+        return pickPropResult.act_success();
+    else
+        return false;
+}
+
+bool Logic::UseProp()
+{
+    protobuf::BoolRes usePropResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto status = THUAI6Stub->UseProp(&context, request, &usePropResult);
+    if (status.ok())
+        return usePropResult.act_success();
+    else
+        return false;
+}
+
+bool Logic::UseSkill()
+{
+    protobuf::BoolRes useSkillResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto status = THUAI6Stub->UseSkill(&context, request, &useSkillResult);
+    if (status.ok())
+        return useSkillResult.act_success();
+    else
+        return false;
+}
+
+bool Logic::SendMessage(int64_t toID, std::string message)
+{
+    protobuf::BoolRes sendMessageResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufSend(message, toID, playerID);
+    auto status = THUAI6Stub->SendMessage(&context, request, &sendMessageResult);
+    if (status.ok())
+        return sendMessageResult.act_success();
+    else
+        return false;
+}
+
+bool Logic::HaveMessage()
+{
+    protobuf::BoolRes haveMessageResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto status = THUAI6Stub->HaveMessage(&context, request, &haveMessageResult);
+    if (status.ok())
+        return haveMessageResult.act_success();
+    else
+        return false;
+}
+
+std::pair<std::string, int64_t> Logic::GetMessage()
+{
+    protobuf::MsgRes getMessageResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto status = THUAI6Stub->GetMessage(&context, request, &getMessageResult);
+    if (status.ok())
+    {
+        if (getMessageResult.have_message())
+            return std::make_pair(getMessageResult.message_received(), getMessageResult.from_player_id());
+        else
+            return std::make_pair("", -1);
+    }
+    else
+        return std::make_pair("", -1);
+}
+
+bool Logic::Escape()
+{
+    protobuf::BoolRes escapeResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto status = THUAI6Stub->Escape(&context, request, &escapeResult);
+    if (status.ok())
+        return escapeResult.act_success();
+    else
+        return false;
 }
 
 void Logic::ProcessMessage()
@@ -73,7 +210,6 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         }
 
         bufferState->gamemap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());
-
         cvBuffer.notify_one();
     }
 }

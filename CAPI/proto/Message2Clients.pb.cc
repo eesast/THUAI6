@@ -180,7 +180,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.actual_speed_)*/ int64_t{0}, /*decltype(_impl_.actual_angle_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.actual_speed_)*/ int64_t{0}, /*decltype(_impl_.actual_angle_)*/ 0, /*decltype(_impl_.act_success_)*/ false, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
     struct MoveResDefaultTypeInternal
@@ -349,6 +349,7 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     ~0u,  // no _inlined_string_donated_
     PROTOBUF_FIELD_OFFSET(::protobuf::MoveRes, _impl_.actual_speed_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MoveRes, _impl_.actual_angle_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MoveRes, _impl_.act_success_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::BoolRes, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -375,8 +376,8 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
     {76, -1, -1, sizeof(::protobuf::MessageOfMap)},
     {83, -1, -1, sizeof(::protobuf::MessageToClient)},
     {93, -1, -1, sizeof(::protobuf::MoveRes)},
-    {101, -1, -1, sizeof(::protobuf::BoolRes)},
-    {108, -1, -1, sizeof(::protobuf::MsgRes)},
+    {102, -1, -1, sizeof(::protobuf::BoolRes)},
+    {109, -1, -1, sizeof(::protobuf::MsgRes)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -429,11 +430,12 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     "ge\030\002 \003(\0132\032.protobuf.MessageOfButcher\022-\n\014"
     "prop_message\030\003 \003(\0132\027.protobuf.MessageOfP"
     "rop\022+\n\013map_message\030\004 \001(\0132\026.protobuf.Mess"
-    "ageOfMap\"5\n\007MoveRes\022\024\n\014actual_speed\030\001 \001("
-    "\003\022\024\n\014actual_angle\030\002 \001(\001\"\036\n\007BoolRes\022\023\n\013ac"
-    "t_success\030\001 \001(\010\"P\n\006MsgRes\022\024\n\014have_messag"
-    "e\030\001 \001(\010\022\026\n\016from_player_id\030\002 \001(\003\022\030\n\020messa"
-    "ge_received\030\003 \001(\tb\006proto3";
+    "ageOfMap\"J\n\007MoveRes\022\024\n\014actual_speed\030\001 \001("
+    "\003\022\024\n\014actual_angle\030\002 \001(\001\022\023\n\013act_success\030\003"
+    " \001(\010\"\036\n\007BoolRes\022\023\n\013act_success\030\001 \001(\010\"P\n\006"
+    "MsgRes\022\024\n\014have_message\030\001 \001(\010\022\026\n\016from_pla"
+    "yer_id\030\002 \001(\003\022\030\n\020message_received\030\003 \001(\tb\006"
+    "proto3";
 static const ::_pbi::DescriptorTable* const descriptor_table_Message2Clients_2eproto_deps[1] = {
     &::descriptor_table_MessageType_2eproto,
 };
@@ -441,7 +443,7 @@ static ::_pbi::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Message2Clients_2eproto = {
     false,
     false,
-    1625,
+    1646,
     descriptor_table_protodef_Message2Clients_2eproto,
     "Message2Clients.proto",
     &descriptor_table_Message2Clients_2eproto_once,
@@ -3410,10 +3412,10 @@ namespace protobuf
         MoveRes* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.actual_speed_){}, decltype(_impl_.actual_angle_){}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.actual_speed_){}, decltype(_impl_.actual_angle_){}, decltype(_impl_.act_success_){}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-        ::memcpy(&_impl_.actual_speed_, &from._impl_.actual_speed_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.actual_angle_) - reinterpret_cast<char*>(&_impl_.actual_speed_)) + sizeof(_impl_.actual_angle_));
+        ::memcpy(&_impl_.actual_speed_, &from._impl_.actual_speed_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.act_success_) - reinterpret_cast<char*>(&_impl_.actual_speed_)) + sizeof(_impl_.act_success_));
         // @@protoc_insertion_point(copy_constructor:protobuf.MoveRes)
     }
 
@@ -3424,7 +3426,7 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.actual_speed_){int64_t{0}}, decltype(_impl_.actual_angle_){0}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.actual_speed_){int64_t{0}}, decltype(_impl_.actual_angle_){0}, decltype(_impl_.act_success_){false}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
     MoveRes::~MoveRes()
@@ -3455,7 +3457,7 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        ::memset(&_impl_.actual_speed_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.actual_angle_) - reinterpret_cast<char*>(&_impl_.actual_speed_)) + sizeof(_impl_.actual_angle_));
+        ::memset(&_impl_.actual_speed_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.act_success_) - reinterpret_cast<char*>(&_impl_.actual_speed_)) + sizeof(_impl_.act_success_));
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -3486,6 +3488,16 @@ namespace protobuf
                     {
                         _impl_.actual_angle_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
                         ptr += sizeof(double);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // bool act_success = 3;
+                case 3:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24))
+                    {
+                        _impl_.act_success_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        CHK_(ptr);
                     }
                     else
                         goto handle_unusual;
@@ -3542,6 +3554,13 @@ namespace protobuf
             target = ::_pbi::WireFormatLite::WriteDoubleToArray(2, this->_internal_actual_angle(), target);
         }
 
+        // bool act_success = 3;
+        if (this->_internal_act_success() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteBoolToArray(3, this->_internal_act_success(), target);
+        }
+
         if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
         {
             target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -3577,6 +3596,12 @@ namespace protobuf
             total_size += 1 + 8;
         }
 
+        // bool act_success = 3;
+        if (this->_internal_act_success() != 0)
+        {
+            total_size += 1 + 1;
+        }
+
         return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
     }
 
@@ -3609,6 +3634,10 @@ namespace protobuf
         {
             _this->_internal_set_actual_angle(from._internal_actual_angle());
         }
+        if (from._internal_act_success() != 0)
+        {
+            _this->_internal_set_act_success(from._internal_act_success());
+        }
         _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
 
@@ -3631,7 +3660,7 @@ namespace protobuf
         using std::swap;
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-            PROTOBUF_FIELD_OFFSET(MoveRes, _impl_.actual_angle_) + sizeof(MoveRes::_impl_.actual_angle_) - PROTOBUF_FIELD_OFFSET(MoveRes, _impl_.actual_speed_)>(
+            PROTOBUF_FIELD_OFFSET(MoveRes, _impl_.act_success_) + sizeof(MoveRes::_impl_.act_success_) - PROTOBUF_FIELD_OFFSET(MoveRes, _impl_.actual_speed_)>(
             reinterpret_cast<char*>(&_impl_.actual_speed_),
             reinterpret_cast<char*>(&other->_impl_.actual_speed_)
         );

@@ -86,6 +86,7 @@ message MoveRes // 如果打算设计撞墙保留平行速度分量，且需要�
 {
     int64 actual_speed = 1;
     double actual_angle = 2;
+    bool act_success = 3;
 }
 
 message BoolRes // 用于只需要判断执行操作是否成功的行为，如捡起道具、使用道具

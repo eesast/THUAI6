@@ -31,7 +31,7 @@ private:
     // gRPC客户端的stub，所有与服务端之间的通信操作都需要基于stub完成。
     std::unique_ptr<protobuf::AvailableService::Stub> THUAI6Stub;
     // ID、阵营记录
-    int playerID;
+    int64_t playerID;
     THUAI6::PlayerType playerType;
 
     // 类型记录
@@ -82,84 +82,56 @@ private:
 
     // 获取服务器发来的消息
 
-    std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override
-    {
-    }
-    std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override
-    {
-    }
-    std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override
-    {
-    }
-    std::shared_ptr<const THUAI6::Human> HumanGetSelfInfo() const override
-    {
-    }
-    std::shared_ptr<const THUAI6::Butcher> ButcherGetSelfInfo() const override
-    {
-    }
+    std::vector<std::shared_ptr<THUAI6::Butcher>> GetButchers() const override;
+    std::vector<std::shared_ptr<THUAI6::Human>> GetHumans() const override;
+    std::vector<std::shared_ptr<THUAI6::Prop>> GetProps() const override;
+    std::shared_ptr<THUAI6::Human> HumanGetSelfInfo() const override;
+    std::shared_ptr<THUAI6::Butcher> ButcherGetSelfInfo() const override;
 
-    std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override
-    {
-    }
+    std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
 
     // 供IAPI使用的操作相关的部分
-    bool Move(protobuf::MoveMsg) override
-    {
-    }
-    bool PickProp(protobuf::PickMsg) override
-    {
-    }
-    bool UseProp(protobuf::IDMsg) override
-    {
-    }
-    bool UseSkill(protobuf::IDMsg) override
-    {
-    }
-    void SendMessage(protobuf::SendMsg) override
-    {
-    }
-    bool HaveMessage(protobuf::IDMsg) override
-    {
-    }
-    protobuf::MsgRes GetMessage(protobuf::IDMsg) override
-    {
-    }
+    bool Move(int64_t time, double angle) override;
+    bool PickProp(THUAI6::PropType prop) override;
+    bool UseProp() override;
+    bool UseSkill() override;
+    bool SendMessage(int64_t toID, std::string message) override;
+    bool HaveMessage() override;
+    std::pair<std::string, int64_t> GetMessage() override;
 
-    bool Escape(protobuf::IDMsg) override
-    {
-    }
+    bool Escape() override;
 
     // 说明：双向stream由三个函数共同实现，两个记录开始和结束，结果由Logic里的私有的成员变量记录，获得返回值则另调函数
-    bool StartFixMachine(protobuf::IDMsg) override
+    bool StartFixMachine() override
     {
     }
-    bool EndFixMachine(protobuf::IDMsg) override
+    bool EndFixMachine() override
     {
     }
     bool GetFixStatus() override
     {
     }
 
-    bool StartSaveHuman(protobuf::IDMsg) override
+    bool StartSaveHuman() override
     {
     }
-    bool EndSaveHuman(protobuf::IDMsg) override
+    bool EndSaveHuman() override
     {
     }
     bool GetSaveStatus() override
     {
     }
 
-    bool Attack(protobuf::AttackMsg) override
+    bool Attack(double angle) override
     {
     }
-    bool CarryHuman(protobuf::IDMsg) override
+    bool CarryHuman() override
     {
     }
-    bool ReleaseHuman(protobuf::IDMsg) override
+    bool ReleaseHuman() override
     {
     }
-    bool HangHuman(protobuf::IDMsg) override
+    bool HangHuman() override
     {
     }
 
@@ -197,7 +169,7 @@ private:
 
 public:
     // 构造函数还需要传更多参数，有待补充
-    Logic(THUAI6::PlayerType type, int ID, THUAI6::ButcherType butcher, THUAI6::HumanType human);
+    Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::ButcherType butcher, THUAI6::HumanType human);
 
     ~Logic()
     {

@@ -173,9 +173,7 @@ public:
     }
     void Play(IAI& ai) override;
 
-    std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override
-    {
-    }
+    std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override;
 
     [[nodiscard]] int GetFrameCount() const override
     {

@@ -23,13 +23,14 @@
 #include "AI.h"
 #include "structures.h"
 #include "state.h"
+#include "Communication.h"
 
 // 封装了通信组件和对AI对象进行操作
 class Logic : public ILogic
 {
 private:
     // gRPC客户端的stub，所有与服务端之间的通信操作都需要基于stub完成。
-    std::unique_ptr<protobuf::AvailableService::Stub> THUAI6Stub;
+    std::unique_ptr<Communication> pComm;
     // ID、阵营记录
     int64_t playerID;
     THUAI6::PlayerType playerType;

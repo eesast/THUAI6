@@ -3,9 +3,10 @@
 #include <grpcpp/grpcpp.h>
 #include <functional>
 #include "utils.hpp"
-using namespace protobuf;
-using grpc::ClientContext;
-using grpc::Status;
+#include "Communication.h"
+
+// using grpc::ClientContext;
+// using grpc::Status;
 
 extern const THUAI6::PlayerType playerType;
 
@@ -57,119 +58,145 @@ std::vector<std::vector<THUAI6::PlaceType>> Logic::GetFullMap() const
 
 bool Logic::Move(int64_t time, double angle)
 {
-    protobuf::MoveRes moveResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufMove(time, angle, playerID);
-    auto status = THUAI6Stub->Move(&context, request, &moveResult);
-    if (status.ok())
-        return moveResult.act_success();
-    else
-        return false;
+    // protobuf::MoveRes moveResult;
+    // ClientContext context;
+    // auto request = THUAI62Proto::THUAI62ProtobufMove(time, angle, playerID);
+    // auto status = THUAI6Stub->Move(&context, request, &moveResult);
+    // if (status.ok())
+    //     return moveResult.act_success();
+    // else
+    //     return false;
+    return pComm->Move(time, angle, playerID);
 }
 
 bool Logic::PickProp(THUAI6::PropType prop)
 {
-    protobuf::BoolRes pickPropResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufPick(prop, playerID);
-    auto status = THUAI6Stub->PickProp(&context, request, &pickPropResult);
-    if (status.ok())
-        return pickPropResult.act_success();
-    else
-        return false;
+    // protobuf::BoolRes pickPropResult;
+    // ClientContext context;
+    // auto request = THUAI62Proto::THUAI62ProtobufPick(prop, playerID);
+    // auto status = THUAI6Stub->PickProp(&context, request, &pickPropResult);
+    // if (status.ok())
+    //     return pickPropResult.act_success();
+    // else
+    //     return false;
+
+    return pComm->PickProp(prop, playerID);
 }
 
 bool Logic::UseProp()
 {
-    protobuf::BoolRes usePropResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->UseProp(&context, request, &usePropResult);
-    if (status.ok())
-        return usePropResult.act_success();
-    else
-        return false;
+    // protobuf::BoolRes usePropResult;
+    // ClientContext context;
+    // auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    // auto status = THUAI6Stub->UseProp(&context, request, &usePropResult);
+    // if (status.ok())
+    //     return usePropResult.act_success();
+    // else
+    //     return false;
+    return pComm->UseProp(playerID);
 }
 
 bool Logic::UseSkill()
 {
-    protobuf::BoolRes useSkillResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->UseSkill(&context, request, &useSkillResult);
-    if (status.ok())
-        return useSkillResult.act_success();
-    else
-        return false;
+    // protobuf::BoolRes useSkillResult;
+    // ClientContext context;
+    // auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    // auto status = THUAI6Stub->UseSkill(&context, request, &useSkillResult);
+    // if (status.ok())
+    //     return useSkillResult.act_success();
+    // else
+    //     return false;
+
+    return pComm->UseSkill(playerID);
 }
 
 bool Logic::SendMessage(int64_t toID, std::string message)
 {
-    protobuf::BoolRes sendMessageResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufSend(message, toID, playerID);
-    auto status = THUAI6Stub->SendMessage(&context, request, &sendMessageResult);
-    if (status.ok())
-        return sendMessageResult.act_success();
-    else
-        return false;
+    // protobuf::BoolRes sendMessageResult;
+    // ClientContext context;
+    // auto request = THUAI62Proto::THUAI62ProtobufSend(message, toID, playerID);
+    // auto status = THUAI6Stub->SendMessage(&context, request, &sendMessageResult);
+    // if (status.ok())
+    //     return sendMessageResult.act_success();
+    // else
+    //     return false;
+
+    return pComm->SendMessage(toID, message, playerID);
 }
 
 bool Logic::HaveMessage()
 {
-    protobuf::BoolRes haveMessageResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->HaveMessage(&context, request, &haveMessageResult);
-    if (status.ok())
-        return haveMessageResult.act_success();
-    else
-        return false;
+    // protobuf::BoolRes haveMessageResult;
+    // ClientContext context;
+    // auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    // auto status = THUAI6Stub->HaveMessage(&context, request, &haveMessageResult);
+    // if (status.ok())
+    //     return haveMessageResult.act_success();
+    // else
+    //     return false;
+
+    return pComm->HaveMessage(playerID);
 }
 
 std::pair<std::string, int64_t> Logic::GetMessage()
 {
-    protobuf::MsgRes getMessageResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->GetMessage(&context, request, &getMessageResult);
-    if (status.ok())
-    {
-        if (getMessageResult.have_message())
-            return std::make_pair(getMessageResult.message_received(), getMessageResult.from_player_id());
-        else
-            return std::make_pair("", -1);
-    }
-    else
-        return std::make_pair("", -1);
+    // protobuf::MsgRes getMessageResult;
+    // ClientContext context;
+    // auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    // auto status = THUAI6Stub->GetMessage(&context, request, &getMessageResult);
+    // if (status.ok())
+    // {
+    //     if (getMessageResult.have_message())
+    //         return std::make_pair(getMessageResult.message_received(), getMessageResult.from_player_id());
+    //     else
+    //         return std::make_pair("", -1);
+    // }
+    // else
+    //     return std::make_pair("", -1);
+
+    return pComm->GetMessage(playerID);
 }
 
 bool Logic::Escape()
 {
-    protobuf::BoolRes escapeResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->Escape(&context, request, &escapeResult);
-    if (status.ok())
-        return escapeResult.act_success();
-    else
-        return false;
+    // protobuf::BoolRes escapeResult;
+    // ClientContext context;
+    // auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    // auto status = THUAI6Stub->Escape(&context, request, &escapeResult);
+    // if (status.ok())
+    //     return escapeResult.act_success();
+    // else
+    //     return false;
+
+    return pComm->Escape(playerID);
 }
 
 void Logic::ProcessMessage()
 {
     auto messageThread = [&]()
     {
-        // 首先设置消息、通过加入游戏，开始与服务端建立联系
-        protobuf::MessageToClient clientMsg;
-        protobuf::PlayerMsg playerMsg = THUAI62Proto::THUAI62ProtobufPlayer(playerID, playerType, humanType, butcherType);
-        grpc::ClientContext context;
-        auto MessageReader = THUAI6Stub->AddPlayer(&context, playerMsg);
+        // // 首先设置消息、通过加入游戏，开始与服务端建立联系
+        // protobuf::MessageToClient clientMsg;
+        // protobuf::PlayerMsg playerMsg = THUAI62Proto::THUAI62ProtobufPlayer(playerID, playerType, humanType, butcherType);
+        // grpc::ClientContext context;
+        // auto MessageReader = THUAI6Stub->AddPlayer(&context, playerMsg);
 
-        // 持续读取服务端的消息
-        while (MessageReader->Read(&clientMsg))
+        // // 持续读取服务端的消息
+        // while (MessageReader->Read(&clientMsg))
+        // {
+        //     LoadBuffer(clientMsg);
+        // }
+
+        std::cout << "Join Player!" << std::endl;
+        pComm->AddPlayer(playerID, playerType, humanType, butcherType);
+        while (true)
         {
-            LoadBuffer(clientMsg);
+            if (pComm->HaveMessage2Client())
+            {
+                std::cout << "Get Message!" << std::endl;
+                auto clientMsg = pComm->GetMessage2Client();
+                LoadBuffer(clientMsg);
+            }
         }
     };
     std::thread(messageThread).detach();
@@ -186,6 +213,8 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         bufferState->butchers.clear();
         bufferState->props.clear();
 
+        std::cout << "Buffer clear!" << std::endl;
+
         // 读取新的信息
         // 读取消息的选择待补充，之后需要另外判断；具体做法应该是先读到自己，然后按照自己的视野做处理。此处暂时全部读了进来
         for (auto itr = message.human_message().begin(); itr != message.human_message().end(); itr++)
@@ -196,7 +225,10 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                 bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
             }
             else
+            {
                 bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
+                std::cout << "Add Human!" << std::endl;
+            }
         }
         for (auto itr = message.butcher_message().begin(); itr != message.butcher_message().end(); itr++)
         {
@@ -220,24 +252,25 @@ void Logic::Update() noexcept
 
 void Logic::PlayerWrapper(std::function<void()> player)
 {
-    {
-        std::unique_lock<std::mutex> lock(mtxAI);
-        cvAI.wait(lock, [this]()
-                  { return AIStart; });
-    }
+    // {
+    //     std::unique_lock<std::mutex> lock(mtxAI);
+    //     cvAI.wait(lock, [this]()
+    //               { return AIStart; });
+    // }
     player();
 }
 
 bool Logic::TryConnection()
 {
-    IDMsg request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    BoolRes reply;
-    ClientContext context;
-    auto status = THUAI6Stub->TryConnection(&context, request, &reply);
-    if (status.ok())
-        return true;
-    else
-        return false;
+    // IDMsg request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    // BoolRes reply;
+    // ClientContext context;
+    // auto status = THUAI6Stub->TryConnection(&context, request, &reply);
+    // if (status.ok())
+    //     return true;
+    // else
+    //     return false;
+    return pComm->TryConnection(playerID);
 }
 
 void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
@@ -245,10 +278,8 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
     // 构造AI
     pAI = createAI();
 
-    // 建立与服务器之间通信的Stub
-    std::string aim = IP + ':' + port;
-    auto channel = grpc::CreateChannel(aim, grpc::InsecureChannelCredentials());
-    THUAI6Stub = protobuf::AvailableService::NewStub(channel);
+    // 建立与服务器之间通信的组件
+    pComm = std::make_unique<Communication>(IP, port);
 
     // 构造timer
     if (playerType == THUAI6::PlayerType::HumanPlayer)
@@ -260,6 +291,7 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
     auto AIThread = [&, this]()
     {
         auto ai = createAI();
+        ProcessMessage();
         while (AILoop)
         {
             Update();

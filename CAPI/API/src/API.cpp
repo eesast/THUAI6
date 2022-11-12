@@ -10,3 +10,8 @@ void ButcherAPI::Play(IAI& ai)
 {
     ai.play(*this);
 }
+
+std::vector<std::shared_ptr<const THUAI6::Butcher>> HumanAPI::GetButcher() const
+{
+    return logic.GetButchers();
+}

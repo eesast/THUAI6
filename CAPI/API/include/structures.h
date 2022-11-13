@@ -90,13 +90,13 @@ namespace THUAI6
     // 玩家类
     struct Player
     {
-        int32_t x;           // x坐标
-        int32_t y;           // y坐标
-        uint32_t speed;      // 移动速度
-        uint32_t viewRange;  // 视野范围
-        uint64_t playerID;   // 玩家ID
-        uint64_t guid;       // 全局唯一ID
-        uint16_t radius;     // 圆形物体的半径或正方形物体的内切圆半径
+        int32_t x;          // x坐标
+        int32_t y;          // y坐标
+        int32_t speed;      // 移动速度
+        int32_t viewRange;  // 视野范围
+        int64_t playerID;   // 玩家ID
+        int64_t guid;       // 全局唯一ID
+        int16_t radius;     // 圆形物体的半径或正方形物体的内切圆半径
 
         double timeUntilSkillAvailable;  // 技能冷却时间
 
@@ -107,10 +107,10 @@ namespace THUAI6
 
     struct Human : public Player
     {
-        bool onChair;         // 是否被挂
-        bool onGround;        // 是否倒地
-        uint32_t life;        // 剩余生命（本次倒地之前还能承受的伤害）
-        uint32_t hangedTime;  // 被挂的次数
+        bool onChair;        // 是否被挂
+        bool onGround;       // 是否倒地
+        int32_t life;        // 剩余生命（本次倒地之前还能承受的伤害）
+        int32_t hangedTime;  // 被挂的次数
 
         HumanType humanType;              // 人类类型
         std::vector<HumanBuffType> buff;  // buff
@@ -118,8 +118,8 @@ namespace THUAI6
 
     struct Butcher : public Player
     {
-        uint32_t damage;  // 攻击伤害
-        bool movable;     // 是否处在攻击后摇中
+        int32_t damage;  // 攻击伤害
+        bool movable;    // 是否处在攻击后摇中
 
         ButcherType butcherType;            // 屠夫类型
         std::vector<ButcherBuffType> buff;  // buff
@@ -129,8 +129,8 @@ namespace THUAI6
     {
         int32_t x;
         int32_t y;
-        uint32_t size;
-        uint64_t guid;
+        int32_t size;
+        int64_t guid;
         PropType type;
         PlaceType place;
         double facingDirection;  // 朝向

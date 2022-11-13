@@ -22,7 +22,8 @@ message MessageOfHuman
     double ground_time = 14; // 倒地时间
     int64 player_id = 15;
     int32 view_range = 16; // 视野距离
-    repeated HumanBuffType buff = 17;
+    int32 radius = 17; // 半径
+    repeated HumanBuffType buff = 18;
 }
 
 message MessageOfButcher
@@ -37,9 +38,10 @@ message MessageOfButcher
     ButcherType butcher_type = 8;
     int64 guid = 9;
     bool movable = 10; // 是否进入了攻击后摇
-    int64 playerID = 11;
+    int64 player_id = 11;
     int32 view_range = 12; // 视野距离
-    repeated ButcherBuffType buff = 13;
+    int32 radius = 13; // 半径
+    repeated ButcherBuffType buff = 14;
 }
 
 message MessageOfProp // 可拾取道具的信息
@@ -77,13 +79,14 @@ message MessageToClient
     repeated MessageOfHuman human_message = 1;
     repeated MessageOfButcher butcher_message = 2; // 是否真正repeated待定
     repeated MessageOfProp prop_message = 3;
-    MessageOfMap map_massage = 4;
+    MessageOfMap map_message = 4;
 }
 
 message MoveRes // 如果打算设计撞墙保留平行速度分量，且需要返回值则可用这个（大概没啥用）
 {
     int64 actual_speed = 1;
     double actual_angle = 2;
+    bool act_success = 3;
 }
 
 message BoolRes // 用于只需要判断执行操作是否成功的行为，如捡起道具、使用道具

@@ -5,8 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Installer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Installer" Height="450" Width="800">
     <Grid>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="400" />
+            <ColumnDefinition Width="75" />
+            <ColumnDefinition Width="75" />
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="将主体程序安装在：" />
+        <TextBox Grid.Row="2" Grid.Column="1" Name="RouteTxtBox" Text="{Binding Route}" IsEnabled="{Binding CanEditRoute}" />
+        <Button Grid.Row="2" Grid.Column="2" Name="GetRouteBtn" Content="Browse..." Command="{Binding ClickBrowseCommand}" IsEnabled="{Binding CanEditRoute}" />
+        <Button Grid.Row="2" Grid.Column="3" Name="SetBtm" Content="Confirm" Command="{Binding ClickConfirmCommand}" />
     </Grid>
 </Window>

@@ -139,5 +139,3 @@ void ButcherAPI::Play(IAI& ai)
 {
     ai.play(*this);
 }
-
-

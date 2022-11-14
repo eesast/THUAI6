@@ -20,31 +20,37 @@ Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::ButcherType butcher, T
     bufferState = &state[1];
 }
 
-std::vector<std::shared_ptr<THUAI6::Butcher>> Logic::GetButchers() const
+std::vector<std::shared_ptr<const THUAI6::Butcher>> Logic::GetButchers() const
 {
     std::lock_guard<std::mutex> lock(mtxState);
-    return currentState->butchers;
+    std::vector<std::shared_ptr<const THUAI6::Butcher>> temp;
+    temp.assign(currentState->butchers.begin(), currentState->butchers.end());
+    return temp;
 }
 
-std::vector<std::shared_ptr<THUAI6::Human>> Logic::GetHumans() const
+std::vector<std::shared_ptr<const THUAI6::Human>> Logic::GetHumans() const
 {
     std::lock_guard<std::mutex> lock(mtxState);
-    return currentState->humans;
+    std::vector<std::shared_ptr<const THUAI6::Human>> temp;
+    temp.assign(currentState->humans.begin(), currentState->humans.end());
+    return temp;
 }
 
-std::vector<std::shared_ptr<THUAI6::Prop>> Logic::GetProps() const
+std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
 {
     std::lock_guard<std::mutex> lock(mtxState);
-    return currentState->props;
+    std::vector<std::shared_ptr<const THUAI6::Prop>> temp;
+    temp.assign(currentState->props.begin(), currentState->props.end());
+    return temp;
 }
 
-std::shared_ptr<THUAI6::Human> Logic::HumanGetSelfInfo() const
+std::shared_ptr<const THUAI6::Human> Logic::HumanGetSelfInfo() const
 {
     std::lock_guard<std::mutex> lock(mtxState);
     return currentState->humanSelf;
 }
 
-std::shared_ptr<THUAI6::Butcher> Logic::ButcherGetSelfInfo() const
+std::shared_ptr<const THUAI6::Butcher> Logic::ButcherGetSelfInfo() const
 {
     std::lock_guard<std::mutex> lock(mtxState);
     return currentState->butcherSelf;

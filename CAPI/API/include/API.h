@@ -27,11 +27,11 @@ class ILogic
 
 public:
     // 获取服务器发来的消息
-    virtual std::vector<std::shared_ptr<THUAI6::Butcher>> GetButchers() const = 0;
-    virtual std::vector<std::shared_ptr<THUAI6::Human>> GetHumans() const = 0;
-    virtual std::vector<std::shared_ptr<THUAI6::Prop>> GetProps() const = 0;
-    virtual std::shared_ptr<THUAI6::Human> HumanGetSelfInfo() const = 0;
-    virtual std::shared_ptr<THUAI6::Butcher> ButcherGetSelfInfo() const = 0;
+    virtual std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const = 0;
+    virtual std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const = 0;
+    virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
+    virtual std::shared_ptr<const THUAI6::Human> HumanGetSelfInfo() const = 0;
+    virtual std::shared_ptr<const THUAI6::Butcher> ButcherGetSelfInfo() const = 0;
 
     virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
 

@@ -79,7 +79,7 @@ public:
     virtual std::future<bool> MoveDown(int64_t timeInMilliseconds) = 0;
 
     // 捡道具、使用技能
-    virtual std::future<bool> PickProp() = 0;
+    virtual std::future<bool> PickProp(THUAI6::PropType prop) = 0;
     virtual std::future<bool> UseProp() = 0;
     virtual std::future<bool> UseSkill() = 0;
 
@@ -192,7 +192,7 @@ public:
     {
     }
 
-    std::future<bool> PickProp() override
+    std::future<bool> PickProp(THUAI6::PropType prop) override
     {
     }
     std::future<bool> UseProp() override
@@ -219,9 +219,7 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override
     {
     }
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override
-    {
-    }
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override
     {
@@ -303,7 +301,7 @@ public:
     {
     }
 
-    std::future<bool> PickProp() override
+    std::future<bool> PickProp(THUAI6::PropType prop) override
     {
     }
     std::future<bool> UseProp() override
@@ -405,7 +403,7 @@ public:
     {
     }
 
-    std::future<bool> PickProp() override
+    std::future<bool> PickProp(THUAI6::PropType prop) override
     {
     }
     std::future<bool> UseProp() override
@@ -516,7 +514,7 @@ public:
     {
     }
 
-    std::future<bool> PickProp() override
+    std::future<bool> PickProp(THUAI6::PropType prop) override
     {
     }
     std::future<bool> UseProp() override

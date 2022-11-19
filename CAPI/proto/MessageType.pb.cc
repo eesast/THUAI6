@@ -23,7 +23,7 @@ namespace _pbi = _pb::internal;
 namespace protobuf
 {
 }  // namespace protobuf
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_MessageType_2eproto[8];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_MessageType_2eproto[9];
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_MessageType_2eproto = nullptr;
 const uint32_t TableStruct_MessageType_2eproto::offsets[1] = {};
 static constexpr ::_pbi::MigrationSchema* schemas = nullptr;
@@ -39,22 +39,24 @@ const char descriptor_table_protodef_MessageType_2eproto[] PROTOBUF_SECTION_VARI
     "PTYPE2\020\002\022\n\n\006PTYPE3\020\003\022\n\n\006PTYPE4\020\004*d\n\rHuma"
     "nBuffType\022\023\n\017NULL_HBUFF_TYPE\020\000\022\016\n\nHBUFFT"
     "YPE1\020\001\022\016\n\nHBUFFTYPE2\020\002\022\016\n\nHBUFFTYPE3\020\003\022\016"
-    "\n\nHBUFFTYPE4\020\004*f\n\017ButcherBuffType\022\023\n\017NUL"
-    "L_BBUFF_TYPE\020\000\022\016\n\nBBUFFTYPE1\020\001\022\016\n\nBBUFFT"
-    "YPE2\020\002\022\016\n\nBBUFFTYPE3\020\003\022\016\n\nBBUFFTYPE4\020\004*H"
-    "\n\nPlayerType\022\024\n\020NULL_PLAYER_TYPE\020\000\022\020\n\014HU"
-    "MAN_PLAYER\020\001\022\022\n\016BUTCHER_PLAYER\020\002*`\n\tHuma"
-    "nType\022\023\n\017NULL_HUMAN_TYPE\020\000\022\016\n\nHUMANTYPE1"
-    "\020\001\022\016\n\nHUMANTYPE2\020\002\022\016\n\nHUMANTYPE3\020\003\022\016\n\nHU"
-    "MANTYPE4\020\004*l\n\013ButcherType\022\025\n\021NULL_BUTCHE"
-    "R_TYPE\020\000\022\020\n\014BUTCHERTYPE1\020\001\022\020\n\014BUTCHERTYP"
-    "E2\020\002\022\020\n\014BUTCHERTYPE3\020\003\022\020\n\014BUTCHERTYPE4\020\004"
-    "b\006proto3";
+    "\n\nHBUFFTYPE4\020\004*V\n\nHumanState\022\017\n\013NULL_STA"
+    "TUS\020\000\022\010\n\004IDLE\020\001\022\n\n\006FIXING\020\002\022\t\n\005DYING\020\003\022\014"
+    "\n\010ON_CHAIR\020\004\022\010\n\004DEAD\020\005*f\n\017ButcherBuffTyp"
+    "e\022\023\n\017NULL_BBUFF_TYPE\020\000\022\016\n\nBBUFFTYPE1\020\001\022\016"
+    "\n\nBBUFFTYPE2\020\002\022\016\n\nBBUFFTYPE3\020\003\022\016\n\nBBUFFT"
+    "YPE4\020\004*H\n\nPlayerType\022\024\n\020NULL_PLAYER_TYPE"
+    "\020\000\022\020\n\014HUMAN_PLAYER\020\001\022\022\n\016BUTCHER_PLAYER\020\002"
+    "*`\n\tHumanType\022\023\n\017NULL_HUMAN_TYPE\020\000\022\016\n\nHU"
+    "MANTYPE1\020\001\022\016\n\nHUMANTYPE2\020\002\022\016\n\nHUMANTYPE3"
+    "\020\003\022\016\n\nHUMANTYPE4\020\004*l\n\013ButcherType\022\025\n\021NUL"
+    "L_BUTCHER_TYPE\020\000\022\020\n\014BUTCHERTYPE1\020\001\022\020\n\014BU"
+    "TCHERTYPE2\020\002\022\020\n\014BUTCHERTYPE3\020\003\022\020\n\014BUTCHE"
+    "RTYPE4\020\004b\006proto3";
 static ::_pbi::once_flag descriptor_table_MessageType_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_MessageType_2eproto = {
     false,
     false,
-    768,
+    856,
     descriptor_table_protodef_MessageType_2eproto,
     "MessageType.proto",
     &descriptor_table_MessageType_2eproto_once,
@@ -157,10 +159,31 @@ namespace protobuf
         }
     }
 
-    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* ButcherBuffType_descriptor()
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* HumanState_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
         return file_level_enum_descriptors_MessageType_2eproto[4];
+    }
+    bool HumanState_IsValid(int value)
+    {
+        switch (value)
+        {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* ButcherBuffType_descriptor()
+    {
+        ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
+        return file_level_enum_descriptors_MessageType_2eproto[5];
     }
     bool ButcherBuffType_IsValid(int value)
     {
@@ -180,7 +203,7 @@ namespace protobuf
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PlayerType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
-        return file_level_enum_descriptors_MessageType_2eproto[5];
+        return file_level_enum_descriptors_MessageType_2eproto[6];
     }
     bool PlayerType_IsValid(int value)
     {
@@ -198,7 +221,7 @@ namespace protobuf
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* HumanType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
-        return file_level_enum_descriptors_MessageType_2eproto[6];
+        return file_level_enum_descriptors_MessageType_2eproto[7];
     }
     bool HumanType_IsValid(int value)
     {
@@ -218,7 +241,7 @@ namespace protobuf
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* ButcherType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
-        return file_level_enum_descriptors_MessageType_2eproto[7];
+        return file_level_enum_descriptors_MessageType_2eproto[8];
     }
     bool ButcherType_IsValid(int value)
     {

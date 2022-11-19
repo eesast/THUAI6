@@ -277,8 +277,7 @@ namespace protobuf
             kHumanTypeFieldNumber = 9,
             kGuidFieldNumber = 10,
             kChairTimeFieldNumber = 12,
-            kOnChairFieldNumber = 11,
-            kOnGroundFieldNumber = 13,
+            kStateFieldNumber = 11,
             kViewRangeFieldNumber = 16,
             kGroundTimeFieldNumber = 14,
             kPlayerIdFieldNumber = 15,
@@ -415,24 +414,14 @@ namespace protobuf
         void _internal_set_chair_time(double value);
 
     public:
-        // bool on_chair = 11;
-        void clear_on_chair();
-        bool on_chair() const;
-        void set_on_chair(bool value);
+        // .protobuf.HumanState state = 11;
+        void clear_state();
+        ::protobuf::HumanState state() const;
+        void set_state(::protobuf::HumanState value);
 
     private:
-        bool _internal_on_chair() const;
-        void _internal_set_on_chair(bool value);
-
-    public:
-        // bool on_ground = 13;
-        void clear_on_ground();
-        bool on_ground() const;
-        void set_on_ground(bool value);
-
-    private:
-        bool _internal_on_ground() const;
-        void _internal_set_on_ground(bool value);
+        ::protobuf::HumanState _internal_state() const;
+        void _internal_set_state(::protobuf::HumanState value);
 
     public:
         // int32 view_range = 16;
@@ -499,8 +488,7 @@ namespace protobuf
             int human_type_;
             int64_t guid_;
             double chair_time_;
-            bool on_chair_;
-            bool on_ground_;
+            int state_;
             int32_t view_range_;
             double ground_time_;
             int64_t player_id_;
@@ -2955,28 +2943,28 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfHuman.guid)
     }
 
-    // bool on_chair = 11;
-    inline void MessageOfHuman::clear_on_chair()
+    // .protobuf.HumanState state = 11;
+    inline void MessageOfHuman::clear_state()
     {
-        _impl_.on_chair_ = false;
+        _impl_.state_ = 0;
     }
-    inline bool MessageOfHuman::_internal_on_chair() const
+    inline ::protobuf::HumanState MessageOfHuman::_internal_state() const
     {
-        return _impl_.on_chair_;
+        return static_cast<::protobuf::HumanState>(_impl_.state_);
     }
-    inline bool MessageOfHuman::on_chair() const
+    inline ::protobuf::HumanState MessageOfHuman::state() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfHuman.on_chair)
-        return _internal_on_chair();
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfHuman.state)
+        return _internal_state();
     }
-    inline void MessageOfHuman::_internal_set_on_chair(bool value)
+    inline void MessageOfHuman::_internal_set_state(::protobuf::HumanState value)
     {
-        _impl_.on_chair_ = value;
+        _impl_.state_ = value;
     }
-    inline void MessageOfHuman::set_on_chair(bool value)
+    inline void MessageOfHuman::set_state(::protobuf::HumanState value)
     {
-        _internal_set_on_chair(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfHuman.on_chair)
+        _internal_set_state(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfHuman.state)
     }
 
     // double chair_time = 12;
@@ -3001,30 +2989,6 @@ namespace protobuf
     {
         _internal_set_chair_time(value);
         // @@protoc_insertion_point(field_set:protobuf.MessageOfHuman.chair_time)
-    }
-
-    // bool on_ground = 13;
-    inline void MessageOfHuman::clear_on_ground()
-    {
-        _impl_.on_ground_ = false;
-    }
-    inline bool MessageOfHuman::_internal_on_ground() const
-    {
-        return _impl_.on_ground_;
-    }
-    inline bool MessageOfHuman::on_ground() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfHuman.on_ground)
-        return _internal_on_ground();
-    }
-    inline void MessageOfHuman::_internal_set_on_ground(bool value)
-    {
-        _impl_.on_ground_ = value;
-    }
-    inline void MessageOfHuman::set_on_ground(bool value)
-    {
-        _internal_set_on_ground(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfHuman.on_ground)
     }
 
     // double ground_time = 14;

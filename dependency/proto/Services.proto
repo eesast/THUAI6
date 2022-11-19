@@ -19,8 +19,10 @@ service AvailableService
     rpc SendMessage(SendMsg) returns (BoolRes);
     rpc HaveMessage(IDMsg) returns (BoolRes);
     rpc GetMessage(IDMsg) returns (MsgRes);
-    rpc FixMachine(stream IDMsg) returns (stream BoolRes); // 若正常修复且未被打断则返回修复成功，位置错误/被打断则返回修复失败，下同
-    rpc SaveHuman(stream IDMsg) returns (stream BoolRes);
+    rpc StartFixMachine(IDMsg) returns (BoolRes); // 开始修理机器
+    rpc EndFixMachine(IDMsg) returns (BoolRes); // 主动停止修复
+    rpc SaveHuman(IDMsg) returns (BoolRes); // 开始救人
+    rpc EndSaveHuman(IDMsg) returns (BoolRes); // 主动停止救人
     rpc Attack (AttackMsg) returns (BoolRes);
     rpc CarryHuman (IDMsg) returns (BoolRes);
     rpc ReleaseHuman (IDMsg) returns (BoolRes);

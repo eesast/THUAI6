@@ -8,6 +8,6 @@ jobs:
     - uses: DoozyX/clang-format-lint-action@v0.14
       with:
         source: '.'
-        extensions: 'cs,c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx,i,ixx,ipp,i++'
+        extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx,i,ixx,ipp,i++'
         clangFormatVersion: 14
         inplace: False

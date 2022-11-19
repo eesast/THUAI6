@@ -7,7 +7,7 @@ namespace ClientTest
     {
         public static async Task Main(string[] args)
         {
-            Channel channel = new Channel("127.0.0.1:8888", ChannelCredentials.Insecure);
+            Channel channel = new Channel("0.0.0.0:8888", ChannelCredentials.Insecure);
             var client = new AvailableService.AvailableServiceClient(channel);
             PlayerMsg playerInfo = new();
             playerInfo.PlayerId = Convert.ToInt32(args[0]);

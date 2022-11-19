@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Protos\Protos.csproj" />
+    <ProjectReference Include="..\..\dependency\proto\Protos.csproj" />
   </ItemGroup>
 
 </Project>

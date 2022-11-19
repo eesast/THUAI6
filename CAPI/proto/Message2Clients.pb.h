@@ -265,7 +265,7 @@ namespace protobuf
 
         enum : int
         {
-            kBuffFieldNumber = 17,
+            kBuffFieldNumber = 18,
             kXFieldNumber = 1,
             kYFieldNumber = 2,
             kSpeedFieldNumber = 3,
@@ -282,8 +282,9 @@ namespace protobuf
             kViewRangeFieldNumber = 16,
             kGroundTimeFieldNumber = 14,
             kPlayerIdFieldNumber = 15,
+            kRadiusFieldNumber = 17,
         };
-        // repeated .protobuf.HumanBuffType buff = 17;
+        // repeated .protobuf.HumanBuffType buff = 18;
         int buff_size() const;
 
     private:
@@ -464,6 +465,16 @@ namespace protobuf
         void _internal_set_player_id(int64_t value);
 
     public:
+        // int32 radius = 17;
+        void clear_radius();
+        int32_t radius() const;
+        void set_radius(int32_t value);
+
+    private:
+        int32_t _internal_radius() const;
+        void _internal_set_radius(int32_t value);
+
+    public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfHuman)
 
     private:
@@ -493,6 +504,7 @@ namespace protobuf
             int32_t view_range_;
             double ground_time_;
             int64_t player_id_;
+            int32_t radius_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -661,7 +673,7 @@ namespace protobuf
 
         enum : int
         {
-            kBuffFieldNumber = 13,
+            kBuffFieldNumber = 14,
             kXFieldNumber = 1,
             kYFieldNumber = 2,
             kSpeedFieldNumber = 3,
@@ -672,10 +684,11 @@ namespace protobuf
             kGuidFieldNumber = 9,
             kButcherTypeFieldNumber = 8,
             kMovableFieldNumber = 10,
-            kPlayerIDFieldNumber = 11,
+            kPlayerIdFieldNumber = 11,
             kViewRangeFieldNumber = 12,
+            kRadiusFieldNumber = 13,
         };
-        // repeated .protobuf.ButcherBuffType buff = 13;
+        // repeated .protobuf.ButcherBuffType buff = 14;
         int buff_size() const;
 
     private:
@@ -796,14 +809,14 @@ namespace protobuf
         void _internal_set_movable(bool value);
 
     public:
-        // int64 playerID = 11;
-        void clear_playerid();
-        int64_t playerid() const;
-        void set_playerid(int64_t value);
+        // int64 player_id = 11;
+        void clear_player_id();
+        int64_t player_id() const;
+        void set_player_id(int64_t value);
 
     private:
-        int64_t _internal_playerid() const;
-        void _internal_set_playerid(int64_t value);
+        int64_t _internal_player_id() const;
+        void _internal_set_player_id(int64_t value);
 
     public:
         // int32 view_range = 12;
@@ -814,6 +827,16 @@ namespace protobuf
     private:
         int32_t _internal_view_range() const;
         void _internal_set_view_range(int32_t value);
+
+    public:
+        // int32 radius = 13;
+        void clear_radius();
+        int32_t radius() const;
+        void set_radius(int32_t value);
+
+    private:
+        int32_t _internal_radius() const;
+        void _internal_set_radius(int32_t value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfButcher)
@@ -839,8 +862,9 @@ namespace protobuf
             int64_t guid_;
             int butcher_type_;
             bool movable_;
-            int64_t playerid_;
+            int64_t player_id_;
             int32_t view_range_;
+            int32_t radius_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -1938,7 +1962,7 @@ namespace protobuf
             kHumanMessageFieldNumber = 1,
             kButcherMessageFieldNumber = 2,
             kPropMessageFieldNumber = 3,
-            kMapMassageFieldNumber = 4,
+            kMapMessageFieldNumber = 4,
         };
         // repeated .protobuf.MessageOfHuman human_message = 1;
         int human_message_size() const;
@@ -2006,28 +2030,28 @@ namespace protobuf
         const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfProp>&
             prop_message() const;
 
-        // .protobuf.MessageOfMap map_massage = 4;
-        bool has_map_massage() const;
+        // .protobuf.MessageOfMap map_message = 4;
+        bool has_map_message() const;
 
     private:
-        bool _internal_has_map_massage() const;
+        bool _internal_has_map_message() const;
 
     public:
-        void clear_map_massage();
-        const ::protobuf::MessageOfMap& map_massage() const;
-        PROTOBUF_NODISCARD ::protobuf::MessageOfMap* release_map_massage();
-        ::protobuf::MessageOfMap* mutable_map_massage();
-        void set_allocated_map_massage(::protobuf::MessageOfMap* map_massage);
+        void clear_map_message();
+        const ::protobuf::MessageOfMap& map_message() const;
+        PROTOBUF_NODISCARD ::protobuf::MessageOfMap* release_map_message();
+        ::protobuf::MessageOfMap* mutable_map_message();
+        void set_allocated_map_message(::protobuf::MessageOfMap* map_message);
 
     private:
-        const ::protobuf::MessageOfMap& _internal_map_massage() const;
-        ::protobuf::MessageOfMap* _internal_mutable_map_massage();
+        const ::protobuf::MessageOfMap& _internal_map_message() const;
+        ::protobuf::MessageOfMap* _internal_mutable_map_message();
 
     public:
-        void unsafe_arena_set_allocated_map_massage(
-            ::protobuf::MessageOfMap* map_massage
+        void unsafe_arena_set_allocated_map_message(
+            ::protobuf::MessageOfMap* map_message
         );
-        ::protobuf::MessageOfMap* unsafe_arena_release_map_massage();
+        ::protobuf::MessageOfMap* unsafe_arena_release_map_message();
 
         // @@protoc_insertion_point(class_scope:protobuf.MessageToClient)
 
@@ -2043,7 +2067,7 @@ namespace protobuf
             ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfHuman> human_message_;
             ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfButcher> butcher_message_;
             ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfProp> prop_message_;
-            ::protobuf::MessageOfMap* map_massage_;
+            ::protobuf::MessageOfMap* map_message_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -2214,6 +2238,7 @@ namespace protobuf
         {
             kActualSpeedFieldNumber = 1,
             kActualAngleFieldNumber = 2,
+            kActSuccessFieldNumber = 3,
         };
         // int64 actual_speed = 1;
         void clear_actual_speed();
@@ -2235,6 +2260,16 @@ namespace protobuf
         void _internal_set_actual_angle(double value);
 
     public:
+        // bool act_success = 3;
+        void clear_act_success();
+        bool act_success() const;
+        void set_act_success(bool value);
+
+    private:
+        bool _internal_act_success() const;
+        void _internal_set_act_success(bool value);
+
+    public:
         // @@protoc_insertion_point(class_scope:protobuf.MoveRes)
 
     private:
@@ -2248,6 +2283,7 @@ namespace protobuf
         {
             int64_t actual_speed_;
             double actual_angle_;
+            bool act_success_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -3063,7 +3099,31 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfHuman.view_range)
     }
 
-    // repeated .protobuf.HumanBuffType buff = 17;
+    // int32 radius = 17;
+    inline void MessageOfHuman::clear_radius()
+    {
+        _impl_.radius_ = 0;
+    }
+    inline int32_t MessageOfHuman::_internal_radius() const
+    {
+        return _impl_.radius_;
+    }
+    inline int32_t MessageOfHuman::radius() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfHuman.radius)
+        return _internal_radius();
+    }
+    inline void MessageOfHuman::_internal_set_radius(int32_t value)
+    {
+        _impl_.radius_ = value;
+    }
+    inline void MessageOfHuman::set_radius(int32_t value)
+    {
+        _internal_set_radius(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfHuman.radius)
+    }
+
+    // repeated .protobuf.HumanBuffType buff = 18;
     inline int MessageOfHuman::_internal_buff_size() const
     {
         return _impl_.buff_.size();
@@ -3361,28 +3421,28 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfButcher.movable)
     }
 
-    // int64 playerID = 11;
-    inline void MessageOfButcher::clear_playerid()
+    // int64 player_id = 11;
+    inline void MessageOfButcher::clear_player_id()
     {
-        _impl_.playerid_ = int64_t{0};
+        _impl_.player_id_ = int64_t{0};
     }
-    inline int64_t MessageOfButcher::_internal_playerid() const
+    inline int64_t MessageOfButcher::_internal_player_id() const
     {
-        return _impl_.playerid_;
+        return _impl_.player_id_;
     }
-    inline int64_t MessageOfButcher::playerid() const
+    inline int64_t MessageOfButcher::player_id() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfButcher.playerID)
-        return _internal_playerid();
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfButcher.player_id)
+        return _internal_player_id();
     }
-    inline void MessageOfButcher::_internal_set_playerid(int64_t value)
+    inline void MessageOfButcher::_internal_set_player_id(int64_t value)
     {
-        _impl_.playerid_ = value;
+        _impl_.player_id_ = value;
     }
-    inline void MessageOfButcher::set_playerid(int64_t value)
+    inline void MessageOfButcher::set_player_id(int64_t value)
     {
-        _internal_set_playerid(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfButcher.playerID)
+        _internal_set_player_id(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfButcher.player_id)
     }
 
     // int32 view_range = 12;
@@ -3409,7 +3469,31 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfButcher.view_range)
     }
 
-    // repeated .protobuf.ButcherBuffType buff = 13;
+    // int32 radius = 13;
+    inline void MessageOfButcher::clear_radius()
+    {
+        _impl_.radius_ = 0;
+    }
+    inline int32_t MessageOfButcher::_internal_radius() const
+    {
+        return _impl_.radius_;
+    }
+    inline int32_t MessageOfButcher::radius() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfButcher.radius)
+        return _internal_radius();
+    }
+    inline void MessageOfButcher::_internal_set_radius(int32_t value)
+    {
+        _impl_.radius_ = value;
+    }
+    inline void MessageOfButcher::set_radius(int32_t value)
+    {
+        _internal_set_radius(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfButcher.radius)
+    }
+
+    // repeated .protobuf.ButcherBuffType buff = 14;
     inline int MessageOfButcher::_internal_buff_size() const
     {
         return _impl_.buff_.size();
@@ -4049,54 +4133,54 @@ namespace protobuf
         return _impl_.prop_message_;
     }
 
-    // .protobuf.MessageOfMap map_massage = 4;
-    inline bool MessageToClient::_internal_has_map_massage() const
+    // .protobuf.MessageOfMap map_message = 4;
+    inline bool MessageToClient::_internal_has_map_message() const
     {
-        return this != internal_default_instance() && _impl_.map_massage_ != nullptr;
+        return this != internal_default_instance() && _impl_.map_message_ != nullptr;
     }
-    inline bool MessageToClient::has_map_massage() const
+    inline bool MessageToClient::has_map_message() const
     {
-        return _internal_has_map_massage();
+        return _internal_has_map_message();
     }
-    inline void MessageToClient::clear_map_massage()
+    inline void MessageToClient::clear_map_message()
     {
-        if (GetArenaForAllocation() == nullptr && _impl_.map_massage_ != nullptr)
+        if (GetArenaForAllocation() == nullptr && _impl_.map_message_ != nullptr)
         {
-            delete _impl_.map_massage_;
+            delete _impl_.map_message_;
         }
-        _impl_.map_massage_ = nullptr;
+        _impl_.map_message_ = nullptr;
     }
-    inline const ::protobuf::MessageOfMap& MessageToClient::_internal_map_massage() const
+    inline const ::protobuf::MessageOfMap& MessageToClient::_internal_map_message() const
     {
-        const ::protobuf::MessageOfMap* p = _impl_.map_massage_;
+        const ::protobuf::MessageOfMap* p = _impl_.map_message_;
         return p != nullptr ? *p : reinterpret_cast<const ::protobuf::MessageOfMap&>(::protobuf::_MessageOfMap_default_instance_);
     }
-    inline const ::protobuf::MessageOfMap& MessageToClient::map_massage() const
+    inline const ::protobuf::MessageOfMap& MessageToClient::map_message() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.MessageToClient.map_massage)
-        return _internal_map_massage();
+        // @@protoc_insertion_point(field_get:protobuf.MessageToClient.map_message)
+        return _internal_map_message();
     }
-    inline void MessageToClient::unsafe_arena_set_allocated_map_massage(
-        ::protobuf::MessageOfMap* map_massage
+    inline void MessageToClient::unsafe_arena_set_allocated_map_message(
+        ::protobuf::MessageOfMap* map_message
     )
     {
         if (GetArenaForAllocation() == nullptr)
         {
-            delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.map_massage_);
+            delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.map_message_);
         }
-        _impl_.map_massage_ = map_massage;
-        if (map_massage)
+        _impl_.map_message_ = map_message;
+        if (map_message)
         {
         }
         else
         {
         }
-        // @@protoc_insertion_point(field_unsafe_arena_set_allocated:protobuf.MessageToClient.map_massage)
+        // @@protoc_insertion_point(field_unsafe_arena_set_allocated:protobuf.MessageToClient.map_message)
     }
-    inline ::protobuf::MessageOfMap* MessageToClient::release_map_massage()
+    inline ::protobuf::MessageOfMap* MessageToClient::release_map_message()
     {
-        ::protobuf::MessageOfMap* temp = _impl_.map_massage_;
-        _impl_.map_massage_ = nullptr;
+        ::protobuf::MessageOfMap* temp = _impl_.map_message_;
+        _impl_.map_message_ = nullptr;
 #ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
         auto* old = reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
         temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
@@ -4112,52 +4196,52 @@ namespace protobuf
 #endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
         return temp;
     }
-    inline ::protobuf::MessageOfMap* MessageToClient::unsafe_arena_release_map_massage()
+    inline ::protobuf::MessageOfMap* MessageToClient::unsafe_arena_release_map_message()
     {
-        // @@protoc_insertion_point(field_release:protobuf.MessageToClient.map_massage)
+        // @@protoc_insertion_point(field_release:protobuf.MessageToClient.map_message)
 
-        ::protobuf::MessageOfMap* temp = _impl_.map_massage_;
-        _impl_.map_massage_ = nullptr;
+        ::protobuf::MessageOfMap* temp = _impl_.map_message_;
+        _impl_.map_message_ = nullptr;
         return temp;
     }
-    inline ::protobuf::MessageOfMap* MessageToClient::_internal_mutable_map_massage()
+    inline ::protobuf::MessageOfMap* MessageToClient::_internal_mutable_map_message()
     {
-        if (_impl_.map_massage_ == nullptr)
+        if (_impl_.map_message_ == nullptr)
         {
             auto* p = CreateMaybeMessage<::protobuf::MessageOfMap>(GetArenaForAllocation());
-            _impl_.map_massage_ = p;
+            _impl_.map_message_ = p;
         }
-        return _impl_.map_massage_;
+        return _impl_.map_message_;
     }
-    inline ::protobuf::MessageOfMap* MessageToClient::mutable_map_massage()
+    inline ::protobuf::MessageOfMap* MessageToClient::mutable_map_message()
     {
-        ::protobuf::MessageOfMap* _msg = _internal_mutable_map_massage();
-        // @@protoc_insertion_point(field_mutable:protobuf.MessageToClient.map_massage)
+        ::protobuf::MessageOfMap* _msg = _internal_mutable_map_message();
+        // @@protoc_insertion_point(field_mutable:protobuf.MessageToClient.map_message)
         return _msg;
     }
-    inline void MessageToClient::set_allocated_map_massage(::protobuf::MessageOfMap* map_massage)
+    inline void MessageToClient::set_allocated_map_message(::protobuf::MessageOfMap* map_message)
     {
         ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
         if (message_arena == nullptr)
         {
-            delete _impl_.map_massage_;
+            delete _impl_.map_message_;
         }
-        if (map_massage)
+        if (map_message)
         {
             ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-                ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(map_massage);
+                ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(map_message);
             if (message_arena != submessage_arena)
             {
-                map_massage = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-                    message_arena, map_massage, submessage_arena
+                map_message = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+                    message_arena, map_message, submessage_arena
                 );
             }
         }
         else
         {
         }
-        _impl_.map_massage_ = map_massage;
-        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageToClient.map_massage)
+        _impl_.map_message_ = map_message;
+        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageToClient.map_message)
     }
 
     // -------------------------------------------------------------------
@@ -4210,6 +4294,30 @@ namespace protobuf
     {
         _internal_set_actual_angle(value);
         // @@protoc_insertion_point(field_set:protobuf.MoveRes.actual_angle)
+    }
+
+    // bool act_success = 3;
+    inline void MoveRes::clear_act_success()
+    {
+        _impl_.act_success_ = false;
+    }
+    inline bool MoveRes::_internal_act_success() const
+    {
+        return _impl_.act_success_;
+    }
+    inline bool MoveRes::act_success() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MoveRes.act_success)
+        return _internal_act_success();
+    }
+    inline void MoveRes::_internal_set_act_success(bool value)
+    {
+        _impl_.act_success_ = value;
+    }
+    inline void MoveRes::set_act_success(bool value)
+    {
+        _internal_set_act_success(value);
+        // @@protoc_insertion_point(field_set:protobuf.MoveRes.act_success)
     }
 
     // -------------------------------------------------------------------

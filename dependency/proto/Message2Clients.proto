@@ -16,9 +16,8 @@ message MessageOfHuman
     PropType prop = 8;
     HumanType human_type = 9;
     int64 guid = 10;
-    bool on_chair = 11; // 是否被挂
+    HumanState state = 11;
     double chair_time = 12; // 被挂的时间
-    bool on_ground = 13; // 是否倒地
     double ground_time = 14; // 倒地时间
     int64 player_id = 15;
     int32 view_range = 16; // 视野距离

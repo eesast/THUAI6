@@ -43,6 +43,16 @@ enum HumanBuffType // 人类可用的增益效果类型
     HBUFFTYPE4 = 4;
 }
 
+enum HumanState
+{
+    NULL_STATUS = 0;
+    IDLE = 1; // 正常状态
+    FIXING = 2; // 修理状态
+    DYING = 3; // 濒死状态 
+    ON_CHAIR = 4; // 被挂
+    DEAD = 5; // 死亡状态
+}
+
 enum ButcherBuffType // 屠夫可用的增益效果类型
 {
     NULL_BBUFF_TYPE = 0;

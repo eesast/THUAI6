@@ -10,26 +10,22 @@ std::future<bool> HumanAPI::Move(int64_t timeInMilliseconds, double angleInRadia
 
 std::future<bool> HumanAPI::MoveDown(int64_t timeInMilliseconds)
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.Move(timeInMilliseconds, 0); });
+    return Move(timeInMilliseconds, 0);
 }
 
 std::future<bool> HumanAPI::MoveRight(int64_t timeInMilliseconds)
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.Move(timeInMilliseconds, PI * 0.5); });
+    return Move(timeInMilliseconds, PI * 0.5);
 }
 
 std::future<bool> HumanAPI::MoveUp(int64_t timeInMilliseconds)
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.Move(timeInMilliseconds, PI); });
+    return Move(timeInMilliseconds, PI);
 }
 
 std::future<bool> HumanAPI::MoveLeft(int64_t timeInMilliseconds)
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.Move(timeInMilliseconds, PI * 1.5); });
+    return Move(timeInMilliseconds, PI * 1.5);
 }
 
 std::future<bool> ButcherAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
@@ -40,26 +36,22 @@ std::future<bool> ButcherAPI::Move(int64_t timeInMilliseconds, double angleInRad
 
 std::future<bool> ButcherAPI::MoveDown(int64_t timeInMilliseconds)
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.Move(timeInMilliseconds, 0); });
+    return Move(timeInMilliseconds, 0);
 }
 
 std::future<bool> ButcherAPI::MoveRight(int64_t timeInMilliseconds)
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.Move(timeInMilliseconds, PI * 0.5); });
+    return Move(timeInMilliseconds, PI * 0.5);
 }
 
 std::future<bool> ButcherAPI::MoveUp(int64_t timeInMilliseconds)
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.Move(timeInMilliseconds, PI); });
+    return Move(timeInMilliseconds, PI);
 }
 
 std::future<bool> ButcherAPI::MoveLeft(int64_t timeInMilliseconds)
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.Move(timeInMilliseconds, PI * 1.5); });
+    return Move(timeInMilliseconds, PI * 1.5);
 }
 
 std::future<bool> HumanAPI::PickProp(THUAI6::PropType prop)
@@ -110,6 +102,30 @@ std::future<bool> ButcherAPI::SendMessage(int64_t toID, std::string message)
                       { return logic.SendMessage(toID, message); });
 }
 
+std::future<bool> HumanAPI::HaveMessage()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.HaveMessage(); });
+}
+
+std::future<bool> ButcherAPI::HaveMessage()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.HaveMessage(); });
+}
+
+std::future<std::pair<int64_t, std::string>> HumanAPI::GetMessage()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.GetMessage(); });
+}
+
+std::future<std::pair<int64_t, std::string>> ButcherAPI::GetMessage()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.GetMessage(); });
+}
+
 std::vector<std::shared_ptr<const THUAI6::Butcher>> HumanAPI::GetButcher() const
 {
     return logic.GetButchers();
@@ -120,7 +136,22 @@ std::vector<std::shared_ptr<const THUAI6::Human>> HumanAPI::GetHuman() const
     return logic.GetHumans();
 }
 
+std::vector<std::shared_ptr<const THUAI6::Butcher>> ButcherAPI::GetButcher() const
+{
+    return logic.GetButchers();
+}
+
+std::vector<std::shared_ptr<const THUAI6::Human>> ButcherAPI::GetHuman() const
+{
+    return logic.GetHumans();
+}
+
 std::vector<std::shared_ptr<const THUAI6::Prop>> HumanAPI::GetProps() const
+{
+    return logic.GetProps();
+}
+
+std::vector<std::shared_ptr<const THUAI6::Prop>> ButcherAPI::GetProps() const
 {
     return logic.GetProps();
 }
@@ -128,6 +159,101 @@ std::vector<std::shared_ptr<const THUAI6::Prop>> HumanAPI::GetProps() const
 std::vector<std::vector<THUAI6::PlaceType>> HumanAPI::GetFullMap() const
 {
     return logic.GetFullMap();
+}
+
+THUAI6::PlaceType HumanAPI::GetPlaceType(int32_t CellX, int32_t CellY) const
+{
+    return logic.GetPlaceType(CellX, CellY);
+}
+
+THUAI6::PlaceType ButcherAPI::GetPlaceType(int32_t CellX, int32_t CellY) const
+{
+    return logic.GetPlaceType(CellX, CellY);
+}
+
+std::vector<std::vector<THUAI6::PlaceType>> ButcherAPI::GetFullMap() const
+{
+    return logic.GetFullMap();
+}
+
+void HumanAPI::StartFixMachine()
+{
+    std::thread([&]()
+                { logic.StartFixMachine(); })
+        .detach();
+}
+
+void HumanAPI::EndFixMachine()
+{
+    std::thread([&]()
+                { logic.EndFixMachine(); })
+        .detach();
+}
+
+std::future<bool> HumanAPI::GetFixStatus()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.GetFixStatus(); });
+}
+
+void HumanAPI::StartSaveHuman()
+{
+    std::thread([&]()
+                { logic.StartSaveHuman(); })
+        .detach();
+}
+
+void HumanAPI::EndSaveHuman()
+{
+    std::thread([&]()
+                { logic.EndSaveHuman(); })
+        .detach();
+}
+
+std::future<bool> HumanAPI::GetSaveStatus()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.GetSaveStatus(); });
+}
+
+std::future<bool> HumanAPI::Escape()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.Escape(); });
+}
+
+std::shared_ptr<const THUAI6::Human> HumanAPI::GetSelfInfo() const
+{
+    return logic.HumanGetSelfInfo();
+}
+
+std::future<bool> ButcherAPI::Attack(double angleInRadian)
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.Attack(angleInRadian); });
+}
+
+std::future<bool> ButcherAPI::CarryHuman()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.CarryHuman(); });
+}
+
+std::future<bool> ButcherAPI::ReleaseHuman()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.ReleaseHuman(); });
+}
+
+std::future<bool> ButcherAPI::HangHuman()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.HangHuman(); });
+}
+
+std::shared_ptr<const THUAI6::Butcher> ButcherAPI::GetSelfInfo() const
+{
+    return logic.ButcherGetSelfInfo();
 }
 
 void HumanAPI::Play(IAI& ai)

@@ -128,31 +128,46 @@ namespace protobuf
             {
                 return std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::MsgRes>>(PrepareAsyncGetMessageRaw(context, request, cq));
             }
-            std::unique_ptr<::grpc::ClientReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>> FixMachine(::grpc::ClientContext* context)
+            virtual ::grpc::Status StartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response) = 0;
+            std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>> AsyncStartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
             {
-                return std::unique_ptr<::grpc::ClientReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>>(FixMachineRaw(context));
+                return std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>>(AsyncStartFixMachineRaw(context, request, cq));
             }
-            std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>> AsyncFixMachine(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag)
+            std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>> PrepareAsyncStartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
             {
-                return std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>>(AsyncFixMachineRaw(context, cq, tag));
+                return std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>>(PrepareAsyncStartFixMachineRaw(context, request, cq));
             }
-            std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>> PrepareAsyncFixMachine(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq)
+            // 开始修理机器
+            virtual ::grpc::Status EndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response) = 0;
+            std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>> AsyncEndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
             {
-                return std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>>(PrepareAsyncFixMachineRaw(context, cq));
+                return std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>>(AsyncEndFixMachineRaw(context, request, cq));
             }
-            // 若正常修复且未被打断则返回修复成功，位置错误/被打断则返回修复失败，下同
-            std::unique_ptr<::grpc::ClientReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>> SaveHuman(::grpc::ClientContext* context)
+            std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>> PrepareAsyncEndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
             {
-                return std::unique_ptr<::grpc::ClientReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>>(SaveHumanRaw(context));
+                return std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>>(PrepareAsyncEndFixMachineRaw(context, request, cq));
             }
-            std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>> AsyncSaveHuman(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag)
+            // 主动停止修复
+            virtual ::grpc::Status SaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response) = 0;
+            std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>> AsyncSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
             {
-                return std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>>(AsyncSaveHumanRaw(context, cq, tag));
+                return std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>>(AsyncSaveHumanRaw(context, request, cq));
             }
-            std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>> PrepareAsyncSaveHuman(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq)
+            std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>> PrepareAsyncSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
             {
-                return std::unique_ptr<::grpc::ClientAsyncReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>>(PrepareAsyncSaveHumanRaw(context, cq));
+                return std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>>(PrepareAsyncSaveHumanRaw(context, request, cq));
             }
+            // 开始救人
+            virtual ::grpc::Status EndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response) = 0;
+            std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>> AsyncEndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+            {
+                return std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>>(AsyncEndSaveHumanRaw(context, request, cq));
+            }
+            std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>> PrepareAsyncEndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+            {
+                return std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>>(PrepareAsyncEndSaveHumanRaw(context, request, cq));
+            }
+            // 主动停止救人
             virtual ::grpc::Status Attack(::grpc::ClientContext* context, const ::protobuf::AttackMsg& request, ::protobuf::BoolRes* response) = 0;
             std::unique_ptr<::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>> AsyncAttack(::grpc::ClientContext* context, const ::protobuf::AttackMsg& request, ::grpc::CompletionQueue* cq)
             {
@@ -224,9 +239,18 @@ namespace protobuf
                 virtual void HaveMessage(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) = 0;
                 virtual void GetMessage(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::MsgRes* response, std::function<void(::grpc::Status)>) = 0;
                 virtual void GetMessage(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::MsgRes* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-                virtual void FixMachine(::grpc::ClientContext* context, ::grpc::ClientBidiReactor<::protobuf::IDMsg, ::protobuf::BoolRes>* reactor) = 0;
-                // 若正常修复且未被打断则返回修复成功，位置错误/被打断则返回修复失败，下同
-                virtual void SaveHuman(::grpc::ClientContext* context, ::grpc::ClientBidiReactor<::protobuf::IDMsg, ::protobuf::BoolRes>* reactor) = 0;
+                virtual void StartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) = 0;
+                virtual void StartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+                // 开始修理机器
+                virtual void EndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) = 0;
+                virtual void EndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+                // 主动停止修复
+                virtual void SaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) = 0;
+                virtual void SaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+                // 开始救人
+                virtual void EndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) = 0;
+                virtual void EndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+                // 主动停止救人
                 virtual void Attack(::grpc::ClientContext* context, const ::protobuf::AttackMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) = 0;
                 virtual void Attack(::grpc::ClientContext* context, const ::protobuf::AttackMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) = 0;
                 virtual void CarryHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) = 0;
@@ -268,12 +292,14 @@ namespace protobuf
             virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* PrepareAsyncHaveMessageRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
             virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::MsgRes>* AsyncGetMessageRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
             virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::MsgRes>* PrepareAsyncGetMessageRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
-            virtual ::grpc::ClientReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>* FixMachineRaw(::grpc::ClientContext* context) = 0;
-            virtual ::grpc::ClientAsyncReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>* AsyncFixMachineRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) = 0;
-            virtual ::grpc::ClientAsyncReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>* PrepareAsyncFixMachineRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) = 0;
-            virtual ::grpc::ClientReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>* SaveHumanRaw(::grpc::ClientContext* context) = 0;
-            virtual ::grpc::ClientAsyncReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>* AsyncSaveHumanRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) = 0;
-            virtual ::grpc::ClientAsyncReaderWriterInterface<::protobuf::IDMsg, ::protobuf::BoolRes>* PrepareAsyncSaveHumanRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) = 0;
+            virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* AsyncStartFixMachineRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
+            virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* PrepareAsyncStartFixMachineRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
+            virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* AsyncEndFixMachineRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
+            virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* PrepareAsyncEndFixMachineRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
+            virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* AsyncSaveHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
+            virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* PrepareAsyncSaveHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
+            virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* AsyncEndSaveHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
+            virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* PrepareAsyncEndSaveHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
             virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* AsyncAttackRaw(::grpc::ClientContext* context, const ::protobuf::AttackMsg& request, ::grpc::CompletionQueue* cq) = 0;
             virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* PrepareAsyncAttackRaw(::grpc::ClientContext* context, const ::protobuf::AttackMsg& request, ::grpc::CompletionQueue* cq) = 0;
             virtual ::grpc::ClientAsyncResponseReaderInterface<::protobuf::BoolRes>* AsyncCarryHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) = 0;
@@ -373,29 +399,41 @@ namespace protobuf
             {
                 return std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::MsgRes>>(PrepareAsyncGetMessageRaw(context, request, cq));
             }
-            std::unique_ptr<::grpc::ClientReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>> FixMachine(::grpc::ClientContext* context)
+            ::grpc::Status StartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response) override;
+            std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>> AsyncStartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
             {
-                return std::unique_ptr<::grpc::ClientReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>>(FixMachineRaw(context));
+                return std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>>(AsyncStartFixMachineRaw(context, request, cq));
             }
-            std::unique_ptr<::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>> AsyncFixMachine(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag)
+            std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>> PrepareAsyncStartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
             {
-                return std::unique_ptr<::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>>(AsyncFixMachineRaw(context, cq, tag));
+                return std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>>(PrepareAsyncStartFixMachineRaw(context, request, cq));
             }
-            std::unique_ptr<::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>> PrepareAsyncFixMachine(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq)
+            ::grpc::Status EndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response) override;
+            std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>> AsyncEndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
             {
-                return std::unique_ptr<::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>>(PrepareAsyncFixMachineRaw(context, cq));
+                return std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>>(AsyncEndFixMachineRaw(context, request, cq));
             }
-            std::unique_ptr<::grpc::ClientReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>> SaveHuman(::grpc::ClientContext* context)
+            std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>> PrepareAsyncEndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
             {
-                return std::unique_ptr<::grpc::ClientReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>>(SaveHumanRaw(context));
+                return std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>>(PrepareAsyncEndFixMachineRaw(context, request, cq));
             }
-            std::unique_ptr<::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>> AsyncSaveHuman(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag)
+            ::grpc::Status SaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response) override;
+            std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>> AsyncSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
             {
-                return std::unique_ptr<::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>>(AsyncSaveHumanRaw(context, cq, tag));
+                return std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>>(AsyncSaveHumanRaw(context, request, cq));
             }
-            std::unique_ptr<::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>> PrepareAsyncSaveHuman(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq)
+            std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>> PrepareAsyncSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
             {
-                return std::unique_ptr<::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>>(PrepareAsyncSaveHumanRaw(context, cq));
+                return std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>>(PrepareAsyncSaveHumanRaw(context, request, cq));
+            }
+            ::grpc::Status EndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response) override;
+            std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>> AsyncEndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+            {
+                return std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>>(AsyncEndSaveHumanRaw(context, request, cq));
+            }
+            std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>> PrepareAsyncEndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+            {
+                return std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>>(PrepareAsyncEndSaveHumanRaw(context, request, cq));
             }
             ::grpc::Status Attack(::grpc::ClientContext* context, const ::protobuf::AttackMsg& request, ::protobuf::BoolRes* response) override;
             std::unique_ptr<::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>> AsyncAttack(::grpc::ClientContext* context, const ::protobuf::AttackMsg& request, ::grpc::CompletionQueue* cq)
@@ -463,8 +501,14 @@ namespace protobuf
                 void HaveMessage(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) override;
                 void GetMessage(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::MsgRes* response, std::function<void(::grpc::Status)>) override;
                 void GetMessage(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::MsgRes* response, ::grpc::ClientUnaryReactor* reactor) override;
-                void FixMachine(::grpc::ClientContext* context, ::grpc::ClientBidiReactor<::protobuf::IDMsg, ::protobuf::BoolRes>* reactor) override;
-                void SaveHuman(::grpc::ClientContext* context, ::grpc::ClientBidiReactor<::protobuf::IDMsg, ::protobuf::BoolRes>* reactor) override;
+                void StartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) override;
+                void StartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) override;
+                void EndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) override;
+                void EndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) override;
+                void SaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) override;
+                void SaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) override;
+                void EndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) override;
+                void EndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) override;
                 void Attack(::grpc::ClientContext* context, const ::protobuf::AttackMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) override;
                 void Attack(::grpc::ClientContext* context, const ::protobuf::AttackMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor) override;
                 void CarryHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)>) override;
@@ -518,12 +562,14 @@ namespace protobuf
             ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* PrepareAsyncHaveMessageRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
             ::grpc::ClientAsyncResponseReader<::protobuf::MsgRes>* AsyncGetMessageRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
             ::grpc::ClientAsyncResponseReader<::protobuf::MsgRes>* PrepareAsyncGetMessageRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
-            ::grpc::ClientReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>* FixMachineRaw(::grpc::ClientContext* context) override;
-            ::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>* AsyncFixMachineRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) override;
-            ::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>* PrepareAsyncFixMachineRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) override;
-            ::grpc::ClientReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>* SaveHumanRaw(::grpc::ClientContext* context) override;
-            ::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>* AsyncSaveHumanRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag) override;
-            ::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>* PrepareAsyncSaveHumanRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq) override;
+            ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AsyncStartFixMachineRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
+            ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* PrepareAsyncStartFixMachineRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
+            ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AsyncEndFixMachineRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
+            ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* PrepareAsyncEndFixMachineRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
+            ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AsyncSaveHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
+            ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* PrepareAsyncSaveHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
+            ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AsyncEndSaveHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
+            ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* PrepareAsyncEndSaveHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
             ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AsyncAttackRaw(::grpc::ClientContext* context, const ::protobuf::AttackMsg& request, ::grpc::CompletionQueue* cq) override;
             ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* PrepareAsyncAttackRaw(::grpc::ClientContext* context, const ::protobuf::AttackMsg& request, ::grpc::CompletionQueue* cq) override;
             ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AsyncCarryHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq) override;
@@ -543,8 +589,10 @@ namespace protobuf
             const ::grpc::internal::RpcMethod rpcmethod_SendMessage_;
             const ::grpc::internal::RpcMethod rpcmethod_HaveMessage_;
             const ::grpc::internal::RpcMethod rpcmethod_GetMessage_;
-            const ::grpc::internal::RpcMethod rpcmethod_FixMachine_;
+            const ::grpc::internal::RpcMethod rpcmethod_StartFixMachine_;
+            const ::grpc::internal::RpcMethod rpcmethod_EndFixMachine_;
             const ::grpc::internal::RpcMethod rpcmethod_SaveHuman_;
+            const ::grpc::internal::RpcMethod rpcmethod_EndSaveHuman_;
             const ::grpc::internal::RpcMethod rpcmethod_Attack_;
             const ::grpc::internal::RpcMethod rpcmethod_CarryHuman_;
             const ::grpc::internal::RpcMethod rpcmethod_ReleaseHuman_;
@@ -570,9 +618,14 @@ namespace protobuf
             virtual ::grpc::Status SendMessage(::grpc::ServerContext* context, const ::protobuf::SendMsg* request, ::protobuf::BoolRes* response);
             virtual ::grpc::Status HaveMessage(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response);
             virtual ::grpc::Status GetMessage(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::MsgRes* response);
-            virtual ::grpc::Status FixMachine(::grpc::ServerContext* context, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* stream);
-            // 若正常修复且未被打断则返回修复成功，位置错误/被打断则返回修复失败，下同
-            virtual ::grpc::Status SaveHuman(::grpc::ServerContext* context, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* stream);
+            virtual ::grpc::Status StartFixMachine(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response);
+            // 开始修理机器
+            virtual ::grpc::Status EndFixMachine(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response);
+            // 主动停止修复
+            virtual ::grpc::Status SaveHuman(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response);
+            // 开始救人
+            virtual ::grpc::Status EndSaveHuman(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response);
+            // 主动停止救人
             virtual ::grpc::Status Attack(::grpc::ServerContext* context, const ::protobuf::AttackMsg* request, ::protobuf::BoolRes* response);
             virtual ::grpc::Status CarryHuman(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response);
             virtual ::grpc::Status ReleaseHuman(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response);
@@ -832,7 +885,7 @@ namespace protobuf
             }
         };
         template<class BaseClass>
-        class WithAsyncMethod_FixMachine : public BaseClass
+        class WithAsyncMethod_StartFixMachine : public BaseClass
         {
         private:
             void BaseClassMustBeDerivedFromService(const Service* /*service*/)
@@ -840,23 +893,51 @@ namespace protobuf
             }
 
         public:
-            WithAsyncMethod_FixMachine()
+            WithAsyncMethod_StartFixMachine()
             {
                 ::grpc::Service::MarkMethodAsync(9);
             }
-            ~WithAsyncMethod_FixMachine() override
+            ~WithAsyncMethod_StartFixMachine() override
             {
                 BaseClassMustBeDerivedFromService(this);
             }
             // disable synchronous version of this method
-            ::grpc::Status FixMachine(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* /*stream*/) override
+            ::grpc::Status StartFixMachine(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
             {
                 abort();
                 return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
             }
-            void RequestFixMachine(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
+            void RequestStartFixMachine(::grpc::ServerContext* context, ::protobuf::IDMsg* request, ::grpc::ServerAsyncResponseWriter<::protobuf::BoolRes>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncBidiStreaming(9, context, stream, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(9, context, request, response, new_call_cq, notification_cq, tag);
+            }
+        };
+        template<class BaseClass>
+        class WithAsyncMethod_EndFixMachine : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithAsyncMethod_EndFixMachine()
+            {
+                ::grpc::Service::MarkMethodAsync(10);
+            }
+            ~WithAsyncMethod_EndFixMachine() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status EndFixMachine(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            void RequestEndFixMachine(::grpc::ServerContext* context, ::protobuf::IDMsg* request, ::grpc::ServerAsyncResponseWriter<::protobuf::BoolRes>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
+            {
+                ::grpc::Service::RequestAsyncUnary(10, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -870,21 +951,49 @@ namespace protobuf
         public:
             WithAsyncMethod_SaveHuman()
             {
-                ::grpc::Service::MarkMethodAsync(10);
+                ::grpc::Service::MarkMethodAsync(11);
             }
             ~WithAsyncMethod_SaveHuman() override
             {
                 BaseClassMustBeDerivedFromService(this);
             }
             // disable synchronous version of this method
-            ::grpc::Status SaveHuman(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* /*stream*/) override
+            ::grpc::Status SaveHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
             {
                 abort();
                 return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
             }
-            void RequestSaveHuman(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
+            void RequestSaveHuman(::grpc::ServerContext* context, ::protobuf::IDMsg* request, ::grpc::ServerAsyncResponseWriter<::protobuf::BoolRes>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncBidiStreaming(10, context, stream, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(11, context, request, response, new_call_cq, notification_cq, tag);
+            }
+        };
+        template<class BaseClass>
+        class WithAsyncMethod_EndSaveHuman : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithAsyncMethod_EndSaveHuman()
+            {
+                ::grpc::Service::MarkMethodAsync(12);
+            }
+            ~WithAsyncMethod_EndSaveHuman() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status EndSaveHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            void RequestEndSaveHuman(::grpc::ServerContext* context, ::protobuf::IDMsg* request, ::grpc::ServerAsyncResponseWriter<::protobuf::BoolRes>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
+            {
+                ::grpc::Service::RequestAsyncUnary(12, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -898,7 +1007,7 @@ namespace protobuf
         public:
             WithAsyncMethod_Attack()
             {
-                ::grpc::Service::MarkMethodAsync(11);
+                ::grpc::Service::MarkMethodAsync(13);
             }
             ~WithAsyncMethod_Attack() override
             {
@@ -912,7 +1021,7 @@ namespace protobuf
             }
             void RequestAttack(::grpc::ServerContext* context, ::protobuf::AttackMsg* request, ::grpc::ServerAsyncResponseWriter<::protobuf::BoolRes>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncUnary(11, context, request, response, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(13, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -926,7 +1035,7 @@ namespace protobuf
         public:
             WithAsyncMethod_CarryHuman()
             {
-                ::grpc::Service::MarkMethodAsync(12);
+                ::grpc::Service::MarkMethodAsync(14);
             }
             ~WithAsyncMethod_CarryHuman() override
             {
@@ -940,7 +1049,7 @@ namespace protobuf
             }
             void RequestCarryHuman(::grpc::ServerContext* context, ::protobuf::IDMsg* request, ::grpc::ServerAsyncResponseWriter<::protobuf::BoolRes>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncUnary(12, context, request, response, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(14, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -954,7 +1063,7 @@ namespace protobuf
         public:
             WithAsyncMethod_ReleaseHuman()
             {
-                ::grpc::Service::MarkMethodAsync(13);
+                ::grpc::Service::MarkMethodAsync(15);
             }
             ~WithAsyncMethod_ReleaseHuman() override
             {
@@ -968,7 +1077,7 @@ namespace protobuf
             }
             void RequestReleaseHuman(::grpc::ServerContext* context, ::protobuf::IDMsg* request, ::grpc::ServerAsyncResponseWriter<::protobuf::BoolRes>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncUnary(13, context, request, response, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(15, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -982,7 +1091,7 @@ namespace protobuf
         public:
             WithAsyncMethod_HangHuman()
             {
-                ::grpc::Service::MarkMethodAsync(14);
+                ::grpc::Service::MarkMethodAsync(16);
             }
             ~WithAsyncMethod_HangHuman() override
             {
@@ -996,7 +1105,7 @@ namespace protobuf
             }
             void RequestHangHuman(::grpc::ServerContext* context, ::protobuf::IDMsg* request, ::grpc::ServerAsyncResponseWriter<::protobuf::BoolRes>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncUnary(14, context, request, response, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(16, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -1010,7 +1119,7 @@ namespace protobuf
         public:
             WithAsyncMethod_Escape()
             {
-                ::grpc::Service::MarkMethodAsync(15);
+                ::grpc::Service::MarkMethodAsync(17);
             }
             ~WithAsyncMethod_Escape() override
             {
@@ -1024,10 +1133,10 @@ namespace protobuf
             }
             void RequestEscape(::grpc::ServerContext* context, ::protobuf::IDMsg* request, ::grpc::ServerAsyncResponseWriter<::protobuf::BoolRes>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncUnary(15, context, request, response, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(17, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
-        typedef WithAsyncMethod_TryConnection<WithAsyncMethod_AddPlayer<WithAsyncMethod_Move<WithAsyncMethod_PickProp<WithAsyncMethod_UseProp<WithAsyncMethod_UseSkill<WithAsyncMethod_SendMessage<WithAsyncMethod_HaveMessage<WithAsyncMethod_GetMessage<WithAsyncMethod_FixMachine<WithAsyncMethod_SaveHuman<WithAsyncMethod_Attack<WithAsyncMethod_CarryHuman<WithAsyncMethod_ReleaseHuman<WithAsyncMethod_HangHuman<WithAsyncMethod_Escape<Service>>>>>>>>>>>>>>>> AsyncService;
+        typedef WithAsyncMethod_TryConnection<WithAsyncMethod_AddPlayer<WithAsyncMethod_Move<WithAsyncMethod_PickProp<WithAsyncMethod_UseProp<WithAsyncMethod_UseSkill<WithAsyncMethod_SendMessage<WithAsyncMethod_HaveMessage<WithAsyncMethod_GetMessage<WithAsyncMethod_StartFixMachine<WithAsyncMethod_EndFixMachine<WithAsyncMethod_SaveHuman<WithAsyncMethod_EndSaveHuman<WithAsyncMethod_Attack<WithAsyncMethod_CarryHuman<WithAsyncMethod_ReleaseHuman<WithAsyncMethod_HangHuman<WithAsyncMethod_Escape<Service>>>>>>>>>>>>>>>>>> AsyncService;
         template<class BaseClass>
         class WithCallbackMethod_TryConnection : public BaseClass
         {
@@ -1372,7 +1481,7 @@ namespace protobuf
             }
         };
         template<class BaseClass>
-        class WithCallbackMethod_FixMachine : public BaseClass
+        class WithCallbackMethod_StartFixMachine : public BaseClass
         {
         private:
             void BaseClassMustBeDerivedFromService(const Service* /*service*/)
@@ -1380,23 +1489,70 @@ namespace protobuf
             }
 
         public:
-            WithCallbackMethod_FixMachine()
+            WithCallbackMethod_StartFixMachine()
             {
-                ::grpc::Service::MarkMethodCallback(9, new ::grpc::internal::CallbackBidiHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context)
-                                                                                                                                         { return this->FixMachine(context); }));
+                ::grpc::Service::MarkMethodCallback(9, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+                                                                                                                                          { return this->StartFixMachine(context, request, response); }));
             }
-            ~WithCallbackMethod_FixMachine() override
+            void SetMessageAllocatorFor_StartFixMachine(
+                ::grpc::MessageAllocator<::protobuf::IDMsg, ::protobuf::BoolRes>* allocator
+            )
+            {
+                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(9);
+                static_cast<::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>*>(handler)
+                    ->SetMessageAllocator(allocator);
+            }
+            ~WithCallbackMethod_StartFixMachine() override
             {
                 BaseClassMustBeDerivedFromService(this);
             }
             // disable synchronous version of this method
-            ::grpc::Status FixMachine(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* /*stream*/) override
+            ::grpc::Status StartFixMachine(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
             {
                 abort();
                 return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
             }
-            virtual ::grpc::ServerBidiReactor<::protobuf::IDMsg, ::protobuf::BoolRes>* FixMachine(
-                ::grpc::CallbackServerContext* /*context*/
+            virtual ::grpc::ServerUnaryReactor* StartFixMachine(
+                ::grpc::CallbackServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/
+            )
+            {
+                return nullptr;
+            }
+        };
+        template<class BaseClass>
+        class WithCallbackMethod_EndFixMachine : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithCallbackMethod_EndFixMachine()
+            {
+                ::grpc::Service::MarkMethodCallback(10, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+                                                                                                                                           { return this->EndFixMachine(context, request, response); }));
+            }
+            void SetMessageAllocatorFor_EndFixMachine(
+                ::grpc::MessageAllocator<::protobuf::IDMsg, ::protobuf::BoolRes>* allocator
+            )
+            {
+                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(10);
+                static_cast<::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>*>(handler)
+                    ->SetMessageAllocator(allocator);
+            }
+            ~WithCallbackMethod_EndFixMachine() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status EndFixMachine(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            virtual ::grpc::ServerUnaryReactor* EndFixMachine(
+                ::grpc::CallbackServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/
             )
             {
                 return nullptr;
@@ -1413,21 +1569,68 @@ namespace protobuf
         public:
             WithCallbackMethod_SaveHuman()
             {
-                ::grpc::Service::MarkMethodCallback(10, new ::grpc::internal::CallbackBidiHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context)
-                                                                                                                                          { return this->SaveHuman(context); }));
+                ::grpc::Service::MarkMethodCallback(11, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+                                                                                                                                           { return this->SaveHuman(context, request, response); }));
+            }
+            void SetMessageAllocatorFor_SaveHuman(
+                ::grpc::MessageAllocator<::protobuf::IDMsg, ::protobuf::BoolRes>* allocator
+            )
+            {
+                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(11);
+                static_cast<::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>*>(handler)
+                    ->SetMessageAllocator(allocator);
             }
             ~WithCallbackMethod_SaveHuman() override
             {
                 BaseClassMustBeDerivedFromService(this);
             }
             // disable synchronous version of this method
-            ::grpc::Status SaveHuman(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* /*stream*/) override
+            ::grpc::Status SaveHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
             {
                 abort();
                 return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
             }
-            virtual ::grpc::ServerBidiReactor<::protobuf::IDMsg, ::protobuf::BoolRes>* SaveHuman(
-                ::grpc::CallbackServerContext* /*context*/
+            virtual ::grpc::ServerUnaryReactor* SaveHuman(
+                ::grpc::CallbackServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/
+            )
+            {
+                return nullptr;
+            }
+        };
+        template<class BaseClass>
+        class WithCallbackMethod_EndSaveHuman : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithCallbackMethod_EndSaveHuman()
+            {
+                ::grpc::Service::MarkMethodCallback(12, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+                                                                                                                                           { return this->EndSaveHuman(context, request, response); }));
+            }
+            void SetMessageAllocatorFor_EndSaveHuman(
+                ::grpc::MessageAllocator<::protobuf::IDMsg, ::protobuf::BoolRes>* allocator
+            )
+            {
+                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(12);
+                static_cast<::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>*>(handler)
+                    ->SetMessageAllocator(allocator);
+            }
+            ~WithCallbackMethod_EndSaveHuman() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status EndSaveHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            virtual ::grpc::ServerUnaryReactor* EndSaveHuman(
+                ::grpc::CallbackServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/
             )
             {
                 return nullptr;
@@ -1444,14 +1647,14 @@ namespace protobuf
         public:
             WithCallbackMethod_Attack()
             {
-                ::grpc::Service::MarkMethodCallback(11, new ::grpc::internal::CallbackUnaryHandler<::protobuf::AttackMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::AttackMsg* request, ::protobuf::BoolRes* response)
+                ::grpc::Service::MarkMethodCallback(13, new ::grpc::internal::CallbackUnaryHandler<::protobuf::AttackMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::AttackMsg* request, ::protobuf::BoolRes* response)
                                                                                                                                                { return this->Attack(context, request, response); }));
             }
             void SetMessageAllocatorFor_Attack(
                 ::grpc::MessageAllocator<::protobuf::AttackMsg, ::protobuf::BoolRes>* allocator
             )
             {
-                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(11);
+                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(13);
                 static_cast<::grpc::internal::CallbackUnaryHandler<::protobuf::AttackMsg, ::protobuf::BoolRes>*>(handler)
                     ->SetMessageAllocator(allocator);
             }
@@ -1483,14 +1686,14 @@ namespace protobuf
         public:
             WithCallbackMethod_CarryHuman()
             {
-                ::grpc::Service::MarkMethodCallback(12, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+                ::grpc::Service::MarkMethodCallback(14, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
                                                                                                                                            { return this->CarryHuman(context, request, response); }));
             }
             void SetMessageAllocatorFor_CarryHuman(
                 ::grpc::MessageAllocator<::protobuf::IDMsg, ::protobuf::BoolRes>* allocator
             )
             {
-                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(12);
+                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(14);
                 static_cast<::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>*>(handler)
                     ->SetMessageAllocator(allocator);
             }
@@ -1522,14 +1725,14 @@ namespace protobuf
         public:
             WithCallbackMethod_ReleaseHuman()
             {
-                ::grpc::Service::MarkMethodCallback(13, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+                ::grpc::Service::MarkMethodCallback(15, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
                                                                                                                                            { return this->ReleaseHuman(context, request, response); }));
             }
             void SetMessageAllocatorFor_ReleaseHuman(
                 ::grpc::MessageAllocator<::protobuf::IDMsg, ::protobuf::BoolRes>* allocator
             )
             {
-                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(13);
+                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(15);
                 static_cast<::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>*>(handler)
                     ->SetMessageAllocator(allocator);
             }
@@ -1561,14 +1764,14 @@ namespace protobuf
         public:
             WithCallbackMethod_HangHuman()
             {
-                ::grpc::Service::MarkMethodCallback(14, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+                ::grpc::Service::MarkMethodCallback(16, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
                                                                                                                                            { return this->HangHuman(context, request, response); }));
             }
             void SetMessageAllocatorFor_HangHuman(
                 ::grpc::MessageAllocator<::protobuf::IDMsg, ::protobuf::BoolRes>* allocator
             )
             {
-                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(14);
+                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(16);
                 static_cast<::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>*>(handler)
                     ->SetMessageAllocator(allocator);
             }
@@ -1600,14 +1803,14 @@ namespace protobuf
         public:
             WithCallbackMethod_Escape()
             {
-                ::grpc::Service::MarkMethodCallback(15, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+                ::grpc::Service::MarkMethodCallback(17, new ::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::CallbackServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
                                                                                                                                            { return this->Escape(context, request, response); }));
             }
             void SetMessageAllocatorFor_Escape(
                 ::grpc::MessageAllocator<::protobuf::IDMsg, ::protobuf::BoolRes>* allocator
             )
             {
-                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(15);
+                ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(17);
                 static_cast<::grpc::internal::CallbackUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>*>(handler)
                     ->SetMessageAllocator(allocator);
             }
@@ -1628,7 +1831,7 @@ namespace protobuf
                 return nullptr;
             }
         };
-        typedef WithCallbackMethod_TryConnection<WithCallbackMethod_AddPlayer<WithCallbackMethod_Move<WithCallbackMethod_PickProp<WithCallbackMethod_UseProp<WithCallbackMethod_UseSkill<WithCallbackMethod_SendMessage<WithCallbackMethod_HaveMessage<WithCallbackMethod_GetMessage<WithCallbackMethod_FixMachine<WithCallbackMethod_SaveHuman<WithCallbackMethod_Attack<WithCallbackMethod_CarryHuman<WithCallbackMethod_ReleaseHuman<WithCallbackMethod_HangHuman<WithCallbackMethod_Escape<Service>>>>>>>>>>>>>>>> CallbackService;
+        typedef WithCallbackMethod_TryConnection<WithCallbackMethod_AddPlayer<WithCallbackMethod_Move<WithCallbackMethod_PickProp<WithCallbackMethod_UseProp<WithCallbackMethod_UseSkill<WithCallbackMethod_SendMessage<WithCallbackMethod_HaveMessage<WithCallbackMethod_GetMessage<WithCallbackMethod_StartFixMachine<WithCallbackMethod_EndFixMachine<WithCallbackMethod_SaveHuman<WithCallbackMethod_EndSaveHuman<WithCallbackMethod_Attack<WithCallbackMethod_CarryHuman<WithCallbackMethod_ReleaseHuman<WithCallbackMethod_HangHuman<WithCallbackMethod_Escape<Service>>>>>>>>>>>>>>>>>> CallbackService;
         typedef CallbackService ExperimentalCallbackService;
         template<class BaseClass>
         class WithGenericMethod_TryConnection : public BaseClass
@@ -1847,7 +2050,7 @@ namespace protobuf
             }
         };
         template<class BaseClass>
-        class WithGenericMethod_FixMachine : public BaseClass
+        class WithGenericMethod_StartFixMachine : public BaseClass
         {
         private:
             void BaseClassMustBeDerivedFromService(const Service* /*service*/)
@@ -1855,16 +2058,40 @@ namespace protobuf
             }
 
         public:
-            WithGenericMethod_FixMachine()
+            WithGenericMethod_StartFixMachine()
             {
                 ::grpc::Service::MarkMethodGeneric(9);
             }
-            ~WithGenericMethod_FixMachine() override
+            ~WithGenericMethod_StartFixMachine() override
             {
                 BaseClassMustBeDerivedFromService(this);
             }
             // disable synchronous version of this method
-            ::grpc::Status FixMachine(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* /*stream*/) override
+            ::grpc::Status StartFixMachine(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+        };
+        template<class BaseClass>
+        class WithGenericMethod_EndFixMachine : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithGenericMethod_EndFixMachine()
+            {
+                ::grpc::Service::MarkMethodGeneric(10);
+            }
+            ~WithGenericMethod_EndFixMachine() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status EndFixMachine(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
             {
                 abort();
                 return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
@@ -1881,14 +2108,38 @@ namespace protobuf
         public:
             WithGenericMethod_SaveHuman()
             {
-                ::grpc::Service::MarkMethodGeneric(10);
+                ::grpc::Service::MarkMethodGeneric(11);
             }
             ~WithGenericMethod_SaveHuman() override
             {
                 BaseClassMustBeDerivedFromService(this);
             }
             // disable synchronous version of this method
-            ::grpc::Status SaveHuman(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* /*stream*/) override
+            ::grpc::Status SaveHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+        };
+        template<class BaseClass>
+        class WithGenericMethod_EndSaveHuman : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithGenericMethod_EndSaveHuman()
+            {
+                ::grpc::Service::MarkMethodGeneric(12);
+            }
+            ~WithGenericMethod_EndSaveHuman() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status EndSaveHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
             {
                 abort();
                 return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
@@ -1905,7 +2156,7 @@ namespace protobuf
         public:
             WithGenericMethod_Attack()
             {
-                ::grpc::Service::MarkMethodGeneric(11);
+                ::grpc::Service::MarkMethodGeneric(13);
             }
             ~WithGenericMethod_Attack() override
             {
@@ -1929,7 +2180,7 @@ namespace protobuf
         public:
             WithGenericMethod_CarryHuman()
             {
-                ::grpc::Service::MarkMethodGeneric(12);
+                ::grpc::Service::MarkMethodGeneric(14);
             }
             ~WithGenericMethod_CarryHuman() override
             {
@@ -1953,7 +2204,7 @@ namespace protobuf
         public:
             WithGenericMethod_ReleaseHuman()
             {
-                ::grpc::Service::MarkMethodGeneric(13);
+                ::grpc::Service::MarkMethodGeneric(15);
             }
             ~WithGenericMethod_ReleaseHuman() override
             {
@@ -1977,7 +2228,7 @@ namespace protobuf
         public:
             WithGenericMethod_HangHuman()
             {
-                ::grpc::Service::MarkMethodGeneric(14);
+                ::grpc::Service::MarkMethodGeneric(16);
             }
             ~WithGenericMethod_HangHuman() override
             {
@@ -2001,7 +2252,7 @@ namespace protobuf
         public:
             WithGenericMethod_Escape()
             {
-                ::grpc::Service::MarkMethodGeneric(15);
+                ::grpc::Service::MarkMethodGeneric(17);
             }
             ~WithGenericMethod_Escape() override
             {
@@ -2267,7 +2518,7 @@ namespace protobuf
             }
         };
         template<class BaseClass>
-        class WithRawMethod_FixMachine : public BaseClass
+        class WithRawMethod_StartFixMachine : public BaseClass
         {
         private:
             void BaseClassMustBeDerivedFromService(const Service* /*service*/)
@@ -2275,23 +2526,51 @@ namespace protobuf
             }
 
         public:
-            WithRawMethod_FixMachine()
+            WithRawMethod_StartFixMachine()
             {
                 ::grpc::Service::MarkMethodRaw(9);
             }
-            ~WithRawMethod_FixMachine() override
+            ~WithRawMethod_StartFixMachine() override
             {
                 BaseClassMustBeDerivedFromService(this);
             }
             // disable synchronous version of this method
-            ::grpc::Status FixMachine(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* /*stream*/) override
+            ::grpc::Status StartFixMachine(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
             {
                 abort();
                 return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
             }
-            void RequestFixMachine(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter<::grpc::ByteBuffer, ::grpc::ByteBuffer>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
+            void RequestStartFixMachine(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncBidiStreaming(9, context, stream, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(9, context, request, response, new_call_cq, notification_cq, tag);
+            }
+        };
+        template<class BaseClass>
+        class WithRawMethod_EndFixMachine : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithRawMethod_EndFixMachine()
+            {
+                ::grpc::Service::MarkMethodRaw(10);
+            }
+            ~WithRawMethod_EndFixMachine() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status EndFixMachine(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            void RequestEndFixMachine(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
+            {
+                ::grpc::Service::RequestAsyncUnary(10, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -2305,21 +2584,49 @@ namespace protobuf
         public:
             WithRawMethod_SaveHuman()
             {
-                ::grpc::Service::MarkMethodRaw(10);
+                ::grpc::Service::MarkMethodRaw(11);
             }
             ~WithRawMethod_SaveHuman() override
             {
                 BaseClassMustBeDerivedFromService(this);
             }
             // disable synchronous version of this method
-            ::grpc::Status SaveHuman(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* /*stream*/) override
+            ::grpc::Status SaveHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
             {
                 abort();
                 return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
             }
-            void RequestSaveHuman(::grpc::ServerContext* context, ::grpc::ServerAsyncReaderWriter<::grpc::ByteBuffer, ::grpc::ByteBuffer>* stream, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
+            void RequestSaveHuman(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncBidiStreaming(10, context, stream, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(11, context, request, response, new_call_cq, notification_cq, tag);
+            }
+        };
+        template<class BaseClass>
+        class WithRawMethod_EndSaveHuman : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithRawMethod_EndSaveHuman()
+            {
+                ::grpc::Service::MarkMethodRaw(12);
+            }
+            ~WithRawMethod_EndSaveHuman() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status EndSaveHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            void RequestEndSaveHuman(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
+            {
+                ::grpc::Service::RequestAsyncUnary(12, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -2333,7 +2640,7 @@ namespace protobuf
         public:
             WithRawMethod_Attack()
             {
-                ::grpc::Service::MarkMethodRaw(11);
+                ::grpc::Service::MarkMethodRaw(13);
             }
             ~WithRawMethod_Attack() override
             {
@@ -2347,7 +2654,7 @@ namespace protobuf
             }
             void RequestAttack(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncUnary(11, context, request, response, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(13, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -2361,7 +2668,7 @@ namespace protobuf
         public:
             WithRawMethod_CarryHuman()
             {
-                ::grpc::Service::MarkMethodRaw(12);
+                ::grpc::Service::MarkMethodRaw(14);
             }
             ~WithRawMethod_CarryHuman() override
             {
@@ -2375,7 +2682,7 @@ namespace protobuf
             }
             void RequestCarryHuman(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncUnary(12, context, request, response, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(14, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -2389,7 +2696,7 @@ namespace protobuf
         public:
             WithRawMethod_ReleaseHuman()
             {
-                ::grpc::Service::MarkMethodRaw(13);
+                ::grpc::Service::MarkMethodRaw(15);
             }
             ~WithRawMethod_ReleaseHuman() override
             {
@@ -2403,7 +2710,7 @@ namespace protobuf
             }
             void RequestReleaseHuman(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncUnary(13, context, request, response, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(15, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -2417,7 +2724,7 @@ namespace protobuf
         public:
             WithRawMethod_HangHuman()
             {
-                ::grpc::Service::MarkMethodRaw(14);
+                ::grpc::Service::MarkMethodRaw(16);
             }
             ~WithRawMethod_HangHuman() override
             {
@@ -2431,7 +2738,7 @@ namespace protobuf
             }
             void RequestHangHuman(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncUnary(14, context, request, response, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(16, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -2445,7 +2752,7 @@ namespace protobuf
         public:
             WithRawMethod_Escape()
             {
-                ::grpc::Service::MarkMethodRaw(15);
+                ::grpc::Service::MarkMethodRaw(17);
             }
             ~WithRawMethod_Escape() override
             {
@@ -2459,7 +2766,7 @@ namespace protobuf
             }
             void RequestEscape(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter<::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void* tag)
             {
-                ::grpc::Service::RequestAsyncUnary(15, context, request, response, new_call_cq, notification_cq, tag);
+                ::grpc::Service::RequestAsyncUnary(17, context, request, response, new_call_cq, notification_cq, tag);
             }
         };
         template<class BaseClass>
@@ -2742,7 +3049,7 @@ namespace protobuf
             }
         };
         template<class BaseClass>
-        class WithRawCallbackMethod_FixMachine : public BaseClass
+        class WithRawCallbackMethod_StartFixMachine : public BaseClass
         {
         private:
             void BaseClassMustBeDerivedFromService(const Service* /*service*/)
@@ -2750,23 +3057,54 @@ namespace protobuf
             }
 
         public:
-            WithRawCallbackMethod_FixMachine()
+            WithRawCallbackMethod_StartFixMachine()
             {
-                ::grpc::Service::MarkMethodRawCallback(9, new ::grpc::internal::CallbackBidiHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context)
-                                                                                                                                            { return this->FixMachine(context); }));
+                ::grpc::Service::MarkMethodRawCallback(9, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
+                                                                                                                                             { return this->StartFixMachine(context, request, response); }));
             }
-            ~WithRawCallbackMethod_FixMachine() override
+            ~WithRawCallbackMethod_StartFixMachine() override
             {
                 BaseClassMustBeDerivedFromService(this);
             }
             // disable synchronous version of this method
-            ::grpc::Status FixMachine(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* /*stream*/) override
+            ::grpc::Status StartFixMachine(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
             {
                 abort();
                 return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
             }
-            virtual ::grpc::ServerBidiReactor<::grpc::ByteBuffer, ::grpc::ByteBuffer>* FixMachine(
-                ::grpc::CallbackServerContext* /*context*/
+            virtual ::grpc::ServerUnaryReactor* StartFixMachine(
+                ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/
+            )
+            {
+                return nullptr;
+            }
+        };
+        template<class BaseClass>
+        class WithRawCallbackMethod_EndFixMachine : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithRawCallbackMethod_EndFixMachine()
+            {
+                ::grpc::Service::MarkMethodRawCallback(10, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
+                                                                                                                                              { return this->EndFixMachine(context, request, response); }));
+            }
+            ~WithRawCallbackMethod_EndFixMachine() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status EndFixMachine(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            virtual ::grpc::ServerUnaryReactor* EndFixMachine(
+                ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/
             )
             {
                 return nullptr;
@@ -2783,21 +3121,52 @@ namespace protobuf
         public:
             WithRawCallbackMethod_SaveHuman()
             {
-                ::grpc::Service::MarkMethodRawCallback(10, new ::grpc::internal::CallbackBidiHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context)
-                                                                                                                                             { return this->SaveHuman(context); }));
+                ::grpc::Service::MarkMethodRawCallback(11, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
+                                                                                                                                              { return this->SaveHuman(context, request, response); }));
             }
             ~WithRawCallbackMethod_SaveHuman() override
             {
                 BaseClassMustBeDerivedFromService(this);
             }
             // disable synchronous version of this method
-            ::grpc::Status SaveHuman(::grpc::ServerContext* /*context*/, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* /*stream*/) override
+            ::grpc::Status SaveHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
             {
                 abort();
                 return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
             }
-            virtual ::grpc::ServerBidiReactor<::grpc::ByteBuffer, ::grpc::ByteBuffer>* SaveHuman(
-                ::grpc::CallbackServerContext* /*context*/
+            virtual ::grpc::ServerUnaryReactor* SaveHuman(
+                ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/
+            )
+            {
+                return nullptr;
+            }
+        };
+        template<class BaseClass>
+        class WithRawCallbackMethod_EndSaveHuman : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithRawCallbackMethod_EndSaveHuman()
+            {
+                ::grpc::Service::MarkMethodRawCallback(12, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
+                                                                                                                                              { return this->EndSaveHuman(context, request, response); }));
+            }
+            ~WithRawCallbackMethod_EndSaveHuman() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable synchronous version of this method
+            ::grpc::Status EndSaveHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            virtual ::grpc::ServerUnaryReactor* EndSaveHuman(
+                ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/
             )
             {
                 return nullptr;
@@ -2814,7 +3183,7 @@ namespace protobuf
         public:
             WithRawCallbackMethod_Attack()
             {
-                ::grpc::Service::MarkMethodRawCallback(11, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
+                ::grpc::Service::MarkMethodRawCallback(13, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
                                                                                                                                               { return this->Attack(context, request, response); }));
             }
             ~WithRawCallbackMethod_Attack() override
@@ -2845,7 +3214,7 @@ namespace protobuf
         public:
             WithRawCallbackMethod_CarryHuman()
             {
-                ::grpc::Service::MarkMethodRawCallback(12, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
+                ::grpc::Service::MarkMethodRawCallback(14, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
                                                                                                                                               { return this->CarryHuman(context, request, response); }));
             }
             ~WithRawCallbackMethod_CarryHuman() override
@@ -2876,7 +3245,7 @@ namespace protobuf
         public:
             WithRawCallbackMethod_ReleaseHuman()
             {
-                ::grpc::Service::MarkMethodRawCallback(13, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
+                ::grpc::Service::MarkMethodRawCallback(15, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
                                                                                                                                               { return this->ReleaseHuman(context, request, response); }));
             }
             ~WithRawCallbackMethod_ReleaseHuman() override
@@ -2907,7 +3276,7 @@ namespace protobuf
         public:
             WithRawCallbackMethod_HangHuman()
             {
-                ::grpc::Service::MarkMethodRawCallback(14, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
+                ::grpc::Service::MarkMethodRawCallback(16, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
                                                                                                                                               { return this->HangHuman(context, request, response); }));
             }
             ~WithRawCallbackMethod_HangHuman() override
@@ -2938,7 +3307,7 @@ namespace protobuf
         public:
             WithRawCallbackMethod_Escape()
             {
-                ::grpc::Service::MarkMethodRawCallback(15, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
+                ::grpc::Service::MarkMethodRawCallback(17, new ::grpc::internal::CallbackUnaryHandler<::grpc::ByteBuffer, ::grpc::ByteBuffer>([this](::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response)
                                                                                                                                               { return this->Escape(context, request, response); }));
             }
             ~WithRawCallbackMethod_Escape() override
@@ -3175,6 +3544,114 @@ namespace protobuf
             virtual ::grpc::Status StreamedGetMessage(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::MsgRes>* server_unary_streamer) = 0;
         };
         template<class BaseClass>
+        class WithStreamedUnaryMethod_StartFixMachine : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithStreamedUnaryMethod_StartFixMachine()
+            {
+                ::grpc::Service::MarkMethodStreamed(9, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
+                                                                                                                                          { return this->StreamedStartFixMachine(context, streamer); }));
+            }
+            ~WithStreamedUnaryMethod_StartFixMachine() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable regular version of this method
+            ::grpc::Status StartFixMachine(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            // replace default version of method with streamed unary
+            virtual ::grpc::Status StreamedStartFixMachine(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* server_unary_streamer) = 0;
+        };
+        template<class BaseClass>
+        class WithStreamedUnaryMethod_EndFixMachine : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithStreamedUnaryMethod_EndFixMachine()
+            {
+                ::grpc::Service::MarkMethodStreamed(10, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
+                                                                                                                                           { return this->StreamedEndFixMachine(context, streamer); }));
+            }
+            ~WithStreamedUnaryMethod_EndFixMachine() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable regular version of this method
+            ::grpc::Status EndFixMachine(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            // replace default version of method with streamed unary
+            virtual ::grpc::Status StreamedEndFixMachine(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* server_unary_streamer) = 0;
+        };
+        template<class BaseClass>
+        class WithStreamedUnaryMethod_SaveHuman : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithStreamedUnaryMethod_SaveHuman()
+            {
+                ::grpc::Service::MarkMethodStreamed(11, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
+                                                                                                                                           { return this->StreamedSaveHuman(context, streamer); }));
+            }
+            ~WithStreamedUnaryMethod_SaveHuman() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable regular version of this method
+            ::grpc::Status SaveHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            // replace default version of method with streamed unary
+            virtual ::grpc::Status StreamedSaveHuman(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* server_unary_streamer) = 0;
+        };
+        template<class BaseClass>
+        class WithStreamedUnaryMethod_EndSaveHuman : public BaseClass
+        {
+        private:
+            void BaseClassMustBeDerivedFromService(const Service* /*service*/)
+            {
+            }
+
+        public:
+            WithStreamedUnaryMethod_EndSaveHuman()
+            {
+                ::grpc::Service::MarkMethodStreamed(12, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
+                                                                                                                                           { return this->StreamedEndSaveHuman(context, streamer); }));
+            }
+            ~WithStreamedUnaryMethod_EndSaveHuman() override
+            {
+                BaseClassMustBeDerivedFromService(this);
+            }
+            // disable regular version of this method
+            ::grpc::Status EndSaveHuman(::grpc::ServerContext* /*context*/, const ::protobuf::IDMsg* /*request*/, ::protobuf::BoolRes* /*response*/) override
+            {
+                abort();
+                return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+            }
+            // replace default version of method with streamed unary
+            virtual ::grpc::Status StreamedEndSaveHuman(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* server_unary_streamer) = 0;
+        };
+        template<class BaseClass>
         class WithStreamedUnaryMethod_Attack : public BaseClass
         {
         private:
@@ -3185,7 +3662,7 @@ namespace protobuf
         public:
             WithStreamedUnaryMethod_Attack()
             {
-                ::grpc::Service::MarkMethodStreamed(11, new ::grpc::internal::StreamedUnaryHandler<::protobuf::AttackMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::AttackMsg, ::protobuf::BoolRes>* streamer)
+                ::grpc::Service::MarkMethodStreamed(13, new ::grpc::internal::StreamedUnaryHandler<::protobuf::AttackMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::AttackMsg, ::protobuf::BoolRes>* streamer)
                                                                                                                                                { return this->StreamedAttack(context, streamer); }));
             }
             ~WithStreamedUnaryMethod_Attack() override
@@ -3212,7 +3689,7 @@ namespace protobuf
         public:
             WithStreamedUnaryMethod_CarryHuman()
             {
-                ::grpc::Service::MarkMethodStreamed(12, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
+                ::grpc::Service::MarkMethodStreamed(14, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
                                                                                                                                            { return this->StreamedCarryHuman(context, streamer); }));
             }
             ~WithStreamedUnaryMethod_CarryHuman() override
@@ -3239,7 +3716,7 @@ namespace protobuf
         public:
             WithStreamedUnaryMethod_ReleaseHuman()
             {
-                ::grpc::Service::MarkMethodStreamed(13, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
+                ::grpc::Service::MarkMethodStreamed(15, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
                                                                                                                                            { return this->StreamedReleaseHuman(context, streamer); }));
             }
             ~WithStreamedUnaryMethod_ReleaseHuman() override
@@ -3266,7 +3743,7 @@ namespace protobuf
         public:
             WithStreamedUnaryMethod_HangHuman()
             {
-                ::grpc::Service::MarkMethodStreamed(14, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
+                ::grpc::Service::MarkMethodStreamed(16, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
                                                                                                                                            { return this->StreamedHangHuman(context, streamer); }));
             }
             ~WithStreamedUnaryMethod_HangHuman() override
@@ -3293,7 +3770,7 @@ namespace protobuf
         public:
             WithStreamedUnaryMethod_Escape()
             {
-                ::grpc::Service::MarkMethodStreamed(15, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
+                ::grpc::Service::MarkMethodStreamed(17, new ::grpc::internal::StreamedUnaryHandler<::protobuf::IDMsg, ::protobuf::BoolRes>([this](::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* streamer)
                                                                                                                                            { return this->StreamedEscape(context, streamer); }));
             }
             ~WithStreamedUnaryMethod_Escape() override
@@ -3309,7 +3786,7 @@ namespace protobuf
             // replace default version of method with streamed unary
             virtual ::grpc::Status StreamedEscape(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer<::protobuf::IDMsg, ::protobuf::BoolRes>* server_unary_streamer) = 0;
         };
-        typedef WithStreamedUnaryMethod_TryConnection<WithStreamedUnaryMethod_Move<WithStreamedUnaryMethod_PickProp<WithStreamedUnaryMethod_UseProp<WithStreamedUnaryMethod_UseSkill<WithStreamedUnaryMethod_SendMessage<WithStreamedUnaryMethod_HaveMessage<WithStreamedUnaryMethod_GetMessage<WithStreamedUnaryMethod_Attack<WithStreamedUnaryMethod_CarryHuman<WithStreamedUnaryMethod_ReleaseHuman<WithStreamedUnaryMethod_HangHuman<WithStreamedUnaryMethod_Escape<Service>>>>>>>>>>>>> StreamedUnaryService;
+        typedef WithStreamedUnaryMethod_TryConnection<WithStreamedUnaryMethod_Move<WithStreamedUnaryMethod_PickProp<WithStreamedUnaryMethod_UseProp<WithStreamedUnaryMethod_UseSkill<WithStreamedUnaryMethod_SendMessage<WithStreamedUnaryMethod_HaveMessage<WithStreamedUnaryMethod_GetMessage<WithStreamedUnaryMethod_StartFixMachine<WithStreamedUnaryMethod_EndFixMachine<WithStreamedUnaryMethod_SaveHuman<WithStreamedUnaryMethod_EndSaveHuman<WithStreamedUnaryMethod_Attack<WithStreamedUnaryMethod_CarryHuman<WithStreamedUnaryMethod_ReleaseHuman<WithStreamedUnaryMethod_HangHuman<WithStreamedUnaryMethod_Escape<Service>>>>>>>>>>>>>>>>> StreamedUnaryService;
         template<class BaseClass>
         class WithSplitStreamingMethod_AddPlayer : public BaseClass
         {
@@ -3338,7 +3815,7 @@ namespace protobuf
             virtual ::grpc::Status StreamedAddPlayer(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer<::protobuf::PlayerMsg, ::protobuf::MessageToClient>* server_split_streamer) = 0;
         };
         typedef WithSplitStreamingMethod_AddPlayer<Service> SplitStreamedService;
-        typedef WithStreamedUnaryMethod_TryConnection<WithSplitStreamingMethod_AddPlayer<WithStreamedUnaryMethod_Move<WithStreamedUnaryMethod_PickProp<WithStreamedUnaryMethod_UseProp<WithStreamedUnaryMethod_UseSkill<WithStreamedUnaryMethod_SendMessage<WithStreamedUnaryMethod_HaveMessage<WithStreamedUnaryMethod_GetMessage<WithStreamedUnaryMethod_Attack<WithStreamedUnaryMethod_CarryHuman<WithStreamedUnaryMethod_ReleaseHuman<WithStreamedUnaryMethod_HangHuman<WithStreamedUnaryMethod_Escape<Service>>>>>>>>>>>>>> StreamedService;
+        typedef WithStreamedUnaryMethod_TryConnection<WithSplitStreamingMethod_AddPlayer<WithStreamedUnaryMethod_Move<WithStreamedUnaryMethod_PickProp<WithStreamedUnaryMethod_UseProp<WithStreamedUnaryMethod_UseSkill<WithStreamedUnaryMethod_SendMessage<WithStreamedUnaryMethod_HaveMessage<WithStreamedUnaryMethod_GetMessage<WithStreamedUnaryMethod_StartFixMachine<WithStreamedUnaryMethod_EndFixMachine<WithStreamedUnaryMethod_SaveHuman<WithStreamedUnaryMethod_EndSaveHuman<WithStreamedUnaryMethod_Attack<WithStreamedUnaryMethod_CarryHuman<WithStreamedUnaryMethod_ReleaseHuman<WithStreamedUnaryMethod_HangHuman<WithStreamedUnaryMethod_Escape<Service>>>>>>>>>>>>>>>>>> StreamedService;
     };
 
 }  // namespace protobuf

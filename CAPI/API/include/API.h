@@ -34,6 +34,7 @@ public:
     virtual std::shared_ptr<const THUAI6::Butcher> ButcherGetSelfInfo() const = 0;
 
     virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
+    virtual THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const = 0;
 
     // 供IAPI使用的操作相关的部分
     virtual bool Move(int64_t time, double angle) = 0;
@@ -42,17 +43,17 @@ public:
     virtual bool UseSkill() = 0;
     virtual bool SendMessage(int64_t toID, std::string message) = 0;
     virtual bool HaveMessage() = 0;
-    virtual std::pair<std::string, int64_t> GetMessage() = 0;
+    virtual std::pair<int64_t, std::string> GetMessage() = 0;
 
     virtual bool Escape() = 0;
 
     // 说明：双向stream由三个函数共同实现，两个记录开始和结束，结果由Logic里的私有的成员变量记录，获得返回值则另调函数
-    virtual bool StartFixMachine() = 0;
-    virtual bool EndFixMachine() = 0;
+    virtual void StartFixMachine() = 0;
+    virtual void EndFixMachine() = 0;
     virtual bool GetFixStatus() = 0;
 
-    virtual bool StartSaveHuman() = 0;
-    virtual bool EndSaveHuman() = 0;
+    virtual void StartSaveHuman() = 0;
+    virtual void EndSaveHuman() = 0;
     virtual bool GetSaveStatus() = 0;
 
     virtual bool Attack(double angle) = 0;
@@ -128,11 +129,11 @@ class IHumanAPI : public IAPI
 public:
     /*****人类阵营的特定函数*****/
 
-    virtual std::future<bool> StartFixMachine() = 0;
-    virtual std::future<bool> EndFixMachine() = 0;
+    virtual void StartFixMachine() = 0;
+    virtual void EndFixMachine() = 0;
     virtual std::future<bool> GetFixStatus() = 0;
-    virtual std::future<bool> StartSaveHuman() = 0;
-    virtual std::future<bool> EndSaveHuman() = 0;
+    virtual void StartSaveHuman() = 0;
+    virtual void EndSaveHuman() = 0;
     virtual std::future<bool> GetSaveStatus() = 0;
     virtual std::future<bool> Escape() = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const = 0;
@@ -189,12 +190,8 @@ public:
     std::future<bool> UseSkill() override;
 
     std::future<bool> SendMessage(int64_t, std::string) override;
-    [[nodiscard]] std::future<bool> HaveMessage() override
-    {
-    }
-    [[nodiscard]] std::future<std::pair<int64_t, std::string>> GetMessage() override
-    {
-    }
+    [[nodiscard]] std::future<bool> HaveMessage() override;
+    [[nodiscard]] std::future<std::pair<int64_t, std::string>> GetMessage() override;
 
     std::future<bool> Wait() override
     {
@@ -206,38 +203,20 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
     [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
-    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override
-    {
-    }
+    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
 
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override
     {
     }
 
-    std::future<bool> StartFixMachine() override
-    {
-    }
-    std::future<bool> EndFixMachine() override
-    {
-    }
-    std::future<bool> GetFixStatus() override
-    {
-    }
-    std::future<bool> StartSaveHuman() override
-    {
-    }
-    std::future<bool> EndSaveHuman() override
-    {
-    }
-    std::future<bool> GetSaveStatus() override
-    {
-    }
-    std::future<bool> Escape() override
-    {
-    }
-    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const override
-    {
-    }
+    void StartFixMachine() override;
+    void EndFixMachine() override;
+    std::future<bool> GetFixStatus() override;
+    void StartSaveHuman() override;
+    void EndSaveHuman() override;
+    std::future<bool> GetSaveStatus() override;
+    std::future<bool> Escape() override;
+    [[nodiscard]] std::shared_ptr<const THUAI6::Human> GetSelfInfo() const override;
 
 private:
     ILogic& logic;
@@ -273,54 +252,30 @@ public:
     std::future<bool> UseSkill() override;
 
     std::future<bool> SendMessage(int64_t, std::string) override;
-    [[nodiscard]] std::future<bool> HaveMessage() override
-    {
-    }
-    [[nodiscard]] std::future<std::pair<int64_t, std::string>> GetMessage() override
-    {
-    }
+    [[nodiscard]] std::future<bool> HaveMessage() override;
+    [[nodiscard]] std::future<std::pair<int64_t, std::string>> GetMessage() override;
 
     std::future<bool> Wait() override
     {
     }
 
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override
-    {
-    }
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override
-    {
-    }
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override;
 
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override
-    {
-    }
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
-    [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override
-    {
-    }
-    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override
-    {
-    }
+    [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
+    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
 
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override
     {
     }
 
-    std::future<bool> Attack(double angleInRadian) override
-    {
-    }
-    std::future<bool> CarryHuman() override
-    {
-    }
-    std::future<bool> ReleaseHuman() override
-    {
-    }
-    std::future<bool> HangHuman() override
-    {
-    }
-    [[nodiscard]] std::shared_ptr<const THUAI6::Butcher> GetSelfInfo() const override
-    {
-    }
+    std::future<bool> Attack(double angleInRadian) override;
+    std::future<bool> CarryHuman() override;
+    std::future<bool> ReleaseHuman() override;
+    std::future<bool> HangHuman() override;
+    [[nodiscard]] std::shared_ptr<const THUAI6::Butcher> GetSelfInfo() const override;
 
 private:
     ILogic& logic;
@@ -408,19 +363,19 @@ public:
     {
     }
 
-    std::future<bool> StartFixMachine() override
+    void StartFixMachine() override
     {
     }
-    std::future<bool> EndFixMachine() override
+    void EndFixMachine() override
     {
     }
     std::future<bool> GetFixStatus() override
     {
     }
-    std::future<bool> StartSaveHuman() override
+    void StartSaveHuman() override
     {
     }
-    std::future<bool> EndSaveHuman() override
+    void EndSaveHuman() override
     {
     }
     std::future<bool> GetSaveStatus() override

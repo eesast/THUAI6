@@ -26,7 +26,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.buff_)*/ {}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, /*decltype(_impl_.x_)*/ 0, /*decltype(_impl_.y_)*/ 0, /*decltype(_impl_.speed_)*/ 0, /*decltype(_impl_.life_)*/ 0, /*decltype(_impl_.time_until_skill_available_)*/ 0, /*decltype(_impl_.hanged_time_)*/ 0, /*decltype(_impl_.place_)*/ 0, /*decltype(_impl_.prop_)*/ 0, /*decltype(_impl_.human_type_)*/ 0, /*decltype(_impl_.guid_)*/ int64_t{0}, /*decltype(_impl_.chair_time_)*/ 0, /*decltype(_impl_.on_chair_)*/ false, /*decltype(_impl_.on_ground_)*/ false, /*decltype(_impl_.view_range_)*/ 0, /*decltype(_impl_.ground_time_)*/ 0, /*decltype(_impl_.player_id_)*/ int64_t{0}, /*decltype(_impl_.radius_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.buff_)*/ {}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, /*decltype(_impl_.x_)*/ 0, /*decltype(_impl_.y_)*/ 0, /*decltype(_impl_.speed_)*/ 0, /*decltype(_impl_.life_)*/ 0, /*decltype(_impl_.time_until_skill_available_)*/ 0, /*decltype(_impl_.hanged_time_)*/ 0, /*decltype(_impl_.place_)*/ 0, /*decltype(_impl_.prop_)*/ 0, /*decltype(_impl_.human_type_)*/ 0, /*decltype(_impl_.guid_)*/ int64_t{0}, /*decltype(_impl_.chair_time_)*/ 0, /*decltype(_impl_.state_)*/ 0, /*decltype(_impl_.view_range_)*/ 0, /*decltype(_impl_.ground_time_)*/ 0, /*decltype(_impl_.player_id_)*/ int64_t{0}, /*decltype(_impl_.radius_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
     struct MessageOfHumanDefaultTypeInternal
@@ -264,9 +264,8 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, _impl_.prop_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, _impl_.human_type_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, _impl_.guid_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, _impl_.on_chair_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, _impl_.state_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, _impl_.chair_time_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, _impl_.on_ground_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, _impl_.ground_time_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, _impl_.player_id_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfHuman, _impl_.view_range_),
@@ -369,15 +368,15 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
     {0, -1, -1, sizeof(::protobuf::MessageOfHuman)},
-    {24, -1, -1, sizeof(::protobuf::MessageOfButcher)},
-    {44, -1, -1, sizeof(::protobuf::MessageOfProp)},
-    {58, -1, -1, sizeof(::protobuf::MessageOfPickedProp)},
-    {69, -1, -1, sizeof(::protobuf::MessageOfMap_Row)},
-    {76, -1, -1, sizeof(::protobuf::MessageOfMap)},
-    {83, -1, -1, sizeof(::protobuf::MessageToClient)},
-    {93, -1, -1, sizeof(::protobuf::MoveRes)},
-    {102, -1, -1, sizeof(::protobuf::BoolRes)},
-    {109, -1, -1, sizeof(::protobuf::MsgRes)},
+    {23, -1, -1, sizeof(::protobuf::MessageOfButcher)},
+    {43, -1, -1, sizeof(::protobuf::MessageOfProp)},
+    {57, -1, -1, sizeof(::protobuf::MessageOfPickedProp)},
+    {68, -1, -1, sizeof(::protobuf::MessageOfMap_Row)},
+    {75, -1, -1, sizeof(::protobuf::MessageOfMap)},
+    {82, -1, -1, sizeof(::protobuf::MessageToClient)},
+    {92, -1, -1, sizeof(::protobuf::MoveRes)},
+    {101, -1, -1, sizeof(::protobuf::BoolRes)},
+    {108, -1, -1, sizeof(::protobuf::MsgRes)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -401,9 +400,9 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     "ill_available\030\006 \001(\001\022\"\n\005place\030\007 \001(\0162\023.pro"
     "tobuf.PlaceType\022 \n\004prop\030\010 \001(\0162\022.protobuf"
     ".PropType\022\'\n\nhuman_type\030\t \001(\0162\023.protobuf"
-    ".HumanType\022\014\n\004guid\030\n \001(\003\022\020\n\010on_chair\030\013 \001"
-    "(\010\022\022\n\nchair_time\030\014 \001(\001\022\021\n\ton_ground\030\r \001("
-    "\010\022\023\n\013ground_time\030\016 \001(\001\022\021\n\tplayer_id\030\017 \001("
+    ".HumanType\022\014\n\004guid\030\n \001(\003\022#\n\005state\030\013 \001(\0162"
+    "\024.protobuf.HumanState\022\022\n\nchair_time\030\014 \001("
+    "\001\022\023\n\013ground_time\030\016 \001(\001\022\021\n\tplayer_id\030\017 \001("
     "\003\022\022\n\nview_range\030\020 \001(\005\022\016\n\006radius\030\021 \001(\005\022%\n"
     "\004buff\030\022 \003(\0162\027.protobuf.HumanBuffType\"\335\002\n"
     "\020MessageOfButcher\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022"
@@ -486,7 +485,7 @@ namespace protobuf
         MessageOfHuman* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.buff_){from._impl_.buff_}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){}, decltype(_impl_.y_){}, decltype(_impl_.speed_){}, decltype(_impl_.life_){}, decltype(_impl_.time_until_skill_available_){}, decltype(_impl_.hanged_time_){}, decltype(_impl_.place_){}, decltype(_impl_.prop_){}, decltype(_impl_.human_type_){}, decltype(_impl_.guid_){}, decltype(_impl_.chair_time_){}, decltype(_impl_.on_chair_){}, decltype(_impl_.on_ground_){}, decltype(_impl_.view_range_){}, decltype(_impl_.ground_time_){}, decltype(_impl_.player_id_){}, decltype(_impl_.radius_){}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.buff_){from._impl_.buff_}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){}, decltype(_impl_.y_){}, decltype(_impl_.speed_){}, decltype(_impl_.life_){}, decltype(_impl_.time_until_skill_available_){}, decltype(_impl_.hanged_time_){}, decltype(_impl_.place_){}, decltype(_impl_.prop_){}, decltype(_impl_.human_type_){}, decltype(_impl_.guid_){}, decltype(_impl_.chair_time_){}, decltype(_impl_.state_){}, decltype(_impl_.view_range_){}, decltype(_impl_.ground_time_){}, decltype(_impl_.player_id_){}, decltype(_impl_.radius_){}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
         ::memcpy(&_impl_.x_, &from._impl_.x_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.radius_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.radius_));
@@ -500,7 +499,7 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.buff_){arena}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){0}, decltype(_impl_.y_){0}, decltype(_impl_.speed_){0}, decltype(_impl_.life_){0}, decltype(_impl_.time_until_skill_available_){0}, decltype(_impl_.hanged_time_){0}, decltype(_impl_.place_){0}, decltype(_impl_.prop_){0}, decltype(_impl_.human_type_){0}, decltype(_impl_.guid_){int64_t{0}}, decltype(_impl_.chair_time_){0}, decltype(_impl_.on_chair_){false}, decltype(_impl_.on_ground_){false}, decltype(_impl_.view_range_){0}, decltype(_impl_.ground_time_){0}, decltype(_impl_.player_id_){int64_t{0}}, decltype(_impl_.radius_){0}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.buff_){arena}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){0}, decltype(_impl_.y_){0}, decltype(_impl_.speed_){0}, decltype(_impl_.life_){0}, decltype(_impl_.time_until_skill_available_){0}, decltype(_impl_.hanged_time_){0}, decltype(_impl_.place_){0}, decltype(_impl_.prop_){0}, decltype(_impl_.human_type_){0}, decltype(_impl_.guid_){int64_t{0}}, decltype(_impl_.chair_time_){0}, decltype(_impl_.state_){0}, decltype(_impl_.view_range_){0}, decltype(_impl_.ground_time_){0}, decltype(_impl_.player_id_){int64_t{0}}, decltype(_impl_.radius_){0}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
     MessageOfHuman::~MessageOfHuman()
@@ -651,12 +650,13 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // bool on_chair = 11;
+                // .protobuf.HumanState state = 11;
                 case 11:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 88))
                     {
-                        _impl_.on_chair_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
+                        _internal_set_state(static_cast<::protobuf::HumanState>(val));
                     }
                     else
                         goto handle_unusual;
@@ -667,16 +667,6 @@ namespace protobuf
                     {
                         _impl_.chair_time_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
                         ptr += sizeof(double);
-                    }
-                    else
-                        goto handle_unusual;
-                    continue;
-                // bool on_ground = 13;
-                case 13:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 104))
-                    {
-                        _impl_.on_ground_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-                        CHK_(ptr);
                     }
                     else
                         goto handle_unusual;
@@ -851,11 +841,13 @@ namespace protobuf
             target = ::_pbi::WireFormatLite::WriteInt64ToArray(10, this->_internal_guid(), target);
         }
 
-        // bool on_chair = 11;
-        if (this->_internal_on_chair() != 0)
+        // .protobuf.HumanState state = 11;
+        if (this->_internal_state() != 0)
         {
             target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteBoolToArray(11, this->_internal_on_chair(), target);
+            target = ::_pbi::WireFormatLite::WriteEnumToArray(
+                11, this->_internal_state(), target
+            );
         }
 
         // double chair_time = 12;
@@ -867,13 +859,6 @@ namespace protobuf
         {
             target = stream->EnsureSpace(target);
             target = ::_pbi::WireFormatLite::WriteDoubleToArray(12, this->_internal_chair_time(), target);
-        }
-
-        // bool on_ground = 13;
-        if (this->_internal_on_ground() != 0)
-        {
-            target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteBoolToArray(13, this->_internal_on_ground(), target);
         }
 
         // double ground_time = 14;
@@ -1035,16 +1020,11 @@ namespace protobuf
             total_size += 1 + 8;
         }
 
-        // bool on_chair = 11;
-        if (this->_internal_on_chair() != 0)
+        // .protobuf.HumanState state = 11;
+        if (this->_internal_state() != 0)
         {
-            total_size += 1 + 1;
-        }
-
-        // bool on_ground = 13;
-        if (this->_internal_on_ground() != 0)
-        {
-            total_size += 1 + 1;
+            total_size += 1 +
+                          ::_pbi::WireFormatLite::EnumSize(this->_internal_state());
         }
 
         // int32 view_range = 16;
@@ -1154,13 +1134,9 @@ namespace protobuf
         {
             _this->_internal_set_chair_time(from._internal_chair_time());
         }
-        if (from._internal_on_chair() != 0)
+        if (from._internal_state() != 0)
         {
-            _this->_internal_set_on_chair(from._internal_on_chair());
-        }
-        if (from._internal_on_ground() != 0)
-        {
-            _this->_internal_set_on_ground(from._internal_on_ground());
+            _this->_internal_set_state(from._internal_state());
         }
         if (from._internal_view_range() != 0)
         {

@@ -272,6 +272,14 @@ namespace THUAI62Proto
         sendMsg.set_player_id(id);
         return sendMsg;
     }
+
+    inline protobuf::AttackMsg THUAI62ProtobufAttack(double angle, int64_t id)
+    {
+        protobuf::AttackMsg attackMsg;
+        attackMsg.set_angle(angle);
+        attackMsg.set_player_id(id);
+        return attackMsg;
+    }
 }  // namespace THUAI62Proto
 
 #endif

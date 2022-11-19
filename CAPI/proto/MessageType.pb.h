@@ -178,6 +178,39 @@ namespace protobuf
             HumanBuffType_descriptor(), name, value
         );
     }
+    enum HumanState : int
+    {
+        NULL_STATUS = 0,
+        IDLE = 1,
+        FIXING = 2,
+        DYING = 3,
+        ON_CHAIR = 4,
+        DEAD = 5,
+        HumanState_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+        HumanState_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+    };
+    bool HumanState_IsValid(int value);
+    constexpr HumanState HumanState_MIN = NULL_STATUS;
+    constexpr HumanState HumanState_MAX = DEAD;
+    constexpr int HumanState_ARRAYSIZE = HumanState_MAX + 1;
+
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* HumanState_descriptor();
+    template<typename T>
+    inline const std::string& HumanState_Name(T enum_t_value)
+    {
+        static_assert(::std::is_same<T, HumanState>::value || ::std::is_integral<T>::value, "Incorrect type passed to function HumanState_Name.");
+        return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+            HumanState_descriptor(), enum_t_value
+        );
+    }
+    inline bool HumanState_Parse(
+        ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, HumanState* value
+    )
+    {
+        return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<HumanState>(
+            HumanState_descriptor(), name, value
+        );
+    }
     enum ButcherBuffType : int
     {
         NULL_BBUFF_TYPE = 0,
@@ -359,6 +392,15 @@ template<>
 inline const EnumDescriptor* GetEnumDescriptor<::protobuf::HumanBuffType>()
 {
     return ::protobuf::HumanBuffType_descriptor();
+}
+template<>
+struct is_proto_enum<::protobuf::HumanState> : ::std::true_type
+{
+};
+template<>
+inline const EnumDescriptor* GetEnumDescriptor<::protobuf::HumanState>()
+{
+    return ::protobuf::HumanState_descriptor();
 }
 template<>
 struct is_proto_enum<::protobuf::ButcherBuffType> : ::std::true_type

@@ -90,6 +90,7 @@ private:
     std::shared_ptr<const THUAI6::Butcher> ButcherGetSelfInfo() const override;
 
     std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
+    THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
 
     // 供IAPI使用的操作相关的部分
     bool Move(int64_t time, double angle) override;
@@ -98,43 +99,23 @@ private:
     bool UseSkill() override;
     bool SendMessage(int64_t toID, std::string message) override;
     bool HaveMessage() override;
-    std::pair<std::string, int64_t> GetMessage() override;
+    std::pair<int64_t, std::string> GetMessage() override;
 
     bool Escape() override;
 
     // 说明：双向stream由三个函数共同实现，两个记录开始和结束，结果由Logic里的私有的成员变量记录，获得返回值则另调函数
-    bool StartFixMachine() override
-    {
-    }
-    bool EndFixMachine() override
-    {
-    }
-    bool GetFixStatus() override
-    {
-    }
+    void StartFixMachine() override;
+    void EndFixMachine() override;
+    bool GetFixStatus() override;
 
-    bool StartSaveHuman() override
-    {
-    }
-    bool EndSaveHuman() override
-    {
-    }
-    bool GetSaveStatus() override
-    {
-    }
+    void StartSaveHuman() override;
+    void EndSaveHuman() override;
+    bool GetSaveStatus() override;
 
-    bool Attack(double angle) override
-    {
-    }
-    bool CarryHuman() override
-    {
-    }
-    bool ReleaseHuman() override
-    {
-    }
-    bool HangHuman() override
-    {
-    }
+    bool Attack(double angle) override;
+    bool CarryHuman() override;
+    bool ReleaseHuman() override;
+    bool HangHuman() override;
 
     bool WaitThread() override
     {

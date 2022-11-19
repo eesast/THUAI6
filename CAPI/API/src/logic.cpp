@@ -62,119 +62,100 @@ std::vector<std::vector<THUAI6::PlaceType>> Logic::GetFullMap() const
     return currentState->gamemap;
 }
 
+THUAI6::PlaceType Logic::GetPlaceType(int32_t CellX, int32_t CellY) const
+{
+    std::lock_guard<std::mutex> lock(mtxState);
+    return currentState->gamemap[CellX][CellY];
+}
+
 bool Logic::Move(int64_t time, double angle)
 {
-    // protobuf::MoveRes moveResult;
-    // ClientContext context;
-    // auto request = THUAI62Proto::THUAI62ProtobufMove(time, angle, playerID);
-    // auto status = THUAI6Stub->Move(&context, request, &moveResult);
-    // if (status.ok())
-    //     return moveResult.act_success();
-    // else
-    //     return false;
     return pComm->Move(time, angle, playerID);
 }
 
 bool Logic::PickProp(THUAI6::PropType prop)
 {
-    // protobuf::BoolRes pickPropResult;
-    // ClientContext context;
-    // auto request = THUAI62Proto::THUAI62ProtobufPick(prop, playerID);
-    // auto status = THUAI6Stub->PickProp(&context, request, &pickPropResult);
-    // if (status.ok())
-    //     return pickPropResult.act_success();
-    // else
-    //     return false;
-
     return pComm->PickProp(prop, playerID);
 }
 
 bool Logic::UseProp()
 {
-    // protobuf::BoolRes usePropResult;
-    // ClientContext context;
-    // auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    // auto status = THUAI6Stub->UseProp(&context, request, &usePropResult);
-    // if (status.ok())
-    //     return usePropResult.act_success();
-    // else
-    //     return false;
     return pComm->UseProp(playerID);
 }
 
 bool Logic::UseSkill()
 {
-    // protobuf::BoolRes useSkillResult;
-    // ClientContext context;
-    // auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    // auto status = THUAI6Stub->UseSkill(&context, request, &useSkillResult);
-    // if (status.ok())
-    //     return useSkillResult.act_success();
-    // else
-    //     return false;
-
     return pComm->UseSkill(playerID);
 }
 
 bool Logic::SendMessage(int64_t toID, std::string message)
 {
-    // protobuf::BoolRes sendMessageResult;
-    // ClientContext context;
-    // auto request = THUAI62Proto::THUAI62ProtobufSend(message, toID, playerID);
-    // auto status = THUAI6Stub->SendMessage(&context, request, &sendMessageResult);
-    // if (status.ok())
-    //     return sendMessageResult.act_success();
-    // else
-    //     return false;
-
     return pComm->SendMessage(toID, message, playerID);
 }
 
 bool Logic::HaveMessage()
 {
-    // protobuf::BoolRes haveMessageResult;
-    // ClientContext context;
-    // auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    // auto status = THUAI6Stub->HaveMessage(&context, request, &haveMessageResult);
-    // if (status.ok())
-    //     return haveMessageResult.act_success();
-    // else
-    //     return false;
-
     return pComm->HaveMessage(playerID);
 }
 
-std::pair<std::string, int64_t> Logic::GetMessage()
+std::pair<int64_t, std::string> Logic::GetMessage()
 {
-    // protobuf::MsgRes getMessageResult;
-    // ClientContext context;
-    // auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    // auto status = THUAI6Stub->GetMessage(&context, request, &getMessageResult);
-    // if (status.ok())
-    // {
-    //     if (getMessageResult.have_message())
-    //         return std::make_pair(getMessageResult.message_received(), getMessageResult.from_player_id());
-    //     else
-    //         return std::make_pair("", -1);
-    // }
-    // else
-    //     return std::make_pair("", -1);
-
     return pComm->GetMessage(playerID);
 }
 
 bool Logic::Escape()
 {
-    // protobuf::BoolRes escapeResult;
-    // ClientContext context;
-    // auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    // auto status = THUAI6Stub->Escape(&context, request, &escapeResult);
-    // if (status.ok())
-    //     return escapeResult.act_success();
-    // else
-    //     return false;
-
     return pComm->Escape(playerID);
+}
+
+void Logic::StartFixMachine()
+{
+    pComm->StartFixMachine(playerID);
+}
+
+void Logic::EndFixMachine()
+{
+    pComm->EndFixMachine();
+}
+
+bool Logic::GetFixStatus()
+{
+    return pComm->GetFixStatus();
+}
+
+void Logic::StartSaveHuman()
+{
+    pComm->StartSaveHuman(playerID);
+}
+
+void Logic::EndSaveHuman()
+{
+    pComm->EndSaveHuman();
+}
+
+bool Logic::GetSaveStatus()
+{
+    return pComm->GetSaveStatus();
+}
+
+bool Logic::Attack(double angle)
+{
+    return pComm->Attack(angle, playerID);
+}
+
+bool Logic::CarryHuman()
+{
+    return pComm->CarryHuman(playerID);
+}
+
+bool Logic::ReleaseHuman()
+{
+    return pComm->ReleaseHuman(playerID);
+}
+
+bool Logic::HangHuman()
+{
+    return pComm->HangHuman(playerID);
 }
 
 void Logic::ProcessMessage()
@@ -268,14 +249,6 @@ void Logic::PlayerWrapper(std::function<void()> player)
 
 bool Logic::TryConnection()
 {
-    // IDMsg request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    // BoolRes reply;
-    // ClientContext context;
-    // auto status = THUAI6Stub->TryConnection(&context, request, &reply);
-    // if (status.ok())
-    //     return true;
-    // else
-    //     return false;
     return pComm->TryConnection(playerID);
 }
 

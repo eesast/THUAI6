@@ -85,7 +85,7 @@ bool Communication::HaveMessage(int64_t playerID)
         return false;
 }
 
-std::pair<std::string, int64_t> Communication::GetMessage(int64_t playerID)
+std::pair<int64_t, std::string> Communication::GetMessage(int64_t playerID)
 {
     protobuf::MsgRes getMessageResult;
     ClientContext context;
@@ -94,12 +94,12 @@ std::pair<std::string, int64_t> Communication::GetMessage(int64_t playerID)
     if (status.ok())
     {
         if (getMessageResult.have_message())
-            return std::make_pair(getMessageResult.message_received(), getMessageResult.from_player_id());
+            return std::make_pair(getMessageResult.from_player_id(), getMessageResult.message_received());
         else
-            return std::make_pair("", -1);
+            return std::make_pair(-1, "");
     }
     else
-        return std::make_pair("", -1);
+        return std::make_pair(-1, "");
 }
 
 bool Communication::Escape(int64_t playerID)
@@ -110,6 +110,124 @@ bool Communication::Escape(int64_t playerID)
     auto status = THUAI6Stub->Escape(&context, request, &escapeResult);
     if (status.ok())
         return escapeResult.act_success();
+    else
+        return false;
+}
+
+void Communication::FixMachine(int64_t playerID)
+{
+    protobuf::BoolRes fixMachineResult;
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    ClientContext context;
+    while (isFixing)
+    {
+        auto fixStream = THUAI6Stub->FixMachine(&context);
+        fixStream->Write(request);
+        fixStream->Read(&fixMachineResult);
+        if (!fixMachineResult.act_success())
+        {
+            isFixing = false;
+            break;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));  // 防止巨量发信
+    }
+}
+
+void Communication::StartFixMachine(int64_t playerID)
+{
+    isFixing = true;
+    FixMachine(playerID);
+}
+
+void Communication::EndFixMachine()
+{
+    isFixing = false;
+}
+
+bool Communication::GetFixStatus()
+{
+    return isFixing;
+}
+
+void Communication::SaveHuman(int64_t playerID)
+{
+    protobuf::BoolRes saveHumanResult;
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    ClientContext context;
+    while (isSaving)
+    {
+        auto saveStream = THUAI6Stub->SaveHuman(&context);
+        saveStream->Write(request);
+        saveStream->Read(&saveHumanResult);
+        if (!saveHumanResult.act_success())
+        {
+            isSaving = false;
+            break;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));  // 防止巨量发信
+    }
+}
+
+void Communication::StartSaveHuman(int64_t playerID)
+{
+    isSaving = true;
+    SaveHuman(playerID);
+}
+
+void Communication::EndSaveHuman()
+{
+    isSaving = false;
+}
+
+bool Communication::GetSaveStatus()
+{
+    return isSaving;
+}
+
+bool Communication::Attack(double angle, int64_t playerID)
+{
+    protobuf::BoolRes attackResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufAttack(angle, playerID);
+    auto status = THUAI6Stub->Attack(&context, request, &attackResult);
+    if (status.ok())
+        return attackResult.act_success();
+    else
+        return false;
+}
+
+bool Communication::CarryHuman(int64_t playerID)
+{
+    protobuf::BoolRes carryHumanResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto status = THUAI6Stub->CarryHuman(&context, request, &carryHumanResult);
+    if (status.ok())
+        return carryHumanResult.act_success();
+    else
+        return false;
+}
+
+bool Communication::ReleaseHuman(int64_t playerID)
+{
+    protobuf::BoolRes releaseHumanResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto status = THUAI6Stub->ReleaseHuman(&context, request, &releaseHumanResult);
+    if (status.ok())
+        return releaseHumanResult.act_success();
+    else
+        return false;
+}
+
+bool Communication::HangHuman(int64_t playerID)
+{
+    protobuf::BoolRes hangHumanResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto status = THUAI6Stub->HangHuman(&context, request, &hangHumanResult);
+    if (status.ok())
+        return hangHumanResult.act_success();
     else
         return false;
 }

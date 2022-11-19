@@ -247,6 +247,7 @@ public:
     std::future<bool> MoveUp(int64_t timeInMilliseconds) override;
     std::future<bool> MoveLeft(int64_t timeInMilliseconds) override;
     std::future<bool> MoveDown(int64_t timeInMilliseconds) override;
+
     std::future<bool> PickProp(THUAI6::PropType prop) override;
     std::future<bool> UseProp() override;
     std::future<bool> UseSkill() override;

@@ -87,6 +87,17 @@ namespace THUAI6
         ButcherBuffType4 = 4,
     };
 
+    //人类状态枚举
+    enum class HumanState : unsigned char
+    {
+        NullHumanState = 0,
+        Idle = 1,
+        Fixing = 2,
+        Dying = 3,
+        OnChair = 4,
+        Dead = 5,
+    };
+
     // 玩家类
     struct Player
     {

@@ -83,11 +83,11 @@ private:
 
     // 获取服务器发来的消息
 
-    std::vector<std::shared_ptr<THUAI6::Butcher>> GetButchers() const override;
-    std::vector<std::shared_ptr<THUAI6::Human>> GetHumans() const override;
-    std::vector<std::shared_ptr<THUAI6::Prop>> GetProps() const override;
-    std::shared_ptr<THUAI6::Human> HumanGetSelfInfo() const override;
-    std::shared_ptr<THUAI6::Butcher> ButcherGetSelfInfo() const override;
+    std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
+    std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
+    std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
+    std::shared_ptr<const THUAI6::Human> HumanGetSelfInfo() const override;
+    std::shared_ptr<const THUAI6::Butcher> ButcherGetSelfInfo() const override;
 
     std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
 

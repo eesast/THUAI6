@@ -27,11 +27,11 @@ class ILogic
 
 public:
     // 获取服务器发来的消息
-    virtual std::vector<std::shared_ptr<THUAI6::Butcher>> GetButchers() const = 0;
-    virtual std::vector<std::shared_ptr<THUAI6::Human>> GetHumans() const = 0;
-    virtual std::vector<std::shared_ptr<THUAI6::Prop>> GetProps() const = 0;
-    virtual std::shared_ptr<THUAI6::Human> HumanGetSelfInfo() const = 0;
-    virtual std::shared_ptr<THUAI6::Butcher> ButcherGetSelfInfo() const = 0;
+    virtual std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const = 0;
+    virtual std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const = 0;
+    virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
+    virtual std::shared_ptr<const THUAI6::Human> HumanGetSelfInfo() const = 0;
+    virtual std::shared_ptr<const THUAI6::Butcher> ButcherGetSelfInfo() const = 0;
 
     virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
 
@@ -79,7 +79,7 @@ public:
     virtual std::future<bool> MoveDown(int64_t timeInMilliseconds) = 0;
 
     // 捡道具、使用技能
-    virtual std::future<bool> PickProp() = 0;
+    virtual std::future<bool> PickProp(THUAI6::PropType prop) = 0;
     virtual std::future<bool> UseProp() = 0;
     virtual std::future<bool> UseSkill() = 0;
 
@@ -179,32 +179,16 @@ public:
     {
     }
 
-    std::future<bool> MoveRight(int64_t timeInMilliseconds) override
-    {
-    }
-    std::future<bool> MoveUp(int64_t timeInMilliseconds) override
-    {
-    }
-    std::future<bool> MoveLeft(int64_t timeInMilliseconds) override
-    {
-    }
-    std::future<bool> MoveDown(int64_t timeInMilliseconds) override
-    {
-    }
+    std::future<bool> MoveRight(int64_t timeInMilliseconds) override;
+    std::future<bool> MoveUp(int64_t timeInMilliseconds) override;
+    std::future<bool> MoveLeft(int64_t timeInMilliseconds) override;
+    std::future<bool> MoveDown(int64_t timeInMilliseconds) override;
 
-    std::future<bool> PickProp() override
-    {
-    }
-    std::future<bool> UseProp() override
-    {
-    }
-    std::future<bool> UseSkill() override
-    {
-    }
+    std::future<bool> PickProp(THUAI6::PropType prop) override;
+    std::future<bool> UseProp() override;
+    std::future<bool> UseSkill() override;
 
-    std::future<bool> SendMessage(int64_t, std::string) override
-    {
-    }
+    std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override
     {
     }
@@ -216,20 +200,12 @@ public:
     {
     }
 
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override
-    {
-    }
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override
-    {
-    }
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override;
 
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override
-    {
-    }
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
-    [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override
-    {
-    }
+    [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
     [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override
     {
     }
@@ -282,40 +258,21 @@ public:
     }
     void Play(IAI& ai) override;
 
-    std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override
-    {
-    }
+    std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override;
 
     [[nodiscard]] int GetFrameCount() const override
     {
     }
 
-    std::future<bool> MoveRight(int64_t timeInMilliseconds) override
-    {
-    }
-    std::future<bool> MoveUp(int64_t timeInMilliseconds) override
-    {
-    }
-    std::future<bool> MoveLeft(int64_t timeInMilliseconds) override
-    {
-    }
-    std::future<bool> MoveDown(int64_t timeInMilliseconds) override
-    {
-    }
+    std::future<bool> MoveRight(int64_t timeInMilliseconds) override;
+    std::future<bool> MoveUp(int64_t timeInMilliseconds) override;
+    std::future<bool> MoveLeft(int64_t timeInMilliseconds) override;
+    std::future<bool> MoveDown(int64_t timeInMilliseconds) override;
+    std::future<bool> PickProp(THUAI6::PropType prop) override;
+    std::future<bool> UseProp() override;
+    std::future<bool> UseSkill() override;
 
-    std::future<bool> PickProp() override
-    {
-    }
-    std::future<bool> UseProp() override
-    {
-    }
-    std::future<bool> UseSkill() override
-    {
-    }
-
-    std::future<bool> SendMessage(int64_t, std::string) override
-    {
-    }
+    std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override
     {
     }
@@ -405,7 +362,7 @@ public:
     {
     }
 
-    std::future<bool> PickProp() override
+    std::future<bool> PickProp(THUAI6::PropType prop) override
     {
     }
     std::future<bool> UseProp() override
@@ -516,7 +473,7 @@ public:
     {
     }
 
-    std::future<bool> PickProp() override
+    std::future<bool> PickProp(THUAI6::PropType prop) override
     {
     }
     std::future<bool> UseProp() override

@@ -22,10 +22,12 @@ namespace starter.viewmodel.settings
 
         public string Route
         {
-            get {
+            get
+            {
                 return obj.Route;
             }
-            set {
+            set
+            {
                 obj.Route = value;
                 this.RaisePropertyChanged("Route");
             }
@@ -33,10 +35,12 @@ namespace starter.viewmodel.settings
 
         public bool CanEditRoute  // if the user can still edit install route
         {
-            get {
+            get
+            {
                 return !obj.HaveRoute;
             }
-            set {
+            set
+            {
                 obj.HaveRoute = !value;
                 obj.EditingRoute = value;
                 this.RaisePropertyChanged("CanEditRoute");
@@ -46,7 +50,8 @@ namespace starter.viewmodel.settings
         private BaseCommand clickBrowseCommand;
         public BaseCommand ClickBrowseCommand
         {
-            get {
+            get
+            {
                 if (clickBrowseCommand == null)
                 {
                     clickBrowseCommand = new BaseCommand(new Action<object>(o =>
@@ -54,28 +59,29 @@ namespace starter.viewmodel.settings
                         using (FolderBrowserDialog dialog = new FolderBrowserDialog())
                         {
                             _ = dialog.ShowDialog();
-                    if (dialog.SelectedPath != String.Empty)
-                        Route = dialog.SelectedPath;
+                            if (dialog.SelectedPath != String.Empty)
+                                Route = dialog.SelectedPath;
+                        }
+                    }));
                 }
-            }));
-                }
-        return clickBrowseCommand;
-    }
-}
-private BaseCommand clickConfirmCommand;
-public BaseCommand ClickConfirmCommand
-{
-    get {
-        if (clickConfirmCommand == null)
+                return clickBrowseCommand;
+            }
+        }
+        private BaseCommand clickConfirmCommand;
+        public BaseCommand ClickConfirmCommand
         {
+            get
+            {
+                if (clickConfirmCommand == null)
+                {
                     clickConfirmCommand = new BaseCommand(new Action<object>(o =>
                     {
                         CanEditRoute = false;
-                    obj.install();
-        }));
-    }
+                        obj.install();
+                    }));
+                }
                 return clickConfirmCommand;
             }
-                }
-                }
-                }
+        }
+    }
+}

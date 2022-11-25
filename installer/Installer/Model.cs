@@ -26,15 +26,21 @@ namespace starter.viewmodel.settings
         /// <summary>
         /// Route of files
         /// </summary>
-        public string Route {
-            get; set; }
+        public string Route
+        {
+            get; set;
+        }
         /// <summary>
         /// if the route was set or is under editing
         /// </summary>
-        public bool HaveRoute {
-            get; set; }
-        public bool EditingRoute {
-            get; set; }
+        public bool HaveRoute
+        {
+            get; set;
+        }
+        public bool EditingRoute
+        {
+            get; set;
+        }
         /// <summary>
         /// downloader function
         /// </summary>
@@ -144,7 +150,8 @@ namespace Downloader
                     GetObjectRequest request = new GetObjectRequest(bucket, key, localDir, localFileName);
 
                     Dictionary<string, string> test = request.GetRequestHeaders();
-                    request.SetCosProgressCallback(delegate(long completed, long total) {
+                    request.SetCosProgressCallback(delegate (long completed, long total)
+                    {
                         Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
                     });
                     // 执行请求

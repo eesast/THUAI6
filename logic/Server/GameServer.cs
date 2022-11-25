@@ -79,42 +79,42 @@ namespace Server
                     1000,
                     () =>
                     {
-                ReportGame();  // 最后发一次消息，唤醒发消息的线程，防止发消息的线程由于有概率处在 Wait 状态而卡住
-                return 0;
+                        ReportGame();  // 最后发一次消息，唤醒发消息的线程，防止发消息的线程由于有概率处在 Wait 状态而卡住
+                        return 0;
                     }
                 ).Start();
-        })
+            })
             { IsBackground = true }.Start();
             new Thread(() =>
             {
                 waitHandle.Wait();
-            this.endGameSem.Release();
-    })
+                this.endGameSem.Release();
+            })
             { IsBackground = true }.Start();
 
-}
-public void WaitForEnd()
-{
-    this.endGameSem.Wait();
-}
+        }
+        public void WaitForEnd()
+        {
+            this.endGameSem.Wait();
+        }
 
-public void ReportGame()
-{
-    currentGameInfo = game.GetCopiedGameInfo();
+        public void ReportGame()
+        {
+            currentGameInfo = game.GetCopiedGameInfo();
 
-    foreach (var kvp in semaDict)
-    {
-            kvp.Value.Item1.Release();
+            foreach (var kvp in semaDict)
+            {
+                kvp.Value.Item1.Release();
+            }
+
+            foreach (var kvp in semaDict)
+            {
+                kvp.Value.Item2.Wait();
+            }
+        }
+
+        public GameServer()
+        {
+        }
     }
-
-    foreach (var kvp in semaDict)
-    {
-            kvp.Value.Item2.Wait();
-    }
-}
-
-public GameServer()
-{
-}
-}
 }

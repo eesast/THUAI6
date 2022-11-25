@@ -1,15 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FrameRateTask" Version="1.1.2" />
+    <None Remove="Message2Clients.proto" />
+    <None Remove="Message2Server.proto" />
+    <None Remove="MessageType.proto" />
+    <None Remove="Services.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.21.9" />
+    <PackageReference Include="Google.Protobuf.Tools" Version="3.21.9" />
     <PackageReference Include="Grpc" Version="2.46.5" />
     <PackageReference Include="Grpc.Core" Version="2.46.5" />
     <PackageReference Include="Grpc.Tools" Version="2.50.0">
@@ -19,7 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\dependency\proto\Protos.csproj" />
+    <Protobuf Include="Message2Clients.proto" />
+    <Protobuf Include="Message2Server.proto" />
+    <Protobuf Include="MessageType.proto" />
+    <Protobuf Include="Services.proto" />
   </ItemGroup>
 
 </Project>

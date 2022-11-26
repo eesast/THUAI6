@@ -9,6 +9,15 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System;
+using COSXML.Model.Bucket;
+using System.Runtime.InteropServices;
+using System.Text.Json.Nodes;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Xml.Schema;
+using static Downloader.Program;
+using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace starter.viewmodel.settings
 {
@@ -608,8 +617,10 @@ namespace Downloader
                 Data.ResetFilepath(newPath);
                 Console.WriteLine("更改路径成功!");
             }
-            public static void main(string[] args)
+            public static async Task main(string[] args)
             {
+                var client = new HttpClient();
+                var web = new WebConnect.Web();
                 Data date = new Data("");
                 while (true)
                 {
@@ -678,6 +689,19 @@ namespace Downloader
                     else if (choose == "6")
                     {
                         MoveProgram();
+                    }
+                    else if (choose == "7")
+                    {
+                        Console.WriteLine("请输入email：");
+                        string username = Console.ReadLine();
+                        Console.WriteLine("请输入密码：");
+                        string password = Console.ReadLine();
+
+                        await web.LoginToEEsast(client, username, password);
+                    }
+                    else if (choose == "8")
+                    {
+                        await web.UserDetails(client);
                     }
                     else if (choose == "exit")
                     {

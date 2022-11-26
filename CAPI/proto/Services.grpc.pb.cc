@@ -32,8 +32,10 @@ namespace protobuf
         "/protobuf.AvailableService/SendMessage",
         "/protobuf.AvailableService/HaveMessage",
         "/protobuf.AvailableService/GetMessage",
-        "/protobuf.AvailableService/FixMachine",
-        "/protobuf.AvailableService/SaveHuman",
+        "/protobuf.AvailableService/StartFixMachine",
+        "/protobuf.AvailableService/EndFixMachine",
+        "/protobuf.AvailableService/StartSaveHuman",
+        "/protobuf.AvailableService/EndSaveHuman",
         "/protobuf.AvailableService/Attack",
         "/protobuf.AvailableService/CarryHuman",
         "/protobuf.AvailableService/ReleaseHuman",
@@ -59,13 +61,15 @@ namespace protobuf
         rpcmethod_SendMessage_(AvailableService_method_names[6], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
         rpcmethod_HaveMessage_(AvailableService_method_names[7], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
         rpcmethod_GetMessage_(AvailableService_method_names[8], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_FixMachine_(AvailableService_method_names[9], options.suffix_for_stats(), ::grpc::internal::RpcMethod::BIDI_STREAMING, channel),
-        rpcmethod_SaveHuman_(AvailableService_method_names[10], options.suffix_for_stats(), ::grpc::internal::RpcMethod::BIDI_STREAMING, channel),
-        rpcmethod_Attack_(AvailableService_method_names[11], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_CarryHuman_(AvailableService_method_names[12], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_ReleaseHuman_(AvailableService_method_names[13], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_HangHuman_(AvailableService_method_names[14], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_Escape_(AvailableService_method_names[15], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+        rpcmethod_StartFixMachine_(AvailableService_method_names[9], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_EndFixMachine_(AvailableService_method_names[10], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_StartSaveHuman_(AvailableService_method_names[11], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_EndSaveHuman_(AvailableService_method_names[12], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_Attack_(AvailableService_method_names[13], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_CarryHuman_(AvailableService_method_names[14], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_ReleaseHuman_(AvailableService_method_names[15], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_HangHuman_(AvailableService_method_names[16], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_Escape_(AvailableService_method_names[17], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
     {
     }
 
@@ -313,44 +317,116 @@ namespace protobuf
         return result;
     }
 
-    ::grpc::ClientReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>* AvailableService::Stub::FixMachineRaw(::grpc::ClientContext* context)
+    ::grpc::Status AvailableService::Stub::StartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
     {
-        return ::grpc::internal::ClientReaderWriterFactory<::protobuf::IDMsg, ::protobuf::BoolRes>::Create(channel_.get(), rpcmethod_FixMachine_, context);
+        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_StartFixMachine_, context, request, response);
     }
 
-    void AvailableService::Stub::async::FixMachine(::grpc::ClientContext* context, ::grpc::ClientBidiReactor<::protobuf::IDMsg, ::protobuf::BoolRes>* reactor)
+    void AvailableService::Stub::async::StartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
     {
-        ::grpc::internal::ClientCallbackReaderWriterFactory<::protobuf::IDMsg, ::protobuf::BoolRes>::Create(stub_->channel_.get(), stub_->rpcmethod_FixMachine_, context, reactor);
+        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartFixMachine_, context, request, response, std::move(f));
     }
 
-    ::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>* AvailableService::Stub::AsyncFixMachineRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag)
+    void AvailableService::Stub::async::StartFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
     {
-        return ::grpc::internal::ClientAsyncReaderWriterFactory<::protobuf::IDMsg, ::protobuf::BoolRes>::Create(channel_.get(), cq, rpcmethod_FixMachine_, context, true, tag);
+        ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartFixMachine_, context, request, response, reactor);
     }
 
-    ::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncFixMachineRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq)
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncStartFixMachineRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
     {
-        return ::grpc::internal::ClientAsyncReaderWriterFactory<::protobuf::IDMsg, ::protobuf::BoolRes>::Create(channel_.get(), cq, rpcmethod_FixMachine_, context, false, nullptr);
+        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_StartFixMachine_, context, request);
     }
 
-    ::grpc::ClientReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>* AvailableService::Stub::SaveHumanRaw(::grpc::ClientContext* context)
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncStartFixMachineRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
     {
-        return ::grpc::internal::ClientReaderWriterFactory<::protobuf::IDMsg, ::protobuf::BoolRes>::Create(channel_.get(), rpcmethod_SaveHuman_, context);
+        auto* result =
+            this->PrepareAsyncStartFixMachineRaw(context, request, cq);
+        result->StartCall();
+        return result;
     }
 
-    void AvailableService::Stub::async::SaveHuman(::grpc::ClientContext* context, ::grpc::ClientBidiReactor<::protobuf::IDMsg, ::protobuf::BoolRes>* reactor)
+    ::grpc::Status AvailableService::Stub::EndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
     {
-        ::grpc::internal::ClientCallbackReaderWriterFactory<::protobuf::IDMsg, ::protobuf::BoolRes>::Create(stub_->channel_.get(), stub_->rpcmethod_SaveHuman_, context, reactor);
+        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_EndFixMachine_, context, request, response);
     }
 
-    ::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>* AvailableService::Stub::AsyncSaveHumanRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq, void* tag)
+    void AvailableService::Stub::async::EndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
     {
-        return ::grpc::internal::ClientAsyncReaderWriterFactory<::protobuf::IDMsg, ::protobuf::BoolRes>::Create(channel_.get(), cq, rpcmethod_SaveHuman_, context, true, tag);
+        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_EndFixMachine_, context, request, response, std::move(f));
     }
 
-    ::grpc::ClientAsyncReaderWriter<::protobuf::IDMsg, ::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncSaveHumanRaw(::grpc::ClientContext* context, ::grpc::CompletionQueue* cq)
+    void AvailableService::Stub::async::EndFixMachine(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
     {
-        return ::grpc::internal::ClientAsyncReaderWriterFactory<::protobuf::IDMsg, ::protobuf::BoolRes>::Create(channel_.get(), cq, rpcmethod_SaveHuman_, context, false, nullptr);
+        ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_EndFixMachine_, context, request, response, reactor);
+    }
+
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncEndFixMachineRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    {
+        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_EndFixMachine_, context, request);
+    }
+
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncEndFixMachineRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    {
+        auto* result =
+            this->PrepareAsyncEndFixMachineRaw(context, request, cq);
+        result->StartCall();
+        return result;
+    }
+
+    ::grpc::Status AvailableService::Stub::StartSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
+    {
+        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_StartSaveHuman_, context, request, response);
+    }
+
+    void AvailableService::Stub::async::StartSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
+    {
+        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartSaveHuman_, context, request, response, std::move(f));
+    }
+
+    void AvailableService::Stub::async::StartSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
+    {
+        ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartSaveHuman_, context, request, response, reactor);
+    }
+
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncStartSaveHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    {
+        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_StartSaveHuman_, context, request);
+    }
+
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncStartSaveHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    {
+        auto* result =
+            this->PrepareAsyncStartSaveHumanRaw(context, request, cq);
+        result->StartCall();
+        return result;
+    }
+
+    ::grpc::Status AvailableService::Stub::EndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
+    {
+        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_EndSaveHuman_, context, request, response);
+    }
+
+    void AvailableService::Stub::async::EndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
+    {
+        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_EndSaveHuman_, context, request, response, std::move(f));
+    }
+
+    void AvailableService::Stub::async::EndSaveHuman(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
+    {
+        ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_EndSaveHuman_, context, request, response, reactor);
+    }
+
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncEndSaveHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    {
+        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_EndSaveHuman_, context, request);
+    }
+
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncEndSaveHumanRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    {
+        auto* result =
+            this->PrepareAsyncEndSaveHumanRaw(context, request, cq);
+        result->StartCall();
+        return result;
     }
 
     ::grpc::Status AvailableService::Stub::Attack(::grpc::ClientContext* context, const ::protobuf::AttackMsg& request, ::protobuf::BoolRes* response)
@@ -623,26 +699,28 @@ namespace protobuf
         ));
         AddMethod(new ::grpc::internal::RpcServiceMethod(
             AvailableService_method_names[9],
-            ::grpc::internal::RpcMethod::BIDI_STREAMING,
-            new ::grpc::internal::BidiStreamingHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes>(
+            ::grpc::internal::RpcMethod::NORMAL_RPC,
+            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
                 [](AvailableService::Service* service,
                    ::grpc::ServerContext* ctx,
-                   ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* stream)
+                   const ::protobuf::IDMsg* req,
+                   ::protobuf::BoolRes* resp)
                 {
-                    return service->FixMachine(ctx, stream);
+                    return service->StartFixMachine(ctx, req, resp);
                 },
                 this
             )
         ));
         AddMethod(new ::grpc::internal::RpcServiceMethod(
             AvailableService_method_names[10],
-            ::grpc::internal::RpcMethod::BIDI_STREAMING,
-            new ::grpc::internal::BidiStreamingHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes>(
+            ::grpc::internal::RpcMethod::NORMAL_RPC,
+            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
                 [](AvailableService::Service* service,
                    ::grpc::ServerContext* ctx,
-                   ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* stream)
+                   const ::protobuf::IDMsg* req,
+                   ::protobuf::BoolRes* resp)
                 {
-                    return service->SaveHuman(ctx, stream);
+                    return service->EndFixMachine(ctx, req, resp);
                 },
                 this
             )
@@ -650,13 +728,13 @@ namespace protobuf
         AddMethod(new ::grpc::internal::RpcServiceMethod(
             AvailableService_method_names[11],
             ::grpc::internal::RpcMethod::NORMAL_RPC,
-            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::AttackMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
                 [](AvailableService::Service* service,
                    ::grpc::ServerContext* ctx,
-                   const ::protobuf::AttackMsg* req,
+                   const ::protobuf::IDMsg* req,
                    ::protobuf::BoolRes* resp)
                 {
-                    return service->Attack(ctx, req, resp);
+                    return service->StartSaveHuman(ctx, req, resp);
                 },
                 this
             )
@@ -670,7 +748,7 @@ namespace protobuf
                    const ::protobuf::IDMsg* req,
                    ::protobuf::BoolRes* resp)
                 {
-                    return service->CarryHuman(ctx, req, resp);
+                    return service->EndSaveHuman(ctx, req, resp);
                 },
                 this
             )
@@ -678,13 +756,13 @@ namespace protobuf
         AddMethod(new ::grpc::internal::RpcServiceMethod(
             AvailableService_method_names[13],
             ::grpc::internal::RpcMethod::NORMAL_RPC,
-            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::AttackMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
                 [](AvailableService::Service* service,
                    ::grpc::ServerContext* ctx,
-                   const ::protobuf::IDMsg* req,
+                   const ::protobuf::AttackMsg* req,
                    ::protobuf::BoolRes* resp)
                 {
-                    return service->ReleaseHuman(ctx, req, resp);
+                    return service->Attack(ctx, req, resp);
                 },
                 this
             )
@@ -698,13 +776,41 @@ namespace protobuf
                    const ::protobuf::IDMsg* req,
                    ::protobuf::BoolRes* resp)
                 {
-                    return service->HangHuman(ctx, req, resp);
+                    return service->CarryHuman(ctx, req, resp);
                 },
                 this
             )
         ));
         AddMethod(new ::grpc::internal::RpcServiceMethod(
             AvailableService_method_names[15],
+            ::grpc::internal::RpcMethod::NORMAL_RPC,
+            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+                [](AvailableService::Service* service,
+                   ::grpc::ServerContext* ctx,
+                   const ::protobuf::IDMsg* req,
+                   ::protobuf::BoolRes* resp)
+                {
+                    return service->ReleaseHuman(ctx, req, resp);
+                },
+                this
+            )
+        ));
+        AddMethod(new ::grpc::internal::RpcServiceMethod(
+            AvailableService_method_names[16],
+            ::grpc::internal::RpcMethod::NORMAL_RPC,
+            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+                [](AvailableService::Service* service,
+                   ::grpc::ServerContext* ctx,
+                   const ::protobuf::IDMsg* req,
+                   ::protobuf::BoolRes* resp)
+                {
+                    return service->HangHuman(ctx, req, resp);
+                },
+                this
+            )
+        ));
+        AddMethod(new ::grpc::internal::RpcServiceMethod(
+            AvailableService_method_names[17],
             ::grpc::internal::RpcMethod::NORMAL_RPC,
             new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
                 [](AvailableService::Service* service,
@@ -795,17 +901,35 @@ namespace protobuf
         return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
 
-    ::grpc::Status AvailableService::Service::FixMachine(::grpc::ServerContext* context, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* stream)
+    ::grpc::Status AvailableService::Service::StartFixMachine(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
     {
         (void)context;
-        (void)stream;
+        (void)request;
+        (void)response;
         return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
 
-    ::grpc::Status AvailableService::Service::SaveHuman(::grpc::ServerContext* context, ::grpc::ServerReaderWriter<::protobuf::BoolRes, ::protobuf::IDMsg>* stream)
+    ::grpc::Status AvailableService::Service::EndFixMachine(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
     {
         (void)context;
-        (void)stream;
+        (void)request;
+        (void)response;
+        return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+
+    ::grpc::Status AvailableService::Service::StartSaveHuman(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+    {
+        (void)context;
+        (void)request;
+        (void)response;
+        return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+
+    ::grpc::Status AvailableService::Service::EndSaveHuman(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+    {
+        (void)context;
+        (void)request;
+        (void)response;
         return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
 

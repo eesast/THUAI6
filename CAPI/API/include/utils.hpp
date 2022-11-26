@@ -76,6 +76,15 @@ namespace Proto2THUAI6
         {protobuf::ButcherBuffType::BBUFFTYPE4, THUAI6::ButcherBuffType::ButcherBuffType4},
     };
 
+    inline std::map<protobuf::HumanState, THUAI6::HumanState> humanStateDict{
+        {protobuf::HumanState::NULL_STATUS, THUAI6::HumanState::NullHumanState},
+        {protobuf::HumanState::IDLE, THUAI6::HumanState::Idle},
+        {protobuf::HumanState::FIXING, THUAI6::HumanState::Fixing},
+        {protobuf::HumanState::DYING, THUAI6::HumanState::Dying},
+        {protobuf::HumanState::ON_CHAIR, THUAI6::HumanState::OnChair},
+        {protobuf::HumanState::DEAD, THUAI6::HumanState::Dead},
+    };
+
     // 用于将Protobuf中的类转换为THUAI6的类
     inline std::shared_ptr<THUAI6::Butcher> Protobuf2THUAI6Butcher(const protobuf::MessageOfButcher& butcherMsg)
     {
@@ -115,8 +124,7 @@ namespace Proto2THUAI6
         human->playerType = THUAI6::PlayerType::HumanPlayer;
         human->prop = propTypeDict[humanMsg.prop()];
         human->place = placeTypeDict[humanMsg.place()];
-        human->onChair = humanMsg.on_chair();
-        human->onGround = humanMsg.on_ground();
+        human->state = humanStateDict[humanMsg.state()];
         human->life = humanMsg.life();
         human->hangedTime = humanMsg.hanged_time();
         human->humanType = humanTypeDict[humanMsg.human_type()];
@@ -271,6 +279,14 @@ namespace THUAI62Proto
         sendMsg.set_to_player_id(toID);
         sendMsg.set_player_id(id);
         return sendMsg;
+    }
+
+    inline protobuf::AttackMsg THUAI62ProtobufAttack(double angle, int64_t id)
+    {
+        protobuf::AttackMsg attackMsg;
+        attackMsg.set_angle(angle);
+        attackMsg.set_player_id(id);
+        return attackMsg;
     }
 }  // namespace THUAI62Proto
 

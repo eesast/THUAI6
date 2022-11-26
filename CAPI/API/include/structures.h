@@ -87,6 +87,17 @@ namespace THUAI6
         ButcherBuffType4 = 4,
     };
 
+    // 人类状态枚举
+    enum class HumanState : unsigned char
+    {
+        NullHumanState = 0,
+        Idle = 1,
+        Fixing = 2,
+        Dying = 3,
+        OnChair = 4,
+        Dead = 5,
+    };
+
     // 玩家类
     struct Player
     {
@@ -107,8 +118,7 @@ namespace THUAI6
 
     struct Human : public Player
     {
-        bool onChair;        // 是否被挂
-        bool onGround;       // 是否倒地
+        HumanState state;    // 人类状态
         int32_t life;        // 剩余生命（本次倒地之前还能承受的伤害）
         int32_t hangedTime;  // 被挂的次数
 

@@ -1,0 +1,34 @@
+name: format
+on: [push, pull_request]
+jobs:
+  clang-format-checking:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: DoozyX/clang-format-lint-action@v0.14
+      with:
+        source: '.'
+        extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx,i,ixx,ipp,i++'
+        clangFormatVersion: 14
+        inplace: False
+ 
+  dotnet-format-checking:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+        
+    - name: Check Logic
+      run: dotnet format "./logic/logic.sln" --severity error --no-restore
+      
+    - name: Check Installer
+      run: dotnet format "./installer/installer.sln" --severity error --no-restore
+      
+    - name: Check Launcher
+      run: dotnet format "./launcher/launcher.sln" --severity error --no-restore
+      
+    - name: Check Playback
+      run: dotnet format "./playback/playback.sln" --severity error --no-restore

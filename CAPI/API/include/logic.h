@@ -64,19 +64,20 @@ private:
     State* currentState;
     State* bufferState;
 
+    // 保存缓冲区数
+    int counterState = 0;
+    int counterBuffer = 0;
+
     // 是否应该执行player()
     std::atomic_bool AILoop = true;
 
     // buffer是否更新完毕
     bool bufferUpdated = true;
 
-    // 是否可以启用当前状态
-    bool currentStateAccessed = false;
-
     // 是否应当启动AI
     bool AIStart = false;
 
-    // 控制内容更新的变量
+    // asynchronous = true 时控制内容更新的变量
     std::atomic_bool freshed = false;
 
     // 提供给API使用的函数
@@ -103,32 +104,22 @@ private:
 
     bool Escape() override;
 
-    // 说明：双向stream由三个函数共同实现，两个记录开始和结束，结果由Logic里的私有的成员变量记录，获得返回值则另调函数
-    void StartFixMachine() override;
-    void EndFixMachine() override;
-    bool GetFixStatus() override;
+    bool StartFixMachine() override;
+    bool EndFixMachine() override;
 
-    void StartSaveHuman() override;
-    void EndSaveHuman() override;
-    bool GetSaveStatus() override;
+    bool StartSaveHuman() override;
+    bool EndSaveHuman() override;
 
     bool Attack(double angle) override;
     bool CarryHuman() override;
     bool ReleaseHuman() override;
     bool HangHuman() override;
 
-    bool WaitThread() override
-    {
-    }
+    bool WaitThread() override;
 
-    int GetCounter() override
-    {
-    }
+    int GetCounter() const override;
 
     bool TryConnection();
-
-    // 执行AI线程
-    void PlayerWrapper(std::function<void()> player);
 
     // THUAI5中的一系列用于处理信息的函数可能也不会再用
 

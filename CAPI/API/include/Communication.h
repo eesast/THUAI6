@@ -28,12 +28,10 @@ public:
     std::pair<int64_t, std::string> GetMessage(int64_t playerID);
     bool Escape(int64_t playerID);
 
-    void StartFixMachine(int64_t playerID);
-    void EndFixMachine();
-    bool GetFixStatus();
-    void StartSaveHuman(int64_t playerID);
-    void EndSaveHuman();
-    bool GetSaveStatus();
+    bool StartFixMachine(int64_t playerID);
+    bool EndFixMachine(int64_t playerID);
+    bool StartSaveHuman(int64_t playerID);
+    bool EndSaveHuman(int64_t playerID);
 
     bool Attack(double angle, int64_t playerID);
 
@@ -47,13 +45,9 @@ public:
     void AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType);
 
 private:
-    void FixMachine(int64_t playerID);
-    void SaveHuman(int64_t playerID);
     std::unique_ptr<protobuf::AvailableService::Stub> THUAI6Stub;
     bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
-    bool isFixing = false;
-    bool isSaving = false;
 };
 
 #endif

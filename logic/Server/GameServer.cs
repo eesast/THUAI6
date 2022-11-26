@@ -25,6 +25,7 @@ namespace Server
                 // if (0 <= request.PlayerId && request.PlayerId < playerNum)
                 {
                     onConnection.ActSuccess = true;
+                    Console.WriteLine(onConnection.ActSuccess);
                     return Task.FromResult(onConnection);
                 }
             }

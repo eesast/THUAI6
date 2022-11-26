@@ -688,3 +688,157 @@ namespace Downloader
         }
     }
 }
+
+namespace WebConnect
+{
+    class Web
+    {
+        public static string logintoken = "";
+        async public Task LoginToEEsast(HttpClient client, string useremail, string password)
+        {
+            string token = "";
+            using (var response = await client.PostAsync("https://api.eesast.com/users/login", JsonContent.Create(new
+            {
+                email = useremail,
+                password = password,
+            })))
+            {
+                switch (response.StatusCode)
+                {
+                    case System.Net.HttpStatusCode.OK:
+                        Console.WriteLine("Success login");
+                        token = (System.Text.Json.JsonSerializer.Deserialize(await response.Content.ReadAsStreamAsync(), typeof(LoginResponse), new JsonSerializerOptions()
+                        {
+                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        }) as LoginResponse)?.Token ?? throw new Exception("no token!");
+                        logintoken = token;
+                        SaveToken();
+                        break;
+
+                    default:
+                        int code = ((int)response.StatusCode);
+                        Console.WriteLine(code);
+                        if (code == 401)
+                        {
+                            Console.WriteLine("邮箱或密码错误！");
+                        }
+                        return;
+                }
+            }
+        }
+
+        async public Task UserDetails(HttpClient client)  //用来测试访问网站
+        {
+            if (!ReadToken())   //读取token失败
+            {
+                return;
+            }
+            try
+            {
+                client.DefaultRequestHeaders.Authorization = new("Bearer", logintoken);
+                Console.WriteLine(logintoken);
+                using (var response = await client.GetAsync("https://api.eesast.com/application/info")) //JsonContent.Create(new
+                                                                                                        //{
+
+                //})))
+                {
+                    switch (response.StatusCode)
+                    {
+                        case System.Net.HttpStatusCode.OK:
+                            Console.WriteLine("Require OK");
+                            Console.WriteLine(await response.Content.ReadAsStringAsync());
+                            break;
+                        default:
+                            int code = ((int)response.StatusCode);
+                            if (code == 401)
+                            {
+                                Console.WriteLine("您未登录或登录过期，请先登录");
+                            }
+                            return;
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("请求错误！请检查网络连接！");
+            }
+        }
+
+        public void SaveToken()//保存token
+        {
+            string savepath = Path.Combine(Data.dataPath, "Token.dat");
+            try
+            {
+                FileStream fs = new FileStream(savepath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                StreamWriter sw = new StreamWriter(fs);
+                fs.SetLength(0);
+                sw.Write(logintoken);   //将token写入文件
+                sw.Close();
+                fs.Close();
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Console.WriteLine("保存token时未找到下载器地址！请检查下载器是否被移动！");
+            }
+            catch (PathTooLongException)
+            {
+                Console.WriteLine("下载器的路径名太长！请尝试移动下载器！");
+            }
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("下载器路径初始化失败！");
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("写入token.dat发生冲突！请检查token.dat是否被其它程序占用！");
+            }
+        }
+        public bool ReadToken()//读取token
+        {
+            try
+            {
+                string savepath = Path.Combine(Data.dataPath, "Token.dat");
+                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.Read);
+                StreamReader sr = new StreamReader(fs);
+                logintoken = sr.ReadLine();
+                sr.Close();
+                fs.Close();
+                return true;
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Console.WriteLine("读取token时未找到下载器地址！请检查下载器是否被移动！");
+                return false;
+            }
+            catch (FileNotFoundException)
+            {
+                //没有登陆
+                Console.WriteLine("请先登陆！");
+                return false;
+            }
+            catch (PathTooLongException)
+            {
+                Console.WriteLine("下载器的路径名太长！请尝试移动下载器！");
+                return false;
+            }
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("下载器路径初始化失败！");
+                return false;
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("写入token.dat发生冲突！请检查token.dat是否被其它程序占用！");
+                return false;
+            }
+        }
+    }
+    [Serializable]
+    record LoginResponse
+    {
+        // Map `Token` to `token` when serializing
+
+        public string Token { get; set; } = "";
+    }
+
+}

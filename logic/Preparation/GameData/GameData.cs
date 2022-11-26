@@ -33,6 +33,8 @@ namespace Preparation.GameData
         {
             return PosGridToCellX(pos1) == PosGridToCellX(pos2) && PosGridToCellY(pos1) == PosGridToCellY(pos2);
         }
+
+        public static int numOfBirthPoint = 5;
 #endregion
 #region 角色相关
         /// <summary>

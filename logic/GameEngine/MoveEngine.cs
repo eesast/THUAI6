@@ -64,7 +64,7 @@ namespace GameEngine
             (
                 () =>
                 {
-                    if (!obj.IsAvailable&&gameTimer.IsGaming) //不能动就直接return，后面都是能动的情况
+                    if (!obj.IsAvailable && gameTimer.IsGaming) //不能动就直接return，后面都是能动的情况
                         return;
             lock (obj.MoveLock)
                 obj.IsMoving = true;

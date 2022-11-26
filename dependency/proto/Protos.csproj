@@ -6,12 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <None Remove="Message2Clients.proto" />
     <None Remove="Message2Server.proto" />
     <None Remove="MessageType.proto" />
     <None Remove="Services.proto" />
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.21.9" />

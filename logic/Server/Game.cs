@@ -46,11 +46,16 @@ namespace Server
                 {
                     gameInfo.ButcherMessage.Add(new MessageOfButcher()
                     {
-                        PlayerID = player.PlayerId
+                        PlayerId = player.PlayerId
                     });
                     return;
                 }
             }
+        }
+
+        public void Move()
+        {
+
         }
 
         public SemaphoreSlim StartGame()

@@ -176,6 +176,16 @@ std::vector<std::vector<THUAI6::PlaceType>> ButcherAPI::GetFullMap() const
     return logic.GetFullMap();
 }
 
+const std::vector<int64_t> HumanAPI::GetPlayerGUIDs() const
+{
+    // todo
+}
+
+const std::vector<int64_t> ButcherAPI::GetPlayerGUIDs() const
+{
+    // todo
+}
+
 std::future<bool> HumanAPI::StartFixMachine()
 {
     std::async(std::launch::async, [&]()

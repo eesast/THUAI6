@@ -48,13 +48,11 @@ public:
     virtual bool Escape() = 0;
 
     // 说明：双向stream由三个函数共同实现，两个记录开始和结束，结果由Logic里的私有的成员变量记录，获得返回值则另调函数
-    virtual void StartFixMachine() = 0;
-    virtual void EndFixMachine() = 0;
-    virtual bool GetFixStatus() = 0;
+    virtual bool StartFixMachine() = 0;
+    virtual bool EndFixMachine() = 0;
 
-    virtual void StartSaveHuman() = 0;
-    virtual void EndSaveHuman() = 0;
-    virtual bool GetSaveStatus() = 0;
+    virtual bool StartSaveHuman() = 0;
+    virtual bool EndSaveHuman() = 0;
 
     virtual bool Attack(double angle) = 0;
     virtual bool CarryHuman() = 0;
@@ -129,12 +127,10 @@ class IHumanAPI : public IAPI
 public:
     /*****人类阵营的特定函数*****/
 
-    virtual void StartFixMachine() = 0;
-    virtual void EndFixMachine() = 0;
-    virtual std::future<bool> GetFixStatus() = 0;
-    virtual void StartSaveHuman() = 0;
-    virtual void EndSaveHuman() = 0;
-    virtual std::future<bool> GetSaveStatus() = 0;
+    virtual std::future<bool> StartFixMachine() = 0;
+    virtual std::future<bool> EndFixMachine() = 0;
+    virtual std::future<bool> StartSaveHuman() = 0;
+    virtual std::future<bool> EndSaveHuman() = 0;
     virtual std::future<bool> Escape() = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const = 0;
 };
@@ -209,12 +205,10 @@ public:
     {
     }
 
-    void StartFixMachine() override;
-    void EndFixMachine() override;
-    std::future<bool> GetFixStatus() override;
-    void StartSaveHuman() override;
-    void EndSaveHuman() override;
-    std::future<bool> GetSaveStatus() override;
+    std::future<bool> StartFixMachine() override;
+    std::future<bool> EndFixMachine() override;
+    std::future<bool> StartSaveHuman() override;
+    std::future<bool> EndSaveHuman() override;
     std::future<bool> Escape() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Human> GetSelfInfo() const override;
 
@@ -364,22 +358,16 @@ public:
     {
     }
 
-    void StartFixMachine() override
+    std::future<bool> StartFixMachine() override
     {
     }
-    void EndFixMachine() override
+    std::future<bool> EndFixMachine() override
     {
     }
-    std::future<bool> GetFixStatus() override
+    std::future<bool> StartSaveHuman() override
     {
     }
-    void StartSaveHuman() override
-    {
-    }
-    void EndSaveHuman() override
-    {
-    }
-    std::future<bool> GetSaveStatus() override
+    std::future<bool> EndSaveHuman() override
     {
     }
     std::future<bool> Escape() override

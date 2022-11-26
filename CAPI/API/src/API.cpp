@@ -176,44 +176,28 @@ std::vector<std::vector<THUAI6::PlaceType>> ButcherAPI::GetFullMap() const
     return logic.GetFullMap();
 }
 
-void HumanAPI::StartFixMachine()
+std::future<bool> HumanAPI::StartFixMachine()
 {
-    std::thread([&]()
-                { logic.StartFixMachine(); })
-        .detach();
+    std::async(std::launch::async, [&]()
+               { return logic.StartFixMachine(); });
 }
 
-void HumanAPI::EndFixMachine()
+std::future<bool> HumanAPI::EndFixMachine()
 {
-    std::thread([&]()
-                { logic.EndFixMachine(); })
-        .detach();
+    std::async(std::launch::async, [&]()
+               { return logic.EndFixMachine(); });
 }
 
-std::future<bool> HumanAPI::GetFixStatus()
+std::future<bool> HumanAPI::StartSaveHuman()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.GetFixStatus(); });
+    std::async(std::launch::async, [&]()
+               { return logic.StartSaveHuman(); });
 }
 
-void HumanAPI::StartSaveHuman()
+std::future<bool> HumanAPI::EndSaveHuman()
 {
-    std::thread([&]()
-                { logic.StartSaveHuman(); })
-        .detach();
-}
-
-void HumanAPI::EndSaveHuman()
-{
-    std::thread([&]()
-                { logic.EndSaveHuman(); })
-        .detach();
-}
-
-std::future<bool> HumanAPI::GetSaveStatus()
-{
-    return std::async(std::launch::async, [&]()
-                      { return logic.GetSaveStatus(); });
+    std::async(std::launch::async, [&]()
+               { return logic.EndSaveHuman(); });
 }
 
 std::future<bool> HumanAPI::Escape()

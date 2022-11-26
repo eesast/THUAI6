@@ -17,8 +17,7 @@ service AvailableService
     rpc UseProp(IDMsg) returns (BoolRes);
     rpc UseSkill(IDMsg) returns (BoolRes);
     rpc SendMessage(SendMsg) returns (BoolRes);
-    rpc HaveMessage(IDMsg) returns (BoolRes);
-    rpc GetMessage(IDMsg) returns (MsgRes);
+    rpc GetMessage(IDMsg) returns (stream MsgRes);
     rpc StartFixMachine(IDMsg) returns (BoolRes); // 开始修理机器
     rpc EndFixMachine(IDMsg) returns (BoolRes); // 主动停止修复
     rpc StartSaveHuman(IDMsg) returns (BoolRes); // 开始救人

@@ -78,11 +78,11 @@ bool Communication::HaveMessage(int64_t playerID)
     protobuf::BoolRes haveMessageResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->HaveMessage(&context, request, &haveMessageResult);
-    if (status.ok())
-        return haveMessageResult.act_success();
-    else
-        return false;
+    // auto status = THUAI6Stub->HaveMessage(&context, request, &haveMessageResult);
+    // if (status.ok())
+    //     return haveMessageResult.act_success();
+    // else
+    //     return false;
 }
 
 std::pair<int64_t, std::string> Communication::GetMessage(int64_t playerID)
@@ -90,16 +90,16 @@ std::pair<int64_t, std::string> Communication::GetMessage(int64_t playerID)
     protobuf::MsgRes getMessageResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->GetMessage(&context, request, &getMessageResult);
-    if (status.ok())
-    {
-        if (getMessageResult.have_message())
-            return std::make_pair(getMessageResult.from_player_id(), getMessageResult.message_received());
-        else
-            return std::make_pair(-1, "");
-    }
-    else
-        return std::make_pair(-1, "");
+    // auto status = THUAI6Stub->GetMessage(&context, request, &getMessageResult);
+    // if (status.ok())
+    // {
+    //     if (getMessageResult.have_message())
+    //         return std::make_pair(getMessageResult.from_player_id(), getMessageResult.message_received());
+    //     else
+    //         return std::make_pair(-1, "");
+    // }
+    // else
+    //     return std::make_pair(-1, "");
 }
 
 bool Communication::Escape(int64_t playerID)

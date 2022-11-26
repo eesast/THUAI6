@@ -73,35 +73,6 @@ bool Communication::SendMessage(int64_t toID, std::string message, int64_t playe
         return false;
 }
 
-bool Communication::HaveMessage(int64_t playerID)
-{
-    protobuf::BoolRes haveMessageResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    // auto status = THUAI6Stub->HaveMessage(&context, request, &haveMessageResult);
-    // if (status.ok())
-    //     return haveMessageResult.act_success();
-    // else
-    //     return false;
-}
-
-std::pair<int64_t, std::string> Communication::GetMessage(int64_t playerID)
-{
-    protobuf::MsgRes getMessageResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    // auto status = THUAI6Stub->GetMessage(&context, request, &getMessageResult);
-    // if (status.ok())
-    // {
-    //     if (getMessageResult.have_message())
-    //         return std::make_pair(getMessageResult.from_player_id(), getMessageResult.message_received());
-    //     else
-    //         return std::make_pair(-1, "");
-    // }
-    // else
-    //     return std::make_pair(-1, "");
-}
-
 bool Communication::Escape(int64_t playerID)
 {
     protobuf::BoolRes escapeResult;
@@ -234,6 +205,42 @@ protobuf::MessageToClient Communication::GetMessage2Client()
 bool Communication::HaveMessage2Client()
 {
     return haveNewMessage;
+}
+
+std::pair<int64_t, std::string> Communication::GetMessage()
+{
+    std::lock_guard<std::mutex> lock(messageMutex);
+    if (messageQueue.empty())
+        return std::make_pair(-1, "");
+    else
+    {
+        auto message = messageQueue.front();
+        messageQueue.pop();
+        return message;
+    }
+}
+
+bool Communication::HaveMessage()
+{
+    std::lock_guard<std::mutex> lock(messageMutex);
+    return !messageQueue.empty();
+}
+
+void Communication::ReadMessage(int64_t playerID)
+{
+    auto tRead = [&]()
+    {
+        auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+        ClientContext context;
+        protobuf::MsgRes messageReceived;
+        auto reader = THUAI6Stub->GetMessage(&context, request);
+        while (reader->Read(&messageReceived))
+        {
+            std::lock_guard<std::mutex> lock(messageMutex);
+            messageQueue.push(std::make_pair(messageReceived.from_player_id(), messageReceived.message_received()));
+        }
+    };
+    std::thread(tRead).detach();
 }
 
 void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType)

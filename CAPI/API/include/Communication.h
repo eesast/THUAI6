@@ -9,6 +9,8 @@
 #include <grpcpp/grpcpp.h>
 #include "structures.h"
 #include <thread>
+#include <mutex>
+#include <queue>
 
 class Logic;
 
@@ -23,9 +25,9 @@ public:
     bool PickProp(THUAI6::PropType prop, int64_t playerID);
     bool UseProp(int64_t playerID);
     bool UseSkill(int64_t playerID);
+    std::pair<int64_t, std::string> GetMessage();
+    bool HaveMessage();
     bool SendMessage(int64_t toID, std::string message, int64_t playerID);
-    bool HaveMessage(int64_t playerID);
-    std::pair<int64_t, std::string> GetMessage(int64_t playerID);
     bool Escape(int64_t playerID);
 
     bool StartFixMachine(int64_t playerID);
@@ -44,10 +46,14 @@ public:
     bool HaveMessage2Client();
     void AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType);
 
+    void ReadMessage(int64_t playerID);
+
 private:
     std::unique_ptr<protobuf::AvailableService::Stub> THUAI6Stub;
     bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
+    std::queue<std::pair<int64_t, std::string>> messageQueue;
+    std::mutex messageMutex;
 };
 
 #endif

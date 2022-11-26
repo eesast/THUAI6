@@ -93,12 +93,12 @@ bool Logic::SendMessage(int64_t toID, std::string message)
 
 bool Logic::HaveMessage()
 {
-    return pComm->HaveMessage(playerID);
+    return pComm->HaveMessage();
 }
 
 std::pair<int64_t, std::string> Logic::GetMessage()
 {
-    return pComm->GetMessage(playerID);
+    return pComm->GetMessage();
 }
 
 bool Logic::Escape()

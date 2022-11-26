@@ -13,6 +13,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <queue>
 
 #include "Message2Server.pb.h"
 #include "Message2Clients.pb.h"
@@ -57,7 +58,8 @@ private:
     std::condition_variable cvBuffer;
     std::condition_variable cvAI;
 
-    // 信息队列目前可能会不用？具体待定
+    // 信息队列
+    std::queue<std::pair<int64_t, std::string>> messageQueue;
 
     // 存储状态，分别是现在的状态和缓冲区的状态。
     State state[2];

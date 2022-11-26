@@ -14,6 +14,7 @@ extern const THUAI6::HumanType humanType = THUAI6::HumanType::HumanType1;
 
 void AI::play(IHumanAPI& api)
 {
+    // api.Move(1, 1);
 }
 
 void AI::play(IButcherAPI& api)

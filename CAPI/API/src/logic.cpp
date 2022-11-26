@@ -108,34 +108,24 @@ bool Logic::Escape()
     return pComm->Escape(playerID);
 }
 
-void Logic::StartFixMachine()
+bool Logic::StartFixMachine()
 {
-    pComm->StartFixMachine(playerID);
+    return pComm->StartFixMachine(playerID);
 }
 
-void Logic::EndFixMachine()
+bool Logic::EndFixMachine()
 {
-    pComm->EndFixMachine();
+    return pComm->EndFixMachine(playerID);
 }
 
-bool Logic::GetFixStatus()
+bool Logic::StartSaveHuman()
 {
-    return pComm->GetFixStatus();
+    return pComm->StartSaveHuman(playerID);
 }
 
-void Logic::StartSaveHuman()
+bool Logic::EndSaveHuman()
 {
-    pComm->StartSaveHuman(playerID);
-}
-
-void Logic::EndSaveHuman()
-{
-    pComm->EndSaveHuman();
-}
-
-bool Logic::GetSaveStatus()
-{
-    return pComm->GetSaveStatus();
+    return pComm->EndSaveHuman(playerID);
 }
 
 bool Logic::Attack(double angle)
@@ -162,18 +152,6 @@ void Logic::ProcessMessage()
 {
     auto messageThread = [&]()
     {
-        // // 首先设置消息、通过加入游戏，开始与服务端建立联系
-        // protobuf::MessageToClient clientMsg;
-        // protobuf::PlayerMsg playerMsg = THUAI62Proto::THUAI62ProtobufPlayer(playerID, playerType, humanType, butcherType);
-        // grpc::ClientContext context;
-        // auto MessageReader = THUAI6Stub->AddPlayer(&context, playerMsg);
-
-        // // 持续读取服务端的消息
-        // while (MessageReader->Read(&clientMsg))
-        // {
-        //     LoadBuffer(clientMsg);
-        // }
-
         std::cout << "Join Player!" << std::endl;
         pComm->AddPlayer(playerID, playerType, humanType, butcherType);
         while (true)
@@ -237,19 +215,11 @@ void Logic::Update() noexcept
 {
 }
 
-void Logic::PlayerWrapper(std::function<void()> player)
-{
-    // {
-    //     std::unique_lock<std::mutex> lock(mtxAI);
-    //     cvAI.wait(lock, [this]()
-    //               { return AIStart; });
-    // }
-    player();
-}
-
 bool Logic::TryConnection()
 {
-    return pComm->TryConnection(playerID);
+    std::cout << "Trying to connect to server..." << std::endl;
+    bool result = pComm->TryConnection(playerID);
+    return result;
 }
 
 void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
@@ -267,8 +237,13 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
         timer = std::make_unique<ButcherAPI>(*this);
 
     // 构造AI线程
-    auto AIThread = [&, this]()
+    auto AIThread = [&]()
     {
+        {
+            std::unique_lock<std::mutex> lock(mtxAI);
+            cvAI.wait(lock, [this]()
+                      { return AIStart; });
+        }
         auto ai = createAI();
         ProcessMessage();
         while (AILoop)
@@ -280,7 +255,7 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
         }
     };
 
-    tAI = std::thread(&Logic::PlayerWrapper, this, AIThread);
+    tAI = std::thread(AIThread);
 
     // 连接服务器
     if (TryConnection())
@@ -289,11 +264,13 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
         if (tAI.joinable())
         {
             std::cout << "Join the AI thread." << std::endl;
+            AIStart = true;
             tAI.join();
         }
     }
     else
     {
         std::cout << "Connection error!" << std::endl;
+        return;
     }
 }

@@ -103,14 +103,11 @@ private:
 
     bool Escape() override;
 
-    // 说明：双向stream由三个函数共同实现，两个记录开始和结束，结果由Logic里的私有的成员变量记录，获得返回值则另调函数
-    void StartFixMachine() override;
-    void EndFixMachine() override;
-    bool GetFixStatus() override;
+    bool StartFixMachine() override;
+    bool EndFixMachine() override;
 
-    void StartSaveHuman() override;
-    void EndSaveHuman() override;
-    bool GetSaveStatus() override;
+    bool StartSaveHuman() override;
+    bool EndSaveHuman() override;
 
     bool Attack(double angle) override;
     bool CarryHuman() override;

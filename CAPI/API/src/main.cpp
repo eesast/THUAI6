@@ -10,8 +10,8 @@ int THUAI6Main(CreateAIFunc AIBuilder)
 {
     // 仅供调试使用
     int playerID = 123;
-    std::string sIP = "localhost";
-    std::string sPort = "12345";
+    std::string sIP = "183.172.208.226";
+    std::string sPort = "8888";
     extern const THUAI6::PlayerType playerType;
     extern const THUAI6::ButcherType butcherType;
     extern const THUAI6::HumanType humanType;

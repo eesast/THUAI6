@@ -9,21 +9,39 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="40" />
-            <ColumnDefinition Width="400" />
             <ColumnDefinition Width="75" />
             <ColumnDefinition Width="75" />
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="75" />
+            <ColumnDefinition Width="75" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="40" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="20" />
             <RowDefinition Height="20" />
             <RowDefinition Height="20" />
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="将主体程序安装在：" />
-        <TextBox Grid.Row="2" Grid.Column="1" Name="RouteTxtBox" Text="{Binding Route}" IsEnabled="{Binding CanEditRoute}" />
-        <Button Grid.Row="2" Grid.Column="2" Name="GetRouteBtn" Content="Browse..." Command="{Binding ClickBrowseCommand}" IsEnabled="{Binding CanEditRoute}" />
-        <Button Grid.Row="2" Grid.Column="3" Name="SetBtm" Content="Confirm" Command="{Binding ClickConfirmCommand}" />
+        <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="欢迎使用选手包" Visibility="{Binding InstIntroVis}"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="你已经安装了选手包，请选择你要进行的操作" Visibility="{Binding EditIntroVis}"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Text="将主体程序安装在：" Visibility="{Binding InstIntroVis}"/>
+        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Text="将主体程序移动到：" Visibility="{Binding MoveIntroVis}"/>
+
+        <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Name="RouteTxtBox" Text="{Binding Route}" Visibility="{Binding RouteBoxVis}"/>
+        <Button Grid.Row="3" Grid.Column="4" Name="GetRouteBtn" Content="Browse..." Command="{Binding ClickBrowseCommand}" Visibility="{Binding RouteBoxVis}" />
+        <Button Grid.Row="3" Grid.Column="5" Name="SetBtm" Content="Confirm" Command="{Binding ClickConfirmCommand}" Visibility="{Binding RouteBoxVis}"/>
+        <Button Grid.Row="3" Grid.Column="2" Name="UpdateBtn" Content="Update" Command="{Binding ClickUpdateCommand}" Visibility="{Binding EditIntroVis}" />
+
+        <Button Grid.Row="5" Grid.Column="2" Name="MoveBtn" Content="Move" Command="{Binding ClickMoveCommand}" Visibility="{Binding EditIntroVis}" />
+
+        <Button Grid.Row="7" Grid.Column="2" Name="UninstBtn" Content="UnInst" Command="{Binding ClickUninstCommand}" Visibility="{Binding EditIntroVis}" />
     </Grid>
 </Window>

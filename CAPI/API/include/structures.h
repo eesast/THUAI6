@@ -87,7 +87,7 @@ namespace THUAI6
         ButcherBuffType4 = 4,
     };
 
-    //人类状态枚举
+    // 人类状态枚举
     enum class HumanState : unsigned char
     {
         NullHumanState = 0,

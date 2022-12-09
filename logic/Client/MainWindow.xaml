@@ -31,8 +31,8 @@
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
         <!--给地图留好位置-->
-        <Grid x:Name="UnderLayerOfMap" Margin="6,16,35,14" Grid.RowSpan="5" Grid.Column="3" Grid.Row="1" />
-        <Grid x:Name="UpperLayerOfMap" Margin="6,16,35,14" Grid.RowSpan="5" Grid.Column="3" Grid.Row="1" />
+        <Canvas x:Name="UnderLayerOfMap" Margin="20,11,30,33" Grid.Column="3" Grid.RowSpan="5" Grid.Row="1"/>
+        <Canvas x:Name="UpperLayerOfMap" Margin="20,11,30,33" Grid.Column="3" Grid.RowSpan="5" Grid.Row="1"/>
         <!--右上角蓝绿小按钮-->
         <Button x:Name="PorC" Content="▶"  Margin="0,16,0,0" Background="Green" BorderBrush="Green" FontFamily="Microsoft YaHei" Click="ClickToPauseOrContinue" Grid.Column="4" Grid.Row="2" HorizontalAlignment="Left" Width="24" Height="26" VerticalAlignment="Top"/>
         <Button Name="Connect" Content="🔗" Margin="0,11,0,0" VerticalAlignment="Top" Background="Aqua" Click="ClickToConnect" Height="25" Grid.Column="4" HorizontalAlignment="Left" Width="25" Grid.Row="1"/>

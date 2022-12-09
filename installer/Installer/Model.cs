@@ -9,6 +9,16 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System;
+using COSXML.Model.Bucket;
+using System.Runtime.InteropServices;
+using System.Text.Json.Nodes;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Xml.Schema;
+using static Downloader.Program;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Windows;
 
 namespace starter.viewmodel.settings
 {
@@ -18,27 +28,70 @@ namespace starter.viewmodel.settings
     public class SettingsModel
     {
         /// <summary>
+        /// downloader function
+        /// </summary>
+        private Downloader.Program.Data configData = new Downloader.Program.Data("");
+        private Downloader.Program.Tencent_cos_download cloud = new Downloader.Program.Tencent_cos_download();
+
+        /// <summary>
         /// save settings
         /// </summary>
-        public void install()
+        public bool install()
         {
+            if (Downloader.Program.Tencent_cos_download.CheckAlreadyDownload())
+            {
+                MessageBoxResult repeatOption = MessageBox.Show($"文件已存在于{Downloader.Program.Data.FilePath},是否移动到新位置？", "重复安装", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+                //ask if abort install, with warning sign, defalut no;
+                if (repeatOption == MessageBoxResult.Cancel)
+                {
+                    return false;         //回到选择地址界面
+                }
+                else if (repeatOption == MessageBoxResult.No)
+                {
+                    System.Environment.Exit(0);
+                    return false;
+                }
+                else
+                {
+                    Downloader.Program.Tencent_cos_download.MoveProgram(Route);
+                    return true;
+                }
+            }
+            else
+            {
+                Downloader.Program.Data.ResetFilepath(Route);
+                Downloader.Program.Tencent_cos_download.DownloadAll();
+                return true;
+            }
         }
         /// <summary>
         /// Route of files
         /// </summary>
-        public string Route {
-            get; set; }
+        public string Route
+        {
+            get
+            {
+                return Downloader.Program.Data.FilePath;
+            }
+            set
+            {
+                Downloader.Program.Data.FilePath = value;
+            }
+        }
         /// <summary>
         /// if the route was set or is under editing
         /// </summary>
-        public bool HaveRoute {
-            get; set; }
-        public bool EditingRoute {
-            get; set; }
-        /// <summary>
-        /// downloader function
+        public bool EditingRoute
+        {
+            get; set;
+        }
+        ///<summary>
+        ///if already installed
         /// </summary>
-        private Downloader.Program downloader = new Downloader.Program();
+        public bool installed
+        {
+            get; set;
+        }
     }
 }
 namespace Downloader
@@ -144,7 +197,8 @@ namespace Downloader
                     GetObjectRequest request = new GetObjectRequest(bucket, key, localDir, localFileName);
 
                     Dictionary<string, string> test = request.GetRequestHeaders();
-                    request.SetCosProgressCallback(delegate(long completed, long total) {
+                    request.SetCosProgressCallback(delegate (long completed, long total)
+                    {
                         Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
                     });
                     // 执行请求
@@ -556,9 +610,8 @@ namespace Downloader
                 File.WriteAllText(@System.IO.Path.Combine(Data.FilePath, "hash.json"), Contentjson);
             }
 
-            public static void MoveProgram()
+            public static void MoveProgram(string newPath)
             {
-                string newPath = Console.ReadLine();
                 DirectoryInfo newdi = new DirectoryInfo(newPath);
                 DirectoryInfo olddi = new DirectoryInfo(Data.FilePath);
                 try
@@ -601,8 +654,10 @@ namespace Downloader
                 Data.ResetFilepath(newPath);
                 Console.WriteLine("更改路径成功!");
             }
-            public static void main(string[] args)
+            public static async Task main(string[] args)
             {
+                var client = new HttpClient();
+                var web = new WebConnect.Web();
                 Data date = new Data("");
                 while (true)
                 {
@@ -670,7 +725,22 @@ namespace Downloader
                     }
                     else if (choose == "6")
                     {
-                        MoveProgram();
+                        string newPath;
+                        newPath = Console.ReadLine();
+                        MoveProgram(newPath);
+                    }
+                    else if (choose == "7")
+                    {
+                        Console.WriteLine("请输入email：");
+                        string username = Console.ReadLine();
+                        Console.WriteLine("请输入密码：");
+                        string password = Console.ReadLine();
+
+                        await web.LoginToEEsast(client, username, password);
+                    }
+                    else if (choose == "8")
+                    {
+                        await web.UserDetails(client);
                     }
                     else if (choose == "exit")
                     {
@@ -680,4 +750,158 @@ namespace Downloader
             }
         }
     }
+}
+
+namespace WebConnect
+{
+    class Web
+    {
+        public static string logintoken = "";
+        async public Task LoginToEEsast(HttpClient client, string useremail, string password)
+        {
+            string token = "";
+            using (var response = await client.PostAsync("https://api.eesast.com/users/login", JsonContent.Create(new
+            {
+                email = useremail,
+                password = password,
+            })))
+            {
+                switch (response.StatusCode)
+                {
+                    case System.Net.HttpStatusCode.OK:
+                        Console.WriteLine("Success login");
+                        token = (System.Text.Json.JsonSerializer.Deserialize(await response.Content.ReadAsStreamAsync(), typeof(LoginResponse), new JsonSerializerOptions()
+                        {
+                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        }) as LoginResponse)?.Token ?? throw new Exception("no token!");
+                        logintoken = token;
+                        SaveToken();
+                        break;
+
+                    default:
+                        int code = ((int)response.StatusCode);
+                        Console.WriteLine(code);
+                        if (code == 401)
+                        {
+                            Console.WriteLine("邮箱或密码错误！");
+                        }
+                        return;
+                }
+            }
+        }
+
+        async public Task UserDetails(HttpClient client)  //用来测试访问网站
+        {
+            if (!ReadToken())   //读取token失败
+            {
+                return;
+            }
+            try
+            {
+                client.DefaultRequestHeaders.Authorization = new("Bearer", logintoken);
+                Console.WriteLine(logintoken);
+                using (var response = await client.GetAsync("https://api.eesast.com/application/info")) //JsonContent.Create(new
+                                                                                                        //{
+
+                //})))
+                {
+                    switch (response.StatusCode)
+                    {
+                        case System.Net.HttpStatusCode.OK:
+                            Console.WriteLine("Require OK");
+                            Console.WriteLine(await response.Content.ReadAsStringAsync());
+                            break;
+                        default:
+                            int code = ((int)response.StatusCode);
+                            if (code == 401)
+                            {
+                                Console.WriteLine("您未登录或登录过期，请先登录");
+                            }
+                            return;
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("请求错误！请检查网络连接！");
+            }
+        }
+
+        public void SaveToken()//保存token
+        {
+            string savepath = Path.Combine(Data.dataPath, "Token.dat");
+            try
+            {
+                FileStream fs = new FileStream(savepath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                StreamWriter sw = new StreamWriter(fs);
+                fs.SetLength(0);
+                sw.Write(logintoken);   //将token写入文件
+                sw.Close();
+                fs.Close();
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Console.WriteLine("保存token时未找到下载器地址！请检查下载器是否被移动！");
+            }
+            catch (PathTooLongException)
+            {
+                Console.WriteLine("下载器的路径名太长！请尝试移动下载器！");
+            }
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("下载器路径初始化失败！");
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("写入token.dat发生冲突！请检查token.dat是否被其它程序占用！");
+            }
+        }
+        public bool ReadToken()//读取token
+        {
+            try
+            {
+                string savepath = Path.Combine(Data.dataPath, "Token.dat");
+                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.Read);
+                StreamReader sr = new StreamReader(fs);
+                logintoken = sr.ReadLine();
+                sr.Close();
+                fs.Close();
+                return true;
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Console.WriteLine("读取token时未找到下载器地址！请检查下载器是否被移动！");
+                return false;
+            }
+            catch (FileNotFoundException)
+            {
+                //没有登陆
+                Console.WriteLine("请先登陆！");
+                return false;
+            }
+            catch (PathTooLongException)
+            {
+                Console.WriteLine("下载器的路径名太长！请尝试移动下载器！");
+                return false;
+            }
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("下载器路径初始化失败！");
+                return false;
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("写入token.dat发生冲突！请检查token.dat是否被其它程序占用！");
+                return false;
+            }
+        }
+    }
+    [Serializable]
+    record LoginResponse
+    {
+        // Map `Token` to `token` when serializing
+
+        public string Token { get; set; } = "";
+    }
+
 }

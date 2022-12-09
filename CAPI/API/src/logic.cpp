@@ -5,9 +5,7 @@
 #include "utils.hpp"
 #include "Communication.h"
 
-// using grpc::ClientContext;
-// using grpc::Status;
-
+extern const bool asynchronous;
 extern const THUAI6::PlayerType playerType;
 
 Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::ButcherType butcher, THUAI6::HumanType human) :
@@ -22,7 +20,7 @@ Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::ButcherType butcher, T
 
 std::vector<std::shared_ptr<const THUAI6::Butcher>> Logic::GetButchers() const
 {
-    std::lock_guard<std::mutex> lock(mtxState);
+    std::lock_guard<std::mutex> lock(mtxBuffer);
     std::vector<std::shared_ptr<const THUAI6::Butcher>> temp;
     temp.assign(currentState->butchers.begin(), currentState->butchers.end());
     return temp;
@@ -30,7 +28,7 @@ std::vector<std::shared_ptr<const THUAI6::Butcher>> Logic::GetButchers() const
 
 std::vector<std::shared_ptr<const THUAI6::Human>> Logic::GetHumans() const
 {
-    std::lock_guard<std::mutex> lock(mtxState);
+    std::unique_lock<std::mutex> lock(mtxBuffer);
     std::vector<std::shared_ptr<const THUAI6::Human>> temp;
     temp.assign(currentState->humans.begin(), currentState->humans.end());
     return temp;
@@ -38,7 +36,7 @@ std::vector<std::shared_ptr<const THUAI6::Human>> Logic::GetHumans() const
 
 std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
 {
-    std::lock_guard<std::mutex> lock(mtxState);
+    std::unique_lock<std::mutex> lock(mtxBuffer);
     std::vector<std::shared_ptr<const THUAI6::Prop>> temp;
     temp.assign(currentState->props.begin(), currentState->props.end());
     return temp;
@@ -46,25 +44,25 @@ std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
 
 std::shared_ptr<const THUAI6::Human> Logic::HumanGetSelfInfo() const
 {
-    std::lock_guard<std::mutex> lock(mtxState);
+    std::unique_lock<std::mutex> lock(mtxBuffer);
     return currentState->humanSelf;
 }
 
 std::shared_ptr<const THUAI6::Butcher> Logic::ButcherGetSelfInfo() const
 {
-    std::lock_guard<std::mutex> lock(mtxState);
+    std::unique_lock<std::mutex> lock(mtxBuffer);
     return currentState->butcherSelf;
 }
 
 std::vector<std::vector<THUAI6::PlaceType>> Logic::GetFullMap() const
 {
-    std::lock_guard<std::mutex> lock(mtxState);
+    std::unique_lock<std::mutex> lock(mtxBuffer);
     return currentState->gamemap;
 }
 
 THUAI6::PlaceType Logic::GetPlaceType(int32_t CellX, int32_t CellY) const
 {
-    std::lock_guard<std::mutex> lock(mtxState);
+    std::unique_lock<std::mutex> lock(mtxBuffer);
     return currentState->gamemap[CellX][CellY];
 }
 
@@ -95,12 +93,12 @@ bool Logic::SendMessage(int64_t toID, std::string message)
 
 bool Logic::HaveMessage()
 {
-    return pComm->HaveMessage(playerID);
+    return pComm->HaveMessage();
 }
 
 std::pair<int64_t, std::string> Logic::GetMessage()
 {
-    return pComm->GetMessage(playerID);
+    return pComm->GetMessage();
 }
 
 bool Logic::Escape()
@@ -108,34 +106,24 @@ bool Logic::Escape()
     return pComm->Escape(playerID);
 }
 
-void Logic::StartFixMachine()
+bool Logic::StartFixMachine()
 {
-    pComm->StartFixMachine(playerID);
+    return pComm->StartFixMachine(playerID);
 }
 
-void Logic::EndFixMachine()
+bool Logic::EndFixMachine()
 {
-    pComm->EndFixMachine();
+    return pComm->EndFixMachine(playerID);
 }
 
-bool Logic::GetFixStatus()
+bool Logic::StartSaveHuman()
 {
-    return pComm->GetFixStatus();
+    return pComm->StartSaveHuman(playerID);
 }
 
-void Logic::StartSaveHuman()
+bool Logic::EndSaveHuman()
 {
-    pComm->StartSaveHuman(playerID);
-}
-
-void Logic::EndSaveHuman()
-{
-    pComm->EndSaveHuman();
-}
-
-bool Logic::GetSaveStatus()
-{
-    return pComm->GetSaveStatus();
+    return pComm->EndSaveHuman(playerID);
 }
 
 bool Logic::Attack(double angle)
@@ -158,22 +146,16 @@ bool Logic::HangHuman()
     return pComm->HangHuman(playerID);
 }
 
+bool Logic::WaitThread()
+{
+    Update();
+    return true;
+}
+
 void Logic::ProcessMessage()
 {
     auto messageThread = [&]()
     {
-        // // 首先设置消息、通过加入游戏，开始与服务端建立联系
-        // protobuf::MessageToClient clientMsg;
-        // protobuf::PlayerMsg playerMsg = THUAI62Proto::THUAI62ProtobufPlayer(playerID, playerType, humanType, butcherType);
-        // grpc::ClientContext context;
-        // auto MessageReader = THUAI6Stub->AddPlayer(&context, playerMsg);
-
-        // // 持续读取服务端的消息
-        // while (MessageReader->Read(&clientMsg))
-        // {
-        //     LoadBuffer(clientMsg);
-        // }
-
         std::cout << "Join Player!" << std::endl;
         pComm->AddPlayer(playerID, playerType, humanType, butcherType);
         while (true)
@@ -229,27 +211,77 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         }
 
         bufferState->gamemap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());
-        cvBuffer.notify_one();
+        if (asynchronous)
+        {
+            {
+                std::lock_guard<std::mutex> lock(mtxState);
+                std::swap(currentState, bufferState);
+            }
+            freshed = true;
+        }
+        else
+            bufferUpdated = true;
+        counterBuffer++;
     }
+    // 唤醒其他线程
+    cvBuffer.notify_one();
 }
 
 void Logic::Update() noexcept
 {
+    if (!asynchronous)
+    {
+        std::unique_lock<std::mutex> lock(mtxBuffer);
+
+        // 缓冲区被更新之后才可以使用
+        cvBuffer.wait(lock, [&]()
+                      { return bufferUpdated; });
+
+        std::swap(currentState, bufferState);
+        bufferUpdated = false;
+        counterState = counterBuffer;
+    }
 }
 
-void Logic::PlayerWrapper(std::function<void()> player)
+void Logic::Wait() noexcept
 {
-    // {
-    //     std::unique_lock<std::mutex> lock(mtxAI);
-    //     cvAI.wait(lock, [this]()
-    //               { return AIStart; });
-    // }
-    player();
+    freshed = false;
+    {
+        std::unique_lock<std::mutex> lock(mtxBuffer);
+        cvBuffer.wait(lock, [&]()
+                      { return freshed.load(); });
+    }
+}
+
+void Logic::UnBlockAI()
+{
+    {
+        std::lock_guard<std::mutex> lock(mtxAI);
+        AIStart = true;
+    }
+    cvAI.notify_one();
+}
+
+void Logic::UnBlockBuffer()
+{
+    {
+        std::lock_guard<std::mutex> lock(mtxBuffer);
+        bufferUpdated = true;
+    }
+    cvBuffer.notify_one();
+}
+
+int Logic::GetCounter() const
+{
+    std::unique_lock<std::mutex> lock(mtxState);
+    return counterState;
 }
 
 bool Logic::TryConnection()
 {
-    return pComm->TryConnection(playerID);
+    std::cout << "Trying to connect to server..." << std::endl;
+    bool result = pComm->TryConnection(playerID);
+    return result;
 }
 
 void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
@@ -267,8 +299,14 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
         timer = std::make_unique<ButcherAPI>(*this);
 
     // 构造AI线程
-    auto AIThread = [&, this]()
+    auto AIThread = [&]()
     {
+        {
+            std::unique_lock<std::mutex> lock(mtxAI);
+            cvAI.wait(lock, [this]()
+                      { return AIStart; });
+        }
+        std::cout << "AI Start!" << std::endl;
         auto ai = createAI();
         ProcessMessage();
         while (AILoop)
@@ -280,7 +318,7 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
         }
     };
 
-    tAI = std::thread(&Logic::PlayerWrapper, this, AIThread);
+    tAI = std::thread(AIThread);
 
     // 连接服务器
     if (TryConnection())
@@ -289,11 +327,14 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
         if (tAI.joinable())
         {
             std::cout << "Join the AI thread." << std::endl;
+            AIStart = true;
+            cvAI.notify_one();
             tAI.join();
         }
     }
     else
     {
         std::cout << "Connection error!" << std::endl;
+        return;
     }
 }

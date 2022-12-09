@@ -87,11 +87,9 @@ namespace Preparation.Utility
     {
         None = 0,
         Player = 1,
-        Bullet = 2,
-        Prop = 3,
-        Gem = 4,
-        Map = 5,
-        BombedBullet = 6,
-        PickedProp = 7
+        Prop = 2,
+        Map = 3,
+        BombedBullet = 4,
+        PickedProp = 5
     }
 }

@@ -118,8 +118,7 @@ namespace THUAI6
 
     struct Human : public Player
     {
-        bool onChair;        // 是否被挂
-        bool onGround;       // 是否倒地
+        HumanState state;    // 人类状态
         int32_t life;        // 剩余生命（本次倒地之前还能承受的伤害）
         int32_t hangedTime;  // 被挂的次数
 

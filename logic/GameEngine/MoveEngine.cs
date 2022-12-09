@@ -50,10 +50,10 @@ namespace GameEngine
         {
 
             /*由于四周是墙，所以人物永远不可能与越界方块碰撞*/
-            XY nextPos = obj.Position + XY.VectorToXY(moveVec);
+            XY nextPos = obj.Position + moveVec;
             double maxLen = collisionChecker.FindMax(obj, nextPos, moveVec);
             maxLen = Math.Min(maxLen, obj.MoveSpeed / GameData.numOfStepPerSecond);
-            _ = obj.Move(new Vector(moveVec.angle, maxLen));
+            _ = obj.Move(new XY(moveVec.Angle(), maxLen));
         }
 
         public void MoveObj(IMoveable obj, int moveTime, double direction)
@@ -62,33 +62,33 @@ namespace GameEngine
                 return;
             new Thread
             (
-                ()=>
+                () =>
                 {
                     if (!obj.IsAvailable&&gameTimer.IsGaming) //不能动就直接return，后面都是能动的情况
-                            return;
+                        return;
             lock (obj.MoveLock)
                 obj.IsMoving = true;
 
-            XY moveVec = new(direction, 0.0);
-            double deltaLen = moveVec.length - Math.Sqrt(obj.Move(moveVec));  // 转向，并用deltaLen存储行走的误差
+            double moveVecLength = 0.0;
+            double deltaLen = moveVecLength - Math.Sqrt(obj.Move(new XY(direction, moveVecLength)));  // 转向，并用deltaLen存储行走的误差
             IGameObj? collisionObj = null;
             bool isDestroyed = false;
             new FrameRateTaskExecutor<int>(
                 () => gameTimer.IsGaming && obj.CanMove && !obj.IsResetting,
                 () =>
                 {
-                    moveVec.length = obj.MoveSpeed / GameData.numOfStepPerSecond;
+                    moveVecLength = obj.MoveSpeed / GameData.numOfStepPerSecond;
 
                     // 越界情况处理：如果越界，则与越界方块碰撞
                     bool flag;  // 循环标志
                     do
                     {
                         flag = false;
-                        collisionObj = collisionChecker.CheckCollision(obj, moveVec);
+                        collisionObj = collisionChecker.CheckCollision(obj, new XY(direction, moveVecLength));
                         if (collisionObj == null)
                             break;
 
-                        switch (OnCollision(obj, collisionObj, moveVec))
+                        switch (OnCollision(obj, collisionObj, new XY(direction, moveVecLength)))
                         {
                             case AfterCollision.ContinueCheck:
                                 flag = true;
@@ -98,13 +98,13 @@ namespace GameEngine
                                 isDestroyed = true;
                                 return false;
                             case AfterCollision.MoveMax:
-                                MoveMax(obj, moveVec);
-                                moveVec.length = 0;
+                                MoveMax(obj, new XY(direction, moveVecLength));
+                                moveVecLength = 0;
                                 break;
                         }
                     } while (flag);
 
-                    deltaLen += moveVec.length - Math.Sqrt(obj.Move(moveVec));
+                    deltaLen += moveVecLength - Math.Sqrt(obj.Move(new XY(direction, moveVecLength)));
 
                     return true;
                 },
@@ -118,14 +118,14 @@ namespace GameEngine
                         flag = false;
                         if (!isDestroyed)
                         {
-                            moveVec.length = deltaLen + leftTime * obj.MoveSpeed / GameData.numOfPosGridPerCell;
-                            if ((collisionObj = collisionChecker.CheckCollision(obj, moveVec)) == null)
+                            moveVecLength = deltaLen + leftTime * obj.MoveSpeed / GameData.numOfPosGridPerCell;
+                            if ((collisionObj = collisionChecker.CheckCollision(obj, new XY(direction, moveVecLength))) == null)
                             {
-                                obj.Move(moveVec);
+                                obj.Move(new XY(direction, moveVecLength));
                             }
                             else
                             {
-                                switch (OnCollision(obj, collisionObj, moveVec))
+                                switch (OnCollision(obj, collisionObj, new XY(direction, moveVecLength)))
                                 {
                                     case AfterCollision.ContinueCheck:
                                         flag = true;
@@ -135,8 +135,8 @@ namespace GameEngine
                                         isDestroyed = true;
                                         break;
                                     case AfterCollision.MoveMax:
-                                        MoveMax(obj, moveVec);
-                                        moveVec.length = 0;
+                                        MoveMax(obj, new XY(direction, moveVecLength));
+                                        moveVecLength = 0;
                                         break;
                                 }
                             }

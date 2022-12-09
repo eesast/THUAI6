@@ -13,6 +13,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <queue>
 
 #include "Message2Server.pb.h"
 #include "Message2Clients.pb.h"
@@ -57,12 +58,17 @@ private:
     std::condition_variable cvBuffer;
     std::condition_variable cvAI;
 
-    // 信息队列目前可能会不用？具体待定
+    // 信息队列
+    std::queue<std::pair<int64_t, std::string>> messageQueue;
 
     // 存储状态，分别是现在的状态和缓冲区的状态。
     State state[2];
     State* currentState;
     State* bufferState;
+
+    // 保存缓冲区数
+    int counterState = 0;
+    int counterBuffer = 0;
 
     // 是否应该执行player()
     std::atomic_bool AILoop = true;
@@ -70,13 +76,10 @@ private:
     // buffer是否更新完毕
     bool bufferUpdated = true;
 
-    // 是否可以启用当前状态
-    bool currentStateAccessed = false;
-
     // 是否应当启动AI
     bool AIStart = false;
 
-    // 控制内容更新的变量
+    // asynchronous = true 时控制内容更新的变量
     std::atomic_bool freshed = false;
 
     // 提供给API使用的函数
@@ -103,32 +106,22 @@ private:
 
     bool Escape() override;
 
-    // 说明：双向stream由三个函数共同实现，两个记录开始和结束，结果由Logic里的私有的成员变量记录，获得返回值则另调函数
-    void StartFixMachine() override;
-    void EndFixMachine() override;
-    bool GetFixStatus() override;
+    bool StartFixMachine() override;
+    bool EndFixMachine() override;
 
-    void StartSaveHuman() override;
-    void EndSaveHuman() override;
-    bool GetSaveStatus() override;
+    bool StartSaveHuman() override;
+    bool EndSaveHuman() override;
 
     bool Attack(double angle) override;
     bool CarryHuman() override;
     bool ReleaseHuman() override;
     bool HangHuman() override;
 
-    bool WaitThread() override
-    {
-    }
+    bool WaitThread() override;
 
-    int GetCounter() override
-    {
-    }
+    int GetCounter() const override;
 
     bool TryConnection();
-
-    // 执行AI线程
-    void PlayerWrapper(std::function<void()> player);
 
     // THUAI5中的一系列用于处理信息的函数可能也不会再用
 

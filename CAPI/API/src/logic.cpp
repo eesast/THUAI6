@@ -158,13 +158,58 @@ void Logic::ProcessMessage()
     {
         std::cout << "Join Player!" << std::endl;
         pComm->AddPlayer(playerID, playerType, humanType, butcherType);
-        while (true)
+        while (gameState != THUAI6::GameState::GameEnd)
         {
             if (pComm->HaveMessage2Client())
             {
                 std::cout << "Get Message!" << std::endl;
                 auto clientMsg = pComm->GetMessage2Client();
-                LoadBuffer(clientMsg);
+                gameState = Proto2THUAI6::gameStateDict[clientMsg.game_state()];
+                switch (gameState)
+                {
+                    case THUAI6::GameState::GameStart:
+                        std::cout << "Game Start!" << std::endl;
+
+                        // 重新读取玩家的guid，guid确保人类在前屠夫在后
+                        playerGUIDs.clear();
+                        for (auto human : clientMsg.human_message())
+                            playerGUIDs.push_back(human.guid());
+                        for (auto butcher : clientMsg.butcher_message())
+                            playerGUIDs.push_back(butcher.guid());
+                        currentState->guids = playerGUIDs;
+                        bufferState->guids = playerGUIDs;
+
+                        LoadBuffer(clientMsg);
+
+                        AILoop = true;
+                        UnBlockAI();
+
+                        break;
+                    case THUAI6::GameState::GameRunning:
+                        // 重新读取玩家的guid，guid确保人类在前屠夫在后
+                        playerGUIDs.clear();
+                        for (auto human : clientMsg.human_message())
+                            playerGUIDs.push_back(human.guid());
+                        for (auto butcher : clientMsg.butcher_message())
+                            playerGUIDs.push_back(butcher.guid());
+                        currentState->guids = playerGUIDs;
+                        bufferState->guids = playerGUIDs;
+
+                        LoadBuffer(clientMsg);
+                        break;
+                    case THUAI6::GameState::GameEnd:
+                        AILoop = false;
+                        {
+                            std::lock_guard<std::mutex> lock(mtxBuffer);
+                            bufferUpdated = true;
+                            counterBuffer = -1;
+                        }
+                        cvBuffer.notify_one();
+                        std::cout << "Game End!" << std::endl;
+                        break;
+                    default:
+                        std::cerr << "Invalid GameState!" << std::endl;
+                }
             }
         }
     };
@@ -277,6 +322,12 @@ int Logic::GetCounter() const
     return counterState;
 }
 
+const std::vector<int64_t> Logic::GetPlayerGUIDs() const
+{
+    std::unique_lock<std::mutex> lock(mtxState);
+    return currentState->guids;
+}
+
 bool Logic::TryConnection()
 {
     std::cout << "Trying to connect to server..." << std::endl;
@@ -286,9 +337,6 @@ bool Logic::TryConnection()
 
 void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
 {
-    // 构造AI
-    pAI = createAI();
-
     // 建立与服务器之间通信的组件
     pComm = std::make_unique<Communication>(IP, port);
 
@@ -306,15 +354,24 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
             cvAI.wait(lock, [this]()
                       { return AIStart; });
         }
-        std::cout << "AI Start!" << std::endl;
         auto ai = createAI();
-        ProcessMessage();
+
         while (AILoop)
         {
-            Update();
-            timer->StartTimer();
-            timer->Play(*ai);
-            timer->EndTimer();
+            if (asynchronous)
+            {
+                Wait();
+                timer->StartTimer();
+                timer->Play(*ai);
+                timer->EndTimer();
+            }
+            else
+            {
+                Update();
+                timer->StartTimer();
+                timer->Play(*ai);
+                timer->EndTimer();
+            }
         }
     };
 
@@ -327,8 +384,8 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
         if (tAI.joinable())
         {
             std::cout << "Join the AI thread." << std::endl;
-            AIStart = true;
-            cvAI.notify_one();
+            // 首先开启处理消息的线程
+            ProcessMessage();
             tAI.join();
         }
     }

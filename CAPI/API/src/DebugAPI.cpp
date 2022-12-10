@@ -2,6 +2,36 @@
 #include "API.h"
 #define PI 3.14159265358979323846
 
+void HumanDebugAPI::StartTimer()
+{
+    StartPoint = std::chrono::system_clock::now();
+    std::time_t t = std::chrono::system_clock::to_time_t(StartPoint);
+}
+
+void ButcherDebugAPI::StartTimer()
+{
+    StartPoint = std::chrono::system_clock::now();
+    std::time_t t = std::chrono::system_clock::to_time_t(StartPoint);
+}
+
+void HumanDebugAPI::EndTimer()
+{
+}
+
+void ButcherDebugAPI::EndTimer()
+{
+}
+
+int HumanDebugAPI::GetFrameCount() const
+{
+    return logic.GetCounter();
+}
+
+int ButcherDebugAPI::GetFrameCount() const
+{
+    return logic.GetCounter();
+}
+
 std::future<bool> HumanDebugAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
 {
     return std::async(std::launch::async, [&]()
@@ -126,6 +156,26 @@ std::future<std::pair<int64_t, std::string>> ButcherDebugAPI::GetMessage()
                       { return logic.GetMessage(); });
 }
 
+std::future<bool> HumanDebugAPI::Wait()
+{
+    if (logic.GetCounter() == -1)
+        return std::async(std::launch::async, [&]()
+                          { return false; });
+    else
+        return std::async(std::launch::async, [&]()
+                          { return logic.WaitThread(); });
+}
+
+std::future<bool> ButcherDebugAPI::Wait()
+{
+    if (logic.GetCounter() == -1)
+        return std::async(std::launch::async, [&]()
+                          { return false; });
+    else
+        return std::async(std::launch::async, [&]()
+                          { return logic.WaitThread(); });
+}
+
 std::vector<std::shared_ptr<const THUAI6::Butcher>> HumanDebugAPI::GetButcher() const
 {
     return logic.GetButchers();
@@ -178,36 +228,36 @@ std::vector<std::vector<THUAI6::PlaceType>> ButcherDebugAPI::GetFullMap() const
 
 const std::vector<int64_t> HumanDebugAPI::GetPlayerGUIDs() const
 {
-    // todo
+    return logic.GetPlayerGUIDs();
 }
 
 const std::vector<int64_t> ButcherDebugAPI::GetPlayerGUIDs() const
 {
-    // todo
+    return logic.GetPlayerGUIDs();
 }
 
 std::future<bool> HumanDebugAPI::StartFixMachine()
 {
-    std::async(std::launch::async, [&]()
-               { return logic.StartFixMachine(); });
+    return std::async(std::launch::async, [&]()
+                      { return logic.StartFixMachine(); });
 }
 
 std::future<bool> HumanDebugAPI::EndFixMachine()
 {
-    std::async(std::launch::async, [&]()
-               { return logic.EndFixMachine(); });
+    return std::async(std::launch::async, [&]()
+                      { return logic.EndFixMachine(); });
 }
 
 std::future<bool> HumanDebugAPI::StartSaveHuman()
 {
-    std::async(std::launch::async, [&]()
-               { return logic.StartSaveHuman(); });
+    return std::async(std::launch::async, [&]()
+                      { return logic.StartSaveHuman(); });
 }
 
 std::future<bool> HumanDebugAPI::EndSaveHuman()
 {
-    std::async(std::launch::async, [&]()
-               { return logic.EndSaveHuman(); });
+    return std::async(std::launch::async, [&]()
+                      { return logic.EndSaveHuman(); });
 }
 
 std::future<bool> HumanDebugAPI::Escape()

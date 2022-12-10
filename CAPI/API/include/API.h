@@ -63,6 +63,8 @@ public:
     virtual bool CarryHuman() = 0;
     virtual bool ReleaseHuman() = 0;
     virtual bool HangHuman() = 0;
+
+    virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
 };
 
 class IAPI
@@ -171,11 +173,9 @@ public:
     }
     void Play(IAI& ai) override;
 
-    std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override;
+    [[nodiscard]] int GetFrameCount() const override;
 
-    [[nodiscard]] int GetFrameCount() const override
-    {
-    }
+    std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override;
 
     std::future<bool> MoveRight(int64_t timeInMilliseconds) override;
     std::future<bool> MoveUp(int64_t timeInMilliseconds) override;
@@ -190,9 +190,7 @@ public:
     [[nodiscard]] std::future<bool> HaveMessage() override;
     [[nodiscard]] std::future<std::pair<int64_t, std::string>> GetMessage() override;
 
-    std::future<bool> Wait() override
-    {
-    }
+    std::future<bool> Wait() override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override;
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override;
@@ -230,12 +228,9 @@ public:
     }
     void Play(IAI& ai) override;
 
+    [[nodiscard]] int GetFrameCount() const override;
+
     std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override;
-
-    [[nodiscard]] int GetFrameCount() const override
-    {
-    }
-
     std::future<bool> MoveRight(int64_t timeInMilliseconds) override;
     std::future<bool> MoveUp(int64_t timeInMilliseconds) override;
     std::future<bool> MoveLeft(int64_t timeInMilliseconds) override;
@@ -249,9 +244,7 @@ public:
     [[nodiscard]] std::future<bool> HaveMessage() override;
     [[nodiscard]] std::future<std::pair<int64_t, std::string>> GetMessage() override;
 
-    std::future<bool> Wait() override
-    {
-    }
+    std::future<bool> Wait() override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override;
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override;
@@ -280,20 +273,13 @@ public:
         logic(logic)
     {
     }
-    void StartTimer() override
-    {
-    }
-    void EndTimer() override
-    {
-    }
+    void StartTimer() override;
+    void EndTimer() override;
     void Play(IAI& ai) override;
 
+    [[nodiscard]] int GetFrameCount() const override;
+
     std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override;
-
-    [[nodiscard]] int GetFrameCount() const override
-    {
-    }
-
     std::future<bool> MoveRight(int64_t timeInMilliseconds) override;
     std::future<bool> MoveUp(int64_t timeInMilliseconds) override;
     std::future<bool> MoveLeft(int64_t timeInMilliseconds) override;
@@ -307,9 +293,7 @@ public:
     [[nodiscard]] std::future<bool> HaveMessage() override;
     [[nodiscard]] std::future<std::pair<int64_t, std::string>> GetMessage() override;
 
-    std::future<bool> Wait() override
-    {
-    }
+    std::future<bool> Wait() override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override;
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override;
@@ -329,6 +313,7 @@ public:
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const override;
 
 private:
+    std::chrono::system_clock::time_point StartPoint;
     ILogic& logic;
 };
 
@@ -339,20 +324,13 @@ public:
         logic(logic)
     {
     }
-    void StartTimer() override
-    {
-    }
-    void EndTimer() override
-    {
-    }
+    void StartTimer() override;
+    void EndTimer() override;
     void Play(IAI& ai) override;
 
+    [[nodiscard]] int GetFrameCount() const override;
+
     std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override;
-
-    [[nodiscard]] int GetFrameCount() const override
-    {
-    }
-
     std::future<bool> MoveRight(int64_t timeInMilliseconds) override;
     std::future<bool> MoveUp(int64_t timeInMilliseconds) override;
     std::future<bool> MoveLeft(int64_t timeInMilliseconds) override;
@@ -366,9 +344,7 @@ public:
     [[nodiscard]] std::future<bool> HaveMessage() override;
     [[nodiscard]] std::future<std::pair<int64_t, std::string>> GetMessage() override;
 
-    std::future<bool> Wait() override
-    {
-    }
+    std::future<bool> Wait() override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override;
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override;
@@ -387,6 +363,7 @@ public:
     [[nodiscard]] std::shared_ptr<const THUAI6::Butcher> GetSelfInfo() const override;
 
 private:
+    std::chrono::system_clock::time_point StartPoint;
     ILogic& logic;
 };
 

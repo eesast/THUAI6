@@ -79,6 +79,7 @@ message MessageToClient
     repeated MessageOfButcher butcher_message = 2; // 是否真正repeated待定
     repeated MessageOfProp prop_message = 3;
     MessageOfMap map_message = 4;
+    GameState game_state = 5;
 }
 
 message MoveRes // 如果打算设计撞墙保留平行速度分量，且需要返回值则可用这个（大概没啥用）

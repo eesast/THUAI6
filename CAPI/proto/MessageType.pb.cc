@@ -23,7 +23,7 @@ namespace _pbi = _pb::internal;
 namespace protobuf
 {
 }  // namespace protobuf
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_MessageType_2eproto[9];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_MessageType_2eproto[10];
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_MessageType_2eproto = nullptr;
 const uint32_t TableStruct_MessageType_2eproto::offsets[1] = {};
 static constexpr ::_pbi::MigrationSchema* schemas = nullptr;
@@ -51,12 +51,14 @@ const char descriptor_table_protodef_MessageType_2eproto[] PROTOBUF_SECTION_VARI
     "\020\003\022\016\n\nHUMANTYPE4\020\004*l\n\013ButcherType\022\025\n\021NUL"
     "L_BUTCHER_TYPE\020\000\022\020\n\014BUTCHERTYPE1\020\001\022\020\n\014BU"
     "TCHERTYPE2\020\002\022\020\n\014BUTCHERTYPE3\020\003\022\020\n\014BUTCHE"
-    "RTYPE4\020\004b\006proto3";
+    "RTYPE4\020\004*P\n\tGameState\022\023\n\017NULL_GAME_STATE"
+    "\020\000\022\016\n\nGAME_START\020\001\022\020\n\014GAME_RUNNING\020\002\022\014\n\010"
+    "GAME_END\020\003b\006proto3";
 static ::_pbi::once_flag descriptor_table_MessageType_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_MessageType_2eproto = {
     false,
     false,
-    856,
+    938,
     descriptor_table_protodef_MessageType_2eproto,
     "MessageType.proto",
     &descriptor_table_MessageType_2eproto_once,
@@ -252,6 +254,25 @@ namespace protobuf
             case 2:
             case 3:
             case 4:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* GameState_descriptor()
+    {
+        ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
+        return file_level_enum_descriptors_MessageType_2eproto[9];
+    }
+    bool GameState_IsValid(int value)
+    {
+        switch (value)
+        {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
                 return true;
             default:
                 return false;

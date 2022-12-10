@@ -1951,6 +1951,7 @@ namespace protobuf
             kButcherMessageFieldNumber = 2,
             kPropMessageFieldNumber = 3,
             kMapMessageFieldNumber = 4,
+            kGameStateFieldNumber = 5,
         };
         // repeated .protobuf.MessageOfHuman human_message = 1;
         int human_message_size() const;
@@ -2041,6 +2042,16 @@ namespace protobuf
         );
         ::protobuf::MessageOfMap* unsafe_arena_release_map_message();
 
+        // .protobuf.GameState game_state = 5;
+        void clear_game_state();
+        ::protobuf::GameState game_state() const;
+        void set_game_state(::protobuf::GameState value);
+
+    private:
+        ::protobuf::GameState _internal_game_state() const;
+        void _internal_set_game_state(::protobuf::GameState value);
+
+    public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageToClient)
 
     private:
@@ -2056,6 +2067,7 @@ namespace protobuf
             ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfButcher> butcher_message_;
             ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfProp> prop_message_;
             ::protobuf::MessageOfMap* map_message_;
+            int game_state_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -4206,6 +4218,30 @@ namespace protobuf
         }
         _impl_.map_message_ = map_message;
         // @@protoc_insertion_point(field_set_allocated:protobuf.MessageToClient.map_message)
+    }
+
+    // .protobuf.GameState game_state = 5;
+    inline void MessageToClient::clear_game_state()
+    {
+        _impl_.game_state_ = 0;
+    }
+    inline ::protobuf::GameState MessageToClient::_internal_game_state() const
+    {
+        return static_cast<::protobuf::GameState>(_impl_.game_state_);
+    }
+    inline ::protobuf::GameState MessageToClient::game_state() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageToClient.game_state)
+        return _internal_game_state();
+    }
+    inline void MessageToClient::_internal_set_game_state(::protobuf::GameState value)
+    {
+        _impl_.game_state_ = value;
+    }
+    inline void MessageToClient::set_game_state(::protobuf::GameState value)
+    {
+        _internal_set_game_state(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageToClient.game_state)
     }
 
     // -------------------------------------------------------------------

@@ -89,32 +89,11 @@ enum ButcherType
     BUTCHERTYPE4 = 4;
 }
 
-// 取消了大包之后，MessageType的枚举是否有必要保留还有待商榷
-// enum MessageType
-// {
-//     // 公共信息类型
-//     Move = 0;
-//     PickProp = 1;
-//     UseProp = 2;
-//     UseSkill = 3;
-//     Map = 4;
-//     Send = 5;
-
-//     // 人类限定信息类型
-//     FixMachine = 6;
-//     SaveHuman = 7;
-
-//     // 屠夫限定信息类型
-//     Attack = 8;
-//     CarryHuman = 9;
-//     ReleaseHuman = 10;
-//     HangHuman = 11;
-
-//     // 游戏相关信息类型
-//     AddPlayer = 12;
-//     InvalidPlayer = 13;
-//     ValidPlayer = 14;
-//     StartGame = 15;
-//     Gaming = 16;
-//     EndGame = 17;
-// }
+// 游戏进行状态
+enum GameState
+{
+    NULL_GAME_STATE = 0;
+    GAME_START = 1;
+    GAME_RUNNING = 2;
+    GAME_END = 3;
+}

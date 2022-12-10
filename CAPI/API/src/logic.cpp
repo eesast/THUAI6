@@ -183,7 +183,6 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         bufferState->props.clear();
 
         std::cout << "Buffer clear!" << std::endl;
-
         // 读取新的信息
         // 读取消息的选择待补充，之后需要另外判断；具体做法应该是先读到自己，然后按照自己的视野做处理。此处暂时全部读了进来
         for (auto itr = message.human_message().begin(); itr != message.human_message().end(); itr++)
@@ -195,8 +194,94 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
             }
             else
             {
-                bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
-                std::cout << "Add Human!" << std::endl;
+                // here program should decide whether this human can be seen by AI
+                if (playerType == THUAI6::PlayerType::HumanPlayer)
+                {
+                    bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
+                    std::cout << "Add Human!" << std::endl;
+                }
+                else
+                {
+                    int vr = this->currentState->butcherSelf->viewRange;
+                    int deltaX = itr->x() - this->currentState->butcherSelf->x;
+                    int deltaY = itr->y() - this->currentState->butcherSelf->y;
+                    double distance = deltaX * deltaX + deltaY * deltaY;
+                    if (distance > vr * vr)
+                        continue;
+                    else
+                    {
+                        int divide = abs(deltaX) > abs(deltaY) ? abs(deltaX) : abs(deltaY);
+                        int dx = deltaX / divide;
+                        int dy = deltaY / divide;
+                        bool barrier = false;
+                        if (deltaX > 0)
+                        {
+                            if (deltaY > 0)
+                            {
+                                for (int i = this->currentState->butcherSelf->x; i < itr->x() && !barrier; i += dx)
+                                    for (int j = this->currentState->butcherSelf->y; j < itr->y(); j += dy)
+                                    {
+                                        int x_cell = IAPI::GridToCell(i);
+                                        int y_cell = IAPI::GridToCell(j);
+                                        if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
+                                        {
+                                            barrier = true;
+                                            break;
+                                        }
+                                    }
+                            }
+                            else
+                            {
+                                for (int i = this->currentState->butcherSelf->x; i < itr->x() && !barrier; i += dx)
+                                    for (int j = this->currentState->butcherSelf->y; j > itr->y(); j += dy)
+                                    {
+                                        int x_cell = IAPI::GridToCell(i);
+                                        int y_cell = IAPI::GridToCell(j);
+                                        if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
+                                        {
+                                            barrier = true;
+                                            break;
+                                        }
+                                    }
+                            }
+                        }
+                        else
+                        {
+                            if (deltaY > 0)
+                            {
+                                for (int i = this->currentState->butcherSelf->x; i > itr->x() && !barrier; i += dx)
+                                    for (int j = this->currentState->butcherSelf->y; j < itr->y(); j += dy)
+                                    {
+                                        int x_cell = IAPI::GridToCell(i);
+                                        int y_cell = IAPI::GridToCell(j);
+                                        if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
+                                        {
+                                            barrier = true;
+                                            break;
+                                        }
+                                    }
+                            }
+                            else
+                            {
+                                for (int i = this->currentState->butcherSelf->x; i > itr->x() && !barrier; i += dx)
+                                    for (int j = this->currentState->butcherSelf->y; j > itr->y(); j += dy)
+                                    {
+                                        int x_cell = IAPI::GridToCell(i);
+                                        int y_cell = IAPI::GridToCell(j);
+                                        if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
+                                        {
+                                            barrier = true;
+                                            break;
+                                        }
+                                    }
+                            }
+                        }
+                        if (barrier)
+                            continue;
+                        bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
+                        std::cout << "Add Human!" << std::endl;
+                    }
+                }
             }
         }
         for (auto itr = message.butcher_message().begin(); itr != message.butcher_message().end(); itr++)
@@ -207,7 +292,96 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                 bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(*itr));
             }
             else
-                bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(*itr));
+            {
+                // here program should decide whether this human can be seen by AI
+                if (playerType == THUAI6::PlayerType::ButcherPlayer)
+                {
+                    bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(*itr));
+                    std::cout << "Add Butcher!" << std::endl;
+                }
+                else
+                {
+                    int vr = this->currentState->humanSelf->viewRange;
+                    int deltaX = itr->x() - this->currentState->humanSelf->x;
+                    int deltaY = itr->y() - this->currentState->humanSelf->y;
+                    double distance = deltaX * deltaX + deltaY * deltaY;
+                    if (distance > vr * vr)
+                        continue;
+                    else
+                    {
+                        int divide = abs(deltaX) > abs(deltaY) ? abs(deltaX) : abs(deltaY);
+                        int dx = deltaX / divide;
+                        int dy = deltaY / divide;
+                        bool barrier = false;
+                        if (deltaX > 0)
+                        {
+                            if (deltaY > 0)
+                            {
+                                for (int i = this->currentState->humanSelf->x; i < itr->x() && !barrier; i += dx)
+                                    for (int j = this->currentState->humanSelf->y; j < itr->y(); j += dy)
+                                    {
+                                        int x_cell = IAPI::GridToCell(i);
+                                        int y_cell = IAPI::GridToCell(j);
+                                        if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
+                                        {
+                                            barrier = true;
+                                            break;
+                                        }
+                                    }
+                            }
+                            else
+                            {
+                                for (int i = this->currentState->humanSelf->x; i < itr->x() && !barrier; i += dx)
+                                    for (int j = this->currentState->humanSelf->y; j > itr->y(); j += dy)
+                                    {
+                                        int x_cell = IAPI::GridToCell(i);
+                                        int y_cell = IAPI::GridToCell(j);
+                                        if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
+                                        {
+                                            barrier = true;
+                                            break;
+                                        }
+                                    }
+                            }
+                        }
+                        else
+                        {
+                            if (deltaY > 0)
+                            {
+                                for (int i = this->currentState->humanSelf->x; i > itr->x() && !barrier; i += dx)
+                                    for (int j = this->currentState->humanSelf->y; j < itr->y(); j += dy)
+                                    {
+                                        int x_cell = IAPI::GridToCell(i);
+                                        int y_cell = IAPI::GridToCell(j);
+                                        if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
+                                        {
+                                            barrier = true;
+                                            break;
+                                        }
+                                    }
+                            }
+                            else
+                            {
+                                for (int i = this->currentState->humanSelf->x; i > itr->x() && !barrier; i += dx)
+                                    for (int j = this->currentState->humanSelf->y; j > itr->y(); j += dy)
+                                    {
+                                        int x_cell = IAPI::GridToCell(i);
+                                        int y_cell = IAPI::GridToCell(j);
+                                        if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
+                                        {
+                                            barrier = true;
+                                            break;
+                                        }
+                                    }
+                            }
+                        }
+                        if (barrier)
+                            continue;
+                        bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(*itr));
+                        std::cout << "Add Butcher!" << std::endl;
+                    }
+                }
+            }
         }
 
         bufferState->gamemap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());

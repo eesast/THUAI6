@@ -158,7 +158,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.human_message_)*/ {}, /*decltype(_impl_.butcher_message_)*/ {}, /*decltype(_impl_.prop_message_)*/ {}, /*decltype(_impl_.map_message_)*/ nullptr, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.human_message_)*/ {}, /*decltype(_impl_.butcher_message_)*/ {}, /*decltype(_impl_.prop_message_)*/ {}, /*decltype(_impl_.map_message_)*/ nullptr, /*decltype(_impl_.game_state_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
     struct MessageToClientDefaultTypeInternal
@@ -340,6 +340,7 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.butcher_message_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.prop_message_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.map_message_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.game_state_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MoveRes, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -374,9 +375,9 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
     {68, -1, -1, sizeof(::protobuf::MessageOfMap_Row)},
     {75, -1, -1, sizeof(::protobuf::MessageOfMap)},
     {82, -1, -1, sizeof(::protobuf::MessageToClient)},
-    {92, -1, -1, sizeof(::protobuf::MoveRes)},
-    {101, -1, -1, sizeof(::protobuf::BoolRes)},
-    {108, -1, -1, sizeof(::protobuf::MsgRes)},
+    {93, -1, -1, sizeof(::protobuf::MoveRes)},
+    {102, -1, -1, sizeof(::protobuf::BoolRes)},
+    {109, -1, -1, sizeof(::protobuf::MsgRes)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -423,18 +424,19 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     "\t\n\001y\030\003 \001(\005\022\030\n\020facing_direction\030\004 \001(\001\022\022\n\n"
     "mapping_id\030\005 \001(\003\"`\n\014MessageOfMap\022\'\n\003row\030"
     "\002 \003(\0132\032.protobuf.MessageOfMap.Row\032\'\n\003Row"
-    "\022 \n\003col\030\001 \003(\0162\023.protobuf.PlaceType\"\323\001\n\017M"
+    "\022 \n\003col\030\001 \003(\0162\023.protobuf.PlaceType\"\374\001\n\017M"
     "essageToClient\022/\n\rhuman_message\030\001 \003(\0132\030."
     "protobuf.MessageOfHuman\0223\n\017butcher_messa"
     "ge\030\002 \003(\0132\032.protobuf.MessageOfButcher\022-\n\014"
     "prop_message\030\003 \003(\0132\027.protobuf.MessageOfP"
     "rop\022+\n\013map_message\030\004 \001(\0132\026.protobuf.Mess"
-    "ageOfMap\"J\n\007MoveRes\022\024\n\014actual_speed\030\001 \001("
-    "\003\022\024\n\014actual_angle\030\002 \001(\001\022\023\n\013act_success\030\003"
-    " \001(\010\"\036\n\007BoolRes\022\023\n\013act_success\030\001 \001(\010\"P\n\006"
-    "MsgRes\022\024\n\014have_message\030\001 \001(\010\022\026\n\016from_pla"
-    "yer_id\030\002 \001(\003\022\030\n\020message_received\030\003 \001(\tb\006"
-    "proto3";
+    "ageOfMap\022\'\n\ngame_state\030\005 \001(\0162\023.protobuf."
+    "GameState\"J\n\007MoveRes\022\024\n\014actual_speed\030\001 \001"
+    "(\003\022\024\n\014actual_angle\030\002 \001(\001\022\023\n\013act_success\030"
+    "\003 \001(\010\"\036\n\007BoolRes\022\023\n\013act_success\030\001 \001(\010\"P\n"
+    "\006MsgRes\022\024\n\014have_message\030\001 \001(\010\022\026\n\016from_pl"
+    "ayer_id\030\002 \001(\003\022\030\n\020message_received\030\003 \001(\tb"
+    "\006proto3";
 static const ::_pbi::DescriptorTable* const descriptor_table_Message2Clients_2eproto_deps[1] = {
     &::descriptor_table_MessageType_2eproto,
 };
@@ -442,7 +444,7 @@ static ::_pbi::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Message2Clients_2eproto = {
     false,
     false,
-    1646,
+    1687,
     descriptor_table_protodef_Message2Clients_2eproto,
     "Message2Clients.proto",
     &descriptor_table_Message2Clients_2eproto_once,
@@ -3044,13 +3046,14 @@ namespace protobuf
         MessageToClient* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.human_message_){from._impl_.human_message_}, decltype(_impl_.butcher_message_){from._impl_.butcher_message_}, decltype(_impl_.prop_message_){from._impl_.prop_message_}, decltype(_impl_.map_message_){nullptr}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.human_message_){from._impl_.human_message_}, decltype(_impl_.butcher_message_){from._impl_.butcher_message_}, decltype(_impl_.prop_message_){from._impl_.prop_message_}, decltype(_impl_.map_message_){nullptr}, decltype(_impl_.game_state_){}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
         if (from._internal_has_map_message())
         {
             _this->_impl_.map_message_ = new ::protobuf::MessageOfMap(*from._impl_.map_message_);
         }
+        _this->_impl_.game_state_ = from._impl_.game_state_;
         // @@protoc_insertion_point(copy_constructor:protobuf.MessageToClient)
     }
 
@@ -3061,7 +3064,7 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.human_message_){arena}, decltype(_impl_.butcher_message_){arena}, decltype(_impl_.prop_message_){arena}, decltype(_impl_.map_message_){nullptr}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.human_message_){arena}, decltype(_impl_.butcher_message_){arena}, decltype(_impl_.prop_message_){arena}, decltype(_impl_.map_message_){nullptr}, decltype(_impl_.game_state_){0}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
     MessageToClient::~MessageToClient()
@@ -3105,6 +3108,7 @@ namespace protobuf
             delete _impl_.map_message_;
         }
         _impl_.map_message_ = nullptr;
+        _impl_.game_state_ = 0;
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -3176,6 +3180,17 @@ namespace protobuf
                     {
                         ptr = ctx->ParseMessage(_internal_mutable_map_message(), ptr);
                         CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // .protobuf.GameState game_state = 5;
+                case 5:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40))
+                    {
+                        uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        CHK_(ptr);
+                        _internal_set_game_state(static_cast<::protobuf::GameState>(val));
                     }
                     else
                         goto handle_unusual;
@@ -3254,6 +3269,15 @@ namespace protobuf
                 InternalWriteMessage(4, _Internal::map_message(this), _Internal::map_message(this).GetCachedSize(), target, stream);
         }
 
+        // .protobuf.GameState game_state = 5;
+        if (this->_internal_game_state() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteEnumToArray(
+                5, this->_internal_game_state(), target
+            );
+        }
+
         if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
         {
             target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -3306,6 +3330,13 @@ namespace protobuf
                           );
         }
 
+        // .protobuf.GameState game_state = 5;
+        if (this->_internal_game_state() != 0)
+        {
+            total_size += 1 +
+                          ::_pbi::WireFormatLite::EnumSize(this->_internal_game_state());
+        }
+
         return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
     }
 
@@ -3335,6 +3366,10 @@ namespace protobuf
                 from._internal_map_message()
             );
         }
+        if (from._internal_game_state() != 0)
+        {
+            _this->_internal_set_game_state(from._internal_game_state());
+        }
         _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
 
@@ -3359,7 +3394,11 @@ namespace protobuf
         _impl_.human_message_.InternalSwap(&other->_impl_.human_message_);
         _impl_.butcher_message_.InternalSwap(&other->_impl_.butcher_message_);
         _impl_.prop_message_.InternalSwap(&other->_impl_.prop_message_);
-        swap(_impl_.map_message_, other->_impl_.map_message_);
+        ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+            PROTOBUF_FIELD_OFFSET(MessageToClient, _impl_.game_state_) + sizeof(MessageToClient::_impl_.game_state_) - PROTOBUF_FIELD_OFFSET(MessageToClient, _impl_.map_message_)>(
+            reinterpret_cast<char*>(&_impl_.map_message_),
+            reinterpret_cast<char*>(&other->_impl_.map_message_)
+        );
     }
 
     ::PROTOBUF_NAMESPACE_ID::Metadata MessageToClient::GetMetadata() const

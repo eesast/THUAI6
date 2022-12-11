@@ -43,10 +43,6 @@ private:
     // GUID信息
     std::vector<int64_t> playerGUIDs;
 
-    // THUAI5中的通信组件可以完全被我们的stub取代，故无须再写
-
-    std::unique_ptr<IAI> pAI;
-
     std::unique_ptr<IGameTimer> timer;
 
     std::thread tAI;  // 用于运行AI的线程
@@ -70,6 +66,8 @@ private:
     int counterState = 0;
     int counterBuffer = 0;
 
+    THUAI6::GameState gameState = THUAI6::GameState::NullGameState;
+
     // 是否应该执行player()
     std::atomic_bool AILoop = true;
 
@@ -83,8 +81,6 @@ private:
     std::atomic_bool freshed = false;
 
     // 提供给API使用的函数
-
-    // 获取服务器发来的消息
 
     std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
     std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
@@ -120,6 +116,8 @@ private:
     bool WaitThread() override;
 
     int GetCounter() const override;
+
+    const std::vector<int64_t> GetPlayerGUIDs() const override;
 
     bool TryConnection();
 

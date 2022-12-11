@@ -337,6 +337,37 @@ namespace protobuf
             ButcherType_descriptor(), name, value
         );
     }
+    enum GameState : int
+    {
+        NULL_GAME_STATE = 0,
+        GAME_START = 1,
+        GAME_RUNNING = 2,
+        GAME_END = 3,
+        GameState_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+        GameState_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+    };
+    bool GameState_IsValid(int value);
+    constexpr GameState GameState_MIN = NULL_GAME_STATE;
+    constexpr GameState GameState_MAX = GAME_END;
+    constexpr int GameState_ARRAYSIZE = GameState_MAX + 1;
+
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* GameState_descriptor();
+    template<typename T>
+    inline const std::string& GameState_Name(T enum_t_value)
+    {
+        static_assert(::std::is_same<T, GameState>::value || ::std::is_integral<T>::value, "Incorrect type passed to function GameState_Name.");
+        return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+            GameState_descriptor(), enum_t_value
+        );
+    }
+    inline bool GameState_Parse(
+        ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, GameState* value
+    )
+    {
+        return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<GameState>(
+            GameState_descriptor(), name, value
+        );
+    }
     // ===================================================================
 
     // ===================================================================
@@ -437,6 +468,15 @@ template<>
 inline const EnumDescriptor* GetEnumDescriptor<::protobuf::ButcherType>()
 {
     return ::protobuf::ButcherType_descriptor();
+}
+template<>
+struct is_proto_enum<::protobuf::GameState> : ::std::true_type
+{
+};
+template<>
+inline const EnumDescriptor* GetEnumDescriptor<::protobuf::GameState>()
+{
+    return ::protobuf::GameState_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE

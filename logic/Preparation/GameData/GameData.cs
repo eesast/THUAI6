@@ -4,7 +4,7 @@ namespace Preparation.GameData
 {
     public static class GameData
     {
-#region 基本常数与常方法
+        #region 基本常数与常方法
         public const int numOfPosGridPerCell = 1000;  // 每格的【坐标单位】数
         public const int numOfStepPerSecond = 20;     // 每秒行走的步数
         public const int lengthOfMap = 50000;         // 地图长度
@@ -35,8 +35,8 @@ namespace Preparation.GameData
         }
 
         public static int numOfBirthPoint = 5;
-#endregion
-#region 角色相关
+        #endregion
+        #region 角色相关
         /// <summary>
         /// 玩家相关
         /// </summary>
@@ -71,9 +71,9 @@ namespace Preparation.GameData
         public const long GemProduceTime = 10000;
         public const long PropProduceTime = 10000;
         public const int PropDuration = 10000;
-#endregion
-#region 游戏帧相关
+        #endregion
+        #region 游戏帧相关
         public const long checkInterval = 50;  // 检查位置标志、补充子弹的帧时长
-#endregion
+        #endregion
     }
 }

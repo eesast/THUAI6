@@ -400,5 +400,3 @@ FodyWeavers.xsd
 #THUAI playback file
 *.thuaipb
 
-Client/
-CSharpInterface/

@@ -21,7 +21,7 @@ namespace Preparation.Utility
         {
             return "(" + x.ToString() + "," + y.ToString() + ")";
         }
-        public static int operator*(XY v1, XY v2)
+        public static int operator *(XY v1, XY v2)
         {
             return (v1.x * v2.x) + (v1.y * v2.y);
         }

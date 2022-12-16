@@ -256,65 +256,20 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                     else
                     {
                         int divide = abs(deltaX) > abs(deltaY) ? abs(deltaX) : abs(deltaY);
-                        int dx = deltaX / divide;
-                        int dy = deltaY / divide;
+                        divide /= 100;
+                        double dx = deltaX / divide;
+                        double dy = deltaY / divide;
+                        double myX = this->currentState->butcherSelf->x;
+                        double myY = this->currentState->butcherSelf->y;
                         bool barrier = false;
-                        if (deltaX > 0)
+                        for (int i = 0; i < divide; i++)
                         {
-                            if (deltaY > 0)
+                            myX += dx;
+                            myY += dy;
+                            if (this->currentState->gamemap[IAPI::GridToCell(myX)][IAPI::GridToCell(myY)] == THUAI6::PlaceType::Wall)
                             {
-                                for (int i = this->currentState->butcherSelf->x, j = this->currentState->butcherSelf->y; i < itr->x() && !barrier && j < itr->y(); i += dx, j += dy)
-                                {
-                                    int x_cell = IAPI::GridToCell(i);
-                                    int y_cell = IAPI::GridToCell(j);
-                                    if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
-                                    {
-                                        barrier = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                for (int i = this->currentState->butcherSelf->x, j = this->currentState->butcherSelf->y; i < itr->x() && !barrier && j > itr->y(); i += dx, j += dy)
-                                {
-                                    int x_cell = IAPI::GridToCell(i);
-                                    int y_cell = IAPI::GridToCell(j);
-                                    if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
-                                    {
-                                        barrier = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (deltaY > 0)
-                            {
-                                for (int i = this->currentState->butcherSelf->x, j = this->currentState->butcherSelf->y; i > itr->x() && !barrier && j < itr->y(); i += dx, j += dy)
-                                {
-                                    int x_cell = IAPI::GridToCell(i);
-                                    int y_cell = IAPI::GridToCell(j);
-                                    if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
-                                    {
-                                        barrier = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                for (int i = this->currentState->butcherSelf->x, j = this->currentState->butcherSelf->y; i > itr->x() && !barrier && j > itr->y(); i += dx, j += dy)
-                                {
-                                    int x_cell = IAPI::GridToCell(i);
-                                    int y_cell = IAPI::GridToCell(j);
-                                    if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
-                                    {
-                                        barrier = true;
-                                        break;
-                                    }
-                                }
+                                barrier = true;
+                                break;
                             }
                         }
                         if (barrier)
@@ -351,65 +306,20 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                     else
                     {
                         int divide = abs(deltaX) > abs(deltaY) ? abs(deltaX) : abs(deltaY);
-                        int dx = deltaX / divide;
-                        int dy = deltaY / divide;
+                        divide /= 100;
+                        double dx = deltaX / divide;
+                        double dy = deltaY / divide;
+                        double myX = this->currentState->humanSelf->x;
+                        double myY = this->currentState->humanSelf->y;
                         bool barrier = false;
-                        if (deltaX > 0)
+                        for (int i = 0; i < divide; i++)
                         {
-                            if (deltaY > 0)
+                            myX += dx;
+                            myY += dy;
+                            if (this->currentState->gamemap[IAPI::GridToCell(myX)][IAPI::GridToCell(myY)] == THUAI6::PlaceType::Wall)
                             {
-                                for (int i = this->currentState->humanSelf->x, j = this->currentState->humanSelf->y; i < itr->x() && j < itr->y() && !barrier; i += dx, j += dy)
-                                {
-                                    int x_cell = IAPI::GridToCell(i);
-                                    int y_cell = IAPI::GridToCell(j);
-                                    if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
-                                    {
-                                        barrier = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                for (int i = this->currentState->humanSelf->x, j = this->currentState->humanSelf->y; i < itr->x() && j > itr->y() && !barrier; i += dx, j += dy)
-                                {
-                                    int x_cell = IAPI::GridToCell(i);
-                                    int y_cell = IAPI::GridToCell(j);
-                                    if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
-                                    {
-                                        barrier = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (deltaY > 0)
-                            {
-                                for (int i = this->currentState->humanSelf->x, j = this->currentState->humanSelf->y; i > itr->x() && j < itr->y() && !barrier; i += dx, j += dy)
-                                {
-                                    int x_cell = IAPI::GridToCell(i);
-                                    int y_cell = IAPI::GridToCell(j);
-                                    if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
-                                    {
-                                        barrier = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                for (int i = this->currentState->humanSelf->x, j = this->currentState->humanSelf->y; i > itr->x() && j > itr->y() && !barrier; i += dx, j += dy)
-                                {
-                                    int x_cell = IAPI::GridToCell(i);
-                                    int y_cell = IAPI::GridToCell(j);
-                                    if (this->currentState->gamemap[x_cell][y_cell] == THUAI6::PlaceType::Wall)
-                                    {
-                                        barrier = true;
-                                        break;
-                                    }
-                                }
+                                barrier = true;
+                                break;
                             }
                         }
                         if (barrier)

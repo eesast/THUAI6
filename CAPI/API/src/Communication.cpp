@@ -207,22 +207,13 @@ bool Communication::HaveMessage2Client()
     return haveNewMessage;
 }
 
-std::pair<int64_t, std::string> Communication::GetMessage()
+std::optional<std::pair<int64_t, std::string>> Communication::GetMessage()
 {
-    std::lock_guard<std::mutex> lock(messageMutex);
-    if (messageQueue.empty())
-        return std::make_pair(-1, "");
-    else
-    {
-        auto message = messageQueue.front();
-        messageQueue.pop();
-        return message;
-    }
+    return messageQueue.tryPop();
 }
 
 bool Communication::HaveMessage()
 {
-    std::lock_guard<std::mutex> lock(messageMutex);
     return !messageQueue.empty();
 }
 
@@ -236,8 +227,7 @@ void Communication::ReadMessage(int64_t playerID)
         auto reader = THUAI6Stub->GetMessage(&context, request);
         while (reader->Read(&messageReceived))
         {
-            std::lock_guard<std::mutex> lock(messageMutex);
-            messageQueue.push(std::make_pair(messageReceived.from_player_id(), messageReceived.message_received()));
+            messageQueue.emplace(messageReceived.from_player_id(), messageReceived.message_received());
         }
     };
     std::thread(tRead).detach();
@@ -245,7 +235,7 @@ void Communication::ReadMessage(int64_t playerID)
 
 void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType)
 {
-    auto msgThread = [&]()
+    auto tMessage = [&]()
     {
         protobuf::PlayerMsg playerMsg = THUAI62Proto::THUAI62ProtobufPlayer(playerID, playerType, humanType, butcherType);
         grpc::ClientContext context;
@@ -254,5 +244,5 @@ void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, T
         while (MessageReader->Read(&message2Client))
             haveNewMessage = true;
     };
-    std::thread(msgThread).detach();
+    std::thread(tMessage).detach();
 }

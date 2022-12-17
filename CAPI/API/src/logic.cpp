@@ -228,34 +228,97 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         bufferState->props.clear();
 
         std::cout << "Buffer clear!" << std::endl;
-
         // 读取新的信息
         // 读取消息的选择待补充，之后需要另外判断；具体做法应该是先读到自己，然后按照自己的视野做处理。此处暂时全部读了进来
-        for (auto itr = message.human_message().begin(); itr != message.human_message().end(); itr++)
-        {
-            if (itr->player_id() == playerID)
-            {
-                bufferState->humanSelf = Proto2THUAI6::Protobuf2THUAI6Human(*itr);
-                bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
-            }
-            else
-            {
-                bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
-                std::cout << "Add Human!" << std::endl;
-            }
-        }
-        for (auto itr = message.butcher_message().begin(); itr != message.butcher_message().end(); itr++)
-        {
-            if (itr->player_id() == playerID)
-            {
-                bufferState->butcherSelf = Proto2THUAI6::Protobuf2THUAI6Butcher(*itr);
-                bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(*itr));
-            }
-            else
-                bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(*itr));
-        }
-
         bufferState->gamemap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());
+        if (playerType == THUAI6::PlayerType::HumanPlayer)
+        {
+            for (auto itr = message.human_message().begin(); itr != message.human_message().end(); itr++)
+            {
+                if (itr->player_id() == playerID)
+                {
+                    bufferState->humanSelf = Proto2THUAI6::Protobuf2THUAI6Human(*itr);
+                }
+                bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
+            }
+            for (auto itr = message.butcher_message().begin(); itr != message.butcher_message().end(); itr++)
+            {
+                int vr = this->bufferState->humanSelf->viewRange;
+                int deltaX = itr->x() - this->bufferState->humanSelf->x;
+                int deltaY = itr->y() - this->bufferState->humanSelf->y;
+                double distance = deltaX * deltaX + deltaY * deltaY;
+                if (distance > vr * vr)
+                    continue;
+                else
+                {
+                    int divide = abs(deltaX) > abs(deltaY) ? abs(deltaX) : abs(deltaY);
+                    divide /= 100;
+                    double dx = deltaX / divide;
+                    double dy = deltaY / divide;
+                    double myX = this->bufferState->humanSelf->x;
+                    double myY = this->bufferState->humanSelf->y;
+                    bool barrier = false;
+                    for (int i = 0; i < divide; i++)
+                    {
+                        myX += dx;
+                        myY += dy;
+                        if (this->bufferState->gamemap[IAPI::GridToCell(myX)][IAPI::GridToCell(myY)] == THUAI6::PlaceType::Wall)
+                        {
+                            barrier = true;
+                            break;
+                        }
+                    }
+                    if (barrier)
+                        continue;
+                    bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(*itr));
+                    std::cout << "Add Butcher!" << std::endl;
+                }
+            }
+        }
+        else
+        {
+            for (auto itr = message.butcher_message().begin(); itr != message.butcher_message().end(); itr++)
+            {
+                if (itr->player_id() == playerID)
+                {
+                    bufferState->butcherSelf = Proto2THUAI6::Protobuf2THUAI6Butcher(*itr);
+                }
+                bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(*itr));
+            }
+            for (auto itr = message.human_message().begin(); itr != message.human_message().end(); itr++)
+            {
+                int vr = this->bufferState->butcherSelf->viewRange;
+                int deltaX = itr->x() - this->bufferState->butcherSelf->x;
+                int deltaY = itr->y() - this->bufferState->butcherSelf->y;
+                double distance = deltaX * deltaX + deltaY * deltaY;
+                if (distance > vr * vr)
+                    continue;
+                else
+                {
+                    int divide = abs(deltaX) > abs(deltaY) ? abs(deltaX) : abs(deltaY);
+                    divide /= 100;
+                    double dx = deltaX / divide;
+                    double dy = deltaY / divide;
+                    double myX = this->bufferState->butcherSelf->x;
+                    double myY = this->bufferState->butcherSelf->y;
+                    bool barrier = false;
+                    for (int i = 0; i < divide; i++)
+                    {
+                        myX += dx;
+                        myY += dy;
+                        if (this->bufferState->gamemap[IAPI::GridToCell(myX)][IAPI::GridToCell(myY)] == THUAI6::PlaceType::Wall)
+                        {
+                            barrier = true;
+                            break;
+                        }
+                    }
+                    if (barrier)
+                        continue;
+                    bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
+                    std::cout << "Add Human!" << std::endl;
+                }
+            }
+        }
         if (asynchronous)
         {
             {

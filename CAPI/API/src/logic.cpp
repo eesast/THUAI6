@@ -230,6 +230,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         std::cout << "Buffer clear!" << std::endl;
         // 读取新的信息
         // 读取消息的选择待补充，之后需要另外判断；具体做法应该是先读到自己，然后按照自己的视野做处理。此处暂时全部读了进来
+        bufferState->gamemap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());
         if (playerType == THUAI6::PlayerType::HumanPlayer)
         {
             for (auto itr = message.human_message().begin(); itr != message.human_message().end(); itr++)
@@ -318,7 +319,6 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                 }
             }
         }
-        bufferState->gamemap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());
         if (asynchronous)
         {
             {

@@ -96,9 +96,10 @@ private:
     bool PickProp(THUAI6::PropType prop) override;
     bool UseProp() override;
     bool UseSkill() override;
+
     bool SendMessage(int64_t toID, std::string message) override;
     bool HaveMessage() override;
-    std::pair<int64_t, std::string> GetMessage() override;
+    std::optional<std::pair<int64_t, std::string>> GetMessage() override;
 
     bool Escape() override;
 
@@ -120,8 +121,6 @@ private:
     const std::vector<int64_t> GetPlayerGUIDs() const override;
 
     bool TryConnection();
-
-    // THUAI5中的一系列用于处理信息的函数可能也不会再用
 
     void ProcessMessage();
 

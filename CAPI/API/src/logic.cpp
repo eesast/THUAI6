@@ -96,7 +96,7 @@ bool Logic::HaveMessage()
     return pComm->HaveMessage();
 }
 
-std::pair<int64_t, std::string> Logic::GetMessage()
+std::optional<std::pair<int64_t, std::string>> Logic::GetMessage()
 {
     return pComm->GetMessage();
 }

@@ -43,7 +43,7 @@ public:
     virtual bool UseSkill() = 0;
     virtual bool SendMessage(int64_t toID, std::string message) = 0;
     virtual bool HaveMessage() = 0;
-    virtual std::pair<int64_t, std::string> GetMessage() = 0;
+    virtual std::optional<std::pair<int64_t, std::string>> GetMessage() = 0;
 
     virtual bool WaitThread() = 0;
 
@@ -85,10 +85,10 @@ public:
     virtual std::future<bool> UseProp() = 0;
     virtual std::future<bool> UseSkill() = 0;
 
-    // 发送信息、接受信息
+    // 发送信息、接受信息，注意收消息时无消息则返回nullopt
     virtual std::future<bool> SendMessage(int64_t, std::string) = 0;
     [[nodiscard]] virtual std::future<bool> HaveMessage() = 0;
-    [[nodiscard]] virtual std::future<std::pair<int64_t, std::string>> GetMessage() = 0;
+    [[nodiscard]] virtual std::future<std::optional<std::pair<int64_t, std::string>>> GetMessage() = 0;
 
     // 等待下一帧
     virtual std::future<bool> Wait() = 0;
@@ -188,7 +188,7 @@ public:
 
     std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override;
-    [[nodiscard]] std::future<std::pair<int64_t, std::string>> GetMessage() override;
+    [[nodiscard]] std::future<std::optional<std::pair<int64_t, std::string>>> GetMessage() override;
 
     std::future<bool> Wait() override;
 
@@ -242,7 +242,7 @@ public:
 
     std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override;
-    [[nodiscard]] std::future<std::pair<int64_t, std::string>> GetMessage() override;
+    [[nodiscard]] std::future<std::optional<std::pair<int64_t, std::string>>> GetMessage() override;
 
     std::future<bool> Wait() override;
 
@@ -291,7 +291,7 @@ public:
 
     std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override;
-    [[nodiscard]] std::future<std::pair<int64_t, std::string>> GetMessage() override;
+    [[nodiscard]] std::future<std::optional<std::pair<int64_t, std::string>>> GetMessage() override;
 
     std::future<bool> Wait() override;
 
@@ -342,7 +342,7 @@ public:
 
     std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override;
-    [[nodiscard]] std::future<std::pair<int64_t, std::string>> GetMessage() override;
+    [[nodiscard]] std::future<std::optional<std::pair<int64_t, std::string>>> GetMessage() override;
 
     std::future<bool> Wait() override;
 

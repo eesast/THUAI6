@@ -11,6 +11,7 @@
 #include <thread>
 #include <mutex>
 #include <queue>
+#include "ConcurrentQueue.hpp"
 
 class Logic;
 
@@ -25,7 +26,7 @@ public:
     bool PickProp(THUAI6::PropType prop, int64_t playerID);
     bool UseProp(int64_t playerID);
     bool UseSkill(int64_t playerID);
-    std::pair<int64_t, std::string> GetMessage();
+    std::optional<std::pair<int64_t, std::string>> GetMessage();
     bool HaveMessage();
     bool SendMessage(int64_t toID, std::string message, int64_t playerID);
     bool Escape(int64_t playerID);
@@ -52,8 +53,7 @@ private:
     std::unique_ptr<protobuf::AvailableService::Stub> THUAI6Stub;
     bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
-    std::queue<std::pair<int64_t, std::string>> messageQueue;
-    std::mutex messageMutex;
+    ConcurrentQueue<std::pair<int64_t, std::string>> messageQueue;
 };
 
 #endif

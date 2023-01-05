@@ -96,7 +96,7 @@ bool Logic::HaveMessage()
     return pComm->HaveMessage();
 }
 
-std::pair<int64_t, std::string> Logic::GetMessage()
+std::optional<std::pair<int64_t, std::string>> Logic::GetMessage()
 {
     return pComm->GetMessage();
 }
@@ -233,19 +233,19 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         bufferState->gamemap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());
         if (playerType == THUAI6::PlayerType::HumanPlayer)
         {
-            for (auto itr = message.human_message().begin(); itr != message.human_message().end(); itr++)
+            for (auto item : message.human_message())
             {
-                if (itr->player_id() == playerID)
+                if (item.player_id() == playerID)
                 {
-                    bufferState->humanSelf = Proto2THUAI6::Protobuf2THUAI6Human(*itr);
+                    bufferState->humanSelf = Proto2THUAI6::Protobuf2THUAI6Human(item);
                 }
-                bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
+                bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(item));
             }
-            for (auto itr = message.butcher_message().begin(); itr != message.butcher_message().end(); itr++)
+            for (auto item : message.butcher_message())
             {
                 int vr = this->bufferState->humanSelf->viewRange;
-                int deltaX = itr->x() - this->bufferState->humanSelf->x;
-                int deltaY = itr->y() - this->bufferState->humanSelf->y;
+                int deltaX = item.x() - this->bufferState->humanSelf->x;
+                int deltaY = item.y() - this->bufferState->humanSelf->y;
                 double distance = deltaX * deltaX + deltaY * deltaY;
                 if (distance > vr * vr)
                     continue;
@@ -270,26 +270,26 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                     }
                     if (barrier)
                         continue;
-                    bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(*itr));
+                    bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(item));
                     std::cout << "Add Butcher!" << std::endl;
                 }
             }
         }
         else
         {
-            for (auto itr = message.butcher_message().begin(); itr != message.butcher_message().end(); itr++)
+            for (auto item : message.butcher_message())
             {
-                if (itr->player_id() == playerID)
+                if (item.player_id() == playerID)
                 {
-                    bufferState->butcherSelf = Proto2THUAI6::Protobuf2THUAI6Butcher(*itr);
+                    bufferState->butcherSelf = Proto2THUAI6::Protobuf2THUAI6Butcher(item);
                 }
-                bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(*itr));
+                bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(item));
             }
-            for (auto itr = message.human_message().begin(); itr != message.human_message().end(); itr++)
+            for (auto item : message.human_message())
             {
                 int vr = this->bufferState->butcherSelf->viewRange;
-                int deltaX = itr->x() - this->bufferState->butcherSelf->x;
-                int deltaY = itr->y() - this->bufferState->butcherSelf->y;
+                int deltaX = item.x() - this->bufferState->butcherSelf->x;
+                int deltaY = item.y() - this->bufferState->butcherSelf->y;
                 double distance = deltaX * deltaX + deltaY * deltaY;
                 if (distance > vr * vr)
                     continue;
@@ -314,11 +314,13 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                     }
                     if (barrier)
                         continue;
-                    bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
+                    bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(item));
                     std::cout << "Add Human!" << std::endl;
                 }
             }
         }
+        for (auto item : message.prop_message())
+            bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item));
         if (asynchronous)
         {
             {
@@ -398,7 +400,7 @@ bool Logic::TryConnection()
     return result;
 }
 
-void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
+void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool level, std::string filename)
 {
     // 建立与服务器之间通信的组件
     pComm = std::make_unique<Communication>(IP, port);

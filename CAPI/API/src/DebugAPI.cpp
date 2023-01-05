@@ -144,13 +144,13 @@ std::future<bool> ButcherDebugAPI::HaveMessage()
                       { return logic.HaveMessage(); });
 }
 
-std::future<std::pair<int64_t, std::string>> HumanDebugAPI::GetMessage()
+std::future<std::optional<std::pair<int64_t, std::string>>> HumanDebugAPI::GetMessage()
 {
     return std::async(std::launch::async, [&]()
                       { return logic.GetMessage(); });
 }
 
-std::future<std::pair<int64_t, std::string>> ButcherDebugAPI::GetMessage()
+std::future<std::optional<std::pair<int64_t, std::string>>> ButcherDebugAPI::GetMessage()
 {
     return std::async(std::launch::async, [&]()
                       { return logic.GetMessage(); });

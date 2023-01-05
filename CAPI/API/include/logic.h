@@ -30,7 +30,7 @@
 class Logic : public ILogic
 {
 private:
-    // gRPC客户端的stub，所有与服务端之间的通信操作都需要基于stub完成。
+    // 通信组件
     std::unique_ptr<Communication> pComm;
     // ID、阵营记录
     int64_t playerID;
@@ -148,7 +148,7 @@ public:
     }
 
     // Main函数同上
-    void Main(CreateAIFunc createAI, std::string IP, std::string port);
+    void Main(CreateAIFunc createAI, std::string IP, std::string port, bool level, std::string filename);
 };
 
 #endif

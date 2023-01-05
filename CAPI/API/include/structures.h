@@ -8,6 +8,15 @@
 
 namespace THUAI6
 {
+
+    // 游戏状态
+    enum class GameState : unsigned char
+    {
+        NullGameState = 0,
+        GameStart = 1,
+        GameRunning = 2,
+        GameEnd = 3,
+    };
     // 所有NullXXXType均为错误类型，其余为可能出现的正常类型
 
     // 位置标志

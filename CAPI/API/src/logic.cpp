@@ -96,7 +96,7 @@ bool Logic::HaveMessage()
     return pComm->HaveMessage();
 }
 
-std::pair<int64_t, std::string> Logic::GetMessage()
+std::optional<std::pair<int64_t, std::string>> Logic::GetMessage()
 {
     return pComm->GetMessage();
 }
@@ -158,13 +158,58 @@ void Logic::ProcessMessage()
     {
         std::cout << "Join Player!" << std::endl;
         pComm->AddPlayer(playerID, playerType, humanType, butcherType);
-        while (true)
+        while (gameState != THUAI6::GameState::GameEnd)
         {
             if (pComm->HaveMessage2Client())
             {
                 std::cout << "Get Message!" << std::endl;
                 auto clientMsg = pComm->GetMessage2Client();
-                LoadBuffer(clientMsg);
+                gameState = Proto2THUAI6::gameStateDict[clientMsg.game_state()];
+                switch (gameState)
+                {
+                    case THUAI6::GameState::GameStart:
+                        std::cout << "Game Start!" << std::endl;
+
+                        // 重新读取玩家的guid，guid确保人类在前屠夫在后
+                        playerGUIDs.clear();
+                        for (auto human : clientMsg.human_message())
+                            playerGUIDs.push_back(human.guid());
+                        for (auto butcher : clientMsg.butcher_message())
+                            playerGUIDs.push_back(butcher.guid());
+                        currentState->guids = playerGUIDs;
+                        bufferState->guids = playerGUIDs;
+
+                        LoadBuffer(clientMsg);
+
+                        AILoop = true;
+                        UnBlockAI();
+
+                        break;
+                    case THUAI6::GameState::GameRunning:
+                        // 重新读取玩家的guid，guid确保人类在前屠夫在后
+                        playerGUIDs.clear();
+                        for (auto human : clientMsg.human_message())
+                            playerGUIDs.push_back(human.guid());
+                        for (auto butcher : clientMsg.butcher_message())
+                            playerGUIDs.push_back(butcher.guid());
+                        currentState->guids = playerGUIDs;
+                        bufferState->guids = playerGUIDs;
+
+                        LoadBuffer(clientMsg);
+                        break;
+                    case THUAI6::GameState::GameEnd:
+                        AILoop = false;
+                        {
+                            std::lock_guard<std::mutex> lock(mtxBuffer);
+                            bufferUpdated = true;
+                            counterBuffer = -1;
+                        }
+                        cvBuffer.notify_one();
+                        std::cout << "Game End!" << std::endl;
+                        break;
+                    default:
+                        std::cerr << "Invalid GameState!" << std::endl;
+                }
             }
         }
     };
@@ -183,34 +228,99 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         bufferState->props.clear();
 
         std::cout << "Buffer clear!" << std::endl;
-
         // 读取新的信息
         // 读取消息的选择待补充，之后需要另外判断；具体做法应该是先读到自己，然后按照自己的视野做处理。此处暂时全部读了进来
-        for (auto itr = message.human_message().begin(); itr != message.human_message().end(); itr++)
-        {
-            if (itr->player_id() == playerID)
-            {
-                bufferState->humanSelf = Proto2THUAI6::Protobuf2THUAI6Human(*itr);
-                bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
-            }
-            else
-            {
-                bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(*itr));
-                std::cout << "Add Human!" << std::endl;
-            }
-        }
-        for (auto itr = message.butcher_message().begin(); itr != message.butcher_message().end(); itr++)
-        {
-            if (itr->player_id() == playerID)
-            {
-                bufferState->butcherSelf = Proto2THUAI6::Protobuf2THUAI6Butcher(*itr);
-                bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(*itr));
-            }
-            else
-                bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(*itr));
-        }
-
         bufferState->gamemap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());
+        if (playerType == THUAI6::PlayerType::HumanPlayer)
+        {
+            for (auto item : message.human_message())
+            {
+                if (item.player_id() == playerID)
+                {
+                    bufferState->humanSelf = Proto2THUAI6::Protobuf2THUAI6Human(item);
+                }
+                bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(item));
+            }
+            for (auto item : message.butcher_message())
+            {
+                int vr = this->bufferState->humanSelf->viewRange;
+                int deltaX = item.x() - this->bufferState->humanSelf->x;
+                int deltaY = item.y() - this->bufferState->humanSelf->y;
+                double distance = deltaX * deltaX + deltaY * deltaY;
+                if (distance > vr * vr)
+                    continue;
+                else
+                {
+                    int divide = abs(deltaX) > abs(deltaY) ? abs(deltaX) : abs(deltaY);
+                    divide /= 100;
+                    double dx = deltaX / divide;
+                    double dy = deltaY / divide;
+                    double myX = this->bufferState->humanSelf->x;
+                    double myY = this->bufferState->humanSelf->y;
+                    bool barrier = false;
+                    for (int i = 0; i < divide; i++)
+                    {
+                        myX += dx;
+                        myY += dy;
+                        if (this->bufferState->gamemap[IAPI::GridToCell(myX)][IAPI::GridToCell(myY)] == THUAI6::PlaceType::Wall)
+                        {
+                            barrier = true;
+                            break;
+                        }
+                    }
+                    if (barrier)
+                        continue;
+                    bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(item));
+                    std::cout << "Add Butcher!" << std::endl;
+                }
+            }
+        }
+        else
+        {
+            for (auto item : message.butcher_message())
+            {
+                if (item.player_id() == playerID)
+                {
+                    bufferState->butcherSelf = Proto2THUAI6::Protobuf2THUAI6Butcher(item);
+                }
+                bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(item));
+            }
+            for (auto item : message.human_message())
+            {
+                int vr = this->bufferState->butcherSelf->viewRange;
+                int deltaX = item.x() - this->bufferState->butcherSelf->x;
+                int deltaY = item.y() - this->bufferState->butcherSelf->y;
+                double distance = deltaX * deltaX + deltaY * deltaY;
+                if (distance > vr * vr)
+                    continue;
+                else
+                {
+                    int divide = abs(deltaX) > abs(deltaY) ? abs(deltaX) : abs(deltaY);
+                    divide /= 100;
+                    double dx = deltaX / divide;
+                    double dy = deltaY / divide;
+                    double myX = this->bufferState->butcherSelf->x;
+                    double myY = this->bufferState->butcherSelf->y;
+                    bool barrier = false;
+                    for (int i = 0; i < divide; i++)
+                    {
+                        myX += dx;
+                        myY += dy;
+                        if (this->bufferState->gamemap[IAPI::GridToCell(myX)][IAPI::GridToCell(myY)] == THUAI6::PlaceType::Wall)
+                        {
+                            barrier = true;
+                            break;
+                        }
+                    }
+                    if (barrier)
+                        continue;
+                    bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(item));
+                    std::cout << "Add Human!" << std::endl;
+                }
+            }
+        }
+        for (auto item : message.prop_message())
+            bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item));
         if (asynchronous)
         {
             {
@@ -277,6 +387,12 @@ int Logic::GetCounter() const
     return counterState;
 }
 
+const std::vector<int64_t> Logic::GetPlayerGUIDs() const
+{
+    std::unique_lock<std::mutex> lock(mtxState);
+    return currentState->guids;
+}
+
 bool Logic::TryConnection()
 {
     std::cout << "Trying to connect to server..." << std::endl;
@@ -284,11 +400,8 @@ bool Logic::TryConnection()
     return result;
 }
 
-void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
+void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool level, std::string filename)
 {
-    // 构造AI
-    pAI = createAI();
-
     // 建立与服务器之间通信的组件
     pComm = std::make_unique<Communication>(IP, port);
 
@@ -306,15 +419,24 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
             cvAI.wait(lock, [this]()
                       { return AIStart; });
         }
-        std::cout << "AI Start!" << std::endl;
         auto ai = createAI();
-        ProcessMessage();
+
         while (AILoop)
         {
-            Update();
-            timer->StartTimer();
-            timer->Play(*ai);
-            timer->EndTimer();
+            if (asynchronous)
+            {
+                Wait();
+                timer->StartTimer();
+                timer->Play(*ai);
+                timer->EndTimer();
+            }
+            else
+            {
+                Update();
+                timer->StartTimer();
+                timer->Play(*ai);
+                timer->EndTimer();
+            }
         }
     };
 
@@ -327,8 +449,8 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port)
         if (tAI.joinable())
         {
             std::cout << "Join the AI thread." << std::endl;
-            AIStart = true;
-            cvAI.notify_one();
+            // 首先开启处理消息的线程
+            ProcessMessage();
             tAI.join();
         }
     }

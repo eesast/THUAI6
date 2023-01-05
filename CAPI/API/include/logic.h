@@ -30,7 +30,7 @@
 class Logic : public ILogic
 {
 private:
-    // gRPC客户端的stub，所有与服务端之间的通信操作都需要基于stub完成。
+    // 通信组件
     std::unique_ptr<Communication> pComm;
     // ID、阵营记录
     int64_t playerID;
@@ -42,10 +42,6 @@ private:
 
     // GUID信息
     std::vector<int64_t> playerGUIDs;
-
-    // THUAI5中的通信组件可以完全被我们的stub取代，故无须再写
-
-    std::unique_ptr<IAI> pAI;
 
     std::unique_ptr<IGameTimer> timer;
 
@@ -70,6 +66,8 @@ private:
     int counterState = 0;
     int counterBuffer = 0;
 
+    THUAI6::GameState gameState = THUAI6::GameState::NullGameState;
+
     // 是否应该执行player()
     std::atomic_bool AILoop = true;
 
@@ -83,8 +81,6 @@ private:
     std::atomic_bool freshed = false;
 
     // 提供给API使用的函数
-
-    // 获取服务器发来的消息
 
     std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
     std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
@@ -100,9 +96,10 @@ private:
     bool PickProp(THUAI6::PropType prop) override;
     bool UseProp() override;
     bool UseSkill() override;
+
     bool SendMessage(int64_t toID, std::string message) override;
     bool HaveMessage() override;
-    std::pair<int64_t, std::string> GetMessage() override;
+    std::optional<std::pair<int64_t, std::string>> GetMessage() override;
 
     bool Escape() override;
 
@@ -121,9 +118,9 @@ private:
 
     int GetCounter() const override;
 
-    bool TryConnection();
+    const std::vector<int64_t> GetPlayerGUIDs() const override;
 
-    // THUAI5中的一系列用于处理信息的函数可能也不会再用
+    bool TryConnection();
 
     void ProcessMessage();
 
@@ -151,7 +148,7 @@ public:
     }
 
     // Main函数同上
-    void Main(CreateAIFunc createAI, std::string IP, std::string port);
+    void Main(CreateAIFunc createAI, std::string IP, std::string port, bool level, std::string filename);
 };
 
 #endif

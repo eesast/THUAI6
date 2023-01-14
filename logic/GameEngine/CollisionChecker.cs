@@ -17,7 +17,7 @@ namespace GameEngine
         /// <returns>和它碰撞的物体</returns>
         public IGameObj? CheckCollision(IMoveable obj, XY moveVec)
         {
-            XY nextPos = obj.Position + XY.VectorToXY(moveVec);
+            XY nextPos = obj.Position + moveVec;
             if (!obj.IsRigid)
             {
                 if (gameMap.IsOutOfBound(obj))
@@ -156,7 +156,7 @@ namespace GameEngine
                                             {
                                                 double tmp = mod - obj.Radius - listObj.Radius;
                                                 // 计算能走的最长距离，好像这么算有一点误差？
-                                                tmp = tmp / Math.Cos(Math.Atan2(orgDeltaY, orgDeltaX) - moveVec.angle);
+                                                tmp = tmp / Math.Cos(Math.Atan2(orgDeltaY, orgDeltaX) - moveVec.Angle());
                                                 if (tmp < 0 || tmp > uint.MaxValue || tmp == double.NaN)
                                                 {
                                                     tmpMax = uint.MaxValue;
@@ -177,11 +177,11 @@ namespace GameEngine
                                             else
                                             {
                                                 // 二分查找最大可能移动距离
-                                                int left = 0, right = (int)moveVec.length;
+                                                int left = 0, right = (int)moveVec.Length();
                                                 while (left < right - 1)
                                                 {
                                                     int mid = (right - left) / 2 + left;
-                                                    if (obj.WillCollideWith(listObj, obj.Position + new XY((int)(mid * Math.Cos(moveVec.angle)), (int)(mid * Math.Sin(moveVec.angle)))))
+                                                    if (obj.WillCollideWith(listObj, obj.Position + new XY((int)(mid * Math.Cos(moveVec.Angle())), (int)(mid * Math.Sin(moveVec.Angle())))))
                                                     {
                                                         right = mid;
                                                     }

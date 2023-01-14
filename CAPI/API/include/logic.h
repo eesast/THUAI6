@@ -13,6 +13,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <queue>
 
 #include "Message2Server.pb.h"
 #include "Message2Clients.pb.h"
@@ -29,7 +30,7 @@
 class Logic : public ILogic
 {
 private:
-    // gRPC客户端的stub，所有与服务端之间的通信操作都需要基于stub完成。
+    // 通信组件
     std::unique_ptr<Communication> pComm;
     // ID、阵营记录
     int64_t playerID;
@@ -42,10 +43,6 @@ private:
     // GUID信息
     std::vector<int64_t> playerGUIDs;
 
-    // THUAI5中的通信组件可以完全被我们的stub取代，故无须再写
-
-    std::unique_ptr<IAI> pAI;
-
     std::unique_ptr<IGameTimer> timer;
 
     std::thread tAI;  // 用于运行AI的线程
@@ -57,12 +54,19 @@ private:
     std::condition_variable cvBuffer;
     std::condition_variable cvAI;
 
-    // 信息队列目前可能会不用？具体待定
+    // 信息队列
+    std::queue<std::pair<int64_t, std::string>> messageQueue;
 
     // 存储状态，分别是现在的状态和缓冲区的状态。
     State state[2];
     State* currentState;
     State* bufferState;
+
+    // 保存缓冲区数
+    int counterState = 0;
+    int counterBuffer = 0;
+
+    THUAI6::GameState gameState = THUAI6::GameState::NullGameState;
 
     // 是否应该执行player()
     std::atomic_bool AILoop = true;
@@ -70,18 +74,13 @@ private:
     // buffer是否更新完毕
     bool bufferUpdated = true;
 
-    // 是否可以启用当前状态
-    bool currentStateAccessed = false;
-
     // 是否应当启动AI
     bool AIStart = false;
 
-    // 控制内容更新的变量
+    // asynchronous = true 时控制内容更新的变量
     std::atomic_bool freshed = false;
 
     // 提供给API使用的函数
-
-    // 获取服务器发来的消息
 
     std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
     std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
@@ -97,40 +96,31 @@ private:
     bool PickProp(THUAI6::PropType prop) override;
     bool UseProp() override;
     bool UseSkill() override;
+
     bool SendMessage(int64_t toID, std::string message) override;
     bool HaveMessage() override;
-    std::pair<int64_t, std::string> GetMessage() override;
+    std::optional<std::pair<int64_t, std::string>> GetMessage() override;
 
     bool Escape() override;
 
-    // 说明：双向stream由三个函数共同实现，两个记录开始和结束，结果由Logic里的私有的成员变量记录，获得返回值则另调函数
-    void StartFixMachine() override;
-    void EndFixMachine() override;
-    bool GetFixStatus() override;
+    bool StartFixMachine() override;
+    bool EndFixMachine() override;
 
-    void StartSaveHuman() override;
-    void EndSaveHuman() override;
-    bool GetSaveStatus() override;
+    bool StartSaveHuman() override;
+    bool EndSaveHuman() override;
 
     bool Attack(double angle) override;
     bool CarryHuman() override;
     bool ReleaseHuman() override;
     bool HangHuman() override;
 
-    bool WaitThread() override
-    {
-    }
+    bool WaitThread() override;
 
-    int GetCounter() override
-    {
-    }
+    int GetCounter() const override;
+
+    const std::vector<int64_t> GetPlayerGUIDs() const override;
 
     bool TryConnection();
-
-    // 执行AI线程
-    void PlayerWrapper(std::function<void()> player);
-
-    // THUAI5中的一系列用于处理信息的函数可能也不会再用
 
     void ProcessMessage();
 
@@ -158,7 +148,7 @@ public:
     }
 
     // Main函数同上
-    void Main(CreateAIFunc createAI, std::string IP, std::string port);
+    void Main(CreateAIFunc createAI, std::string IP, std::string port, bool level, std::string filename);
 };
 
 #endif

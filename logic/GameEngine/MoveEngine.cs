@@ -50,10 +50,10 @@ namespace GameEngine
         {
 
             /*由于四周是墙，所以人物永远不可能与越界方块碰撞*/
-            XY nextPos = obj.Position + XY.VectorToXY(moveVec);
+            XY nextPos = obj.Position + moveVec;
             double maxLen = collisionChecker.FindMax(obj, nextPos, moveVec);
             maxLen = Math.Min(maxLen, obj.MoveSpeed / GameData.numOfStepPerSecond);
-            _ = obj.Move(new Vector(moveVec.angle, maxLen));
+            _ = obj.Move(new XY(moveVec.Angle(), maxLen));
         }
 
         public void MoveObj(IMoveable obj, int moveTime, double direction)
@@ -62,70 +62,33 @@ namespace GameEngine
                 return;
             new Thread
             (
-                ()=>
-                {
-                    if (!obj.IsAvailable&&gameTimer.IsGaming) //不能动就直接return，后面都是能动的情况
-                            return;
-            lock (obj.MoveLock)
-                obj.IsMoving = true;
-
-            XY moveVec = new(direction, 0.0);
-            double deltaLen = moveVec.length - Math.Sqrt(obj.Move(moveVec));  // 转向，并用deltaLen存储行走的误差
-            IGameObj? collisionObj = null;
-            bool isDestroyed = false;
-            new FrameRateTaskExecutor<int>(
-                () => gameTimer.IsGaming && obj.CanMove && !obj.IsResetting,
                 () =>
                 {
-                    moveVec.length = obj.MoveSpeed / GameData.numOfStepPerSecond;
+                    if (!obj.IsAvailable && gameTimer.IsGaming) //不能动就直接return，后面都是能动的情况
+                        return;
+                    lock (obj.MoveLock)
+                        obj.IsMoving = true;
 
-                    // 越界情况处理：如果越界，则与越界方块碰撞
-                    bool flag;  // 循环标志
-                    do
-                    {
-                        flag = false;
-                        collisionObj = collisionChecker.CheckCollision(obj, moveVec);
-                        if (collisionObj == null)
-                            break;
-
-                        switch (OnCollision(obj, collisionObj, moveVec))
+                    double moveVecLength = 0.0;
+                    double deltaLen = moveVecLength - Math.Sqrt(obj.Move(new XY(direction, moveVecLength)));  // 转向，并用deltaLen存储行走的误差
+                    IGameObj? collisionObj = null;
+                    bool isDestroyed = false;
+                    new FrameRateTaskExecutor<int>(
+                        () => gameTimer.IsGaming && obj.CanMove && !obj.IsResetting,
+                        () =>
                         {
-                            case AfterCollision.ContinueCheck:
-                                flag = true;
-                                break;
-                            case AfterCollision.Destroyed:
-                                Debugger.Output(obj, " collide with " + collisionObj.ToString() + " and has been removed from the game.");
-                                isDestroyed = true;
-                                return false;
-                            case AfterCollision.MoveMax:
-                                MoveMax(obj, moveVec);
-                                moveVec.length = 0;
-                                break;
-                        }
-                    } while (flag);
+                            moveVecLength = obj.MoveSpeed / GameData.numOfStepPerSecond;
 
-                    deltaLen += moveVec.length - Math.Sqrt(obj.Move(moveVec));
+                            // 越界情况处理：如果越界，则与越界方块碰撞
+                            bool flag;  // 循环标志
+                            do
+                            {
+                                flag = false;
+                                collisionObj = collisionChecker.CheckCollision(obj, new XY(direction, moveVecLength));
+                                if (collisionObj == null)
+                                    break;
 
-                    return true;
-                },
-                GameData.numOfPosGridPerCell / GameData.numOfStepPerSecond,
-                () =>
-                {
-                    int leftTime = moveTime % (GameData.numOfPosGridPerCell / GameData.numOfStepPerSecond);
-                    bool flag;
-                    do
-                    {
-                        flag = false;
-                        if (!isDestroyed)
-                        {
-                            moveVec.length = deltaLen + leftTime * obj.MoveSpeed / GameData.numOfPosGridPerCell;
-                            if ((collisionObj = collisionChecker.CheckCollision(obj, moveVec)) == null)
-                            {
-                                obj.Move(moveVec);
-                            }
-                            else
-                            {
-                                switch (OnCollision(obj, collisionObj, moveVec))
+                                switch (OnCollision(obj, collisionObj, new XY(direction, moveVecLength)))
                                 {
                                     case AfterCollision.ContinueCheck:
                                         flag = true;
@@ -133,43 +96,81 @@ namespace GameEngine
                                     case AfterCollision.Destroyed:
                                         Debugger.Output(obj, " collide with " + collisionObj.ToString() + " and has been removed from the game.");
                                         isDestroyed = true;
-                                        break;
+                                        return false;
                                     case AfterCollision.MoveMax:
-                                        MoveMax(obj, moveVec);
-                                        moveVec.length = 0;
+                                        MoveMax(obj, new XY(direction, moveVecLength));
+                                        moveVecLength = 0;
                                         break;
                                 }
+                            } while (flag);
+
+                            deltaLen += moveVecLength - Math.Sqrt(obj.Move(new XY(direction, moveVecLength)));
+
+                            return true;
+                        },
+                        GameData.numOfPosGridPerCell / GameData.numOfStepPerSecond,
+                        () =>
+                        {
+                            int leftTime = moveTime % (GameData.numOfPosGridPerCell / GameData.numOfStepPerSecond);
+                            bool flag;
+                            do
+                            {
+                                flag = false;
+                                if (!isDestroyed)
+                                {
+                                    moveVecLength = deltaLen + leftTime * obj.MoveSpeed / GameData.numOfPosGridPerCell;
+                                    if ((collisionObj = collisionChecker.CheckCollision(obj, new XY(direction, moveVecLength))) == null)
+                                    {
+                                        obj.Move(new XY(direction, moveVecLength));
+                                    }
+                                    else
+                                    {
+                                        switch (OnCollision(obj, collisionObj, new XY(direction, moveVecLength)))
+                                        {
+                                            case AfterCollision.ContinueCheck:
+                                                flag = true;
+                                                break;
+                                            case AfterCollision.Destroyed:
+                                                Debugger.Output(obj, " collide with " + collisionObj.ToString() + " and has been removed from the game.");
+                                                isDestroyed = true;
+                                                break;
+                                            case AfterCollision.MoveMax:
+                                                MoveMax(obj, new XY(direction, moveVecLength));
+                                                moveVecLength = 0;
+                                                break;
+                                        }
+                                    }
+                                }
+                            } while (flag);
+                            if (leftTime > 0)
+                            {
+                                Thread.Sleep(leftTime);  // 多移动的在这里补回来
                             }
-                        }
-                    } while (flag);
-                    if (leftTime > 0)
+                            lock (obj.MoveLock)
+                                obj.IsMoving = false;  // 结束移动
+                            EndMove(obj);
+                            return 0;
+                        },
+                        maxTotalDuration: moveTime
+                    )
                     {
-                        Thread.Sleep(leftTime);  // 多移动的在这里补回来
-                    }
-                    lock (obj.MoveLock)
-                        obj.IsMoving = false;  // 结束移动
-                    EndMove(obj);
-                    return 0;
-                },
-                maxTotalDuration: moveTime
-            ) {
-                AllowTimeExceed = true,
-                MaxTolerantTimeExceedCount = ulong.MaxValue,
-                TimeExceedAction = b =>
-                {
-                    if (b)
-                        Console.WriteLine("Fatal Error: The computer runs so slow that the object cannot finish moving during this time!!!!!!");
+                        AllowTimeExceed = true,
+                        MaxTolerantTimeExceedCount = ulong.MaxValue,
+                        TimeExceedAction = b =>
+                        {
+                            if (b)
+                                Console.WriteLine("Fatal Error: The computer runs so slow that the object cannot finish moving during this time!!!!!!");
 
 #if DEBUG
-                    else
-                    {
-                        Console.WriteLine("Debug info: Object moving time exceed for once.");
-                    }
+                            else
+                            {
+                                Console.WriteLine("Debug info: Object moving time exceed for once.");
+                            }
 #endif
+                        }
+                    }.Start();
                 }
-            }.Start();
-        }
             ).Start();
+        }
     }
-}
 }

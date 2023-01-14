@@ -85,6 +85,13 @@ namespace Proto2THUAI6
         {protobuf::HumanState::DEAD, THUAI6::HumanState::Dead},
     };
 
+    inline std::map<protobuf::GameState, THUAI6::GameState> gameStateDict{
+        {protobuf::GameState::NULL_GAME_STATE, THUAI6::GameState::NullGameState},
+        {protobuf::GameState::GAME_START, THUAI6::GameState::GameStart},
+        {protobuf::GameState::GAME_RUNNING, THUAI6::GameState::GameRunning},
+        {protobuf::GameState::GAME_END, THUAI6::GameState::GameEnd},
+    };
+
     // 用于将Protobuf中的类转换为THUAI6的类
     inline std::shared_ptr<THUAI6::Butcher> Protobuf2THUAI6Butcher(const protobuf::MessageOfButcher& butcherMsg)
     {

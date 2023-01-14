@@ -2,6 +2,16 @@
 #include "API.h"
 #define PI 3.14159265358979323846
 
+int HumanAPI::GetFrameCount() const
+{
+    return logic.GetCounter();
+}
+
+int ButcherAPI::GetFrameCount() const
+{
+    return logic.GetCounter();
+}
+
 std::future<bool> HumanAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
 {
     return std::async(std::launch::async, [&]()
@@ -114,16 +124,36 @@ std::future<bool> ButcherAPI::HaveMessage()
                       { return logic.HaveMessage(); });
 }
 
-std::future<std::pair<int64_t, std::string>> HumanAPI::GetMessage()
+std::future<std::optional<std::pair<int64_t, std::string>>> HumanAPI::GetMessage()
 {
     return std::async(std::launch::async, [&]()
                       { return logic.GetMessage(); });
 }
 
-std::future<std::pair<int64_t, std::string>> ButcherAPI::GetMessage()
+std::future<std::optional<std::pair<int64_t, std::string>>> ButcherAPI::GetMessage()
 {
     return std::async(std::launch::async, [&]()
                       { return logic.GetMessage(); });
+}
+
+std::future<bool> HumanAPI::Wait()
+{
+    if (logic.GetCounter() == -1)
+        return std::async(std::launch::async, [&]()
+                          { return false; });
+    else
+        return std::async(std::launch::async, [&]()
+                          { return logic.WaitThread(); });
+}
+
+std::future<bool> ButcherAPI::Wait()
+{
+    if (logic.GetCounter() == -1)
+        return std::async(std::launch::async, [&]()
+                          { return false; });
+    else
+        return std::async(std::launch::async, [&]()
+                          { return logic.WaitThread(); });
 }
 
 std::vector<std::shared_ptr<const THUAI6::Butcher>> HumanAPI::GetButcher() const
@@ -176,44 +206,38 @@ std::vector<std::vector<THUAI6::PlaceType>> ButcherAPI::GetFullMap() const
     return logic.GetFullMap();
 }
 
-void HumanAPI::StartFixMachine()
+const std::vector<int64_t> HumanAPI::GetPlayerGUIDs() const
 {
-    std::thread([&]()
-                { logic.StartFixMachine(); })
-        .detach();
+    return logic.GetPlayerGUIDs();
 }
 
-void HumanAPI::EndFixMachine()
+const std::vector<int64_t> ButcherAPI::GetPlayerGUIDs() const
 {
-    std::thread([&]()
-                { logic.EndFixMachine(); })
-        .detach();
+    return logic.GetPlayerGUIDs();
 }
 
-std::future<bool> HumanAPI::GetFixStatus()
+std::future<bool> HumanAPI::StartFixMachine()
 {
     return std::async(std::launch::async, [&]()
-                      { return logic.GetFixStatus(); });
+                      { return logic.StartFixMachine(); });
 }
 
-void HumanAPI::StartSaveHuman()
-{
-    std::thread([&]()
-                { logic.StartSaveHuman(); })
-        .detach();
-}
-
-void HumanAPI::EndSaveHuman()
-{
-    std::thread([&]()
-                { logic.EndSaveHuman(); })
-        .detach();
-}
-
-std::future<bool> HumanAPI::GetSaveStatus()
+std::future<bool> HumanAPI::EndFixMachine()
 {
     return std::async(std::launch::async, [&]()
-                      { return logic.GetSaveStatus(); });
+                      { return logic.EndFixMachine(); });
+}
+
+std::future<bool> HumanAPI::StartSaveHuman()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.StartSaveHuman(); });
+}
+
+std::future<bool> HumanAPI::EndSaveHuman()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.EndSaveHuman(); });
 }
 
 std::future<bool> HumanAPI::Escape()

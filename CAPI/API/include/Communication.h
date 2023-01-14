@@ -9,6 +9,9 @@
 #include <grpcpp/grpcpp.h>
 #include "structures.h"
 #include <thread>
+#include <mutex>
+#include <queue>
+#include "ConcurrentQueue.hpp"
 
 class Logic;
 
@@ -23,17 +26,15 @@ public:
     bool PickProp(THUAI6::PropType prop, int64_t playerID);
     bool UseProp(int64_t playerID);
     bool UseSkill(int64_t playerID);
+    std::optional<std::pair<int64_t, std::string>> GetMessage();
+    bool HaveMessage();
     bool SendMessage(int64_t toID, std::string message, int64_t playerID);
-    bool HaveMessage(int64_t playerID);
-    std::pair<int64_t, std::string> GetMessage(int64_t playerID);
     bool Escape(int64_t playerID);
 
-    void StartFixMachine(int64_t playerID);
-    void EndFixMachine();
-    bool GetFixStatus();
-    void StartSaveHuman(int64_t playerID);
-    void EndSaveHuman();
-    bool GetSaveStatus();
+    bool StartFixMachine(int64_t playerID);
+    bool EndFixMachine(int64_t playerID);
+    bool StartSaveHuman(int64_t playerID);
+    bool EndSaveHuman(int64_t playerID);
 
     bool Attack(double angle, int64_t playerID);
 
@@ -46,14 +47,13 @@ public:
     bool HaveMessage2Client();
     void AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType);
 
+    void ReadMessage(int64_t playerID);
+
 private:
-    void FixMachine(int64_t playerID);
-    void SaveHuman(int64_t playerID);
     std::unique_ptr<protobuf::AvailableService::Stub> THUAI6Stub;
     bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
-    bool isFixing = false;
-    bool isSaving = false;
+    ConcurrentQueue<std::pair<int64_t, std::string>> messageQueue;
 };
 
 #endif

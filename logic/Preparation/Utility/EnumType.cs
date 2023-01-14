@@ -35,8 +35,6 @@ namespace Preparation.Utility
         Grass1 = 3,
         Grass2 = 4,
         Grass3 = 5,
-        Grass4 = 6,
-        Grass5 = 7,
     }
     public enum BulletType  // 子弹类型
     {
@@ -87,11 +85,22 @@ namespace Preparation.Utility
     {
         None = 0,
         Player = 1,
-        Bullet = 2,
-        Prop = 3,
-        Gem = 4,
-        Map = 5,
-        BombedBullet = 6,
-        PickedProp = 7
+        Prop = 2,
+        Map = 3,
+        BombedBullet = 4,
+        PickedProp = 5
     }
+}
+public enum MapInfoObjType
+{
+    Null = 0,
+    Wall = 1,
+    Grass1 = 2,
+    Grass2 = 3,
+    Grass3 = 4,
+    BirthPoint1 = 5,
+    BirthPoint2 = 6,
+    BirthPoint3 = 7,
+    BirthPoint4 = 8,
+    BirthPoint5 = 9,
 }

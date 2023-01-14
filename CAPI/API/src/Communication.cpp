@@ -73,35 +73,6 @@ bool Communication::SendMessage(int64_t toID, std::string message, int64_t playe
         return false;
 }
 
-bool Communication::HaveMessage(int64_t playerID)
-{
-    protobuf::BoolRes haveMessageResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->HaveMessage(&context, request, &haveMessageResult);
-    if (status.ok())
-        return haveMessageResult.act_success();
-    else
-        return false;
-}
-
-std::pair<int64_t, std::string> Communication::GetMessage(int64_t playerID)
-{
-    protobuf::MsgRes getMessageResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->GetMessage(&context, request, &getMessageResult);
-    if (status.ok())
-    {
-        if (getMessageResult.have_message())
-            return std::make_pair(getMessageResult.from_player_id(), getMessageResult.message_received());
-        else
-            return std::make_pair(-1, "");
-    }
-    else
-        return std::make_pair(-1, "");
-}
-
 bool Communication::Escape(int64_t playerID)
 {
     protobuf::BoolRes escapeResult;
@@ -114,74 +85,52 @@ bool Communication::Escape(int64_t playerID)
         return false;
 }
 
-void Communication::FixMachine(int64_t playerID)
+bool Communication::StartFixMachine(int64_t playerID)
 {
-    protobuf::BoolRes fixMachineResult;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    protobuf::BoolRes startFixMachineResult;
     ClientContext context;
-    while (isFixing)
-    {
-        auto fixStream = THUAI6Stub->FixMachine(&context);
-        fixStream->Write(request);
-        fixStream->Read(&fixMachineResult);
-        if (!fixMachineResult.act_success())
-        {
-            isFixing = false;
-            break;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));  // 防止巨量发信
-    }
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto status = THUAI6Stub->StartFixMachine(&context, request, &startFixMachineResult);
+    if (status.ok())
+        return startFixMachineResult.act_success();
+    else
+        return false;
 }
 
-void Communication::StartFixMachine(int64_t playerID)
+bool Communication::EndFixMachine(int64_t playerID)
 {
-    isFixing = true;
-    FixMachine(playerID);
+    protobuf::BoolRes endFixMachineResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto status = THUAI6Stub->EndFixMachine(&context, request, &endFixMachineResult);
+    if (status.ok())
+        return endFixMachineResult.act_success();
+    else
+        return false;
 }
 
-void Communication::EndFixMachine()
-{
-    isFixing = false;
-}
-
-bool Communication::GetFixStatus()
-{
-    return isFixing;
-}
-
-void Communication::SaveHuman(int64_t playerID)
+bool Communication::StartSaveHuman(int64_t playerID)
 {
     protobuf::BoolRes saveHumanResult;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
     ClientContext context;
-    while (isSaving)
-    {
-        auto saveStream = THUAI6Stub->SaveHuman(&context);
-        saveStream->Write(request);
-        saveStream->Read(&saveHumanResult);
-        if (!saveHumanResult.act_success())
-        {
-            isSaving = false;
-            break;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));  // 防止巨量发信
-    }
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto status = THUAI6Stub->StartSaveHuman(&context, request, &saveHumanResult);
+    if (status.ok())
+        return saveHumanResult.act_success();
+    else
+        return false;
 }
 
-void Communication::StartSaveHuman(int64_t playerID)
+bool Communication::EndSaveHuman(int64_t playerID)
 {
-    isSaving = true;
-    SaveHuman(playerID);
-}
-
-void Communication::EndSaveHuman()
-{
-    isSaving = false;
-}
-
-bool Communication::GetSaveStatus()
-{
-    return isSaving;
+    protobuf::BoolRes saveHumanResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto status = THUAI6Stub->EndSaveHuman(&context, request, &saveHumanResult);
+    if (status.ok())
+        return saveHumanResult.act_success();
+    else
+        return false;
 }
 
 bool Communication::Attack(double angle, int64_t playerID)
@@ -239,7 +188,10 @@ bool Communication::TryConnection(int64_t playerID)
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
     auto status = THUAI6Stub->TryConnection(&context, request, &reply);
     if (status.ok())
+    {
+        std::cout << "Connection success!" << std::endl;
         return true;
+    }
     else
         return false;
 }
@@ -255,9 +207,35 @@ bool Communication::HaveMessage2Client()
     return haveNewMessage;
 }
 
+std::optional<std::pair<int64_t, std::string>> Communication::GetMessage()
+{
+    return messageQueue.tryPop();
+}
+
+bool Communication::HaveMessage()
+{
+    return !messageQueue.empty();
+}
+
+void Communication::ReadMessage(int64_t playerID)
+{
+    auto tRead = [&]()
+    {
+        auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+        ClientContext context;
+        protobuf::MsgRes messageReceived;
+        auto reader = THUAI6Stub->GetMessage(&context, request);
+        while (reader->Read(&messageReceived))
+        {
+            messageQueue.emplace(messageReceived.from_player_id(), messageReceived.message_received());
+        }
+    };
+    std::thread(tRead).detach();
+}
+
 void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType)
 {
-    auto msgThread = [&]()
+    auto tMessage = [&]()
     {
         protobuf::PlayerMsg playerMsg = THUAI62Proto::THUAI62ProtobufPlayer(playerID, playerType, humanType, butcherType);
         grpc::ClientContext context;
@@ -266,5 +244,5 @@ void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, T
         while (MessageReader->Read(&message2Client))
             haveNewMessage = true;
     };
-    std::thread(msgThread).detach();
+    std::thread(tMessage).detach();
 }

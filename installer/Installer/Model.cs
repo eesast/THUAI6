@@ -18,6 +18,7 @@ using System.Xml.Schema;
 using static Downloader.Program;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Windows;
 
 namespace starter.viewmodel.settings
 {
@@ -27,33 +28,70 @@ namespace starter.viewmodel.settings
     public class SettingsModel
     {
         /// <summary>
+        /// downloader function
+        /// </summary>
+        private Downloader.Program.Data configData = new Downloader.Program.Data("");
+        private Downloader.Program.Tencent_cos_download cloud = new Downloader.Program.Tencent_cos_download();
+
+        /// <summary>
         /// save settings
         /// </summary>
-        public void install()
+        public bool install()
         {
+            if (Downloader.Program.Tencent_cos_download.CheckAlreadyDownload())
+            {
+                MessageBoxResult repeatOption = MessageBox.Show($"文件已存在于{Downloader.Program.Data.FilePath},是否移动到新位置？", "重复安装", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+                //ask if abort install, with warning sign, defalut no;
+                if (repeatOption == MessageBoxResult.Cancel)
+                {
+                    return false;         //回到选择地址界面
+                }
+                else if (repeatOption == MessageBoxResult.No)
+                {
+                    System.Environment.Exit(0);
+                    return false;
+                }
+                else
+                {
+                    Downloader.Program.Tencent_cos_download.MoveProgram(Route);
+                    return true;
+                }
+            }
+            else
+            {
+                Downloader.Program.Data.ResetFilepath(Route);
+                Downloader.Program.Tencent_cos_download.DownloadAll();
+                return true;
+            }
         }
         /// <summary>
         /// Route of files
         /// </summary>
         public string Route
         {
-            get; set;
+            get
+            {
+                return Downloader.Program.Data.FilePath;
+            }
+            set
+            {
+                Downloader.Program.Data.FilePath = value;
+            }
         }
         /// <summary>
         /// if the route was set or is under editing
         /// </summary>
-        public bool HaveRoute
-        {
-            get; set;
-        }
         public bool EditingRoute
         {
             get; set;
         }
-        /// <summary>
-        /// downloader function
+        ///<summary>
+        ///if already installed
         /// </summary>
-        private Downloader.Program downloader = new Downloader.Program();
+        public bool installed
+        {
+            get; set;
+        }
     }
 }
 namespace Downloader
@@ -575,9 +613,8 @@ namespace Downloader
                 File.WriteAllText(@System.IO.Path.Combine(Data.FilePath, "hash.json"), Contentjson);
             }
 
-            public static void MoveProgram()
+            public static void MoveProgram(string newPath)
             {
-                string newPath = Console.ReadLine();
                 DirectoryInfo newdi = new DirectoryInfo(newPath);
                 DirectoryInfo olddi = new DirectoryInfo(Data.FilePath);
                 try
@@ -691,7 +728,9 @@ namespace Downloader
                     }
                     else if (choose == "6")
                     {
-                        MoveProgram();
+                        string newPath;
+                        newPath = Console.ReadLine();
+                        MoveProgram(newPath);
                     }
                     else if (choose == "7")
                     {

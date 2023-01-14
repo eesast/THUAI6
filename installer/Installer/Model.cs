@@ -65,6 +65,7 @@ namespace Downloader
         static string ProgramName = "THUAI6";                     // 要运行或下载的程序名称
         static string playerFolder = "player";                    // 选手代码保存文件夹路径
         static string startName = "maintest.exe";                 // 启动的程序名
+        static int filenum = 0;                                   // 总文件个数
 
         public class Data
         {
@@ -262,6 +263,7 @@ namespace Downloader
 
                 newFile = newFileName.Count;
                 updateFile = updateFileName.Count;
+                filenum = newFile + updateFile;
                 Console.WriteLine("----------------------" + Environment.NewLine);
 
                 if (newFile + updateFile == 0)
@@ -295,6 +297,7 @@ namespace Downloader
 
                 int newFile = 0, updateFile = 0;
                 int totalnew = newFileName.Count, totalupdate = updateFileName.Count;
+                filenum = totalnew + totalupdate;
 
                 if (newFileName.Count > 0 || updateFileName.Count > 0)
                 {
@@ -837,7 +840,7 @@ namespace WebConnect
             catch (FileNotFoundException)
             {
                 //没有登陆
-                Console.WriteLine("请先登陆！");
+                Console.WriteLine("请先登录！");
                 return false;
             }
             catch (PathTooLongException)

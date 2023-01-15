@@ -29,9 +29,8 @@ namespace GameClass.GameObj
         public XY Position
         {
             get => position;
-            protected
-                set
-            {
+        protected
+            set {
                 lock (gameObjLock)
                 {
                     position = value;
@@ -44,8 +43,7 @@ namespace GameClass.GameObj
         public XY FacingDirection
         {
             get => facingDirection;
-            set
-            {
+            set {
                 lock (gameObjLock)
                     facingDirection = value;
             }
@@ -56,8 +54,7 @@ namespace GameClass.GameObj
         public bool CanMove
         {
             get => canMove;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     canMove = value;
@@ -69,8 +66,7 @@ namespace GameClass.GameObj
         public bool IsMoving
         {
             get => isMoving;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     isMoving = value;
@@ -82,8 +78,7 @@ namespace GameClass.GameObj
         public bool IsResetting
         {
             get => isResetting;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     isResetting = value;
@@ -97,8 +92,7 @@ namespace GameClass.GameObj
         public PlaceType Place
         {
             get => place;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     place = value;
@@ -112,8 +106,7 @@ namespace GameClass.GameObj
         public int MoveSpeed
         {
             get => moveSpeed;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     moveSpeed = value;
@@ -127,9 +120,8 @@ namespace GameClass.GameObj
         public int OrgMoveSpeed
         {
             get => orgMoveSpeed;
-            protected
-                set
-            {
+        protected
+            set {
                 orgMoveSpeed = value;
             }
         }

@@ -12,7 +12,7 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     int pID = 114514;
     std::string sIP = "114.51.41.91";
     std::string sPort = "9810";
-    std::string filename = "";
+    bool print = false;
     bool level = false;
     extern const THUAI6::PlayerType playerType;
     extern const THUAI6::ButcherType butcherType;
@@ -20,11 +20,11 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     // 仅供早期调试使用
     {
         Logic logic(playerType, pID, butcherType, humanType);
-        logic.Main(AIBuilder, sIP, sPort, level, filename);
+        logic.Main(AIBuilder, sIP, sPort, print, level);
         return 0;
     }
 
-    // 使用cmdline的版本
+    // 使用cmdline的正式版本
     try
     {
         TCLAP::CmdLine cmd("THUAI6 C++ interface commandline parameter introduction");
@@ -40,16 +40,13 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
         TCLAP::ValueArg<int> playerID("p", "playerID", "Player ID 0,1,2,3 valid only", true, -1, &playerIdConstraint);
         cmd.add(playerID);
 
-        std::string DebugDesc = "Set this flag to use API for debugging.\n"
-                                "If \"-f\" is not set, the log will be printed on the screen.\n"
-                                "Or you could specify a file to store it.";
+        std::string DebugDesc = "Set this flag to print the debug log on the screen.\n"
+                                "The log will always be saved to ./logs folder.\n";
         TCLAP::SwitchArg debug("d", "debug", DebugDesc);
         cmd.add(debug);
 
-        TCLAP::ValueArg<std::string> FileName("f", "filename", "Specify a file to store the log.", false, "", "string");
-        cmd.add(FileName);
-
-        TCLAP::SwitchArg warning("w", "warning", "Warn of some obviously invalid operations (only when \"-d\" is set).");
+        TCLAP::SwitchArg warning("w", "warning", "Set this flag to only print warning on the screen.\n"
+                                                 "This flag will be ignored if the debug flag is not set\n");
         cmd.add(warning);
 
         cmd.parse(argc, argv);
@@ -61,9 +58,9 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
         bool w = warning.getValue();
         if (d)
         {
+            print = true;
             level = w;
         }
-        filename = FileName.getValue();
     }
     catch (TCLAP::ArgException& e)
     {
@@ -71,7 +68,7 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
         return 1;
     }
     Logic logic(playerType, pID, butcherType, humanType);
-    logic.Main(AIBuilder, sIP, sPort, level, filename);
+    logic.Main(AIBuilder, sIP, sPort, print, level);
     return 0;
 }
 

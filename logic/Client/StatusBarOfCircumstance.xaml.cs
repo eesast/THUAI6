@@ -29,6 +29,10 @@ namespace Client
             Grid.SetRowSpan(this, 2);
             initialized = false;
         }
+        public void SetFontSize(double fontsize)
+        {
+            serial.FontSize = scores.FontSize = star.FontSize = status.FontSize = prop.FontSize = fontsize;
+        }
         private bool initialized;
     }
 }

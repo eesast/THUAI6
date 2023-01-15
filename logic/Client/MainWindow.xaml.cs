@@ -13,26 +13,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
+using System.Windows.Threading;
 using Grpc.Core;
 using Protobuf;
 
-// 留意初始化
 // 目前MainWindow还未复现的功能：
-
+// errordisplayer
 // private void ReactToCommandline()，
 // private void Playback(string fileName, double pbSpeed = 2.0)
 // 绘图函数private void DrawLaser(Point source, double theta, double range,double Width)//三个参数分别为攻击者的位置，攻击方位角（窗口坐标）和攻击半径
-//        private void DrawProp(MessageToClient.Types.GameObjMessage data, string text)，
 //        private void Attack(object sender,RoutedEventArgs e)
-// 地图相关private void ZoomMap()
 
 // 交互：private void ClickToSetMode(object sender, RoutedEventArgs e)
-// 最近要解决private void ConnectToServer(string[] comInfo)
+
 // private void KeyBoardControl(object sender, KeyEventArgs e)
-// private void GetMap(MessageToClient.Types.GameObjMessage obj)
-// private void OnReceive()
-// private bool CanSee(MessageOfCharacter msg) (以及两个重载函数)
-// private void Refresh(object? sender, EventArgs e)
+
 // private void Bonus()
 
 namespace Client
@@ -45,12 +40,29 @@ namespace Client
         public MainWindow()
         {
             unitHeight = unitWidth = unit = 13;
+            bonusflag = true;
+            timer = new DispatcherTimer {
+                Interval = new TimeSpan(50000)  // 每50ms刷新一次
+            };
+            timer.Tick += new EventHandler(Refresh);  // 定时器初始化
             InitializeComponent();
+            timer.Start();
             SetStatusBar();
-            DrawMap();
             isClientStocked = true;
             isPlaybackMode = false;
+            drawPicLock = new();
+            listOfProp = new List<MessageOfProp>();
+            listOfHuman = new List<MessageOfHuman>();
+            listOfButcher = new List<MessageOfButcher>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            comInfo[0] = "127.0.0.1";
+            comInfo[1] = "8888";
+            comInfo[2] = "1";
+            comInfo[3] = "1";
+            comInfo[4] = "1";
+            ConnectToServer(comInfo);
+            OnReceive();
+            // ReactToCommandline();
         }
 
         private void SetStatusBar()
@@ -64,18 +76,143 @@ namespace Client
             }
         }
 
-        // 连接Server
-        private void ConnectToServer()
+        // 连接Server,comInfo[]的格式：0-ip 1- port 2-playerID 3-playerType 4-human/butcherType
+        private void ConnectToServer(string[] comInfo)
         {
-            Channel channel = new Channel("127.0.0.1:8888", ChannelCredentials.Insecure);
-            var client = new AvailableService.AvailableServiceClient(channel);
-            PlayerMsg playerMsg = new PlayerMsg();
-            var responseStream = client.AddPlayer(playerMsg);
+            if (!isPlaybackMode)
+            {
+                if (comInfo.Length != 5)
+                    throw new Exception("注册信息有误！");
+                playerID = Convert.ToInt64(comInfo[2]);
+                Connect.Background = Brushes.Gray;
+                string connect = new string(comInfo[0]);
+                connect += ':';
+                connect += comInfo[1];
+                Channel channel = new Channel(connect, ChannelCredentials.Insecure);
+                client = new AvailableService.AvailableServiceClient(channel);
+                // 没判断连没连上
 
-            // 新建一个线程，处理的时候要上锁
+                PlayerMsg playerMsg = new PlayerMsg();
+                playerMsg.PlayerId = playerID;
+                playerType = Convert.ToInt64(comInfo[3]) switch {
+                    0 => PlayerType.NullPlayerType,
+                    1 => PlayerType.HumanPlayer,
+                    2 => PlayerType.ButcherPlayer,
+                };
+                playerMsg.PlayerType = playerType;
+                if (playerType == PlayerType.HumanPlayer)
+                {
+                    switch (Convert.ToInt64(comInfo[4]))
+                    {
+                        case 0:
+                            playerMsg.HumanType = HumanType.NullHumanType;
+                            break;
+                        case 1:
+                            playerMsg.HumanType = HumanType._1;
+                            break;
+                        case 2:
+                            playerMsg.HumanType = HumanType._2;
+                            break;
+                        case 3:
+                            playerMsg.HumanType = HumanType._3;
+                            break;
+                        case 4:
+                            playerMsg.HumanType = HumanType._4;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else if (playerType == PlayerType.ButcherPlayer)
+                {
+                    switch (Convert.ToInt64(comInfo[4]))
+                    {
+                        case 0:
+                            playerMsg.ButcherType = ButcherType.NullButcherType;
+                            break;
+                        case 1:
+                            playerMsg.ButcherType = ButcherType._1;
+                            break;
+                        case 2:
+                            playerMsg.ButcherType = ButcherType._2;
+                            break;
+                        case 3:
+                            playerMsg.ButcherType = ButcherType._3;
+                            break;
+                        case 4:
+                            playerMsg.ButcherType = ButcherType._4;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                responseStream = client.AddPlayer(playerMsg);
+                Connect.Background = Brushes.Transparent;
+                isClientStocked = false;
+                PorC.Content = "⏸";
+                // 建立连接的同时加入人物
+            }
         }
 
-        // drawmap,22/11/27ver：丑陋的实现方式，底层为canvas，本身似乎就不太支持缩放，现在主体界面最大化后十分之丑陋，还需在之后的版本进行修复
+        // 绘制道具
+        private void DrawProp(MessageOfProp data, string text)
+        {
+            TextBox icon = new() {
+                FontSize = 10,
+                Width = 20,
+                Height = 20,
+                Text = text,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                Background = Brushes.Transparent,
+                BorderBrush = Brushes.Transparent,
+                IsReadOnly = true
+            };
+            UpperLayerOfMap.Children.Add(icon);
+        }
+
+        // 获得地图信息
+        private void GetMap(MessageOfMap obj)
+        {
+            int[,] map = new int[50, 50];
+            try
+            {
+                for (int i = 0; i < 50; i++)
+                {
+                    for (int j = 0; j < 50; j++)
+                    {
+                        map[i, j] = Convert.ToInt32(obj.Row[i].Col[j]);
+                    }
+                }
+            }
+            catch
+            {
+                mapFlag = false;
+            }
+            finally
+            {
+                defaultMap = map;
+                mapFlag = true;
+            }
+        }
+        private void ZoomMap()
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                for (int j = 0; j < 50; j++)
+                {
+                    if (mapPatches[i, j] != null)
+                    {
+                        mapPatches[i, j].Width = UpperLayerOfMap.ActualWidth / 50;
+                        mapPatches[i, j].Height = UpperLayerOfMap.ActualHeight / 50;
+                        mapPatches[i, j].HorizontalAlignment = HorizontalAlignment.Left;
+                        mapPatches[i, j].VerticalAlignment = VerticalAlignment.Top;
+                        mapPatches[i, j].Margin = new Thickness(UpperLayerOfMap.ActualWidth / 50 * j, UpperLayerOfMap.ActualHeight / 50 * i, 0, 0);
+                    }
+                }
+            }
+        }
         private void DrawMap()
         {
             for (int i = 0; i < defaultMap.GetLength(0); i++)
@@ -85,12 +222,12 @@ namespace Client
                     mapPatches[i, j] = new() {
                         Width = unitWidth,
                         Height = unitHeight,
-                        // HorizontalAlignment = HorizontalAlignment.Left,
-                        // VerticalAlignment = VerticalAlignment.Top,
-                        // Margin = new Thickness(Width * (j), Height * (i), 0, 0)
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        Margin = new Thickness(Width * (j), Height * (i), 0, 0)
                     };
-                    mapPatches[i, j].SetValue(Canvas.LeftProperty, (double)(Width / 65.5 * j));
-                    mapPatches[i, j].SetValue(Canvas.TopProperty, (double)(Height / 56.5 * i));  // 用zoommap进行修改
+                    // mapPatches[i, j].SetValue(Canvas.LeftProperty, (double)(Width / 65.5 * j));
+                    // mapPatches[i, j].SetValue(Canvas.TopProperty, (double)(Height / 56.5 * i));  // 用zoommap进行修改
                     switch (defaultMap[i, j])
                     {
                         case 1:
@@ -125,6 +262,240 @@ namespace Client
                 }
             }
             hasDrawed = true;
+        }
+
+        private async void OnReceive()  // log未更新,switch1,2更新log
+        {
+            while (await responseStream.ResponseStream.MoveNext())
+            {
+                lock (drawPicLock)  // 加锁是必要的，画图操作和接收信息操作不能同时进行，否则画图时foreach会有bug
+                {
+                    listOfHuman.Clear();
+                    listOfButcher.Clear();
+                    listOfProp.Clear();
+                    MessageToClient content = responseStream.ResponseStream.Current;
+                    switch (content.GameState)
+                    {
+                        case GameState.GameStart:
+                            foreach (var obj in content.HumanMessage)
+                            {
+                                listOfHuman.Add(obj);
+                            }
+                            foreach (var obj in content.ButcherMessage)
+                            {
+                                listOfButcher.Add(obj);
+                            }
+                            foreach (var obj in content.PropMessage)
+                            {
+                                listOfProp.Add(obj);
+                            }
+                            GetMap(content.MapMessage);
+                            break;
+                        case GameState.GameRunning:
+                            foreach (var obj in content.HumanMessage)
+                            {
+                                listOfHuman.Add(obj);
+                            }
+                            foreach (var obj in content.ButcherMessage)
+                            {
+                                listOfButcher.Add(obj);
+                            }
+                            foreach (var obj in content.PropMessage)
+                            {
+                                listOfProp.Add(obj);
+                            }
+                            if (!mapFlag)
+                                GetMap(content.MapMessage);
+                            break;
+                        case GameState.GameEnd:
+                            foreach (var obj in content.HumanMessage)
+                            {
+                                listOfHuman.Add(obj);
+                            }
+                            foreach (var obj in content.ButcherMessage)
+                            {
+                                listOfButcher.Add(obj);
+                            }
+                            foreach (var obj in content.PropMessage)
+                            {
+                                listOfProp.Add(obj);
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+
+        private bool CanSee(MessageOfHuman msg)
+        {
+            if (msg.State == HumanState.Dead)
+                return false;
+            // if (playerID >= 2022 || teamID >= 2022)
+            //     return true;
+            // if (myInfo != null)
+            //{
+            //     if (myInfo.MessageOfCharacter.Guid == msg.Guid)  // 自己能看见自己
+            //         return true;
+            // }
+            if (msg.Place == PlaceType.Grass || msg.Place == PlaceType.Gate || msg.Place == PlaceType.HiddenGate)
+                return false;
+            if (msg.Place == PlaceType.Land || msg.Place == PlaceType.Machine)
+                return true;
+            // if (myInfo != null)
+            //{
+            //     if (msg.Place != myInfo.MessageOfCharacter.Place)
+            //         return false;
+            // }
+            return true;
+        }
+
+        private bool CanSee(MessageOfButcher msg)
+        {
+            // if (playerID >= 2022 || teamID >= 2022)
+            //     return true;
+            // if (myInfo != null)
+            //{
+            //     if (myInfo.MessageOfCharacter.Guid == msg.Guid)  // 自己能看见自己
+            //         return true;
+            // }
+            if (msg.Place == PlaceType.Grass || msg.Place == PlaceType.Gate || msg.Place == PlaceType.HiddenGate)
+                return false;
+            if (msg.Place == PlaceType.Land || msg.Place == PlaceType.Machine)
+                return true;
+            // if (myInfo != null)
+            //{
+            //     if (msg.Place != myInfo.MessageOfCharacter.Place)
+            //         return false;
+            // }
+            return true;
+        }
+
+        private bool CanSee(MessageOfProp msg)
+        {
+            if (msg.Place == PlaceType.Land)
+                return true;
+            // if (myInfo != null)
+            //{
+            //     if (msg.Place != myInfo.MessageOfCharacter.Place)
+            //         return false;
+            // }
+            return true;
+        }
+
+        private void Refresh(object? sender, EventArgs e)
+        {
+            // Bonus();
+            if (WindowState == WindowState.Maximized)
+                MaxButton.Content = "❐";
+            else
+                MaxButton.Content = "🗖";
+            if (StatusBarsOfSurvivor != null)
+                for (int i = 4; i < 8; i++)
+                {
+                    StatusBarsOfSurvivor[i - 4].SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
+                }
+            if (StatusBarsOfHunter != null)
+                StatusBarsOfHunter.SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
+            if (StatusBarsOfCircumstance != null)
+                StatusBarsOfCircumstance.SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
+            // 完成窗口信息更新
+            if (!isClientStocked)
+            {
+                unit = Math.Sqrt(UpperLayerOfMap.ActualHeight * UpperLayerOfMap.ActualWidth) / 50;
+                unitHeight = UpperLayerOfMap.ActualHeight / 50;
+                unitWidth = UpperLayerOfMap.ActualWidth / 50;
+                try
+                {
+                    // if (log != null)
+                    //{
+                    //     string temp = "";
+                    //     for (int i = 0; i < dataDict[GameObjType.Character].Count; i++)
+                    //     {
+                    //         temp += Convert.ToString(dataDict[GameObjType.Character][i].MessageOfCharacter.TeamID) + "\n";
+                    //     }
+                    //     log.Content = temp;
+                    // }
+                    UpperLayerOfMap.Children.Clear();
+                    // if ((communicator == null || !communicator.Client.IsConnected) && !isPlaybackMode)
+                    //{
+                    //     UnderLayerOfMap.Children.Clear();
+                    //     throw new Exception("Client is unconnected.");
+                    // }
+                    // else
+                    //{
+                    lock (drawPicLock)  // 加锁是必要的，画图操作和接收信息操作不能同时进行
+                    {
+                        if (!hasDrawed && mapFlag)
+                            DrawMap();
+                        foreach (var data in listOfHuman)
+                        {
+                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data);
+                            if (CanSee(data))
+                            {
+                                Ellipse icon = new() {
+                                    Width = unitWidth,
+                                    Height = unitHeight,
+                                    HorizontalAlignment = HorizontalAlignment.Left,
+                                    VerticalAlignment = VerticalAlignment.Top,
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                    Fill = Brushes.BlueViolet,
+                                };
+                                UpperLayerOfMap.Children.Add(icon);
+                            }
+                        }
+                        foreach (var data in listOfButcher)
+                        {
+                            if (CanSee(data))
+                            {
+                                Ellipse icon = new() {
+                                    Width = 10,
+                                    Height = 10,
+                                    HorizontalAlignment = HorizontalAlignment.Left,
+                                    VerticalAlignment = VerticalAlignment.Top,
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                    Fill = Brushes.Black,
+                                };
+                                UpperLayerOfMap.Children.Add(icon);
+                            }
+                        }
+                        foreach (var data in listOfProp)
+                        {
+                            if (CanSee(data))
+                            {
+                                switch (data.Type)
+                                {
+                                    case PropType.Ptype1:
+                                        DrawProp(data, "🔧");
+                                        break;
+                                    case PropType.Ptype2:
+                                        DrawProp(data, "🛡");
+                                        break;
+                                    case PropType.Ptype3:
+                                        DrawProp(data, "♥");
+                                        break;
+                                    case PropType.Ptype4:
+                                        DrawProp(data, "⛸");
+                                        break;
+                                    default:
+                                        DrawProp(data, "");
+                                        break;
+                                }
+                            }
+                        }
+
+                        //}
+                        ZoomMap();
+                    }
+                }
+                catch (Exception exc)
+                {
+                    // ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
+                    // error.Show();
+                    isClientStocked = true;
+                    PorC.Content = "▶";
+                }
+            }
+            counter++;
         }
 
         // 之后需要修改，现在只具有修改按钮形状的功能，并不能实现暂停/继续
@@ -233,6 +604,12 @@ namespace Client
                 //               error.Show();
             }
         }
+
+        // 以下为Mainwindow自定义属性
+        private readonly DispatcherTimer timer;  // 定时器
+        private long counter;                    // 预留的取时间变量
+        AvailableService.AvailableServiceClient client;
+        AsyncServerStreamingCall<MessageToClient>? responseStream;
         private StatusBarOfSurvivor[] StatusBarsOfSurvivor;
         private StatusBarOfHunter StatusBarsOfHunter;
         private StatusBarOfCircumstance StatusBarsOfCircumstance;
@@ -241,13 +618,19 @@ namespace Client
         private bool isPlaybackMode;
 
         private long playerID;
-        private long teamID;
+        private PlayerType playerType;
 
         private double unit;
         private double unitHeight;
         private double unitWidth;
         private readonly Rectangle[,] mapPatches = new Rectangle[50, 50];
 
+        private List<MessageOfProp> listOfProp;
+        private List<MessageOfHuman> listOfHuman;
+        private List<MessageOfButcher> listOfButcher;
+        private object drawPicLock = new object();
+
+        private bool bonusflag;
         private bool mapFlag = false;
         private bool hasDrawed = false;
         public int[,] defaultMap = new int[,] {
@@ -302,5 +685,7 @@ namespace Client
             { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
         };
+
+        private string[] comInfo = new string[5];
     }
 }

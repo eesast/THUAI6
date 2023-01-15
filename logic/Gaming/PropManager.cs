@@ -175,49 +175,49 @@ namespace Gaming
                     {
                         while (!gameMap.Timer.IsGaming)
                             Thread.Sleep(1000);
-                        new FrameRateTaskExecutor<int>(
-                            () => gameMap.Timer.IsGaming,
-                            () =>
-                            {
-                                int rand = r.Next(0, len);
-                                XY randPos = availableCellForGenerateProp[rand];
+                new FrameRateTaskExecutor<int>(
+                    () => gameMap.Timer.IsGaming,
+                    () =>
+                    {
+                        int rand = r.Next(0, len);
+                        XY randPos = availableCellForGenerateProp[rand];
 
-                                gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
-                                try
-                                {
-                                    switch (r.Next(0, 4))
-                                    {
-                                        case 0:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new AddLIFE(randPos));
-                                            break;
-                                        case 1:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new AddSpeed(randPos));
-                                            break;
-                                        case 2:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new Shield(randPos));
-                                            break;
-                                        case 3:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new Spear(randPos));
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                                finally
-                                {
-                                    gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock();
-                                }
-                            },
-                            GameData.PropProduceTime,
-                            () => 0
-                        )
-                            .Start();
-                    }
+                        gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
+                        try
+                        {
+                            switch (r.Next(0, 4))
+                            {
+                                case 0:
+                                    gameMap.GameObjDict[GameObjIdx.Prop].Add(new AddLIFE(randPos));
+                                    break;
+                                case 1:
+                                    gameMap.GameObjDict[GameObjIdx.Prop].Add(new AddSpeed(randPos));
+                                    break;
+                                case 2:
+                                    gameMap.GameObjDict[GameObjIdx.Prop].Add(new Shield(randPos));
+                                    break;
+                                case 3:
+                                    gameMap.GameObjDict[GameObjIdx.Prop].Add(new Spear(randPos));
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        finally
+                        {
+                            gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock();
+                        }
+                    },
+                    GameData.PropProduceTime,
+                    () => 0
+                )
+                    .Start();
+            }
                 )
                 { IsBackground = true }.Start();
-            }
-            public PropManager(Map gameMap)  // 道具不能扔过墙
-            {
+        }
+        public PropManager(Map gameMap)  // 道具不能扔过墙
+        {
                 this.gameMap = gameMap;
                 this.moveEngine = new MoveEngine(
                     gameMap: gameMap,
@@ -227,21 +227,20 @@ namespace Gaming
                     {
                         // obj.Place = gameMap.GetPlaceType((GameObj)obj);
                         obj.CanMove = false;
-                        Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
-                    }
+                        Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64); }
                 );
                 availableCellForGenerateProp = new List<XY>();
                 for (int i = 0; i < gameMap.ProtoGameMap.GetLength(0); i++)
                 {
-                    for (int j = 0; j < gameMap.ProtoGameMap.GetLength(1); j++)
+                for (int j = 0; j < gameMap.ProtoGameMap.GetLength(1); j++)
+                {
+                    if (gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Null)
                     {
-                        if (gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Null)
-                        {
-                            availableCellForGenerateProp.Add(GameData.GetCellCenterPos(i, j));
-                        }
+                        availableCellForGenerateProp.Add(GameData.GetCellCenterPos(i, j));
                     }
                 }
-            }
+                }
         }
     }
+}
 }

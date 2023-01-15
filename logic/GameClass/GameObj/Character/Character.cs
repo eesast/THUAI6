@@ -11,7 +11,7 @@ namespace GameClass.GameObj
     {
         private readonly object beAttackedLock = new();
 
-        #region 角色的基本属性及方法，包括与道具的交互方法
+#region 角色的基本属性及方法，包括与道具的交互方法
 
         /// <summary>
         /// 装弹冷却
@@ -20,9 +20,8 @@ namespace GameClass.GameObj
         public int CD
         {
             get => cd;
-            private
-                set
-            {
+        private
+            set {
                 lock (gameObjLock)
                 {
                     cd = value;
@@ -34,15 +33,14 @@ namespace GameClass.GameObj
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;  // 人物最大子弹数
         protected int bulletNum;
-        public int BulletNum => bulletNum;        // 目前持有的子弹数
+        public int BulletNum => bulletNum;  // 目前持有的子弹数
 
         public int MaxHp { get; protected set; }  // 最大血量
         protected int hp;
         public int HP
         {
             get => hp;
-            set
-            {
+            set {
                 lock (gameObjLock)
                     hp = value <= MaxHp ? value : MaxHp;
             }
@@ -62,8 +60,7 @@ namespace GameClass.GameObj
         public double Vampire
         {
             get => vampire;
-            set
-            {
+            set {
                 if (value > 1)
                     lock (gameObjLock)
                         vampire = 1;
@@ -79,8 +76,7 @@ namespace GameClass.GameObj
         public double OriVampire
         {
             get => oriVampire;
-            set
-            {
+            set {
                 if (value > 1)
                     lock (gameObjLock)
                         vampire = 1;
@@ -93,26 +89,22 @@ namespace GameClass.GameObj
             }
         }
 
-
         public readonly BulletType OriBulletOfPlayer;
         private BulletType bulletOfPlayer;
         public BulletType BulletOfPlayer
         {
             get => bulletOfPlayer;
-            set
-            {
+            set {
                 lock (gameObjLock)
                     bulletOfPlayer = value;
             }
         }
 
-
         private Prop? propInventory;
         public Prop? PropInventory  // 持有的道具
         {
             get => propInventory;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     propInventory = value;
@@ -142,8 +134,7 @@ namespace GameClass.GameObj
         public bool IsModifyingProp
         {
             get => isModifyingProp;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     isModifyingProp = value;
@@ -158,8 +149,7 @@ namespace GameClass.GameObj
         public bool IsInvisible
         {
             get => isInvisible;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     isInvisible = value;
@@ -356,8 +346,7 @@ namespace GameClass.GameObj
         public long TeamID
         {
             get => teamID;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     teamID = value;
@@ -369,8 +358,7 @@ namespace GameClass.GameObj
         public long PlayerID
         {
             get => playerID;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     playerID = value;
@@ -384,17 +372,16 @@ namespace GameClass.GameObj
         public string Message
         {
             get => message;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     message = value;
                 }
             }
         }
-        #endregion
+#endregion
 
-        #region 角色拥有的buff相关属性、方法
+#region 角色拥有的buff相关属性、方法
         public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManeger.AddMoveSpeed(add, buffTime, newVal =>
                                                                                                             { MoveSpeed = newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed; },
                                                                                              OrgMoveSpeed);
@@ -412,8 +399,7 @@ namespace GameClass.GameObj
         private Array buffTypeArray = Enum.GetValues(typeof(BuffType));
         public Dictionary<BuffType, bool> Buff
         {
-            get
-            {
+            get {
                 Dictionary<BuffType, bool> buff = new Dictionary<BuffType, bool>();
                 foreach (BuffType type in buffTypeArray)
                 {
@@ -446,7 +432,7 @@ namespace GameClass.GameObj
                 hp = MaxHp;
             }
         }
-        #endregion
+#endregion
         public override void Reset()  // 要加锁吗？
         {
             _ = AddDeathCount();

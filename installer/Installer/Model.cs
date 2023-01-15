@@ -43,10 +43,10 @@ namespace starter.viewmodel.settings
             if (Downloader.Program.Tencent_cos_download.CheckAlreadyDownload())
             {
                 MessageBoxResult repeatOption = MessageBox.Show($"文件已存在于{Downloader.Program.Data.FilePath},是否移动到新位置？", "重复安装", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
-                //ask if abort install, with warning sign, defalut no;
+                // ask if abort install, with warning sign, defalut no;
                 if (repeatOption == MessageBoxResult.Cancel)
                 {
-                    return false;         //回到选择地址界面
+                    return false;  // 回到选择地址界面
                 }
                 else if (repeatOption == MessageBoxResult.No)
                 {
@@ -71,29 +71,23 @@ namespace starter.viewmodel.settings
         /// </summary>
         public string Route
         {
-            get
-            {
+            get {
                 return Downloader.Program.Data.FilePath;
             }
-            set
-            {
+            set {
                 Downloader.Program.Data.FilePath = value;
             }
         }
         /// <summary>
         /// if the route was set or is under editing
         /// </summary>
-        public bool EditingRoute
-        {
-            get; set;
-        }
-        ///<summary>
-        ///if already installed
-        /// </summary>
-        public bool installed
-        {
-            get; set;
-        }
+        public bool EditingRoute {
+            get; set; }
+        ///< summary>
+        /// if already installed
+        ///  </summary>
+        public bool installed {
+            get; set; }
     }
 }
 namespace Downloader
@@ -238,8 +232,7 @@ namespace Downloader
                     GetObjectRequest request = new GetObjectRequest(bucket, key, localDir, localFileName);
 
                     Dictionary<string, string> test = request.GetRequestHeaders();
-                    request.SetCosProgressCallback(delegate (long completed, long total)
-                    {
+                    request.SetCosProgressCallback(delegate(long completed, long total) {
                         Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
                     });
                     // 执行请求
@@ -859,8 +852,7 @@ namespace WebConnect
         async public Task LoginToEEsast(HttpClient client, string useremail, string password)
         {
             string token = "";
-            using (var response = await client.PostAsync("https://api.eesast.com/users/login", JsonContent.Create(new
-            {
+            using (var response = await client.PostAsync("https://api.eesast.com/users/login", JsonContent.Create(new {
                 email = useremail,
                 password = password,
             })))
@@ -869,10 +861,11 @@ namespace WebConnect
                 {
                     case System.Net.HttpStatusCode.OK:
                         Console.WriteLine("Success login");
-                        token = (System.Text.Json.JsonSerializer.Deserialize(await response.Content.ReadAsStreamAsync(), typeof(LoginResponse), new JsonSerializerOptions()
-                        {
-                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                        }) as LoginResponse)?.Token ?? throw new Exception("no token!");
+                        token = (System.Text.Json.JsonSerializer.Deserialize(await response.Content.ReadAsStreamAsync(), typeof(LoginResponse), new JsonSerializerOptions() {
+                                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                }) as LoginResponse)
+                                    ?.Token ??
+                                throw new Exception("no token!");
                         logintoken = token;
                         SaveToken();
                         break;
@@ -944,9 +937,9 @@ namespace WebConnect
             }
         }
 
-        async public Task UserDetails(HttpClient client)  //用来测试访问网站
+        async public Task UserDetails(HttpClient client)  // 用来测试访问网站
         {
-            if (!ReadToken())   //读取token失败
+            if (!ReadToken())  // 读取token失败
             {
                 return;
             }
@@ -954,8 +947,8 @@ namespace WebConnect
             {
                 client.DefaultRequestHeaders.Authorization = new("Bearer", logintoken);
                 Console.WriteLine(logintoken);
-                using (var response = await client.GetAsync("https://api.eesast.com/application/info")) //JsonContent.Create(new
-                                                                                                        //{
+                using (var response = await client.GetAsync("https://api.eesast.com/application/info"))  // JsonContent.Create(new
+                                                                                                         //{
 
                 //})))
                 {
@@ -981,7 +974,7 @@ namespace WebConnect
             }
         }
 
-        public void SaveToken()//保存token
+        public void SaveToken()  // 保存token
         {
             string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
             try
@@ -1004,6 +997,7 @@ namespace WebConnect
                 StreamWriter sw = new StreamWriter(fs);
                 fs.SetLength(0);
                 sw.Write(JsonConvert.SerializeObject(dict));   //将token写入文件
+                
                 sw.Close();
                 fs.Close();
             }
@@ -1024,7 +1018,7 @@ namespace WebConnect
                 Console.WriteLine("写入token.dat发生冲突！请检查token.dat是否被其它程序占用！");
             }
         }
-        public bool ReadToken()//读取token
+        public bool ReadToken()  // 读取token
         {
             try
             {

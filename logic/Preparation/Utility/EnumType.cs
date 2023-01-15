@@ -85,10 +85,11 @@ namespace Preparation.Utility
     {
         None = 0,
         Player = 1,
-        Prop = 2,
-        Map = 3,
-        BombedBullet = 4,
-        PickedProp = 5
+        Bullet = 2,
+        Prop = 3,
+        Map = 4,
+        BombedBullet = 5,
+        PickedProp = 6
     }
 }
 public enum MapInfoObjType

@@ -12,8 +12,7 @@ namespace GameClass.GameObj
         public ICharacter? Parent
         {
             get => parent;
-            set
-            {
+            set {
                 lock (gameObjLock)
                 {
                     parent = value;

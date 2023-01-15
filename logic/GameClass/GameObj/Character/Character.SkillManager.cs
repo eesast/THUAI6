@@ -23,8 +23,7 @@ namespace GameClass.GameObj
         public int TimeUntilCommonSkillAvailable
         {
             get => timeUntilCommonSkillAvailable;
-            set
-            {
+            set {
                 lock (gameObjLock)
                     timeUntilCommonSkillAvailable = value < 0 ? 0 : value;
             }
@@ -45,15 +44,15 @@ namespace GameClass.GameObj
             this.buffManeger = new BuffManeger();
             IPassiveSkill pSkill;
             ICommonSkill cSkill;
-            switch (passiveSkillType)
+            switch (characterType)
             {
-                case this.CharacterType.RecoverAfterBattle:
+                case CharacterType.RecoverAfterBattle:
                     pSkill = new RecoverAfterBattle();
                     break;
-                case this.CharacterType.SpeedUpWhenLeavingGrass:
+                case CharacterType.SpeedUpWhenLeavingGrass:
                     pSkill = new SpeedUpWhenLeavingGrass();
                     break;
-                case this.CharacterType.Vampire:
+                case CharacterType.Vampire:
                     pSkill = new Vampire();
                     break;
                 default:
@@ -89,7 +88,7 @@ namespace GameClass.GameObj
             this.OriBulletOfPlayer = pSkill.InitBullet;
             this.passiveSkill = pSkill.SkillEffect;
             this.commonSkill = cSkill.SkillEffect;
-            this.passiveSkillType = passiveSkillType;
+            this.characterType = characterType;
             this.commonSkillType = commonSkillType;
 
             // UsePassiveSkill();  //创建player时开始被动技能，这一过程也可以放到gamestart时进行

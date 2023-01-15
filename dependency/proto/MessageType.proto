@@ -62,7 +62,7 @@ enum ButcherBuffType // 屠夫可用的增益效果类型
     BBUFFTYPE4 = 4;
 }
 
-// 特别说明：由于Human阵营和Butcher阵营有显著的隔离，且暂定职业、主动技能和被动效果相互绑定，故不按照THUAI5的方式区分ActiveSkillType和PassiveSkillType，而是选择了按照阵营来给不同阵营赋予不同的职业（及技能）。
+// 特别说明：由于Human阵营和Butcher阵营有显著的隔离，且暂定职业、主动技能和被动效果相互绑定，故不按照THUAI5的方式区分ActiveSkillType和CharacterType，而是选择了按照阵营来给不同阵营赋予不同的职业（及技能）。
 
 enum PlayerType
 {

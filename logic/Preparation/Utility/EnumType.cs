@@ -27,14 +27,13 @@ namespace Preparation.Utility
         Circle = 1,  // 子弹和人物为圆形，格子为方形
         Square = 2
     }
-    public enum PlaceType  // 位置标志，包括陆地，建筑，草丛。游戏中每一帧都要刷新各个物体的该属性
+    public enum PlaceType  // 位置标志，包括陆地，草丛。游戏中每一帧都要刷新各个物体的该属性
     {
         Null = 0,
         Land = 1,
-        Building = 2,
-        Grass1 = 3,
-        Grass2 = 4,
-        Grass3 = 5,
+        Grass1 = 2,
+        Grass2 = 3,
+        Grass3 = 4,
     }
     public enum BulletType  // 子弹类型
     {

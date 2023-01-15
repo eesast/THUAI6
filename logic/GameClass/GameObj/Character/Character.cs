@@ -454,9 +454,9 @@ namespace GameClass.GameObj
             this.MoveSpeed = OrgMoveSpeed;
             HP = MaxHp;
             PropInventory = null;
-            // BulletOfPlayer = OriBulletOfPlayer;
-            // lock (gameObjLock)
-            //   bulletNum = maxBulletNum;
+             BulletOfPlayer = OriBulletOfPlayer;
+             lock (gameObjLock)
+               bulletNum = maxBulletNum;
 
             buffManeger.ClearAll();
             IsInvisible = false;

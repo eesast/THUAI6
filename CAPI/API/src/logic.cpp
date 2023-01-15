@@ -233,7 +233,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         bufferState->gamemap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());
         if (playerType == THUAI6::PlayerType::HumanPlayer)
         {
-            for (auto item : message.human_message())
+            for (const auto& item : message.human_message())
             {
                 if (item.player_id() == playerID)
                 {
@@ -241,7 +241,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                 }
                 bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(item));
             }
-            for (auto item : message.butcher_message())
+            for (const auto& item : message.butcher_message())
             {
                 int vr = this->bufferState->humanSelf->viewRange;
                 int deltaX = item.x() - this->bufferState->humanSelf->x;
@@ -277,7 +277,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         }
         else
         {
-            for (auto item : message.butcher_message())
+            for (const auto& item : message.butcher_message())
             {
                 if (item.player_id() == playerID)
                 {
@@ -285,7 +285,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                 }
                 bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(item));
             }
-            for (auto item : message.human_message())
+            for (const auto& item : message.human_message())
             {
                 int vr = this->bufferState->butcherSelf->viewRange;
                 int deltaX = item.x() - this->bufferState->butcherSelf->x;
@@ -319,7 +319,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                 }
             }
         }
-        for (auto item : message.prop_message())
+        for (const auto& item : message.prop_message())
             bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item));
         if (asynchronous)
         {

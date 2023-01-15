@@ -16,7 +16,7 @@ namespace GameClass.Skill
         public int CD { get; }
         public int MaxBulletNum { get; }
         public bool SkillEffect(Character player);
-        public int DurationTime { get; } //技能持续时间
+        public int DurationTime { get; }  // 技能持续时间
         public int SkillCD { get; }
         public object CommonSkillLock { get; }
     }

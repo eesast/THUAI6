@@ -13,8 +13,7 @@ namespace GameClass.GameObj
         private readonly List<Character> playerList;
         public int Score
         {
-            get
-            {
+            get {
                 int score = 0;
                 foreach (var player in playerList)
                     score += player.Score;

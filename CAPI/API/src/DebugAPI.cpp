@@ -23,7 +23,7 @@ HumanDebugAPI::HumanDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly
         printLogger->set_level(spdlog::level::off);
     if (warnOnly)
         printLogger->set_level(spdlog::level::warn);
-    logger = std::make_shared<spdlog::logger>("apiLogger", spdlog::sinks_init_list{fileLogger, printLogger});
+    logger = std::make_unique<spdlog::logger>("apiLogger", spdlog::sinks_init_list{fileLogger, printLogger});
 }
 
 ButcherDebugAPI::ButcherDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID) :
@@ -45,7 +45,7 @@ ButcherDebugAPI::ButcherDebugAPI(ILogic& logic, bool file, bool print, bool warn
         printLogger->set_level(spdlog::level::off);
     if (warnOnly)
         printLogger->set_level(spdlog::level::warn);
-    logger = std::make_shared<spdlog::logger>("apiLogger", spdlog::sinks_init_list{fileLogger, printLogger});
+    logger = std::make_unique<spdlog::logger>("apiLogger", spdlog::sinks_init_list{fileLogger, printLogger});
 }
 
 void HumanDebugAPI::StartTimer()

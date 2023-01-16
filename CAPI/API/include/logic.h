@@ -35,7 +35,7 @@ class Logic : public ILogic
 {
 private:
     // 日志组件
-    std::shared_ptr<spdlog::logger> logger;
+    std::unique_ptr<spdlog::logger> logger;
 
     // 通信组件
     std::unique_ptr<Communication> pComm;

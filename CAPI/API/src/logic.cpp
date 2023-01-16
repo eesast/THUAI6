@@ -449,7 +449,7 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
         printLogger->set_level(spdlog::level::off);
     if (warnOnly)
         printLogger->set_level(spdlog::level::warn);
-    logger = std::make_shared<spdlog::logger>("logicLogger", spdlog::sinks_init_list{fileLogger, printLogger});
+    logger = std::make_unique<spdlog::logger>("logicLogger", spdlog::sinks_init_list{fileLogger, printLogger});
 
     // 建立与服务器之间通信的组件
     pComm = std::make_unique<Communication>(IP, port);

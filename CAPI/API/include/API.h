@@ -315,7 +315,7 @@ public:
 
 private:
     std::chrono::system_clock::time_point StartPoint;
-    std::shared_ptr<spdlog::logger> logger;
+    std::unique_ptr<spdlog::logger> logger;
     ILogic& logic;
 };
 
@@ -363,7 +363,7 @@ public:
 
 private:
     std::chrono::system_clock::time_point StartPoint;
-    std::shared_ptr<spdlog::logger> logger;
+    std::unique_ptr<spdlog::logger> logger;
     ILogic& logic;
 };
 

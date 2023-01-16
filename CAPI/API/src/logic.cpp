@@ -431,34 +431,44 @@ bool Logic::TryConnection()
     return result;
 }
 
-void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool debug, bool level)
+void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool file, bool print, bool warnOnly)
 {
     // 建立日志组件
-    if (debug)
-    {
-        auto file_logger = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/logic-log.txt", true);
-        auto stdout_logger = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        if (level)
-            stdout_logger->set_level(spdlog::level::warn);
-        else
-            stdout_logger->set_level(spdlog::level::info);
-        file_logger->set_level(spdlog::level::trace);
-        logger = std::make_shared<spdlog::logger>("logicLogger", spdlog::sinks_init_list{file_logger, stdout_logger});
-    }
+    auto fileLogger = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/logic-log.txt", true);
+    auto printLogger = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    std::string pattern = "[logic] [%H:%M:%S.%e] [%l] %v";
+    fileLogger->set_pattern(pattern);
+    printLogger->set_pattern(pattern);
+    if (file)
+        fileLogger->set_level(spdlog::level::trace);
     else
-    {
-        auto logger = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/logic-log.txt", true);
-        logger->set_level(spdlog::level::trace);
-    }
+        fileLogger->set_level(spdlog::level::off);
+    if (print)
+        printLogger->set_level(spdlog::level::info);
+    else
+        printLogger->set_level(spdlog::level::off);
+    if (warnOnly)
+        printLogger->set_level(spdlog::level::warn);
+    logger = std::make_shared<spdlog::logger>("logicLogger", spdlog::sinks_init_list{fileLogger, printLogger});
 
     // 建立与服务器之间通信的组件
     pComm = std::make_unique<Communication>(IP, port);
 
     // 构造timer
     if (playerType == THUAI6::PlayerType::HumanPlayer)
-        timer = std::make_unique<HumanAPI>(*this);
+    {
+        if (!file && !print)
+            timer = std::make_unique<HumanAPI>(*this);
+        else
+            timer = std::make_unique<HumanDebugAPI>(*this, file, print, warnOnly, playerID);
+    }
     else if (playerType == THUAI6::PlayerType::ButcherPlayer)
-        timer = std::make_unique<ButcherAPI>(*this);
+    {
+        if (!file && !print)
+            timer = std::make_unique<ButcherAPI>(*this);
+        else
+            timer = std::make_unique<ButcherDebugAPI>(*this, file, print, warnOnly, playerID);
+    }
 
     // 构造AI线程
     auto AIThread = [&]()

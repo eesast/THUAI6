@@ -156,7 +156,7 @@ public:
     }
 
     // Main函数同上
-    void Main(CreateAIFunc createAI, std::string IP, std::string port, bool debug, bool level);
+    void Main(CreateAIFunc createAI, std::string IP, std::string port, bool file, bool print, bool warnOnly);
 };
 
 #endif

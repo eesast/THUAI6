@@ -1,5 +1,7 @@
 tclap/** linguist-vendored
 
+spdlog/** linguist-vendored
+
 proto/** linguist-generated
 
 *.h linguist-language=C++

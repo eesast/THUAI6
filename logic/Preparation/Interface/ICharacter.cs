@@ -7,5 +7,6 @@ namespace Preparation.Interface
     {
         public long TeamID { get; }
         public int HP { get; set; }
+        public double Vampire { get; }
     }
 }

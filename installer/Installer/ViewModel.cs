@@ -30,24 +30,20 @@ namespace starter.viewmodel.settings
 
         public string Route
         {
-            get
-            {
+            get {
                 return obj.Route;
             }
-            set
-            {
+            set {
                 obj.Route = value;
                 this.RaisePropertyChanged("Route");
             }
         }
         public bool Installed
         {
-            get
-            {
+            get {
                 return obj.installed;
             }
-            set
-            {
+            set {
                 obj.installed = value;
                 this.RaisePropertyChanged("Installed");
                 this.RaisePropertyChanged("InstIntroVis");
@@ -57,22 +53,19 @@ namespace starter.viewmodel.settings
         }
         public bool EditingRoute
         {
-            get
-            {
+            get {
                 return obj.EditingRoute;
             }
-            set
-            {
+            set {
                 obj.EditingRoute = value;
                 this.RaisePropertyChanged("EditingRoute");
                 this.RaisePropertyChanged("MoveIntroVis");
                 this.RaisePropertyChanged("RouteBoxVis");
             }
         }
-        public Visibility RouteBoxVis        //if the route editing textbox is visible
+        public Visibility RouteBoxVis  // if the route editing textbox is visible
         {
-            get
-            {
+            get {
                 return obj.EditingRoute ? Visibility.Visible : Visibility.Collapsed;
             }
         }
@@ -81,22 +74,19 @@ namespace starter.viewmodel.settings
         /// </summary>
         public Visibility InstIntroVis
         {
-            get
-            {
+            get {
                 return obj.installed ? Visibility.Collapsed : Visibility.Visible;
             }
         }
         public Visibility EditIntroVis
         {
-            get
-            {
+            get {
                 return obj.installed ? Visibility.Visible : Visibility.Collapsed;
             }
         }
         public Visibility MoveIntroVis
         {
-            get
-            {
+            get {
                 if (obj.installed == true && obj.EditingRoute == true)
                     return Visibility.Visible;
                 else
@@ -107,8 +97,7 @@ namespace starter.viewmodel.settings
         private BaseCommand clickBrowseCommand;
         public BaseCommand ClickBrowseCommand
         {
-            get
-            {
+            get {
                 if (clickBrowseCommand == null)
                 {
                     clickBrowseCommand = new BaseCommand(new Action<object>(o =>
@@ -116,32 +105,31 @@ namespace starter.viewmodel.settings
                         using (FolderBrowserDialog dialog = new FolderBrowserDialog())
                         {
                             _ = dialog.ShowDialog();
-                            if (dialog.SelectedPath != String.Empty)
-                                Route = dialog.SelectedPath;
-                        }
-                    }));
+                    if (dialog.SelectedPath != String.Empty)
+                        Route = dialog.SelectedPath;
                 }
-                return clickBrowseCommand;
-            }
-        }
-        private BaseCommand clickConfirmCommand;
-        public BaseCommand ClickConfirmCommand
+            }));
+                }
+        return clickBrowseCommand;
+    }
+}
+private BaseCommand clickConfirmCommand;
+public BaseCommand ClickConfirmCommand
+{
+    get {
+        if (clickConfirmCommand == null)
         {
-            get
-            {
-                if (clickConfirmCommand == null)
-                {
                     clickConfirmCommand = new BaseCommand(new Action<object>(o =>
                     {
                         if (obj.install())
                         {
                             EditingRoute = false;
-                            Installed = true;
-                        }
-                    }));
-                }
-                return clickConfirmCommand;
-            }
+                    Installed = true;
         }
-    }
+    }));
+                }
+return clickConfirmCommand;
+}
+}
+}
 }

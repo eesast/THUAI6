@@ -43,14 +43,14 @@ namespace GameClass.GameObj
         {
         }
     }
-    ///// <summary>
-    ///// 坑人地雷
-    ///// </summary>
-    // public abstract class DebuffMine : Prop
-    //{
-    //     public DebuffMine(XYPosition initPos) : base(initPos) { }
-    // }
-    #region 所有增益道具
+///// <summary>
+///// 坑人地雷
+///// </summary>
+// public abstract class DebuffMine : Prop
+//{
+//     public DebuffMine(XYPosition initPos) : base(initPos) { }
+// }
+#region 所有增益道具
     /// <summary>
     /// 增加速度
     /// </summary>
@@ -95,7 +95,7 @@ namespace GameClass.GameObj
         }
         public override PropType GetPropType() => PropType.Spear;
     }
-    #endregion
+#endregion
     // #region 所有坑人地雷
     ///// <summary>
     ///// 减速

@@ -15,6 +15,10 @@
 #include <atomic>
 #include <queue>
 
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+
 #include "Message2Server.pb.h"
 #include "Message2Clients.pb.h"
 #include "MessageType.pb.h"
@@ -30,8 +34,12 @@
 class Logic : public ILogic
 {
 private:
+    // 日志组件
+    std::unique_ptr<spdlog::logger> logger;
+
     // 通信组件
     std::unique_ptr<Communication> pComm;
+
     // ID、阵营记录
     int64_t playerID;
     THUAI6::PlayerType playerType;
@@ -148,7 +156,7 @@ public:
     }
 
     // Main函数同上
-    void Main(CreateAIFunc createAI, std::string IP, std::string port, bool level, std::string filename);
+    void Main(CreateAIFunc createAI, std::string IP, std::string port, bool file, bool print, bool warnOnly);
 };
 
 #endif

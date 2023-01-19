@@ -35,7 +35,7 @@ class Logic : public ILogic
 {
 private:
     // 日志组件
-    std::shared_ptr<spdlog::logger> logger;
+    std::unique_ptr<spdlog::logger> logger;
 
     // 通信组件
     std::unique_ptr<Communication> pComm;
@@ -156,7 +156,7 @@ public:
     }
 
     // Main函数同上
-    void Main(CreateAIFunc createAI, std::string IP, std::string port, bool debug, bool level);
+    void Main(CreateAIFunc createAI, std::string IP, std::string port, bool file, bool print, bool warnOnly);
 };
 
 #endif

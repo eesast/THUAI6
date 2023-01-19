@@ -1,6 +1,52 @@
+#include <string>
 #include "AI.h"
 #include "API.h"
+#include "structures.h"
 #define PI 3.14159265358979323846
+
+HumanDebugAPI::HumanDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID) :
+    logic(logic)
+{
+    std::string fileName = "logs/api-" + std::to_string(playerID) + "-log.txt";
+    auto fileLogger = std::make_shared<spdlog::sinks::basic_file_sink_mt>(fileName, true);
+    auto printLogger = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    std::string pattern = "[api " + std::to_string(playerID) + "] [%H:%M:%S.%e] [%l] %v";
+    fileLogger->set_pattern(pattern);
+    printLogger->set_pattern(pattern);
+    if (file)
+        fileLogger->set_level(spdlog::level::trace);
+    else
+        fileLogger->set_level(spdlog::level::off);
+    if (print)
+        printLogger->set_level(spdlog::level::info);
+    else
+        printLogger->set_level(spdlog::level::off);
+    if (warnOnly)
+        printLogger->set_level(spdlog::level::warn);
+    logger = std::make_unique<spdlog::logger>("apiLogger", spdlog::sinks_init_list{fileLogger, printLogger});
+}
+
+ButcherDebugAPI::ButcherDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID) :
+    logic(logic)
+{
+    std::string fileName = "logs/api-" + std::to_string(playerID) + "-log.txt";
+    auto fileLogger = std::make_shared<spdlog::sinks::basic_file_sink_mt>(fileName, true);
+    auto printLogger = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    std::string pattern = "[api" + std::to_string(playerID) + "] [%H:%M:%S.%e] [%l] %v";
+    fileLogger->set_pattern(pattern);
+    printLogger->set_pattern(pattern);
+    if (file)
+        fileLogger->set_level(spdlog::level::trace);
+    else
+        fileLogger->set_level(spdlog::level::off);
+    if (print)
+        printLogger->set_level(spdlog::level::info);
+    else
+        printLogger->set_level(spdlog::level::off);
+    if (warnOnly)
+        printLogger->set_level(spdlog::level::warn);
+    logger = std::make_unique<spdlog::logger>("apiLogger", spdlog::sinks_init_list{fileLogger, printLogger});
+}
 
 void HumanDebugAPI::StartTimer()
 {
@@ -34,130 +80,153 @@ int ButcherDebugAPI::GetFrameCount() const
 
 std::future<bool> HumanDebugAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
 {
+    logger->info("Move: timeInMilliseconds = {}, angleInRadian = {}", timeInMilliseconds, angleInRadian);
     return std::async(std::launch::async, [&]()
                       { return logic.Move(timeInMilliseconds, angleInRadian); });
 }
 
 std::future<bool> HumanDebugAPI::MoveDown(int64_t timeInMilliseconds)
 {
+    logger->info("MoveDown: timeInMilliseconds = {}", timeInMilliseconds);
     return Move(timeInMilliseconds, 0);
 }
 
 std::future<bool> HumanDebugAPI::MoveRight(int64_t timeInMilliseconds)
 {
+    logger->info("MoveRight: timeInMilliseconds = {}", timeInMilliseconds);
     return Move(timeInMilliseconds, PI * 0.5);
 }
 
 std::future<bool> HumanDebugAPI::MoveUp(int64_t timeInMilliseconds)
 {
+    logger->info("MoveUp: timeInMilliseconds = {}", timeInMilliseconds);
     return Move(timeInMilliseconds, PI);
 }
 
 std::future<bool> HumanDebugAPI::MoveLeft(int64_t timeInMilliseconds)
 {
+    logger->info("MoveLeft: timeInMilliseconds = {}", timeInMilliseconds);
     return Move(timeInMilliseconds, PI * 1.5);
 }
 
 std::future<bool> ButcherDebugAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
 {
+    logger->info("Move: timeInMilliseconds = {}, angleInRadian = {}", timeInMilliseconds, angleInRadian);
     return std::async(std::launch::async, [&]()
                       { return logic.Move(timeInMilliseconds, angleInRadian); });
 }
 
 std::future<bool> ButcherDebugAPI::MoveDown(int64_t timeInMilliseconds)
 {
+    logger->info("MoveDown: timeInMilliseconds = {}", timeInMilliseconds);
     return Move(timeInMilliseconds, 0);
 }
 
 std::future<bool> ButcherDebugAPI::MoveRight(int64_t timeInMilliseconds)
 {
+    logger->info("MoveRight: timeInMilliseconds = {}", timeInMilliseconds);
     return Move(timeInMilliseconds, PI * 0.5);
 }
 
 std::future<bool> ButcherDebugAPI::MoveUp(int64_t timeInMilliseconds)
 {
+    logger->info("MoveUp: timeInMilliseconds = {}", timeInMilliseconds);
     return Move(timeInMilliseconds, PI);
 }
 
 std::future<bool> ButcherDebugAPI::MoveLeft(int64_t timeInMilliseconds)
 {
+    logger->info("MoveLeft: timeInMilliseconds = {}", timeInMilliseconds);
     return Move(timeInMilliseconds, PI * 1.5);
 }
 
 std::future<bool> HumanDebugAPI::PickProp(THUAI6::PropType prop)
 {
+    logger->info("PickProp: prop = {}", THUAI6::propDict[prop]);
     return std::async(std::launch::async, [&]()
                       { return logic.PickProp(prop); });
 }
 
 std::future<bool> HumanDebugAPI::UseProp()
 {
+    logger->info("UseProp");
     return std::async(std::launch::async, [&]()
                       { return logic.UseProp(); });
 }
 
 std::future<bool> ButcherDebugAPI::PickProp(THUAI6::PropType prop)
 {
+    logger->info("PickProp: prop = {}", THUAI6::propDict[prop]);
     return std::async(std::launch::async, [&]()
                       { return logic.PickProp(prop); });
 }
 
 std::future<bool> ButcherDebugAPI::UseProp()
 {
+    logger->info("UseProp");
     return std::async(std::launch::async, [&]()
                       { return logic.UseProp(); });
 }
 
 std::future<bool> HumanDebugAPI::UseSkill()
 {
+    logger->info("UseSkill");
     return std::async(std::launch::async, [&]()
                       { return logic.UseSkill(); });
 }
 
 std::future<bool> ButcherDebugAPI::UseSkill()
 {
+    logger->info("UseSkill");
     return std::async(std::launch::async, [&]()
                       { return logic.UseSkill(); });
 }
 
 std::future<bool> HumanDebugAPI::SendMessage(int64_t toID, std::string message)
 {
+    logger->info("SendMessage: toID = {}, message = {}", toID, message);
     return std::async(std::launch::async, [&]()
                       { return logic.SendMessage(toID, message); });
 }
 
 std::future<bool> ButcherDebugAPI::SendMessage(int64_t toID, std::string message)
 {
+    logger->info("SendMessage: toID = {}, message = {}", toID, message);
     return std::async(std::launch::async, [&]()
                       { return logic.SendMessage(toID, message); });
 }
 
 std::future<bool> HumanDebugAPI::HaveMessage()
 {
+    logger->info("HaveMessage");
     return std::async(std::launch::async, [&]()
                       { return logic.HaveMessage(); });
 }
 
 std::future<bool> ButcherDebugAPI::HaveMessage()
 {
+    logger->info("HaveMessage");
     return std::async(std::launch::async, [&]()
                       { return logic.HaveMessage(); });
 }
 
 std::future<std::optional<std::pair<int64_t, std::string>>> HumanDebugAPI::GetMessage()
 {
+    logger->info("GetMessage");
     return std::async(std::launch::async, [&]()
                       { return logic.GetMessage(); });
 }
 
 std::future<std::optional<std::pair<int64_t, std::string>>> ButcherDebugAPI::GetMessage()
 {
+    logger->info("GetMessage");
     return std::async(std::launch::async, [&]()
                       { return logic.GetMessage(); });
 }
 
 std::future<bool> HumanDebugAPI::Wait()
 {
+    logger->info("Wait");
     if (logic.GetCounter() == -1)
         return std::async(std::launch::async, [&]()
                           { return false; });
@@ -168,6 +237,7 @@ std::future<bool> HumanDebugAPI::Wait()
 
 std::future<bool> ButcherDebugAPI::Wait()
 {
+    logger->info("Wait");
     if (logic.GetCounter() == -1)
         return std::async(std::launch::async, [&]()
                           { return false; });
@@ -238,30 +308,35 @@ const std::vector<int64_t> ButcherDebugAPI::GetPlayerGUIDs() const
 
 std::future<bool> HumanDebugAPI::StartFixMachine()
 {
+    logger->info("StartFixMachine");
     return std::async(std::launch::async, [&]()
                       { return logic.StartFixMachine(); });
 }
 
 std::future<bool> HumanDebugAPI::EndFixMachine()
 {
+    logger->info("EndFixMachine");
     return std::async(std::launch::async, [&]()
                       { return logic.EndFixMachine(); });
 }
 
 std::future<bool> HumanDebugAPI::StartSaveHuman()
 {
+    logger->info("StartSaveHuman");
     return std::async(std::launch::async, [&]()
                       { return logic.StartSaveHuman(); });
 }
 
 std::future<bool> HumanDebugAPI::EndSaveHuman()
 {
+    logger->info("EndSaveHuman");
     return std::async(std::launch::async, [&]()
                       { return logic.EndSaveHuman(); });
 }
 
 std::future<bool> HumanDebugAPI::Escape()
 {
+    logger->info("Escape");
     return std::async(std::launch::async, [&]()
                       { return logic.Escape(); });
 }
@@ -273,24 +348,28 @@ std::shared_ptr<const THUAI6::Human> HumanDebugAPI::GetSelfInfo() const
 
 std::future<bool> ButcherDebugAPI::Attack(double angleInRadian)
 {
+    logger->info("Attack");
     return std::async(std::launch::async, [&]()
                       { return logic.Attack(angleInRadian); });
 }
 
 std::future<bool> ButcherDebugAPI::CarryHuman()
 {
+    logger->info("CarryHuman");
     return std::async(std::launch::async, [&]()
                       { return logic.CarryHuman(); });
 }
 
 std::future<bool> ButcherDebugAPI::ReleaseHuman()
 {
+    logger->info("ReleaseHuman");
     return std::async(std::launch::async, [&]()
                       { return logic.ReleaseHuman(); });
 }
 
 std::future<bool> ButcherDebugAPI::HangHuman()
 {
+    logger->info("HangHuman");
     return std::async(std::launch::async, [&]()
                       { return logic.HangHuman(); });
 }

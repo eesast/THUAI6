@@ -315,7 +315,7 @@ public:
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const override;
 
 private:
-    std::chrono::system_clock::time_point StartPoint;
+    std::chrono::system_clock::time_point startPoint;
     std::unique_ptr<spdlog::logger> logger;
     ILogic& logic;
 };
@@ -363,7 +363,7 @@ public:
     [[nodiscard]] std::shared_ptr<const THUAI6::Butcher> GetSelfInfo() const override;
 
 private:
-    std::chrono::system_clock::time_point StartPoint;
+    std::chrono::system_clock::time_point startPoint;
     std::unique_ptr<spdlog::logger> logger;
     ILogic& logic;
 };

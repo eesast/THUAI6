@@ -234,7 +234,7 @@ namespace Gaming
                 {
                 for (int j = 0; j < gameMap.ProtoGameMap.GetLength(1); j++)
                 {
-                    if (gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Null)
+                    if (gameMap.ProtoGameMap[i, j] == (int)MapInfoObjType.Null)
                     {
                         availableCellForGenerateProp.Add(GameData.GetCellCenterPos(i, j));
                     }

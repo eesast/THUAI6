@@ -98,9 +98,12 @@ public enum MapInfoObjType
     Grass1 = 2,
     Grass2 = 3,
     Grass3 = 4,
-    BirthPoint1 = 5,
-    BirthPoint2 = 6,
-    BirthPoint3 = 7,
-    BirthPoint4 = 8,
-    BirthPoint5 = 9,
+    Generator = 5,  // 发电机
+    Exit = 6,
+    EmergencyExit = 7,
+    BirthPoint1 = 8,
+    BirthPoint2 = 9,
+    BirthPoint3 = 10,
+    BirthPoint4 = 11,
+    BirthPoint5 = 12,
 }

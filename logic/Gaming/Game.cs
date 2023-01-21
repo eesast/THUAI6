@@ -182,7 +182,7 @@ public void MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-            moveManager.MovePlayer(player, moveTimeInMilliseconds, angle);
+            actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
 #if DEBUG
             Console.WriteLine($"PlayerID:{playerID} move to ({player.Position.x},{player.Position.y})!");
 #endif
@@ -351,7 +351,7 @@ public Game(uint[,] mapResource, int numOfTeam)
 
             skillManager = new SkillManager();
             attackManager = new AttackManager(gameMap);
-            moveManager = new MoveManager(gameMap);
+            actionManager = new ActionManager(gameMap);
             propManager = new PropManager(gameMap);
 }
 }

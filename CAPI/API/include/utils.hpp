@@ -297,4 +297,14 @@ namespace THUAI62Proto
     }
 }  // namespace THUAI62Proto
 
+namespace Time
+{
+    inline double TimeSinceStart(const std::chrono::system_clock::time_point& sp)
+    {
+        std::chrono::system_clock::time_point tp = std::chrono::system_clock::now();
+        std::chrono::duration<double, std::milli> time_span = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(tp - sp);
+        return time_span.count();
+    }
+}  // namespace Time
+
 #endif

@@ -71,23 +71,29 @@ namespace starter.viewmodel.settings
         /// </summary>
         public string Route
         {
-            get {
+            get
+            {
                 return Downloader.Program.Data.FilePath;
             }
-            set {
+            set
+            {
                 Downloader.Program.Data.FilePath = value;
             }
         }
         /// <summary>
         /// if the route was set or is under editing
         /// </summary>
-        public bool EditingRoute {
-            get; set; }
+        public bool EditingRoute
+        {
+            get; set;
+        }
         ///< summary>
         /// if already installed
         ///  </summary>
-        public bool installed {
-            get; set; }
+        public bool installed
+        {
+            get; set;
+        }
     }
 }
 namespace Downloader
@@ -224,7 +230,8 @@ namespace Downloader
                     GetObjectRequest request = new GetObjectRequest(bucket, key, localDir, localFileName);
 
                     Dictionary<string, string> test = request.GetRequestHeaders();
-                    request.SetCosProgressCallback(delegate(long completed, long total) {
+                    request.SetCosProgressCallback(delegate (long completed, long total)
+                    {
                         Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
                     });
                     // 执行请求
@@ -834,7 +841,8 @@ namespace WebConnect
         async public Task LoginToEEsast(HttpClient client, string useremail, string password)
         {
             string token = "";
-            using (var response = await client.PostAsync("https://api.eesast.com/users/login", JsonContent.Create(new {
+            using (var response = await client.PostAsync("https://api.eesast.com/users/login", JsonContent.Create(new
+            {
                 email = useremail,
                 password = password,
             })))
@@ -843,9 +851,10 @@ namespace WebConnect
                 {
                     case System.Net.HttpStatusCode.OK:
                         Console.WriteLine("Success login");
-                        token = (System.Text.Json.JsonSerializer.Deserialize(await response.Content.ReadAsStreamAsync(), typeof(LoginResponse), new JsonSerializerOptions() {
-                                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                                }) as LoginResponse)
+                        token = (System.Text.Json.JsonSerializer.Deserialize(await response.Content.ReadAsStreamAsync(), typeof(LoginResponse), new JsonSerializerOptions()
+                        {
+                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        }) as LoginResponse)
                                     ?.Token ??
                                 throw new Exception("no token!");
                         logintoken = token;

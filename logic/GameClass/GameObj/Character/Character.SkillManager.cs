@@ -23,7 +23,8 @@ namespace GameClass.GameObj
         public int TimeUntilCommonSkillAvailable
         {
             get => timeUntilCommonSkillAvailable;
-            set {
+            set
+            {
                 lock (gameObjLock)
                     timeUntilCommonSkillAvailable = value < 0 ? 0 : value;
             }

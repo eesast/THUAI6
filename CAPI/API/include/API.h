@@ -14,6 +14,11 @@
 #include <future>
 #include <iostream>
 #include <vector>
+#include <optional>
+
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 #include "structures.h"
 
@@ -269,10 +274,7 @@ private:
 class HumanDebugAPI : public IHumanAPI, public IGameTimer
 {
 public:
-    HumanDebugAPI(ILogic& logic) :
-        logic(logic)
-    {
-    }
+    HumanDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID);
     void StartTimer() override;
     void EndTimer() override;
     void Play(IAI& ai) override;
@@ -313,17 +315,15 @@ public:
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const override;
 
 private:
-    std::chrono::system_clock::time_point StartPoint;
+    std::chrono::system_clock::time_point startPoint;
+    std::unique_ptr<spdlog::logger> logger;
     ILogic& logic;
 };
 
 class ButcherDebugAPI : public IButcherAPI, public IGameTimer
 {
 public:
-    ButcherDebugAPI(ILogic& logic) :
-        logic(logic)
-    {
-    }
+    ButcherDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID);
     void StartTimer() override;
     void EndTimer() override;
     void Play(IAI& ai) override;
@@ -363,7 +363,8 @@ public:
     [[nodiscard]] std::shared_ptr<const THUAI6::Butcher> GetSelfInfo() const override;
 
 private:
-    std::chrono::system_clock::time_point StartPoint;
+    std::chrono::system_clock::time_point startPoint;
+    std::unique_ptr<spdlog::logger> logger;
     ILogic& logic;
 };
 

@@ -19,6 +19,8 @@ using static Downloader.Program;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Windows;
+using System.Windows.Shapes;
+//using System.Windows.Forms;
 
 namespace starter.viewmodel.settings
 {
@@ -69,23 +71,29 @@ namespace starter.viewmodel.settings
         /// </summary>
         public string Route
         {
-            get {
+            get
+            {
                 return Downloader.Program.Data.FilePath;
             }
-            set {
+            set
+            {
                 Downloader.Program.Data.FilePath = value;
             }
         }
         /// <summary>
         /// if the route was set or is under editing
         /// </summary>
-        public bool EditingRoute {
-            get; set; }
+        public bool EditingRoute
+        {
+            get; set;
+        }
         ///< summary>
         /// if already installed
         ///  </summary>
-        public bool installed {
-            get; set; }
+        public bool installed
+        {
+            get; set;
+        }
     }
 }
 namespace Downloader
@@ -97,63 +105,94 @@ namespace Downloader
         static string ProgramName = "THUAI6";                     // 要运行或下载的程序名称
         static string playerFolder = "player";                    // 选手代码保存文件夹路径
         static string startName = "maintest.exe";                 // 启动的程序名
+        static int filenum = 0;                                   // 总文件个数
 
         public class Data
         {
-            public static string path = "";      // 标记路径记录文件THUAI6.dat的路径
+            public static string path = "";      // 标记路径记录文件THUAI6.json的路径
             public static string FilePath = "";  // 最后一级为THUAI6文件夹所在目录
             public static string dataPath = "";  // C盘的文档文件夹
             public Data(string path)
             {
                 // dataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 dataPath = new DirectoryInfo(".").FullName;
-                Data.path = System.IO.Path.Combine(dataPath, "THUAI6.dat");
+                Data.path = System.IO.Path.Combine(dataPath, "THUAI6.json");
                 if (File.Exists(Data.path))
                 {
+                    var dict = new Dictionary<string, string>();
                     using (StreamReader r = new StreamReader(Data.path))
-                        FilePath = r.ReadLine().Replace('\\', '/');  // 读取THUAI6.dat文件的第一行
+                    {
+                        string json = r.ReadToEnd();
+                        if (json == null || json == "")
+                        {
+                            json += @"{""THUAI6""" + ":" + @"""2023""}";
+                        }
+                        dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                        if (dict != null && dict.ContainsKey("installpath"))
+                        {
+                            FilePath = dict["installpath"].Replace('\\', '/');
+                        }  //读取安装路径
+                    }
+                    dict?.TryAdd("installpath", @path);
+                    using FileStream fs = new FileStream(Data.path, FileMode.Create, FileAccess.ReadWrite);
+                    using StreamWriter sw = new StreamWriter(fs);
+                    sw.Write(JsonConvert.SerializeObject(dict));
+                    sw.Flush();
                 }
                 else
                 {
                     FilePath = System.IO.Path.GetDirectoryName(@path);
 
-                    // 将dat文件写入程序运行路径
-                    FileStream fs = new FileStream(Data.path, FileMode.Create, FileAccess.ReadWrite);
-                    StreamWriter sw = new StreamWriter(fs);
-                    sw.Write(path);
-                    sw.Flush();
-                    sw.Close();
-                }
-            }
-
-            public static void ChangeData(string newLine)
-            {
-                if (Directory.Exists(@newLine))  // 判断文件夹是否存在
-                {
-                    Console.Write($"是否创建新路径 {newLine}？y/n:");
-                    if (Console.Read() != 'y')
+                    //将dat文件写入程序运行路径
+                    string json;
+                    Dictionary<string, string> dict = new Dictionary<string, string>();
+                    using FileStream fs = new FileStream(Data.path, FileMode.Create, FileAccess.ReadWrite);
+                    using (StreamReader r = new StreamReader(fs))
                     {
-                        Console.WriteLine("创建取消!");
-                        return;
+                        json = r.ReadToEnd();
+                        if (json == null || json == "")
+                        {
+                            json += @"{""THUAI6""" + ":" + @"""2023""}";
+                        }
+                        dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                        dict?.Add("installpath", path);
                     }
-
-                    using (StreamWriter w = new StreamWriter(path))
-                        w.WriteLine(@newLine.Trim('\r').Trim('\n'));
-                    Console.WriteLine($"当前下载路径为{newLine}");
+                    using FileStream fs2 = new FileStream(Data.path, FileMode.Create, FileAccess.ReadWrite);
+                    using StreamWriter sw = new StreamWriter(fs2);
+                    sw.Write(JsonConvert.SerializeObject(dict));
+                    sw.Flush();
                 }
             }
 
             public static void ResetFilepath(string newPath)
             {
+                string json;
+                Dictionary<string, string> dict = new Dictionary<string, string>();
                 FilePath = newPath.Replace('\\', '/');
-                path = System.IO.Path.Combine(dataPath, "THUAI6.dat");
-                FileStream fs = new FileStream(Data.path, FileMode.Create, FileAccess.ReadWrite);
-                StreamWriter sw = new StreamWriter(fs);
-                fs.SetLength(0);
-                sw.Write(newPath);
+                path = System.IO.Path.Combine(dataPath, "THUAI6.json");
+                using FileStream fs = new FileStream(Data.path, FileMode.Create, FileAccess.ReadWrite);
+                using (StreamReader r = new StreamReader(fs))
+                {
+                    json = r.ReadToEnd();
+                    if (json == null || json == "")
+                    {
+                        json += @"{""THUAI6""" + ":" + @"""2023""}";
+                    }
+                    dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                    if (dict != null && dict.ContainsKey("installpath"))
+                    {
+                        dict["installpath"] = newPath;
+                    }
+                    else
+                    {
+                        dict.Add("installpath", newPath);
+                    }
+                }
+                using FileStream fs2 = new FileStream(path, FileMode.Open, FileAccess.ReadWrite);
+                using StreamWriter sw = new StreamWriter(fs2);
+                fs2.SetLength(0);
+                sw.Write(JsonConvert.SerializeObject(dict));
                 sw.Flush();
-                sw.Close();
-                fs.Close();
             }
         }
         public class Tencent_cos_download
@@ -191,7 +230,8 @@ namespace Downloader
                     GetObjectRequest request = new GetObjectRequest(bucket, key, localDir, localFileName);
 
                     Dictionary<string, string> test = request.GetRequestHeaders();
-                    request.SetCosProgressCallback(delegate(long completed, long total) {
+                    request.SetCosProgressCallback(delegate (long completed, long total)
+                    {
                         Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
                     });
                     // 执行请求
@@ -293,6 +333,7 @@ namespace Downloader
 
                 newFile = newFileName.Count;
                 updateFile = updateFileName.Count;
+                filenum = newFile + updateFile;
                 Console.WriteLine("----------------------" + Environment.NewLine);
 
                 if (newFile + updateFile == 0)
@@ -326,6 +367,7 @@ namespace Downloader
 
                 int newFile = 0, updateFile = 0;
                 int totalnew = newFileName.Count, totalupdate = updateFileName.Count;
+                filenum = totalnew + totalupdate;
 
                 if (newFileName.Count > 0 || updateFileName.Count > 0)
                 {
@@ -372,27 +414,32 @@ namespace Downloader
 
             public static bool CheckAlreadyDownload()  // 检查是否已经下载
             {
-                string existpath = System.IO.Path.Combine(Data.dataPath, "Exists.txt");
+                string existpath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
                 if (!File.Exists(existpath))  // 文件不存在
                 {
-                    FileStream fs = new FileStream(existpath, FileMode.Create, FileAccess.ReadWrite);
-                    fs.Close();
+                    using FileStream fs = new FileStream(existpath, FileMode.Create, FileAccess.ReadWrite);
                     return false;
                 }
                 else  // 文件存在
                 {
-                    FileStream fs = new FileStream(existpath, FileMode.Open, FileAccess.Read);
-                    StreamReader sr = new StreamReader(fs);
-                    if ("true" == sr.ReadLine())
+                    using FileStream fs = new FileStream(existpath, FileMode.Open, FileAccess.Read);
+                    using StreamReader sr = new StreamReader(fs);
+                    string json = sr.ReadToEnd();
+                    if (json == null || json == "")
                     {
-                        sr.Close();
-                        fs.Close();
+                        json += @"{""THUAI6""" + ":" + @"""2023""}";
+                    }
+                    var dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                    if (dict == null || !dict.ContainsKey("download") || "false" == dict["download"])
+                    {
+                        return false;
+                    }
+                    else if (dict["download"] == "true")
+                    {
                         return true;
                     }
                     else
                     {
-                        sr.Close();
-                        fs.Close();
                         return false;
                     }
                 }
@@ -442,13 +489,32 @@ namespace Downloader
                 }
                 Download();
 
-                string existpath = System.IO.Path.Combine(Data.dataPath, "Exists.txt");
-                FileStream fs = new FileStream(existpath, FileMode.Open, FileAccess.ReadWrite);
-                StreamWriter sw = new StreamWriter(fs);
-                fs.SetLength(0);
-                sw.Write("true");
-                sw.Close();
-                fs.Close();
+                string json2;
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                string existpath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
+                using FileStream fs = new FileStream(existpath, FileMode.Open, FileAccess.ReadWrite);
+                using (StreamReader r = new StreamReader(fs))
+                {
+                    json2 = r.ReadToEnd();
+                    if (json2 == null || json2 == "")
+                    {
+                        json2 += @"{""THUAI6""" + ":" + @"""2023""}";
+                    }
+                    dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json2);
+                    if (dict == null || !dict.ContainsKey("download"))
+                    {
+                        dict?.Add("download", "true");
+                    }
+                    else
+                    {
+                        dict["download"] = "true";
+                    }
+                }
+
+                using FileStream fs2 = new FileStream(existpath, FileMode.Open, FileAccess.ReadWrite);
+                using StreamWriter sw = new StreamWriter(fs2);
+                fs2.SetLength(0);
+                sw.Write(JsonConvert.SerializeObject(dict));
             }
 
             public static void Change_all_hash(string topDir, Dictionary<string, string> jsonDict)  // 更改HASH
@@ -566,13 +632,31 @@ namespace Downloader
                     return;
                 }
 
-                string existpath = System.IO.Path.Combine(Data.dataPath, "Exists.txt");
-                FileStream fs = new FileStream(existpath, FileMode.Open, FileAccess.ReadWrite);
-                StreamWriter sw = new StreamWriter(fs);
-                fs.SetLength(0);
-                sw.Write("false");
-                sw.Close();
-                fs.Close();
+                string json2;
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                string existpath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
+                using FileStream fs = new FileStream(existpath, FileMode.Open, FileAccess.ReadWrite);
+                using (StreamReader r = new StreamReader(fs))
+                {
+                    json2 = r.ReadToEnd();
+                    if (json2 == null || json2 == "")
+                    {
+                        json2 += @"{""THUAI6""" + ":" + @"""2023""}";
+                    }
+                    dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json2);
+                    if (dict == null || !dict.ContainsKey("download"))
+                    {
+                        dict?.Add("download", "false");
+                    }
+                    else
+                    {
+                        dict["download"] = "false";
+                    }
+                }
+                using FileStream fs2 = new FileStream(existpath, FileMode.Open, FileAccess.ReadWrite);
+                using StreamWriter sw = new StreamWriter(fs2);
+                fs2.SetLength(0);
+                sw.Write(JsonConvert.SerializeObject(dict));
 
                 try
                 {
@@ -735,6 +819,10 @@ namespace Downloader
                     {
                         await web.UserDetails(client);
                     }
+                    else if (choose == "9")
+                    {
+                        await web.UploadFiles(client);
+                    }
                     else if (choose == "exit")
                     {
                         return;
@@ -753,7 +841,8 @@ namespace WebConnect
         async public Task LoginToEEsast(HttpClient client, string useremail, string password)
         {
             string token = "";
-            using (var response = await client.PostAsync("https://api.eesast.com/users/login", JsonContent.Create(new {
+            using (var response = await client.PostAsync("https://api.eesast.com/users/login", JsonContent.Create(new
+            {
                 email = useremail,
                 password = password,
             })))
@@ -762,9 +851,10 @@ namespace WebConnect
                 {
                     case System.Net.HttpStatusCode.OK:
                         Console.WriteLine("Success login");
-                        token = (System.Text.Json.JsonSerializer.Deserialize(await response.Content.ReadAsStreamAsync(), typeof(LoginResponse), new JsonSerializerOptions() {
-                                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                                }) as LoginResponse)
+                        token = (System.Text.Json.JsonSerializer.Deserialize(await response.Content.ReadAsStreamAsync(), typeof(LoginResponse), new JsonSerializerOptions()
+                        {
+                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        }) as LoginResponse)
                                     ?.Token ??
                                 throw new Exception("no token!");
                         logintoken = token;
@@ -780,6 +870,59 @@ namespace WebConnect
                         }
                         return;
                 }
+            }
+        }
+        async public Task UploadFiles(HttpClient client)    //用来上传文件
+        {
+            if (!ReadToken())   //读取token失败
+            {
+                return;
+            }
+            try
+            {
+                string tarfile; //要上传的文件路径
+                string content;
+                string filedest;    //文件目的地
+                client.DefaultRequestHeaders.Authorization = new("Bearer", logintoken);
+                Console.WriteLine("请输入要上传的文件完整路径：");
+                tarfile = Console.ReadLine();
+                if (!File.Exists(tarfile))
+                {
+                    Console.WriteLine("文件不存在！");
+                    return;
+                }
+                Console.WriteLine("要将文件上传到何处？：");
+                filedest = Console.ReadLine();
+                using FileStream fs = new FileStream(tarfile, FileMode.Open, FileAccess.Read);
+                using StreamReader sr = new StreamReader(fs);
+                content = sr.ReadToEnd();
+                using (var response = await client.PostAsync("https://api.eesast.com/files/upload", JsonContent.Create(new
+                {
+                    file = content,
+                    dest = filedest
+                })))
+                {
+                    switch (response.StatusCode)
+                    {
+                        case System.Net.HttpStatusCode.OK:
+                            Console.WriteLine("上传成功！");
+                            break;
+                        case System.Net.HttpStatusCode.Unauthorized:
+                            Console.WriteLine("您未登录或登录过期，请先登录");
+                            break;
+                        default:
+                            Console.WriteLine("上传失败！");
+                            break;
+                    }
+                }
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("文件读取错误！请检查文件是否被其它应用占用！");
+            }
+            catch
+            {
+                Console.WriteLine("请求错误！请检查网络连接！");
             }
         }
 
@@ -822,15 +965,26 @@ namespace WebConnect
 
         public void SaveToken()  // 保存token
         {
-            string savepath = Path.Combine(Data.dataPath, "Token.dat");
+            string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
             try
             {
-                FileStream fs = new FileStream(savepath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-                StreamWriter sw = new StreamWriter(fs);
-                fs.SetLength(0);
-                sw.Write(logintoken);  // 将token写入文件
-                sw.Close();
-                fs.Close();
+                string json;
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                using FileStream fs = new FileStream(savepath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                using (StreamReader r = new StreamReader(fs))
+                {
+                    json = r.ReadToEnd();
+                    if (json == null || json == "")
+                    {
+                        json += @"{""THUAI6""" + ":" + @"""2023""}";
+                    }
+                    dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                    dict?.Add("token", logintoken);
+                }
+                using FileStream fs2 = new FileStream(savepath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                using StreamWriter sw = new StreamWriter(fs2);
+                fs2.SetLength(0);
+                sw.Write(JsonConvert.SerializeObject(dict));   //将token写入文件
             }
             catch (DirectoryNotFoundException)
             {
@@ -853,13 +1007,27 @@ namespace WebConnect
         {
             try
             {
-                string savepath = Path.Combine(Data.dataPath, "Token.dat");
-                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.Read);
-                StreamReader sr = new StreamReader(fs);
-                logintoken = sr.ReadLine();
-                sr.Close();
-                fs.Close();
-                return true;
+                string json;
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
+                using FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.Read);
+                using StreamReader sr = new StreamReader(fs);
+
+                json = sr.ReadToEnd();
+                if (json == null || json == "")
+                {
+                    json += @"{""THUAI6""" + ":" + @"""2023""}";
+                }
+                dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                if (!dict.ContainsKey("token"))
+                {
+                    return false;
+                }
+                else
+                {
+                    logintoken = dict["token"];
+                    return true;
+                }
             }
             catch (DirectoryNotFoundException)
             {
@@ -868,8 +1036,8 @@ namespace WebConnect
             }
             catch (FileNotFoundException)
             {
-                // 没有登陆
-                Console.WriteLine("请先登陆！");
+                //没有登陆
+                Console.WriteLine("请先登录！");
                 return false;
             }
             catch (PathTooLongException)

@@ -12,6 +12,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using COSXML;
+using COSXML.Auth;
+using COSXML.Model.Object;
+using COSXML.Model.Bucket;
+using COSXML.CosException;
+using System.IO;
+using Newtonsoft.Json;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text.Json.Nodes;
+using System.Diagnostics;
+using starter.viewmodel.settings;
+using System.Windows.Forms;
 
 namespace Installer
 {
@@ -23,6 +36,8 @@ namespace Installer
         public MainWindow()
         {
             InitializeComponent();
+
+            this.DataContext = new SettingsViewModel();
         }
     }
 }

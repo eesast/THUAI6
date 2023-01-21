@@ -1,9 +1,9 @@
 # THUAI6
 清华大学第六届人工智能挑战赛电子系赛道（原电子系第 24 届队式程序设计大赛 teamstyle24）
 
-Gitee 镜像地址：[THUAI6: Gitee Image](https://gitee.com/eesast/THUAI6)
+Gitee 镜像地址：[THUAI6: Gitee Mirror](https://gitee.com/eesast/THUAI6)
 
-GitLink 镜像地址：[THUAI6: GitLink Image](https://www.gitlink.org.cn/EESAST/THUAI6)
+GitLink 镜像地址：[THUAI6: GitLink Mirror](https://www.gitlink.org.cn/EESAST/THUAI6)
 
 ## 赛题背景
 
@@ -71,6 +71,7 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
   | :------: | :--------------------------------------------: |
   |  chore   | 日常代码开发；改变构建流程；增加依赖库、工具等 |
   |   fix    |                    修复bug                     |
+  |   feat   |                  增加新特性                   |
   | refactor |         改变代码结构，但没有增加新功能         |
   |   docs   |       修改文档，如 README、CONTRIBUTE 等       |
   |  revert  |                    版本回退                    |
@@ -168,7 +169,7 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 - 小组内合理分工，避免个人任务量过重或过轻
 - 做好部会记录，及时完成工作任务，避免拖延到ddl
 - 各组间多交流，相互了解各自的开发进度，加强协作，遇到困难互相帮助
-- 加油，奥里给  
+- 加油，奥里给 ，冲冲冲
 
 ## 开发组成员
 

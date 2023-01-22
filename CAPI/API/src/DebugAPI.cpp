@@ -179,7 +179,7 @@ std::future<bool> ButcherDebugAPI::PickProp(THUAI6::PropType prop)
 std::future<bool> ButcherDebugAPI::UseProp()
 {
     logger->info("UseProp: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.UseProp();
                         if (!result)
                             logger->warn("UseProp: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -189,7 +189,7 @@ std::future<bool> ButcherDebugAPI::UseProp()
 std::future<bool> HumanDebugAPI::UseSkill()
 {
     logger->info("UseSkill: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.UseSkill();
                         if (!result)
                             logger->warn("UseSkill: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -199,7 +199,7 @@ std::future<bool> HumanDebugAPI::UseSkill()
 std::future<bool> ButcherDebugAPI::UseSkill()
 {
     logger->info("UseSkill: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.UseSkill();
                         if (!result)
                             logger->warn("UseSkill: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -229,7 +229,7 @@ std::future<bool> ButcherDebugAPI::SendMessage(int64_t toID, std::string message
 std::future<bool> HumanDebugAPI::HaveMessage()
 {
     logger->info("HaveMessage: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.HaveMessage();
                         if (!result)
                             logger->warn("HaveMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -239,7 +239,7 @@ std::future<bool> HumanDebugAPI::HaveMessage()
 std::future<bool> ButcherDebugAPI::HaveMessage()
 {
     logger->info("HaveMessage: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.HaveMessage();
                         if (!result)
                             logger->warn("HaveMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -249,7 +249,7 @@ std::future<bool> ButcherDebugAPI::HaveMessage()
 std::future<std::optional<std::pair<int64_t, std::string>>> HumanDebugAPI::GetMessage()
 {
     logger->info("GetMessage: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.GetMessage();
                         if (result == std::nullopt)
                             logger->warn("GetMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -259,7 +259,7 @@ std::future<std::optional<std::pair<int64_t, std::string>>> HumanDebugAPI::GetMe
 std::future<std::optional<std::pair<int64_t, std::string>>> ButcherDebugAPI::GetMessage()
 {
     logger->info("GetMessage: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.GetMessage();
                         if (result == std::nullopt)
                             logger->warn("GetMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -273,7 +273,7 @@ std::future<bool> HumanDebugAPI::Wait()
         return std::async(std::launch::async, []()
                           { return false; });
     else
-        return std::async(std::launch::async, [&]()
+        return std::async(std::launch::async, [this]()
                           { return logic.WaitThread(); });
 }
 
@@ -284,7 +284,7 @@ std::future<bool> ButcherDebugAPI::Wait()
         return std::async(std::launch::async, []()
                           { return false; });
     else
-        return std::async(std::launch::async, [&]()
+        return std::async(std::launch::async, [this]()
                           { return logic.WaitThread(); });
 }
 
@@ -351,7 +351,7 @@ const std::vector<int64_t> ButcherDebugAPI::GetPlayerGUIDs() const
 std::future<bool> HumanDebugAPI::StartFixMachine()
 {
     logger->info("StartFixMachine: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.StartFixMachine();
                         if (!result)
                             logger->warn("StartFixMachine: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -361,7 +361,7 @@ std::future<bool> HumanDebugAPI::StartFixMachine()
 std::future<bool> HumanDebugAPI::EndFixMachine()
 {
     logger->info("EndFixMachine: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.EndFixMachine();
                         if (!result)
                             logger->warn("EndFixMachine: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -371,7 +371,7 @@ std::future<bool> HumanDebugAPI::EndFixMachine()
 std::future<bool> HumanDebugAPI::StartSaveHuman()
 {
     logger->info("StartSaveHuman: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.StartSaveHuman();
                         if (!result)
                             logger->warn("StartSaveHuman: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -381,7 +381,7 @@ std::future<bool> HumanDebugAPI::StartSaveHuman()
 std::future<bool> HumanDebugAPI::EndSaveHuman()
 {
     logger->info("EndSaveHuman: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.EndSaveHuman();
                         if (!result)
                             logger->warn("EndSaveHuman: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -391,7 +391,7 @@ std::future<bool> HumanDebugAPI::EndSaveHuman()
 std::future<bool> HumanDebugAPI::Escape()
 {
     logger->info("Escape: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.Escape();
                         if (!result)
                             logger->warn("Escape: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -406,7 +406,7 @@ std::shared_ptr<const THUAI6::Human> HumanDebugAPI::GetSelfInfo() const
 std::future<bool> ButcherDebugAPI::Attack(double angleInRadian)
 {
     logger->info("Attack: angleInRadian = {}, called at {}ms", angleInRadian, Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { auto result = logic.Attack(angleInRadian);
                         if (!result)
                             logger->warn("Attack: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -416,7 +416,7 @@ std::future<bool> ButcherDebugAPI::Attack(double angleInRadian)
 std::future<bool> ButcherDebugAPI::CarryHuman()
 {
     logger->info("CarryHuman: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.CarryHuman();
                         if (!result)
                             logger->warn("CarryHuman: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -426,7 +426,7 @@ std::future<bool> ButcherDebugAPI::CarryHuman()
 std::future<bool> ButcherDebugAPI::ReleaseHuman()
 {
     logger->info("ReleaseHuman: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.ReleaseHuman();
                         if (!result)
                             logger->warn("ReleaseHuman: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -436,7 +436,7 @@ std::future<bool> ButcherDebugAPI::ReleaseHuman()
 std::future<bool> ButcherDebugAPI::HangHuman()
 {
     logger->info("HangHuman: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { auto result = logic.HangHuman();
                         if (!result)
                             logger->warn("HangHuman: failed at {}ms", Time::TimeSinceStart(startPoint));

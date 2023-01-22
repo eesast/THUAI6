@@ -89,7 +89,7 @@ int ButcherDebugAPI::GetFrameCount() const
 std::future<bool> HumanDebugAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
 {
     logger->info("Move: timeInMilliseconds = {}, angleInRadian = {}, called at {}ms", timeInMilliseconds, angleInRadian, Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { auto result = logic.Move(timeInMilliseconds, angleInRadian);
                         if (!result)
                             logger->warn("Move: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -119,7 +119,7 @@ std::future<bool> HumanDebugAPI::MoveLeft(int64_t timeInMilliseconds)
 std::future<bool> ButcherDebugAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
 {
     logger->info("Move: timeInMilliseconds = {}, angleInRadian = {}, called at {}ms", timeInMilliseconds, angleInRadian, Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { auto result = logic.Move(timeInMilliseconds, angleInRadian);
                         if (!result)
                             logger->warn("Move: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -149,7 +149,7 @@ std::future<bool> ButcherDebugAPI::MoveLeft(int64_t timeInMilliseconds)
 std::future<bool> HumanDebugAPI::PickProp(THUAI6::PropType prop)
 {
     logger->info("PickProp: prop = {}, called at {}ms", THUAI6::propDict[prop], Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { auto result = logic.PickProp(prop);
                         if (!result)
                            logger->warn("PickProp: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -159,7 +159,7 @@ std::future<bool> HumanDebugAPI::PickProp(THUAI6::PropType prop)
 std::future<bool> HumanDebugAPI::UseProp()
 {
     logger->info("UseProp: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { auto result = logic.UseProp();
                         if (!result)
                             logger->warn("UseProp: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -169,7 +169,7 @@ std::future<bool> HumanDebugAPI::UseProp()
 std::future<bool> ButcherDebugAPI::PickProp(THUAI6::PropType prop)
 {
     logger->info("PickProp: prop = {}, called at {}ms", THUAI6::propDict[prop], Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { auto result = logic.PickProp(prop);
                         if (!result)
                             logger->warn("PickProp: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -209,7 +209,7 @@ std::future<bool> ButcherDebugAPI::UseSkill()
 std::future<bool> HumanDebugAPI::SendMessage(int64_t toID, std::string message)
 {
     logger->info("SendMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { auto result = logic.SendMessage(toID, message);
                         if (!result)
                             logger->warn("SendMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -219,7 +219,7 @@ std::future<bool> HumanDebugAPI::SendMessage(int64_t toID, std::string message)
 std::future<bool> ButcherDebugAPI::SendMessage(int64_t toID, std::string message)
 {
     logger->info("SendMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { auto result = logic.SendMessage(toID, message);
                         if (!result)
                             logger->warn("SendMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
@@ -270,7 +270,7 @@ std::future<bool> HumanDebugAPI::Wait()
 {
     logger->info("Wait: called at {}ms", Time::TimeSinceStart(startPoint));
     if (logic.GetCounter() == -1)
-        return std::async(std::launch::async, [&]()
+        return std::async(std::launch::async, []()
                           { return false; });
     else
         return std::async(std::launch::async, [&]()
@@ -281,7 +281,7 @@ std::future<bool> ButcherDebugAPI::Wait()
 {
     logger->info("Wait: called at {}ms", Time::TimeSinceStart(startPoint));
     if (logic.GetCounter() == -1)
-        return std::async(std::launch::async, [&]()
+        return std::async(std::launch::async, []()
                           { return false; });
     else
         return std::async(std::launch::async, [&]()

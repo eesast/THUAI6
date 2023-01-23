@@ -159,7 +159,29 @@ namespace THUAI6
     // 仅供DEBUG使用，名称可改动
     // 还没写完，后面待续
 
-    inline std::map<PlaceType, std::string> placeDict{
+    inline std::map<GameState, std::string> gameStateDict{
+        {GameState::NullGameState, "NullGameState"},
+        {GameState::GameStart, "GameStart"},
+        {GameState::GameRunning, "GameRunning"},
+        {GameState::GameEnd, "GameEnd"},
+    };
+
+    inline std::map<HumanState, std::string> humanStateDict{
+        {HumanState::NullHumanState, "NullHumanState"},
+        {HumanState::Idle, "Idle"},
+        {HumanState::Fixing, "Fixing"},
+        {HumanState::Dying, "Dying"},
+        {HumanState::OnChair, "OnChair"},
+        {HumanState::Dead, "Dead"},
+    };
+
+    inline std::map<PlayerType, std::string> playerTypeDict{
+        {PlayerType::NullPlayerType, "NullPlayerType"},
+        {PlayerType::HumanPlayer, "HumanPlayer"},
+        {PlayerType::ButcherPlayer, "ButcherPlayer"},
+    };
+
+    inline std::map<PlaceType, std::string> placeTypeDict{
         {PlaceType::NullPlaceType, "NullPlaceType"},
         {PlaceType::Land, "Land"},
         {PlaceType::Wall, "Wall"},
@@ -169,8 +191,18 @@ namespace THUAI6
         {PlaceType::HiddenGate, "HiddenGate"},
     };
 
-    inline std::map<PropType, std::string> propDict{
+    inline std::map<PropType, std::string> propTypeDict{
         {PropType::NullPropType, "NullPropType"},
+
+    };
+
+    inline std::map<HumanBuffType, std::string> humanBuffDict{
+        {HumanBuffType::NullHumanBuffType, "NullHumanBuffType"},
+
+    };
+
+    inline std::map<ButcherBuffType, std::string> butcherBuffDict{
+        {ButcherBuffType::NullButcherBuffType, "NullButcherBuffType"},
 
     };
 

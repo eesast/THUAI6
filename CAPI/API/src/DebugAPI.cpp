@@ -148,7 +148,7 @@ std::future<bool> ButcherDebugAPI::MoveLeft(int64_t timeInMilliseconds)
 
 std::future<bool> HumanDebugAPI::PickProp(THUAI6::PropType prop)
 {
-    logger->info("PickProp: prop = {}, called at {}ms", THUAI6::propDict[prop], Time::TimeSinceStart(startPoint));
+    logger->info("PickProp: prop = {}, called at {}ms", THUAI6::propTypeDict[prop], Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
                       { auto result = logic.PickProp(prop);
                         if (!result)
@@ -168,7 +168,7 @@ std::future<bool> HumanDebugAPI::UseProp()
 
 std::future<bool> ButcherDebugAPI::PickProp(THUAI6::PropType prop)
 {
-    logger->info("PickProp: prop = {}, called at {}ms", THUAI6::propDict[prop], Time::TimeSinceStart(startPoint));
+    logger->info("PickProp: prop = {}, called at {}ms", THUAI6::propTypeDict[prop], Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
                       { auto result = logic.PickProp(prop);
                         if (!result)
@@ -446,6 +446,118 @@ std::future<bool> ButcherDebugAPI::HangHuman()
 std::shared_ptr<const THUAI6::Butcher> ButcherDebugAPI::GetSelfInfo() const
 {
     return logic.ButcherGetSelfInfo();
+}
+
+void HumanDebugAPI::PrintHuman() const
+{
+    for (auto human : logic.GetHumans())
+    {
+        logger->info("******Human Info******");
+        logger->info("playerID={}, GUID={}, x={}, y={}", human->playerID, human->guid, human->x, human->y);
+        logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", human->speed, human->viewRange, human->timeUntilSkillAvailable, THUAI6::propTypeDict[human->prop], THUAI6::placeTypeDict[human->place]);
+        logger->info("state={}, life={}, hangedTime={}", THUAI6::humanStateDict[human->state], human->life, human->hangedTime);
+        std::string humanBuff = "buff=";
+        for (auto buff : human->buff)
+            humanBuff += THUAI6::humanBuffDict[buff] + ", ";
+        logger->info(humanBuff);
+        logger->info("**********************");
+    }
+}
+
+void ButcherDebugAPI::PrintHuman() const
+{
+    for (auto human : logic.GetHumans())
+    {
+        logger->info("******Human Info******");
+        logger->info("playerID={}, GUID={}, x={}, y={}", human->playerID, human->guid, human->x, human->y);
+        logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", human->speed, human->viewRange, human->timeUntilSkillAvailable, THUAI6::propTypeDict[human->prop], THUAI6::placeTypeDict[human->place]);
+        logger->info("state={}, life={}, hangedTime={}", THUAI6::humanStateDict[human->state], human->life, human->hangedTime);
+        std::string humanBuff = "buff=";
+        for (auto buff : human->buff)
+            humanBuff += THUAI6::humanBuffDict[buff] + ", ";
+        logger->info(humanBuff);
+        logger->info("**********************");
+    }
+}
+
+void HumanDebugAPI::PrintButcher() const
+{
+    for (auto butcher : logic.GetButchers())
+    {
+        logger->info("******Butcher Info******");
+        logger->info("playerID={}, GUID={}, x={}, y={}", butcher->playerID, butcher->guid, butcher->x, butcher->y);
+        logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", butcher->speed, butcher->viewRange, butcher->timeUntilSkillAvailable, THUAI6::propTypeDict[butcher->prop], THUAI6::placeTypeDict[butcher->place]);
+        logger->info("damage={}, movable={}", butcher->damage, butcher->movable);
+        std::string butcherBuff = "buff=";
+        for (auto buff : butcher->buff)
+            butcherBuff += THUAI6::butcherBuffDict[buff] + ", ";
+        logger->info(butcherBuff);
+        logger->info("************************");
+    }
+}
+
+void ButcherDebugAPI::PrintButcher() const
+{
+    for (auto butcher : logic.GetButchers())
+    {
+        logger->info("******Butcher Info******");
+        logger->info("playerID={}, GUID={}, x={}, y={}", butcher->playerID, butcher->guid, butcher->x, butcher->y);
+        logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", butcher->speed, butcher->viewRange, butcher->timeUntilSkillAvailable, THUAI6::propTypeDict[butcher->prop], THUAI6::placeTypeDict[butcher->place]);
+        logger->info("damage={}, movable={}", butcher->damage, butcher->movable);
+        std::string butcherBuff = "buff=";
+        for (auto buff : butcher->buff)
+            butcherBuff += THUAI6::butcherBuffDict[buff] + ", ";
+        logger->info(butcherBuff);
+        logger->info("************************");
+    }
+}
+
+void HumanDebugAPI::PrintProp() const
+{
+    for (auto prop : logic.GetProps())
+    {
+        logger->info("******Prop Info******");
+        logger->info("GUID={}, x={}, y={}, place={}, is moving={}", prop->guid, prop->x, prop->y, THUAI6::placeTypeDict[prop->place], prop->isMoving);
+        logger->info("*********************");
+    }
+}
+
+void ButcherDebugAPI::PrintProp() const
+{
+    for (auto prop : logic.GetProps())
+    {
+        logger->info("******Prop Info******");
+        logger->info("GUID={}, x={}, y={}, place={}, is moving={}", prop->guid, prop->x, prop->y, THUAI6::placeTypeDict[prop->place], prop->isMoving);
+        logger->info("*********************");
+    }
+}
+
+void HumanDebugAPI::PrintSelfInfo() const
+{
+    auto self = logic.HumanGetSelfInfo();
+    logger->info("******Self Info******");
+    logger->info("playerID={}, GUID={}, x={}, y={}", self->playerID, self->guid, self->x, self->y);
+    logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", self->speed, self->viewRange, self->timeUntilSkillAvailable, THUAI6::propTypeDict[self->prop], THUAI6::placeTypeDict[self->place]);
+    logger->info("state={}, life={}, hangedTime={}", THUAI6::humanStateDict[self->state], self->life, self->hangedTime);
+    std::string humanBuff = "buff=";
+    for (auto buff : self->buff)
+        humanBuff += THUAI6::humanBuffDict[buff] + ", ";
+    logger->info(humanBuff);
+    logger->info("*********************");
+}
+
+void ButcherDebugAPI::PrintSelfInfo() const
+{
+    auto self = logic.ButcherGetSelfInfo();
+    logger->info("******Self Info******");
+    logger->info("playerID={}, GUID={}, x={}, y={}", self->playerID, self->guid, self->x, self->y);
+    logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", self->speed, self->viewRange, self->timeUntilSkillAvailable, THUAI6::propTypeDict[self->prop], THUAI6::placeTypeDict[self->place]);
+    logger->info("damage={}, movable={}", self->damage, self->movable);
+    std::string butcherBuff = "buff=";
+    for (auto buff : self->buff)
+        butcherBuff += THUAI6::butcherBuffDict[buff] + ", ";
+    logger->info(butcherBuff);
+    logger->info("*********************");
 }
 
 void HumanDebugAPI::Play(IAI& ai)

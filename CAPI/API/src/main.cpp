@@ -20,7 +20,7 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     extern const THUAI6::HumanType humanType;
     // 仅供早期调试使用
     {
-        file = true;
+        file = false;
         print = true;
         Logic logic(playerType, pID, butcherType, humanType);
         logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);

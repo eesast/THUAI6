@@ -451,6 +451,14 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
         printLogger->set_level(spdlog::level::warn);
     logger = std::make_unique<spdlog::logger>("logicLogger", spdlog::sinks_init_list{fileLogger, printLogger});
 
+    // 打印当前的调试信息
+    logger->info("*********Basic Info*********");
+    logger->info("asynchronous: {}", asynchronous);
+    logger->info("server: {}:{}", IP, port);
+    logger->info("player ID: {}", playerID);
+    logger->info("player type: {}", THUAI6::playerTypeDict[playerType]);
+    logger->info("****************************");
+
     // 建立与服务器之间通信的组件
     pComm = std::make_unique<Communication>(IP, port);
 
@@ -499,12 +507,13 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
         }
     };
 
-    tAI = std::thread(AIThread);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     // 连接服务器
     if (TryConnection())
     {
         logger->info("Connect to the server successfully, AI thread will be start.");
+        tAI = std::thread(AIThread);
         if (tAI.joinable())
         {
             logger->info("Join the AI thread!");
@@ -516,7 +525,7 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
     }
     else
     {
-        logger->error("Connect to the server failed, AI thread will not be start.");
+        logger->error("Connect to the server failed, AI thread will not be started.");
         return;
     }
 }

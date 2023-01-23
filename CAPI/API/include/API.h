@@ -128,6 +128,13 @@ public:
     {
         return grid / num_of_grid_per_cell;
     }
+
+    // 用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
+
+    virtual void PrintHuman() const = 0;
+    virtual void PrintButcher() const = 0;
+    virtual void PrintProp() const = 0;
+    virtual void PrintSelfInfo() const = 0;
 };
 
 class IHumanAPI : public IAPI
@@ -158,6 +165,7 @@ public:
 class IGameTimer
 {
 public:
+    virtual ~IGameTimer() = default;
     virtual void StartTimer() = 0;
     virtual void EndTimer() = 0;
     virtual void Play(IAI& ai) = 0;
@@ -214,6 +222,19 @@ public:
     std::future<bool> Escape() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Human> GetSelfInfo() const override;
 
+    void PrintHuman() const override
+    {
+    }
+    void PrintButcher() const override
+    {
+    }
+    void PrintProp() const override
+    {
+    }
+    void PrintSelfInfo() const override
+    {
+    }
+
 private:
     ILogic& logic;
 };
@@ -267,6 +288,19 @@ public:
     std::future<bool> HangHuman() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Butcher> GetSelfInfo() const override;
 
+    void PrintHuman() const override
+    {
+    }
+    void PrintButcher() const override
+    {
+    }
+    void PrintProp() const override
+    {
+    }
+    void PrintSelfInfo() const override
+    {
+    }
+
 private:
     ILogic& logic;
 };
@@ -313,6 +347,11 @@ public:
     std::future<bool> EndSaveHuman() override;
     std::future<bool> Escape() override;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const override;
+
+    void PrintHuman() const override;
+    void PrintButcher() const override;
+    void PrintProp() const override;
+    void PrintSelfInfo() const override;
 
 private:
     std::chrono::system_clock::time_point startPoint;
@@ -361,6 +400,11 @@ public:
     std::future<bool> ReleaseHuman() override;
     std::future<bool> HangHuman() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Butcher> GetSelfInfo() const override;
+
+    void PrintHuman() const override;
+    void PrintButcher() const override;
+    void PrintProp() const override;
+    void PrintSelfInfo() const override;
 
 private:
     std::chrono::system_clock::time_point startPoint;

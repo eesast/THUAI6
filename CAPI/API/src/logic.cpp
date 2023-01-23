@@ -507,8 +507,6 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
         }
     };
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
     // 连接服务器
     if (TryConnection())
     {

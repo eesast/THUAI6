@@ -139,7 +139,8 @@ namespace Gaming
                         //    ActivateMine((Character)obj, (Mine)collisionObj);
                         //    return MoveEngine.AfterCollision.ContinueCheck;
                         //}
-                        return MoveEngine.AfterCollision.MoveMax; },
+                        return MoveEngine.AfterCollision.MoveMax;
+                    },
                     EndMove: obj =>
                     {
                         // Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);

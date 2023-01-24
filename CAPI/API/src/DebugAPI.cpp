@@ -288,22 +288,22 @@ std::future<bool> ButcherDebugAPI::Wait()
                           { return logic.WaitThread(); });
 }
 
-std::vector<std::shared_ptr<const THUAI6::Butcher>> HumanDebugAPI::GetButcher() const
+std::vector<std::shared_ptr<const THUAI6::Butcher>> HumanDebugAPI::GetButchers() const
 {
     return logic.GetButchers();
 }
 
-std::vector<std::shared_ptr<const THUAI6::Human>> HumanDebugAPI::GetHuman() const
+std::vector<std::shared_ptr<const THUAI6::Human>> HumanDebugAPI::GetHumans() const
 {
     return logic.GetHumans();
 }
 
-std::vector<std::shared_ptr<const THUAI6::Butcher>> ButcherDebugAPI::GetButcher() const
+std::vector<std::shared_ptr<const THUAI6::Butcher>> ButcherDebugAPI::GetButchers() const
 {
     return logic.GetButchers();
 }
 
-std::vector<std::shared_ptr<const THUAI6::Human>> ButcherDebugAPI::GetHuman() const
+std::vector<std::shared_ptr<const THUAI6::Human>> ButcherDebugAPI::GetHumans() const
 {
     return logic.GetHumans();
 }
@@ -323,14 +323,14 @@ std::vector<std::vector<THUAI6::PlaceType>> HumanDebugAPI::GetFullMap() const
     return logic.GetFullMap();
 }
 
-THUAI6::PlaceType HumanDebugAPI::GetPlaceType(int32_t CellX, int32_t CellY) const
+THUAI6::PlaceType HumanDebugAPI::GetPlaceType(int32_t cellX, int32_t cellY) const
 {
-    return logic.GetPlaceType(CellX, CellY);
+    return logic.GetPlaceType(cellX, cellY);
 }
 
-THUAI6::PlaceType ButcherDebugAPI::GetPlaceType(int32_t CellX, int32_t CellY) const
+THUAI6::PlaceType ButcherDebugAPI::GetPlaceType(int32_t cellX, int32_t cellY) const
 {
-    return logic.GetPlaceType(CellX, CellY);
+    return logic.GetPlaceType(cellX, cellY);
 }
 
 std::vector<std::vector<THUAI6::PlaceType>> ButcherDebugAPI::GetFullMap() const

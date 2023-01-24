@@ -2,3 +2,4 @@
 .vs/
 .vscode/
 CAPI/build
+PyAPI/test

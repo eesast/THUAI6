@@ -219,7 +219,7 @@ bool Communication::HaveMessage()
 
 void Communication::ReadMessage(int64_t playerID)
 {
-    auto tRead = [&]()
+    auto tRead = [=]()
     {
         auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
         ClientContext context;
@@ -235,7 +235,7 @@ void Communication::ReadMessage(int64_t playerID)
 
 void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType)
 {
-    auto tMessage = [&]()
+    auto tMessage = [=]()
     {
         protobuf::PlayerMsg playerMsg = THUAI62Proto::THUAI62ProtobufPlayer(playerID, playerType, humanType, butcherType);
         grpc::ClientContext context;

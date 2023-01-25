@@ -184,6 +184,7 @@ void Logic::ProcessMessage()
         logger->info("Message thread start!");
         pComm->AddPlayer(playerID, playerType, humanType, butcherType);
         logger->info("Join the player!");
+        pComm->ReadMessage(playerID);
         while (gameState != THUAI6::GameState::GameEnd)
         {
             if (pComm->HaveMessage2Client())
@@ -523,6 +524,7 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
     }
     else
     {
+        AILoop = false;
         logger->error("Connect to the server failed, AI thread will not be started.");
         return;
     }

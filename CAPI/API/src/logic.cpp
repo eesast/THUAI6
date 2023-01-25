@@ -187,56 +187,58 @@ void Logic::ProcessMessage()
         pComm->ReadMessage(playerID);
         while (gameState != THUAI6::GameState::GameEnd)
         {
-            if (pComm->HaveMessage2Client())
             {
-                logger->debug("Get message from server!");
-                auto clientMsg = pComm->GetMessage2Client();
-                gameState = Proto2THUAI6::gameStateDict[clientMsg.game_state()];
-                switch (gameState)
-                {
-                    case THUAI6::GameState::GameStart:
-                        logger->info("Game Start!");
+                std::unique_lock<std::mutex> lock(mtxMessage);
+                cvMessage.wait(lock, [this]()
+                               { return pComm->HaveMessage2Client(); });
+            }
+            logger->debug("Get message from server!");
+            auto clientMsg = pComm->GetMessage2Client();
+            gameState = Proto2THUAI6::gameStateDict[clientMsg.game_state()];
+            switch (gameState)
+            {
+                case THUAI6::GameState::GameStart:
+                    logger->info("Game Start!");
 
-                        // 重新读取玩家的guid，guid确保人类在前屠夫在后
-                        playerGUIDs.clear();
-                        for (auto human : clientMsg.human_message())
-                            playerGUIDs.push_back(human.guid());
-                        for (auto butcher : clientMsg.butcher_message())
-                            playerGUIDs.push_back(butcher.guid());
-                        currentState->guids = playerGUIDs;
-                        bufferState->guids = playerGUIDs;
+                    // 重新读取玩家的guid，guid确保人类在前屠夫在后
+                    playerGUIDs.clear();
+                    for (auto human : clientMsg.human_message())
+                        playerGUIDs.push_back(human.guid());
+                    for (auto butcher : clientMsg.butcher_message())
+                        playerGUIDs.push_back(butcher.guid());
+                    currentState->guids = playerGUIDs;
+                    bufferState->guids = playerGUIDs;
 
-                        LoadBuffer(clientMsg);
+                    LoadBuffer(clientMsg);
 
-                        AILoop = true;
-                        UnBlockAI();
+                    AILoop = true;
+                    UnBlockAI();
 
-                        break;
-                    case THUAI6::GameState::GameRunning:
-                        // 重新读取玩家的guid，guid确保人类在前屠夫在后
-                        playerGUIDs.clear();
-                        for (auto human : clientMsg.human_message())
-                            playerGUIDs.push_back(human.guid());
-                        for (auto butcher : clientMsg.butcher_message())
-                            playerGUIDs.push_back(butcher.guid());
-                        currentState->guids = playerGUIDs;
-                        bufferState->guids = playerGUIDs;
+                    break;
+                case THUAI6::GameState::GameRunning:
+                    // 重新读取玩家的guid，guid确保人类在前屠夫在后
+                    playerGUIDs.clear();
+                    for (auto human : clientMsg.human_message())
+                        playerGUIDs.push_back(human.guid());
+                    for (auto butcher : clientMsg.butcher_message())
+                        playerGUIDs.push_back(butcher.guid());
+                    currentState->guids = playerGUIDs;
+                    bufferState->guids = playerGUIDs;
 
-                        LoadBuffer(clientMsg);
-                        break;
-                    case THUAI6::GameState::GameEnd:
-                        AILoop = false;
-                        {
-                            std::lock_guard<std::mutex> lock(mtxBuffer);
-                            bufferUpdated = true;
-                            counterBuffer = -1;
-                        }
-                        cvBuffer.notify_one();
-                        logger->info("Game End!");
-                        break;
-                    default:
-                        logger->debug("Unknown GameState!");
-                }
+                    LoadBuffer(clientMsg);
+                    break;
+                case THUAI6::GameState::GameEnd:
+                    AILoop = false;
+                    {
+                        std::lock_guard<std::mutex> lock(mtxBuffer);
+                        bufferUpdated = true;
+                        counterBuffer = -1;
+                    }
+                    cvBuffer.notify_one();
+                    logger->info("Game End!");
+                    break;
+                default:
+                    logger->debug("Unknown GameState!");
             }
         }
     };
@@ -428,8 +430,7 @@ const std::vector<int64_t> Logic::GetPlayerGUIDs() const
 bool Logic::TryConnection()
 {
     logger->info("Try to connect to server...");
-    bool result = pComm->TryConnection(playerID);
-    return result;
+    return pComm->TryConnection(playerID);
 }
 
 void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool file, bool print, bool warnOnly)
@@ -461,7 +462,7 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
     logger->info("****************************");
 
     // 建立与服务器之间通信的组件
-    pComm = std::make_unique<Communication>(IP, port);
+    pComm = std::make_unique<Communication>(IP, port, mtxMessage, cvMessage);
 
     // 构造timer
     if (playerType == THUAI6::PlayerType::HumanPlayer)

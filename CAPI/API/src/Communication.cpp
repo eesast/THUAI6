@@ -2,10 +2,14 @@
 #include "utils.hpp"
 #include "structures.h"
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 
 using grpc::ClientContext;
 
-Communication::Communication(std::string sIP, std::string sPort)
+Communication::Communication(std::string sIP, std::string sPort, std::mutex& mtx, std::condition_variable& cv) :
+    mtxMessage(mtx),
+    cvMessage(cv)
 {
     std::string aim = sIP + ':' + sPort;
     auto channel = grpc::CreateChannel(aim, grpc::InsecureChannelCredentials());
@@ -242,7 +246,13 @@ void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, T
         auto MessageReader = THUAI6Stub->AddPlayer(&context, playerMsg);
 
         while (MessageReader->Read(&message2Client))
-            haveNewMessage = true;
+        {
+            {
+                std::lock_guard<std::mutex> lock(mtxMessage);
+                haveNewMessage = true;
+            }
+            cvMessage.notify_one();
+        }
     };
     std::thread(tMessage).detach();
 }

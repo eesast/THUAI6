@@ -10,6 +10,7 @@
 #include "structures.h"
 #include <thread>
 #include <mutex>
+#include <condition_variable>
 #include <queue>
 #include "ConcurrentQueue.hpp"
 
@@ -18,7 +19,7 @@ class Logic;
 class Communication
 {
 public:
-    Communication(std::string sIP, std::string sPort);
+    Communication(std::string sIP, std::string sPort, std::mutex& mtx, std::condition_variable& cv);
     ~Communication()
     {
     }
@@ -54,6 +55,8 @@ private:
     bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
     ConcurrentQueue<std::pair<int64_t, std::string>> messageQueue;
+    std::mutex& mtxMessage;
+    std::condition_variable& cvMessage;
 };
 
 #endif

@@ -1,5 +1,5 @@
 from typing import List, Union
-import structures as THUAI6
+import PyAPI.structures as THUAI6
 
 
 class State:

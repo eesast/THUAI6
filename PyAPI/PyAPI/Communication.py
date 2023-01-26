@@ -1,14 +1,12 @@
-from queue import Queue
-import grpc
-import threading
-import proto.Message2Clients_pb2 as Message2Clients
-import proto.Message2Server_pb2 as Message2Server
-import proto.MessageType_pb2 as MessageType
+import PyAPI.structures as THUAI6
+from PyAPI.AI import Setting
+from PyAPI.utils import THUAI62Proto
+from PyAPI.Interface import IErrorHandler
 import proto.Services_pb2_grpc as Services
-from logic import Logic
-from Interface import IErrorHandler
-from utils import THUAI62Proto
-import structures as THUAI6
+import proto.Message2Clients_pb2 as Message2Clients
+import threading
+import grpc
+from queue import Queue
 
 
 # 使用gRPC的异步来减少通信对于选手而言损失的时间，而gRPC的return值有result()方法，故若连接错误时也应当返回一个具有result()方法的对象，使用此处的ErrorHandler类来实现
@@ -24,6 +22,8 @@ class Communication:
     __haveNewMessage: bool
     __message2Client: Message2Clients.MessageToClient
     __messageQueue: Queue  # Python的Queue是线程安全的，故无须自己实现Queue
+    __mtxMessage: threading.Lock
+    __cvMessage: threading.Condition
 
     def __init__(self, sIP: str, sPort: str):
         aim = sIP + ':' + sPort
@@ -31,6 +31,7 @@ class Communication:
         self.__THUAI6Stub = Services.AvailableServiceStub(channel)
         self.__haveNewMessage = False
         self.__messageQueue = Queue()
+        self.__cvMessage = threading.Condition()
 
     def Move(self, time: int, angle: float, playerID: int) -> bool:
         try:
@@ -190,21 +191,22 @@ class Communication:
         else:
             return True
 
-    def HaveMessage2Client(self) -> bool:
-        return self.__haveNewMessage
-
     def GetMessage2Client(self) -> Message2Clients.MessageToClient:
-        self.__haveNewMessage = False
-        return self.__message2Client
+        with self.__cvMessage:
+            self.__cvMessage.wait_for(lambda: self.__haveNewMessage)
+            self.__haveNewMessage = False
+            return self.__message2Client
 
-    def AddPlayer(self, playerID: int, playerType: THUAI6.PlayerType, humanType: THUAI6.HumanType, butcherType: THUAI6.ButcherType) -> None:
+    def AddPlayer(self, playerID: int) -> None:
         def tMessage():
             try:
                 playerMsg = THUAI62Proto.THUAI62ProtobufPlayer(
-                    playerID, playerType, humanType, butcherType)
+                    playerID, Setting.playerType(), Setting.humanType(), Setting.butcherType())
                 for msg in self.__THUAI6Stub.AddPlayer(playerMsg):
-                    self.__haveNewMessage = True
-                    self.__message2Client = msg
+                    with self.__cvMessage:
+                        self.__haveNewMessage = True
+                        self.__message2Client = msg
+                        self.__cvMessage.notify()
             except grpc.RpcError as e:
                 return
 

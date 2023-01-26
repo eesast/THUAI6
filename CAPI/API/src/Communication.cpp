@@ -202,7 +202,7 @@ protobuf::MessageToClient Communication::GetMessage2Client()
 {
     std::unique_lock<std::mutex> lock(mtxMessage);
     cvMessage.wait(lock, [this]()
-                   { return haveNewMessage.load(); });
+                   { return haveNewMessage; });
     haveNewMessage = false;
     return message2Client;
 }

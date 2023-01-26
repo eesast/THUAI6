@@ -52,7 +52,7 @@ public:
 
 private:
     std::unique_ptr<protobuf::AvailableService::Stub> THUAI6Stub;
-    std::atomic_bool haveNewMessage = false;
+    bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
     ConcurrentQueue<std::pair<int64_t, std::string>> messageQueue;
     std::mutex mtxMessage;

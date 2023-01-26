@@ -1,6 +1,0 @@
-[21:02:47.26][logic][INFO] *********Basic Info*********
-[21:02:47.26][logic][INFO] asynchronous: False
-[21:02:47.26][logic][INFO] server: 114.51.41.91:9810
-[21:02:47.26][logic][INFO] playerID: 114514
-[21:02:47.26][logic][INFO] player type: HumanPlayer
-[21:02:47.26][logic][INFO] ****************************

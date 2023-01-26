@@ -12,6 +12,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <queue>
+#include <atomic>
 #include "ConcurrentQueue.hpp"
 
 class Logic;
@@ -19,7 +20,7 @@ class Logic;
 class Communication
 {
 public:
-    Communication(std::string sIP, std::string sPort, std::mutex& mtx, std::condition_variable& cv);
+    Communication(std::string sIP, std::string sPort);
     ~Communication()
     {
     }
@@ -45,18 +46,17 @@ public:
 
     bool TryConnection(int64_t playerID);
     protobuf::MessageToClient GetMessage2Client();
-    bool HaveMessage2Client();
     void AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType);
 
     void ReadMessage(int64_t playerID);
 
 private:
     std::unique_ptr<protobuf::AvailableService::Stub> THUAI6Stub;
-    bool haveNewMessage = false;
+    std::atomic_bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
     ConcurrentQueue<std::pair<int64_t, std::string>> messageQueue;
-    std::mutex& mtxMessage;
-    std::condition_variable& cvMessage;
+    std::mutex mtxMessage;
+    std::condition_variable cvMessage;
 };
 
 #endif

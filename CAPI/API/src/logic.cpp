@@ -187,13 +187,8 @@ void Logic::ProcessMessage()
         pComm->ReadMessage(playerID);
         while (gameState != THUAI6::GameState::GameEnd)
         {
-            {
-                std::unique_lock<std::mutex> lock(mtxMessage);
-                cvMessage.wait(lock, [this]()
-                               { return pComm->HaveMessage2Client(); });
-            }
+            auto clientMsg = pComm->GetMessage2Client();  // 在获得新消息之前阻塞
             logger->debug("Get message from server!");
-            auto clientMsg = pComm->GetMessage2Client();
             gameState = Proto2THUAI6::gameStateDict[clientMsg.game_state()];
             switch (gameState)
             {
@@ -227,20 +222,19 @@ void Logic::ProcessMessage()
 
                     LoadBuffer(clientMsg);
                     break;
-                case THUAI6::GameState::GameEnd:
-                    AILoop = false;
-                    {
-                        std::lock_guard<std::mutex> lock(mtxBuffer);
-                        bufferUpdated = true;
-                        counterBuffer = -1;
-                    }
-                    cvBuffer.notify_one();
-                    logger->info("Game End!");
-                    break;
                 default:
                     logger->debug("Unknown GameState!");
+                    break;
             }
         }
+        AILoop = false;
+        {
+            std::lock_guard<std::mutex> lock(mtxBuffer);
+            bufferUpdated = true;
+            counterBuffer = -1;
+        }
+        cvBuffer.notify_one();
+        logger->info("Game End!");
     };
     std::thread(messageThread).detach();
 }
@@ -462,7 +456,7 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
     logger->info("****************************");
 
     // 建立与服务器之间通信的组件
-    pComm = std::make_unique<Communication>(IP, port, mtxMessage, cvMessage);
+    pComm = std::make_unique<Communication>(IP, port);
 
     // 构造timer
     if (playerType == THUAI6::PlayerType::HumanPlayer)

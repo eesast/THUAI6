@@ -58,11 +58,9 @@ private:
     mutable std::mutex mtxAI;
     mutable std::mutex mtxState;
     mutable std::mutex mtxBuffer;
-    mutable std::mutex mtxMessage;
 
     std::condition_variable cvBuffer;
     std::condition_variable cvAI;
-    std::condition_variable cvMessage;
 
     // 信息队列
     std::queue<std::pair<int64_t, std::string>> messageQueue;

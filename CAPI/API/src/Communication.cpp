@@ -7,9 +7,7 @@
 
 using grpc::ClientContext;
 
-Communication::Communication(std::string sIP, std::string sPort, std::mutex& mtx, std::condition_variable& cv) :
-    mtxMessage(mtx),
-    cvMessage(cv)
+Communication::Communication(std::string sIP, std::string sPort)
 {
     std::string aim = sIP + ':' + sPort;
     auto channel = grpc::CreateChannel(aim, grpc::InsecureChannelCredentials());
@@ -202,13 +200,11 @@ bool Communication::TryConnection(int64_t playerID)
 
 protobuf::MessageToClient Communication::GetMessage2Client()
 {
+    std::unique_lock<std::mutex> lock(mtxMessage);
+    cvMessage.wait(lock, [this]()
+                   { return haveNewMessage.load(); });
     haveNewMessage = false;
     return message2Client;
-}
-
-bool Communication::HaveMessage2Client()
-{
-    return haveNewMessage;
 }
 
 std::optional<std::pair<int64_t, std::string>> Communication::GetMessage()

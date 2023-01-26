@@ -22,7 +22,7 @@ Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::ButcherType butcher, T
 
 std::vector<std::shared_ptr<const THUAI6::Butcher>> Logic::GetButchers() const
 {
-    std::lock_guard<std::mutex> lock(mtxBuffer);
+    std::lock_guard<std::mutex> lock(mtxState);
     std::vector<std::shared_ptr<const THUAI6::Butcher>> temp;
     temp.assign(currentState->butchers.begin(), currentState->butchers.end());
     logger->debug("Called GetButchers");
@@ -31,7 +31,7 @@ std::vector<std::shared_ptr<const THUAI6::Butcher>> Logic::GetButchers() const
 
 std::vector<std::shared_ptr<const THUAI6::Human>> Logic::GetHumans() const
 {
-    std::unique_lock<std::mutex> lock(mtxBuffer);
+    std::unique_lock<std::mutex> lock(mtxState);
     std::vector<std::shared_ptr<const THUAI6::Human>> temp;
     temp.assign(currentState->humans.begin(), currentState->humans.end());
     logger->debug("Called GetHumans");
@@ -40,7 +40,7 @@ std::vector<std::shared_ptr<const THUAI6::Human>> Logic::GetHumans() const
 
 std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
 {
-    std::unique_lock<std::mutex> lock(mtxBuffer);
+    std::unique_lock<std::mutex> lock(mtxState);
     std::vector<std::shared_ptr<const THUAI6::Prop>> temp;
     temp.assign(currentState->props.begin(), currentState->props.end());
     logger->debug("Called GetProps");
@@ -49,28 +49,28 @@ std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
 
 std::shared_ptr<const THUAI6::Human> Logic::HumanGetSelfInfo() const
 {
-    std::unique_lock<std::mutex> lock(mtxBuffer);
+    std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called HumanGetSelfInfo");
     return currentState->humanSelf;
 }
 
 std::shared_ptr<const THUAI6::Butcher> Logic::ButcherGetSelfInfo() const
 {
-    std::unique_lock<std::mutex> lock(mtxBuffer);
+    std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called ButcherGetSelfInfo");
     return currentState->butcherSelf;
 }
 
 std::vector<std::vector<THUAI6::PlaceType>> Logic::GetFullMap() const
 {
-    std::unique_lock<std::mutex> lock(mtxBuffer);
+    std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called GetFullMap");
     return currentState->gamemap;
 }
 
 THUAI6::PlaceType Logic::GetPlaceType(int32_t CellX, int32_t CellY) const
 {
-    std::unique_lock<std::mutex> lock(mtxBuffer);
+    std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called GetPlaceType");
     return currentState->gamemap[CellX][CellY];
 }

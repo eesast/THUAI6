@@ -1,15 +1,16 @@
-import structures as THUAI6
-from typing import Final, List
-import proto.Message2Clients_pb2 as Message2Clients
-import proto.Message2Server_pb2 as Message2Server
 import proto.MessageType_pb2 as MessageType
+import proto.Message2Server_pb2 as Message2Server
+import proto.Message2Clients_pb2 as Message2Clients
+import PyAPI.structures as THUAI6
+from typing import Final, List
+
 
 numOfGridPerCell: Final[int] = 1000
 
 
 # 起到NameSpace的作用
 class NoInstance:
-    def __call__(self, *args, **kwargs):
+    def __call__(self):
         raise TypeError("This class cannot be instantiated.")
 
 
@@ -17,11 +18,11 @@ class AssistFunction(NoInstance):
     # 辅助函数
     @staticmethod
     def CellToGrid(cell: int) -> int:
-        return cell*numOfGridPerCell+numOfGridPerCell//2
+        return cell * numOfGridPerCell + numOfGridPerCell // 2
 
     @staticmethod
     def GridToCell(grid: int) -> int:
-        return grid//numOfGridPerCell
+        return grid // numOfGridPerCell
 
 
 class Proto2THUAI6(NoInstance):

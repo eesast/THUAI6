@@ -1,6 +1,7 @@
-from abc import abstractmethod, ABCMeta
 from typing import List, Union
-import structures as THUAI6
+from concurrent.futures import Future
+from abc import abstractmethod, ABCMeta
+import PyAPI.structures as THUAI6
 
 
 class ILogic(metaclass=ABCMeta):
@@ -112,65 +113,65 @@ class ILogic(metaclass=ABCMeta):
         pass
 
 
-class IAPI(metacls=ABCMeta):
+class IAPI(metaclass=ABCMeta):
 
     # 选手可执行的操作
     # 指挥本角色进行移动，`timeInMilliseconds` 为移动时间，单位为毫秒；`angleInRadian` 表示移动的方向，单位是弧度，使用极坐标——竖直向下方向为 x 轴，水平向右方向为 y 轴
 
     @abstractmethod
-    def Move(self, timeInMilliseconds: int, angle: float) -> bool:
+    def Move(self, timeInMilliseconds: int, angle: float) -> Future[bool]:
         pass
 
     # 向特定方向移动
 
     @abstractmethod
-    def MoveRight(self, timeInMilliseconds: int) -> bool:
+    def MoveRight(self, timeInMilliseconds: int) -> Future[bool]:
         pass
 
     @abstractmethod
-    def MoveLeft(self, timeInMilliseconds: int) -> bool:
+    def MoveLeft(self, timeInMilliseconds: int) -> Future[bool]:
         pass
 
     @abstractmethod
-    def MoveUp(self, timeInMilliseconds: int) -> bool:
+    def MoveUp(self, timeInMilliseconds: int) -> Future[bool]:
         pass
 
     @abstractmethod
-    def MoveDown(self, timeInMilliseconds: int) -> bool:
+    def MoveDown(self, timeInMilliseconds: int) -> Future[bool]:
         pass
 
     # 道具和技能相关
 
     @abstractmethod
-    def PickProp(self, propType: THUAI6.PropType) -> bool:
+    def PickProp(self, propType: THUAI6.PropType) -> Future[bool]:
         pass
 
     @abstractmethod
-    def UseProp(self) -> bool:
+    def UseProp(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def UseSkill(self) -> bool:
+    def UseSkill(self) -> Future[bool]:
         pass
 
     # 消息相关，接收消息时无消息则返回(-1, '')
 
     @abstractmethod
-    def SendMessage(self, toID: int, message: str) -> bool:
+    def SendMessage(self, toID: int, message: str) -> Future[bool]:
         pass
 
     @abstractmethod
-    def HaveMessage(self) -> bool:
+    def HaveMessage(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Future[tuple[int, str]]:
         pass
 
     # 等待下一帧
 
     @abstractmethod
-    def Wait(self) -> bool:
+    def Wait(self) -> Future[bool]:
         pass
 
     # 获取各类游戏中的消息
@@ -231,23 +232,23 @@ class IHumanAPI(IAPI, metaclass=ABCMeta):
     # 人类阵营的特殊函数
 
     @abstractmethod
-    def Escape(self) -> bool:
+    def Escape(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def StartFixMachine(self) -> bool:
+    def StartFixMachine(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def EndFixMachine(self) -> bool:
+    def EndFixMachine(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def StartSaveHuman(self) -> bool:
+    def StartSaveHuman(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def EndSaveHuman(self) -> bool:
+    def EndSaveHuman(self) -> Future[bool]:
         pass
 
 
@@ -256,19 +257,19 @@ class IButcherAPI(IAPI, metaclass=ABCMeta):
     # 屠夫阵营的特殊函数
 
     @abstractmethod
-    def Attack(self, angle: float) -> bool:
+    def Attack(self, angle: float) -> Future[bool]:
         pass
 
     @abstractmethod
-    def CarryHuman(self) -> bool:
+    def CarryHuman(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def ReleaseHuman(self) -> bool:
+    def ReleaseHuman(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def HangHuman(self) -> bool:
+    def HangHuman(self) -> Future[bool]:
         pass
 
 

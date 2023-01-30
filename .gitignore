@@ -1,4 +1,3 @@
 # .vs, .vscode must be ignored
 .vs/
 .vscode/
-CAPI/build

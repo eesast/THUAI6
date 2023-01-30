@@ -22,7 +22,7 @@ Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::ButcherType butcher, T
 
 std::vector<std::shared_ptr<const THUAI6::Butcher>> Logic::GetButchers() const
 {
-    std::lock_guard<std::mutex> lock(mtxBuffer);
+    std::lock_guard<std::mutex> lock(mtxState);
     std::vector<std::shared_ptr<const THUAI6::Butcher>> temp;
     temp.assign(currentState->butchers.begin(), currentState->butchers.end());
     logger->debug("Called GetButchers");
@@ -31,7 +31,7 @@ std::vector<std::shared_ptr<const THUAI6::Butcher>> Logic::GetButchers() const
 
 std::vector<std::shared_ptr<const THUAI6::Human>> Logic::GetHumans() const
 {
-    std::unique_lock<std::mutex> lock(mtxBuffer);
+    std::unique_lock<std::mutex> lock(mtxState);
     std::vector<std::shared_ptr<const THUAI6::Human>> temp;
     temp.assign(currentState->humans.begin(), currentState->humans.end());
     logger->debug("Called GetHumans");
@@ -40,7 +40,7 @@ std::vector<std::shared_ptr<const THUAI6::Human>> Logic::GetHumans() const
 
 std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
 {
-    std::unique_lock<std::mutex> lock(mtxBuffer);
+    std::unique_lock<std::mutex> lock(mtxState);
     std::vector<std::shared_ptr<const THUAI6::Prop>> temp;
     temp.assign(currentState->props.begin(), currentState->props.end());
     logger->debug("Called GetProps");
@@ -49,28 +49,28 @@ std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
 
 std::shared_ptr<const THUAI6::Human> Logic::HumanGetSelfInfo() const
 {
-    std::unique_lock<std::mutex> lock(mtxBuffer);
+    std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called HumanGetSelfInfo");
     return currentState->humanSelf;
 }
 
 std::shared_ptr<const THUAI6::Butcher> Logic::ButcherGetSelfInfo() const
 {
-    std::unique_lock<std::mutex> lock(mtxBuffer);
+    std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called ButcherGetSelfInfo");
     return currentState->butcherSelf;
 }
 
 std::vector<std::vector<THUAI6::PlaceType>> Logic::GetFullMap() const
 {
-    std::unique_lock<std::mutex> lock(mtxBuffer);
+    std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called GetFullMap");
     return currentState->gamemap;
 }
 
 THUAI6::PlaceType Logic::GetPlaceType(int32_t CellX, int32_t CellY) const
 {
-    std::unique_lock<std::mutex> lock(mtxBuffer);
+    std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called GetPlaceType");
     return currentState->gamemap[CellX][CellY];
 }
@@ -184,60 +184,57 @@ void Logic::ProcessMessage()
         logger->info("Message thread start!");
         pComm->AddPlayer(playerID, playerType, humanType, butcherType);
         logger->info("Join the player!");
+        pComm->ReadMessage(playerID);
         while (gameState != THUAI6::GameState::GameEnd)
         {
-            if (pComm->HaveMessage2Client())
+            auto clientMsg = pComm->GetMessage2Client();  // 在获得新消息之前阻塞
+            logger->debug("Get message from server!");
+            gameState = Proto2THUAI6::gameStateDict[clientMsg.game_state()];
+            switch (gameState)
             {
-                logger->debug("Get message from server!");
-                auto clientMsg = pComm->GetMessage2Client();
-                gameState = Proto2THUAI6::gameStateDict[clientMsg.game_state()];
-                switch (gameState)
-                {
-                    case THUAI6::GameState::GameStart:
-                        logger->info("Game Start!");
+                case THUAI6::GameState::GameStart:
+                    logger->info("Game Start!");
 
-                        // 重新读取玩家的guid，guid确保人类在前屠夫在后
-                        playerGUIDs.clear();
-                        for (auto human : clientMsg.human_message())
-                            playerGUIDs.push_back(human.guid());
-                        for (auto butcher : clientMsg.butcher_message())
-                            playerGUIDs.push_back(butcher.guid());
-                        currentState->guids = playerGUIDs;
-                        bufferState->guids = playerGUIDs;
+                    // 重新读取玩家的guid，guid确保人类在前屠夫在后
+                    playerGUIDs.clear();
+                    for (auto human : clientMsg.human_message())
+                        playerGUIDs.push_back(human.guid());
+                    for (auto butcher : clientMsg.butcher_message())
+                        playerGUIDs.push_back(butcher.guid());
+                    currentState->guids = playerGUIDs;
+                    bufferState->guids = playerGUIDs;
 
-                        LoadBuffer(clientMsg);
+                    LoadBuffer(clientMsg);
 
-                        AILoop = true;
-                        UnBlockAI();
+                    AILoop = true;
+                    UnBlockAI();
 
-                        break;
-                    case THUAI6::GameState::GameRunning:
-                        // 重新读取玩家的guid，guid确保人类在前屠夫在后
-                        playerGUIDs.clear();
-                        for (auto human : clientMsg.human_message())
-                            playerGUIDs.push_back(human.guid());
-                        for (auto butcher : clientMsg.butcher_message())
-                            playerGUIDs.push_back(butcher.guid());
-                        currentState->guids = playerGUIDs;
-                        bufferState->guids = playerGUIDs;
+                    break;
+                case THUAI6::GameState::GameRunning:
+                    // 重新读取玩家的guid，guid确保人类在前屠夫在后
+                    playerGUIDs.clear();
+                    for (auto human : clientMsg.human_message())
+                        playerGUIDs.push_back(human.guid());
+                    for (auto butcher : clientMsg.butcher_message())
+                        playerGUIDs.push_back(butcher.guid());
+                    currentState->guids = playerGUIDs;
+                    bufferState->guids = playerGUIDs;
 
-                        LoadBuffer(clientMsg);
-                        break;
-                    case THUAI6::GameState::GameEnd:
-                        AILoop = false;
-                        {
-                            std::lock_guard<std::mutex> lock(mtxBuffer);
-                            bufferUpdated = true;
-                            counterBuffer = -1;
-                        }
-                        cvBuffer.notify_one();
-                        logger->info("Game End!");
-                        break;
-                    default:
-                        logger->debug("Unknown GameState!");
-                }
+                    LoadBuffer(clientMsg);
+                    break;
+                default:
+                    logger->debug("Unknown GameState!");
+                    break;
             }
         }
+        AILoop = false;
+        {
+            std::lock_guard<std::mutex> lock(mtxBuffer);
+            bufferUpdated = true;
+            counterBuffer = -1;
+        }
+        cvBuffer.notify_one();
+        logger->info("Game End!");
     };
     std::thread(messageThread).detach();
 }
@@ -427,8 +424,7 @@ const std::vector<int64_t> Logic::GetPlayerGUIDs() const
 bool Logic::TryConnection()
 {
     logger->info("Try to connect to server...");
-    bool result = pComm->TryConnection(playerID);
-    return result;
+    return pComm->TryConnection(playerID);
 }
 
 void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool file, bool print, bool warnOnly)
@@ -450,6 +446,14 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
     if (warnOnly)
         printLogger->set_level(spdlog::level::warn);
     logger = std::make_unique<spdlog::logger>("logicLogger", spdlog::sinks_init_list{fileLogger, printLogger});
+
+    // 打印当前的调试信息
+    logger->info("*********Basic Info*********");
+    logger->info("asynchronous: {}", asynchronous);
+    logger->info("server: {}:{}", IP, port);
+    logger->info("player ID: {}", playerID);
+    logger->info("player type: {}", THUAI6::playerTypeDict[playerType]);
+    logger->info("****************************");
 
     // 建立与服务器之间通信的组件
     pComm = std::make_unique<Communication>(IP, port);
@@ -499,12 +503,11 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
         }
     };
 
-    tAI = std::thread(AIThread);
-
     // 连接服务器
     if (TryConnection())
     {
         logger->info("Connect to the server successfully, AI thread will be start.");
+        tAI = std::thread(AIThread);
         if (tAI.joinable())
         {
             logger->info("Join the AI thread!");
@@ -516,7 +519,8 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
     }
     else
     {
-        logger->error("Connect to the server failed, AI thread will not be start.");
+        AILoop = false;
+        logger->error("Connect to the server failed, AI thread will not be started.");
         return;
     }
 }

@@ -22,7 +22,7 @@
 
 #include "structures.h"
 
-const constexpr int num_of_grid_per_cell = 1000;
+const constexpr int numOfGridPerCell = 1000;
 
 class IAI;
 
@@ -39,7 +39,7 @@ public:
     virtual std::shared_ptr<const THUAI6::Butcher> ButcherGetSelfInfo() const = 0;
 
     virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
-    virtual THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const = 0;
+    virtual THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const = 0;
 
     // 供IAPI使用的操作相关的部分
     virtual bool Move(int64_t time, double angle) = 0;
@@ -99,8 +99,8 @@ public:
     virtual std::future<bool> Wait() = 0;
 
     // 获取视野内可见的人类/屠夫的信息
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const = 0;
 
     // 获取视野内可见的道具信息
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
@@ -120,14 +120,21 @@ public:
     // 获取指定格子中心的坐标
     [[nodiscard]] static inline int CellToGrid(int cell) noexcept
     {
-        return cell * num_of_grid_per_cell + num_of_grid_per_cell / 2;
+        return cell * numOfGridPerCell + numOfGridPerCell / 2;
     }
 
     // 获取指定坐标点所位于的格子的 X 序号
     [[nodiscard]] static inline int GridToCell(int grid) noexcept
     {
-        return grid / num_of_grid_per_cell;
+        return grid / numOfGridPerCell;
     }
+
+    // 用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
+
+    virtual void PrintHuman() const = 0;
+    virtual void PrintButcher() const = 0;
+    virtual void PrintProp() const = 0;
+    virtual void PrintSelfInfo() const = 0;
 };
 
 class IHumanAPI : public IAPI
@@ -158,6 +165,7 @@ public:
 class IGameTimer
 {
 public:
+    virtual ~IGameTimer() = default;
     virtual void StartTimer() = 0;
     virtual void EndTimer() = 0;
     virtual void Play(IAI& ai) = 0;
@@ -197,8 +205,8 @@ public:
 
     std::future<bool> Wait() override;
 
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override;
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
@@ -213,6 +221,19 @@ public:
     std::future<bool> EndSaveHuman() override;
     std::future<bool> Escape() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Human> GetSelfInfo() const override;
+
+    void PrintHuman() const override
+    {
+    }
+    void PrintButcher() const override
+    {
+    }
+    void PrintProp() const override
+    {
+    }
+    void PrintSelfInfo() const override
+    {
+    }
 
 private:
     ILogic& logic;
@@ -251,8 +272,8 @@ public:
 
     std::future<bool> Wait() override;
 
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override;
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
@@ -266,6 +287,19 @@ public:
     std::future<bool> ReleaseHuman() override;
     std::future<bool> HangHuman() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Butcher> GetSelfInfo() const override;
+
+    void PrintHuman() const override
+    {
+    }
+    void PrintButcher() const override
+    {
+    }
+    void PrintProp() const override
+    {
+    }
+    void PrintSelfInfo() const override
+    {
+    }
 
 private:
     ILogic& logic;
@@ -297,8 +331,8 @@ public:
 
     std::future<bool> Wait() override;
 
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override;
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
@@ -313,6 +347,11 @@ public:
     std::future<bool> EndSaveHuman() override;
     std::future<bool> Escape() override;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const override;
+
+    void PrintHuman() const override;
+    void PrintButcher() const override;
+    void PrintProp() const override;
+    void PrintSelfInfo() const override;
 
 private:
     std::chrono::system_clock::time_point startPoint;
@@ -346,8 +385,8 @@ public:
 
     std::future<bool> Wait() override;
 
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHuman() const override;
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButcher() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
@@ -361,6 +400,11 @@ public:
     std::future<bool> ReleaseHuman() override;
     std::future<bool> HangHuman() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Butcher> GetSelfInfo() const override;
+
+    void PrintHuman() const override;
+    void PrintButcher() const override;
+    void PrintProp() const override;
+    void PrintSelfInfo() const override;
 
 private:
     std::chrono::system_clock::time_point startPoint;

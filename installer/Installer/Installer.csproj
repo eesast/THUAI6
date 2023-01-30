@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="Tencent.QCloud.Cos.Sdk" Version="5.4.32" />
+    <PackageReference Include="Tencent.QCloud.Cos.Sdk" Version="5.4.34" />
   </ItemGroup>
 
 </Project>

@@ -135,9 +135,6 @@ private:
     // 将信息加载到buffer
     void LoadBuffer(protobuf::MessageToClient&);
 
-    // 解锁状态更新线程
-    void UnBlockBuffer();
-
     // 解锁AI线程
     void UnBlockAI();
 

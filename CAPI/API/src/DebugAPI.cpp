@@ -455,7 +455,7 @@ void HumanDebugAPI::PrintHuman() const
         logger->info("******Human Info******");
         logger->info("playerID={}, GUID={}, x={}, y={}", human->playerID, human->guid, human->x, human->y);
         logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", human->speed, human->viewRange, human->timeUntilSkillAvailable, THUAI6::propTypeDict[human->prop], THUAI6::placeTypeDict[human->place]);
-        logger->info("state={}, life={}, hangedTime={}", THUAI6::humanStateDict[human->state], human->life, human->hangedTime);
+        logger->info("state={}, life={}, hanged time={}", THUAI6::humanStateDict[human->state], human->life, human->hangedTime);
         std::string humanBuff = "buff=";
         for (auto buff : human->buff)
             humanBuff += THUAI6::humanBuffDict[buff] + ", ";
@@ -471,7 +471,7 @@ void ButcherDebugAPI::PrintHuman() const
         logger->info("******Human Info******");
         logger->info("playerID={}, GUID={}, x={}, y={}", human->playerID, human->guid, human->x, human->y);
         logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", human->speed, human->viewRange, human->timeUntilSkillAvailable, THUAI6::propTypeDict[human->prop], THUAI6::placeTypeDict[human->place]);
-        logger->info("state={}, life={}, hangedTime={}", THUAI6::humanStateDict[human->state], human->life, human->hangedTime);
+        logger->info("state={}, life={}, hanged time={}", THUAI6::humanStateDict[human->state], human->life, human->hangedTime);
         std::string humanBuff = "buff=";
         for (auto buff : human->buff)
             humanBuff += THUAI6::humanBuffDict[buff] + ", ";
@@ -538,7 +538,7 @@ void HumanDebugAPI::PrintSelfInfo() const
     logger->info("******Self Info******");
     logger->info("playerID={}, GUID={}, x={}, y={}", self->playerID, self->guid, self->x, self->y);
     logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", self->speed, self->viewRange, self->timeUntilSkillAvailable, THUAI6::propTypeDict[self->prop], THUAI6::placeTypeDict[self->place]);
-    logger->info("state={}, life={}, hangedTime={}", THUAI6::humanStateDict[self->state], self->life, self->hangedTime);
+    logger->info("state={}, life={}, hanged time={}", THUAI6::humanStateDict[self->state], self->life, self->hangedTime);
     std::string humanBuff = "buff=";
     for (auto buff : self->buff)
         humanBuff += THUAI6::humanBuffDict[buff] + ", ";

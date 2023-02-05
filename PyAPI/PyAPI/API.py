@@ -1,7 +1,7 @@
 import PyAPI.structures as THUAI6
 from PyAPI.Interface import ILogic, IHumanAPI, IButcherAPI, IGameTimer, IAI
 from math import pi
-from concurrent.futures import ProcessPoolExecutor, Future
+from concurrent.futures import ThreadPoolExecutor, Future
 from typing import List, Union
 
 
@@ -9,7 +9,7 @@ class HumanAPI(IHumanAPI, IGameTimer):
 
     def __init__(self, logic: ILogic) -> None:
         self.__logic = logic
-        self.__pool = ProcessPoolExecutor(20)
+        self.__pool = ThreadPoolExecutor(20)
 
     # 指挥本角色进行移动，`timeInMilliseconds` 为移动时间，单位为毫秒；`angleInRadian` 表示移动的方向，单位是弧度，使用极坐标——竖直向下方向为 x 轴，水平向右方向为 y 轴
 
@@ -133,7 +133,7 @@ class ButcherAPI(IButcherAPI, IGameTimer):
 
     def __init__(self, logic: ILogic) -> None:
         self.__logic = logic
-        self.__pool = ProcessPoolExecutor(20)
+        self.__pool = ThreadPoolExecutor(20)
 
     # 指挥本角色进行移动，`timeInMilliseconds` 为移动时间，单位为毫秒；`angleInRadian` 表示移动的方向，单位是弧度，使用极坐标——竖直向下方向为 x 轴，水平向右方向为 y 轴
 

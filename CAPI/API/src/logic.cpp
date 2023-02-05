@@ -263,6 +263,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                     bufferState->humanSelf = Proto2THUAI6::Protobuf2THUAI6Human(item);
                 }
                 bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(item));
+                logger->debug("Add Human!");
             }
             for (const auto& item : message.butcher_message())
             {
@@ -307,6 +308,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                     bufferState->butcherSelf = Proto2THUAI6::Protobuf2THUAI6Butcher(item);
                 }
                 bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(item));
+                logger->debug("Add Butcher!");
             }
             for (const auto& item : message.human_message())
             {
@@ -398,15 +400,6 @@ void Logic::UnBlockAI()
         AIStart = true;
     }
     cvAI.notify_one();
-}
-
-void Logic::UnBlockBuffer()
-{
-    {
-        std::lock_guard<std::mutex> lock(mtxBuffer);
-        bufferUpdated = true;
-    }
-    cvBuffer.notify_one();
 }
 
 int Logic::GetCounter() const
@@ -506,7 +499,7 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
     // 连接服务器
     if (TryConnection())
     {
-        logger->info("Connect to the server successfully, AI thread will be start.");
+        logger->info("Connect to the server successfully, AI thread will be started.");
         tAI = std::thread(AIThread);
         if (tAI.joinable())
         {

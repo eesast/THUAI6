@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Collections.Generic;
 using GameClass.GameObj;
-using Preparation.GameData;
 using Preparation.Utility;
 using GameEngine;
 
@@ -41,14 +40,14 @@ namespace Gaming
                 {
                     playerBeingShot.CanMove = false;
                     playerBeingShot.IsResetting = true;
-                    // gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
+                    // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
                     // try
                     //{
-                    //     gameMap.GameObjDict[GameObjIdx.Player].Remove(playerBeingShot);
+                    //     gameMap.GameObjDict[GameObjType.Character].Remove(playerBeingShot);
                     // }
                     // finally
                     //{
-                    //     gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock();
+                    //     gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
                     // }
 
                     Prop? dropProp = null;
@@ -57,15 +56,15 @@ namespace Gaming
                         dropProp = playerBeingShot.PropInventory;
                         dropProp.SetNewPos(GameData.GetCellCenterPos(playerBeingShot.Position.x / GameData.numOfPosGridPerCell, playerBeingShot.Position.y / GameData.numOfPosGridPerCell));
                     }
-                    gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
+                    gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
                     try
                     {
                         if (dropProp != null)
-                            gameMap.GameObjDict[GameObjIdx.Prop].Add(dropProp);
+                            gameMap.GameObjDict[GameObjType.Prop].Add(dropProp);
                     }
                     finally
                     {
-                        gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock();
+                        gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
                     }
 
                     playerBeingShot.Reset();
@@ -79,12 +78,12 @@ namespace Gaming
 
                             playerBeingShot.AddShield(GameData.shieldTimeAtBirth);  // 复活加个盾
 
-                            // gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
+                            // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
                             // try
                             //{
-                            //     gameMap.GameObjDict[GameObjIdx.Player].Add(playerBeingShot);
+                            //     gameMap.GameObjDict[GameObjType.Character].Add(playerBeingShot);
                             // }
-                            // finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock(); }
+                            // finally { gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock(); }
 
                             if (gameMap.Timer.IsGaming)
                             {
@@ -102,30 +101,30 @@ namespace Gaming
                 Debugger.Output(bullet, "bombed!");
 #endif
                 bullet.CanMove = false;
-                gameMap.GameObjLockDict[GameObjIdx.Bullet].EnterWriteLock();
+                gameMap.GameObjLockDict[GameObjType.Bullet].EnterWriteLock();
                 try
                 {
-                    foreach (ObjOfCharacter _bullet in gameMap.GameObjDict[GameObjIdx.Bullet])
+                    foreach (ObjOfCharacter _bullet in gameMap.GameObjDict[GameObjType.Bullet])
                     {
                         if (_bullet.ID == bullet.ID)
                         {
-                            gameMap.GameObjLockDict[GameObjIdx.BombedBullet].EnterWriteLock();
+                            gameMap.GameObjLockDict[GameObjType.BombedBullet].EnterWriteLock();
                             try
                             {
-                                gameMap.GameObjDict[GameObjIdx.BombedBullet].Add(new BombedBullet(bullet));
+                                gameMap.GameObjDict[GameObjType.BombedBullet].Add(new BombedBullet(bullet));
                             }
                             finally
                             {
-                                gameMap.GameObjLockDict[GameObjIdx.BombedBullet].ExitWriteLock();
+                                gameMap.GameObjLockDict[GameObjType.BombedBullet].ExitWriteLock();
                             }
-                            gameMap.GameObjDict[GameObjIdx.Bullet].Remove(_bullet);
+                            gameMap.GameObjDict[GameObjType.Bullet].Remove(_bullet);
                             break;
                         }
                     }
                 }
                 finally
                 {
-                    gameMap.GameObjLockDict[GameObjIdx.Bullet].ExitWriteLock();
+                    gameMap.GameObjLockDict[GameObjType.Bullet].ExitWriteLock();
                 }
 
                 /*if (objBeingShot != null)
@@ -138,10 +137,10 @@ namespace Gaming
 
                 // 子弹爆炸会发生的事↓↓↓
                 var beAttackedList = new List<Character>();
-                gameMap.GameObjLockDict[GameObjIdx.Player].EnterReadLock();
+                gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
                 try
                 {
-                    foreach (Character player in gameMap.GameObjDict[GameObjIdx.Player])
+                    foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
                     {
                         if (bullet.CanAttack(player))
                         {
@@ -153,7 +152,7 @@ namespace Gaming
                 }
                 finally
                 {
-                    gameMap.GameObjLockDict[GameObjIdx.Player].ExitReadLock();
+                    gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                 }
 
                 foreach (Character beAttackedPlayer in beAttackedList)
@@ -184,14 +183,14 @@ namespace Gaming
                 if (bullet != null)
                 {
                     bullet.CanMove = true;
-                    gameMap.GameObjLockDict[GameObjIdx.Bullet].EnterWriteLock();
+                    gameMap.GameObjLockDict[GameObjType.Bullet].EnterWriteLock();
                     try
                     {
-                        gameMap.GameObjDict[GameObjIdx.Bullet].Add(bullet);
+                        gameMap.GameObjDict[GameObjType.Bullet].Add(bullet);
                     }
                     finally
                     {
-                        gameMap.GameObjLockDict[GameObjIdx.Bullet].ExitWriteLock();
+                        gameMap.GameObjLockDict[GameObjType.Bullet].ExitWriteLock();
                     }
                     moveEngine.MoveObj(bullet, (int)((player.AttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
 #if DEBUG

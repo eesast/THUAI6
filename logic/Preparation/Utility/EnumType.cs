@@ -4,6 +4,7 @@ namespace Preparation.Utility
     /// <summary>
     /// 存放所有用到的枚举类型
     /// </summary>
+    // public const int numOfObjNotMap = 5;在GameData中
     public enum GameObjType
     {
         Null = 0,
@@ -17,7 +18,7 @@ namespace Preparation.Utility
         Grass = 7,
         Generator = 8,  // 发电机
         BirthPoint = 9,
-        Exit = 10,
+        Doorway = 10,
         EmergencyExit = 11,
         OutOfBoundBlock = 12,  // 范围外
     }
@@ -80,30 +81,21 @@ namespace Preparation.Utility
         Shield = 3,
         Spear = 4
     }
-    public enum GameObjIdx
+
+    public enum MapInfoObjType
     {
-        None = 0,
-        Player = 1,
-        Bullet = 2,
-        Prop = 3,
-        Map = 4,
-        BombedBullet = 5,
-        PickedProp = 6
+        Null = 0,
+        BirthPoint1 = 1,//必须从1开始
+        BirthPoint2 = 2,
+        BirthPoint3 = 3,
+        BirthPoint4 = 4,
+        BirthPoint5 = 5,
+        Wall = 6,
+        Grass1 = 7,
+        Grass2 = 8,
+        Grass3 = 9,
+        Generator = 10,  // 发电机
+        Doorway = 11,
+        EmergencyExit = 12
     }
-}
-public enum MapInfoObjType
-{
-    Null = 0,
-    Wall = 1,
-    Grass1 = 2,
-    Grass2 = 3,
-    Grass3 = 4,
-    Generator = 5,  // 发电机
-    Exit = 6,
-    EmergencyExit = 7,
-    BirthPoint1 = 8,
-    BirthPoint2 = 9,
-    BirthPoint3 = 10,
-    BirthPoint4 = 11,
-    BirthPoint5 = 12,
 }

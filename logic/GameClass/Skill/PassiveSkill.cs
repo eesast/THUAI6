@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using GameClass.GameObj;
-using Preparation.GameData;
 using Preparation.Interface;
 using Preparation.Utility;
 using Timothy.FrameRateTask;

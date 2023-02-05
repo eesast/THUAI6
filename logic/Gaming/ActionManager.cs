@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using GameClass.GameObj;
 using GameEngine;
-using Preparation.GameData;
 using Preparation.Utility;
 
 namespace Gaming
@@ -18,90 +18,104 @@ namespace Gaming
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
             }
 
-            public bool Fix(Character player, Generator? generator = null)
+            public bool TryToFix(Character player)// 自动检查有无发电机可修
             {
-                if (player.IsResetting)
+                if (player.IsResetting||player.IsGhost())
                     return false;
+                Generator? generatorForFix  = null;
 
 
-                Prop? pickProp = null;
-                if (propType == PropType.Null)  // 自动检查有无道具可捡
-                {
-                    gameMap.GameObjLockDict[GameObjIdx.Prop].EnterReadLock();
+                    gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
                     try
                     {
-                        foreach (Prop prop in gameMap.GameObjDict[GameObjIdx.Prop])
+                        foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
                         {
-                            if (GameData.IsInTheSameCell(prop.Position, player.Position) && prop.CanMove == false)
+                            if (GameData.IsInTheSameCell(generator.Position, player.Position))
                             {
-                                pickProp = prop;
+                                generatorForFix = generator;
+                                break;
                             }
                         }
                     }
                     finally
                     {
-                        gameMap.GameObjLockDict[GameObjIdx.Prop].ExitReadLock();
+                        gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
                     }
-                }
-                else
+            
+
+                if (generatorForFix != null)
                 {
-                    gameMap.GameObjLockDict[GameObjIdx.Prop].EnterReadLock();
+                    gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
                     try
                     {
-                        foreach (Prop prop in gameMap.GameObjDict[GameObjIdx.Prop])
-                        {
-                            if (prop.GetPropType() == propType)
+                        if (generatorForFix.Repair(player.FixSpeed))
+                         {
+                            Doorway exit = (Doorway)gameMap.GameObjDict[GameObjType.Doorway][1];
+                            if (!exit.PowerSupply)
                             {
-                                if (GameData.IsInTheSameCell(prop.Position, player.Position) && prop.CanMove == false)
+                                int numOfFixedGenerator = 0;
+                                foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
+                                    if (generator.DegreeOfFRepair==GameData.degreeOfFixedGenerator)
+                                        ++numOfFixedGenerator;
+                                if(numOfFixedGenerator>=GameData.numOfGeneratorRequiredForRepair)
                                 {
-                                    pickProp = prop;
+                                    gameMap.GameObjLockDict[GameObjType.Doorway].EnterWriteLock();
+                                    try
+                                    {
+                                        foreach (Doorway doorway in gameMap.GameObjDict[GameObjType.Doorway])
+                                            doorway.PowerSupply=true;
+                                    }
+                                    finally
+                                    {
+                                        gameMap.GameObjLockDict[GameObjType.Doorway].ExitWriteLock();
+                                    }
                                 }
                             }
-                        }
-                    }
+                         }
+                    } 
                     finally
                     {
-                        gameMap.GameObjLockDict[GameObjIdx.Prop].ExitReadLock();
+                        gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
                     }
-                }
-
-                if (pickProp != null)
-                {
-                    // pickProp.CanMove = false;
-                    Prop? dropProp = null;
-                    if (player.PropInventory != null)  // 若角色原来有道具，则原始道具掉落在原地
-                    {
-                        dropProp = player.PropInventory;
-                        dropProp.SetNewPos(GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell));
-                    }
-                    player.PropInventory = pickProp;
-                    gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
-                    try
-                    {
-                        gameMap.GameObjDict[GameObjIdx.Prop].Remove(pickProp);
-                        if (dropProp != null)
-                            gameMap.GameObjDict[GameObjIdx.Prop].Add(dropProp);
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock();
-                    }
-                    gameMap.GameObjLockDict[GameObjIdx.PickedProp].EnterWriteLock();
-                    try
-                    {
-                        gameMap.GameObjDict[GameObjIdx.PickedProp].Add(new PickedProp(pickProp));
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjIdx.PickedProp].ExitWriteLock();
-                    }
-
                     return true;
                 }
                 else
                     return false;
             }
 
+            public bool TryToEscape(Character player)
+            {
+                if (player.IsResetting||player.IsGhost())
+                    return false;
+                Doorway? doorwayForEscape = null;
+
+
+                gameMap.GameObjLockDict[GameObjType.Doorway].EnterReadLock();
+                try
+                {
+                    foreach (Doorway doorway in gameMap.GameObjDict[GameObjType.Doorway])
+                    {
+                        if (GameData.IsInTheSameCell(doorway.Position, player.Position))
+                        {
+                            doorwayForEscape = doorway;
+                            break;
+                        }
+                    }
+                }
+                finally
+                {
+                    gameMap.GameObjLockDict[GameObjType.Doorway].ExitReadLock();
+                }
+
+
+                if (doorwayForEscape != null&& doorwayForEscape.IsOpen)
+                {
+                    player.Escape();  
+                    return true;
+                }
+                else
+                    return false;
+            }
             /*
             private void ActivateMine(Character player, Mine mine)
             {
@@ -125,11 +139,11 @@ namespace Gaming
             }
             */
 
-            // private readonly Map gameMap;
+            private readonly Map gameMap;
             private readonly MoveEngine moveEngine;
             public ActionManager(Map gameMap)
             {
-                // this.gameMap = gameMap;
+                 this.gameMap = gameMap;
                 this.moveEngine = new MoveEngine(
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>

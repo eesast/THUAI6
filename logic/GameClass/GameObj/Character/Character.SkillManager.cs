@@ -36,6 +36,22 @@ namespace GameClass.GameObj
             passiveSkill(this);
             return;
         }
+
+        public  bool IsGhost() 
+        {
+            return this.characterType switch
+            {
+                CharacterType.Vampire => true,
+                CharacterType.Null => false,
+                CharacterType.RecoverAfterBattle => false,
+                CharacterType.SpeedUpWhenLeavingGrass => false,
+                CharacterType.PSkill3 => false,
+                CharacterType.PSkill4 => false,
+                CharacterType.PSkill5 => false,
+                _ => false,
+            };
+        }
+
         public Character(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType, ActiveSkillType commonSkillType) :
             base(initPos, initRadius, initPlace, GameObjType.Character)
         {

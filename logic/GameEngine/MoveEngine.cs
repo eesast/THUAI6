@@ -3,7 +3,6 @@ using System.Threading;
 using Preparation.Interface;
 using Preparation.Utility;
 using Timothy.FrameRateTask;
-using Preparation.GameData;
 
 namespace GameEngine
 {

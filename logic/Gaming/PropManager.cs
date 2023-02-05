@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using GameClass.GameObj;
 using System.Threading;
-using Preparation.GameData;
 using Preparation.Utility;
 using System;
 using Timothy.FrameRateTask;
@@ -66,10 +65,10 @@ namespace Gaming
                 Prop? pickProp = null;
                 if (propType == PropType.Null)  // 自动检查有无道具可捡
                 {
-                    gameMap.GameObjLockDict[GameObjIdx.Prop].EnterReadLock();
+                    gameMap.GameObjLockDict[GameObjType.Prop].EnterReadLock();
                     try
                     {
-                        foreach (Prop prop in gameMap.GameObjDict[GameObjIdx.Prop])
+                        foreach (Prop prop in gameMap.GameObjDict[GameObjType.Prop])
                         {
                             if (GameData.IsInTheSameCell(prop.Position, player.Position) && prop.CanMove == false)
                             {
@@ -79,15 +78,15 @@ namespace Gaming
                     }
                     finally
                     {
-                        gameMap.GameObjLockDict[GameObjIdx.Prop].ExitReadLock();
+                        gameMap.GameObjLockDict[GameObjType.Prop].ExitReadLock();
                     }
                 }
                 else
                 {
-                    gameMap.GameObjLockDict[GameObjIdx.Prop].EnterReadLock();
+                    gameMap.GameObjLockDict[GameObjType.Prop].EnterReadLock();
                     try
                     {
-                        foreach (Prop prop in gameMap.GameObjDict[GameObjIdx.Prop])
+                        foreach (Prop prop in gameMap.GameObjDict[GameObjType.Prop])
                         {
                             if (prop.GetPropType() == propType)
                             {
@@ -100,7 +99,7 @@ namespace Gaming
                     }
                     finally
                     {
-                        gameMap.GameObjLockDict[GameObjIdx.Prop].ExitReadLock();
+                        gameMap.GameObjLockDict[GameObjType.Prop].ExitReadLock();
                     }
                 }
 
@@ -114,25 +113,25 @@ namespace Gaming
                         dropProp.SetNewPos(GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell));
                     }
                     player.PropInventory = pickProp;
-                    gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
+                    gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
                     try
                     {
-                        gameMap.GameObjDict[GameObjIdx.Prop].Remove(pickProp);
+                        gameMap.GameObjDict[GameObjType.Prop].Remove((Preparation.Interface.IGameObj)pickProp);
                         if (dropProp != null)
-                            gameMap.GameObjDict[GameObjIdx.Prop].Add(dropProp);
+                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)dropProp);
                     }
                     finally
                     {
-                        gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock();
+                        gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
                     }
-                    gameMap.GameObjLockDict[GameObjIdx.PickedProp].EnterWriteLock();
+                    gameMap.GameObjLockDict[GameObjType.PickedProp].EnterWriteLock();
                     try
                     {
-                        gameMap.GameObjDict[GameObjIdx.PickedProp].Add(new PickedProp(pickProp));
+                        gameMap.GameObjDict[GameObjType.PickedProp].Add(new PickedProp(pickProp));
                     }
                     finally
                     {
-                        gameMap.GameObjLockDict[GameObjIdx.PickedProp].ExitWriteLock();
+                        gameMap.GameObjLockDict[GameObjType.PickedProp].ExitWriteLock();
                     }
 
                     return true;
@@ -153,14 +152,14 @@ namespace Gaming
 
                 prop.CanMove = true;
                 prop.SetNewPos(player.Position);
-                gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
+                gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
                 try
                 {
-                    gameMap.GameObjDict[GameObjIdx.Prop].Add(prop);
+                    gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)prop);
                 }
                 finally
                 {
-                    gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock();
+                    gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
                 }
                 timeInMilliseconds = timeInMilliseconds < GameData.PropMaxMoveDistance / prop.MoveSpeed * 1000 ? timeInMilliseconds : GameData.PropMaxMoveDistance / prop.MoveSpeed * 1000;
                 moveEngine.MoveObj(prop, timeInMilliseconds, angle);
@@ -182,22 +181,22 @@ namespace Gaming
                                 int rand = r.Next(0, len);
                                 XY randPos = availableCellForGenerateProp[rand];
 
-                                gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
+                                gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
                                 try
                                 {
                                     switch (r.Next(0, 4))
                                     {
                                         case 0:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new AddLIFE(randPos));
+                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new AddLIFE(randPos));
                                             break;
                                         case 1:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new AddSpeed(randPos));
+                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new AddSpeed(randPos));
                                             break;
                                         case 2:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new Shield(randPos));
+                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new Shield(randPos));
                                             break;
                                         case 3:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new Spear(randPos));
+                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new Spear(randPos));
                                             break;
                                         default:
                                             break;
@@ -205,7 +204,7 @@ namespace Gaming
                                 }
                                 finally
                                 {
-                                    gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock();
+                                    gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
                                 }
                             },
                             GameData.PropProduceTime,
@@ -233,21 +232,15 @@ namespace Gaming
                 availableCellForGenerateProp = new List<XY>();
                 for (int i = 0; i < gameMap.ProtoGameMap.GetLength(0); i++)
                 {
-<<<<<<< HEAD
                     for (int j = 0; j < gameMap.ProtoGameMap.GetLength(1); j++)
                     {
                         if (gameMap.ProtoGameMap[i, j] == (int)MapInfoObjType.Null)
-=======
-                    for (int j = 0; j < gameMap.ProtoGameMap.GetLength(1); j++)
->>>>>>> bad3c7b1c2a9453f59ea260079904624c3df6fb1
                         {
-                            if (gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Null)
-                            {
-                                availableCellForGenerateProp.Add(GameData.GetCellCenterPos(i, j));
-                            }
+                            availableCellForGenerateProp.Add(GameData.GetCellCenterPos(i, j));
                         }
                     }
                 }
             }
         }
     }
+}

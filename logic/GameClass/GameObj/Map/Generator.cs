@@ -21,20 +21,20 @@ namespace GameClass.GameObj
             get => degreeOfFRepair;
             set
             {
-                lock (gameObjLock) 
+                lock (gameObjLock)
                 {
-                    if(degreeOfFRepair<GameData.degreeOfFixedGenerator)//不允许正常破坏已经修好的发电机
-                    if (value < 0) degreeOfFRepair = 0;
-                    else degreeOfFRepair =value>GameData.degreeOfFixedGenerator ? GameData.degreeOfFixedGenerator : value;
+                    if (degreeOfFRepair < GameData.degreeOfFixedGenerator)//不允许正常破坏已经修好的发电机
+                        if (value < 0) degreeOfFRepair = 0;
+                        else degreeOfFRepair = value > GameData.degreeOfFixedGenerator ? GameData.degreeOfFixedGenerator : value;
                 }
             }
         }
 
-        public bool Repair(int addDegree) 
+        public bool Repair(int addDegree)
         {
-            if (DegreeOfFRepair==GameData.degreeOfFixedGenerator) return false;
-            DegreeOfFRepair+=addDegree;
-            if (DegreeOfFRepair==GameData.degreeOfFixedGenerator)
+            if (DegreeOfFRepair == GameData.degreeOfFixedGenerator) return false;
+            DegreeOfFRepair += addDegree;
+            if (DegreeOfFRepair == GameData.degreeOfFixedGenerator)
                 return true;
             else return false;
         }

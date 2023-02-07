@@ -20,28 +20,28 @@ namespace Gaming
 
             public bool TryToFix(Character player)// 自动检查有无发电机可修
             {
-                if (player.IsResetting||player.IsGhost())
+                if (player.IsResetting || player.IsGhost())
                     return false;
-                Generator? generatorForFix  = null;
+                Generator? generatorForFix = null;
 
 
-                    gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
-                    try
+                gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
+                try
+                {
+                    foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
                     {
-                        foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
+                        if (GameData.IsInTheSameCell(generator.Position, player.Position))
                         {
-                            if (GameData.IsInTheSameCell(generator.Position, player.Position))
-                            {
-                                generatorForFix = generator;
-                                break;
-                            }
+                            generatorForFix = generator;
+                            break;
                         }
                     }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
-                    }
-            
+                }
+                finally
+                {
+                    gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
+                }
+
 
                 if (generatorForFix != null)
                 {
@@ -49,21 +49,21 @@ namespace Gaming
                     try
                     {
                         if (generatorForFix.Repair(player.FixSpeed))
-                         {
+                        {
                             Doorway exit = (Doorway)gameMap.GameObjDict[GameObjType.Doorway][1];
                             if (!exit.PowerSupply)
                             {
                                 int numOfFixedGenerator = 0;
                                 foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
-                                    if (generator.DegreeOfFRepair==GameData.degreeOfFixedGenerator)
+                                    if (generator.DegreeOfFRepair == GameData.degreeOfFixedGenerator)
                                         ++numOfFixedGenerator;
-                                if(numOfFixedGenerator>=GameData.numOfGeneratorRequiredForRepair)
+                                if (numOfFixedGenerator >= GameData.numOfGeneratorRequiredForRepair)
                                 {
                                     gameMap.GameObjLockDict[GameObjType.Doorway].EnterWriteLock();
                                     try
                                     {
                                         foreach (Doorway doorway in gameMap.GameObjDict[GameObjType.Doorway])
-                                            doorway.PowerSupply=true;
+                                            doorway.PowerSupply = true;
                                     }
                                     finally
                                     {
@@ -71,8 +71,8 @@ namespace Gaming
                                     }
                                 }
                             }
-                         }
-                    } 
+                        }
+                    }
                     finally
                     {
                         gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
@@ -85,7 +85,7 @@ namespace Gaming
 
             public bool TryToEscape(Character player)
             {
-                if (player.IsResetting||player.IsGhost())
+                if (player.IsResetting || player.IsGhost())
                     return false;
                 Doorway? doorwayForEscape = null;
 
@@ -108,9 +108,9 @@ namespace Gaming
                 }
 
 
-                if (doorwayForEscape != null&& doorwayForEscape.IsOpen)
+                if (doorwayForEscape != null && doorwayForEscape.IsOpen)
                 {
-                    player.Escape();  
+                    player.Escape();
                     return true;
                 }
                 else
@@ -143,7 +143,7 @@ namespace Gaming
             private readonly MoveEngine moveEngine;
             public ActionManager(Map gameMap)
             {
-                 this.gameMap = gameMap;
+                this.gameMap = gameMap;
                 this.moveEngine = new MoveEngine(
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>

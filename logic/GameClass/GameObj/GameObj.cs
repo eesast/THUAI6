@@ -123,7 +123,7 @@ namespace GameClass.GameObj
         /// <summary>
         /// 原初移动速度
         /// </summary>
-        public int OrgMoveSpeed{ get; protected set; }
+        public int OrgMoveSpeed { get; protected set; }
 
         // 移动，改变坐标
         public long Move(XY moveVec)

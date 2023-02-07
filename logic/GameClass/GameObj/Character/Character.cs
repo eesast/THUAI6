@@ -69,15 +69,15 @@ namespace GameClass.GameObj
             }
         }
 
-        private bool isEscaped=false;
+        private bool isEscaped = false;
         public bool IsEscaped
         {
             get => isEscaped;
             set
             {
                 lock (gameObjLock)
-                    if(!isEscaped&&!IsGhost())
-                    isEscaped = value;
+                    if (!isEscaped && !IsGhost())
+                        isEscaped = value;
             }
         }
 
@@ -283,18 +283,18 @@ namespace GameClass.GameObj
             }
             return false;
         }
- /*       /// <summary>
-        /// 增加死亡次数
-        /// </summary>
-        /// <returns>当前死亡次数</returns>
-        private int AddDeathCount()
-        {
-            lock (gameObjLock)
-            {
-                ++deathCount;
-                return deathCount;
-            }
-        }*/
+        /*       /// <summary>
+               /// 增加死亡次数
+               /// </summary>
+               /// <returns>当前死亡次数</returns>
+               private int AddDeathCount()
+               {
+                   lock (gameObjLock)
+                   {
+                       ++deathCount;
+                       return deathCount;
+                   }
+               }*/
         /// <summary>
         /// 加分
         /// </summary>
@@ -498,10 +498,10 @@ namespace GameClass.GameObj
             }
         }
 
-        public void Escape() 
+        public void Escape()
         {
             lock (gameObjLock)
-                IsResetting=IsEscaped=true;
+                IsResetting = IsEscaped = true;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;

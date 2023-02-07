@@ -12,7 +12,7 @@ namespace GameClass.GameObj
             base(initPos, GameData.numOfPosGridPerCell / 2, PlaceType.Land, GameObjType.Doorway)
         {
             this.CanMove = false;
-        }          
+        }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)

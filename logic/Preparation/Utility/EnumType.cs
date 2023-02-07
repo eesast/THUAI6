@@ -56,18 +56,18 @@ namespace Preparation.Utility
     public enum CharacterType  // 职业
     {
         Null = 0,
-        RecoverAfterBattle = 1,
-        SpeedUpWhenLeavingGrass = 2,
-        Vampire = 3,
-        PSkill3 = 4,
+        Assassin = 1,
+        Vampire = 2,
+        RecoverAfterBattle = 3,
+        SpeedUpWhenLeavingGrass = 4,
         PSkill4 = 5,
         PSkill5 = 6
     }
     public enum ActiveSkillType  // 主动技能
     {
         Null = 0,
-        BecomeVampire = 1,
-        BecomeAssassin = 2,
+        BecomeAssassin = 1,
+        BecomeVampire = 2,
         NuclearWeapon = 3,
         SuperFast = 4,
         ASkill4 = 5,

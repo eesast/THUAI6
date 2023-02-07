@@ -15,7 +15,7 @@
         public const int MaxSpeed = int.MaxValue;  // 最大速度
 
         public const int numOfBirthPoint = 5;
-//        public const int numOfGenerator = 7;
+        //        public const int numOfGenerator = 7;
         public const int numOfGeneratorRequiredForRepair = 5;
 
         public const int numOfObjNotMap = 5;

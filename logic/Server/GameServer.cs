@@ -68,6 +68,86 @@ namespace Server
                 semaDict[request.PlayerId].Item2.Release();
             } while (game.IsGaming);
         }
+
+        public override Task<BoolRes> Attack(AttackMsg request, ServerCallContext context)
+        {
+            return base.Attack(request, context);
+        }
+
+        public override Task<BoolRes> CarryHuman(IDMsg request, ServerCallContext context)
+        {
+            return base.CarryHuman(request, context);
+        }
+
+        public override Task<BoolRes> EndFixMachine(IDMsg request, ServerCallContext context)
+        {
+            return base.EndFixMachine(request, context);
+        }
+
+        public override Task<BoolRes> EndSaveHuman(IDMsg request, ServerCallContext context)
+        {
+            return base.EndSaveHuman(request, context);
+        }
+
+        public override Task<BoolRes> Escape(IDMsg request, ServerCallContext context)
+        {
+            return base.Escape(request, context);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override Task GetMessage(IDMsg request, IServerStreamWriter<MsgRes> responseStream, ServerCallContext context)
+        {
+            return base.GetMessage(request, responseStream, context);
+        }
+
+        public override Task<BoolRes> HangHuman(IDMsg request, ServerCallContext context)
+        {
+            return base.HangHuman(request, context);
+        }
+
+        public override Task<MoveRes> Move(MoveMsg request, ServerCallContext context)
+        {
+            return base.Move(request, context);
+        }
+
+        public override Task<BoolRes> PickProp(PickMsg request, ServerCallContext context)
+        {
+            return base.PickProp(request, context);
+        }
+
+        public override Task<BoolRes> ReleaseHuman(IDMsg request, ServerCallContext context)
+        {
+            return base.ReleaseHuman(request, context);
+        }
+
+        public override Task<BoolRes> SendMessage(SendMsg request, ServerCallContext context)
+        {
+            return base.SendMessage(request, context);
+        }
+
+        public override Task<BoolRes> StartFixMachine(IDMsg request, ServerCallContext context)
+        {
+            return base.StartFixMachine(request, context);
+        }
+
+        public override Task<BoolRes> StartSaveHuman(IDMsg request, ServerCallContext context)
+        {
+            return base.StartSaveHuman(request, context);
+        }
+
+        public override Task<BoolRes> UseProp(IDMsg request, ServerCallContext context)
+        {
+            return base.UseProp(request, context);
+        }
+
+        public override Task<BoolRes> UseSkill(IDMsg request, ServerCallContext context)
+        {
+            return base.UseSkill(request, context);
+        }
         public void StartGame()
         {
             var waitHandle = game.StartGame();

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Preparation.Utility;
-using Preparation.GameData;
 
 namespace GameClass.GameObj
 {

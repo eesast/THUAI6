@@ -3,7 +3,6 @@ using System.Threading;
 using Preparation.Interface;
 using Preparation.Utility;
 using Timothy.FrameRateTask;
-using Preparation.GameData;
 
 namespace GameEngine
 {
@@ -14,7 +13,7 @@ namespace GameEngine
         /// </summary>
         public enum AfterCollision
         {
-            ContinueCheck = 0,  // 碰撞后继续检查其他碰撞
+            ContinueCheck = 0,  // 碰撞后继续检查其他碰撞,暂时没用
             MoveMax = 1,        // 行走最远距离
             Destroyed = 2       // 物体已经毁坏
         }

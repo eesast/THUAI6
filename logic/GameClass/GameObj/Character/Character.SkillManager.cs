@@ -36,6 +36,23 @@ namespace GameClass.GameObj
             passiveSkill(this);
             return;
         }
+
+        public bool IsGhost()
+        {
+            return this.characterType switch
+            {
+                CharacterType.Assassin => true,
+                CharacterType.Vampire => true,
+
+                CharacterType.Null => false,
+                CharacterType.RecoverAfterBattle => false,
+                CharacterType.SpeedUpWhenLeavingGrass => false,
+                CharacterType.PSkill4 => false,
+                CharacterType.PSkill5 => false,
+                _ => false,
+            };
+        }
+
         public Character(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType, ActiveSkillType commonSkillType) :
             base(initPos, initRadius, initPlace, GameObjType.Character)
         {
@@ -47,6 +64,9 @@ namespace GameClass.GameObj
             ICommonSkill cSkill;
             switch (characterType)
             {
+                case CharacterType.Assassin:
+                    pSkill = new();
+                    break;
                 case CharacterType.RecoverAfterBattle:
                     pSkill = new RecoverAfterBattle();
                     break;

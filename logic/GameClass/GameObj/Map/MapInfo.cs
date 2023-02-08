@@ -11,15 +11,8 @@ namespace GameClass.GameObj
         /// <param name="obj"></param>
         /// <returns></returns>
 
-        public static uint BirthPointEnumToIdx(MapInfoObjType birthPointEnum)
-        {
-            uint tmp = (uint)birthPointEnum;
-            // if (tmp < 5 || tmp > 12) throw new Exception("The parameter of BirthPointEnumToIdx is not a valid birth point enumeration value!");
-            return tmp - 5;
-        }
         /// <summary>
         /// 50*50
-        /// 1:Wall; 2:Grass1; 3:Grass2 ; 4:Grass3 ; 5~12:BirthPoint ; 13:GemWell
         /// </summary>
         public static uint[,] defaultMap = new uint[,] {
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },

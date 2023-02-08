@@ -9,8 +9,8 @@ namespace Preparation.Interface
         ITimer Timer { get; }
 
         // the two dicts must have same keys
-        Dictionary<GameObjIdx, IList<IGameObj>> GameObjDict { get; }
-        Dictionary<GameObjIdx, ReaderWriterLockSlim> GameObjLockDict { get; }
+        Dictionary<GameObjType, IList<IGameObj>> GameObjDict { get; }
+        Dictionary<GameObjType, ReaderWriterLockSlim> GameObjLockDict { get; }
 
         public bool IsOutOfBound(IGameObj obj);
         public IOutOfBound GetOutOfBound(XY pos);  // 返回新建的一个OutOfBound对象

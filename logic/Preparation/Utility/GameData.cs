@@ -1,6 +1,4 @@
-﻿using Preparation.Utility;
-
-namespace Preparation.GameData
+﻿namespace Preparation.Utility
 {
     public static class GameData
     {
@@ -16,9 +14,15 @@ namespace Preparation.GameData
         public const int MinSpeed = 1;             // 最小速度
         public const int MaxSpeed = int.MaxValue;  // 最大速度
 
+        public const int numOfBirthPoint = 5;
+        //        public const int numOfGenerator = 7;
+        public const int numOfGeneratorRequiredForRepair = 5;
+
+        public const int numOfObjNotMap = 5;
+
         public static XY GetCellCenterPos(int x, int y)  // 求格子的中心坐标
         {
-            XY ret = new((x * numOfPosGridPerCell) + (numOfPosGridPerCell / 2), (y * numOfPosGridPerCell) + (numOfPosGridPerCell / 2));
+            XY ret = new(x * numOfPosGridPerCell + numOfPosGridPerCell / 2, y * numOfPosGridPerCell + numOfPosGridPerCell / 2);
             return ret;
         }
         public static int PosGridToCellX(XY pos)  // 求坐标所在的格子的x坐标
@@ -33,13 +37,8 @@ namespace Preparation.GameData
         {
             return PosGridToCellX(pos1) == PosGridToCellX(pos2) && PosGridToCellY(pos1) == PosGridToCellY(pos2);
         }
-
-        public static int numOfBirthPoint = 5;
         #endregion
         #region 角色相关
-        /// <summary>
-        /// 玩家相关
-        /// </summary>
         public const int characterRadius = numOfPosGridPerCell / 2;  // 人物半径
         public const int basicAp = 3000;                             // 初始攻击力
         public const int basicHp = 6000;                             // 初始血量
@@ -59,9 +58,8 @@ namespace Preparation.GameData
         public const int reviveTime = 30000;                         // 复活时间
         public const int shieldTimeAtBirth = 3000;                   // 复活时的护盾时间
         public const int gemToScore = 4;                             // 一个宝石的标准加分
-        /// <summary>
-        /// 道具相关
-        /// </summary>
+        #endregion
+        #region 道具相关
         public const int MinPropTypeNum = 1;
         public const int MaxPropTypeNum = 10;
         public const int PropRadius = numOfPosGridPerCell / 2;
@@ -71,6 +69,8 @@ namespace Preparation.GameData
         public const long GemProduceTime = 10000;
         public const long PropProduceTime = 10000;
         public const int PropDuration = 10000;
+
+        public const int degreeOfFixedGenerator = 100;
         #endregion
         #region 游戏帧相关
         public const long checkInterval = 50;  // 检查位置标志、补充子弹的帧时长

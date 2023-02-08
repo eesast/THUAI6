@@ -1,8 +1,8 @@
-﻿using Preparation.GameData;
-using Preparation.Interface;
+﻿using Preparation.Interface;
 using Preparation.Utility;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace GameClass.GameObj
@@ -31,6 +31,27 @@ namespace GameClass.GameObj
             }
         }
         public int OrgCD { get; protected set; }
+
+        protected int fixSpeed;
+        /// <summary>
+        /// 修理电机速度
+        /// </summary>
+        public int FixSpeed
+        {
+            get => fixSpeed;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    fixSpeed = value;
+                }
+            }
+        }
+        /// <summary>
+        /// 原初修理电机速度
+        /// </summary>
+        public int OrgFixSpeed { get; protected set; }
+
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;  // 人物最大子弹数
         protected int bulletNum;
@@ -47,8 +68,21 @@ namespace GameClass.GameObj
                     hp = value <= MaxHp ? value : MaxHp;
             }
         }
-        private int deathCount = 0;
-        public int DeathCount => deathCount;  // 玩家的死亡次数
+
+        private bool isEscaped = false;
+        public bool IsEscaped
+        {
+            get => isEscaped;
+            set
+            {
+                lock (gameObjLock)
+                    if (!isEscaped && !IsGhost())
+                        isEscaped = value;
+            }
+        }
+
+        //        private int deathCount = 0;
+        //       public int DeathCount => deathCount;  // 玩家的死亡次数
 
         private int score = 0;
         public int Score
@@ -249,18 +283,18 @@ namespace GameClass.GameObj
             }
             return false;
         }
-        /// <summary>
-        /// 增加死亡次数
-        /// </summary>
-        /// <returns>当前死亡次数</returns>
-        private int AddDeathCount()
-        {
-            lock (gameObjLock)
-            {
-                ++deathCount;
-                return deathCount;
-            }
-        }
+        /*       /// <summary>
+               /// 增加死亡次数
+               /// </summary>
+               /// <returns>当前死亡次数</returns>
+               private int AddDeathCount()
+               {
+                   lock (gameObjLock)
+                   {
+                       ++deathCount;
+                       return deathCount;
+                   }
+               }*/
         /// <summary>
         /// 加分
         /// </summary>
@@ -378,7 +412,7 @@ namespace GameClass.GameObj
         /// <summary>
         /// 角色携带的信息
         /// </summary>
-        private string message = "THUAI5";
+        private string message = "THUAI6";
         public string Message
         {
             get => message;
@@ -447,18 +481,27 @@ namespace GameClass.GameObj
         #endregion
         public override void Reset()  // 要加锁吗？
         {
-            _ = AddDeathCount();
-            base.Reset();
-            this.MoveSpeed = OrgMoveSpeed;
-            HP = MaxHp;
-            PropInventory = null;
-            // BulletOfPlayer = OriBulletOfPlayer;
-            // lock (gameObjLock)
-            //   bulletNum = maxBulletNum;
+            lock (gameObjLock)
+            {
+                //         _ = AddDeathCount();
+                base.Reset();
+                this.MoveSpeed = OrgMoveSpeed;
+                HP = MaxHp;
+                PropInventory = null;
+                BulletOfPlayer = OriBulletOfPlayer;
+                lock (gameObjLock)
+                    bulletNum = maxBulletNum;
 
-            buffManeger.ClearAll();
-            IsInvisible = false;
-            this.Vampire = this.OriVampire;
+                buffManeger.ClearAll();
+                IsInvisible = false;
+                this.Vampire = this.OriVampire;
+            }
+        }
+
+        public void Escape()
+        {
+            lock (gameObjLock)
+                IsResetting = IsEscaped = true;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;

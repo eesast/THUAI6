@@ -1,5 +1,4 @@
 ﻿using Preparation.Utility;
-using Preparation.GameData;
 
 namespace GameClass.GameObj
 {

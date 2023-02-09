@@ -62,7 +62,7 @@ namespace Server
         }
 
         public void ReportGame()
-{
+        {
             // currentGameInfo = game.GetCopiedGameInfo();
             currentGameInfo.HumanMessage[0].X = 1;
             currentGameInfo.ButcherMessage[0].X = 1;
@@ -114,7 +114,7 @@ namespace Server
             }
 
             if (game.GameMap.Timer.IsGaming)
-            return;
+                return;
             /*if (!ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))  //玩家id是否正确
             return;
             if (communicationToGameID[msg.TeamID, msg.PlayerID] != GameObj.invalidID)  //是否已经添加了该玩家
@@ -155,7 +155,7 @@ namespace Server
                 }
                 semaDict[request.PlayerId].Item2.Release();
             } while (game.GameMap.Timer.IsGaming);
-}
+        }
 
         public override Task<BoolRes> Attack(AttackMsg request, ServerCallContext context)
         {

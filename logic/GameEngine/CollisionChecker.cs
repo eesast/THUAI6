@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Preparation.Interface;
 using Preparation.Utility;
-using Preparation.GameData;
-
 namespace GameEngine
 {
     internal class CollisionChecker

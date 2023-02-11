@@ -60,12 +60,12 @@ namespace GameClass.GameObj
             this.score = 0;
             this.propInventory = null;
             this.buffManeger = new BuffManeger();
-            IPassiveSkill pSkill;
+            IPassiveSkill? pSkill;
             ICommonSkill cSkill;
             switch (characterType)
             {
                 case CharacterType.Assassin:
-                    pSkill = new();
+                    pSkill = null;
                     break;
                 case CharacterType.RecoverAfterBattle:
                     pSkill = new RecoverAfterBattle();

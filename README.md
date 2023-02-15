@@ -136,7 +136,7 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 
 ### 规范风格
 
-- 请按照配置文件 [.clang-format](.clang-format) 对代码进行规范；可以使用脚本 [dependency/shell/format.sh](./dependency/shell/format.sh) 规范代码风格
+- C++ 语言请按照配置文件 [.clang-format](.clang-format) 对代码进行规范，C# 语言请按照 dotnet format 进行代码规范；可以使用脚本 [dependency/shell/format.sh](./dependency/shell/format.sh) 规范代码风格
 
 ## 其他注意事项
 

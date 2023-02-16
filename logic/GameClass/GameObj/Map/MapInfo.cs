@@ -1,10 +1,4 @@
-<<<<<<< HEAD
 namespace GameClass.GameObj
-=======
-﻿using Preparation.Utility;
-
-namespace GameClass.GameObj
->>>>>>> 52c5da5a73489643bd96eca11b8822e1773cca17
 {
     public static class MapInfo
     {

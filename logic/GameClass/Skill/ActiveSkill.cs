@@ -190,5 +190,16 @@ namespace GameClass.Skill
                 }
             }
         }
+    public static IActiveSkill FindIActiveSkill(ActiveSkillType activeSkillType) 
+    {
+            switch (activeSkillType)
+            {
+                case ActiveSkillType.BecomeInvisible:
+                    return new BecomeInvisible();
+                default:
+                    return null;
+            }
     }
+    }
+
 }

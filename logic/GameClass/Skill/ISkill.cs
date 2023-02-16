@@ -18,12 +18,4 @@ namespace GameClass.Skill
         public object ActiveSkillLock { get; }
         public bool SkillEffect(Character player);
     }
-    public interface ICharacterType
-    {
-        public int MoveSpeed { get; }
-        public int MaxHp { get; }
-        public BulletType InitBullet { get; }
-        public List<IActiveSkill> ListOfIActiveSkill { get; }
-        public List<IPassiveSkill> ListOfIPassiveSkill { get; }
-    }
 }

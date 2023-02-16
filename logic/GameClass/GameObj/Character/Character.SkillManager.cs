@@ -7,18 +7,11 @@ namespace GameClass.GameObj
 {
     public partial class Character
     {
-        private delegate bool CharacterActiveSkill(Character player);  // 返回值：是否成功释放了技能
-        private delegate void CharacterPassiveSkill(Character player);
-        private readonly CharacterActiveSkill commonSkill;
-        private readonly ActiveSkillType commonSkillType;
-        public ActiveSkillType CommonSkillType => commonSkillType;
 
         private readonly CharacterType characterType;
         public CharacterType CharacterType => characterType;
-        public bool UseCommonSkill()
-        {
-            return commonSkill(this);
-        }
+        private readonly Occupation occupation;
+        public Occupation Occupation => occupation;
 
         private Dictionary<ActiveSkillType, int> TimeUntilActiveSkillAvailable { get; set; }
 
@@ -31,6 +24,12 @@ namespace GameClass.GameObj
                 return true;
             }
             return false;
+        }
+        public bool UseActiveSkill(ActiveSkillType activeSkillType)
+        {
+            if (Occupation.ListOfIActiveSkill.Contains(ActiveSkillFactory.FindIActiveSkill(activeSkillType)))
+                return ActiveSkillFactory.FindIActiveSkill(activeSkillType).;
+            else false;
         }
 
         readonly CharacterPassiveSkill passiveSkill;

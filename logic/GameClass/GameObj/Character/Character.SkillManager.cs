@@ -19,15 +19,18 @@ namespace GameClass.GameObj
         {
             return commonSkill(this);
         }
-        private int timeUntilCommonSkillAvailable = 0;  // 还剩多少时间可以使用普通技能
-        public int TimeUntilCommonSkillAvailable
+
+        private Dictionary<ActiveSkillType, int> TimeUntilActiveSkillAvailable { get; set; }
+
+        public bool SetTimeUntilActiveSkillAvailable(ActiveSkillType activeSkillType, int timeUntilActiveSkillAvailable)
         {
-            get => timeUntilCommonSkillAvailable;
-            set
+            lock (gameObjLock)
+            if (TimeUntilActiveSkillAvailable.ContainsKey(activeSkillType))
             {
-                lock (gameObjLock)
-                    timeUntilCommonSkillAvailable = value < 0 ? 0 : value;
+                TimeUntilActiveSkillAvailable[activeSkillType] = (timeUntilActiveSkillAvailable > 0) ? timeUntilActiveSkillAvailable : 0;
+                return true;
             }
+            return false;
         }
 
         readonly CharacterPassiveSkill passiveSkill;
@@ -41,14 +44,14 @@ namespace GameClass.GameObj
         {
             return this.characterType switch
             {
-                CharacterType.Assassin => true,
-                CharacterType.Vampire => true,
+                this.CharacterType.Assassin => true,
+                this.CharacterType.Vampire => true,
 
-                CharacterType.Null => false,
-                CharacterType.RecoverAfterBattle => false,
-                CharacterType.SpeedUpWhenLeavingGrass => false,
-                CharacterType.PSkill4 => false,
-                CharacterType.PSkill5 => false,
+                this.CharacterType.Null => false,
+                this.CharacterType.RecoverAfterBattle => false,
+                this.CharacterType.SpeedUpWhenLeavingGrass => false,
+                this.CharacterType.PSkill4 => false,
+                this.CharacterType.PSkill5 => false,
                 _ => false,
             };
         }
@@ -61,19 +64,19 @@ namespace GameClass.GameObj
             this.propInventory = null;
             this.buffManeger = new BuffManeger();
             IPassiveSkill pSkill;
-            ICommonSkill cSkill;
+            IActiveSkill cSkill;
             switch (characterType)
             {
-                case CharacterType.Assassin:
-                    pSkill = new();
+                case this.CharacterType.Assassin:
+                    pSkill = null;
                     break;
-                case CharacterType.RecoverAfterBattle:
+                case this.CharacterType.RecoverAfterBattle:
                     pSkill = new RecoverAfterBattle();
                     break;
-                case CharacterType.SpeedUpWhenLeavingGrass:
+                case this.CharacterType.SpeedUpWhenLeavingGrass:
                     pSkill = new SpeedUpWhenLeavingGrass();
                     break;
-                case CharacterType.Vampire:
+                case this.CharacterType.Vampire:
                     pSkill = new Vampire();
                     break;
                 default:
@@ -83,7 +86,7 @@ namespace GameClass.GameObj
             switch (commonSkillType)
             {
                 case ActiveSkillType.BecomeAssassin:
-                    cSkill = new BecomeAssassin();
+                    cSkill = new BecomeInvisible();
                     break;
                 case ActiveSkillType.BecomeVampire:
                     cSkill = new BecomeVampire();
@@ -102,7 +105,6 @@ namespace GameClass.GameObj
             this.hp = cSkill.MaxHp;
             this.OrgMoveSpeed = cSkill.MoveSpeed;
             this.moveSpeed = cSkill.MoveSpeed;
-            this.cd = cSkill.CD;
             this.maxBulletNum = cSkill.MaxBulletNum;
             this.bulletNum = maxBulletNum;
             this.bulletOfPlayer = pSkill.InitBullet;

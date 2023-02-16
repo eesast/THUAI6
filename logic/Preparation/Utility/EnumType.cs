@@ -42,7 +42,9 @@ namespace Preparation.Utility
         OrdinaryBullet = 1,  // 普通子弹
         AtomBomb = 2,        // 原子弹
         FastBullet = 3,      // 快速子弹
-        LineBullet = 4       // 直线子弹
+        LineBullet = 4,      // 直线子弹
+        FlyingKnife = 5,     //飞刀
+        CommonAttackOfGhost = 6
     }
     public enum PropType  // 道具类型
     {
@@ -66,7 +68,7 @@ namespace Preparation.Utility
     public enum ActiveSkillType  // 主动技能
     {
         Null = 0,
-        BecomeAssassin = 1,
+        BecomeInvisible = 1,
         BecomeVampire = 2,
         NuclearWeapon = 3,
         SuperFast = 4,

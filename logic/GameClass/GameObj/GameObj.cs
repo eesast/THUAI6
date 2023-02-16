@@ -171,6 +171,7 @@ namespace GameClass.GameObj
         /// </summary>
         /// <returns> 依具体类及该方法参数而定，默认为false </returns>
         protected virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
+
         bool IMoveable.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
         public GameObj(XY initPos, int initRadius, PlaceType initPlace, GameObjType initType)
         {

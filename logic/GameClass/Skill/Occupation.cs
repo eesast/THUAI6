@@ -7,26 +7,34 @@ using System.Collections.Generic;
 
 namespace GameClass.Skill
 {
-    public abstract class Occupation
+    public interface IOccupation
     {
-        public abstract int MoveSpeed { get; }
-        public abstract int MaxHp { get; }
-        public abstract BulletType InitBullet { get; }
-        public abstract List<IActiveSkill> ListOfIActiveSkill { get; }
-        public abstract List<IPassiveSkill> ListOfIPassiveSkill { get; }
+        public int MoveSpeed { get; }
+        public int MaxHp { get; }
+        public BulletType InitBullet { get; }
+        public int CD { get; }
+        public int MaxBulletNum { get; }
+        public List<IActiveSkill> ListOfIActiveSkill { get; }
+        public List<IPassiveSkill> ListOfIPassiveSkill { get; }
     }
-    public class Assassin : Occupation
+    public class Assassin : IOccupation
     {
-        private const int moveSpeed = GameData.basicMoveSpeed/380*473;
-        public override int MoveSpeed => moveSpeed;
+        private const int moveSpeed = GameData.basicMoveSpeed / 380 * 473;
+        public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp;
-        public override int MaxHp => maxHp;
+        public int MaxHp => maxHp;
 
-        public override BulletType InitBullet => BulletType.CommonAttackOfGhost;
+        public const int cd = 0;
+        public int CD => cd;
 
-        public override List<IActiveSkill> ListOfIActiveSkill => new(new IActiveSkill[]{new BecomeInvisible(),});
-        public override List<IPassiveSkill> ListOfIPassiveSkill => new(new IPassiveSkill[] {});
+        public const int maxBulletNum = 1;
+        public int MaxBulletNum => maxBulletNum;
+
+        public BulletType InitBullet => BulletType.CommonAttackOfGhost;
+
+        public List<IActiveSkill> ListOfIActiveSkill => new(new IActiveSkill[] { new BecomeInvisible(), });
+        public List<IPassiveSkill> ListOfIPassiveSkill => new(new IPassiveSkill[] { });
     }
 
 }

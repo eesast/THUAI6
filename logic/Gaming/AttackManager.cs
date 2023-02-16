@@ -37,15 +37,15 @@ namespace Gaming
             }
             private bool CanBeBombed(Bullet bullet, GameObjType gameObjType)
             {
-                if (gameObjType==GameObjType.Character)return true;
-                    return false;
+                if (gameObjType == GameObjType.Character) return true;
+                return false;
             }
             private void BombObj(Bullet bullet, GameObj objBeingShot)
             {
                 switch (objBeingShot.Type)
                 {
                     case GameObjType.Character:
-                        Character playerBeingShot= (Character)objBeingShot;
+                        Character playerBeingShot = (Character)objBeingShot;
                         if (playerBeingShot.BeAttacked(bullet))
                         {
                             playerBeingShot.CanMove = false;
@@ -80,30 +80,30 @@ namespace Gaming
                             playerBeingShot.Reset();
                             ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  // 给击杀者加分
 
-                        /*    new Thread
-                                (() =>
-                                {
-
-                                    Thread.Sleep(GameData.reviveTime);
-
-                                    playerBeingShot.AddShield(GameData.shieldTimeAtBirth);  // 复活加个盾
-
-                                    // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
-                                    // try
-                                    //{
-                                    //     gameMap.GameObjDict[GameObjType.Character].Add(playerBeingShot);
-                                    // }
-                                    // finally { gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock(); }
-
-                                    if (gameMap.Timer.IsGaming)
+                            /*    new Thread
+                                    (() =>
                                     {
-                                        playerBeingShot.CanMove = true;
+
+                                        Thread.Sleep(GameData.reviveTime);
+
+                                        playerBeingShot.AddShield(GameData.shieldTimeAtBirth);  // 复活加个盾
+
+                                        // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
+                                        // try
+                                        //{
+                                        //     gameMap.GameObjDict[GameObjType.Character].Add(playerBeingShot);
+                                        // }
+                                        // finally { gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock(); }
+
+                                        if (gameMap.Timer.IsGaming)
+                                        {
+                                            playerBeingShot.CanMove = true;
+                                        }
+                                        playerBeingShot.IsResetting = false;
                                     }
-                                    playerBeingShot.IsResetting = false;
-                                }
-                                )
-                            { IsBackground = true }.Start();
-                        */
+                                    )
+                                { IsBackground = true }.Start();
+                            */
                         }
                         break;
                 }
@@ -141,14 +141,14 @@ namespace Gaming
                     gameMap.GameObjLockDict[GameObjType.Bullet].ExitWriteLock();
                 }
 
-                if (!bullet.IsToBomb) 
+                if (!bullet.IsToBomb)
                 {
-                    if (objBeingShot==null) 
+                    if (objBeingShot == null)
                     {
-                        if (bullet.Backswing>0)
+                        if (bullet.Backswing > 0)
                         {
-                            bullet.Parent.CanMove=false;
-                            bullet.Parent.IsMoving=false;
+                            bullet.Parent.CanMove = false;
+                            bullet.Parent.IsMoving = false;
 
                             new Thread
                                     (() =>
@@ -165,13 +165,13 @@ namespace Gaming
                         }
                         return;
                     }
-                  
+
 
                     BombObj(bullet, objBeingShot);
-                    if (bullet.RecoveryFromHit>0)
+                    if (bullet.RecoveryFromHit > 0)
                     {
-                        bullet.Parent.CanMove=false;
-                        bullet.Parent.IsMoving=false;
+                        bullet.Parent.CanMove = false;
+                        bullet.Parent.IsMoving = false;
 
                         new Thread
                                 (() =>
@@ -226,12 +226,12 @@ namespace Gaming
                 {
                     BombObj(bullet, beAttackedObj);
                 }
-                if (objBeingShot==null)
+                if (objBeingShot == null)
                 {
-                    if (bullet.Backswing>0)
+                    if (bullet.Backswing > 0)
                     {
-                        bullet.Parent.CanMove=false;
-                        bullet.Parent.IsMoving=false;
+                        bullet.Parent.CanMove = false;
+                        bullet.Parent.IsMoving = false;
 
                         new Thread
                                 (() =>
@@ -247,12 +247,12 @@ namespace Gaming
                         { IsBackground = true }.Start();
                     }
                 }
-                else 
+                else
                 {
-                    if (bullet.RecoveryFromHit>0)
+                    if (bullet.RecoveryFromHit > 0)
                     {
-                        bullet.Parent.CanMove=false;
-                        bullet.Parent.IsMoving=false;
+                        bullet.Parent.CanMove = false;
+                        bullet.Parent.IsMoving = false;
 
                         new Thread
                                 (() =>
@@ -268,7 +268,7 @@ namespace Gaming
                                 )
                         { IsBackground = true }.Start();
                     }
-            }
+                }
                 beAttackedList.Clear();
             }
 

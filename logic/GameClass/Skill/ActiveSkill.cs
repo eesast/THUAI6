@@ -133,9 +133,11 @@ namespace GameClass.Skill
         {
             lock (activeSkill.ActiveSkillLock)
             {
-                if (player.TimeUntilCommonSkillAvailable == 0)
+                ActiveSkillType activeSkillType = FindActiveSkillType(activeSkill);
+                if (player.TimeUntilActiveSkillAvailable[activeSkillType] == 0)
                 {
-                    player.TimeUntilCommonSkillAvailable = activeSkill.SkillCD;
+
+                    player.SetTimeUntilActiveSkillAvailable(activeSkillType, activeSkill.SkillCD);
                     new Thread
                     (() =>
                     {
@@ -144,7 +146,7 @@ namespace GameClass.Skill
                             () => !player.IsResetting,
                             () =>
                             {
-                                player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
+                                player.AddTimeUntilActiveSkillAvailable(activeSkillType, -(int)GameData.frameDuration);
                             },
                             timeInterval: GameData.frameDuration,
                             () => 0,
@@ -160,10 +162,10 @@ namespace GameClass.Skill
                         Debugger.Output(player, "return to normal.");
 
                         new FrameRateTaskExecutor<int>(
-                            () => player.TimeUntilCommonSkillAvailable > 0 && !player.IsResetting,
+                            () => player.TimeUntilActiveSkillAvailable[activeSkillType] > 0 && !player.IsResetting,
                             () =>
                             {
-                                player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
+                                player.AddTimeUntilActiveSkillAvailable(activeSkillType, -(int)GameData.frameDuration);
                             },
                             timeInterval: GameData.frameDuration,
                             () => 0,
@@ -175,7 +177,7 @@ namespace GameClass.Skill
                         }
                             .Start();
 
-                        player.TimeUntilCommonSkillAvailable = 0;
+                        player.SetTimeUntilActiveSkillAvailable(activeSkillType, 0);
                         Debugger.Output(player, "CommonSkill is ready.");
                     }
                     )
@@ -190,8 +192,8 @@ namespace GameClass.Skill
                 }
             }
         }
-    public static IActiveSkill FindIActiveSkill(ActiveSkillType activeSkillType) 
-    {
+        public static IActiveSkill FindIActiveSkill(ActiveSkillType activeSkillType)
+        {
             switch (activeSkillType)
             {
                 case ActiveSkillType.BecomeInvisible:
@@ -199,7 +201,17 @@ namespace GameClass.Skill
                 default:
                     return null;
             }
-    }
+        }
+        public static ActiveSkillType FindActiveSkillType(IActiveSkill ActiveSkill)
+        {
+            switch (ActiveSkill)
+            {
+                case BecomeInvisible:
+                    return ActiveSkillType.BecomeInvisible;
+                default:
+                    return ActiveSkillType.Null;
+            }
+        }
     }
 
 }

@@ -13,6 +13,23 @@ namespace GameClass.GameObj
         private readonly object beAttackedLock = new();
 
         #region 角色的基本属性及方法，包括与道具的交互方法
+        /// <summary>
+        /// 装弹冷却
+        /// </summary>
+        protected int cd;
+        public int CD
+        {
+            get => cd;
+            private set
+            {
+                lock (gameObjLock)
+                {
+                    cd = value;
+                    Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
+                }
+            }
+        }
+        public int OrgCD { get; protected set; }
 
         protected int fixSpeed = 1;
         /// <summary>
@@ -72,7 +89,7 @@ namespace GameClass.GameObj
             get => score;
         }
 
-  //      public double AttackRange => BulletFactory.BulletAttackRange(this.BulletOfPlayer);
+        //      public double AttackRange => BulletFactory.BulletAttackRange(this.BulletOfPlayer);
 
         private double vampire = 0;  // 回血率：0-1之间
         public double Vampire
@@ -256,11 +273,11 @@ namespace GameClass.GameObj
         /// <returns>减操作是否成功</returns>
         public int TrySubHp(int sub)
         {
-                int previousHp = hp;
-                lock (gameObjLock)
-                    hp = hp >= sub ? 0 : hp - sub;
-                Debugger.Output(this, " hp has subed to: " + hp.ToString());
-                return previousHp - hp;
+            int previousHp = hp;
+            lock (gameObjLock)
+                hp = hp >= sub ? 0 : hp - sub;
+            Debugger.Output(this, " hp has subed to: " + hp.ToString());
+            return previousHp - hp;
         }
         /*       /// <summary>
                /// 增加死亡次数
@@ -325,7 +342,7 @@ namespace GameClass.GameObj
                     }
                     else
                     {
-                      bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * TrySubHp(bullet.AP)));
+                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * TrySubHp(bullet.AP)));
                     }
 #if DEBUG
                     Console.WriteLine($"PlayerID:{ID} is being shot! Now his hp is {hp}.");

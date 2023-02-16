@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-﻿namespace GameClass.GameObj
+namespace GameClass.GameObj
 =======
 ﻿using Preparation.Utility;
 

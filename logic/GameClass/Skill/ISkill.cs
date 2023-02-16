@@ -7,7 +7,7 @@ namespace GameClass.Skill
     public interface ISkill
     {
     }
-    public interface IPassiveSkill: ISkill
+    public interface IPassiveSkill : ISkill
     {
         public void SkillEffect(Character player);
     }

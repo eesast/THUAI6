@@ -40,13 +40,14 @@ namespace Preparation.Utility
         }
         public static bool ApproachToInteract(XY pos1, XY pos2)
         {
-            return Math.Abs(PosGridToCellX(pos1) - PosGridToCellX(pos2))<=1 && Math.Abs(PosGridToCellY(pos1) - PosGridToCellY(pos2))<=1;
+            return Math.Abs(PosGridToCellX(pos1) - PosGridToCellX(pos2)) <= 1 && Math.Abs(PosGridToCellY(pos1) - PosGridToCellY(pos2)) <= 1;
         }
         #endregion
         #region 角色相关
         public const int characterRadius = numOfPosGridPerCell / 2;  // 人物半径
         public const int basicApOfGhost = 500;                             // 初始攻击力
         public const int basicHp = 1003;                             // 初始血量
+        public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicBackswing = 500;//基本后摇时间
         public const int basicRecoveryFromHit = 4300;//基本命中攻击恢复时长
         public const int basicBulletNum = 3;                         // 基本初始子弹量

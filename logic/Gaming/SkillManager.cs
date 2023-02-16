@@ -1,5 +1,8 @@
 ﻿using System;
+using Preparation.Utility;
 using GameClass.GameObj;
+using System.Reflection;
+using GameClass.Skill;
 
 namespace Gaming
 {
@@ -8,13 +11,18 @@ namespace Gaming
         readonly SkillManager skillManager;
         private class SkillManager
         {
-            public bool UseCommonSkill(Character character)
+            public bool UseActiveSkill(Character character, ActiveSkillType activeSkillType)
             {
-                return character.UseCommonSkill();
+                return character.UseActiveSkill(activeSkillType);
             }
-            public void UsePassiveSkill(Character character)
+            public void UsePassiveSkill(Character character, PassiveSkillType passiveSkillType)
             {
-                character.UsePassiveSkill();
+                character.UsePassiveSkill(passiveSkillType);
+            }
+            public void UseAllPassiveSkill(Character character)
+            {
+                foreach (var passiveSkill in character.Occupation.ListOfIPassiveSkill)
+                    character.UsePassiveSkill(PassiveSkillFactory.FindpassiveSkillType(passiveSkill));
             }
         }
     }

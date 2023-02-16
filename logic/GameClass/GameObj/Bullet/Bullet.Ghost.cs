@@ -16,7 +16,7 @@ namespace GameClass.GameObj
         public override int Speed => GameData.basicBulletMoveSpeed;
         public override bool IsToBomb => false;
         public override int Backswing => GameData.basicBackswing;
-        public override int RecoveryFromHit => GameData.basicRecoveryFromHit; 
+        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public override bool CanAttack(GameObj target)
         {
             return false;
@@ -182,5 +182,5 @@ namespace GameClass.GameObj
 
         public override BulletType TypeOfBullet => BulletType.LineBullet;
     }
- 
+
 }

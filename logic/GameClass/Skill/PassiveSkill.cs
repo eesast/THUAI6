@@ -149,4 +149,25 @@ namespace GameClass.Skill  // 被动技能开局时就释放，持续到游戏�
         {
         }
     }
+
+
+    public static class PassiveSkillFactory
+    {
+        public static IPassiveSkill FindIPassiveSkill(PassiveSkillType passiveSkillType)
+        {
+            switch (passiveSkillType)
+            {
+                default:
+                    return null;
+            }
+        }
+        public static PassiveSkillType FindpassiveSkillType(IPassiveSkill passiveSkill)
+        {
+            switch (passiveSkill)
+            {
+                default:
+                    return PassiveSkillType.Null;
+            }
+        }
+    }
 }

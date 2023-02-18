@@ -2,6 +2,7 @@
 using Preparation.Utility;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -12,7 +13,6 @@ namespace GameClass.GameObj
         private readonly object beAttackedLock = new();
 
         #region 角色的基本属性及方法，包括与道具的交互方法
-
         /// <summary>
         /// 装弹冷却
         /// </summary>
@@ -20,8 +20,7 @@ namespace GameClass.GameObj
         public int CD
         {
             get => cd;
-            private
-                set
+            private set
             {
                 lock (gameObjLock)
                 {
@@ -32,7 +31,7 @@ namespace GameClass.GameObj
         }
         public int OrgCD { get; protected set; }
 
-        protected int fixSpeed;
+        protected int fixSpeed = 1;
         /// <summary>
         /// 修理电机速度
         /// </summary>
@@ -90,7 +89,7 @@ namespace GameClass.GameObj
             get => score;
         }
 
-        public double AttackRange => BulletFactory.BulletAttackRange(this.BulletOfPlayer);
+        //      public double AttackRange => BulletFactory.BulletAttackRange(this.BulletOfPlayer);
 
         private double vampire = 0;  // 回血率：0-1之间
         public double Vampire
@@ -272,16 +271,13 @@ namespace GameClass.GameObj
         /// </summary>
         /// <param name="sub">减血量</param>
         /// <returns>减操作是否成功</returns>
-        public bool TrySubHp(int sub)
+        public int TrySubHp(int sub)
         {
-            if (hp > 0)
-            {
-                lock (gameObjLock)
-                    hp = 0 >= hp - sub ? 0 : hp - sub;
-                Debugger.Output(this, " hp has subed to: " + hp.ToString());
-                return true;
-            }
-            return false;
+            int previousHp = hp;
+            lock (gameObjLock)
+                hp = hp >= sub ? 0 : hp - sub;
+            Debugger.Output(this, " hp has subed to: " + hp.ToString());
+            return previousHp - hp;
         }
         /*       /// <summary>
                /// 增加死亡次数
@@ -327,7 +323,7 @@ namespace GameClass.GameObj
         /// <param name="hasSpear"></param>
         /// <param name="attacker">伤害来源</param>
         /// <returns>人物在受到攻击后死了吗</returns>
-        public bool BeAttack(Bullet bullet)
+        public bool BeAttacked(Bullet bullet)
         {
 
             lock (beAttackedLock)
@@ -346,7 +342,7 @@ namespace GameClass.GameObj
                     }
                     else
                     {
-                        TrySubHp(bullet.AP);
+                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * TrySubHp(bullet.AP)));
                     }
 #if DEBUG
                     Console.WriteLine($"PlayerID:{ID} is being shot! Now his hp is {hp}.");

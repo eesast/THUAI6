@@ -30,7 +30,7 @@ namespace Gaming
                 {
                     foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
                     {
-                        if (GameData.IsInTheSameCell(generator.Position, player.Position))
+                        if (GameData.ApproachToInteract(generator.Position, player.Position))
                         {
                             generatorForFix = generator;
                             break;

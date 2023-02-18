@@ -1,5 +1,3 @@
-﻿using Preparation.Utility;
-
 namespace GameClass.GameObj
 {
     public static class MapInfo

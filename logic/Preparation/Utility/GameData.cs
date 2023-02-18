@@ -1,4 +1,5 @@
-﻿namespace Preparation.Utility
+﻿using System;
+namespace Preparation.Utility
 {
     public static class GameData
     {
@@ -37,19 +38,26 @@
         {
             return PosGridToCellX(pos1) == PosGridToCellX(pos2) && PosGridToCellY(pos1) == PosGridToCellY(pos2);
         }
+        public static bool ApproachToInteract(XY pos1, XY pos2)
+        {
+            return Math.Abs(PosGridToCellX(pos1) - PosGridToCellX(pos2)) <= 1 && Math.Abs(PosGridToCellY(pos1) - PosGridToCellY(pos2)) <= 1;
+        }
         #endregion
         #region 角色相关
         public const int characterRadius = numOfPosGridPerCell / 2;  // 人物半径
-        public const int basicAp = 3000;                             // 初始攻击力
-        public const int basicHp = 6000;                             // 初始血量
-        public const int basicCD = 3000;                             // 初始子弹冷却
+        public const int basicApOfGhost = 500;                             // 初始攻击力
+        public const int basicHp = 1003;                             // 初始血量
+        public const int basicCD = 3000;    // 初始子弹冷却
+        public const int basicBackswing = 500;//基本后摇时间
+        public const int basicRecoveryFromHit = 4300;//基本命中攻击恢复时长
         public const int basicBulletNum = 3;                         // 基本初始子弹量
         public const int MinAP = 0;                                  // 最小攻击力
         public const int MaxAP = int.MaxValue;                       // 最大攻击力
-        public const double basicAttackRange = 9000;                 // 基本攻击范围
+        public const double basicRemoteAttackRange = 9000;  // 基本远程攻击范围
+        public const double basicAttackShortRange = 2700;                 // 基本近程攻击范围
         public const double basicBulletBombRange = 3000;             // 基本子弹爆炸范围
-        public const int basicMoveSpeed = 3000;                      // 基本移动速度，单位：s-1
-        public const int basicBulletMoveSpeed = 3000;                // 基本子弹移动速度，单位：s-1
+        public const int basicMoveSpeed = 3800;                      // 基本移动速度，单位：s-1
+        public const int basicBulletMoveSpeed = 5400;                // 基本子弹移动速度，单位：s-1
         public const int characterMaxSpeed = 12000;                  // 最大速度
         public const int addScoreWhenKillOneLevelPlayer = 30;        // 击杀一级角色获得的加分
         public const int commonSkillCD = 30000;                      // 普通技能标准冷却时间
@@ -70,7 +78,7 @@
         public const long PropProduceTime = 10000;
         public const int PropDuration = 10000;
 
-        public const int degreeOfFixedGenerator = 100;
+        public const int degreeOfFixedGenerator = 2000;
         #endregion
         #region 游戏帧相关
         public const long checkInterval = 50;  // 检查位置标志、补充子弹的帧时长

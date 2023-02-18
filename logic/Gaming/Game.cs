@@ -31,7 +31,7 @@ namespace Gaming
         public List<Team> TeamList => teamList;
         private readonly Map gameMap;
         public Map GameMap => gameMap;
-        private readonly int numOfTeam;
+        //       private readonly int numOfTeam;
         public long AddPlayer(PlayerInitInfo playerInitInfo)
         {
             if (!Team.teamExists(playerInitInfo.teamID))
@@ -57,7 +57,7 @@ namespace Gaming
             newPlayer.TeamID = playerInitInfo.teamID;
             newPlayer.PlayerID = playerInitInfo.playerID;
 
-            new Thread  //人物装弹
+            /*new Thread  //人物装弹
             (
                 () =>
                 {
@@ -85,16 +85,16 @@ namespace Gaming
                     )
                     {
                         AllowTimeExceed = true
-                        /*MaxTolerantTimeExceedCount = 5,
+                        MaxTolerantTimeExceedCount = 5,
                         TimeExceedAction = exceedTooMuch =>
                         {
                             if (exceedTooMuch) Console.WriteLine("The computer runs too slow that it cannot check the color below the player in time!");
-                        }*/
+                        }
                     }
                         .Start();
                 }
             )
-            { IsBackground = true }.Start();
+            { IsBackground = true }.Start();*/
 
             return newPlayer.ID;
         }
@@ -236,14 +236,14 @@ namespace Gaming
             return false;
         }
 
-        public bool UseCommonSkill(long playerID)
+        public bool UseActiveSkill(long playerID, ActiveSkillType activeSkillType)
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                return skillManager.UseCommonSkill(player);
+                return skillManager.UseActiveSkill(player, activeSkillType);
             }
             else
                 return false;
@@ -258,7 +258,7 @@ namespace Gaming
             {
                 foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
                 {
-                    skillManager.UsePassiveSkill(player);
+                    skillManager.UseAllPassiveSkill(player);
                 }
             }
             finally
@@ -342,7 +342,7 @@ namespace Gaming
             gameMap = new Map(mapResource);
 
             // 加入队伍
-            this.numOfTeam = numOfTeam;
+            //    this.numOfTeam = numOfTeam;
             teamList = new List<Team>();
             for (int i = 0; i < numOfTeam; ++i)
             {

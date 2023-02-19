@@ -57,7 +57,7 @@ namespace Gaming
             newPlayer.TeamID = playerInitInfo.teamID;
             newPlayer.PlayerID = playerInitInfo.playerID;
 
-            /*new Thread  //人物装弹
+            new Thread  //人物装弹
             (
                 () =>
                 {
@@ -84,17 +84,17 @@ namespace Gaming
                         finallyReturn: () => 0
                     )
                     {
-                        AllowTimeExceed = true
+                        AllowTimeExceed = true/*,
                         MaxTolerantTimeExceedCount = 5,
                         TimeExceedAction = exceedTooMuch =>
                         {
                             if (exceedTooMuch) Console.WriteLine("The computer runs too slow that it cannot check the color below the player in time!");
-                        }
+                        }*/
                     }
                         .Start();
                 }
             )
-            { IsBackground = true }.Start();*/
+            { IsBackground = true }.Start();
 
             return newPlayer.ID;
         }
@@ -193,6 +193,52 @@ namespace Gaming
                 Console.WriteLine($"PlayerID:{playerID} player does not exists!");
 #endif
             }
+        }
+        public bool Treat(long playerID, long playerTreatedID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            Character? playerTreated = gameMap.FindPlayer(playerTreatedID);
+            if (player != null && playerTreated != null)
+            {
+                return actionManager.Treat(player, playerTreated);
+            }
+            return false;
+        }
+        public bool Rescue(long playerID, long playerRescuedID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            Character? playerRescued = gameMap.FindPlayer(playerRescuedID);
+            if (player != null && playerRescued != null)
+            {
+                return actionManager.Treat(player, playerRescued);
+            }
+            return false;
+        }
+        public bool Fix(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                return actionManager.Fix(player);
+            }
+            return false;
+        }
+        public bool Escape(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                return actionManager.Escape(player);
+            }
+            return false;
         }
         public void Attack(long playerID, double angle)
         {

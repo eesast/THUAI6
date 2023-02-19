@@ -66,7 +66,7 @@ namespace GameClass.GameObj
             this.CanMove = true;
             this.score = 0;
             this.propInventory = null;
-            this.buffManeger = new BuffManeger();
+            this.buffManager = new BuffManager();
             switch (characterType)
             {
                 case CharacterType.Assassin:

@@ -32,16 +32,15 @@ namespace GameClass.GameObj
         {
         }
         public override double BulletBombRange => 0;
-        public override double BulletAttackRange => GameData.basicAttackShortRange * 13;
-        public override int AP => GameData.basicApOfGhost / 3 * 7;
-        public override int Speed => GameData.basicBulletMoveSpeed / 3 * 2;
-        public override bool IsToBomb => true;
-        public override int Backswing => GameData.basicBackswing;
-        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
+        public override double BulletAttackRange => GameData.basicRemoteAttackRange * 13;
+        public override int AP => GameData.basicApOfGhost / 5 * 4;
+        public override int Speed => GameData.basicBulletMoveSpeed * 2;
+        public override bool IsToBomb => false;
+        public override int Backswing => GameData.basicBackswing / 5 * 3;
+        public override int RecoveryFromHit => GameData.basicRecoveryFromHit / 4 * 3;
         public override bool CanAttack(GameObj target)
         {
-            // 圆形攻击范围
-            return XY.Distance(this.Position, target.Position) <= BulletBombRange;
+            return false;
         }
 
         public override BulletType TypeOfBullet => BulletType.FlyingKnife;

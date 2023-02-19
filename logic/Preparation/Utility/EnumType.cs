@@ -5,6 +5,20 @@ namespace Preparation.Utility
     /// 存放所有用到的枚举类型
     /// </summary>
     // public const int numOfObjNotMap = 5;在GameData中
+    public enum PlayerStateType
+    {
+        Null = 0,
+        IsAddicted = 1,
+        IsEscaped = 2,
+        IsSwinging = 3,
+        IsResetting = 4,
+        IsMoving = 5,
+        IsTreating = 6,
+        IsRescuing = 7,
+        IsFixing = 8,
+        IsTreated = 9,
+        IsRescued = 10,
+    }
     public enum GameObjType
     {
         Null = 0,
@@ -72,7 +86,7 @@ namespace Preparation.Utility
         BecomeVampire = 2,
         NuclearWeapon = 3,
         SuperFast = 4,
-        ASkill4 = 5,
+        UseKnife = 5,
         ASkill5 = 6
     }
     public enum PassiveSkillType

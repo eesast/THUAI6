@@ -8,11 +8,11 @@ namespace GameClass.GameObj
 {
     public partial class Character
     {
-        private readonly BuffManeger buffManeger;
+        private readonly BuffManager buffManager;
         /// <summary>
         /// 角色携带的buff管理器
         /// </summary>
-        private class BuffManeger
+        private class BuffManager
         {
             [StructLayout(LayoutKind.Explicit, Size = 8)]
             private struct BuffValue  // buff参数联合体类型，可能是int或double
@@ -158,7 +158,7 @@ namespace GameClass.GameObj
                 }
             }
 
-            public BuffManeger()
+            public BuffManager()
             {
                 var buffTypeArray = Enum.GetValues(typeof(BuffType));
                 buffList = new LinkedList<BuffValue>[buffTypeArray.Length];

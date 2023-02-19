@@ -6,11 +6,12 @@ namespace Preparation.Utility
         #region 基本常数与常方法
         public const int numOfPosGridPerCell = 1000;  // 每格的【坐标单位】数
         public const int numOfStepPerSecond = 20;     // 每秒行走的步数
+        public const int frameDuration = 50;         // 每帧时长
+
         public const int lengthOfMap = 50000;         // 地图长度
         public const int rows = 50;                   // 行数
         public const int cols = 50;                   // 列数
         public const long gameDuration = 600000;      // 游戏时长600000ms = 10min
-        public const long frameDuration = 50;         // 每帧时长
 
         public const int MinSpeed = 1;             // 最小速度
         public const int MaxSpeed = int.MaxValue;  // 最大速度
@@ -45,8 +46,16 @@ namespace Preparation.Utility
         #endregion
         #region 角色相关
         public const int characterRadius = numOfPosGridPerCell / 2;  // 人物半径
-        public const int basicApOfGhost = 500;                             // 初始攻击力
-        public const int basicHp = 1003;                             // 初始血量
+        public const int basicApOfGhost = 1500000;                             // 攻击力
+        public const int basicTreatSpeed = 100;
+        public const int basicFixSpeed = 100;
+        public const int basicRescueSpeed = 100;
+        public const int basicMaxGamingAddiction = 60000;//基本完全沉迷时间
+        public const int BeginGamingAddiction = 10003;
+        public const int MidGamingAddiction = 30000;
+        public const int basicTreatmentDegree = 1500000;
+        public const int basicRescueDegree = 100000;
+        public const int basicHp = 3000000;                             // 初始血量
         public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicBackswing = 500;//基本后摇时间
         public const int basicRecoveryFromHit = 4300;//基本命中攻击恢复时长
@@ -78,7 +87,7 @@ namespace Preparation.Utility
         public const long PropProduceTime = 10000;
         public const int PropDuration = 10000;
 
-        public const int degreeOfFixedGenerator = 2000;
+        public const int degreeOfFixedGenerator = 10300000;
         #endregion
         #region 游戏帧相关
         public const long checkInterval = 50;  // 检查位置标志、补充子弹的帧时长

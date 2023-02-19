@@ -1,8 +1,5 @@
 ﻿using GameClass.GameObj;
-using System.Threading;
-using Preparation.Interface;
 using Preparation.Utility;
-using System;
 using System.Collections.Generic;
 
 namespace GameClass.Skill
@@ -33,7 +30,7 @@ namespace GameClass.Skill
 
         public BulletType InitBullet => BulletType.CommonAttackOfGhost;
 
-        public List<IActiveSkill> ListOfIActiveSkill => new(new IActiveSkill[] { new BecomeInvisible(), });
+        public List<IActiveSkill> ListOfIActiveSkill => new(new IActiveSkill[] { new BecomeInvisible(), new UseKnife() });
         public List<IPassiveSkill> ListOfIPassiveSkill => new(new IPassiveSkill[] { });
     }
 

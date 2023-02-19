@@ -4,13 +4,11 @@
 
 #include "API.h"
 
-// 暂定版本：Human和Butcher全部继承AI类，
 class IAI
 {
 public:
-    IAI()
-    {
-    }
+    virtual ~IAI() = default;
+    IAI() = default;
     virtual void play(IHumanAPI& api) = 0;
     virtual void play(IButcherAPI& api) = 0;
 };

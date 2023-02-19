@@ -3,7 +3,6 @@ using System.Threading;
 using System.Collections.Generic;
 using GameClass.GameObj;
 using Preparation.Utility;
-using Preparation.GameData;
 using Timothy.FrameRateTask;
 using Preparation.Interface;
 
@@ -32,7 +31,7 @@ namespace Gaming
         public List<Team> TeamList => teamList;
         private readonly Map gameMap;
         public Map GameMap => gameMap;
-        private readonly int numOfTeam;
+        //       private readonly int numOfTeam;
         public long AddPlayer(PlayerInitInfo playerInitInfo)
         {
             if (!Team.teamExists(playerInitInfo.teamID))
@@ -44,21 +43,21 @@ namespace Gaming
             // Console.WriteLine($"x,y: {pos.x},{pos.y}");
             Character newPlayer = new(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType, playerInitInfo.commonSkill);
             gameMap.BirthPointList[playerInitInfo.birthPointIndex].Parent = newPlayer;
-            gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
+            gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
             try
             {
-                gameMap.GameObjDict[GameObjIdx.Player].Add(newPlayer);
+                gameMap.GameObjDict[GameObjType.Character].Add(newPlayer);
             }
             finally
             {
-                gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock();
+                gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
             }
-            // Console.WriteLine($"GameObjDict[GameObjIdx.Player] length:{gameMap.GameObjDict[GameObjIdx.Player].Count}");
+            // Console.WriteLine($"GameObjDict[GameObjType.Character] length:{gameMap.GameObjDict[GameObjType.Character].Count}");
             teamList[(int)playerInitInfo.teamID].AddPlayer(newPlayer);
             newPlayer.TeamID = playerInitInfo.teamID;
             newPlayer.PlayerID = playerInitInfo.playerID;
 
-            new Thread  //人物装弹
+            /*new Thread  //人物装弹
             (
                 () =>
                 {
@@ -86,16 +85,16 @@ namespace Gaming
                     )
                     {
                         AllowTimeExceed = true
-                        /*MaxTolerantTimeExceedCount = 5,
+                        MaxTolerantTimeExceedCount = 5,
                         TimeExceedAction = exceedTooMuch =>
                         {
                             if (exceedTooMuch) Console.WriteLine("The computer runs too slow that it cannot check the color below the player in time!");
-                        }*/
+                        }
                     }
                         .Start();
                 }
             )
-            { IsBackground = true }.Start();
+            { IsBackground = true }.Start();*/
 
             return newPlayer.ID;
         }
@@ -103,10 +102,10 @@ namespace Gaming
         {
             if (gameMap.Timer.IsGaming)
                 return false;
-            gameMap.GameObjLockDict[GameObjIdx.Player].EnterReadLock();
+            gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
             try
             {
-                foreach (Character player in gameMap.GameObjDict[GameObjIdx.Player])
+                foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
                 {
                     player.CanMove = true;
 
@@ -115,7 +114,7 @@ namespace Gaming
             }
             finally
             {
-                gameMap.GameObjLockDict[GameObjIdx.Player].ExitReadLock();
+                gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
             }
 
             propManager.StartProducing();
@@ -130,7 +129,7 @@ namespace Gaming
                         {
                             foreach (var kvp in gameMap.GameObjDict)  // 检查物体位置
                             {
-                                if (kvp.Key == GameObjIdx.Bullet || kvp.Key == GameObjIdx.Player || kvp.Key == GameObjIdx.Prop)
+                                if (kvp.Key == GameObjType.Bullet || kvp.Key == GameObjType.Character || kvp.Key == GameObjType.Prop)
                                 {
                                     gameMap.GameObjLockDict[kvp.Key].EnterWriteLock();
                                     try
@@ -167,15 +166,14 @@ namespace Gaming
 
         public void EndGame()
         {
-            gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
+            gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
             /*try
             {
             }
             finally
             {
             }*/
-            gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock();
-
+            gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
         }
         public void MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
         {
@@ -184,7 +182,7 @@ namespace Gaming
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                moveManager.MovePlayer(player, moveTimeInMilliseconds, angle);
+                actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
 #if DEBUG
                 Console.WriteLine($"PlayerID:{playerID} move to ({player.Position.x},{player.Position.y})!");
 #endif
@@ -238,14 +236,14 @@ namespace Gaming
             return false;
         }
 
-        public bool UseCommonSkill(long playerID)
+        public bool UseActiveSkill(long playerID, ActiveSkillType activeSkillType)
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                return skillManager.UseCommonSkill(player);
+                return skillManager.UseActiveSkill(player, activeSkillType);
             }
             else
                 return false;
@@ -255,25 +253,25 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return;
-            gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
+            gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
             try
             {
-                foreach (Character player in gameMap.GameObjDict[GameObjIdx.Player])
+                foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
                 {
-                    skillManager.UsePassiveSkill(player);
+                    skillManager.UseAllPassiveSkill(player);
                 }
             }
             finally
             {
-                gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock();
+                gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
             }
         }
 
-        public void ClearLists(GameObjIdx[] objIdxes)
+        public void ClearLists(GameObjType[] objIdxes)
         {
             foreach (var idx in objIdxes)
             {
-                if (idx != GameObjIdx.None)
+                if (idx != GameObjType.Null)
                 {
                     gameMap.GameObjLockDict[idx].EnterWriteLock();
                     try
@@ -291,14 +289,14 @@ namespace Gaming
         {
             foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                if (keyValuePair.Key != GameObjIdx.Map)
+                if (((uint)keyValuePair.Key) <= GameData.numOfObjNotMap)
                 {
                     gameMap.GameObjLockDict[keyValuePair.Key].EnterWriteLock();
                     try
                     {
-                        if (keyValuePair.Key == GameObjIdx.Player)
+                        if (keyValuePair.Key == GameObjType.Character)
                         {
-                            foreach (Character player in gameMap.GameObjDict[GameObjIdx.Player])
+                            foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
                             {
                                 player.CanMove = false;
                             }
@@ -322,7 +320,7 @@ namespace Gaming
             var gameObjList = new List<IGameObj>();
             foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                if (keyValuePair.Key != GameObjIdx.Map)
+                if (((uint)keyValuePair.Key) <= GameData.numOfObjNotMap)
                 {
                     gameMap.GameObjLockDict[keyValuePair.Key].EnterReadLock();
                     try
@@ -344,7 +342,7 @@ namespace Gaming
             gameMap = new Map(mapResource);
 
             // 加入队伍
-            this.numOfTeam = numOfTeam;
+            //    this.numOfTeam = numOfTeam;
             teamList = new List<Team>();
             for (int i = 0; i < numOfTeam; ++i)
             {
@@ -353,7 +351,7 @@ namespace Gaming
 
             skillManager = new SkillManager();
             attackManager = new AttackManager(gameMap);
-            moveManager = new MoveManager(gameMap);
+            actionManager = new ActionManager(gameMap);
             propManager = new PropManager(gameMap);
         }
     }

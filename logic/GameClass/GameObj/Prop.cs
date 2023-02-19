@@ -1,6 +1,5 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
-using Preparation.GameData;
 
 namespace GameClass.GameObj
 {
@@ -33,16 +32,9 @@ namespace GameClass.GameObj
             this.Position = pos;
         }
     }
-    /// <summary>
-    /// 增益道具
-    /// </summary>
-    public abstract class BuffProp : Prop
-    {
-        public BuffProp(XY initPos) :
-            base(initPos)
-        {
-        }
-    }
+
+
+
     ///// <summary>
     ///// 坑人地雷
     ///// </summary>
@@ -54,7 +46,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 增加速度
     /// </summary>
-    public sealed class AddSpeed : BuffProp
+    public sealed class AddSpeed : Prop
     {
         public AddSpeed(XY initPos) :
             base(initPos)
@@ -65,7 +57,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 复活甲
     /// </summary>
-    public sealed class AddLIFE : BuffProp
+    public sealed class AddLIFE : Prop
     {
         public AddLIFE(XY initPos) :
             base(initPos)
@@ -76,7 +68,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 护盾
     /// </summary>
-    public sealed class Shield : BuffProp
+    public sealed class Shield : Prop
     {
         public Shield(XY initPos) :
             base(initPos)
@@ -87,7 +79,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 矛
     /// </summary>
-    public sealed class Spear : BuffProp
+    public sealed class Spear : Prop
     {
         public Spear(XY initPos) :
             base(initPos)

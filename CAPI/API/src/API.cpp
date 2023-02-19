@@ -1,3 +1,4 @@
+#include <optional>
 #include "AI.h"
 #include "API.h"
 #define PI 3.14159265358979323846
@@ -156,22 +157,22 @@ std::future<bool> ButcherAPI::Wait()
                           { return logic.WaitThread(); });
 }
 
-std::vector<std::shared_ptr<const THUAI6::Butcher>> HumanAPI::GetButcher() const
+std::vector<std::shared_ptr<const THUAI6::Butcher>> HumanAPI::GetButchers() const
 {
     return logic.GetButchers();
 }
 
-std::vector<std::shared_ptr<const THUAI6::Human>> HumanAPI::GetHuman() const
+std::vector<std::shared_ptr<const THUAI6::Human>> HumanAPI::GetHumans() const
 {
     return logic.GetHumans();
 }
 
-std::vector<std::shared_ptr<const THUAI6::Butcher>> ButcherAPI::GetButcher() const
+std::vector<std::shared_ptr<const THUAI6::Butcher>> ButcherAPI::GetButchers() const
 {
     return logic.GetButchers();
 }
 
-std::vector<std::shared_ptr<const THUAI6::Human>> ButcherAPI::GetHuman() const
+std::vector<std::shared_ptr<const THUAI6::Human>> ButcherAPI::GetHumans() const
 {
     return logic.GetHumans();
 }
@@ -191,14 +192,14 @@ std::vector<std::vector<THUAI6::PlaceType>> HumanAPI::GetFullMap() const
     return logic.GetFullMap();
 }
 
-THUAI6::PlaceType HumanAPI::GetPlaceType(int32_t CellX, int32_t CellY) const
+THUAI6::PlaceType HumanAPI::GetPlaceType(int32_t cellX, int32_t cellY) const
 {
-    return logic.GetPlaceType(CellX, CellY);
+    return logic.GetPlaceType(cellX, cellY);
 }
 
-THUAI6::PlaceType ButcherAPI::GetPlaceType(int32_t CellX, int32_t CellY) const
+THUAI6::PlaceType ButcherAPI::GetPlaceType(int32_t cellX, int32_t cellY) const
 {
-    return logic.GetPlaceType(CellX, CellY);
+    return logic.GetPlaceType(cellX, cellY);
 }
 
 std::vector<std::vector<THUAI6::PlaceType>> ButcherAPI::GetFullMap() const

@@ -69,7 +69,7 @@ namespace starter.viewmodel.settings
                 this.RaisePropertyChanged("RouteBoxVis");
             }
         }
-        public Visibility RouteBoxVis        //if the route editing textbox is visible
+        public Visibility RouteBoxVis  // if the route editing textbox is visible
         {
             get
             {

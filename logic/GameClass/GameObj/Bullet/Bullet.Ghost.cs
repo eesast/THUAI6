@@ -1,48 +1,51 @@
-﻿using Preparation.GameData;
-using Preparation.Interface;
+﻿using Preparation.Interface;
 using Preparation.Utility;
 using System;
 
 namespace GameClass.GameObj
 {
-    public abstract class Bullet : ObjOfCharacter
+    internal sealed class CommonAttackOfGhost : Bullet
     {
-        /// <summary>
-        /// //攻击力
-        /// </summary>
-        public abstract int AP { get; }
-        public abstract int Speed { get; }
-
-        private readonly bool hasSpear;
-        /// <summary>
-        /// 是否有矛
-        /// </summary>
-        public bool HasSpear => hasSpear;
-
-        /// <summary>
-        /// 与THUAI4不同的一个攻击判定方案，通过这个函数判断爆炸时能否伤害到target
-        /// </summary>
-        /// <param name="target">被尝试攻击者</param>
-        /// <returns>是否可以攻击到</returns>
-        public abstract bool CanAttack(GameObj target);
-
-        protected override bool IgnoreCollideExecutor(IGameObj targetObj)
+        public CommonAttackOfGhost(Character player, int radius = GameData.bulletRadius) :
+            base(player, radius)
         {
-            if (targetObj.Type == GameObjType.BirthPoint || targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet)
-                return true;
+        }
+        public override double BulletBombRange => 0;
+        public override double BulletAttackRange => GameData.basicAttackShortRange;
+        public override int AP => GameData.basicApOfGhost;
+        public override int Speed => GameData.basicBulletMoveSpeed;
+        public override bool IsToBomb => false;
+        public override int Backswing => GameData.basicBackswing;
+        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
+        public override bool CanAttack(GameObj target)
+        {
             return false;
         }
-        public Bullet(Character player, int radius) :
-            base(player.Position, radius, PlaceType.Null, GameObjType.Bullet)
+
+        public override BulletType TypeOfBullet => BulletType.CommonAttackOfGhost;
+
+    }
+    internal sealed class FlyingKnife : Bullet
+    {
+        public FlyingKnife(Character player, int radius = GameData.bulletRadius) :
+            base(player, radius)
         {
-            this.CanMove = true;
-            this.moveSpeed = this.Speed;
-            this.hasSpear = player.HasSpear;
-            this.Parent = player;
         }
-        public override bool IsRigid => true;                 // 默认为true
-        public override ShapeType Shape => ShapeType.Circle;  // 默认为圆形
-        public abstract BulletType TypeOfBullet { get; }
+        public override double BulletBombRange => 0;
+        public override double BulletAttackRange => GameData.basicAttackShortRange * 13;
+        public override int AP => GameData.basicApOfGhost / 3 * 7;
+        public override int Speed => GameData.basicBulletMoveSpeed / 3 * 2;
+        public override bool IsToBomb => true;
+        public override int Backswing => GameData.basicBackswing;
+        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
+        public override bool CanAttack(GameObj target)
+        {
+            // 圆形攻击范围
+            return XY.Distance(this.Position, target.Position) <= BulletBombRange;
+        }
+
+        public override BulletType TypeOfBullet => BulletType.FlyingKnife;
+
     }
 
     internal sealed class AtomBomb : Bullet
@@ -51,10 +54,13 @@ namespace GameClass.GameObj
             base(player, radius)
         {
         }
-        public const double BulletBombRange = GameData.basicBulletBombRange / 3 * 7;
-        public const double BulletAttackRange = GameData.basicAttackRange / 9 * 7;
-        public override int AP => GameData.basicAp / 3 * 7;
+        public override double BulletBombRange => GameData.basicBulletBombRange / 3 * 7;
+        public override double BulletAttackRange => GameData.basicAttackShortRange / 9 * 7;
+        public override int AP => GameData.basicApOfGhost / 3 * 7;
         public override int Speed => GameData.basicBulletMoveSpeed / 3 * 2;
+        public override int Backswing => GameData.basicBackswing;
+        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
+        public override bool IsToBomb => true;
         public override bool CanAttack(GameObj target)
         {
             // 圆形攻击范围
@@ -62,6 +68,7 @@ namespace GameClass.GameObj
         }
 
         public override BulletType TypeOfBullet => BulletType.AtomBomb;
+
     }
 
     internal sealed class OrdinaryBullet : Bullet  // 1倍攻击范围，1倍攻击力，一倍速
@@ -70,10 +77,13 @@ namespace GameClass.GameObj
             base(player, radius)
         {
         }
-        public const double BulletBombRange = GameData.basicBulletBombRange / 6 * 5;
-        public const double BulletAttackRange = GameData.basicAttackRange / 2;
-        public override int AP => GameData.basicAp / 6 * 5;
+        public override double BulletBombRange => GameData.basicBulletBombRange / 6 * 5;
+        public override double BulletAttackRange => GameData.basicAttackShortRange / 2;
+        public override int AP => GameData.basicApOfGhost / 6 * 5;
         public override int Speed => GameData.basicBulletMoveSpeed / 6 * 5;
+        public override int Backswing => GameData.basicBackswing;
+        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
+        public override bool IsToBomb => true;
         public override bool CanAttack(GameObj target)
         {
             // 圆形攻击范围
@@ -89,10 +99,13 @@ namespace GameClass.GameObj
             base(player, radius)
         {
         }
-        public const double BulletBombRange = GameData.basicBulletBombRange / 4 * 2;
-        public const double BulletAttackRange = GameData.basicAttackRange;
-        public override int AP => (int)(0.5 * GameData.basicAp);
+        public override double BulletBombRange => GameData.basicBulletBombRange / 4 * 2;
+        public override double BulletAttackRange => GameData.basicAttackShortRange;
+        public override int AP => (int)(0.5 * GameData.basicApOfGhost);
         public override int Speed => 5 * GameData.basicBulletMoveSpeed / 3;
+        public override int Backswing => GameData.basicBackswing;
+        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
+        public override bool IsToBomb => true;
 
         public override bool CanAttack(GameObj target)
         {
@@ -109,10 +122,13 @@ namespace GameClass.GameObj
             base(player, radius)
         {
         }
-        public const double BulletBombRange = GameData.basicBulletBombRange / 3 * 4;
-        public const double BulletAttackRange = 0.1 * GameData.basicAttackRange;
-        public override int AP => GameData.basicAp / 3 * 2;
+        public override double BulletBombRange => GameData.basicBulletBombRange / 3 * 4;
+        public override double BulletAttackRange => 0.1 * GameData.basicAttackShortRange;
+        public override int AP => GameData.basicApOfGhost / 3 * 2;
         public override int Speed => GameData.basicBulletMoveSpeed / 3;
+        public override int Backswing => GameData.basicBackswing;
+        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
+        public override bool IsToBomb => true;
 
         public override bool CanAttack(GameObj target)
         {
@@ -166,73 +182,5 @@ namespace GameClass.GameObj
 
         public override BulletType TypeOfBullet => BulletType.LineBullet;
     }
-    public static class BulletFactory
-    {
-        public static Bullet? GetBullet(Character character)
-        {
-            Bullet? newBullet = null;
-            switch (character.BulletOfPlayer)
-            {
-                case BulletType.AtomBomb:
-                    newBullet = new AtomBomb(character);
-                    break;
-                case BulletType.LineBullet:
-                    newBullet = new LineBullet(character);
-                    break;
-                case BulletType.FastBullet:
-                    newBullet = new FastBullet(character);
-                    break;
-                case BulletType.OrdinaryBullet:
-                    newBullet = new OrdinaryBullet(character);
-                    break;
-                default:
-                    break;
-            }
-            return newBullet;
-        }
-        public static int BulletRadius(BulletType bulletType)
-        {
-            switch (bulletType)
-            {
-                case BulletType.AtomBomb:
-                case BulletType.LineBullet:
-                case BulletType.FastBullet:
-                case BulletType.OrdinaryBullet:
-                default:
-                    return GameData.bulletRadius;
-            }
-        }
-        public static double BulletAttackRange(BulletType bulletType)
-        {
-            switch (bulletType)
-            {
-                case BulletType.AtomBomb:
-                    return AtomBomb.BulletAttackRange;
-                case BulletType.LineBullet:
-                    return LineBullet.BulletAttackRange;
-                case BulletType.FastBullet:
-                    return FastBullet.BulletAttackRange;
-                case BulletType.OrdinaryBullet:
-                    return OrdinaryBullet.BulletAttackRange;
-                default:
-                    return 0;
-            }
-        }
-        public static double BulletBombRange(BulletType bulletType)
-        {
-            switch (bulletType)
-            {
-                case BulletType.AtomBomb:
-                    return AtomBomb.BulletBombRange;
-                case BulletType.LineBullet:
-                    return LineBullet.BulletBombRange;
-                case BulletType.FastBullet:
-                    return FastBullet.BulletBombRange;
-                case BulletType.OrdinaryBullet:
-                    return OrdinaryBullet.BulletBombRange;
-                default:
-                    return 0;
-            }
-        }
-    }
+
 }

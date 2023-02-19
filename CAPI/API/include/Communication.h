@@ -10,7 +10,9 @@
 #include "structures.h"
 #include <thread>
 #include <mutex>
+#include <condition_variable>
 #include <queue>
+#include <atomic>
 #include "ConcurrentQueue.hpp"
 
 class Logic;
@@ -44,7 +46,6 @@ public:
 
     bool TryConnection(int64_t playerID);
     protobuf::MessageToClient GetMessage2Client();
-    bool HaveMessage2Client();
     void AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType);
 
     void ReadMessage(int64_t playerID);
@@ -54,6 +55,8 @@ private:
     bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
     ConcurrentQueue<std::pair<int64_t, std::string>> messageQueue;
+    std::mutex mtxMessage;
+    std::condition_variable cvMessage;
 };
 
 #endif

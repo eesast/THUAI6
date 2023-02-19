@@ -2,6 +2,8 @@
 #include "utils.hpp"
 #include "structures.h"
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 
 using grpc::ClientContext;
 
@@ -198,13 +200,11 @@ bool Communication::TryConnection(int64_t playerID)
 
 protobuf::MessageToClient Communication::GetMessage2Client()
 {
+    std::unique_lock<std::mutex> lock(mtxMessage);
+    cvMessage.wait(lock, [this]()
+                   { return haveNewMessage; });
     haveNewMessage = false;
     return message2Client;
-}
-
-bool Communication::HaveMessage2Client()
-{
-    return haveNewMessage;
 }
 
 std::optional<std::pair<int64_t, std::string>> Communication::GetMessage()
@@ -219,7 +219,7 @@ bool Communication::HaveMessage()
 
 void Communication::ReadMessage(int64_t playerID)
 {
-    auto tRead = [&]()
+    auto tRead = [=]()
     {
         auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
         ClientContext context;
@@ -235,14 +235,20 @@ void Communication::ReadMessage(int64_t playerID)
 
 void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType)
 {
-    auto tMessage = [&]()
+    auto tMessage = [=]()
     {
         protobuf::PlayerMsg playerMsg = THUAI62Proto::THUAI62ProtobufPlayer(playerID, playerType, humanType, butcherType);
         grpc::ClientContext context;
         auto MessageReader = THUAI6Stub->AddPlayer(&context, playerMsg);
 
         while (MessageReader->Read(&message2Client))
-            haveNewMessage = true;
+        {
+            {
+                std::lock_guard<std::mutex> lock(mtxMessage);
+                haveNewMessage = true;
+            }
+            cvMessage.notify_one();
+        }
     };
     std::thread(tMessage).detach();
 }

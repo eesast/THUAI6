@@ -4,6 +4,7 @@ namespace Preparation.Utility
     /// <summary>
     /// 存放所有用到的枚举类型
     /// </summary>
+    // public const int numOfObjNotMap = 5;在GameData中
     public enum GameObjType
     {
         Null = 0,
@@ -17,7 +18,7 @@ namespace Preparation.Utility
         Grass = 7,
         Generator = 8,  // 发电机
         BirthPoint = 9,
-        Exit = 10,
+        Doorway = 10,
         EmergencyExit = 11,
         OutOfBoundBlock = 12,  // 范围外
     }
@@ -27,14 +28,13 @@ namespace Preparation.Utility
         Circle = 1,  // 子弹和人物为圆形，格子为方形
         Square = 2
     }
-    public enum PlaceType  // 位置标志，包括陆地，建筑，草丛。游戏中每一帧都要刷新各个物体的该属性
+    public enum PlaceType  // 位置标志，包括陆地，草丛。游戏中每一帧都要刷新各个物体的该属性
     {
         Null = 0,
         Land = 1,
-        Building = 2,
-        Grass1 = 3,
-        Grass2 = 4,
-        Grass3 = 5,
+        Grass1 = 2,
+        Grass2 = 3,
+        Grass3 = 4,
     }
     public enum BulletType  // 子弹类型
     {
@@ -42,7 +42,9 @@ namespace Preparation.Utility
         OrdinaryBullet = 1,  // 普通子弹
         AtomBomb = 2,        // 原子弹
         FastBullet = 3,      // 快速子弹
-        LineBullet = 4       // 直线子弹
+        LineBullet = 4,      // 直线子弹
+        FlyingKnife = 5,     //飞刀
+        CommonAttackOfGhost = 6
     }
     public enum PropType  // 道具类型
     {
@@ -56,18 +58,28 @@ namespace Preparation.Utility
     public enum CharacterType  // 职业
     {
         Null = 0,
-        RecoverAfterBattle = 1,
-        SpeedUpWhenLeavingGrass = 2,
-        Vampire = 3,
-        PSkill3 = 4,
+        Assassin = 1,
+        Vampire = 2,
+        RecoverAfterBattle = 3,
+        SpeedUpWhenLeavingGrass = 4,
         PSkill4 = 5,
         PSkill5 = 6
     }
     public enum ActiveSkillType  // 主动技能
     {
         Null = 0,
-        BecomeVampire = 1,
-        BecomeAssassin = 2,
+        BecomeInvisible = 1,
+        BecomeVampire = 2,
+        NuclearWeapon = 3,
+        SuperFast = 4,
+        ASkill4 = 5,
+        ASkill5 = 6
+    }
+    public enum PassiveSkillType
+    {
+        Null = 0,
+        BecomeInvisible = 1,
+        BecomeVampire = 2,
         NuclearWeapon = 3,
         SuperFast = 4,
         ASkill4 = 5,
@@ -81,27 +93,21 @@ namespace Preparation.Utility
         Shield = 3,
         Spear = 4
     }
-    public enum GameObjIdx
+
+    public enum MapInfoObjType
     {
-        None = 0,
-        Player = 1,
-        Bullet = 2,
-        Prop = 3,
-        Map = 4,
-        BombedBullet = 5,
-        PickedProp = 6
+        Null = 0,
+        BirthPoint1 = 1,//必须从1开始
+        BirthPoint2 = 2,
+        BirthPoint3 = 3,
+        BirthPoint4 = 4,
+        BirthPoint5 = 5,
+        Wall = 6,
+        Grass1 = 7,
+        Grass2 = 8,
+        Grass3 = 9,
+        Generator = 10,  // 发电机
+        Doorway = 11,
+        EmergencyExit = 12
     }
-}
-public enum MapInfoObjType
-{
-    Null = 0,
-    Wall = 1,
-    Grass1 = 2,
-    Grass2 = 3,
-    Grass3 = 4,
-    BirthPoint1 = 5,
-    BirthPoint2 = 6,
-    BirthPoint3 = 7,
-    BirthPoint4 = 8,
-    BirthPoint5 = 9,
 }

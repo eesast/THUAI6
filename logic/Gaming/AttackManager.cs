@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Collections.Generic;
 using GameClass.GameObj;
-using Preparation.GameData;
 using Preparation.Utility;
 using GameEngine;
+using Preparation.Interface;
 
 namespace Gaming
 {
@@ -35,97 +35,159 @@ namespace Gaming
                     }
                 );
             }
-            private void BombOnePlayer(Bullet bullet, Character playerBeingShot)
+            private bool CanBeBombed(Bullet bullet, GameObjType gameObjType)
             {
-                if (playerBeingShot.BeAttack(bullet))
+                if (gameObjType == GameObjType.Character) return true;
+                return false;
+            }
+            private void BombObj(Bullet bullet, GameObj objBeingShot)
+            {
+                switch (objBeingShot.Type)
                 {
-                    playerBeingShot.CanMove = false;
-                    playerBeingShot.IsResetting = true;
-                    // gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
-                    // try
-                    //{
-                    //     gameMap.GameObjDict[GameObjIdx.Player].Remove(playerBeingShot);
-                    // }
-                    // finally
-                    //{
-                    //     gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock();
-                    // }                    
-
-                    Prop? dropProp = null;
-                    if (playerBeingShot.PropInventory != null)  // 若角色原来有道具，则原始道具掉落在原地
-                    {
-                        dropProp = playerBeingShot.PropInventory;
-                        dropProp.SetNewPos(GameData.GetCellCenterPos(playerBeingShot.Position.x / GameData.numOfPosGridPerCell, playerBeingShot.Position.y / GameData.numOfPosGridPerCell));
-                    }
-                    gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
-                    try
-                    {
-                        if (dropProp != null)
-                            gameMap.GameObjDict[GameObjIdx.Prop].Add(dropProp);
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock();
-                    }
-
-                    playerBeingShot.Reset();
-                    ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  // 给击杀者加分
-
-                    new Thread
-                        (() =>
+                    case GameObjType.Character:
+                        Character playerBeingShot = (Character)objBeingShot;
+                        if (playerBeingShot.BeAttacked(bullet))
                         {
-
-                            Thread.Sleep(GameData.reviveTime);
-
-                            playerBeingShot.AddShield(GameData.shieldTimeAtBirth);  // 复活加个盾
-
-                            // gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
+                            playerBeingShot.CanMove = false;
+                            playerBeingShot.IsResetting = true;
+                            // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
                             // try
                             //{
-                            //     gameMap.GameObjDict[GameObjIdx.Player].Add(playerBeingShot);
+                            //     gameMap.GameObjDict[GameObjType.Character].Remove(playerBeingShot);
                             // }
-                            // finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock(); }
+                            // finally
+                            //{
+                            //     gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
+                            // }
 
-                            if (gameMap.Timer.IsGaming)
+                            Prop? dropProp = null;
+                            if (playerBeingShot.PropInventory != null)  // 若角色原来有道具，则原始道具掉落在原地
                             {
-                                playerBeingShot.CanMove = true;
+                                dropProp = playerBeingShot.PropInventory;
+                                dropProp.SetNewPos(GameData.GetCellCenterPos(playerBeingShot.Position.x / GameData.numOfPosGridPerCell, playerBeingShot.Position.y / GameData.numOfPosGridPerCell));
                             }
-                            playerBeingShot.IsResetting = false;
+                            gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
+                            try
+                            {
+                                if (dropProp != null)
+                                    gameMap.GameObjDict[GameObjType.Prop].Add(dropProp);
+                            }
+                            finally
+                            {
+                                gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
+                            }
+
+                            playerBeingShot.Reset();
+                            ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  // 给击杀者加分
+
+                            /*    new Thread
+                                    (() =>
+                                    {
+
+                                        Thread.Sleep(GameData.reviveTime);
+
+                                        playerBeingShot.AddShield(GameData.shieldTimeAtBirth);  // 复活加个盾
+
+                                        // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
+                                        // try
+                                        //{
+                                        //     gameMap.GameObjDict[GameObjType.Character].Add(playerBeingShot);
+                                        // }
+                                        // finally { gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock(); }
+
+                                        if (gameMap.Timer.IsGaming)
+                                        {
+                                            playerBeingShot.CanMove = true;
+                                        }
+                                        playerBeingShot.IsResetting = false;
+                                    }
+                                    )
+                                { IsBackground = true }.Start();
+                            */
                         }
-                        )
-                    { IsBackground = true }.Start();
+                        break;
                 }
             }
+
             private void BulletBomb(Bullet bullet, GameObj? objBeingShot)
             {
 #if DEBUG
                 Debugger.Output(bullet, "bombed!");
 #endif
                 bullet.CanMove = false;
-                gameMap.GameObjLockDict[GameObjIdx.Bullet].EnterWriteLock();
+                gameMap.GameObjLockDict[GameObjType.Bullet].EnterWriteLock();
                 try
                 {
-                    foreach (ObjOfCharacter _bullet in gameMap.GameObjDict[GameObjIdx.Bullet])
+                    foreach (ObjOfCharacter _bullet in gameMap.GameObjDict[GameObjType.Bullet])
                     {
                         if (_bullet.ID == bullet.ID)
                         {
-                            gameMap.GameObjLockDict[GameObjIdx.BombedBullet].EnterWriteLock();
+                            gameMap.GameObjLockDict[GameObjType.BombedBullet].EnterWriteLock();
                             try
                             {
-                                gameMap.GameObjDict[GameObjIdx.BombedBullet].Add(new BombedBullet(bullet));
+                                gameMap.GameObjDict[GameObjType.BombedBullet].Add(new BombedBullet(bullet));
                             }
                             finally
                             {
-                                gameMap.GameObjLockDict[GameObjIdx.BombedBullet].ExitWriteLock();
+                                gameMap.GameObjLockDict[GameObjType.BombedBullet].ExitWriteLock();
                             }
-                            gameMap.GameObjDict[GameObjIdx.Bullet].Remove(_bullet);
+                            gameMap.GameObjDict[GameObjType.Bullet].Remove(_bullet);
                             break;
                         }
                     }
                 }
                 finally
                 {
-                    gameMap.GameObjLockDict[GameObjIdx.Bullet].ExitWriteLock();
+                    gameMap.GameObjLockDict[GameObjType.Bullet].ExitWriteLock();
+                }
+
+                if (!bullet.IsToBomb)
+                {
+                    if (objBeingShot == null)
+                    {
+                        if (bullet.Backswing > 0)
+                        {
+                            bullet.Parent.CanMove = false;
+                            bullet.Parent.IsMoving = false;
+
+                            new Thread
+                                    (() =>
+                                    {
+                                        Thread.Sleep(bullet.Backswing);
+
+                                        if (gameMap.Timer.IsGaming)
+                                        {
+                                            bullet.Parent.CanMove = true;
+                                        }
+                                    }
+                                    )
+                            { IsBackground = true }.Start();
+                        }
+                        return;
+                    }
+
+
+                    BombObj(bullet, objBeingShot);
+                    if (bullet.RecoveryFromHit > 0)
+                    {
+                        bullet.Parent.CanMove = false;
+                        bullet.Parent.IsMoving = false;
+
+                        new Thread
+                                (() =>
+                                {
+
+                                    Thread.Sleep(bullet.RecoveryFromHit);
+
+                                    if (gameMap.Timer.IsGaming)
+                                    {
+                                        bullet.Parent.CanMove = true;
+                                    }
+                                }
+                                )
+                        { IsBackground = true }.Start();
+                    }
+                    return;
                 }
 
                 /*if (objBeingShot != null)
@@ -137,31 +199,79 @@ namespace Gaming
                 }*/
 
                 // 子弹爆炸会发生的事↓↓↓
-                var beAttackedList = new List<Character>();
-                gameMap.GameObjLockDict[GameObjIdx.Player].EnterReadLock();
-                try
+                var beAttackedList = new List<IGameObj>();
+
+                foreach (var kvp in gameMap.GameObjDict)
                 {
-                    foreach (Character player in gameMap.GameObjDict[GameObjIdx.Player])
+                    if (CanBeBombed(bullet, kvp.Key))
                     {
-                        if (bullet.CanAttack(player))
+                        gameMap.GameObjLockDict[kvp.Key].EnterWriteLock();
+                        try
                         {
-                            beAttackedList.Add(player);
-                            if (player.ID != bullet.Parent.ID)
-                                bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * bullet.AP));
+                            foreach (var item in gameMap.GameObjDict[kvp.Key])
+                                if (bullet.CanAttack((GameObj)item))
+                                {
+                                    beAttackedList.Add(item);
+                                }
+
+                        }
+                        finally
+                        {
+                            gameMap.GameObjLockDict[kvp.Key].ExitWriteLock();
                         }
                     }
                 }
-                finally
-                {
-                    gameMap.GameObjLockDict[GameObjIdx.Player].ExitReadLock();
-                }
 
-                foreach (Character beAttackedPlayer in beAttackedList)
+                foreach (GameObj beAttackedObj in beAttackedList)
                 {
-                    BombOnePlayer(bullet, beAttackedPlayer);
+                    BombObj(bullet, beAttackedObj);
+                }
+                if (objBeingShot == null)
+                {
+                    if (bullet.Backswing > 0)
+                    {
+                        bullet.Parent.CanMove = false;
+                        bullet.Parent.IsMoving = false;
+
+                        new Thread
+                                (() =>
+                                {
+                                    Thread.Sleep(bullet.Backswing);
+
+                                    if (gameMap.Timer.IsGaming)
+                                    {
+                                        bullet.Parent.CanMove = true;
+                                    }
+                                }
+                                )
+                        { IsBackground = true }.Start();
+                    }
+                }
+                else
+                {
+                    if (bullet.RecoveryFromHit > 0)
+                    {
+                        bullet.Parent.CanMove = false;
+                        bullet.Parent.IsMoving = false;
+
+                        new Thread
+                                (() =>
+                                {
+
+                                    Thread.Sleep(bullet.RecoveryFromHit);
+
+                                    if (gameMap.Timer.IsGaming)
+                                    {
+                                        bullet.Parent.CanMove = true;
+                                    }
+                                }
+                                )
+                        { IsBackground = true }.Start();
+                    }
                 }
                 beAttackedList.Clear();
             }
+
             public bool Attack(Character? player, double angle)  // 射出去的子弹泼出去的水（狗头）
             {                                                    // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
                 if (player == null)
@@ -184,16 +294,16 @@ namespace Gaming
                 if (bullet != null)
                 {
                     bullet.CanMove = true;
-                    gameMap.GameObjLockDict[GameObjIdx.Bullet].EnterWriteLock();
+                    gameMap.GameObjLockDict[GameObjType.Bullet].EnterWriteLock();
                     try
                     {
-                        gameMap.GameObjDict[GameObjIdx.Bullet].Add(bullet);
+                        gameMap.GameObjDict[GameObjType.Bullet].Add(bullet);
                     }
                     finally
                     {
-                        gameMap.GameObjLockDict[GameObjIdx.Bullet].ExitWriteLock();
+                        gameMap.GameObjLockDict[GameObjType.Bullet].ExitWriteLock();
                     }
-                    moveEngine.MoveObj(bullet, (int)((player.AttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
+                    moveEngine.MoveObj(bullet, (int)((bullet.BulletAttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
 #if DEBUG
                     Console.WriteLine($"playerID:{player.ID} successfully attacked!");
 #endif

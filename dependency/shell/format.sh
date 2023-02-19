@@ -23,9 +23,9 @@ find . -iname "*.c"   \
    | xargs clang-format -i
 done
 
-cd logic && dotnet format && cd ..
-cd installer && dotnet format && cd ..
-cd launcher && dotnet format && cd ..
-cd playback && dotnet format && cd ..
+pushd logic && dotnet format && popd
+pushd installer && dotnet format && popd
+pushd launcher && dotnet format && popd
+pushd playback && dotnet format && popd
 
 echo "Done!"

@@ -1,8 +1,9 @@
-﻿using Preparation.GameData;
-using Preparation.Interface;
+﻿using Preparation.Interface;
 using Preparation.Utility;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace GameClass.GameObj
@@ -12,7 +13,6 @@ namespace GameClass.GameObj
         private readonly object beAttackedLock = new();
 
         #region 角色的基本属性及方法，包括与道具的交互方法
-
         /// <summary>
         /// 装弹冷却
         /// </summary>
@@ -20,8 +20,7 @@ namespace GameClass.GameObj
         public int CD
         {
             get => cd;
-            private
-                set
+            private set
             {
                 lock (gameObjLock)
                 {
@@ -31,10 +30,31 @@ namespace GameClass.GameObj
             }
         }
         public int OrgCD { get; protected set; }
+
+        protected int fixSpeed = 1;
+        /// <summary>
+        /// 修理电机速度
+        /// </summary>
+        public int FixSpeed
+        {
+            get => fixSpeed;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    fixSpeed = value;
+                }
+            }
+        }
+        /// <summary>
+        /// 原初修理电机速度
+        /// </summary>
+        public int OrgFixSpeed { get; protected set; }
+
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;  // 人物最大子弹数
         protected int bulletNum;
-        public int BulletNum => bulletNum;        // 目前持有的子弹数
+        public int BulletNum => bulletNum;  // 目前持有的子弹数
 
         public int MaxHp { get; protected set; }  // 最大血量
         protected int hp;
@@ -47,8 +67,21 @@ namespace GameClass.GameObj
                     hp = value <= MaxHp ? value : MaxHp;
             }
         }
-        private int deathCount = 0;
-        public int DeathCount => deathCount;  // 玩家的死亡次数
+
+        private bool isEscaped = false;
+        public bool IsEscaped
+        {
+            get => isEscaped;
+            set
+            {
+                lock (gameObjLock)
+                    if (!isEscaped && !IsGhost())
+                        isEscaped = value;
+            }
+        }
+
+        //        private int deathCount = 0;
+        //       public int DeathCount => deathCount;  // 玩家的死亡次数
 
         private int score = 0;
         public int Score
@@ -56,7 +89,7 @@ namespace GameClass.GameObj
             get => score;
         }
 
-        public double AttackRange => BulletFactory.BulletAttackRange(this.BulletOfPlayer);
+        //      public double AttackRange => BulletFactory.BulletAttackRange(this.BulletOfPlayer);
 
         private double vampire = 0;  // 回血率：0-1之间
         public double Vampire
@@ -93,7 +126,6 @@ namespace GameClass.GameObj
             }
         }
 
-
         public readonly BulletType OriBulletOfPlayer;
         private BulletType bulletOfPlayer;
         public BulletType BulletOfPlayer
@@ -105,7 +137,6 @@ namespace GameClass.GameObj
                     bulletOfPlayer = value;
             }
         }
-
 
         private Prop? propInventory;
         public Prop? PropInventory  // 持有的道具
@@ -240,29 +271,26 @@ namespace GameClass.GameObj
         /// </summary>
         /// <param name="sub">减血量</param>
         /// <returns>减操作是否成功</returns>
-        public bool TrySubHp(int sub)
+        public int TrySubHp(int sub)
         {
-            if (hp > 0)
-            {
-                lock (gameObjLock)
-                    hp = 0 >= hp - sub ? 0 : hp - sub;
-                Debugger.Output(this, " hp has subed to: " + hp.ToString());
-                return true;
-            }
-            return false;
-        }
-        /// <summary>
-        /// 增加死亡次数
-        /// </summary>
-        /// <returns>当前死亡次数</returns>
-        private int AddDeathCount()
-        {
+            int previousHp = hp;
             lock (gameObjLock)
-            {
-                ++deathCount;
-                return deathCount;
-            }
+                hp = hp >= sub ? 0 : hp - sub;
+            Debugger.Output(this, " hp has subed to: " + hp.ToString());
+            return previousHp - hp;
         }
+        /*       /// <summary>
+               /// 增加死亡次数
+               /// </summary>
+               /// <returns>当前死亡次数</returns>
+               private int AddDeathCount()
+               {
+                   lock (gameObjLock)
+                   {
+                       ++deathCount;
+                       return deathCount;
+                   }
+               }*/
         /// <summary>
         /// 加分
         /// </summary>
@@ -295,7 +323,7 @@ namespace GameClass.GameObj
         /// <param name="hasSpear"></param>
         /// <param name="attacker">伤害来源</param>
         /// <returns>人物在受到攻击后死了吗</returns>
-        public bool BeAttack(Bullet bullet)
+        public bool BeAttacked(Bullet bullet)
         {
 
             lock (beAttackedLock)
@@ -314,7 +342,7 @@ namespace GameClass.GameObj
                     }
                     else
                     {
-                        TrySubHp(bullet.AP);
+                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * TrySubHp(bullet.AP)));
                     }
 #if DEBUG
                     Console.WriteLine($"PlayerID:{ID} is being shot! Now his hp is {hp}.");
@@ -380,7 +408,7 @@ namespace GameClass.GameObj
         /// <summary>
         /// 角色携带的信息
         /// </summary>
-        private string message = "THUAI5";
+        private string message = "THUAI6";
         public string Message
         {
             get => message;
@@ -449,18 +477,27 @@ namespace GameClass.GameObj
         #endregion
         public override void Reset()  // 要加锁吗？
         {
-            _ = AddDeathCount();
-            base.Reset();
-            this.MoveSpeed = OrgMoveSpeed;
-            HP = MaxHp;
-            PropInventory = null;
-            // BulletOfPlayer = OriBulletOfPlayer;
-            // lock (gameObjLock)
-            //   bulletNum = maxBulletNum;
+            lock (gameObjLock)
+            {
+                //         _ = AddDeathCount();
+                base.Reset();
+                this.MoveSpeed = OrgMoveSpeed;
+                HP = MaxHp;
+                PropInventory = null;
+                BulletOfPlayer = OriBulletOfPlayer;
+                lock (gameObjLock)
+                    bulletNum = maxBulletNum;
 
-            buffManeger.ClearAll();
-            IsInvisible = false;
-            this.Vampire = this.OriVampire;
+                buffManeger.ClearAll();
+                IsInvisible = false;
+                this.Vampire = this.OriVampire;
+            }
+        }
+
+        public void Escape()
+        {
+            lock (gameObjLock)
+                IsResetting = IsEscaped = true;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;

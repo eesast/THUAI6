@@ -4,16 +4,33 @@ using System.Threading;
 using Timothy.FrameRateTask;
 using System;
 using System.Net.Http.Headers;
+using CommandLine;
 
 namespace Server
 {
     public class Program
     {
-        public static void Main()
+        static int Main(string[] args)
         {
+            foreach (var arg in args)
+            {
+                Console.Write($"{arg} ");
+            }
+            Console.WriteLine();
+
+            ArgumentOptions? options = null;
+            _ = Parser.Default.ParseArguments<ArgumentOptions>(args).WithParsed(o => { options = o; });
+            if (options == null)
+            {
+                Console.WriteLine("Argument parsing failed!");
+                // return 1;
+            }
+
+            // Console.WriteLine("Server begins to run: " + options.ServerPort.ToString());
+
             try
             {
-                GameServer gameServer = new();
+                GameServer? gameServer = new(options);
                 Grpc.Core.Server server = new Grpc.Core.Server(new[] { new ChannelOption(ChannelOptions.SoReuseport, 0) })
                 {
                     Services = { AvailableService.BindService(gameServer) },
@@ -30,6 +47,7 @@ namespace Server
             {
                 Console.WriteLine(ex.ToString());
             }
+            return 0;
         }
     }
 }

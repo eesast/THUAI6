@@ -123,16 +123,7 @@ namespace GameClass.GameObj
         /// <summary>
         /// 原初移动速度
         /// </summary>
-        private int orgMoveSpeed;
-        public int OrgMoveSpeed
-        {
-            get => orgMoveSpeed;
-            protected
-                set
-            {
-                orgMoveSpeed = value;
-            }
-        }
+        public int OrgMoveSpeed { get; protected set; }
 
         // 移动，改变坐标
         public long Move(XY moveVec)
@@ -180,6 +171,7 @@ namespace GameClass.GameObj
         /// </summary>
         /// <returns> 依具体类及该方法参数而定，默认为false </returns>
         protected virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
+
         bool IMoveable.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
         public GameObj(XY initPos, int initRadius, PlaceType initPlace, GameObjType initType)
         {

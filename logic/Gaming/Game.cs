@@ -16,13 +16,11 @@ namespace Gaming
             public long teamID;
             public long playerID;
             public CharacterType characterType;
-            public ActiveSkillType commonSkill;
-            public PlayerInitInfo(uint birthPointIndex, long teamID, long playerID, CharacterType characterType, ActiveSkillType commonSkill)
+            public PlayerInitInfo(uint birthPointIndex, long teamID, long playerID, CharacterType characterType)
             {
                 this.birthPointIndex = birthPointIndex;
                 this.teamID = teamID;
                 this.characterType = characterType;
-                this.commonSkill = commonSkill;
                 this.playerID = playerID;
             }
         }
@@ -41,7 +39,7 @@ namespace Gaming
 
             XY pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex].Position;
             // Console.WriteLine($"x,y: {pos.x},{pos.y}");
-            Character newPlayer = new(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType, playerInitInfo.commonSkill);
+            Character newPlayer = (GameData.IsGhost(playerInitInfo.characterType)) ? new Ghost(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType) : new Student(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType);
             gameMap.BirthPointList[playerInitInfo.birthPointIndex].Parent = newPlayer;
             gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
             try
@@ -175,20 +173,21 @@ namespace Gaming
             }*/
             gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
         }
-        public void MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
+        public bool MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
         {
             if (!gameMap.Timer.IsGaming)
-                return;
+                return false;
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
+                return actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
 #if DEBUG
                 Console.WriteLine($"PlayerID:{playerID} move to ({player.Position.x},{player.Position.y})!");
 #endif
             }
             else
             {
+                return false;
 #if DEBUG
                 Console.WriteLine($"PlayerID:{playerID} player does not exists!");
 #endif
@@ -198,11 +197,12 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
-            Character? playerTreated = gameMap.FindPlayer(playerTreatedID);
+            ICharacter? player = gameMap.FindPlayer(playerID);
+            ICharacter? playerTreated = gameMap.FindPlayer(playerTreatedID);
             if (player != null && playerTreated != null)
             {
-                return actionManager.Treat(player, playerTreated);
+                if (!playerTreated.IsGhost() && !player.IsGhost())
+                    return actionManager.Treat((Student)player, (Student)playerTreated);
             }
             return false;
         }
@@ -210,11 +210,12 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
-            Character? playerRescued = gameMap.FindPlayer(playerRescuedID);
+            ICharacter? player = gameMap.FindPlayer(playerID);
+            ICharacter? playerRescued = gameMap.FindPlayer(playerRescuedID);
             if (player != null && playerRescued != null)
             {
-                return actionManager.Treat(player, playerRescued);
+                if (!playerRescued.IsGhost() && !player.IsGhost())
+                    return actionManager.Treat((Student)player, (Student)playerRescued);
             }
             return false;
         }
@@ -222,10 +223,11 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            ICharacter? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                return actionManager.Fix(player);
+                if (!player.IsGhost())
+                    return actionManager.Fix((Student)player);
             }
             return false;
         }
@@ -233,10 +235,11 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            ICharacter? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                return actionManager.Escape(player);
+                if (!player.IsGhost())
+                    return actionManager.Escape((Student)player);
             }
             return false;
         }

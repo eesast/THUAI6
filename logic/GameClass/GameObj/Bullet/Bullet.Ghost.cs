@@ -15,6 +15,7 @@ namespace GameClass.GameObj
         public override int AP => GameData.basicApOfGhost;
         public override int Speed => GameData.basicBulletMoveSpeed;
         public override bool IsToBomb => false;
+        public override int CastTime => GameData.basicCastTime;
         public override int Backswing => GameData.basicBackswing;
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public override bool CanAttack(GameObj target)
@@ -36,6 +37,7 @@ namespace GameClass.GameObj
         public override int AP => GameData.basicApOfGhost / 5 * 4;
         public override int Speed => GameData.basicBulletMoveSpeed * 2;
         public override bool IsToBomb => false;
+        public override int CastTime => GameData.basicCastTime;
         public override int Backswing => GameData.basicBackswing / 5 * 3;
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit / 4 * 3;
         public override bool CanAttack(GameObj target)
@@ -57,6 +59,7 @@ namespace GameClass.GameObj
         public override double BulletAttackRange => GameData.basicAttackShortRange / 9 * 7;
         public override int AP => GameData.basicApOfGhost / 3 * 7;
         public override int Speed => GameData.basicBulletMoveSpeed / 3 * 2;
+        public override int CastTime => GameData.basicCastTime;
         public override int Backswing => GameData.basicBackswing;
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public override bool IsToBomb => true;
@@ -80,6 +83,7 @@ namespace GameClass.GameObj
         public override double BulletAttackRange => GameData.basicAttackShortRange / 2;
         public override int AP => GameData.basicApOfGhost / 6 * 5;
         public override int Speed => GameData.basicBulletMoveSpeed / 6 * 5;
+        public override int CastTime => GameData.basicCastTime;
         public override int Backswing => GameData.basicBackswing;
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public override bool IsToBomb => true;
@@ -102,6 +106,7 @@ namespace GameClass.GameObj
         public override double BulletAttackRange => GameData.basicAttackShortRange;
         public override int AP => (int)(0.5 * GameData.basicApOfGhost);
         public override int Speed => 5 * GameData.basicBulletMoveSpeed / 3;
+        public override int CastTime => GameData.basicCastTime;
         public override int Backswing => GameData.basicBackswing;
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public override bool IsToBomb => true;
@@ -125,6 +130,7 @@ namespace GameClass.GameObj
         public override double BulletAttackRange => 0.1 * GameData.basicAttackShortRange;
         public override int AP => GameData.basicApOfGhost / 3 * 2;
         public override int Speed => GameData.basicBulletMoveSpeed / 3;
+        public override int CastTime => GameData.basicCastTime;
         public override int Backswing => GameData.basicBackswing;
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public override bool IsToBomb => true;

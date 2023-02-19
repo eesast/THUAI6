@@ -60,7 +60,7 @@ namespace GameClass.GameObj
             };
         }
 
-        public Character(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType, ActiveSkillType commonSkillType) :
+        public Character(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) :
             base(initPos, initRadius, initPlace, GameObjType.Character)
         {
             this.CanMove = true;

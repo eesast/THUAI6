@@ -14,6 +14,7 @@ namespace GameClass.GameObj
         public abstract int AP { get; }
         public abstract int Speed { get; }
         public abstract bool IsToBomb { get; }
+        public abstract int CastTime { get; }
         public abstract int Backswing { get; }
         public abstract int RecoveryFromHit { get; }
 

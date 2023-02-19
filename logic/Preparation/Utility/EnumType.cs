@@ -18,6 +18,7 @@ namespace Preparation.Utility
         IsFixing = 8,
         IsTreated = 9,
         IsRescued = 10,
+        IsStunned = 11,
     }
     public enum GameObjType
     {

@@ -10,6 +10,42 @@
 
 #include "structures.h"
 
+namespace AssistFunction
+{
+
+    const int numOfGridPerCell = 100;
+
+    [[nodiscard]] static inline int GridToCell(int grid) noexcept
+    {
+        return grid / numOfGridPerCell;
+    }
+
+    inline bool HaveView(int viewRange, int x, int y, int newX, int newY, const std::vector<std::vector<THUAI6::PlaceType>>& map)
+    {
+        int deltaX = newX - x;
+        int deltaY = newY - y;
+        double distance = deltaX * deltaX + deltaY * deltaY;
+        if (distance < viewRange * viewRange)
+        {
+            int divide = std::max(std::abs(deltaX), std::abs(deltaY)) / 100;
+            double dx = deltaX / divide;
+            double dy = deltaY / divide;
+            double myX = double(x);
+            double myY = double(y);
+            for (int i = 0; i < divide; i++)
+            {
+                myX += dx;
+                myY += dy;
+                if (map[GridToCell(myX)][GridToCell(myY)] != THUAI6::PlaceType::Land)
+                    return false;
+            }
+            return true;
+        }
+        else
+            return false;
+    }
+}  // namespace AssistFunction
+
 // 辅助函数，用于将proto信息转换为THUAI6信息
 namespace Proto2THUAI6
 {

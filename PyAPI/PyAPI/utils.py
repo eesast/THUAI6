@@ -4,18 +4,18 @@ import proto.Message2Clients_pb2 as Message2Clients
 import PyAPI.structures as THUAI6
 from typing import Final, List
 
-
 numOfGridPerCell: Final[int] = 1000
 
-
 # 起到NameSpace的作用
+
+
 class NoInstance:
     def __call__(self):
         raise TypeError("This class cannot be instantiated.")
 
 
 class AssistFunction(NoInstance):
-    # 辅助函数
+
     @staticmethod
     def CellToGrid(cell: int) -> int:
         return cell * numOfGridPerCell + numOfGridPerCell // 2
@@ -23,6 +23,26 @@ class AssistFunction(NoInstance):
     @staticmethod
     def GridToCell(grid: int) -> int:
         return grid // numOfGridPerCell
+
+    @staticmethod
+    def HaveView(viewRange: int, x: int, y: int, newX: int, newY: int, map: List[List[THUAI6.PlaceType]]) -> bool:
+        deltaX: int = newX - x
+        deltaY: int = newY - y
+        if deltaX * deltaX + deltaY * deltaY <= viewRange * viewRange:
+            divide: int = max(abs(deltaX), abs(deltaY)) // 100
+            dx: float = deltaX / divide
+            dy: float = deltaY / divide
+            selfX: float = float(x)
+            selfY: float = float(y)
+            for i in range(divide):
+                selfX += dx
+                selfY += dy
+                if map[AssistFunction.GridToCell(int(selfX))][AssistFunction.GridToCell(int(selfY))] != THUAI6.PlaceType.Land:
+                    return False
+            else:
+                return True
+        else:
+            return False
 
 
 class Proto2THUAI6(NoInstance):

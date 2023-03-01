@@ -509,7 +509,7 @@ class ButcherDebugAPI(IButcherAPI, IGameTimer):
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
-        def PrintHuman(self) -> None:
+    def PrintHuman(self) -> None:
         for human in self.__logic.GetHumans():
             self.__logger.info("******Human Info******")
             self.__logger.info(

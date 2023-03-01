@@ -1,6 +1,6 @@
 import PyAPI.structures as THUAI6
 from PyAPI.Interface import IHumanAPI, IButcherAPI, IAI
-from typing import Union
+from typing import Union, Final
 
 
 class Setting:
@@ -22,6 +22,21 @@ class Setting:
     @staticmethod
     def butcherType() -> THUAI6.ButcherType:
         return THUAI6.ButcherType.ButcherType1
+
+
+# 辅助函数
+numOfGridPerCell: Final[int] = 1000
+
+
+class AssistFunction:
+
+    @staticmethod
+    def CellToGrid(cell: int) -> int:
+        return cell * numOfGridPerCell + numOfGridPerCell // 2
+
+    @staticmethod
+    def GridToCell(grid: int) -> int:
+        return grid // numOfGridPerCell
 
 
 class AI(IAI):

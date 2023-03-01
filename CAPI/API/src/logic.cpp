@@ -252,7 +252,6 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
 
         logger->debug("Buffer cleared!");
         // 读取新的信息
-        // 读取消息的选择待补充，之后需要另外判断；具体做法应该是先读到自己，然后按照自己的视野做处理。此处暂时全部读了进来
         bufferState->gamemap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());
         if (playerType == THUAI6::PlayerType::HumanPlayer)
         {
@@ -267,33 +266,8 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
             }
             for (const auto& item : message.butcher_message())
             {
-                int vr = this->bufferState->humanSelf->viewRange;
-                int deltaX = item.x() - this->bufferState->humanSelf->x;
-                int deltaY = item.y() - this->bufferState->humanSelf->y;
-                double distance = deltaX * deltaX + deltaY * deltaY;
-                if (distance > vr * vr)
-                    continue;
-                else
+                if (AssistFunction::HaveView(bufferState->humanSelf->viewRange, bufferState->humanSelf->x, bufferState->humanSelf->y, item.x(), item.y(), bufferState->gamemap))
                 {
-                    int divide = abs(deltaX) > abs(deltaY) ? abs(deltaX) : abs(deltaY);
-                    divide /= 100;
-                    double dx = deltaX / divide;
-                    double dy = deltaY / divide;
-                    double myX = this->bufferState->humanSelf->x;
-                    double myY = this->bufferState->humanSelf->y;
-                    bool barrier = false;
-                    for (int i = 0; i < divide; i++)
-                    {
-                        myX += dx;
-                        myY += dy;
-                        if (this->bufferState->gamemap[IAPI::GridToCell(myX)][IAPI::GridToCell(myY)] == THUAI6::PlaceType::Wall)
-                        {
-                            barrier = true;
-                            break;
-                        }
-                    }
-                    if (barrier)
-                        continue;
                     bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(item));
                     logger->debug("Add Butcher!");
                 }
@@ -311,38 +285,11 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                 logger->debug("Add Butcher!");
             }
             for (const auto& item : message.human_message())
-            {
-                int vr = this->bufferState->butcherSelf->viewRange;
-                int deltaX = item.x() - this->bufferState->butcherSelf->x;
-                int deltaY = item.y() - this->bufferState->butcherSelf->y;
-                double distance = deltaX * deltaX + deltaY * deltaY;
-                if (distance > vr * vr)
-                    continue;
-                else
+                if (AssistFunction::HaveView(bufferState->butcherSelf->viewRange, bufferState->butcherSelf->x, bufferState->butcherSelf->y, item.x(), item.y(), bufferState->gamemap))
                 {
-                    int divide = abs(deltaX) > abs(deltaY) ? abs(deltaX) : abs(deltaY);
-                    divide /= 100;
-                    double dx = deltaX / divide;
-                    double dy = deltaY / divide;
-                    double myX = this->bufferState->butcherSelf->x;
-                    double myY = this->bufferState->butcherSelf->y;
-                    bool barrier = false;
-                    for (int i = 0; i < divide; i++)
-                    {
-                        myX += dx;
-                        myY += dy;
-                        if (this->bufferState->gamemap[IAPI::GridToCell(myX)][IAPI::GridToCell(myY)] == THUAI6::PlaceType::Wall)
-                        {
-                            barrier = true;
-                            break;
-                        }
-                    }
-                    if (barrier)
-                        continue;
                     bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(item));
                     logger->debug("Add Human!");
                 }
-            }
         }
         for (const auto& item : message.prop_message())
         {

@@ -250,24 +250,10 @@ class Logic(ILogic):
                         Proto2THUAI6.Protobuf2THUAI6Human(human))
                     self.__logger.debug("Add Human!")
                 for butcher in message.butcher_message:
-                    viewRange: int = self.__bufferState.self.viewRange
-                    deltaX: int = butcher.x - self.__bufferState.self.x
-                    deltaY: int = butcher.y - self.__bufferState.self.y
-                    if deltaX * deltaX + deltaY * deltaY <= viewRange * viewRange:
-                        divide: int = max(abs(deltaX), abs(deltaY)) // 100
-                        dx: float = deltaX / divide
-                        dy: float = deltaY / divide
-                        selfX: float = self.__bufferState.self.x
-                        selfY: float = self.__bufferState.self.y
-                        for i in range(divide):
-                            selfX += dx
-                            selfY += dy
-                            if self.__bufferState.map[AssistFunction.GridToCell(int(selfX))][AssistFunction.GridToCell(int(selfY))]:
-                                break
-                        else:
-                            self.__bufferState.butchers.append(
-                                Proto2THUAI6.Protobuf2THUAI6Butcher(butcher))
-                            self.__logger.debug("Add Butcher!")
+                    if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, butcher.x, butcher.y, self.__bufferState.map):
+                        self.__bufferState.butchers.append(
+                            Proto2THUAI6.Protobuf2THUAI6Butcher(butcher))
+                        self.__logger.debug("Add Butcher!")
             else:
                 for butcher in message.butcher_message:
                     if butcher.player_id == self.__playerID:
@@ -277,24 +263,10 @@ class Logic(ILogic):
                         Proto2THUAI6.Protobuf2THUAI6Butcher(butcher))
                     self.__logger.debug("Add Butcher!")
                 for human in message.human_message:
-                    viewRange: int = self.__bufferState.self.viewRange
-                    deltaX: int = human.x - self.__bufferState.self.x
-                    deltaY: int = human.y - self.__bufferState.self.y
-                    if deltaX * deltaX + deltaY * deltaY <= viewRange * viewRange:
-                        divide: int = max(abs(deltaX), abs(deltaY)) // 100
-                        dx: float = deltaX / divide
-                        dy: float = deltaY / divide
-                        selfX: float = self.__bufferState.self.x
-                        selfY: float = self.__bufferState.self.y
-                        for i in range(divide):
-                            selfX += dx
-                            selfY += dy
-                            if self.__bufferState.map[AssistFunction.GridToCell(int(selfX))][AssistFunction.GridToCell(int(selfY))]:
-                                break
-                        else:
-                            self.__bufferState.humans.append(
-                                Proto2THUAI6.Protobuf2THUAI6Human(human))
-                            self.__logger.debug("Add Human!")
+                    if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, human.x, human.y, self.__bufferState.map):
+                        self.__bufferState.humans.append(
+                            Proto2THUAI6.Protobuf2THUAI6Human(human))
+                        self.__logger.debug("Add Human!")
             for prop in message.prop_message:
                 self.__bufferState.props.append(
                     Proto2THUAI6.Protobuf2THUAI6Prop(prop))

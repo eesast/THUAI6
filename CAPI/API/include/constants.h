@@ -4,5 +4,15 @@
 
 namespace Constants
 {
-}
+    static const constexpr inline numOfGridPerCell = 1000;
+
+    struct HumanConstants
+    {
+    };
+
+    struct ButcherConstants
+    {
+    };
+
+}  // namespace Constants
 #endif

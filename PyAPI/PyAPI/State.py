@@ -4,10 +4,10 @@ import PyAPI.structures as THUAI6
 
 class State:
     teamScore: int
-    self: Union[THUAI6.Human, THUAI6.Butcher]
+    self: Union[THUAI6.Student, THUAI6.Tricker]
 
-    humans: List[THUAI6.Human]
-    butchers: List[THUAI6.Butcher]
+    students: List[THUAI6.Student]
+    trickers: List[THUAI6.Tricker]
 
     props: List[THUAI6.Prop]
 

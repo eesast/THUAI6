@@ -75,110 +75,110 @@ bool Communication::SendMessage(int64_t toID, std::string message, int64_t playe
         return false;
 }
 
-bool Communication::Escape(int64_t playerID)
+bool Communication::Graduate(int64_t playerID)
 {
-    protobuf::BoolRes escapeResult;
+    protobuf::BoolRes graduateResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->Escape(&context, request, &escapeResult);
+    auto status = THUAI6Stub->Graduate(&context, request, &graduateResult);
     if (status.ok())
-        return escapeResult.act_success();
+        return graduateResult.act_success();
     else
         return false;
 }
 
-bool Communication::StartFixMachine(int64_t playerID)
+bool Communication::StartLearning(int64_t playerID)
 {
-    protobuf::BoolRes startFixMachineResult;
+    protobuf::BoolRes startLearningResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->StartFixMachine(&context, request, &startFixMachineResult);
+    auto status = THUAI6Stub->StartLearning(&context, request, &startLearningResult);
     if (status.ok())
-        return startFixMachineResult.act_success();
+        return startLearningResult.act_success();
     else
         return false;
 }
 
-bool Communication::EndFixMachine(int64_t playerID)
+bool Communication::EndLearning(int64_t playerID)
 {
-    protobuf::BoolRes endFixMachineResult;
+    protobuf::BoolRes endLearningResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->EndFixMachine(&context, request, &endFixMachineResult);
+    auto status = THUAI6Stub->EndLearning(&context, request, &endLearningResult);
     if (status.ok())
-        return endFixMachineResult.act_success();
+        return endLearningResult.act_success();
     else
         return false;
 }
 
-bool Communication::StartSaveHuman(int64_t playerID)
+bool Communication::StartHelpMate(int64_t playerID)
 {
-    protobuf::BoolRes saveHumanResult;
+    protobuf::BoolRes saveStudentResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->StartSaveHuman(&context, request, &saveHumanResult);
+    auto status = THUAI6Stub->StartHelpMate(&context, request, &saveStudentResult);
     if (status.ok())
-        return saveHumanResult.act_success();
+        return saveStudentResult.act_success();
     else
         return false;
 }
 
-bool Communication::EndSaveHuman(int64_t playerID)
+bool Communication::EndHelpMate(int64_t playerID)
 {
-    protobuf::BoolRes saveHumanResult;
+    protobuf::BoolRes saveStudentResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->EndSaveHuman(&context, request, &saveHumanResult);
+    auto status = THUAI6Stub->EndHelpMate(&context, request, &saveStudentResult);
     if (status.ok())
-        return saveHumanResult.act_success();
+        return saveStudentResult.act_success();
     else
         return false;
 }
 
-bool Communication::Attack(double angle, int64_t playerID)
+bool Communication::Trick(double angle, int64_t playerID)
 {
-    protobuf::BoolRes attackResult;
+    protobuf::BoolRes trickResult;
     ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufAttack(angle, playerID);
-    auto status = THUAI6Stub->Attack(&context, request, &attackResult);
+    auto request = THUAI62Proto::THUAI62ProtobufTrick(angle, playerID);
+    auto status = THUAI6Stub->Trick(&context, request, &trickResult);
     if (status.ok())
-        return attackResult.act_success();
+        return trickResult.act_success();
     else
         return false;
 }
 
-bool Communication::CarryHuman(int64_t playerID)
+bool Communication::StartExam(int64_t playerID)
 {
-    protobuf::BoolRes carryHumanResult;
+    protobuf::BoolRes startExamResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->CarryHuman(&context, request, &carryHumanResult);
+    auto status = THUAI6Stub->StartExam(&context, request, &startExamResult);
     if (status.ok())
-        return carryHumanResult.act_success();
+        return startExamResult.act_success();
     else
         return false;
 }
 
-bool Communication::ReleaseHuman(int64_t playerID)
+bool Communication::EndExam(int64_t playerID)
 {
-    protobuf::BoolRes releaseHumanResult;
+    protobuf::BoolRes endExamResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->ReleaseHuman(&context, request, &releaseHumanResult);
+    auto status = THUAI6Stub->EndExam(&context, request, &endExamResult);
     if (status.ok())
-        return releaseHumanResult.act_success();
+        return endExamResult.act_success();
     else
         return false;
 }
 
-bool Communication::HangHuman(int64_t playerID)
+bool Communication::MakeFail(int64_t playerID)
 {
-    protobuf::BoolRes hangHumanResult;
+    protobuf::BoolRes makeFailResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->HangHuman(&context, request, &hangHumanResult);
+    auto status = THUAI6Stub->MakeFail(&context, request, &makeFailResult);
     if (status.ok())
-        return hangHumanResult.act_success();
+        return makeFailResult.act_success();
     else
         return false;
 }
@@ -233,11 +233,11 @@ void Communication::ReadMessage(int64_t playerID)
     std::thread(tRead).detach();
 }
 
-void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::HumanType humanType, THUAI6::ButcherType butcherType)
+void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::StudentType studentType, THUAI6::TrickerType trickerType)
 {
     auto tMessage = [=]()
     {
-        protobuf::PlayerMsg playerMsg = THUAI62Proto::THUAI62ProtobufPlayer(playerID, playerType, humanType, butcherType);
+        protobuf::PlayerMsg playerMsg = THUAI62Proto::THUAI62ProtobufPlayer(playerID, playerType, studentType, trickerType);
         grpc::ClientContext context;
         auto MessageReader = THUAI6Stub->AddPlayer(&context, playerMsg);
 

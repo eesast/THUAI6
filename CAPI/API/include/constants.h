@@ -6,11 +6,11 @@ namespace Constants
 {
     static const constexpr inline numOfGridPerCell = 1000;
 
-    struct HumanConstants
+    struct StudentConstants
     {
     };
 
-    struct ButcherConstants
+    struct TrickerConstants
     {
     };
 

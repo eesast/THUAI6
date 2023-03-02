@@ -45,8 +45,8 @@ private:
     THUAI6::PlayerType playerType;
 
     // 类型记录
-    THUAI6::HumanType humanType;
-    THUAI6::ButcherType butcherType;
+    THUAI6::StudentType studentType;
+    THUAI6::TrickerType trickerType;
 
     // GUID信息
     std::vector<int64_t> playerGUIDs;
@@ -90,11 +90,11 @@ private:
 
     // 提供给API使用的函数
 
-    std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
-    std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
+    std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
+    std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const override;
     std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
-    std::shared_ptr<const THUAI6::Human> HumanGetSelfInfo() const override;
-    std::shared_ptr<const THUAI6::Butcher> ButcherGetSelfInfo() const override;
+    std::shared_ptr<const THUAI6::Student> StudentGetSelfInfo() const override;
+    std::shared_ptr<const THUAI6::Tricker> TrickerGetSelfInfo() const override;
 
     std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
     THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
@@ -109,18 +109,18 @@ private:
     bool HaveMessage() override;
     std::optional<std::pair<int64_t, std::string>> GetMessage() override;
 
-    bool Escape() override;
+    bool Graduate() override;
 
-    bool StartFixMachine() override;
-    bool EndFixMachine() override;
+    bool StartLearning() override;
+    bool EndLearning() override;
 
-    bool StartSaveHuman() override;
-    bool EndSaveHuman() override;
+    bool StartHelpMate() override;
+    bool EndHelpMate() override;
 
-    bool Attack(double angle) override;
-    bool CarryHuman() override;
-    bool ReleaseHuman() override;
-    bool HangHuman() override;
+    bool Trick(double angle) override;
+    bool StartExam() override;
+    bool EndExam() override;
+    bool MakeFail() override;
 
     bool WaitThread() override;
 
@@ -146,7 +146,7 @@ private:
 
 public:
     // 构造函数还需要传更多参数，有待补充
-    Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::ButcherType butcher, THUAI6::HumanType human);
+    Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::TrickerType tricker, THUAI6::StudentType student);
 
     ~Logic()
     {

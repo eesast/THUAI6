@@ -32,11 +32,11 @@ class ILogic
 
 public:
     // 获取服务器发来的消息
-    virtual std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const = 0;
-    virtual std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const = 0;
+    virtual std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const = 0;
+    virtual std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const = 0;
     virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
-    virtual std::shared_ptr<const THUAI6::Human> HumanGetSelfInfo() const = 0;
-    virtual std::shared_ptr<const THUAI6::Butcher> ButcherGetSelfInfo() const = 0;
+    virtual std::shared_ptr<const THUAI6::Student> StudentGetSelfInfo() const = 0;
+    virtual std::shared_ptr<const THUAI6::Tricker> TrickerGetSelfInfo() const = 0;
 
     virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
     virtual THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const = 0;
@@ -54,20 +54,20 @@ public:
 
     virtual int GetCounter() const = 0;
 
-    // IHumanAPI使用的部分
-    virtual bool Escape() = 0;
+    // IStudentAPI使用的部分
+    virtual bool Graduate() = 0;
 
-    virtual bool StartFixMachine() = 0;
-    virtual bool EndFixMachine() = 0;
+    virtual bool StartLearning() = 0;
+    virtual bool EndLearning() = 0;
 
-    virtual bool StartSaveHuman() = 0;
-    virtual bool EndSaveHuman() = 0;
+    virtual bool StartHelpMate() = 0;
+    virtual bool EndHelpMate() = 0;
 
-    // IButcherAPI使用的部分
-    virtual bool Attack(double angle) = 0;
-    virtual bool CarryHuman() = 0;
-    virtual bool ReleaseHuman() = 0;
-    virtual bool HangHuman() = 0;
+    // ITrickerAPI使用的部分
+    virtual bool Trick(double angle) = 0;
+    virtual bool StartExam() = 0;
+    virtual bool EndExam() = 0;
+    virtual bool MakeFail() = 0;
 
     virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
 };
@@ -98,9 +98,9 @@ public:
     // 等待下一帧
     virtual std::future<bool> Wait() = 0;
 
-    // 获取视野内可见的人类/屠夫的信息
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const = 0;
+    // 获取视野内可见的学生/捣蛋鬼的信息
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const = 0;
 
     // 获取视野内可见的道具信息
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
@@ -131,35 +131,35 @@ public:
 
     // 用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
 
-    virtual void PrintHuman() const = 0;
-    virtual void PrintButcher() const = 0;
+    virtual void PrintStudent() const = 0;
+    virtual void PrintTricker() const = 0;
     virtual void PrintProp() const = 0;
     virtual void PrintSelfInfo() const = 0;
 };
 
-class IHumanAPI : public IAPI
+class IStudentAPI : public IAPI
 {
 public:
-    /*****人类阵营的特定函数*****/
+    /*****学生阵营的特定函数*****/
 
-    virtual std::future<bool> StartFixMachine() = 0;
-    virtual std::future<bool> EndFixMachine() = 0;
-    virtual std::future<bool> StartSaveHuman() = 0;
-    virtual std::future<bool> EndSaveHuman() = 0;
-    virtual std::future<bool> Escape() = 0;
-    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const = 0;
+    virtual std::future<bool> StartLearning() = 0;
+    virtual std::future<bool> EndLearning() = 0;
+    virtual std::future<bool> StartHelpMate() = 0;
+    virtual std::future<bool> EndHelpMate() = 0;
+    virtual std::future<bool> Graduate() = 0;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const = 0;
 };
 
-class IButcherAPI : public IAPI
+class ITrickerAPI : public IAPI
 {
 public:
-    /*****屠夫阵营的特定函数*****/
+    /*****捣蛋鬼阵营的特定函数*****/
 
-    virtual std::future<bool> Attack(double angleInRadian) = 0;
-    virtual std::future<bool> CarryHuman() = 0;
-    virtual std::future<bool> ReleaseHuman() = 0;
-    virtual std::future<bool> HangHuman() = 0;
-    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Butcher> GetSelfInfo() const = 0;
+    virtual std::future<bool> Trick(double angleInRadian) = 0;
+    virtual std::future<bool> StartExam() = 0;
+    virtual std::future<bool> EndExam() = 0;
+    virtual std::future<bool> MakeFail() = 0;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const = 0;
 };
 
 class IGameTimer
@@ -171,10 +171,10 @@ public:
     virtual void Play(IAI& ai) = 0;
 };
 
-class HumanAPI : public IHumanAPI, public IGameTimer
+class StudentAPI : public IStudentAPI, public IGameTimer
 {
 public:
-    HumanAPI(ILogic& logic) :
+    StudentAPI(ILogic& logic) :
         logic(logic)
     {
     }
@@ -205,8 +205,8 @@ public:
 
     std::future<bool> Wait() override;
 
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
@@ -215,17 +215,17 @@ public:
 
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
 
-    std::future<bool> StartFixMachine() override;
-    std::future<bool> EndFixMachine() override;
-    std::future<bool> StartSaveHuman() override;
-    std::future<bool> EndSaveHuman() override;
-    std::future<bool> Escape() override;
-    [[nodiscard]] std::shared_ptr<const THUAI6::Human> GetSelfInfo() const override;
+    std::future<bool> StartLearning() override;
+    std::future<bool> EndLearning() override;
+    std::future<bool> StartHelpMate() override;
+    std::future<bool> EndHelpMate() override;
+    std::future<bool> Graduate() override;
+    [[nodiscard]] std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
-    void PrintHuman() const override
+    void PrintStudent() const override
     {
     }
-    void PrintButcher() const override
+    void PrintTricker() const override
     {
     }
     void PrintProp() const override
@@ -239,10 +239,10 @@ private:
     ILogic& logic;
 };
 
-class ButcherAPI : public IButcherAPI, public IGameTimer
+class TrickerAPI : public ITrickerAPI, public IGameTimer
 {
 public:
-    ButcherAPI(ILogic& logic) :
+    TrickerAPI(ILogic& logic) :
         logic(logic)
     {
     }
@@ -272,8 +272,8 @@ public:
 
     std::future<bool> Wait() override;
 
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
@@ -282,16 +282,16 @@ public:
 
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
 
-    std::future<bool> Attack(double angleInRadian) override;
-    std::future<bool> CarryHuman() override;
-    std::future<bool> ReleaseHuman() override;
-    std::future<bool> HangHuman() override;
-    [[nodiscard]] std::shared_ptr<const THUAI6::Butcher> GetSelfInfo() const override;
+    std::future<bool> Trick(double angleInRadian) override;
+    std::future<bool> StartExam() override;
+    std::future<bool> EndExam() override;
+    std::future<bool> MakeFail() override;
+    [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
 
-    void PrintHuman() const override
+    void PrintStudent() const override
     {
     }
-    void PrintButcher() const override
+    void PrintTricker() const override
     {
     }
     void PrintProp() const override
@@ -305,10 +305,10 @@ private:
     ILogic& logic;
 };
 
-class HumanDebugAPI : public IHumanAPI, public IGameTimer
+class StudentDebugAPI : public IStudentAPI, public IGameTimer
 {
 public:
-    HumanDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID);
+    StudentDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID);
     void StartTimer() override;
     void EndTimer() override;
     void Play(IAI& ai) override;
@@ -331,8 +331,8 @@ public:
 
     std::future<bool> Wait() override;
 
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
@@ -341,15 +341,15 @@ public:
 
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
 
-    std::future<bool> StartFixMachine() override;
-    std::future<bool> EndFixMachine() override;
-    std::future<bool> StartSaveHuman() override;
-    std::future<bool> EndSaveHuman() override;
-    std::future<bool> Escape() override;
-    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Human> GetSelfInfo() const override;
+    std::future<bool> StartLearning() override;
+    std::future<bool> EndLearning() override;
+    std::future<bool> StartHelpMate() override;
+    std::future<bool> EndHelpMate() override;
+    std::future<bool> Graduate() override;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
-    void PrintHuman() const override;
-    void PrintButcher() const override;
+    void PrintStudent() const override;
+    void PrintTricker() const override;
     void PrintProp() const override;
     void PrintSelfInfo() const override;
 
@@ -359,10 +359,10 @@ private:
     ILogic& logic;
 };
 
-class ButcherDebugAPI : public IButcherAPI, public IGameTimer
+class TrickerDebugAPI : public ITrickerAPI, public IGameTimer
 {
 public:
-    ButcherDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID);
+    TrickerDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID);
     void StartTimer() override;
     void EndTimer() override;
     void Play(IAI& ai) override;
@@ -385,8 +385,8 @@ public:
 
     std::future<bool> Wait() override;
 
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Human>> GetHumans() const override;
-    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Butcher>> GetButchers() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
@@ -395,14 +395,14 @@ public:
 
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
 
-    std::future<bool> Attack(double angleInRadian) override;
-    std::future<bool> CarryHuman() override;
-    std::future<bool> ReleaseHuman() override;
-    std::future<bool> HangHuman() override;
-    [[nodiscard]] std::shared_ptr<const THUAI6::Butcher> GetSelfInfo() const override;
+    std::future<bool> Trick(double angleInRadian) override;
+    std::future<bool> StartExam() override;
+    std::future<bool> EndExam() override;
+    std::future<bool> MakeFail() override;
+    [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
 
-    void PrintHuman() const override;
-    void PrintButcher() const override;
+    void PrintStudent() const override;
+    void PrintTricker() const override;
     void PrintProp() const override;
     void PrintSelfInfo() const override;
 

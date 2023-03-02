@@ -9,8 +9,8 @@ class IAI
 public:
     virtual ~IAI() = default;
     IAI() = default;
-    virtual void play(IHumanAPI& api) = 0;
-    virtual void play(IButcherAPI& api) = 0;
+    virtual void play(IStudentAPI& api) = 0;
+    virtual void play(ITrickerAPI& api) = 0;
 };
 
 using CreateAIFunc = std::unique_ptr<IAI> (*)();
@@ -22,8 +22,8 @@ public:
         IAI()
     {
     }
-    void play(IHumanAPI& api) override;
-    void play(IButcherAPI& api) override;
+    void play(IStudentAPI& api) override;
+    void play(ITrickerAPI& api) override;
 };
 
 #endif

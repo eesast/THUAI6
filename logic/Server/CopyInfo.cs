@@ -8,28 +8,28 @@ namespace Server
     public static class CopyInfo
     {
         // 下面赋值为0的大概率是还没写完 2023-03-03
-        private static MessageOfHuman Human(Character player)
+        private static MessageOfStudent Human(Character player)
         {
-            MessageOfHuman msg = new MessageOfHuman();
+            MessageOfStudent msg = new MessageOfStudent();
             if (player.IsGhost()) return null;
 
             msg.X = player.Position.x;
             msg.Y = player.Position.y;
             msg.Speed = player.MoveSpeed;
-            msg.Life = player.HP;
-            msg.HangedTime = 0;
+            msg.Determination = player.HP;
+            msg.FailNum = 0;
             msg.TimeUntilSkillAvailable = 0;
             //msg.Place = 0; 下面写了
             msg.Prop = PropType.NullPropType; // 下面写
-            msg.HumanType = HumanType.NullHumanType; // 下面写
+            msg.StudentType = StudentType.NullStudentType; // 下面写
             msg.Guid = 0;
-            msg.State = HumanState.NullStatus;
-            msg.ChairTime = 0;
-            msg.GroundTime = 0;
+            msg.State = StudentState.NullStatus;
+            msg.FailTime = 0;
+            msg.EmoTime = 0;
             msg.PlayerId = 0;
             msg.ViewRange = 0;
             msg.Radius = 0;
-            //msg.Buff[0] = HumanBuffType.NullHbuffType; 下面写了
+            //msg.Buff[0] = StudentBuffType.NullSbuffType; 下面写了
 
             /* THUAI5中的内容
             msg.BulletNum = player.BulletNum;
@@ -60,26 +60,26 @@ namespace Server
             {
                 if (kvp.Value)
                 {
-                    switch (kvp.Key) // HumanBuffType具体内容待定
+                    switch (kvp.Key) // StudentBuffType具体内容待定
                     {
                         case Preparation.Utility.BuffType.Spear:
-                            msg.Buff.Add(HumanBuffType.NullHbuffType);
+                            msg.Buff.Add(StudentBuffType.NullSbuffType);
                             break;
                         case Preparation.Utility.BuffType.AddLIFE:
-                            msg.Buff.Add(HumanBuffType.NullHbuffType);
+                            msg.Buff.Add(StudentBuffType.NullSbuffType);
                             break;
                         case Preparation.Utility.BuffType.Shield:
-                            msg.Buff.Add(HumanBuffType.NullHbuffType);
+                            msg.Buff.Add(StudentBuffType.NullSbuffType);
                             break;
                         case Preparation.Utility.BuffType.AddSpeed:
-                            msg.Buff.Add(HumanBuffType.NullHbuffType);
+                            msg.Buff.Add(StudentBuffType.NullSbuffType);
                             break;
                         default:
                             break;
                     }
                 }
             }
-            switch (player.Place)
+            /*switch (player.Place)
             {
                 case Preparation.Utility.PlaceType.Land:
                     msg.Place = PlaceType.Land;
@@ -99,7 +99,7 @@ namespace Server
                 default:
                     msg.Place = PlaceType.NullPlaceType;
                     break;
-            }
+            }*/
 
             //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
             //现在懒得改了，有时间再重整一波
@@ -186,9 +186,9 @@ namespace Server
             return msg;
         }
 
-        private static MessageOfButcher Butcher(Character player)
+        private static MessageOfTricker Butcher(Character player)
         {
-            MessageOfButcher msg = new MessageOfButcher();
+            MessageOfTricker msg = new MessageOfTricker();
             if (!player.IsGhost()) return null;
 
             msg.X = player.Position.x;
@@ -198,13 +198,13 @@ namespace Server
             msg.TimeUntilSkillAvailable = 0;
             //msg.Place = 0; 下面写了
             msg.Prop = PropType.NullPropType; // 下面写
-            msg.ButcherType = ButcherType.NullButcherType; // 下面写
+            msg.TrickerType = TrickerType.NullTrickerType; // 下面写
             msg.Guid = 0;
             msg.Movable = false;
             msg.PlayerId = 0;
             msg.ViewRange = 0;
             msg.Radius = 0;
-            //msg.Buff[0] = ButcherBuffType.NullHbuffType; 下面写了
+            //msg.Buff[0] = ButcherBuffType.NullSbuffType; 下面写了
 
             /* THUAI5中的内容
             msg.BulletNum = player.BulletNum;
@@ -238,23 +238,23 @@ namespace Server
                     switch (kvp.Key) // ButcherBuffType具体内容待定
                     {
                         case Preparation.Utility.BuffType.Spear:
-                            msg.Buff.Add(ButcherBuffType.NullBbuffType);
+                            msg.Buff.Add(TrickerBuffType.NullTbuffType);
                             break;
                         case Preparation.Utility.BuffType.AddLIFE:
-                            msg.Buff.Add(ButcherBuffType.NullBbuffType);
+                            msg.Buff.Add(TrickerBuffType.NullTbuffType);
                             break;
                         case Preparation.Utility.BuffType.Shield:
-                            msg.Buff.Add(ButcherBuffType.NullBbuffType);
+                            msg.Buff.Add(TrickerBuffType.NullTbuffType);
                             break;
                         case Preparation.Utility.BuffType.AddSpeed:
-                            msg.Buff.Add(ButcherBuffType.NullBbuffType);
+                            msg.Buff.Add(TrickerBuffType.NullTbuffType);
                             break;
                         default:
                             break;
                     }
                 }
             }
-            switch (player.Place)
+            /*switch (player.Place)
             {
                 case Preparation.Utility.PlaceType.Land:
                     msg.Place = PlaceType.Land;
@@ -274,7 +274,7 @@ namespace Server
                 default:
                     msg.Place = PlaceType.NullPlaceType;
                     break;
-            }
+            }*/
 
             //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
             //现在懒得改了，有时间再重整一波

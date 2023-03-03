@@ -12,24 +12,24 @@ namespace ClientTest
             var client = new AvailableService.AvailableServiceClient(channel);
             PlayerMsg playerInfo = new();
             playerInfo.PlayerId = 0;
-            playerInfo.PlayerType = PlayerType.HumanPlayer;
-            playerInfo.HumanType = HumanType.NullHumanType;
+            playerInfo.PlayerType = PlayerType.StudentPlayer;
+            playerInfo.StudentType = StudentType.NullStudentType;
             var call = client.AddPlayer(playerInfo);
             while (await call.ResponseStream.MoveNext())
             {
                 var currentGameInfo = call.ResponseStream.Current;
-                if (playerInfo.PlayerType == PlayerType.HumanPlayer)
+                if (playerInfo.PlayerType == PlayerType.StudentPlayer)
                 {
-                    for (int i = 0; i < currentGameInfo.HumanMessage.Count; i++)
+                    for (int i = 0; i < currentGameInfo.StudentMessage.Count; i++)
                     {
-                        Console.WriteLine($"Human is at ({currentGameInfo.HumanMessage[i].X}, {currentGameInfo.HumanMessage[i].Y})");
+                        Console.WriteLine($"Human is at ({currentGameInfo.StudentMessage[i].X}, {currentGameInfo.StudentMessage[i].Y})");
                     }
                 }
-                if (playerInfo.PlayerType == PlayerType.ButcherPlayer)
+                if (playerInfo.PlayerType == PlayerType.TrickerPlayer)
                 {
-                    for (int i = 0; i < currentGameInfo.ButcherMessage.Count; i++)
+                    for (int i = 0; i < currentGameInfo.TrickerMessage.Count; i++)
                     {
-                        Console.WriteLine($"Butcher is at ({currentGameInfo.ButcherMessage[i].X}, {currentGameInfo.ButcherMessage[i].Y})");
+                        Console.WriteLine($"Butcher is at ({currentGameInfo.TrickerMessage[i].X}, {currentGameInfo.TrickerMessage[i].Y})");
                     }
                 }
             }

@@ -128,8 +128,8 @@ namespace Server
 
         private int PlayerTypeToTeamID(PlayerType playerType)
         {
-            if (playerType == PlayerType.HumanPlayer) return 0;
-            if (playerType == PlayerType.ButcherPlayer) return 1;
+            if (playerType == PlayerType.StudentPlayer) return 0;
+            if (playerType == PlayerType.TrickerPlayer) return 1;
             return -1;
         }
         private uint GetBirthPointIdx(PlayerType playerType, long playerID)  // 获取出生点位置
@@ -138,9 +138,9 @@ namespace Server
         }
         private bool ValidPlayerTypeAndPlayerID(PlayerType playerType, long playerID)
         {
-            if (playerType == PlayerType.HumanPlayer && 0 <= playerID && playerID < options.PlayerCountPerTeam)
+            if (playerType == PlayerType.StudentPlayer && 0 <= playerID && playerID < options.PlayerCountPerTeam)
                 return true; // 人数待修改
-            if (playerType == PlayerType.ButcherPlayer && 0 <= playerID && playerID < options.PlayerCountPerTeam)
+            if (playerType == PlayerType.TrickerPlayer && 0 <= playerID && playerID < options.PlayerCountPerTeam)
                 return true;
             return false;
         }
@@ -185,7 +185,7 @@ namespace Server
             //if (communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId] != GameObj.invalidID)  //是否已经添加了该玩家
             //return;
 
-            Preparation.Utility.CharacterType characterType = Preparation.Utility.CharacterType.Null; // 待修改
+            Preparation.Utility.CharacterType characterType = Preparation.Utility.CharacterType.Athlete; // 待修改
 
             lock (addPlayerLock)
             {
@@ -222,7 +222,7 @@ namespace Server
             } while (game.GameMap.Timer.IsGaming);
         }
 
-        public override Task<BoolRes> Attack(AttackMsg request, ServerCallContext context)
+        public override Task<BoolRes> Trick(TrickMsg request, ServerCallContext context)
         {
             game.Attack(request.PlayerId, request.Angle);
             BoolRes boolRes = new();
@@ -230,34 +230,9 @@ namespace Server
             return Task.FromResult(boolRes);
         }
 
-        public override Task<BoolRes> CarryHuman(IDMsg request, ServerCallContext context)
-        {
-            return base.CarryHuman(request, context);
-        }
-
-        public override Task<BoolRes> EndFixMachine(IDMsg request, ServerCallContext context)
-        {
-            return base.EndFixMachine(request, context);
-        }
-
-        public override Task<BoolRes> EndSaveHuman(IDMsg request, ServerCallContext context)
-        {
-            return base.EndSaveHuman(request, context);
-        }
-
-        public override Task<BoolRes> Escape(IDMsg request, ServerCallContext context)
-        {
-            return base.Escape(request, context);
-        }
-
         public override Task GetMessage(IDMsg request, IServerStreamWriter<MsgRes> responseStream, ServerCallContext context)
         {
             return base.GetMessage(request, responseStream, context);
-        }
-
-        public override Task<BoolRes> HangHuman(IDMsg request, ServerCallContext context)
-        {
-            return base.HangHuman(request, context);
         }
 
         public override Task<MoveRes> Move(MoveMsg request, ServerCallContext context)
@@ -278,25 +253,10 @@ namespace Server
             return Task.FromResult(boolRes);
         }
 
-        public override Task<BoolRes> ReleaseHuman(IDMsg request, ServerCallContext context)
-        {
-            return base.ReleaseHuman(request, context);
-        }
-
         public override Task<BoolRes> SendMessage(SendMsg request, ServerCallContext context)
         {
             return base.SendMessage(request, context);
-        }
-
-        public override Task<BoolRes> StartFixMachine(IDMsg request, ServerCallContext context)
-        {
-            return base.StartFixMachine(request, context);
-        }
-
-        public override Task<BoolRes> StartSaveHuman(IDMsg request, ServerCallContext context)
-        {
-            return base.StartSaveHuman(request, context);
-        }
+        }     
 
         public override Task<BoolRes> UseProp(IDMsg request, ServerCallContext context)
         {
@@ -306,6 +266,23 @@ namespace Server
         public override Task<BoolRes> UseSkill(IDMsg request, ServerCallContext context)
         {
             return base.UseSkill(request, context);
+        }
+
+        public override Task<BoolRes> Graduate(IDMsg request, ServerCallContext context)
+        {
+            return base.Graduate(request, context);
+        }
+        public override Task<BoolRes> StartHealMate(IDMsg request, ServerCallContext context)
+        {
+            return base.StartHealMate(request, context);
+        }
+        public override Task<BoolRes> StartHelpMate(IDMsg request, ServerCallContext context)
+        {
+            return base.StartHelpMate(request, context);
+        }
+        public override Task<BoolRes> StartLearning(IDMsg request, ServerCallContext context)
+        {
+            return base.StartLearning(request, context);
         }
 
         public GameServer(ArgumentOptions options)
@@ -353,11 +330,6 @@ namespace Server
                 catch
                 {
                     map = MapInfo.defaultMap;
-                    map[0, 0] = 1;
-                    map[2, 2] = 2;
-                    map[4, 2] = 3;
-                    map[6, 2] = 4;
-                    map[8, 2] = 5;
                 }
                 finally { this.game = new Game(map, options.TeamCount); }
             }

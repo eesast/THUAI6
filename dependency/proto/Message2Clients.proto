@@ -4,43 +4,44 @@ package protobuf;
 
 import "MessageType.proto";
 
-message MessageOfHuman
+message MessageOfStudent
 {
     int32 x = 1;
     int32 y = 2;
     int32 speed = 3;
-    int32 life = 4; // 本次未倒地前的血量，也即还可以受的伤害
-    int32 hanged_time = 5; // 被挂上的次数
+    int32 determination = 4; // 剩余的学习毅力，相当于血量
+    int32 fail_num = 5; // 挂科的科目数
     double time_until_skill_available = 6;
     PlaceType place = 7;
     PropType prop = 8;
-    HumanType human_type = 9;
+    StudentType student_type = 9;
     int64 guid = 10;
-    HumanState state = 11;
-    double chair_time = 12; // 被挂的时间
-    double ground_time = 14; // 倒地时间
+    StudentState state = 11;
+    double fail_time = 12; // 挂科的时间
+    double emo_time = 14; // EMO的时间
     int64 player_id = 15;
     int32 view_range = 16; // 视野距离
     int32 radius = 17; // 半径
-    repeated HumanBuffType buff = 18;
+    int32 damage = 18;
+    repeated StudentBuffType buff = 19;
 }
 
-message MessageOfButcher
+message MessageOfTricker
 {
     int32 x = 1;
     int32 y = 2;
     int32 speed = 3;
-    int32 damage = 4;
+    int32 damage = 4; // 对学生造成的心理伤害
     double time_until_skill_available = 5;
     PlaceType place = 6;
     PropType prop = 7;
-    ButcherType butcher_type = 8;
+    TrickerType tricker_type = 8;
     int64 guid = 9;
     bool movable = 10; // 是否进入了攻击后摇
     int64 player_id = 11;
     int32 view_range = 12; // 视野距离
     int32 radius = 13; // 半径
-    repeated ButcherBuffType buff = 14;
+    repeated TrickerBuffType buff = 14;
 }
 
 message MessageOfProp // 可拾取道具的信息
@@ -75,8 +76,8 @@ message MessageOfMap
 
 message MessageToClient
 {
-    repeated MessageOfHuman human_message = 1;
-    repeated MessageOfButcher butcher_message = 2; // 是否真正repeated待定
+    repeated MessageOfStudent student_message = 1;
+    repeated MessageOfTricker tricker_message = 2; // 是否真正repeated待定
     repeated MessageOfProp prop_message = 3;
     MessageOfMap map_message = 4;
     GameState game_state = 5;

@@ -6,7 +6,7 @@
 #include "structures.h"
 #define PI 3.14159265358979323846
 
-HumanDebugAPI::HumanDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID) :
+StudentDebugAPI::StudentDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID) :
     logic(logic)
 {
     std::string fileName = "logs/api-" + std::to_string(playerID) + "-log.txt";
@@ -28,7 +28,7 @@ HumanDebugAPI::HumanDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly
     logger = std::make_unique<spdlog::logger>("apiLogger", spdlog::sinks_init_list{fileLogger, printLogger});
 }
 
-ButcherDebugAPI::ButcherDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID) :
+TrickerDebugAPI::TrickerDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID) :
     logic(logic)
 {
     std::string fileName = "logs/api-" + std::to_string(playerID) + "-log.txt";
@@ -50,7 +50,7 @@ ButcherDebugAPI::ButcherDebugAPI(ILogic& logic, bool file, bool print, bool warn
     logger = std::make_unique<spdlog::logger>("apiLogger", spdlog::sinks_init_list{fileLogger, printLogger});
 }
 
-void HumanDebugAPI::StartTimer()
+void StudentDebugAPI::StartTimer()
 {
     startPoint = std::chrono::system_clock::now();
     std::time_t t = std::chrono::system_clock::to_time_t(startPoint);
@@ -58,7 +58,7 @@ void HumanDebugAPI::StartTimer()
     logger->info("StartTimer: {}", std::ctime(&t));
 }
 
-void ButcherDebugAPI::StartTimer()
+void TrickerDebugAPI::StartTimer()
 {
     startPoint = std::chrono::system_clock::now();
     std::time_t t = std::chrono::system_clock::to_time_t(startPoint);
@@ -66,27 +66,27 @@ void ButcherDebugAPI::StartTimer()
     logger->info("StartTimer: {}", std::ctime(&t));
 }
 
-void HumanDebugAPI::EndTimer()
+void StudentDebugAPI::EndTimer()
 {
     logger->info("Time elapsed: {}ms", Time::TimeSinceStart(startPoint));
 }
 
-void ButcherDebugAPI::EndTimer()
+void TrickerDebugAPI::EndTimer()
 {
     logger->info("Time elapsed: {}ms", Time::TimeSinceStart(startPoint));
 }
 
-int HumanDebugAPI::GetFrameCount() const
+int StudentDebugAPI::GetFrameCount() const
 {
     return logic.GetCounter();
 }
 
-int ButcherDebugAPI::GetFrameCount() const
+int TrickerDebugAPI::GetFrameCount() const
 {
     return logic.GetCounter();
 }
 
-std::future<bool> HumanDebugAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
+std::future<bool> StudentDebugAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
 {
     logger->info("Move: timeInMilliseconds = {}, angleInRadian = {}, called at {}ms", timeInMilliseconds, angleInRadian, Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
@@ -96,27 +96,27 @@ std::future<bool> HumanDebugAPI::Move(int64_t timeInMilliseconds, double angleIn
                         return result; });
 }
 
-std::future<bool> HumanDebugAPI::MoveDown(int64_t timeInMilliseconds)
+std::future<bool> StudentDebugAPI::MoveDown(int64_t timeInMilliseconds)
 {
     return Move(timeInMilliseconds, 0);
 }
 
-std::future<bool> HumanDebugAPI::MoveRight(int64_t timeInMilliseconds)
+std::future<bool> StudentDebugAPI::MoveRight(int64_t timeInMilliseconds)
 {
     return Move(timeInMilliseconds, PI * 0.5);
 }
 
-std::future<bool> HumanDebugAPI::MoveUp(int64_t timeInMilliseconds)
+std::future<bool> StudentDebugAPI::MoveUp(int64_t timeInMilliseconds)
 {
     return Move(timeInMilliseconds, PI);
 }
 
-std::future<bool> HumanDebugAPI::MoveLeft(int64_t timeInMilliseconds)
+std::future<bool> StudentDebugAPI::MoveLeft(int64_t timeInMilliseconds)
 {
     return Move(timeInMilliseconds, PI * 1.5);
 }
 
-std::future<bool> ButcherDebugAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
+std::future<bool> TrickerDebugAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
 {
     logger->info("Move: timeInMilliseconds = {}, angleInRadian = {}, called at {}ms", timeInMilliseconds, angleInRadian, Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
@@ -126,27 +126,27 @@ std::future<bool> ButcherDebugAPI::Move(int64_t timeInMilliseconds, double angle
                         return result; });
 }
 
-std::future<bool> ButcherDebugAPI::MoveDown(int64_t timeInMilliseconds)
+std::future<bool> TrickerDebugAPI::MoveDown(int64_t timeInMilliseconds)
 {
     return Move(timeInMilliseconds, 0);
 }
 
-std::future<bool> ButcherDebugAPI::MoveRight(int64_t timeInMilliseconds)
+std::future<bool> TrickerDebugAPI::MoveRight(int64_t timeInMilliseconds)
 {
     return Move(timeInMilliseconds, PI * 0.5);
 }
 
-std::future<bool> ButcherDebugAPI::MoveUp(int64_t timeInMilliseconds)
+std::future<bool> TrickerDebugAPI::MoveUp(int64_t timeInMilliseconds)
 {
     return Move(timeInMilliseconds, PI);
 }
 
-std::future<bool> ButcherDebugAPI::MoveLeft(int64_t timeInMilliseconds)
+std::future<bool> TrickerDebugAPI::MoveLeft(int64_t timeInMilliseconds)
 {
     return Move(timeInMilliseconds, PI * 1.5);
 }
 
-std::future<bool> HumanDebugAPI::PickProp(THUAI6::PropType prop)
+std::future<bool> StudentDebugAPI::PickProp(THUAI6::PropType prop)
 {
     logger->info("PickProp: prop = {}, called at {}ms", THUAI6::propTypeDict[prop], Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
@@ -156,7 +156,7 @@ std::future<bool> HumanDebugAPI::PickProp(THUAI6::PropType prop)
                         return result; });
 }
 
-std::future<bool> HumanDebugAPI::UseProp()
+std::future<bool> StudentDebugAPI::UseProp()
 {
     logger->info("UseProp: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
@@ -166,7 +166,7 @@ std::future<bool> HumanDebugAPI::UseProp()
                         return result; });
 }
 
-std::future<bool> ButcherDebugAPI::PickProp(THUAI6::PropType prop)
+std::future<bool> TrickerDebugAPI::PickProp(THUAI6::PropType prop)
 {
     logger->info("PickProp: prop = {}, called at {}ms", THUAI6::propTypeDict[prop], Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
@@ -176,7 +176,7 @@ std::future<bool> ButcherDebugAPI::PickProp(THUAI6::PropType prop)
                         return result; });
 }
 
-std::future<bool> ButcherDebugAPI::UseProp()
+std::future<bool> TrickerDebugAPI::UseProp()
 {
     logger->info("UseProp: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [this]()
@@ -186,7 +186,7 @@ std::future<bool> ButcherDebugAPI::UseProp()
                         return result; });
 }
 
-std::future<bool> HumanDebugAPI::UseSkill()
+std::future<bool> StudentDebugAPI::UseSkill()
 {
     logger->info("UseSkill: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [this]()
@@ -196,7 +196,7 @@ std::future<bool> HumanDebugAPI::UseSkill()
                         return result; });
 }
 
-std::future<bool> ButcherDebugAPI::UseSkill()
+std::future<bool> TrickerDebugAPI::UseSkill()
 {
     logger->info("UseSkill: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [this]()
@@ -206,7 +206,7 @@ std::future<bool> ButcherDebugAPI::UseSkill()
                         return result; });
 }
 
-std::future<bool> HumanDebugAPI::SendMessage(int64_t toID, std::string message)
+std::future<bool> StudentDebugAPI::SendMessage(int64_t toID, std::string message)
 {
     logger->info("SendMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
@@ -216,7 +216,7 @@ std::future<bool> HumanDebugAPI::SendMessage(int64_t toID, std::string message)
                         return result; });
 }
 
-std::future<bool> ButcherDebugAPI::SendMessage(int64_t toID, std::string message)
+std::future<bool> TrickerDebugAPI::SendMessage(int64_t toID, std::string message)
 {
     logger->info("SendMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
@@ -226,7 +226,7 @@ std::future<bool> ButcherDebugAPI::SendMessage(int64_t toID, std::string message
                         return result; });
 }
 
-std::future<bool> HumanDebugAPI::HaveMessage()
+std::future<bool> StudentDebugAPI::HaveMessage()
 {
     logger->info("HaveMessage: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [this]()
@@ -236,7 +236,7 @@ std::future<bool> HumanDebugAPI::HaveMessage()
                         return result; });
 }
 
-std::future<bool> ButcherDebugAPI::HaveMessage()
+std::future<bool> TrickerDebugAPI::HaveMessage()
 {
     logger->info("HaveMessage: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [this]()
@@ -246,7 +246,7 @@ std::future<bool> ButcherDebugAPI::HaveMessage()
                         return result; });
 }
 
-std::future<std::optional<std::pair<int64_t, std::string>>> HumanDebugAPI::GetMessage()
+std::future<std::optional<std::pair<int64_t, std::string>>> StudentDebugAPI::GetMessage()
 {
     logger->info("GetMessage: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [this]()
@@ -256,7 +256,7 @@ std::future<std::optional<std::pair<int64_t, std::string>>> HumanDebugAPI::GetMe
                         return result; });
 }
 
-std::future<std::optional<std::pair<int64_t, std::string>>> ButcherDebugAPI::GetMessage()
+std::future<std::optional<std::pair<int64_t, std::string>>> TrickerDebugAPI::GetMessage()
 {
     logger->info("GetMessage: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [this]()
@@ -266,7 +266,7 @@ std::future<std::optional<std::pair<int64_t, std::string>>> ButcherDebugAPI::Get
                         return result; });
 }
 
-std::future<bool> HumanDebugAPI::Wait()
+std::future<bool> StudentDebugAPI::Wait()
 {
     logger->info("Wait: called at {}ms", Time::TimeSinceStart(startPoint));
     if (logic.GetCounter() == -1)
@@ -277,7 +277,7 @@ std::future<bool> HumanDebugAPI::Wait()
                           { return logic.WaitThread(); });
 }
 
-std::future<bool> ButcherDebugAPI::Wait()
+std::future<bool> TrickerDebugAPI::Wait()
 {
     logger->info("Wait: called at {}ms", Time::TimeSinceStart(startPoint));
     if (logic.GetCounter() == -1)
@@ -288,231 +288,191 @@ std::future<bool> ButcherDebugAPI::Wait()
                           { return logic.WaitThread(); });
 }
 
-std::vector<std::shared_ptr<const THUAI6::Butcher>> HumanDebugAPI::GetButchers() const
+std::vector<std::shared_ptr<const THUAI6::Tricker>> StudentDebugAPI::GetTrickers() const
 {
-    return logic.GetButchers();
+    return logic.GetTrickers();
 }
 
-std::vector<std::shared_ptr<const THUAI6::Human>> HumanDebugAPI::GetHumans() const
+std::vector<std::shared_ptr<const THUAI6::Student>> StudentDebugAPI::GetStudents() const
 {
-    return logic.GetHumans();
+    return logic.GetStudents();
 }
 
-std::vector<std::shared_ptr<const THUAI6::Butcher>> ButcherDebugAPI::GetButchers() const
+std::vector<std::shared_ptr<const THUAI6::Tricker>> TrickerDebugAPI::GetTrickers() const
 {
-    return logic.GetButchers();
+    return logic.GetTrickers();
 }
 
-std::vector<std::shared_ptr<const THUAI6::Human>> ButcherDebugAPI::GetHumans() const
+std::vector<std::shared_ptr<const THUAI6::Student>> TrickerDebugAPI::GetStudents() const
 {
-    return logic.GetHumans();
+    return logic.GetStudents();
 }
 
-std::vector<std::shared_ptr<const THUAI6::Prop>> HumanDebugAPI::GetProps() const
+std::vector<std::shared_ptr<const THUAI6::Prop>> StudentDebugAPI::GetProps() const
 {
     return logic.GetProps();
 }
 
-std::vector<std::shared_ptr<const THUAI6::Prop>> ButcherDebugAPI::GetProps() const
+std::vector<std::shared_ptr<const THUAI6::Prop>> TrickerDebugAPI::GetProps() const
 {
     return logic.GetProps();
 }
 
-std::vector<std::vector<THUAI6::PlaceType>> HumanDebugAPI::GetFullMap() const
+std::vector<std::vector<THUAI6::PlaceType>> StudentDebugAPI::GetFullMap() const
 {
     return logic.GetFullMap();
 }
 
-THUAI6::PlaceType HumanDebugAPI::GetPlaceType(int32_t cellX, int32_t cellY) const
+THUAI6::PlaceType StudentDebugAPI::GetPlaceType(int32_t cellX, int32_t cellY) const
 {
     return logic.GetPlaceType(cellX, cellY);
 }
 
-THUAI6::PlaceType ButcherDebugAPI::GetPlaceType(int32_t cellX, int32_t cellY) const
+THUAI6::PlaceType TrickerDebugAPI::GetPlaceType(int32_t cellX, int32_t cellY) const
 {
     return logic.GetPlaceType(cellX, cellY);
 }
 
-std::vector<std::vector<THUAI6::PlaceType>> ButcherDebugAPI::GetFullMap() const
+std::vector<std::vector<THUAI6::PlaceType>> TrickerDebugAPI::GetFullMap() const
 {
     return logic.GetFullMap();
 }
 
-const std::vector<int64_t> HumanDebugAPI::GetPlayerGUIDs() const
+const std::vector<int64_t> StudentDebugAPI::GetPlayerGUIDs() const
 {
     return logic.GetPlayerGUIDs();
 }
 
-const std::vector<int64_t> ButcherDebugAPI::GetPlayerGUIDs() const
+const std::vector<int64_t> TrickerDebugAPI::GetPlayerGUIDs() const
 {
     return logic.GetPlayerGUIDs();
 }
 
-std::future<bool> HumanDebugAPI::StartFixMachine()
+std::future<bool> StudentDebugAPI::StartLearning()
 {
-    logger->info("StartFixMachine: called at {}ms", Time::TimeSinceStart(startPoint));
+    logger->info("StartLearning: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [this]()
-                      { auto result = logic.StartFixMachine();
+                      { auto result = logic.StartLearning();
                         if (!result)
-                            logger->warn("StartFixMachine: failed at {}ms", Time::TimeSinceStart(startPoint));
+                            logger->warn("StartLearning: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 
-std::future<bool> HumanDebugAPI::EndFixMachine()
+std::future<bool> StudentDebugAPI::StartHelpMate()
 {
-    logger->info("EndFixMachine: called at {}ms", Time::TimeSinceStart(startPoint));
+    logger->info("StartHelpMate: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [this]()
-                      { auto result = logic.EndFixMachine();
+                      { auto result = logic.StartHelpMate();
                         if (!result)
-                            logger->warn("EndFixMachine: failed at {}ms", Time::TimeSinceStart(startPoint));
+                            logger->warn("StartHelpMate: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 
-std::future<bool> HumanDebugAPI::StartSaveHuman()
+std::future<bool> StudentDebugAPI::StartHealMate()
 {
-    logger->info("StartSaveHuman: called at {}ms", Time::TimeSinceStart(startPoint));
+    logger->info("StartHealMate: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [this]()
-                      { auto result = logic.StartSaveHuman();
+                      { auto result = logic.StartHealMate();
                         if (!result)
-                            logger->warn("StartSaveHuman: failed at {}ms", Time::TimeSinceStart(startPoint));
+                            logger->warn("StartHealMate: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 
-std::future<bool> HumanDebugAPI::EndSaveHuman()
+std::future<bool> StudentDebugAPI::Graduate()
 {
-    logger->info("EndSaveHuman: called at {}ms", Time::TimeSinceStart(startPoint));
+    logger->info("Graduate: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [this]()
-                      { auto result = logic.EndSaveHuman();
+                      { auto result = logic.Graduate();
                         if (!result)
-                            logger->warn("EndSaveHuman: failed at {}ms", Time::TimeSinceStart(startPoint));
+                            logger->warn("Graduate: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 
-std::future<bool> HumanDebugAPI::Escape()
+std::shared_ptr<const THUAI6::Student> StudentDebugAPI::GetSelfInfo() const
 {
-    logger->info("Escape: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.Escape();
-                        if (!result)
-                            logger->warn("Escape: failed at {}ms", Time::TimeSinceStart(startPoint));
-                        return result; });
+    return logic.StudentGetSelfInfo();
 }
 
-std::shared_ptr<const THUAI6::Human> HumanDebugAPI::GetSelfInfo() const
+std::future<bool> TrickerDebugAPI::Trick(double angleInRadian)
 {
-    return logic.HumanGetSelfInfo();
-}
-
-std::future<bool> ButcherDebugAPI::Attack(double angleInRadian)
-{
-    logger->info("Attack: angleInRadian = {}, called at {}ms", angleInRadian, Time::TimeSinceStart(startPoint));
+    logger->info("Trick: angleInRadian = {}, called at {}ms", angleInRadian, Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
-                      { auto result = logic.Attack(angleInRadian);
+                      { auto result = logic.Trick(angleInRadian);
                         if (!result)
-                            logger->warn("Attack: failed at {}ms", Time::TimeSinceStart(startPoint));
+                            logger->warn("Trick: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 
-std::future<bool> ButcherDebugAPI::CarryHuman()
+std::shared_ptr<const THUAI6::Tricker> TrickerDebugAPI::GetSelfInfo() const
 {
-    logger->info("CarryHuman: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.CarryHuman();
-                        if (!result)
-                            logger->warn("CarryHuman: failed at {}ms", Time::TimeSinceStart(startPoint));
-                        return result; });
+    return logic.TrickerGetSelfInfo();
 }
 
-std::future<bool> ButcherDebugAPI::ReleaseHuman()
+void StudentDebugAPI::PrintStudent() const
 {
-    logger->info("ReleaseHuman: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.ReleaseHuman();
-                        if (!result)
-                            logger->warn("ReleaseHuman: failed at {}ms", Time::TimeSinceStart(startPoint));
-                        return result; });
-}
-
-std::future<bool> ButcherDebugAPI::HangHuman()
-{
-    logger->info("HangHuman: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.HangHuman();
-                        if (!result)
-                            logger->warn("HangHuman: failed at {}ms", Time::TimeSinceStart(startPoint));
-                        return result; });
-}
-
-std::shared_ptr<const THUAI6::Butcher> ButcherDebugAPI::GetSelfInfo() const
-{
-    return logic.ButcherGetSelfInfo();
-}
-
-void HumanDebugAPI::PrintHuman() const
-{
-    for (auto human : logic.GetHumans())
+    for (auto student : logic.GetStudents())
     {
-        logger->info("******Human Info******");
-        logger->info("playerID={}, GUID={}, x={}, y={}", human->playerID, human->guid, human->x, human->y);
-        logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", human->speed, human->viewRange, human->timeUntilSkillAvailable, THUAI6::propTypeDict[human->prop], THUAI6::placeTypeDict[human->place]);
-        logger->info("state={}, life={}, hanged time={}", THUAI6::humanStateDict[human->state], human->life, human->hangedTime);
-        std::string humanBuff = "buff=";
-        for (auto buff : human->buff)
-            humanBuff += THUAI6::humanBuffDict[buff] + ", ";
-        logger->info(humanBuff);
+        logger->info("******Student Info******");
+        logger->info("playerID={}, GUID={}, x={}, y={}", student->playerID, student->guid, student->x, student->y);
+        logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", student->speed, student->viewRange, student->timeUntilSkillAvailable, THUAI6::propTypeDict[student->prop], THUAI6::placeTypeDict[student->place]);
+        logger->info("state={}, determination={}, fail num={}, fail time={}, emo time={}", THUAI6::studentStateDict[student->state], student->determination, student->failNum, student->failTime, student->emoTime);
+        std::string studentBuff = "buff=";
+        for (auto buff : student->buff)
+            studentBuff += THUAI6::studentBuffDict[buff] + ", ";
+        logger->info(studentBuff);
         logger->info("**********************");
     }
 }
 
-void ButcherDebugAPI::PrintHuman() const
+void TrickerDebugAPI::PrintStudent() const
 {
-    for (auto human : logic.GetHumans())
+    for (auto student : logic.GetStudents())
     {
-        logger->info("******Human Info******");
-        logger->info("playerID={}, GUID={}, x={}, y={}", human->playerID, human->guid, human->x, human->y);
-        logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", human->speed, human->viewRange, human->timeUntilSkillAvailable, THUAI6::propTypeDict[human->prop], THUAI6::placeTypeDict[human->place]);
-        logger->info("state={}, life={}, hanged time={}", THUAI6::humanStateDict[human->state], human->life, human->hangedTime);
-        std::string humanBuff = "buff=";
-        for (auto buff : human->buff)
-            humanBuff += THUAI6::humanBuffDict[buff] + ", ";
-        logger->info(humanBuff);
+        logger->info("******Student Info******");
+        logger->info("playerID={}, GUID={}, x={}, y={}", student->playerID, student->guid, student->x, student->y);
+        logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", student->speed, student->viewRange, student->timeUntilSkillAvailable, THUAI6::propTypeDict[student->prop], THUAI6::placeTypeDict[student->place]);
+        logger->info("state={}, determination={}, fail num={}, fail time={}, emo time={}", THUAI6::studentStateDict[student->state], student->determination, student->failNum, student->failTime, student->emoTime);
+        std::string studentBuff = "buff=";
+        for (auto buff : student->buff)
+            studentBuff += THUAI6::studentBuffDict[buff] + ", ";
+        logger->info(studentBuff);
         logger->info("**********************");
     }
 }
 
-void HumanDebugAPI::PrintButcher() const
+void StudentDebugAPI::PrintTricker() const
 {
-    for (auto butcher : logic.GetButchers())
+    for (auto tricker : logic.GetTrickers())
     {
-        logger->info("******Butcher Info******");
-        logger->info("playerID={}, GUID={}, x={}, y={}", butcher->playerID, butcher->guid, butcher->x, butcher->y);
-        logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", butcher->speed, butcher->viewRange, butcher->timeUntilSkillAvailable, THUAI6::propTypeDict[butcher->prop], THUAI6::placeTypeDict[butcher->place]);
-        logger->info("damage={}, movable={}", butcher->damage, butcher->movable);
-        std::string butcherBuff = "buff=";
-        for (auto buff : butcher->buff)
-            butcherBuff += THUAI6::butcherBuffDict[buff] + ", ";
-        logger->info(butcherBuff);
+        logger->info("******Tricker Info******");
+        logger->info("playerID={}, GUID={}, x={}, y={}", tricker->playerID, tricker->guid, tricker->x, tricker->y);
+        logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", tricker->speed, tricker->viewRange, tricker->timeUntilSkillAvailable, THUAI6::propTypeDict[tricker->prop], THUAI6::placeTypeDict[tricker->place]);
+        logger->info("damage={}, movable={}", tricker->damage, tricker->movable);
+        std::string trickerBuff = "buff=";
+        for (auto buff : tricker->buff)
+            trickerBuff += THUAI6::trickerBuffDict[buff] + ", ";
+        logger->info(trickerBuff);
         logger->info("************************");
     }
 }
 
-void ButcherDebugAPI::PrintButcher() const
+void TrickerDebugAPI::PrintTricker() const
 {
-    for (auto butcher : logic.GetButchers())
+    for (auto tricker : logic.GetTrickers())
     {
-        logger->info("******Butcher Info******");
-        logger->info("playerID={}, GUID={}, x={}, y={}", butcher->playerID, butcher->guid, butcher->x, butcher->y);
-        logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", butcher->speed, butcher->viewRange, butcher->timeUntilSkillAvailable, THUAI6::propTypeDict[butcher->prop], THUAI6::placeTypeDict[butcher->place]);
-        logger->info("damage={}, movable={}", butcher->damage, butcher->movable);
-        std::string butcherBuff = "buff=";
-        for (auto buff : butcher->buff)
-            butcherBuff += THUAI6::butcherBuffDict[buff] + ", ";
-        logger->info(butcherBuff);
+        logger->info("******Tricker Info******");
+        logger->info("playerID={}, GUID={}, x={}, y={}", tricker->playerID, tricker->guid, tricker->x, tricker->y);
+        logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", tricker->speed, tricker->viewRange, tricker->timeUntilSkillAvailable, THUAI6::propTypeDict[tricker->prop], THUAI6::placeTypeDict[tricker->place]);
+        logger->info("damage={}, movable={}", tricker->damage, tricker->movable);
+        std::string trickerBuff = "buff=";
+        for (auto buff : tricker->buff)
+            trickerBuff += THUAI6::trickerBuffDict[buff] + ", ";
+        logger->info(trickerBuff);
         logger->info("************************");
     }
 }
 
-void HumanDebugAPI::PrintProp() const
+void StudentDebugAPI::PrintProp() const
 {
     for (auto prop : logic.GetProps())
     {
@@ -522,7 +482,7 @@ void HumanDebugAPI::PrintProp() const
     }
 }
 
-void ButcherDebugAPI::PrintProp() const
+void TrickerDebugAPI::PrintProp() const
 {
     for (auto prop : logic.GetProps())
     {
@@ -532,40 +492,40 @@ void ButcherDebugAPI::PrintProp() const
     }
 }
 
-void HumanDebugAPI::PrintSelfInfo() const
+void StudentDebugAPI::PrintSelfInfo() const
 {
-    auto self = logic.HumanGetSelfInfo();
+    auto self = logic.StudentGetSelfInfo();
     logger->info("******Self Info******");
     logger->info("playerID={}, GUID={}, x={}, y={}", self->playerID, self->guid, self->x, self->y);
     logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", self->speed, self->viewRange, self->timeUntilSkillAvailable, THUAI6::propTypeDict[self->prop], THUAI6::placeTypeDict[self->place]);
-    logger->info("state={}, life={}, hanged time={}", THUAI6::humanStateDict[self->state], self->life, self->hangedTime);
-    std::string humanBuff = "buff=";
+    logger->info("state={}, determination={}, fail num={}, fail time={}, emo time={}", THUAI6::studentStateDict[self->state], self->determination, self->failNum, self->failTime, self->emoTime);
+    std::string studentBuff = "buff=";
     for (auto buff : self->buff)
-        humanBuff += THUAI6::humanBuffDict[buff] + ", ";
-    logger->info(humanBuff);
+        studentBuff += THUAI6::studentBuffDict[buff] + ", ";
+    logger->info(studentBuff);
     logger->info("*********************");
 }
 
-void ButcherDebugAPI::PrintSelfInfo() const
+void TrickerDebugAPI::PrintSelfInfo() const
 {
-    auto self = logic.ButcherGetSelfInfo();
+    auto self = logic.TrickerGetSelfInfo();
     logger->info("******Self Info******");
     logger->info("playerID={}, GUID={}, x={}, y={}", self->playerID, self->guid, self->x, self->y);
     logger->info("speed={}, view range={}, skill time={}, prop={}, place={}", self->speed, self->viewRange, self->timeUntilSkillAvailable, THUAI6::propTypeDict[self->prop], THUAI6::placeTypeDict[self->place]);
     logger->info("damage={}, movable={}", self->damage, self->movable);
-    std::string butcherBuff = "buff=";
+    std::string trickerBuff = "buff=";
     for (auto buff : self->buff)
-        butcherBuff += THUAI6::butcherBuffDict[buff] + ", ";
-    logger->info(butcherBuff);
+        trickerBuff += THUAI6::trickerBuffDict[buff] + ", ";
+    logger->info(trickerBuff);
     logger->info("*********************");
 }
 
-void HumanDebugAPI::Play(IAI& ai)
+void StudentDebugAPI::Play(IAI& ai)
 {
     ai.play(*this);
 }
 
-void ButcherDebugAPI::Play(IAI& ai)
+void TrickerDebugAPI::Play(IAI& ai)
 {
     ai.play(*this);
 }

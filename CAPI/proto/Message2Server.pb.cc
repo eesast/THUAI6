@@ -110,28 +110,28 @@ namespace protobuf
         };
     };
     PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 SendMsgDefaultTypeInternal _SendMsg_default_instance_;
-    PROTOBUF_CONSTEXPR AttackMsg::AttackMsg(
+    PROTOBUF_CONSTEXPR TrickMsg::TrickMsg(
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
             /*decltype(_impl_.player_id_)*/ int64_t{0}, /*decltype(_impl_.angle_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
-    struct AttackMsgDefaultTypeInternal
+    struct TrickMsgDefaultTypeInternal
     {
-        PROTOBUF_CONSTEXPR AttackMsgDefaultTypeInternal() :
+        PROTOBUF_CONSTEXPR TrickMsgDefaultTypeInternal() :
             _instance(::_pbi::ConstantInitialized{})
         {
         }
-        ~AttackMsgDefaultTypeInternal()
+        ~TrickMsgDefaultTypeInternal()
         {
         }
         union
         {
-            AttackMsg _instance;
+            TrickMsg _instance;
         };
     };
-    PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 AttackMsgDefaultTypeInternal _AttackMsg_default_instance_;
+    PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 TrickMsgDefaultTypeInternal _TrickMsg_default_instance_;
     PROTOBUF_CONSTEXPR IDMsg::IDMsg(
         ::_pbi::ConstantInitialized
     ) :
@@ -198,13 +198,13 @@ const uint32_t TableStruct_Message2Server_2eproto::offsets[] PROTOBUF_SECTION_VA
     PROTOBUF_FIELD_OFFSET(::protobuf::SendMsg, _impl_.to_player_id_),
     PROTOBUF_FIELD_OFFSET(::protobuf::SendMsg, _impl_.message_),
     ~0u,  // no _has_bits_
-    PROTOBUF_FIELD_OFFSET(::protobuf::AttackMsg, _internal_metadata_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::TrickMsg, _internal_metadata_),
     ~0u,  // no _extensions_
     ~0u,  // no _oneof_case_
     ~0u,  // no _weak_field_map_
     ~0u,  // no _inlined_string_donated_
-    PROTOBUF_FIELD_OFFSET(::protobuf::AttackMsg, _impl_.player_id_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::AttackMsg, _impl_.angle_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::TrickMsg, _impl_.player_id_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::TrickMsg, _impl_.angle_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::IDMsg, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -218,7 +218,7 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
     {11, -1, -1, sizeof(::protobuf::MoveMsg)},
     {20, -1, -1, sizeof(::protobuf::PickMsg)},
     {28, -1, -1, sizeof(::protobuf::SendMsg)},
-    {37, -1, -1, sizeof(::protobuf::AttackMsg)},
+    {37, -1, -1, sizeof(::protobuf::TrickMsg)},
     {45, -1, -1, sizeof(::protobuf::IDMsg)},
 };
 
@@ -227,25 +227,25 @@ static const ::_pb::Message* const file_default_instances[] = {
     &::protobuf::_MoveMsg_default_instance_._instance,
     &::protobuf::_PickMsg_default_instance_._instance,
     &::protobuf::_SendMsg_default_instance_._instance,
-    &::protobuf::_AttackMsg_default_instance_._instance,
+    &::protobuf::_TrickMsg_default_instance_._instance,
     &::protobuf::_IDMsg_default_instance_._instance,
 };
 
 const char descriptor_table_protodef_Message2Server_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
     "\n\024Message2Server.proto\022\010protobuf\032\021Messag"
-    "eType.proto\"\257\001\n\tPlayerMsg\022\021\n\tplayer_id\030\001"
+    "eType.proto\"\263\001\n\tPlayerMsg\022\021\n\tplayer_id\030\001"
     " \001(\003\022)\n\013player_type\030\002 \001(\0162\024.protobuf.Pla"
-    "yerType\022)\n\nhuman_type\030\003 \001(\0162\023.protobuf.H"
-    "umanTypeH\000\022-\n\014butcher_type\030\004 \001(\0162\025.proto"
-    "buf.ButcherTypeH\000B\n\n\010job_type\"I\n\007MoveMsg"
-    "\022\021\n\tplayer_id\030\001 \001(\003\022\r\n\005angle\030\002 \001(\001\022\034\n\024ti"
-    "me_in_milliseconds\030\003 \001(\003\"C\n\007PickMsg\022\021\n\tp"
-    "layer_id\030\001 \001(\003\022%\n\tprop_type\030\002 \001(\0162\022.prot"
-    "obuf.PropType\"C\n\007SendMsg\022\021\n\tplayer_id\030\001 "
-    "\001(\003\022\024\n\014to_player_id\030\002 \001(\003\022\017\n\007message\030\003 \001"
-    "(\t\"-\n\tAttackMsg\022\021\n\tplayer_id\030\001 \001(\003\022\r\n\005an"
-    "gle\030\002 \001(\001\"\032\n\005IDMsg\022\021\n\tplayer_id\030\001 \001(\003b\006p"
-    "roto3";
+    "yerType\022-\n\014student_type\030\003 \001(\0162\025.protobuf"
+    ".StudentTypeH\000\022-\n\014tricker_type\030\004 \001(\0162\025.p"
+    "rotobuf.TrickerTypeH\000B\n\n\010job_type\"I\n\007Mov"
+    "eMsg\022\021\n\tplayer_id\030\001 \001(\003\022\r\n\005angle\030\002 \001(\001\022\034"
+    "\n\024time_in_milliseconds\030\003 \001(\003\"C\n\007PickMsg\022"
+    "\021\n\tplayer_id\030\001 \001(\003\022%\n\tprop_type\030\002 \001(\0162\022."
+    "protobuf.PropType\"C\n\007SendMsg\022\021\n\tplayer_i"
+    "d\030\001 \001(\003\022\024\n\014to_player_id\030\002 \001(\003\022\017\n\007message"
+    "\030\003 \001(\t\",\n\010TrickMsg\022\021\n\tplayer_id\030\001 \001(\003\022\r\n"
+    "\005angle\030\002 \001(\001\"\032\n\005IDMsg\022\021\n\tplayer_id\030\001 \001(\003"
+    "b\006proto3";
 static const ::_pbi::DescriptorTable* const descriptor_table_Message2Server_2eproto_deps[1] = {
     &::descriptor_table_MessageType_2eproto,
 };
@@ -253,7 +253,7 @@ static ::_pbi::once_flag descriptor_table_Message2Server_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Message2Server_2eproto = {
     false,
     false,
-    525,
+    528,
     descriptor_table_protodef_Message2Server_2eproto,
     "Message2Server.proto",
     &descriptor_table_Message2Server_2eproto_once,
@@ -303,14 +303,14 @@ namespace protobuf
         clear_has_job_type();
         switch (from.job_type_case())
         {
-            case kHumanType:
+            case kStudentType:
                 {
-                    _this->_internal_set_human_type(from._internal_human_type());
+                    _this->_internal_set_student_type(from._internal_student_type());
                     break;
                 }
-            case kButcherType:
+            case kTrickerType:
                 {
-                    _this->_internal_set_butcher_type(from._internal_butcher_type());
+                    _this->_internal_set_tricker_type(from._internal_tricker_type());
                     break;
                 }
             case JOB_TYPE_NOT_SET:
@@ -362,12 +362,12 @@ namespace protobuf
         // @@protoc_insertion_point(one_of_clear_start:protobuf.PlayerMsg)
         switch (job_type_case())
         {
-            case kHumanType:
+            case kStudentType:
                 {
                     // No need to clear
                     break;
                 }
-            case kButcherType:
+            case kTrickerType:
                 {
                     // No need to clear
                     break;
@@ -424,24 +424,24 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // .protobuf.HumanType human_type = 3;
+                // .protobuf.StudentType student_type = 3;
                 case 3:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24))
                     {
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
-                        _internal_set_human_type(static_cast<::protobuf::HumanType>(val));
+                        _internal_set_student_type(static_cast<::protobuf::StudentType>(val));
                     }
                     else
                         goto handle_unusual;
                     continue;
-                // .protobuf.ButcherType butcher_type = 4;
+                // .protobuf.TrickerType tricker_type = 4;
                 case 4:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32))
                     {
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
-                        _internal_set_butcher_type(static_cast<::protobuf::ButcherType>(val));
+                        _internal_set_tricker_type(static_cast<::protobuf::TrickerType>(val));
                     }
                     else
                         goto handle_unusual;
@@ -496,21 +496,21 @@ namespace protobuf
             );
         }
 
-        // .protobuf.HumanType human_type = 3;
-        if (_internal_has_human_type())
+        // .protobuf.StudentType student_type = 3;
+        if (_internal_has_student_type())
         {
             target = stream->EnsureSpace(target);
             target = ::_pbi::WireFormatLite::WriteEnumToArray(
-                3, this->_internal_human_type(), target
+                3, this->_internal_student_type(), target
             );
         }
 
-        // .protobuf.ButcherType butcher_type = 4;
-        if (_internal_has_butcher_type())
+        // .protobuf.TrickerType tricker_type = 4;
+        if (_internal_has_tricker_type())
         {
             target = stream->EnsureSpace(target);
             target = ::_pbi::WireFormatLite::WriteEnumToArray(
-                4, this->_internal_butcher_type(), target
+                4, this->_internal_tricker_type(), target
             );
         }
 
@@ -548,18 +548,18 @@ namespace protobuf
 
         switch (job_type_case())
         {
-            // .protobuf.HumanType human_type = 3;
-            case kHumanType:
+            // .protobuf.StudentType student_type = 3;
+            case kStudentType:
                 {
                     total_size += 1 +
-                                  ::_pbi::WireFormatLite::EnumSize(this->_internal_human_type());
+                                  ::_pbi::WireFormatLite::EnumSize(this->_internal_student_type());
                     break;
                 }
-            // .protobuf.ButcherType butcher_type = 4;
-            case kButcherType:
+            // .protobuf.TrickerType tricker_type = 4;
+            case kTrickerType:
                 {
                     total_size += 1 +
-                                  ::_pbi::WireFormatLite::EnumSize(this->_internal_butcher_type());
+                                  ::_pbi::WireFormatLite::EnumSize(this->_internal_tricker_type());
                     break;
                 }
             case JOB_TYPE_NOT_SET:
@@ -597,14 +597,14 @@ namespace protobuf
         }
         switch (from.job_type_case())
         {
-            case kHumanType:
+            case kStudentType:
                 {
-                    _this->_internal_set_human_type(from._internal_human_type());
+                    _this->_internal_set_student_type(from._internal_student_type());
                     break;
                 }
-            case kButcherType:
+            case kTrickerType:
                 {
-                    _this->_internal_set_butcher_type(from._internal_butcher_type());
+                    _this->_internal_set_tricker_type(from._internal_tricker_type());
                     break;
                 }
             case JOB_TYPE_NOT_SET:
@@ -1472,31 +1472,31 @@ namespace protobuf
 
     // ===================================================================
 
-    class AttackMsg::_Internal
+    class TrickMsg::_Internal
     {
     public:
     };
 
-    AttackMsg::AttackMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned) :
+    TrickMsg::TrickMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned) :
         ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned)
     {
         SharedCtor(arena, is_message_owned);
-        // @@protoc_insertion_point(arena_constructor:protobuf.AttackMsg)
+        // @@protoc_insertion_point(arena_constructor:protobuf.TrickMsg)
     }
-    AttackMsg::AttackMsg(const AttackMsg& from) :
+    TrickMsg::TrickMsg(const TrickMsg& from) :
         ::PROTOBUF_NAMESPACE_ID::Message()
     {
-        AttackMsg* const _this = this;
+        TrickMsg* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
             decltype(_impl_.player_id_){}, decltype(_impl_.angle_){}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
         ::memcpy(&_impl_.player_id_, &from._impl_.player_id_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.angle_) - reinterpret_cast<char*>(&_impl_.player_id_)) + sizeof(_impl_.angle_));
-        // @@protoc_insertion_point(copy_constructor:protobuf.AttackMsg)
+        // @@protoc_insertion_point(copy_constructor:protobuf.TrickMsg)
     }
 
-    inline void AttackMsg::SharedCtor(
+    inline void TrickMsg::SharedCtor(
         ::_pb::Arena* arena, bool is_message_owned
     )
     {
@@ -1506,9 +1506,9 @@ namespace protobuf
             decltype(_impl_.player_id_){int64_t{0}}, decltype(_impl_.angle_){0}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
-    AttackMsg::~AttackMsg()
+    TrickMsg::~TrickMsg()
     {
-        // @@protoc_insertion_point(destructor:protobuf.AttackMsg)
+        // @@protoc_insertion_point(destructor:protobuf.TrickMsg)
         if (auto* arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>())
         {
             (void)arena;
@@ -1517,19 +1517,19 @@ namespace protobuf
         SharedDtor();
     }
 
-    inline void AttackMsg::SharedDtor()
+    inline void TrickMsg::SharedDtor()
     {
         GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
     }
 
-    void AttackMsg::SetCachedSize(int size) const
+    void TrickMsg::SetCachedSize(int size) const
     {
         _impl_._cached_size_.Set(size);
     }
 
-    void AttackMsg::Clear()
+    void TrickMsg::Clear()
     {
-        // @@protoc_insertion_point(message_clear_start:protobuf.AttackMsg)
+        // @@protoc_insertion_point(message_clear_start:protobuf.TrickMsg)
         uint32_t cached_has_bits = 0;
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
@@ -1538,7 +1538,7 @@ namespace protobuf
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
-    const char* AttackMsg::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
+    const char* TrickMsg::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
     {
 #define CHK_(x)                       \
     if (PROTOBUF_PREDICT_FALSE(!(x))) \
@@ -1595,11 +1595,11 @@ namespace protobuf
 #undef CHK_
     }
 
-    uint8_t* AttackMsg::_InternalSerialize(
+    uint8_t* TrickMsg::_InternalSerialize(
         uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream
     ) const
     {
-        // @@protoc_insertion_point(serialize_to_array_start:protobuf.AttackMsg)
+        // @@protoc_insertion_point(serialize_to_array_start:protobuf.TrickMsg)
         uint32_t cached_has_bits = 0;
         (void)cached_has_bits;
 
@@ -1627,13 +1627,13 @@ namespace protobuf
                 _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream
             );
         }
-        // @@protoc_insertion_point(serialize_to_array_end:protobuf.AttackMsg)
+        // @@protoc_insertion_point(serialize_to_array_end:protobuf.TrickMsg)
         return target;
     }
 
-    size_t AttackMsg::ByteSizeLong() const
+    size_t TrickMsg::ByteSizeLong() const
     {
-        // @@protoc_insertion_point(message_byte_size_start:protobuf.AttackMsg)
+        // @@protoc_insertion_point(message_byte_size_start:protobuf.TrickMsg)
         size_t total_size = 0;
 
         uint32_t cached_has_bits = 0;
@@ -1659,19 +1659,19 @@ namespace protobuf
         return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
     }
 
-    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData AttackMsg::_class_data_ = {
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData TrickMsg::_class_data_ = {
         ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
-        AttackMsg::MergeImpl};
-    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData* AttackMsg::GetClassData() const
+        TrickMsg::MergeImpl};
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData* TrickMsg::GetClassData() const
     {
         return &_class_data_;
     }
 
-    void AttackMsg::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg)
+    void TrickMsg::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg)
     {
-        auto* const _this = static_cast<AttackMsg*>(&to_msg);
-        auto& from = static_cast<const AttackMsg&>(from_msg);
-        // @@protoc_insertion_point(class_specific_merge_from_start:protobuf.AttackMsg)
+        auto* const _this = static_cast<TrickMsg*>(&to_msg);
+        auto& from = static_cast<const TrickMsg&>(from_msg);
+        // @@protoc_insertion_point(class_specific_merge_from_start:protobuf.TrickMsg)
         GOOGLE_DCHECK_NE(&from, _this);
         uint32_t cached_has_bits = 0;
         (void)cached_has_bits;
@@ -1691,32 +1691,32 @@ namespace protobuf
         _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
 
-    void AttackMsg::CopyFrom(const AttackMsg& from)
+    void TrickMsg::CopyFrom(const TrickMsg& from)
     {
-        // @@protoc_insertion_point(class_specific_copy_from_start:protobuf.AttackMsg)
+        // @@protoc_insertion_point(class_specific_copy_from_start:protobuf.TrickMsg)
         if (&from == this)
             return;
         Clear();
         MergeFrom(from);
     }
 
-    bool AttackMsg::IsInitialized() const
+    bool TrickMsg::IsInitialized() const
     {
         return true;
     }
 
-    void AttackMsg::InternalSwap(AttackMsg* other)
+    void TrickMsg::InternalSwap(TrickMsg* other)
     {
         using std::swap;
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-            PROTOBUF_FIELD_OFFSET(AttackMsg, _impl_.angle_) + sizeof(AttackMsg::_impl_.angle_) - PROTOBUF_FIELD_OFFSET(AttackMsg, _impl_.player_id_)>(
+            PROTOBUF_FIELD_OFFSET(TrickMsg, _impl_.angle_) + sizeof(TrickMsg::_impl_.angle_) - PROTOBUF_FIELD_OFFSET(TrickMsg, _impl_.player_id_)>(
             reinterpret_cast<char*>(&_impl_.player_id_),
             reinterpret_cast<char*>(&other->_impl_.player_id_)
         );
     }
 
-    ::PROTOBUF_NAMESPACE_ID::Metadata AttackMsg::GetMetadata() const
+    ::PROTOBUF_NAMESPACE_ID::Metadata TrickMsg::GetMetadata() const
     {
         return ::_pbi::AssignDescriptors(
             &descriptor_table_Message2Server_2eproto_getter, &descriptor_table_Message2Server_2eproto_once, file_level_metadata_Message2Server_2eproto[4]
@@ -1961,10 +1961,10 @@ PROTOBUF_NOINLINE ::protobuf::SendMsg*
     return Arena::CreateMessageInternal<::protobuf::SendMsg>(arena);
 }
 template<>
-PROTOBUF_NOINLINE ::protobuf::AttackMsg*
-    Arena::CreateMaybeMessage<::protobuf::AttackMsg>(Arena* arena)
+PROTOBUF_NOINLINE ::protobuf::TrickMsg*
+    Arena::CreateMaybeMessage<::protobuf::TrickMsg>(Arena* arena)
 {
-    return Arena::CreateMessageInternal<::protobuf::AttackMsg>(arena);
+    return Arena::CreateMessageInternal<::protobuf::TrickMsg>(arena);
 }
 template<>
 PROTOBUF_NOINLINE ::protobuf::IDMsg*

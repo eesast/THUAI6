@@ -9,11 +9,11 @@ class ILogic(metaclass=ABCMeta):
     # IAPI统一可用的接口
 
     @abstractmethod
-    def GetButchers(self) -> List[THUAI6.Butcher]:
+    def GetTrickers(self) -> List[THUAI6.Tricker]:
         pass
 
     @abstractmethod
-    def GetHumans(self) -> List[THUAI6.Human]:
+    def GetStudents(self) -> List[THUAI6.Student]:
         pass
 
     @abstractmethod
@@ -21,7 +21,7 @@ class ILogic(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def GetSelfInfo(self) -> Union[THUAI6.Human, THUAI6.Butcher]:
+    def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
         pass
 
     @abstractmethod
@@ -72,44 +72,44 @@ class ILogic(metaclass=ABCMeta):
     def GetPlayerGUIDs(self) -> List[int]:
         pass
 
-    # IHumanAPI使用的接口
+    # IStudentAPI使用的接口
 
     @abstractmethod
-    def Escape(self) -> bool:
+    def Graduate(self) -> bool:
         pass
 
     @abstractmethod
-    def StartFixMachine(self) -> bool:
+    def StartLearning(self) -> bool:
         pass
 
     @abstractmethod
-    def EndFixMachine(self) -> bool:
+    def EndLearning(self) -> bool:
         pass
 
     @abstractmethod
-    def StartSaveHuman(self) -> bool:
+    def StartHelpMate(self) -> bool:
         pass
 
     @abstractmethod
-    def EndSaveHuman(self) -> bool:
+    def EndHelpMate(self) -> bool:
         pass
 
-    # Butcher使用的接口
+    # Tricker使用的接口
 
     @abstractmethod
-    def Attack(self, angle: float) -> bool:
-        pass
-
-    @abstractmethod
-    def CarryHuman(self) -> bool:
+    def Trick(self, angle: float) -> bool:
         pass
 
     @abstractmethod
-    def ReleaseHuman(self) -> bool:
+    def StartExam(self) -> bool:
         pass
 
     @abstractmethod
-    def HangHuman(self) -> bool:
+    def EndExam(self) -> bool:
+        pass
+
+    @abstractmethod
+    def MakeFail(self) -> bool:
         pass
 
 
@@ -185,11 +185,11 @@ class IAPI(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def GetButchers(self) -> List[THUAI6.Butcher]:
+    def GetTrickers(self) -> List[THUAI6.Tricker]:
         pass
 
     @abstractmethod
-    def GetHumans(self) -> List[THUAI6.Human]:
+    def GetStudents(self) -> List[THUAI6.Student]:
         pass
 
     @abstractmethod
@@ -197,7 +197,7 @@ class IAPI(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def GetSelfInfo(self) -> Union[THUAI6.Human, THUAI6.Butcher]:
+    def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
         pass
 
     @abstractmethod
@@ -211,11 +211,11 @@ class IAPI(metaclass=ABCMeta):
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
     @abstractmethod
-    def PrintHuman(self) -> None:
+    def PrintStudent(self) -> None:
         pass
 
     @abstractmethod
-    def PrintButcher(self) -> None:
+    def PrintTricker(self) -> None:
         pass
 
     @abstractmethod
@@ -227,55 +227,55 @@ class IAPI(metaclass=ABCMeta):
         pass
 
 
-class IHumanAPI(IAPI, metaclass=ABCMeta):
+class IStudentAPI(IAPI, metaclass=ABCMeta):
 
     # 人类阵营的特殊函数
 
     @abstractmethod
-    def Escape(self) -> Future[bool]:
+    def Graduate(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def StartFixMachine(self) -> Future[bool]:
+    def StartLearning(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def EndFixMachine(self) -> Future[bool]:
+    def EndLearning(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def StartSaveHuman(self) -> Future[bool]:
+    def StartHelpMate(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def EndSaveHuman(self) -> Future[bool]:
+    def EndHelpMate(self) -> Future[bool]:
         pass
 
 
-class IButcherAPI(IAPI, metaclass=ABCMeta):
+class ITrickerAPI(IAPI, metaclass=ABCMeta):
 
     # 屠夫阵营的特殊函数
 
     @abstractmethod
-    def Attack(self, angle: float) -> Future[bool]:
+    def Trick(self, angle: float) -> Future[bool]:
         pass
 
     @abstractmethod
-    def CarryHuman(self) -> Future[bool]:
+    def StartExam(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def ReleaseHuman(self) -> Future[bool]:
+    def EndExam(self) -> Future[bool]:
         pass
 
     @abstractmethod
-    def HangHuman(self) -> Future[bool]:
+    def MakeFail(self) -> Future[bool]:
         pass
 
 
 class IAI(metaclass=ABCMeta):
     @abstractmethod
-    def play(self, api: Union[IHumanAPI, IButcherAPI]) -> None:
+    def play(self, api: Union[IStudentAPI, ITrickerAPI]) -> None:
         pass
 
 

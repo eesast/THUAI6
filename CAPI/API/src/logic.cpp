@@ -10,31 +10,31 @@
 
 extern const bool asynchronous;
 
-Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::ButcherType butcher, THUAI6::HumanType human) :
+Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::TrickerType tricker, THUAI6::StudentType student) :
     playerType(type),
     playerID(ID),
-    butcherType(butcher),
-    humanType(human)
+    trickerType(tricker),
+    studentType(student)
 {
     currentState = &state[0];
     bufferState = &state[1];
 }
 
-std::vector<std::shared_ptr<const THUAI6::Butcher>> Logic::GetButchers() const
+std::vector<std::shared_ptr<const THUAI6::Tricker>> Logic::GetTrickers() const
 {
     std::lock_guard<std::mutex> lock(mtxState);
-    std::vector<std::shared_ptr<const THUAI6::Butcher>> temp;
-    temp.assign(currentState->butchers.begin(), currentState->butchers.end());
-    logger->debug("Called GetButchers");
+    std::vector<std::shared_ptr<const THUAI6::Tricker>> temp;
+    temp.assign(currentState->trickers.begin(), currentState->trickers.end());
+    logger->debug("Called GetTrickers");
     return temp;
 }
 
-std::vector<std::shared_ptr<const THUAI6::Human>> Logic::GetHumans() const
+std::vector<std::shared_ptr<const THUAI6::Student>> Logic::GetStudents() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
-    std::vector<std::shared_ptr<const THUAI6::Human>> temp;
-    temp.assign(currentState->humans.begin(), currentState->humans.end());
-    logger->debug("Called GetHumans");
+    std::vector<std::shared_ptr<const THUAI6::Student>> temp;
+    temp.assign(currentState->students.begin(), currentState->students.end());
+    logger->debug("Called GetStudents");
     return temp;
 }
 
@@ -47,18 +47,18 @@ std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
     return temp;
 }
 
-std::shared_ptr<const THUAI6::Human> Logic::HumanGetSelfInfo() const
+std::shared_ptr<const THUAI6::Student> Logic::StudentGetSelfInfo() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
-    logger->debug("Called HumanGetSelfInfo");
-    return currentState->humanSelf;
+    logger->debug("Called StudentGetSelfInfo");
+    return currentState->studentSelf;
 }
 
-std::shared_ptr<const THUAI6::Butcher> Logic::ButcherGetSelfInfo() const
+std::shared_ptr<const THUAI6::Tricker> Logic::TrickerGetSelfInfo() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
-    logger->debug("Called ButcherGetSelfInfo");
-    return currentState->butcherSelf;
+    logger->debug("Called TrickerGetSelfInfo");
+    return currentState->trickerSelf;
 }
 
 std::vector<std::vector<THUAI6::PlaceType>> Logic::GetFullMap() const
@@ -117,58 +117,34 @@ std::optional<std::pair<int64_t, std::string>> Logic::GetMessage()
     return pComm->GetMessage();
 }
 
-bool Logic::Escape()
+bool Logic::Graduate()
 {
-    logger->debug("Called Escape");
-    return pComm->Escape(playerID);
+    logger->debug("Called Graduate");
+    return pComm->Graduate(playerID);
 }
 
-bool Logic::StartFixMachine()
+bool Logic::StartLearning()
 {
-    logger->debug("Called StartFixMachine");
-    return pComm->StartFixMachine(playerID);
+    logger->debug("Called StartLearning");
+    return pComm->StartLearning(playerID);
 }
 
-bool Logic::EndFixMachine()
+bool Logic::StartHelpMate()
 {
-    logger->debug("Called EndFixMachine");
-    return pComm->EndFixMachine(playerID);
+    logger->debug("Called StartHelpMate");
+    return pComm->StartHelpMate(playerID);
 }
 
-bool Logic::StartSaveHuman()
+bool Logic::StartHealMate()
 {
-    logger->debug("Called StartSaveHuman");
-    return pComm->StartSaveHuman(playerID);
+    logger->debug("Called StartHealMate");
+    return pComm->StartHealMate(playerID);
 }
 
-bool Logic::EndSaveHuman()
+bool Logic::Trick(double angle)
 {
-    logger->debug("Called EndSaveHuman");
-    return pComm->EndSaveHuman(playerID);
-}
-
-bool Logic::Attack(double angle)
-{
-    logger->debug("Called Attack");
-    return pComm->Attack(angle, playerID);
-}
-
-bool Logic::CarryHuman()
-{
-    logger->debug("Called CarryHuman");
-    return pComm->CarryHuman(playerID);
-}
-
-bool Logic::ReleaseHuman()
-{
-    logger->debug("Called ReleaseHuman");
-    return pComm->ReleaseHuman(playerID);
-}
-
-bool Logic::HangHuman()
-{
-    logger->debug("Called HangHuman");
-    return pComm->HangHuman(playerID);
+    logger->debug("Called Trick");
+    return pComm->Trick(angle, playerID);
 }
 
 bool Logic::WaitThread()
@@ -182,7 +158,7 @@ void Logic::ProcessMessage()
     auto messageThread = [&]()
     {
         logger->info("Message thread start!");
-        pComm->AddPlayer(playerID, playerType, humanType, butcherType);
+        pComm->AddPlayer(playerID, playerType, studentType, trickerType);
         logger->info("Join the player!");
         pComm->ReadMessage(playerID);
         while (gameState != THUAI6::GameState::GameEnd)
@@ -197,10 +173,10 @@ void Logic::ProcessMessage()
 
                     // 重新读取玩家的guid，guid确保人类在前屠夫在后
                     playerGUIDs.clear();
-                    for (auto human : clientMsg.human_message())
-                        playerGUIDs.push_back(human.guid());
-                    for (auto butcher : clientMsg.butcher_message())
-                        playerGUIDs.push_back(butcher.guid());
+                    for (auto student : clientMsg.student_message())
+                        playerGUIDs.push_back(student.guid());
+                    for (auto tricker : clientMsg.tricker_message())
+                        playerGUIDs.push_back(tricker.guid());
                     currentState->guids = playerGUIDs;
                     bufferState->guids = playerGUIDs;
 
@@ -213,10 +189,10 @@ void Logic::ProcessMessage()
                 case THUAI6::GameState::GameRunning:
                     // 重新读取玩家的guid，guid确保人类在前屠夫在后
                     playerGUIDs.clear();
-                    for (auto human : clientMsg.human_message())
-                        playerGUIDs.push_back(human.guid());
-                    for (auto butcher : clientMsg.butcher_message())
-                        playerGUIDs.push_back(butcher.guid());
+                    for (auto student : clientMsg.student_message())
+                        playerGUIDs.push_back(student.guid());
+                    for (auto tricker : clientMsg.tricker_message())
+                        playerGUIDs.push_back(tricker.guid());
                     currentState->guids = playerGUIDs;
                     bufferState->guids = playerGUIDs;
 
@@ -246,103 +222,50 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         std::lock_guard<std::mutex> lock(mtxBuffer);
 
         // 清空原有信息
-        bufferState->humans.clear();
-        bufferState->butchers.clear();
+        bufferState->students.clear();
+        bufferState->trickers.clear();
         bufferState->props.clear();
 
         logger->debug("Buffer cleared!");
         // 读取新的信息
-        // 读取消息的选择待补充，之后需要另外判断；具体做法应该是先读到自己，然后按照自己的视野做处理。此处暂时全部读了进来
         bufferState->gamemap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());
-        if (playerType == THUAI6::PlayerType::HumanPlayer)
+        if (playerType == THUAI6::PlayerType::StudentPlayer)
         {
-            for (const auto& item : message.human_message())
+            for (const auto& item : message.student_message())
             {
                 if (item.player_id() == playerID)
                 {
-                    bufferState->humanSelf = Proto2THUAI6::Protobuf2THUAI6Human(item);
+                    bufferState->studentSelf = Proto2THUAI6::Protobuf2THUAI6Student(item);
                 }
-                bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(item));
-                logger->debug("Add Human!");
+                bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item));
+                logger->debug("Add Student!");
             }
-            for (const auto& item : message.butcher_message())
+            for (const auto& item : message.tricker_message())
             {
-                int vr = this->bufferState->humanSelf->viewRange;
-                int deltaX = item.x() - this->bufferState->humanSelf->x;
-                int deltaY = item.y() - this->bufferState->humanSelf->y;
-                double distance = deltaX * deltaX + deltaY * deltaY;
-                if (distance > vr * vr)
-                    continue;
-                else
+                if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.x(), item.y(), bufferState->gamemap))
                 {
-                    int divide = abs(deltaX) > abs(deltaY) ? abs(deltaX) : abs(deltaY);
-                    divide /= 100;
-                    double dx = deltaX / divide;
-                    double dy = deltaY / divide;
-                    double myX = this->bufferState->humanSelf->x;
-                    double myY = this->bufferState->humanSelf->y;
-                    bool barrier = false;
-                    for (int i = 0; i < divide; i++)
-                    {
-                        myX += dx;
-                        myY += dy;
-                        if (this->bufferState->gamemap[IAPI::GridToCell(myX)][IAPI::GridToCell(myY)] == THUAI6::PlaceType::Wall)
-                        {
-                            barrier = true;
-                            break;
-                        }
-                    }
-                    if (barrier)
-                        continue;
-                    bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(item));
-                    logger->debug("Add Butcher!");
+                    bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item));
+                    logger->debug("Add Tricker!");
                 }
             }
         }
         else
         {
-            for (const auto& item : message.butcher_message())
+            for (const auto& item : message.tricker_message())
             {
                 if (item.player_id() == playerID)
                 {
-                    bufferState->butcherSelf = Proto2THUAI6::Protobuf2THUAI6Butcher(item);
+                    bufferState->trickerSelf = Proto2THUAI6::Protobuf2THUAI6Tricker(item);
                 }
-                bufferState->butchers.push_back(Proto2THUAI6::Protobuf2THUAI6Butcher(item));
-                logger->debug("Add Butcher!");
+                bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item));
+                logger->debug("Add Tricker!");
             }
-            for (const auto& item : message.human_message())
-            {
-                int vr = this->bufferState->butcherSelf->viewRange;
-                int deltaX = item.x() - this->bufferState->butcherSelf->x;
-                int deltaY = item.y() - this->bufferState->butcherSelf->y;
-                double distance = deltaX * deltaX + deltaY * deltaY;
-                if (distance > vr * vr)
-                    continue;
-                else
+            for (const auto& item : message.student_message())
+                if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.x(), item.y(), bufferState->gamemap))
                 {
-                    int divide = abs(deltaX) > abs(deltaY) ? abs(deltaX) : abs(deltaY);
-                    divide /= 100;
-                    double dx = deltaX / divide;
-                    double dy = deltaY / divide;
-                    double myX = this->bufferState->butcherSelf->x;
-                    double myY = this->bufferState->butcherSelf->y;
-                    bool barrier = false;
-                    for (int i = 0; i < divide; i++)
-                    {
-                        myX += dx;
-                        myY += dy;
-                        if (this->bufferState->gamemap[IAPI::GridToCell(myX)][IAPI::GridToCell(myY)] == THUAI6::PlaceType::Wall)
-                        {
-                            barrier = true;
-                            break;
-                        }
-                    }
-                    if (barrier)
-                        continue;
-                    bufferState->humans.push_back(Proto2THUAI6::Protobuf2THUAI6Human(item));
-                    logger->debug("Add Human!");
+                    bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item));
+                    logger->debug("Add Student!");
                 }
-            }
         }
         for (const auto& item : message.prop_message())
         {
@@ -452,19 +375,19 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
     pComm = std::make_unique<Communication>(IP, port);
 
     // 构造timer
-    if (playerType == THUAI6::PlayerType::HumanPlayer)
+    if (playerType == THUAI6::PlayerType::StudentPlayer)
     {
         if (!file && !print)
-            timer = std::make_unique<HumanAPI>(*this);
+            timer = std::make_unique<StudentAPI>(*this);
         else
-            timer = std::make_unique<HumanDebugAPI>(*this, file, print, warnOnly, playerID);
+            timer = std::make_unique<StudentDebugAPI>(*this, file, print, warnOnly, playerID);
     }
-    else if (playerType == THUAI6::PlayerType::ButcherPlayer)
+    else if (playerType == THUAI6::PlayerType::TrickerPlayer)
     {
         if (!file && !print)
-            timer = std::make_unique<ButcherAPI>(*this);
+            timer = std::make_unique<TrickerAPI>(*this);
         else
-            timer = std::make_unique<ButcherDebugAPI>(*this, file, print, warnOnly, playerID);
+            timer = std::make_unique<TrickerDebugAPI>(*this, file, print, warnOnly, playerID);
     }
 
     // 构造AI线程

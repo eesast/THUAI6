@@ -30,35 +30,36 @@ static constexpr ::_pbi::MigrationSchema* schemas = nullptr;
 static constexpr ::_pb::Message* const* file_default_instances = nullptr;
 
 const char descriptor_table_protodef_MessageType_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-    "\n\021MessageType.proto\022\010protobuf*g\n\tPlaceTy"
+    "\n\021MessageType.proto\022\010protobuf*i\n\tPlaceTy"
     "pe\022\023\n\017NULL_PLACE_TYPE\020\000\022\010\n\004LAND\020\001\022\010\n\004WAL"
-    "L\020\002\022\t\n\005GRASS\020\003\022\013\n\007MACHINE\020\004\022\010\n\004GATE\020\005\022\017\n"
-    "\013HIDDEN_GATE\020\006*8\n\tShapeType\022\023\n\017NULL_SHAP"
-    "E_TYPE\020\000\022\n\n\006CIRCLE\020\001\022\n\n\006SQUARE\020\002*N\n\010Prop"
-    "Type\022\022\n\016NULL_PROP_TYPE\020\000\022\n\n\006PTYPE1\020\001\022\n\n\006"
-    "PTYPE2\020\002\022\n\n\006PTYPE3\020\003\022\n\n\006PTYPE4\020\004*d\n\rHuma"
-    "nBuffType\022\023\n\017NULL_HBUFF_TYPE\020\000\022\016\n\nHBUFFT"
-    "YPE1\020\001\022\016\n\nHBUFFTYPE2\020\002\022\016\n\nHBUFFTYPE3\020\003\022\016"
-    "\n\nHBUFFTYPE4\020\004*V\n\nHumanState\022\017\n\013NULL_STA"
-    "TUS\020\000\022\010\n\004IDLE\020\001\022\n\n\006FIXING\020\002\022\t\n\005DYING\020\003\022\014"
-    "\n\010ON_CHAIR\020\004\022\010\n\004DEAD\020\005*f\n\017ButcherBuffTyp"
-    "e\022\023\n\017NULL_BBUFF_TYPE\020\000\022\016\n\nBBUFFTYPE1\020\001\022\016"
-    "\n\nBBUFFTYPE2\020\002\022\016\n\nBBUFFTYPE3\020\003\022\016\n\nBBUFFT"
-    "YPE4\020\004*H\n\nPlayerType\022\024\n\020NULL_PLAYER_TYPE"
-    "\020\000\022\020\n\014HUMAN_PLAYER\020\001\022\022\n\016BUTCHER_PLAYER\020\002"
-    "*`\n\tHumanType\022\023\n\017NULL_HUMAN_TYPE\020\000\022\016\n\nHU"
-    "MANTYPE1\020\001\022\016\n\nHUMANTYPE2\020\002\022\016\n\nHUMANTYPE3"
-    "\020\003\022\016\n\nHUMANTYPE4\020\004*l\n\013ButcherType\022\025\n\021NUL"
-    "L_BUTCHER_TYPE\020\000\022\020\n\014BUTCHERTYPE1\020\001\022\020\n\014BU"
-    "TCHERTYPE2\020\002\022\020\n\014BUTCHERTYPE3\020\003\022\020\n\014BUTCHE"
-    "RTYPE4\020\004*P\n\tGameState\022\023\n\017NULL_GAME_STATE"
-    "\020\000\022\016\n\nGAME_START\020\001\022\020\n\014GAME_RUNNING\020\002\022\014\n\010"
-    "GAME_END\020\003b\006proto3";
+    "L\020\002\022\t\n\005GRASS\020\003\022\r\n\tCLASSROOM\020\004\022\010\n\004GATE\020\005\022"
+    "\017\n\013HIDDEN_GATE\020\006*8\n\tShapeType\022\023\n\017NULL_SH"
+    "APE_TYPE\020\000\022\n\n\006CIRCLE\020\001\022\n\n\006SQUARE\020\002*N\n\010Pr"
+    "opType\022\022\n\016NULL_PROP_TYPE\020\000\022\n\n\006PTYPE1\020\001\022\n"
+    "\n\006PTYPE2\020\002\022\n\n\006PTYPE3\020\003\022\n\n\006PTYPE4\020\004*f\n\017St"
+    "udentBuffType\022\023\n\017NULL_SBUFF_TYPE\020\000\022\016\n\nSB"
+    "UFFTYPE1\020\001\022\016\n\nSBUFFTYPE2\020\002\022\016\n\nSBUFFTYPE3"
+    "\020\003\022\016\n\nSBUFFTYPE4\020\004*^\n\014StudentState\022\017\n\013NU"
+    "LL_STATUS\020\000\022\010\n\004IDLE\020\001\022\014\n\010LEARNING\020\002\022\014\n\010A"
+    "DDICTED\020\003\022\010\n\004QUIT\020\004\022\r\n\tGRADUATED\020\005*f\n\017Tr"
+    "ickerBuffType\022\023\n\017NULL_TBUFF_TYPE\020\000\022\016\n\nTB"
+    "UFFTYPE1\020\001\022\016\n\nTBUFFTYPE2\020\002\022\016\n\nTBUFFTYPE3"
+    "\020\003\022\016\n\nTBUFFTYPE4\020\004*J\n\nPlayerType\022\024\n\020NULL"
+    "_PLAYER_TYPE\020\000\022\022\n\016STUDENT_PLAYER\020\001\022\022\n\016TR"
+    "ICKER_PLAYER\020\002*l\n\013StudentType\022\025\n\021NULL_ST"
+    "UDENT_TYPE\020\000\022\020\n\014STUDENTTYPE1\020\001\022\020\n\014STUDEN"
+    "TTYPE2\020\002\022\020\n\014STUDENTTYPE3\020\003\022\020\n\014STUDENTTYP"
+    "E4\020\004*l\n\013TrickerType\022\025\n\021NULL_TRICKER_TYPE"
+    "\020\000\022\020\n\014TRICKERTYPE1\020\001\022\020\n\014TRICKERTYPE2\020\002\022\020"
+    "\n\014TRICKERTYPE3\020\003\022\020\n\014TRICKERTYPE4\020\004*P\n\tGa"
+    "meState\022\023\n\017NULL_GAME_STATE\020\000\022\016\n\nGAME_STA"
+    "RT\020\001\022\020\n\014GAME_RUNNING\020\002\022\014\n\010GAME_END\020\003b\006pr"
+    "oto3";
 static ::_pbi::once_flag descriptor_table_MessageType_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_MessageType_2eproto = {
     false,
     false,
-    938,
+    964,
     descriptor_table_protodef_MessageType_2eproto,
     "MessageType.proto",
     &descriptor_table_MessageType_2eproto_once,
@@ -141,12 +142,12 @@ namespace protobuf
         }
     }
 
-    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* HumanBuffType_descriptor()
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StudentBuffType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
         return file_level_enum_descriptors_MessageType_2eproto[3];
     }
-    bool HumanBuffType_IsValid(int value)
+    bool StudentBuffType_IsValid(int value)
     {
         switch (value)
         {
@@ -161,12 +162,12 @@ namespace protobuf
         }
     }
 
-    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* HumanState_descriptor()
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StudentState_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
         return file_level_enum_descriptors_MessageType_2eproto[4];
     }
-    bool HumanState_IsValid(int value)
+    bool StudentState_IsValid(int value)
     {
         switch (value)
         {
@@ -182,12 +183,12 @@ namespace protobuf
         }
     }
 
-    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* ButcherBuffType_descriptor()
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TrickerBuffType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
         return file_level_enum_descriptors_MessageType_2eproto[5];
     }
-    bool ButcherBuffType_IsValid(int value)
+    bool TrickerBuffType_IsValid(int value)
     {
         switch (value)
         {
@@ -220,12 +221,12 @@ namespace protobuf
         }
     }
 
-    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* HumanType_descriptor()
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StudentType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
         return file_level_enum_descriptors_MessageType_2eproto[7];
     }
-    bool HumanType_IsValid(int value)
+    bool StudentType_IsValid(int value)
     {
         switch (value)
         {
@@ -240,12 +241,12 @@ namespace protobuf
         }
     }
 
-    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* ButcherType_descriptor()
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TrickerType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
         return file_level_enum_descriptors_MessageType_2eproto[8];
     }
-    bool ButcherType_IsValid(int value)
+    bool TrickerType_IsValid(int value)
     {
         switch (value)
         {

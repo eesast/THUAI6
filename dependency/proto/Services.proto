@@ -6,26 +6,22 @@ import "Message2Server.proto";
 
 service AvailableService
 {
-    rpc TryConnection(IDMsg) returns(BoolRes);
+    rpc TryConnection (IDMsg) returns(BoolRes);
 
     // 游戏开局调用一次的服务
-    rpc AddPlayer(PlayerMsg) returns(stream MessageToClient); // 连接上后等待游戏开始，server会定时通过该服务向所有client发送消息。
+    rpc AddPlayer (PlayerMsg) returns(stream MessageToClient); // 连接上后等待游戏开始，server会定时通过该服务向所有client发送消息。
 
     // 游戏过程中玩家执行操作的服务
-    rpc Move(MoveMsg) returns (MoveRes);
-    rpc PickProp(PickMsg) returns (BoolRes);
-    rpc UseProp(IDMsg) returns (BoolRes);
-    rpc UseSkill(IDMsg) returns (BoolRes);
-    rpc SendMessage(SendMsg) returns (BoolRes);
-    rpc GetMessage(IDMsg) returns (stream MsgRes);
-    rpc StartFixMachine(IDMsg) returns (BoolRes); // 开始修理机器
-    rpc EndFixMachine(IDMsg) returns (BoolRes); // 主动停止修复
-    rpc StartSaveHuman(IDMsg) returns (BoolRes); // 开始救人
-    rpc EndSaveHuman(IDMsg) returns (BoolRes); // 主动停止救人
-    rpc Attack (AttackMsg) returns (BoolRes);
-    rpc CarryHuman (IDMsg) returns (BoolRes);
-    rpc ReleaseHuman (IDMsg) returns (BoolRes);
-    rpc HangHuman (IDMsg) returns (BoolRes);
-    rpc Escape (IDMsg) returns (BoolRes);
+    rpc Move (MoveMsg) returns (MoveRes);
+    rpc PickProp (PickMsg) returns (BoolRes);
+    rpc UseProp (IDMsg) returns (BoolRes);
+    rpc UseSkill (IDMsg) returns (BoolRes);
+    rpc SendMessage (SendMsg) returns (BoolRes);
+    rpc GetMessage (IDMsg) returns (stream MsgRes);
+    rpc StartLearning (IDMsg) returns (BoolRes); // 开始修理机器
+    rpc StartHelpMate (IDMsg) returns (BoolRes); // 开始救人
+    rpc StartHealMate (IDMsg) returns (BoolRes);
+    rpc Trick (TrickMsg) returns (BoolRes); // 攻击
+    rpc Graduate (IDMsg) returns (BoolRes); // 相当于逃跑
     
 }

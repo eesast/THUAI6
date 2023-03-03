@@ -5,6 +5,8 @@ using GameClass.GameObj;
 using Preparation.Utility;
 using GameEngine;
 using Preparation.Interface;
+using Timothy.FrameRateTask;
+using System.Numerics;
 
 namespace Gaming
 {
@@ -35,6 +37,98 @@ namespace Gaming
                     }
                 );
             }
+
+            public void BeAddictedToGame(Student player)
+            {
+                new Thread
+                    (() =>
+                    {
+                        if (player.GamingAddiction > GameData.BeginGamingAddiction && player.GamingAddiction < GameData.MidGamingAddiction)
+                            player.GamingAddiction = GameData.MidGamingAddiction;
+                        player.PlayerState = PlayerStateType.IsAddicted;
+                        new FrameRateTaskExecutor<int>(
+                            () => player.PlayerState == PlayerStateType.IsAddicted && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
+                            () =>
+                            {
+                                player.GamingAddiction += GameData.frameDuration;
+                            },
+                            timeInterval: GameData.frameDuration,
+                            () =>
+                            {
+                                if (player.GamingAddiction == player.MaxGamingAddiction && gameMap.Timer.IsGaming)
+                                {
+                                    Die(player);
+                                }
+                                return 0;
+                            }
+                        )
+                            .Start();
+                    }
+                    )
+                { IsBackground = true }.Start();
+            }
+
+            public void Die(Character player)
+            {
+
+                player.CanMove = false;
+                player.IsResetting = true;
+                // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
+                // try
+                //{
+                //     gameMap.GameObjDict[GameObjType.Character].Remove(playerBeingShot);
+                // }
+                // finally
+                //{
+                //     gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
+                // }
+
+                Prop? dropProp = null;
+                if (player.PropInventory != null)  // 若角色原来有道具，则原始道具掉落在原地
+                {
+                    dropProp = player.PropInventory;
+                    dropProp.SetNewPos(GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell));
+                }
+                gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
+                try
+                {
+                    if (dropProp != null)
+                        gameMap.GameObjDict[GameObjType.Prop].Add(dropProp);
+                }
+                finally
+                {
+                    gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
+                }
+
+                player.Reset();
+                //    ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  // 给击杀者加分
+
+                /*    new Thread
+                        (() =>
+                        {
+
+                            Thread.Sleep(GameData.reviveTime);
+
+                            playerBeingShot.AddShield(GameData.shieldTimeAtBirth);  // 复活加个盾
+
+                            // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
+                            // try
+                            //{
+                            //     gameMap.GameObjDict[GameObjType.Character].Add(playerBeingShot);
+                            // }
+                            // finally { gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock(); }
+
+                            if (gameMap.Timer.IsGaming)
+                            {
+                                playerBeingShot.CanMove = true;
+                            }
+                            playerBeingShot.IsResetting = false;
+                        }
+                        )
+                    { IsBackground = true }.Start();
+                */
+            }
+
             private bool CanBeBombed(Bullet bullet, GameObjType gameObjType)
             {
                 if (gameObjType == GameObjType.Character) return true;
@@ -45,66 +139,11 @@ namespace Gaming
                 switch (objBeingShot.Type)
                 {
                     case GameObjType.Character:
-                        Character playerBeingShot = (Character)objBeingShot;
-                        if (playerBeingShot.BeAttacked(bullet))
-                        {
-                            playerBeingShot.CanMove = false;
-                            playerBeingShot.IsResetting = true;
-                            // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
-                            // try
-                            //{
-                            //     gameMap.GameObjDict[GameObjType.Character].Remove(playerBeingShot);
-                            // }
-                            // finally
-                            //{
-                            //     gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
-                            // }
-
-                            Prop? dropProp = null;
-                            if (playerBeingShot.PropInventory != null)  // 若角色原来有道具，则原始道具掉落在原地
+                        if (!((Character)objBeingShot).IsGhost())
+                            if (((Character)objBeingShot).BeAttacked(bullet))
                             {
-                                dropProp = playerBeingShot.PropInventory;
-                                dropProp.SetNewPos(GameData.GetCellCenterPos(playerBeingShot.Position.x / GameData.numOfPosGridPerCell, playerBeingShot.Position.y / GameData.numOfPosGridPerCell));
+                                BeAddictedToGame((Student)objBeingShot);
                             }
-                            gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
-                            try
-                            {
-                                if (dropProp != null)
-                                    gameMap.GameObjDict[GameObjType.Prop].Add(dropProp);
-                            }
-                            finally
-                            {
-                                gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
-                            }
-
-                            playerBeingShot.Reset();
-                            ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  // 给击杀者加分
-
-                            /*    new Thread
-                                    (() =>
-                                    {
-
-                                        Thread.Sleep(GameData.reviveTime);
-
-                                        playerBeingShot.AddShield(GameData.shieldTimeAtBirth);  // 复活加个盾
-
-                                        // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
-                                        // try
-                                        //{
-                                        //     gameMap.GameObjDict[GameObjType.Character].Add(playerBeingShot);
-                                        // }
-                                        // finally { gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock(); }
-
-                                        if (gameMap.Timer.IsGaming)
-                                        {
-                                            playerBeingShot.CanMove = true;
-                                        }
-                                        playerBeingShot.IsResetting = false;
-                                    }
-                                    )
-                                { IsBackground = true }.Start();
-                            */
-                        }
                         break;
                 }
             }
@@ -147,17 +186,16 @@ namespace Gaming
                     {
                         if (bullet.Backswing > 0)
                         {
-                            bullet.Parent.CanMove = false;
-                            bullet.Parent.IsMoving = false;
+                            bullet.Parent.PlayerState = PlayerStateType.IsSwinging;
 
                             new Thread
                                     (() =>
                                     {
                                         Thread.Sleep(bullet.Backswing);
 
-                                        if (gameMap.Timer.IsGaming)
+                                        if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
                                         {
-                                            bullet.Parent.CanMove = true;
+                                            bullet.Parent.PlayerState = PlayerStateType.Null;
                                         }
                                     }
                                     )
@@ -170,8 +208,7 @@ namespace Gaming
                     BombObj(bullet, objBeingShot);
                     if (bullet.RecoveryFromHit > 0)
                     {
-                        bullet.Parent.CanMove = false;
-                        bullet.Parent.IsMoving = false;
+                        bullet.Parent.PlayerState = PlayerStateType.IsSwinging;
 
                         new Thread
                                 (() =>
@@ -179,9 +216,9 @@ namespace Gaming
 
                                     Thread.Sleep(bullet.RecoveryFromHit);
 
-                                    if (gameMap.Timer.IsGaming)
+                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
                                     {
-                                        bullet.Parent.CanMove = true;
+                                        bullet.Parent.PlayerState = PlayerStateType.Null;
                                     }
                                 }
                                 )
@@ -230,17 +267,16 @@ namespace Gaming
                 {
                     if (bullet.Backswing > 0)
                     {
-                        bullet.Parent.CanMove = false;
-                        bullet.Parent.IsMoving = false;
+                        bullet.Parent.PlayerState = PlayerStateType.IsSwinging;
 
                         new Thread
                                 (() =>
                                 {
                                     Thread.Sleep(bullet.Backswing);
 
-                                    if (gameMap.Timer.IsGaming)
+                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
                                     {
-                                        bullet.Parent.CanMove = true;
+                                        bullet.Parent.PlayerState = PlayerStateType.Null;
                                     }
                                 }
                                 )
@@ -251,8 +287,7 @@ namespace Gaming
                 {
                     if (bullet.RecoveryFromHit > 0)
                     {
-                        bullet.Parent.CanMove = false;
-                        bullet.Parent.IsMoving = false;
+                        bullet.Parent.PlayerState = PlayerStateType.IsSwinging;
 
                         new Thread
                                 (() =>
@@ -260,9 +295,9 @@ namespace Gaming
 
                                     Thread.Sleep(bullet.RecoveryFromHit);
 
-                                    if (gameMap.Timer.IsGaming)
+                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
                                     {
-                                        bullet.Parent.CanMove = true;
+                                        bullet.Parent.PlayerState = PlayerStateType.Null;
                                     }
                                 }
                                 )
@@ -282,8 +317,9 @@ namespace Gaming
                     return false;
                 }
 
-                if (player.IsResetting)
+                if (player.PlayerState != PlayerStateType.Null || player.PlayerState != PlayerStateType.IsMoving)
                     return false;
+
                 Bullet? bullet = player.RemoteAttack(
                     new XY  // 子弹紧贴人物生成。
                     (
@@ -291,6 +327,24 @@ namespace Gaming
                         (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))
                     )
                 );
+                if (bullet.CastTime > 0)
+                {
+                    player.PlayerState = PlayerStateType.IsTryingToAttack;
+
+                    new Thread
+                            (() =>
+                            {
+
+                                Thread.Sleep(bullet.CastTime);
+
+                                if (gameMap.Timer.IsGaming && player.PlayerState == PlayerStateType.IsTryingToAttack)
+                                {
+                                    player.PlayerState = PlayerStateType.Null;
+                                }
+                            }
+                            )
+                    { IsBackground = true }.Start();
+                }
                 if (bullet != null)
                 {
                     bullet.CanMove = true;

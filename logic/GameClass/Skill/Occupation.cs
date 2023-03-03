@@ -1,8 +1,5 @@
 ﻿using GameClass.GameObj;
-using System.Threading;
-using Preparation.Interface;
 using Preparation.Utility;
-using System;
 using System.Collections.Generic;
 
 namespace GameClass.Skill
@@ -17,7 +14,17 @@ namespace GameClass.Skill
         public List<IActiveSkill> ListOfIActiveSkill { get; }
         public List<IPassiveSkill> ListOfIPassiveSkill { get; }
     }
-    public class Assassin : IOccupation
+
+    public interface IGhost : IOccupation
+    {
+    }
+
+    public interface IStudent : IOccupation
+    {
+        public int FixSpeed { get; }
+    }
+
+    public class Assassin : IGhost
     {
         private const int moveSpeed = GameData.basicMoveSpeed / 380 * 473;
         public int MoveSpeed => moveSpeed;
@@ -33,8 +40,26 @@ namespace GameClass.Skill
 
         public BulletType InitBullet => BulletType.CommonAttackOfGhost;
 
-        public List<IActiveSkill> ListOfIActiveSkill => new(new IActiveSkill[] { new BecomeInvisible(), });
+        public List<IActiveSkill> ListOfIActiveSkill => new(new IActiveSkill[] { new BecomeInvisible(), new UseKnife() });
         public List<IPassiveSkill> ListOfIPassiveSkill => new(new IPassiveSkill[] { });
     }
+    public class Athlete : IOccupation
+    {
+        private const int moveSpeed = GameData.basicMoveSpeed;
+        public int MoveSpeed => moveSpeed;
 
+        private const int maxHp = GameData.basicHp;
+        public int MaxHp => maxHp;
+
+        public const int cd = 0;
+        public int CD => cd;
+
+        public const int maxBulletNum = 1;
+        public int MaxBulletNum => maxBulletNum;
+
+        public BulletType InitBullet => BulletType.CommonAttackOfGhost;
+
+        public List<IActiveSkill> ListOfIActiveSkill => new(new IActiveSkill[] { new BecomeInvisible(), new UseKnife() });
+        public List<IPassiveSkill> ListOfIPassiveSkill => new(new IPassiveSkill[] { });
+    }
 }

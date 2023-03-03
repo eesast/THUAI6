@@ -9,7 +9,7 @@ namespace GameClass.GameObj
     public class Doorway : GameObj
     {
         public Doorway(XY initPos) :
-            base(initPos, GameData.numOfPosGridPerCell / 2, PlaceType.Land, GameObjType.Doorway)
+            base(initPos, GameData.numOfPosGridPerCell / 2, PlaceType.Null, GameObjType.Doorway)
         {
             this.CanMove = false;
         }

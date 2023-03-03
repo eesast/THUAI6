@@ -16,13 +16,11 @@ namespace Gaming
             public long teamID;
             public long playerID;
             public CharacterType characterType;
-            public ActiveSkillType commonSkill;
-            public PlayerInitInfo(uint birthPointIndex, long teamID, long playerID, CharacterType characterType, ActiveSkillType commonSkill)
+            public PlayerInitInfo(uint birthPointIndex, long teamID, long playerID, CharacterType characterType)
             {
                 this.birthPointIndex = birthPointIndex;
                 this.teamID = teamID;
                 this.characterType = characterType;
-                this.commonSkill = commonSkill;
                 this.playerID = playerID;
             }
         }
@@ -39,10 +37,9 @@ namespace Gaming
                   || gameMap.BirthPointList[playerInitInfo.birthPointIdx].Parent != null)*/
                 return GameObj.invalidID;
 
-            XY pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex].Position;
+            XY pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex];
             // Console.WriteLine($"x,y: {pos.x},{pos.y}");
-            Character newPlayer = new(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType, playerInitInfo.commonSkill);
-            gameMap.BirthPointList[playerInitInfo.birthPointIndex].Parent = newPlayer;
+            Character newPlayer = (GameData.IsGhost(playerInitInfo.characterType)) ? new Ghost(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType) : new Student(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType);
             gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
             try
             {
@@ -57,7 +54,7 @@ namespace Gaming
             newPlayer.TeamID = playerInitInfo.teamID;
             newPlayer.PlayerID = playerInitInfo.playerID;
 
-            /*new Thread  //人物装弹
+            new Thread  //人物装弹
             (
                 () =>
                 {
@@ -84,17 +81,17 @@ namespace Gaming
                         finallyReturn: () => 0
                     )
                     {
-                        AllowTimeExceed = true
+                        AllowTimeExceed = true/*,
                         MaxTolerantTimeExceedCount = 5,
                         TimeExceedAction = exceedTooMuch =>
                         {
                             if (exceedTooMuch) Console.WriteLine("The computer runs too slow that it cannot check the color below the player in time!");
-                        }
+                        }*/
                     }
                         .Start();
                 }
             )
-            { IsBackground = true }.Start();*/
+            { IsBackground = true }.Start();
 
             return newPlayer.ID;
         }
@@ -175,24 +172,75 @@ namespace Gaming
             }*/
             gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
         }
-        public void MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
+        public bool MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
         {
             if (!gameMap.Timer.IsGaming)
-                return;
+                return false;
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
+                return actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
 #if DEBUG
                 Console.WriteLine($"PlayerID:{playerID} move to ({player.Position.x},{player.Position.y})!");
 #endif
             }
             else
             {
+                return false;
 #if DEBUG
                 Console.WriteLine($"PlayerID:{playerID} player does not exists!");
 #endif
             }
+        }
+        public bool Treat(long playerID, long playerTreatedID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            ICharacter? player = gameMap.FindPlayer(playerID);
+            ICharacter? playerTreated = gameMap.FindPlayer(playerTreatedID);
+            if (player != null && playerTreated != null)
+            {
+                if (!playerTreated.IsGhost() && !player.IsGhost())
+                    return actionManager.Treat((Student)player, (Student)playerTreated);
+            }
+            return false;
+        }
+        public bool Rescue(long playerID, long playerRescuedID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            ICharacter? player = gameMap.FindPlayer(playerID);
+            ICharacter? playerRescued = gameMap.FindPlayer(playerRescuedID);
+            if (player != null && playerRescued != null)
+            {
+                if (!playerRescued.IsGhost() && !player.IsGhost())
+                    return actionManager.Treat((Student)player, (Student)playerRescued);
+            }
+            return false;
+        }
+        public bool Fix(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            ICharacter? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                if (!player.IsGhost())
+                    return actionManager.Fix((Student)player);
+            }
+            return false;
+        }
+        public bool Escape(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            ICharacter? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                if (!player.IsGhost())
+                    return actionManager.Escape((Student)player);
+            }
+            return false;
         }
         public void Attack(long playerID, double angle)
         {
@@ -289,7 +337,7 @@ namespace Gaming
         {
             foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                if (((uint)keyValuePair.Key) <= GameData.numOfObjNotMap)
+                if (!GameData.IsMap(keyValuePair.Key))
                 {
                     gameMap.GameObjLockDict[keyValuePair.Key].EnterWriteLock();
                     try
@@ -320,7 +368,7 @@ namespace Gaming
             var gameObjList = new List<IGameObj>();
             foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                if (((uint)keyValuePair.Key) <= GameData.numOfObjNotMap)
+                if (!GameData.IsMap(keyValuePair.Key))
                 {
                     gameMap.GameObjLockDict[keyValuePair.Key].EnterReadLock();
                     try

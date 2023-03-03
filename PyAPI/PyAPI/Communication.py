@@ -101,81 +101,81 @@ class Communication:
 
         threading.Thread(target=tRead).start()
 
-    def Escape(self, playerID: int) -> bool:
+    def Graduate(self, playerID: int) -> bool:
         try:
-            escapeResult = self.__THUAI6Stub.Escape(
+            escapeResult = self.__THUAI6Stub.Graduate(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
         else:
             return escapeResult.act_success
 
-    def StartFixMachine(self, playerID: int) -> bool:
+    def StartLearning(self, playerID: int) -> bool:
         try:
-            fixResult = self.__THUAI6Stub.StartFixMachine(
+            learnResult = self.__THUAI6Stub.StartLearning(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
         else:
-            return fixResult.act_success
+            return learnResult.act_success
 
-    def EndFixMachine(self, playerID: int) -> bool:
+    def EndLearning(self, playerID: int) -> bool:
         try:
-            fixResult = self.__THUAI6Stub.EndFixMachine(
+            learnResult = self.__THUAI6Stub.EndLearning(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
         else:
-            return fixResult.act_success
+            return learnResult.act_success
 
-    def StartSaveHuman(self, playerID: int) -> bool:
+    def StartHelpMate(self, playerID: int) -> bool:
         try:
-            saveResult = self.__THUAI6Stub.StartSaveHuman(
+            helpResult = self.__THUAI6Stub.StartHelpMate(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
         else:
-            return saveResult.act_success
+            return helpResult.act_success
 
-    def EndSaveHuman(self, playerID: int) -> bool:
+    def EndHelpMate(self, playerID: int) -> bool:
         try:
-            saveResult = self.__THUAI6Stub.EndSaveHuman(
+            helpResult = self.__THUAI6Stub.EndHelpMate(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
         else:
-            return saveResult.act_success
+            return helpResult.act_success
 
-    def Attack(self, angle: float, playerID: int) -> bool:
+    def Trick(self, angle: float, playerID: int) -> bool:
         try:
-            attackResult = self.__THUAI6Stub.Attack(
-                THUAI62Proto.THUAI62ProtobufAttack(angle, playerID))
+            trickResult = self.__THUAI6Stub.Trick(
+                THUAI62Proto.THUAI62ProtobufTrick(angle, playerID))
         except grpc.RpcError as e:
             return False
         else:
-            return attackResult.act_success
+            return trickResult.act_success
 
-    def CarryHuman(self, playerID: int) -> bool:
+    def StartExam(self, playerID: int) -> bool:
         try:
-            carryResult = self.__THUAI6Stub.CarryHuman(
+            carryResult = self.__THUAI6Stub.StartExam(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
         else:
             return carryResult.act_success
 
-    def ReleaseHuman(self, playerID: int) -> bool:
+    def EndExam(self, playerID: int) -> bool:
         try:
-            releaseResult = self.__THUAI6Stub.ReleaseHuman(
+            releaseResult = self.__THUAI6Stub.EndExam(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
         else:
             return releaseResult.act_success
 
-    def HangHuman(self, playerID: int) -> bool:
+    def MakeFail(self, playerID: int) -> bool:
         try:
-            hangResult = self.__THUAI6Stub.HangHuman(
+            hangResult = self.__THUAI6Stub.MakeFail(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
@@ -201,7 +201,7 @@ class Communication:
         def tMessage():
             try:
                 playerMsg = THUAI62Proto.THUAI62ProtobufPlayer(
-                    playerID, Setting.playerType(), Setting.humanType(), Setting.butcherType())
+                    playerID, Setting.playerType(), Setting.studentType(), Setting.trickerType())
                 for msg in self.__THUAI6Stub.AddPlayer(playerMsg):
                     with self.__cvMessage:
                         self.__haveNewMessage = True

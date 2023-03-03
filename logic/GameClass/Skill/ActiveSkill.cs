@@ -9,13 +9,6 @@ namespace GameClass.Skill
 {
     public class BecomeVampire : IActiveSkill  // 化身吸血鬼
     {
-        private const int moveSpeed = GameData.basicMoveSpeed;
-        public int MoveSpeed => moveSpeed;
-
-        private const int maxHp = (int)(GameData.basicHp / 6 * 9.5);
-        public int MaxHp => maxHp;
-
-        // 以上参数以后再改
         public int SkillCD => GameData.commonSkillCD / 3 * 4;
         public int DurationTime => GameData.commonSkillTime;
 
@@ -29,6 +22,29 @@ namespace GameClass.Skill
                                                                     player.Vampire += 0.5;
                                                                     Debugger.Output(player, "becomes vampire!");
                                                                 },
+                                                  () =>
+                                                  {
+                                                      double tempVam = player.Vampire - 0.5;
+                                                      player.Vampire = tempVam < player.OriVampire ? player.OriVampire : tempVam;
+                                                  });
+        }
+    }
+
+    public class BeginToCharge : IActiveSkill
+    {
+        public int SkillCD => GameData.commonSkillCD / 3 * 4;
+        public int DurationTime => GameData.commonSkillTime;
+
+        private readonly object commonSkillLock = new object();
+        public object ActiveSkillLock => commonSkillLock;
+
+        public bool SkillEffect(Character player)
+        {
+            return ActiveSkillFactory.SkillEffect(this, player, () =>
+            {
+                player.Vampire += 0.5;
+                Debugger.Output(player, "becomes vampire!");
+            },
                                                   () =>
                                                   {
                                                       double tempVam = player.Vampire - 0.5;
@@ -56,15 +72,6 @@ namespace GameClass.Skill
     }
     public class NuclearWeapon : IActiveSkill  // 核武器
     {
-        private const int moveSpeed = GameData.basicMoveSpeed / 3 * 4;
-        public int MoveSpeed => moveSpeed;
-
-        private const int maxHp = GameData.basicHp;
-        public int MaxHp => maxHp;
-
-        private const int maxBulletNum = GameData.basicBulletNum * 2 / 3;
-        public int MaxBulletNum => maxBulletNum;
-        // 以上参数以后再改
         public int SkillCD => GameData.commonSkillCD / 3 * 7;
         public int DurationTime => GameData.commonSkillTime / 10;
         private readonly object commonSkillLock = new object();
@@ -80,17 +87,25 @@ namespace GameClass.Skill
                                                   { player.BulletOfPlayer = player.OriBulletOfPlayer; });
         }
     }
+    public class UseKnife : IActiveSkill
+    {
+        public int SkillCD => GameData.commonSkillCD / 3 * 2;
+        public int DurationTime => GameData.commonSkillTime / 10;
+        private readonly object commonSkillLock = new object();
+        public object ActiveSkillLock => commonSkillLock;
+        public bool SkillEffect(Character player)
+        {
+            return ActiveSkillFactory.SkillEffect(this, player, () =>
+            {
+                player.BulletOfPlayer = BulletType.FlyingKnife;
+                Debugger.Output(player, "uses flyingknife!");
+            },
+                                                  () =>
+                                                  { player.BulletOfPlayer = player.OriBulletOfPlayer; });
+        }
+    }
     public class SuperFast : IActiveSkill  // 3倍速
     {
-        private const int moveSpeed = GameData.basicMoveSpeed * 4 / 3;
-        public int MoveSpeed => moveSpeed;
-
-        private const int maxHp = GameData.basicHp / 6 * 4;
-        public int MaxHp => maxHp;
-
-        private const int maxBulletNum = GameData.basicBulletNum * 4 / 3;
-        public int MaxBulletNum => maxBulletNum;
-        // 以上参数以后再改
         public int SkillCD => GameData.commonSkillCD;
         public int DurationTime => GameData.commonSkillTime / 10 * 4;
         private readonly object commonSkillLock = new object();
@@ -108,15 +123,6 @@ namespace GameClass.Skill
     }
     public class NoCommonSkill : IActiveSkill  // 这种情况不该发生，定义着以防意外
     {
-        private const int moveSpeed = GameData.basicMoveSpeed;
-        public int MoveSpeed => moveSpeed;
-
-        private const int maxHp = GameData.basicHp;
-        public int MaxHp => maxHp;
-
-        private const int maxBulletNum = GameData.basicBulletNum;
-        public int MaxBulletNum => maxBulletNum;
-        // 以上参数以后再改
         public int SkillCD => GameData.commonSkillCD;
         public int DurationTime => GameData.commonSkillTime;
         private readonly object commonSkillLock = new object();

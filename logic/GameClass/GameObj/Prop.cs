@@ -12,7 +12,7 @@ namespace GameClass.GameObj
 
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj.Type == GameObjType.BirthPoint || targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet || targetObj.Type == GameObjType.Character)
+            if (targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet || targetObj.Type == GameObjType.Character)
                 return true;
             return false;
         }
@@ -22,7 +22,7 @@ namespace GameClass.GameObj
         public abstract PropType GetPropType();
 
         public Prop(XY initPos, int radius = GameData.PropRadius) :
-            base(initPos, radius, PlaceType.Land, GameObjType.Prop)
+            base(initPos, radius, PlaceType.Null, GameObjType.Prop)
         {
             this.CanMove = false;
             this.moveSpeed = GameData.PropMoveSpeed;

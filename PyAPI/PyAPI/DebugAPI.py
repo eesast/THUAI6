@@ -6,10 +6,10 @@ import os
 import datetime
 
 import PyAPI.structures as THUAI6
-from PyAPI.Interface import ILogic, IHumanAPI, IButcherAPI, IGameTimer, IAI
+from PyAPI.Interface import ILogic, IStudentAPI, ITrickerAPI, IGameTimer, IAI
 
 
-class HumanDebugAPI(IHumanAPI, IGameTimer):
+class StudentDebugAPI(IStudentAPI, IGameTimer):
 
     def __init__(self, logic: ILogic, file: bool, screen: bool, warnOnly: bool, playerID: int) -> None:
         self.__logic = logic
@@ -168,16 +168,16 @@ class HumanDebugAPI(IHumanAPI, IGameTimer):
     def GetPlayerGUIDs(self) -> List[int]:
         return self.__logic.GetPlayerGUIDs()
 
-    def GetButchers(self) -> List[THUAI6.Butcher]:
-        return self.__logic.GetButchers()
+    def GetTrickers(self) -> List[THUAI6.Tricker]:
+        return self.__logic.GetTrickers()
 
-    def GetHumans(self) -> List[THUAI6.Human]:
-        return self.__logic.GetHumans()
+    def GetStudents(self) -> List[THUAI6.Student]:
+        return self.__logic.GetStudents()
 
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
 
-    def GetSelfInfo(self) -> Union[THUAI6.Human, THUAI6.Butcher]:
+    def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
         return self.__logic.GetSelfInfo()
 
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
@@ -188,36 +188,36 @@ class HumanDebugAPI(IHumanAPI, IGameTimer):
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
-    def PrintHuman(self) -> None:
-        for human in self.__logic.GetHumans():
-            self.__logger.info("******Human Info******")
+    def PrintStudent(self) -> None:
+        for student in self.__logic.GetStudents():
+            self.__logger.info("******Student Info******")
             self.__logger.info(
-                f"playerID={human.playerID}, GUID={human.guid}, x={human.x}, y={human.y}")
+                f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
             self.__logger.info(
-                f"speed={human.speed}, view range={human.viewRange}, skill time={human.timeUntilSkillAvailable}, prop={human.prop.name}, place={human.place.name}")
+                f"speed={student.speed}, view range={student.viewRange}, skill time={student.timeUntilSkillAvailable}, prop={student.prop.name}, place={student.place.name}")
             self.__logger.info(
-                f"state={human.state.name}, life={human.life}, hanged time={human.hangedTime}")
+                f"state={student.state.name}, determination={student.determination}, fail time={student.failTime}")
             self.__logger.info("buff=")
-            humanBuff = ""
-            for buff in human.buff:
-                humanBuff += buff.name + ", "
-            self.__logger.info(humanBuff)
+            studentBuff = ""
+            for buff in student.buff:
+                studentBuff += buff.name + ", "
+            self.__logger.info(studentBuff)
             self.__logger.info("**********************")
 
-    def PrintButcher(self) -> None:
-        for butcher in self.__logic.GetButchers():
-            self.__logger.info("******Butcher Info******")
+    def PrintTricker(self) -> None:
+        for tricker in self.__logic.GetTrickers():
+            self.__logger.info("******Tricker Info******")
             self.__logger.info(
-                f"playerID={butcher.playerID}, GUID={butcher.guid}, x={butcher.x}, y={butcher.y}")
+                f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
             self.__logger.info(
-                f"speed={butcher.speed}, view range={butcher.viewRange}, skill time={butcher.timeUntilSkillAvailable}, prop={butcher.prop.name}, place={butcher.place.name}")
+                f"speed={tricker.speed}, view range={tricker.viewRange}, skill time={tricker.timeUntilSkillAvailable}, prop={tricker.prop.name}, place={tricker.place.name}")
             self.__logger.info(
-                f"damage={butcher.damage}, movable={butcher.movable}")
+                f"damage={tricker.damage}, movable={tricker.movable}")
             self.__logger.info("buff=")
-            butcherBuff = ""
-            for buff in butcher.buff:
-                butcherBuff += buff.name + ", "
-            self.__logger.info(butcherBuff)
+            trickerBuff = ""
+            for buff in tricker.buff:
+                trickerBuff += buff.name + ", "
+            self.__logger.info(trickerBuff)
             self.__logger.info("************************")
 
     def PrintProp(self) -> None:
@@ -234,9 +234,9 @@ class HumanDebugAPI(IHumanAPI, IGameTimer):
             f"playerID={mySelf.playerID}, GUID={mySelf.guid}, x={mySelf.x}, y={mySelf.y}")
         self.__logger.info(
             f"speed={mySelf.speed}, view range={mySelf.viewRange}, skill time={mySelf.timeUntilSkillAvailable}, prop={mySelf.prop.name}, place={mySelf.place.name}")
-        if isinstance(mySelf, THUAI6.Human):
+        if isinstance(mySelf, THUAI6.Student):
             self.__logger.info(
-                f"state={mySelf.state.name}, life={mySelf.life}, hanged time={mySelf.hangedTime}")
+                f"state={mySelf.state.name}, determination={mySelf.determination},fail num={mySelf.failNum}, fail time={mySelf.failTime}, emo time={mySelf.emoTime}")
         else:
             self.__logger.info(
                 f"damage={mySelf.damage}, movable={mySelf.movable}")
@@ -249,67 +249,67 @@ class HumanDebugAPI(IHumanAPI, IGameTimer):
 
     # 人类阵营的特殊函数
 
-    def Escape(self) -> Future[bool]:
+    def Graduate(self) -> Future[bool]:
         self.__logger.info(
-            f"Escape: called at {self.__GetTime()}ms")
+            f"Graduate: called at {self.__GetTime()}ms")
 
-        def logEscape() -> bool:
-            result = self.__logic.Escape()
+        def logGraduate() -> bool:
+            result = self.__logic.Graduate()
             if not result:
                 self.__logger.warning(
-                    f"Escape: failed at {self.__GetTime()}ms")
+                    f"Graduate: failed at {self.__GetTime()}ms")
             return result
 
-        return self.__pool.submit(logEscape)
+        return self.__pool.submit(logGraduate)
 
-    def StartFixMachine(self) -> Future[bool]:
+    def StartLearning(self) -> Future[bool]:
         self.__logger.info(
-            f"StartFixMachine: called at {self.__GetTime()}ms")
+            f"StartLearning: called at {self.__GetTime()}ms")
 
         def logStart() -> bool:
-            result = self.__logic.StartFixMachine()
+            result = self.__logic.StartLearning()
             if not result:
                 self.__logger.warning(
-                    f"StartFixMachine: failed at {self.__GetTime()}ms")
+                    f"StartLearning: failed at {self.__GetTime()}ms")
             return result
 
         return self.__pool.submit(logStart)
 
-    def EndFixMachine(self) -> Future[bool]:
+    def EndLearning(self) -> Future[bool]:
         self.__logger.info(
-            f"EndFixMachine: called at {self.__GetTime()}ms")
+            f"EndLearning: called at {self.__GetTime()}ms")
 
         def logEnd() -> bool:
-            result = self.__logic.EndFixMachine()
+            result = self.__logic.EndLearning()
             if not result:
                 self.__logger.warning(
-                    f"EndFixMachine: failed at {self.__GetTime()}ms")
+                    f"EndLearning: failed at {self.__GetTime()}ms")
             return result
 
         return self.__pool.submit(logEnd)
 
-    def StartSaveHuman(self) -> Future[bool]:
+    def StartHelpMate(self) -> Future[bool]:
         self.__logger.info(
-            f"StartSaveHuman: called at {self.__GetTime()}ms")
+            f"StartHelpMate: called at {self.__GetTime()}ms")
 
         def logStart() -> bool:
-            result = self.__logic.StartSaveHuman()
+            result = self.__logic.StartHelpMate()
             if not result:
                 self.__logger.warning(
-                    f"StartSaveHuman: failed at {self.__GetTime()}ms")
+                    f"StartHelpMate: failed at {self.__GetTime()}ms")
             return result
 
         return self.__pool.submit(logStart)
 
-    def EndSaveHuman(self) -> Future[bool]:
+    def EndHelpMate(self) -> Future[bool]:
         self.__logger.info(
-            f"EndSaveHuman: called at {self.__GetTime()}ms")
+            f"EndHelpMate: called at {self.__GetTime()}ms")
 
         def logEnd() -> bool:
-            result = self.__logic.EndSaveHuman()
+            result = self.__logic.EndHelpMate()
             if not result:
                 self.__logger.warning(
-                    f"EndSaveHuman: failed at {self.__GetTime()}ms")
+                    f"EndHelpMate: failed at {self.__GetTime()}ms")
             return result
 
         return self.__pool.submit(logEnd)
@@ -331,7 +331,7 @@ class HumanDebugAPI(IHumanAPI, IGameTimer):
         ai.play(self)
 
 
-class ButcherDebugAPI(IButcherAPI, IGameTimer):
+class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
     def __init__(self, logic: ILogic, file: bool, screen: bool, warnOnly: bool, playerID: int) -> None:
         self.__logic = logic
@@ -489,16 +489,16 @@ class ButcherDebugAPI(IButcherAPI, IGameTimer):
     def GetPlayerGUIDs(self) -> List[int]:
         return self.__logic.GetPlayerGUIDs()
 
-    def GetButchers(self) -> List[THUAI6.Butcher]:
-        return self.__logic.GetButchers()
+    def GetTrickers(self) -> List[THUAI6.Tricker]:
+        return self.__logic.GetTrickers()
 
-    def GetHumans(self) -> List[THUAI6.Human]:
-        return self.__logic.GetHumans()
+    def GetStudents(self) -> List[THUAI6.Student]:
+        return self.__logic.GetStudents()
 
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
 
-    def GetSelfInfo(self) -> Union[THUAI6.Human, THUAI6.Butcher]:
+    def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
         return self.__logic.GetSelfInfo()
 
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
@@ -509,36 +509,36 @@ class ButcherDebugAPI(IButcherAPI, IGameTimer):
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
-        def PrintHuman(self) -> None:
-        for human in self.__logic.GetHumans():
-            self.__logger.info("******Human Info******")
+    def PrintStudent(self) -> None:
+        for student in self.__logic.GetStudents():
+            self.__logger.info("******Student Info******")
             self.__logger.info(
-                f"playerID={human.playerID}, GUID={human.guid}, x={human.x}, y={human.y}")
+                f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
             self.__logger.info(
-                f"speed={human.speed}, view range={human.viewRange}, skill time={human.timeUntilSkillAvailable}, prop={human.prop.name}, place={human.place.name}")
+                f"speed={student.speed}, view range={student.viewRange}, skill time={student.timeUntilSkillAvailable}, prop={student.prop.name}, place={student.place.name}")
             self.__logger.info(
-                f"state={human.state.name}, life={human.life}, hanged time={human.hangedTime}")
+                f"state={student.state.name}, determination={student.determination}, fail num={student.failNum}, fail time={student.failTime}, emo time={student.emoTime}")
             self.__logger.info("buff=")
-            humanBuff = ""
-            for buff in human.buff:
-                humanBuff += buff.name + ", "
-            self.__logger.info(humanBuff)
+            studentBuff = ""
+            for buff in student.buff:
+                studentBuff += buff.name + ", "
+            self.__logger.info(studentBuff)
             self.__logger.info("**********************")
 
-    def PrintButcher(self) -> None:
-        for butcher in self.__logic.GetButchers():
-            self.__logger.info("******Butcher Info******")
+    def PrintTricker(self) -> None:
+        for tricker in self.__logic.GetTrickers():
+            self.__logger.info("******Tricker Info******")
             self.__logger.info(
-                f"playerID={butcher.playerID}, GUID={butcher.guid}, x={butcher.x}, y={butcher.y}")
+                f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
             self.__logger.info(
-                f"speed={butcher.speed}, view range={butcher.viewRange}, skill time={butcher.timeUntilSkillAvailable}, prop={butcher.prop.name}, place={butcher.place.name}")
+                f"speed={tricker.speed}, view range={tricker.viewRange}, skill time={tricker.timeUntilSkillAvailable}, prop={tricker.prop.name}, place={tricker.place.name}")
             self.__logger.info(
-                f"damage={butcher.damage}, movable={butcher.movable}")
+                f"damage={tricker.damage}, movable={tricker.movable}")
             self.__logger.info("buff=")
-            butcherBuff = ""
-            for buff in butcher.buff:
-                butcherBuff += buff.name + ", "
-            self.__logger.info(butcherBuff)
+            trickerBuff = ""
+            for buff in tricker.buff:
+                trickerBuff += buff.name + ", "
+            self.__logger.info(trickerBuff)
             self.__logger.info("************************")
 
     def PrintProp(self) -> None:
@@ -555,9 +555,9 @@ class ButcherDebugAPI(IButcherAPI, IGameTimer):
             f"playerID={mySelf.playerID}, GUID={mySelf.guid}, x={mySelf.x}, y={mySelf.y}")
         self.__logger.info(
             f"speed={mySelf.speed}, view range={mySelf.viewRange}, skill time={mySelf.timeUntilSkillAvailable}, prop={mySelf.prop.name}, place={mySelf.place.name}")
-        if isinstance(mySelf, THUAI6.Human):
+        if isinstance(mySelf, THUAI6.Student):
             self.__logger.info(
-                f"state={mySelf.state.name}, life={mySelf.life}, hanged time={mySelf.hangedTime}")
+                f"state={mySelf.state.name}, determination={mySelf.determination}, fail time={mySelf.failTime}")
         else:
             self.__logger.info(
                 f"damage={mySelf.damage}, movable={mySelf.movable}")
@@ -570,54 +570,54 @@ class ButcherDebugAPI(IButcherAPI, IGameTimer):
 
     # 屠夫阵营的特殊函数
 
-    def Attack(self, angle: float) -> Future[bool]:
+    def Trick(self, angle: float) -> Future[bool]:
         self.__logger.info(
-            f"Attack: angle = {angle}, called at {self.__GetTime()}ms")
+            f"Trick: angle = {angle}, called at {self.__GetTime()}ms")
 
-        def logAttack() -> bool:
-            result = self.__logic.Attack(angle)
+        def logTrick() -> bool:
+            result = self.__logic.Trick(angle)
             if not result:
                 self.__logger.warning(
-                    f"Attack: failed at {self.__GetTime()}ms")
+                    f"Trick: failed at {self.__GetTime()}ms")
             return result
 
-        return self.__pool.submit(logAttack)
+        return self.__pool.submit(logTrick)
 
-    def CarryHuman(self) -> Future[bool]:
+    def StartExam(self) -> Future[bool]:
         self.__logger.info(
-            f"CarryHuman: called at {self.__GetTime()}ms")
+            f"StartExam: called at {self.__GetTime()}ms")
 
         def logCarry() -> bool:
-            result = self.__logic.CarryHuman()
+            result = self.__logic.StartExam()
             if not result:
                 self.__logger.warning(
-                    f"CarryHuman: failed at {self.__GetTime()}ms")
+                    f"StartExam: failed at {self.__GetTime()}ms")
             return result
 
         return self.__pool.submit(logCarry)
 
-    def ReleaseHuman(self) -> Future[bool]:
+    def EndExam(self) -> Future[bool]:
         self.__logger.info(
-            f"ReleaseHuman: called at {self.__GetTime()}ms")
+            f"EndExam: called at {self.__GetTime()}ms")
 
         def logRelease() -> bool:
-            result = self.__logic.ReleaseHuman()
+            result = self.__logic.EndExam()
             if not result:
                 self.__logger.warning(
-                    f"ReleaseHuman: failed at {self.__GetTime()}ms")
+                    f"EndExam: failed at {self.__GetTime()}ms")
             return result
 
         return self.__pool.submit(logRelease)
 
-    def HangHuman(self) -> Future[bool]:
+    def MakeFail(self) -> Future[bool]:
         self.__logger.info(
-            f"HangHuman: called at {self.__GetTime()}ms")
+            f"MakeFail: called at {self.__GetTime()}ms")
 
         def logHang() -> bool:
-            result = self.__logic.HangHuman()
+            result = self.__logic.MakeFail()
             if not result:
                 self.__logger.warning(
-                    f"HangHuman: failed at {self.__GetTime()}ms")
+                    f"MakeFail: failed at {self.__GetTime()}ms")
             return result
 
         return self.__pool.submit(logHang)

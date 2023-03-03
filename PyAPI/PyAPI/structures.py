@@ -14,9 +14,10 @@ class PlaceType(Enum):
     Land = 1
     Wall = 2
     Grass = 3
-    Machine = 4
-    Gate = 5
-    HiddenGate = 6
+    ClassRoom = 4
+    BlackRoom = 5
+    Gate = 6
+    HiddenGate = 7
 
 
 class ShapeType(Enum):
@@ -27,8 +28,8 @@ class ShapeType(Enum):
 
 class PlayerType(Enum):
     NullPlayerType = 0
-    HumanPlayer = 1
-    ButcherPlayer = 2
+    StudentPlayer = 1
+    TrickerPlayer = 2
 
 
 class PropType(Enum):
@@ -36,33 +37,34 @@ class PropType(Enum):
     PropType1 = 1
 
 
-class HumanType(Enum):
-    NullHumanType = 0
-    HumanType1 = 1
+class StudentType(Enum):
+    NullStudentType = 0
+    StudentType1 = 1
 
 
-class ButcherType(Enum):
-    NullButcherType = 0
-    ButcherType1 = 1
+class TrickerType(Enum):
+    NullTrickerType = 0
+    TrickerType1 = 1
 
 
-class HumanBuffType(Enum):
-    NullHumanBuffType = 0
-    HumanBuffType1 = 1
+class StudentBuffType(Enum):
+    NullStudentBuffType = 0
+    StudentBuffType1 = 1
 
 
-class ButcherBuffType(Enum):
-    NullButcherBuffType = 0
-    ButcherBuffType1 = 1
+class TrickerBuffType(Enum):
+    NullTrickerBuffType = 0
+    TrickerBuffType1 = 1
 
 
-class HumanState(Enum):
-    NullHumanState = 0
+class StudentState(Enum):
+    NullStudentState = 0
     Idle = 1
-    Fixing = 2
-    Dying = 3
-    OnChair = 4
-    Dead = 5
+    Learning = 2
+    Fail = 3
+    Emotional = 4
+    Quit = 5
+    Graduated = 6
 
 
 class Player:
@@ -79,19 +81,21 @@ class Player:
     place: PlaceType
 
 
-class Human(Player):
-    state: HumanState
-    life: int
-    hangedTime: int
-    humanType: HumanType
-    buff: List[HumanBuffType]
+class Student(Player):
+    state: StudentState
+    determination: int
+    failNum: int
+    failTime: float
+    emoTime: float
+    studentType: StudentType
+    buff: List[StudentBuffType]
 
 
-class Butcher(Player):
+class Tricker(Player):
     damage: int
     movable: bool
-    butcherType: ButcherType
-    buff: List[ButcherBuffType]
+    trickerType: TrickerType
+    buff: List[TrickerBuffType]
 
 
 class Prop:

@@ -14,6 +14,7 @@ namespace GameClass.GameObj
         public abstract int AP { get; }
         public abstract int Speed { get; }
         public abstract bool IsToBomb { get; }
+        public abstract int CastTime { get; }
         public abstract int Backswing { get; }
         public abstract int RecoveryFromHit { get; }
 
@@ -32,7 +33,7 @@ namespace GameClass.GameObj
 
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj.Type == GameObjType.BirthPoint || targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet)
+            if (targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet)
                 return true;
             return false;
         }

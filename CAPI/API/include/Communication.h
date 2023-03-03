@@ -34,15 +34,10 @@ public:
     bool Graduate(int64_t playerID);
 
     bool StartLearning(int64_t playerID);
-    bool EndLearning(int64_t playerID);
     bool StartHelpMate(int64_t playerID);
-    bool EndHelpMate(int64_t playerID);
+    bool StartHealMate(int64_t playerID);
 
     bool Trick(double angle, int64_t playerID);
-
-    bool StartExam(int64_t playerID);
-    bool EndExam(int64_t playerID);
-    bool MakeFail(int64_t playerID);
 
     bool TryConnection(int64_t playerID);
     protobuf::MessageToClient GetMessage2Client();

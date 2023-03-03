@@ -265,7 +265,7 @@ namespace protobuf
 
         enum : int
         {
-            kBuffFieldNumber = 18,
+            kBuffFieldNumber = 19,
             kXFieldNumber = 1,
             kYFieldNumber = 2,
             kSpeedFieldNumber = 3,
@@ -282,8 +282,9 @@ namespace protobuf
             kEmoTimeFieldNumber = 14,
             kPlayerIdFieldNumber = 15,
             kRadiusFieldNumber = 17,
+            kDamageFieldNumber = 18,
         };
-        // repeated .protobuf.StudentBuffType buff = 18;
+        // repeated .protobuf.StudentBuffType buff = 19;
         int buff_size() const;
 
     private:
@@ -464,6 +465,16 @@ namespace protobuf
         void _internal_set_radius(int32_t value);
 
     public:
+        // int32 damage = 18;
+        void clear_damage();
+        int32_t damage() const;
+        void set_damage(int32_t value);
+
+    private:
+        int32_t _internal_damage() const;
+        void _internal_set_damage(int32_t value);
+
+    public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfStudent)
 
     private:
@@ -493,6 +504,7 @@ namespace protobuf
             double emo_time_;
             int64_t player_id_;
             int32_t radius_;
+            int32_t damage_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -3099,7 +3111,31 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfStudent.radius)
     }
 
-    // repeated .protobuf.StudentBuffType buff = 18;
+    // int32 damage = 18;
+    inline void MessageOfStudent::clear_damage()
+    {
+        _impl_.damage_ = 0;
+    }
+    inline int32_t MessageOfStudent::_internal_damage() const
+    {
+        return _impl_.damage_;
+    }
+    inline int32_t MessageOfStudent::damage() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfStudent.damage)
+        return _internal_damage();
+    }
+    inline void MessageOfStudent::_internal_set_damage(int32_t value)
+    {
+        _impl_.damage_ = value;
+    }
+    inline void MessageOfStudent::set_damage(int32_t value)
+    {
+        _internal_set_damage(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfStudent.damage)
+    }
+
+    // repeated .protobuf.StudentBuffType buff = 19;
     inline int MessageOfStudent::_internal_buff_size() const
     {
         return _impl_.buff_.size();

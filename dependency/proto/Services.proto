@@ -19,13 +19,9 @@ service AvailableService
     rpc SendMessage (SendMsg) returns (BoolRes);
     rpc GetMessage (IDMsg) returns (stream MsgRes);
     rpc StartLearning (IDMsg) returns (BoolRes); // 开始修理机器
-    rpc EndLearning (IDMsg) returns (BoolRes); // 主动停止修复
     rpc StartHelpMate (IDMsg) returns (BoolRes); // 开始救人
-    rpc EndHelpMate (IDMsg) returns (BoolRes); // 主动停止救人
+    rpc StartHealMate (IDMsg) returns (BoolRes);
     rpc Trick (TrickMsg) returns (BoolRes); // 攻击
-    rpc StartExam (IDMsg) returns (BoolRes); // 相当于背人
-    rpc EndExam (IDMsg) returns (BoolRes); // 相当于放人
-    rpc MakeFail (IDMsg) returns (BoolRes); // 相当于挂人
     rpc Graduate (IDMsg) returns (BoolRes); // 相当于逃跑
     
 }

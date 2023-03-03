@@ -32,13 +32,9 @@ namespace protobuf
         "/protobuf.AvailableService/SendMessage",
         "/protobuf.AvailableService/GetMessage",
         "/protobuf.AvailableService/StartLearning",
-        "/protobuf.AvailableService/EndLearning",
         "/protobuf.AvailableService/StartHelpMate",
-        "/protobuf.AvailableService/EndHelpMate",
+        "/protobuf.AvailableService/StartHealMate",
         "/protobuf.AvailableService/Trick",
-        "/protobuf.AvailableService/StartExam",
-        "/protobuf.AvailableService/EndExam",
-        "/protobuf.AvailableService/MakeFail",
         "/protobuf.AvailableService/Graduate",
     };
 
@@ -60,14 +56,10 @@ namespace protobuf
         rpcmethod_SendMessage_(AvailableService_method_names[6], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
         rpcmethod_GetMessage_(AvailableService_method_names[7], options.suffix_for_stats(), ::grpc::internal::RpcMethod::SERVER_STREAMING, channel),
         rpcmethod_StartLearning_(AvailableService_method_names[8], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_EndLearning_(AvailableService_method_names[9], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_StartHelpMate_(AvailableService_method_names[10], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_EndHelpMate_(AvailableService_method_names[11], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_Trick_(AvailableService_method_names[12], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_StartExam_(AvailableService_method_names[13], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_EndExam_(AvailableService_method_names[14], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_MakeFail_(AvailableService_method_names[15], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_Graduate_(AvailableService_method_names[16], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+        rpcmethod_StartHelpMate_(AvailableService_method_names[9], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_StartHealMate_(AvailableService_method_names[10], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_Trick_(AvailableService_method_names[11], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_Graduate_(AvailableService_method_names[12], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
     {
     }
 
@@ -307,34 +299,6 @@ namespace protobuf
         return result;
     }
 
-    ::grpc::Status AvailableService::Stub::EndLearning(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
-    {
-        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_EndLearning_, context, request, response);
-    }
-
-    void AvailableService::Stub::async::EndLearning(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
-    {
-        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_EndLearning_, context, request, response, std::move(f));
-    }
-
-    void AvailableService::Stub::async::EndLearning(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
-    {
-        ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_EndLearning_, context, request, response, reactor);
-    }
-
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncEndLearningRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
-    {
-        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_EndLearning_, context, request);
-    }
-
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncEndLearningRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
-    {
-        auto* result =
-            this->PrepareAsyncEndLearningRaw(context, request, cq);
-        result->StartCall();
-        return result;
-    }
-
     ::grpc::Status AvailableService::Stub::StartHelpMate(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
     {
         return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_StartHelpMate_, context, request, response);
@@ -363,30 +327,30 @@ namespace protobuf
         return result;
     }
 
-    ::grpc::Status AvailableService::Stub::EndHelpMate(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
+    ::grpc::Status AvailableService::Stub::StartHealMate(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
     {
-        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_EndHelpMate_, context, request, response);
+        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_StartHealMate_, context, request, response);
     }
 
-    void AvailableService::Stub::async::EndHelpMate(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
+    void AvailableService::Stub::async::StartHealMate(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
     {
-        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_EndHelpMate_, context, request, response, std::move(f));
+        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartHealMate_, context, request, response, std::move(f));
     }
 
-    void AvailableService::Stub::async::EndHelpMate(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
+    void AvailableService::Stub::async::StartHealMate(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
     {
-        ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_EndHelpMate_, context, request, response, reactor);
+        ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartHealMate_, context, request, response, reactor);
     }
 
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncEndHelpMateRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncStartHealMateRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
     {
-        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_EndHelpMate_, context, request);
+        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_StartHealMate_, context, request);
     }
 
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncEndHelpMateRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncStartHealMateRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
     {
         auto* result =
-            this->PrepareAsyncEndHelpMateRaw(context, request, cq);
+            this->PrepareAsyncStartHealMateRaw(context, request, cq);
         result->StartCall();
         return result;
     }
@@ -415,90 +379,6 @@ namespace protobuf
     {
         auto* result =
             this->PrepareAsyncTrickRaw(context, request, cq);
-        result->StartCall();
-        return result;
-    }
-
-    ::grpc::Status AvailableService::Stub::StartExam(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
-    {
-        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_StartExam_, context, request, response);
-    }
-
-    void AvailableService::Stub::async::StartExam(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
-    {
-        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartExam_, context, request, response, std::move(f));
-    }
-
-    void AvailableService::Stub::async::StartExam(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
-    {
-        ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartExam_, context, request, response, reactor);
-    }
-
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncStartExamRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
-    {
-        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_StartExam_, context, request);
-    }
-
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncStartExamRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
-    {
-        auto* result =
-            this->PrepareAsyncStartExamRaw(context, request, cq);
-        result->StartCall();
-        return result;
-    }
-
-    ::grpc::Status AvailableService::Stub::EndExam(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
-    {
-        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_EndExam_, context, request, response);
-    }
-
-    void AvailableService::Stub::async::EndExam(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
-    {
-        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_EndExam_, context, request, response, std::move(f));
-    }
-
-    void AvailableService::Stub::async::EndExam(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
-    {
-        ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_EndExam_, context, request, response, reactor);
-    }
-
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncEndExamRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
-    {
-        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_EndExam_, context, request);
-    }
-
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncEndExamRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
-    {
-        auto* result =
-            this->PrepareAsyncEndExamRaw(context, request, cq);
-        result->StartCall();
-        return result;
-    }
-
-    ::grpc::Status AvailableService::Stub::MakeFail(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
-    {
-        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_MakeFail_, context, request, response);
-    }
-
-    void AvailableService::Stub::async::MakeFail(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
-    {
-        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_MakeFail_, context, request, response, std::move(f));
-    }
-
-    void AvailableService::Stub::async::MakeFail(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
-    {
-        ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_MakeFail_, context, request, response, reactor);
-    }
-
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncMakeFailRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
-    {
-        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_MakeFail_, context, request);
-    }
-
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncMakeFailRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
-    {
-        auto* result =
-            this->PrepareAsyncMakeFailRaw(context, request, cq);
         result->StartCall();
         return result;
     }
@@ -668,7 +548,7 @@ namespace protobuf
                    const ::protobuf::IDMsg* req,
                    ::protobuf::BoolRes* resp)
                 {
-                    return service->EndLearning(ctx, req, resp);
+                    return service->StartHelpMate(ctx, req, resp);
                 },
                 this
             )
@@ -682,27 +562,13 @@ namespace protobuf
                    const ::protobuf::IDMsg* req,
                    ::protobuf::BoolRes* resp)
                 {
-                    return service->StartHelpMate(ctx, req, resp);
+                    return service->StartHealMate(ctx, req, resp);
                 },
                 this
             )
         ));
         AddMethod(new ::grpc::internal::RpcServiceMethod(
             AvailableService_method_names[11],
-            ::grpc::internal::RpcMethod::NORMAL_RPC,
-            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
-                [](AvailableService::Service* service,
-                   ::grpc::ServerContext* ctx,
-                   const ::protobuf::IDMsg* req,
-                   ::protobuf::BoolRes* resp)
-                {
-                    return service->EndHelpMate(ctx, req, resp);
-                },
-                this
-            )
-        ));
-        AddMethod(new ::grpc::internal::RpcServiceMethod(
-            AvailableService_method_names[12],
             ::grpc::internal::RpcMethod::NORMAL_RPC,
             new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::TrickMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
                 [](AvailableService::Service* service,
@@ -716,49 +582,7 @@ namespace protobuf
             )
         ));
         AddMethod(new ::grpc::internal::RpcServiceMethod(
-            AvailableService_method_names[13],
-            ::grpc::internal::RpcMethod::NORMAL_RPC,
-            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
-                [](AvailableService::Service* service,
-                   ::grpc::ServerContext* ctx,
-                   const ::protobuf::IDMsg* req,
-                   ::protobuf::BoolRes* resp)
-                {
-                    return service->StartExam(ctx, req, resp);
-                },
-                this
-            )
-        ));
-        AddMethod(new ::grpc::internal::RpcServiceMethod(
-            AvailableService_method_names[14],
-            ::grpc::internal::RpcMethod::NORMAL_RPC,
-            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
-                [](AvailableService::Service* service,
-                   ::grpc::ServerContext* ctx,
-                   const ::protobuf::IDMsg* req,
-                   ::protobuf::BoolRes* resp)
-                {
-                    return service->EndExam(ctx, req, resp);
-                },
-                this
-            )
-        ));
-        AddMethod(new ::grpc::internal::RpcServiceMethod(
-            AvailableService_method_names[15],
-            ::grpc::internal::RpcMethod::NORMAL_RPC,
-            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
-                [](AvailableService::Service* service,
-                   ::grpc::ServerContext* ctx,
-                   const ::protobuf::IDMsg* req,
-                   ::protobuf::BoolRes* resp)
-                {
-                    return service->MakeFail(ctx, req, resp);
-                },
-                this
-            )
-        ));
-        AddMethod(new ::grpc::internal::RpcServiceMethod(
-            AvailableService_method_names[16],
+            AvailableService_method_names[12],
             ::grpc::internal::RpcMethod::NORMAL_RPC,
             new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
                 [](AvailableService::Service* service,
@@ -849,14 +673,6 @@ namespace protobuf
         return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
 
-    ::grpc::Status AvailableService::Service::EndLearning(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
-    {
-        (void)context;
-        (void)request;
-        (void)response;
-        return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-
     ::grpc::Status AvailableService::Service::StartHelpMate(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
     {
         (void)context;
@@ -865,7 +681,7 @@ namespace protobuf
         return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
 
-    ::grpc::Status AvailableService::Service::EndHelpMate(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+    ::grpc::Status AvailableService::Service::StartHealMate(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
     {
         (void)context;
         (void)request;
@@ -874,30 +690,6 @@ namespace protobuf
     }
 
     ::grpc::Status AvailableService::Service::Trick(::grpc::ServerContext* context, const ::protobuf::TrickMsg* request, ::protobuf::BoolRes* response)
-    {
-        (void)context;
-        (void)request;
-        (void)response;
-        return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-
-    ::grpc::Status AvailableService::Service::StartExam(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
-    {
-        (void)context;
-        (void)request;
-        (void)response;
-        return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-
-    ::grpc::Status AvailableService::Service::EndExam(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
-    {
-        (void)context;
-        (void)request;
-        (void)response;
-        return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-
-    ::grpc::Status AvailableService::Service::MakeFail(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
     {
         (void)context;
         (void)request;

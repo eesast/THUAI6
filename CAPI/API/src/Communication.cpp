@@ -99,18 +99,6 @@ bool Communication::StartLearning(int64_t playerID)
         return false;
 }
 
-bool Communication::EndLearning(int64_t playerID)
-{
-    protobuf::BoolRes endLearningResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->EndLearning(&context, request, &endLearningResult);
-    if (status.ok())
-        return endLearningResult.act_success();
-    else
-        return false;
-}
-
 bool Communication::StartHelpMate(int64_t playerID)
 {
     protobuf::BoolRes saveStudentResult;
@@ -123,14 +111,14 @@ bool Communication::StartHelpMate(int64_t playerID)
         return false;
 }
 
-bool Communication::EndHelpMate(int64_t playerID)
+bool Communication::StartHealMate(int64_t playerID)
 {
-    protobuf::BoolRes saveStudentResult;
+    protobuf::BoolRes healStudentResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->EndHelpMate(&context, request, &saveStudentResult);
+    auto status = THUAI6Stub->StartHealMate(&context, request, &healStudentResult);
     if (status.ok())
-        return saveStudentResult.act_success();
+        return healStudentResult.act_success();
     else
         return false;
 }
@@ -143,42 +131,6 @@ bool Communication::Trick(double angle, int64_t playerID)
     auto status = THUAI6Stub->Trick(&context, request, &trickResult);
     if (status.ok())
         return trickResult.act_success();
-    else
-        return false;
-}
-
-bool Communication::StartExam(int64_t playerID)
-{
-    protobuf::BoolRes startExamResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->StartExam(&context, request, &startExamResult);
-    if (status.ok())
-        return startExamResult.act_success();
-    else
-        return false;
-}
-
-bool Communication::EndExam(int64_t playerID)
-{
-    protobuf::BoolRes endExamResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->EndExam(&context, request, &endExamResult);
-    if (status.ok())
-        return endExamResult.act_success();
-    else
-        return false;
-}
-
-bool Communication::MakeFail(int64_t playerID)
-{
-    protobuf::BoolRes makeFailResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->MakeFail(&context, request, &makeFailResult);
-    if (status.ok())
-        return makeFailResult.act_success();
     else
         return false;
 }

@@ -22,7 +22,8 @@ message MessageOfStudent
     int64 player_id = 15;
     int32 view_range = 16; // 视野距离
     int32 radius = 17; // 半径
-    repeated StudentBuffType buff = 18;
+    int32 damage = 18;
+    repeated StudentBuffType buff = 19;
 }
 
 message MessageOfTricker

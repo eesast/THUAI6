@@ -112,15 +112,11 @@ private:
     bool Graduate() override;
 
     bool StartLearning() override;
-    bool EndLearning() override;
 
     bool StartHelpMate() override;
-    bool EndHelpMate() override;
+    bool StartHealMate() override;
 
     bool Trick(double angle) override;
-    bool StartExam() override;
-    bool EndExam() override;
-    bool MakeFail() override;
 
     bool WaitThread() override;
 

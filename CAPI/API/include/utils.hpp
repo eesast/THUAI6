@@ -56,7 +56,6 @@ namespace Proto2THUAI6
         {protobuf::PlaceType::WALL, THUAI6::PlaceType::Wall},
         {protobuf::PlaceType::GRASS, THUAI6::PlaceType::Grass},
         {protobuf::PlaceType::CLASSROOM, THUAI6::PlaceType::ClassRoom},
-        {protobuf::PlaceType::BLACKROOM, THUAI6::PlaceType::BlackRoom},
         {protobuf::PlaceType::GATE, THUAI6::PlaceType::Gate},
         {protobuf::PlaceType::HIDDEN_GATE, THUAI6::PlaceType::HiddenGate},
     };
@@ -117,8 +116,7 @@ namespace Proto2THUAI6
         {protobuf::StudentState::NULL_STATUS, THUAI6::StudentState::NullStudentState},
         {protobuf::StudentState::IDLE, THUAI6::StudentState::Idle},
         {protobuf::StudentState::LEARNING, THUAI6::StudentState::Learning},
-        {protobuf::StudentState::FAIL, THUAI6::StudentState::Fail},
-        {protobuf::StudentState::EMOTIONAL, THUAI6::StudentState::Emotional},
+        {protobuf::StudentState::ADDICTED, THUAI6::StudentState::Addicted},
         {protobuf::StudentState::QUIT, THUAI6::StudentState::Quit},
         {protobuf::StudentState::GRADUATED, THUAI6::StudentState::Graduated},
     };
@@ -166,6 +164,7 @@ namespace Proto2THUAI6
         student->guid = studentMsg.guid();
         student->radius = studentMsg.radius();
         student->timeUntilSkillAvailable = studentMsg.time_until_skill_available();
+        student->damage = studentMsg.damage();
         student->playerType = THUAI6::PlayerType::StudentPlayer;
         student->prop = propTypeDict[studentMsg.prop()];
         student->place = placeTypeDict[studentMsg.place()];
@@ -223,7 +222,6 @@ namespace THUAI62Proto
         {THUAI6::PlaceType::Wall, protobuf::PlaceType::WALL},
         {THUAI6::PlaceType::Grass, protobuf::PlaceType::GRASS},
         {THUAI6::PlaceType::ClassRoom, protobuf::PlaceType::CLASSROOM},
-        {THUAI6::PlaceType::BlackRoom, protobuf::PlaceType::BLACKROOM},
         {THUAI6::PlaceType::Gate, protobuf::PlaceType::GATE},
         {THUAI6::PlaceType::HiddenGate, protobuf::PlaceType::HIDDEN_GATE},
     };

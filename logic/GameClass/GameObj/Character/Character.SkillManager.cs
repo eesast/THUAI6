@@ -58,7 +58,7 @@ namespace GameClass.GameObj
             };
         }
 
-        protected Character(XY initPos, int initRadius, PlaceType initPlace) :
+        public Character(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) :
             base(initPos, initRadius, initPlace, GameObjType.Character)
         {
             this.CanMove = true;

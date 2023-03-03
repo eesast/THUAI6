@@ -7,11 +7,13 @@ namespace ClientTest
     {
         public static async Task Main(string[] args)
         {
-            Channel channel = new Channel("0.0.0.0:8888", ChannelCredentials.Insecure);
+            Thread.Sleep(3000);
+            Channel channel = new Channel("127.0.0.1:8888", ChannelCredentials.Insecure);
             var client = new AvailableService.AvailableServiceClient(channel);
             PlayerMsg playerInfo = new();
-            playerInfo.PlayerId = Convert.ToInt32(args[0]);
-            playerInfo.PlayerType = (PlayerType)Convert.ToInt32(args[1]);
+            playerInfo.PlayerId = 0;
+            playerInfo.PlayerType = PlayerType.HumanPlayer;
+            playerInfo.HumanType = HumanType.NullHumanType;
             var call = client.AddPlayer(playerInfo);
             while (await call.ResponseStream.MoveNext())
             {

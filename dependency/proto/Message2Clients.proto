@@ -78,6 +78,7 @@ message MessageOfProp // 可拾取道具的信息
     bool is_moving = 8;
 }
 
+
 message MessageOfPickedProp  //for Unity，直接继承自THUAI5
 {
     PropType type = 1;

@@ -1,0 +1,15 @@
+﻿<Window x:Class="Client.ErrorDisplayer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        mc:Ignorable="d"
+        Title="ErrorDisplayer" Height="250" Width="500">
+    <Grid Margin="0,0,0,0">
+        <TextBox Name="errorDisplayer" HorizontalAlignment="Left" Height="150
+                 " Margin="140,52,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" IsReadOnly="True"/>
+        <Image Margin="33,95,398,76" Stretch="Fill" Source="/Warning.png" RenderTransformOrigin="0.484,1.248"/>
+
+    </Grid>
+</Window>

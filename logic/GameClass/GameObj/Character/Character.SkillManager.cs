@@ -7,6 +7,7 @@ namespace GameClass.GameObj
 {
     public partial class Character
     {
+
         public CharacterType CharacterType { protected set; get; }
         public IOccupation Occupation { protected set; get; }
 

@@ -6,6 +6,7 @@ using Preparation.Utility;
 using GameEngine;
 using Preparation.Interface;
 using Timothy.FrameRateTask;
+using System.Numerics;
 
 namespace Gaming
 {
@@ -37,7 +38,7 @@ namespace Gaming
                 );
             }
 
-            public void BeAddictedToGame(Character player)
+            public void BeAddictedToGame(Student player)
             {
                 new Thread
                     (() =>
@@ -46,7 +47,7 @@ namespace Gaming
                             player.GamingAddiction = GameData.MidGamingAddiction;
                         player.PlayerState = PlayerStateType.IsAddicted;
                         new FrameRateTaskExecutor<int>(
-                            () => player.PlayerState == PlayerStateType.IsAddicted && player.GamingAddiction < player.MaxGamingAddiction,
+                            () => player.PlayerState == PlayerStateType.IsAddicted && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
                             () =>
                             {
                                 player.GamingAddiction += GameData.frameDuration;
@@ -54,12 +55,10 @@ namespace Gaming
                             timeInterval: GameData.frameDuration,
                             () =>
                             {
-                                if (player.GamingAddiction == player.MaxGamingAddiction)
+                                if (player.GamingAddiction == player.MaxGamingAddiction && gameMap.Timer.IsGaming)
                                 {
-                                    player.PlayerState = PlayerStateType.Null;
                                     Die(player);
                                 }
-                                else player.CanMove = true;
                                 return 0;
                             }
                         )
@@ -140,11 +139,11 @@ namespace Gaming
                 switch (objBeingShot.Type)
                 {
                     case GameObjType.Character:
-                        Character playerBeingShot = (Character)objBeingShot;
-                        if (playerBeingShot.BeAttacked(bullet))
-                        {
-                            BeAddictedToGame(playerBeingShot);
-                        }
+                        if (!((Character)objBeingShot).IsGhost())
+                            if (((Character)objBeingShot).BeAttacked(bullet))
+                            {
+                                BeAddictedToGame((Student)objBeingShot);
+                            }
                         break;
                 }
             }
@@ -187,17 +186,16 @@ namespace Gaming
                     {
                         if (bullet.Backswing > 0)
                         {
-                            bullet.Parent.CanMove = false;
-                            bullet.Parent.IsMoving = false;
+                            bullet.Parent.PlayerState = PlayerStateType.IsSwinging;
 
                             new Thread
                                     (() =>
                                     {
                                         Thread.Sleep(bullet.Backswing);
 
-                                        if (gameMap.Timer.IsGaming)
+                                        if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
                                         {
-                                            bullet.Parent.CanMove = true;
+                                            bullet.Parent.PlayerState = PlayerStateType.Null;
                                         }
                                     }
                                     )
@@ -210,8 +208,7 @@ namespace Gaming
                     BombObj(bullet, objBeingShot);
                     if (bullet.RecoveryFromHit > 0)
                     {
-                        bullet.Parent.CanMove = false;
-                        bullet.Parent.IsMoving = false;
+                        bullet.Parent.PlayerState = PlayerStateType.IsSwinging;
 
                         new Thread
                                 (() =>
@@ -219,9 +216,9 @@ namespace Gaming
 
                                     Thread.Sleep(bullet.RecoveryFromHit);
 
-                                    if (gameMap.Timer.IsGaming)
+                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
                                     {
-                                        bullet.Parent.CanMove = true;
+                                        bullet.Parent.PlayerState = PlayerStateType.Null;
                                     }
                                 }
                                 )
@@ -270,17 +267,16 @@ namespace Gaming
                 {
                     if (bullet.Backswing > 0)
                     {
-                        bullet.Parent.CanMove = false;
-                        bullet.Parent.IsMoving = false;
+                        bullet.Parent.PlayerState = PlayerStateType.IsSwinging;
 
                         new Thread
                                 (() =>
                                 {
                                     Thread.Sleep(bullet.Backswing);
 
-                                    if (gameMap.Timer.IsGaming)
+                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
                                     {
-                                        bullet.Parent.CanMove = true;
+                                        bullet.Parent.PlayerState = PlayerStateType.Null;
                                     }
                                 }
                                 )
@@ -291,8 +287,7 @@ namespace Gaming
                 {
                     if (bullet.RecoveryFromHit > 0)
                     {
-                        bullet.Parent.CanMove = false;
-                        bullet.Parent.IsMoving = false;
+                        bullet.Parent.PlayerState = PlayerStateType.IsSwinging;
 
                         new Thread
                                 (() =>
@@ -300,9 +295,9 @@ namespace Gaming
 
                                     Thread.Sleep(bullet.RecoveryFromHit);
 
-                                    if (gameMap.Timer.IsGaming)
+                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
                                     {
-                                        bullet.Parent.CanMove = true;
+                                        bullet.Parent.PlayerState = PlayerStateType.Null;
                                     }
                                 }
                                 )
@@ -322,8 +317,9 @@ namespace Gaming
                     return false;
                 }
 
-                if (player.IsResetting)
+                if (player.PlayerState != PlayerStateType.Null || player.PlayerState != PlayerStateType.IsMoving)
                     return false;
+
                 Bullet? bullet = player.RemoteAttack(
                     new XY  // 子弹紧贴人物生成。
                     (
@@ -331,6 +327,24 @@ namespace Gaming
                         (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))
                     )
                 );
+                if (bullet.CastTime > 0)
+                {
+                    player.PlayerState = PlayerStateType.IsTryingToAttack;
+
+                    new Thread
+                            (() =>
+                            {
+
+                                Thread.Sleep(bullet.CastTime);
+
+                                if (gameMap.Timer.IsGaming && player.PlayerState == PlayerStateType.IsTryingToAttack)
+                                {
+                                    player.PlayerState = PlayerStateType.Null;
+                                }
+                            }
+                            )
+                    { IsBackground = true }.Start();
+                }
                 if (bullet != null)
                 {
                     bullet.CanMove = true;

@@ -77,23 +77,23 @@ namespace Server
             }
             switch (player.Place)
             {
-                case Preparation.Utility.PlaceType.Land:
-                    msg.MessageOfCharacter.Place = Communication.Proto.PlaceType.Land;
+                case Preparation.Utility.PlacccceType.Land:
+                    msg.MessageOfCharacter.Place = Communication.Proto.PlacccceType.Land;
                     break;
-                case Preparation.Utility.PlaceType.Grass1:
-                    msg.MessageOfCharacter.Place = Communication.Proto.PlaceType.Grass1;
+                case Preparation.Utility.PlacccceType.Grass1:
+                    msg.MessageOfCharacter.Place = Communication.Proto.PlacccceType.Grass1;
                     break;
-                case Preparation.Utility.PlaceType.Grass2:
-                    msg.MessageOfCharacter.Place = Communication.Proto.PlaceType.Grass2;
+                case Preparation.Utility.PlacccceType.Grass2:
+                    msg.MessageOfCharacter.Place = Communication.Proto.PlacccceType.Grass2;
                     break;
-                case Preparation.Utility.PlaceType.Grass3:
-                    msg.MessageOfCharacter.Place = Communication.Proto.PlaceType.Grass3;
+                case Preparation.Utility.PlacccceType.Grass3:
+                    msg.MessageOfCharacter.Place = Communication.Proto.PlacccceType.Grass3;
                     break;
-               // case Preparation.Utility.PlaceType.Invisible:
-               //     msg.MessageOfCharacter.Place = Communication.Proto.PlaceType.Invisible;
+               // case Preparation.Utility.PlacccceType.Invisible:
+               //     msg.MessageOfCharacter.Place = Communication.Proto.PlacccceType.Invisible;
                //     break;
                 default:
-                    msg.MessageOfCharacter.Place = Communication.Proto.PlaceType.NullPlaceType;
+                    msg.MessageOfCharacter.Place = Communication.Proto.PlacccceType.NullPlaceType;
                     break;
             }
 
@@ -212,20 +212,20 @@ namespace Server
                 msg.MessageOfBullet.ParentTeamID = bullet.Parent.TeamID;
             switch (bullet.Place)
             {
-                case Preparation.Utility.PlaceType.Land:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Land;
+                case Preparation.Utility.PlacccceType.Land:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.Land;
                     break;
-                case Preparation.Utility.PlaceType.Grass1:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass1;
+                case Preparation.Utility.PlacccceType.Grass1:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.Grass1;
                     break;
-                case Preparation.Utility.PlaceType.Grass2:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass2;
+                case Preparation.Utility.PlacccceType.Grass2:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.Grass2;
                     break;
-                case Preparation.Utility.PlaceType.Grass3:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass3;
+                case Preparation.Utility.PlacccceType.Grass3:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.Grass3;
                     break;
                 default:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.NullPlaceType;
+                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.NullPlaceType;
                     break;
             }
             return msg;
@@ -271,20 +271,20 @@ namespace Server
             }
             switch (prop.Place)
             {
-                case Preparation.Utility.PlaceType.Land:
-                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Land;
+                case Preparation.Utility.PlacccceType.Land:
+                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.Land;
                     break;
-                case Preparation.Utility.PlaceType.Grass1:
-                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass1;
+                case Preparation.Utility.PlacccceType.Grass1:
+                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.Grass1;
                     break;
-                case Preparation.Utility.PlaceType.Grass2:
-                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass2;
+                case Preparation.Utility.PlacccceType.Grass2:
+                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.Grass2;
                     break;
-                case Preparation.Utility.PlaceType.Grass3:
-                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass3;
+                case Preparation.Utility.PlacccceType.Grass3:
+                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.Grass3;
                     break;
                 default:
-                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.NullPlaceType;
+                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.NullPlaceType;
                     break;
             }
             return msg;

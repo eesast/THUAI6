@@ -29,6 +29,29 @@ namespace GameClass.Skill
                                                   });
         }
     }
+
+    public class BeginToCharge : IActiveSkill
+    {
+        public int SkillCD => GameData.commonSkillCD / 3 * 4;
+        public int DurationTime => GameData.commonSkillTime;
+
+        private readonly object commonSkillLock = new object();
+        public object ActiveSkillLock => commonSkillLock;
+
+        public bool SkillEffect(Character player)
+        {
+            return ActiveSkillFactory.SkillEffect(this, player, () =>
+            {
+                player.Vampire += 0.5;
+                Debugger.Output(player, "becomes vampire!");
+            },
+                                                  () =>
+                                                  {
+                                                      double tempVam = player.Vampire - 0.5;
+                                                      player.Vampire = tempVam < player.OriVampire ? player.OriVampire : tempVam;
+                                                  });
+        }
+    }
     public class BecomeInvisible : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD;

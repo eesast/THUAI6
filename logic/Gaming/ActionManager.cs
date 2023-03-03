@@ -15,12 +15,14 @@ namespace Gaming
         {
 
             // 人物移动
-            public void MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
+            public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
+                if (playerToMove.PlayerState != PlayerStateType.Null) return false;
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
+                return true;
             }
 
-            public bool Fix(Character player)// 自动检查有无发电机可修
+            public bool Fix(Student player)// 自动检查有无发电机可修
             {
                 if (player.PlayerState != PlayerStateType.Null || player.IsGhost())
                     return false;
@@ -53,7 +55,7 @@ namespace Gaming
               () =>
               {
                   new FrameRateTaskExecutor<int>(
-                      loopCondition: () => player.PlayerState == PlayerStateType.IsFixing && generatorForFix.DegreeOfFRepair < GameData.degreeOfFixedGenerator && GameData.ApproachToInteract(player.Position, generatorForFix.Position),
+                      loopCondition: () => player.PlayerState == PlayerStateType.IsFixing && gameMap.Timer.IsGaming && generatorForFix.DegreeOfFRepair < GameData.degreeOfFixedGenerator && GameData.ApproachToInteract(player.Position, generatorForFix.Position),
                       loopToDo: () =>
                       {
                           return !generatorForFix.Repair(player.FixSpeed * GameData.frameDuration);
@@ -63,48 +65,48 @@ namespace Gaming
                   )
 
                       .Start();
+                  if (generatorForFix.DegreeOfFRepair == GameData.degreeOfFixedGenerator)
+                  {
+                      gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
+                      try
+                      {
+                          Doorway exit = (Doorway)gameMap.GameObjDict[GameObjType.Doorway][1];
+                          if (!exit.PowerSupply)
+                          {
+                              int numOfFixedGenerator = 0;
+                              foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
+                                  if (generator.DegreeOfFRepair == GameData.degreeOfFixedGenerator)
+                                      ++numOfFixedGenerator;
+                              if (numOfFixedGenerator >= GameData.numOfGeneratorRequiredForRepair)
+                              {
+                                  gameMap.GameObjLockDict[GameObjType.Doorway].EnterWriteLock();
+                                  try
+                                  {
+                                      foreach (Doorway doorway in gameMap.GameObjDict[GameObjType.Doorway])
+                                          doorway.PowerSupply = true;
+                                  }
+                                  finally
+                                  {
+                                      gameMap.GameObjLockDict[GameObjType.Doorway].ExitWriteLock();
+                                  }
+                              }
+                          }
+                      }
+
+                      finally
+                      {
+                          gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
+                      }
+                  }
               }
+
           )
                 { IsBackground = true }.Start();
 
-                if (generatorForFix.DegreeOfFRepair == GameData.degreeOfFixedGenerator)
-                {
-                    gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
-                    try
-                    {
-                        Doorway exit = (Doorway)gameMap.GameObjDict[GameObjType.Doorway][1];
-                        if (!exit.PowerSupply)
-                        {
-                            int numOfFixedGenerator = 0;
-                            foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
-                                if (generator.DegreeOfFRepair == GameData.degreeOfFixedGenerator)
-                                    ++numOfFixedGenerator;
-                            if (numOfFixedGenerator >= GameData.numOfGeneratorRequiredForRepair)
-                            {
-                                gameMap.GameObjLockDict[GameObjType.Doorway].EnterWriteLock();
-                                try
-                                {
-                                    foreach (Doorway doorway in gameMap.GameObjDict[GameObjType.Doorway])
-                                        doorway.PowerSupply = true;
-                                }
-                                finally
-                                {
-                                    gameMap.GameObjLockDict[GameObjType.Doorway].ExitWriteLock();
-                                }
-                            }
-                        }
-                    }
-
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
-                    }
-                    return true;
-                }
-                return false;
+                return true;
             }
 
-            public bool Escape(Character player)
+            public bool Escape(Student player)
             {
                 if (!(player.PlayerState == PlayerStateType.Null || player.PlayerState == PlayerStateType.IsMoving) || player.IsGhost())
                     return false;
@@ -137,7 +139,7 @@ namespace Gaming
                     return false;
             }
 
-            public bool Treat(Character player, Character playerTreated)
+            public bool Treat(Student player, Student playerTreated)
             {
                 if (playerTreated.PlayerState == PlayerStateType.Null || player.PlayerState == PlayerStateType.Null || playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
                     return false;
@@ -146,21 +148,21 @@ namespace Gaming
                 {
                     playerTreated.HP = playerTreated.MaxHp;
                     playerTreated.DegreeOfTreatment = 0;
-                    return true;
+                    return false;
                 }
 
                 if (playerTreated.DegreeOfTreatment >= GameData.basicTreatmentDegree)
                 {
                     playerTreated.HP += GameData.basicTreatmentDegree;
                     playerTreated.DegreeOfTreatment = 0;
-                    return true;
+                    return false;
                 }
                 new Thread
            (
                () =>
                {
                    new FrameRateTaskExecutor<int>(
-                       loopCondition: () => playerTreated.PlayerState == PlayerStateType.IsTreated && player.PlayerState == PlayerStateType.IsTreating && playerTreated.HP + playerTreated.DegreeOfTreatment < playerTreated.MaxHp && playerTreated.DegreeOfTreatment >= GameData.basicTreatmentDegree && GameData.ApproachToInteract(playerTreated.Position, player.Position),
+                       loopCondition: () => playerTreated.PlayerState == PlayerStateType.IsTreated && player.PlayerState == PlayerStateType.IsTreating && gameMap.Timer.IsGaming && playerTreated.HP + playerTreated.DegreeOfTreatment < playerTreated.MaxHp && playerTreated.DegreeOfTreatment >= GameData.basicTreatmentDegree && GameData.ApproachToInteract(playerTreated.Position, player.Position),
                        loopToDo: () =>
                        {
                            playerTreated.DegreeOfTreatment += GameData.frameDuration * player.TreatSpeed;
@@ -170,30 +172,28 @@ namespace Gaming
                    )
 
                        .Start();
+
+                   if (playerTreated.PlayerState == PlayerStateType.IsTreated) playerTreated.PlayerState = PlayerStateType.Null;
+                   if (player.PlayerState == PlayerStateType.IsTreating) player.PlayerState = PlayerStateType.Null;
+
+                   if (playerTreated.HP + playerTreated.DegreeOfTreatment >= playerTreated.MaxHp)
+                   {
+                       playerTreated.HP = playerTreated.MaxHp;
+                       playerTreated.DegreeOfTreatment = 0;
+                   }
+                   else
+                   if (playerTreated.DegreeOfTreatment >= GameData.basicTreatmentDegree)
+                   {
+                       playerTreated.HP += GameData.basicTreatmentDegree;
+                       playerTreated.DegreeOfTreatment = 0;
+                   }
                }
            )
                 { IsBackground = true }.Start();
-
-                if (playerTreated.PlayerState == PlayerStateType.IsTreated) playerTreated.PlayerState = PlayerStateType.Null;
-                if (player.PlayerState == PlayerStateType.IsTreating) player.PlayerState = PlayerStateType.Null;
-
-                if (playerTreated.HP + playerTreated.DegreeOfTreatment >= playerTreated.MaxHp)
-                {
-                    playerTreated.HP = playerTreated.MaxHp;
-                    playerTreated.DegreeOfTreatment = 0;
-                    return true;
-                }
-
-                if (playerTreated.DegreeOfTreatment >= GameData.basicTreatmentDegree)
-                {
-                    playerTreated.HP += GameData.basicTreatmentDegree;
-                    playerTreated.DegreeOfTreatment = 0;
-                    return true;
-                }
-                return false;
+                return true;
             }
 
-            public bool Rescue(Character player, Character playerRescued)
+            public bool Rescue(Student player, Student playerRescued)
             {
                 if (player.PlayerState != PlayerStateType.Null || playerRescued.PlayerState != PlayerStateType.IsAddicted || !GameData.ApproachToInteract(playerRescued.Position, player.Position))
                     return false;
@@ -205,7 +205,7 @@ namespace Gaming
                () =>
                {
                    new FrameRateTaskExecutor<int>(
-                       loopCondition: () => playerRescued.PlayerState == PlayerStateType.IsRescued && player.PlayerState == PlayerStateType.IsRescuing && GameData.ApproachToInteract(playerRescued.Position, player.Position),
+                       loopCondition: () => playerRescued.PlayerState == PlayerStateType.IsRescued && player.PlayerState == PlayerStateType.IsRescuing && gameMap.Timer.IsGaming && GameData.ApproachToInteract(playerRescued.Position, player.Position),
                        loopToDo: () =>
                        {
                            rescuedDegree += GameData.frameDuration;
@@ -216,21 +216,22 @@ namespace Gaming
                    )
 
                        .Start();
+
+                   if (rescuedDegree == 1000)
+                   {
+                       if (playerRescued.PlayerState == PlayerStateType.IsRescued) playerRescued.PlayerState = PlayerStateType.Null;
+                       if (player.PlayerState == PlayerStateType.IsRescuing) player.PlayerState = PlayerStateType.Null;
+                   }
+                   else
+                   {
+                       if (playerRescued.PlayerState == PlayerStateType.IsRescued) playerRescued.PlayerState = PlayerStateType.Null;
+                       if (player.PlayerState == PlayerStateType.IsRescuing) player.PlayerState = PlayerStateType.IsAddicted;
+                   }
                }
            )
                 { IsBackground = true }.Start();
-                if (rescuedDegree == 1000)
-                {
-                    if (playerRescued.PlayerState == PlayerStateType.IsRescued) playerRescued.PlayerState = PlayerStateType.Null;
-                    if (player.PlayerState == PlayerStateType.IsRescuing) player.PlayerState = PlayerStateType.Null;
-                    return true;
-                }
-                else
-                {
-                    if (playerRescued.PlayerState == PlayerStateType.IsRescued) playerRescued.PlayerState = PlayerStateType.Null;
-                    if (player.PlayerState == PlayerStateType.IsRescuing) player.PlayerState = PlayerStateType.IsAddicted;
-                    return false;
-                }
+
+                return true;
             }
 
             /*

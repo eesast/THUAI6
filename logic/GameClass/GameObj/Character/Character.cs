@@ -31,54 +31,6 @@ namespace GameClass.GameObj
         }
         public int OrgCD { get; protected set; }
 
-        protected int fixSpeed = GameData.basicFixSpeed;
-        /// <summary>
-        /// 修理电机速度
-        /// </summary>
-        public int FixSpeed
-        {
-            get => fixSpeed;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    fixSpeed = value;
-                }
-            }
-        }
-        /// <summary>
-        /// 原初修理电机速度
-        /// </summary>
-        public int OrgFixSpeed { get; protected set; } = GameData.basicFixSpeed;
-
-        protected int treatSpeed = GameData.basicTreatSpeed;
-        public int TreatSpeed
-        {
-            get => treatSpeed;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    treatSpeed = value;
-                }
-            }
-        }
-        public int OrgTreatSpeed { get; protected set; } = GameData.basicTreatSpeed;
-
-        protected int rescueSpeed = GameData.basicRescueSpeed;
-        public int RescueSpeed
-        {
-            get => rescueSpeed;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    rescueSpeed = value;
-                }
-            }
-        }
-        public int OrgRescueSpeed { get; protected set; } = GameData.basicRescueSpeed;
-
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;  // 人物最大子弹数
         protected int bulletNum;
@@ -102,22 +54,6 @@ namespace GameClass.GameObj
             }
         }
 
-        public int MaxGamingAddiction { get; protected set; }
-        private int gamingAddiction;
-        public int GamingAddiction
-        {
-            get => gamingAddiction;
-            set
-            {
-                if (gamingAddiction > 0)
-                    lock (gameObjLock)
-                        gamingAddiction = value <= MaxGamingAddiction ? value : MaxGamingAddiction;
-                else
-                    lock (gameObjLock)
-                        gamingAddiction = 0;
-            }
-        }
-
         private PlayerStateType playerState = PlayerStateType.Null;
         public PlayerStateType PlayerState
         {
@@ -129,11 +65,11 @@ namespace GameClass.GameObj
             }
             set
             {
-                if (value != PlayerStateType.IsMoving && value != PlayerStateType.Null)
+                if (!(value == PlayerStateType.IsMoving || value == PlayerStateType.Null))
                     lock (gameObjLock)
-                        CanMove = false;
+                        IsMoving = false;
 
-                lock (gameObjLock) playerState = value;
+                lock (gameObjLock) playerState = (value == PlayerStateType.IsMoving) ? PlayerStateType.Null : value;
             }
         }
 
@@ -180,32 +116,6 @@ namespace GameClass.GameObj
                 else
                     lock (gameObjLock)
                         vampire = value;
-            }
-        }
-
-        private int selfHealingTimes = 1;//剩余的自愈次数
-        public int SelfHealingTimes
-        {
-            get => selfHealingTimes;
-            set
-            {
-                lock (gameObjLock)
-                    selfHealingTimes = (value > 0) ? value : 0;
-            }
-        }
-
-        private int degreeOfTreatment = 0;
-        public int DegreeOfTreatment
-        {
-            get => degreeOfTreatment;
-            set
-            {
-                if (value > 0)
-                    lock (gameObjLock)
-                        degreeOfTreatment = (value < MaxHp - HP) ? value : MaxHp - HP;
-                else
-                    lock (gameObjLock)
-                        degreeOfTreatment = 0;
             }
         }
 
@@ -561,24 +471,11 @@ namespace GameClass.GameObj
             }
         }
 
-        public void Escape()
-        {
-            lock (gameObjLock)
-                IsResetting = true;
-            PlayerState = PlayerStateType.IsEscaped;
-        }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj.Type == GameObjType.BirthPoint)
-            {
-                if (object.ReferenceEquals(((BirthPoint)targetObj).Parent, this))  // 自己的出生点可以忽略碰撞
-                {
-                    return true;
-                }
-            }
-            else if (targetObj.Type == GameObjType.Prop)  // 自己队的地雷忽略碰撞
+            if (targetObj.Type == GameObjType.Prop)  // 自己队的地雷忽略碰撞
             {
                 return true;
             }

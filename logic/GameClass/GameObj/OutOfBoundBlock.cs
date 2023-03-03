@@ -9,7 +9,7 @@ namespace GameClass.GameObj
     public class OutOfBoundBlock : GameObj, IOutOfBound
     {
         public OutOfBoundBlock(XY initPos) :
-            base(initPos, int.MaxValue, PlaceType.Land, GameObjType.OutOfBoundBlock)
+            base(initPos, int.MaxValue, PlaceType.Null, GameObjType.OutOfBoundBlock)
         {
             this.CanMove = false;
         }

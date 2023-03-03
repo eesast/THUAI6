@@ -33,7 +33,7 @@ namespace GameClass.GameObj
 
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj.Type == GameObjType.BirthPoint || targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet)
+            if (targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet)
                 return true;
             return false;
         }

@@ -65,8 +65,9 @@ namespace GameClass.GameObj
             }
             set
             {
-                lock (gameObjLock)
-                    CanMove = (value == PlayerStateType.IsMoving || value == PlayerStateType.Null);
+                if (!(value == PlayerStateType.IsMoving || value == PlayerStateType.Null))
+                    lock (gameObjLock)
+                        IsMoving = false;
 
                 lock (gameObjLock) playerState = (value == PlayerStateType.IsMoving) ? PlayerStateType.Null : value;
             }
@@ -474,14 +475,7 @@ namespace GameClass.GameObj
         public override ShapeType Shape => ShapeType.Circle;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj.Type == GameObjType.BirthPoint)
-            {
-                if (object.ReferenceEquals(((BirthPoint)targetObj).Parent, this))  // 自己的出生点可以忽略碰撞
-                {
-                    return true;
-                }
-            }
-            else if (targetObj.Type == GameObjType.Prop)  // 自己队的地雷忽略碰撞
+            if (targetObj.Type == GameObjType.Prop)  // 自己队的地雷忽略碰撞
             {
                 return true;
             }

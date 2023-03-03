@@ -6,6 +6,7 @@ using Preparation.Utility;
 using GameEngine;
 using Preparation.Interface;
 using Timothy.FrameRateTask;
+using System.Numerics;
 
 namespace Gaming
 {
@@ -192,7 +193,7 @@ namespace Gaming
                                     {
                                         Thread.Sleep(bullet.Backswing);
 
-                                        if (gameMap.Timer.IsGaming)
+                                        if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
                                         {
                                             bullet.Parent.PlayerState = PlayerStateType.Null;
                                         }
@@ -215,7 +216,7 @@ namespace Gaming
 
                                     Thread.Sleep(bullet.RecoveryFromHit);
 
-                                    if (gameMap.Timer.IsGaming)
+                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
                                     {
                                         bullet.Parent.PlayerState = PlayerStateType.Null;
                                     }
@@ -273,7 +274,7 @@ namespace Gaming
                                 {
                                     Thread.Sleep(bullet.Backswing);
 
-                                    if (gameMap.Timer.IsGaming)
+                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
                                     {
                                         bullet.Parent.PlayerState = PlayerStateType.Null;
                                     }
@@ -294,7 +295,7 @@ namespace Gaming
 
                                     Thread.Sleep(bullet.RecoveryFromHit);
 
-                                    if (gameMap.Timer.IsGaming)
+                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
                                     {
                                         bullet.Parent.PlayerState = PlayerStateType.Null;
                                     }
@@ -328,7 +329,7 @@ namespace Gaming
                 );
                 if (bullet.CastTime > 0)
                 {
-                    player.PlayerState = PlayerStateType.IsSwinging;
+                    player.PlayerState = PlayerStateType.IsTryingToAttack;
 
                     new Thread
                             (() =>
@@ -336,7 +337,7 @@ namespace Gaming
 
                                 Thread.Sleep(bullet.CastTime);
 
-                                if (gameMap.Timer.IsGaming)
+                                if (gameMap.Timer.IsGaming && player.PlayerState == PlayerStateType.IsTryingToAttack)
                                 {
                                     player.PlayerState = PlayerStateType.Null;
                                 }

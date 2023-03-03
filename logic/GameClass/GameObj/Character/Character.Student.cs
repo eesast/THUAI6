@@ -1,10 +1,11 @@
-﻿using Preparation.Utility;
+﻿using GameClass.Skill;
+using Preparation.Utility;
 
 namespace GameClass.GameObj
 {
     public class Student : Character
     {
-        protected int fixSpeed = GameData.basicFixSpeed;
+        protected int fixSpeed;
         /// <summary>
         /// 修理电机速度
         /// </summary>
@@ -100,8 +101,19 @@ namespace GameClass.GameObj
                 IsResetting = true;
             PlayerState = PlayerStateType.IsEscaped;
         }
-        public Student(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) : base(initPos, initRadius, initPlace, characterType)
+        public Student(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) : base(initPos, initRadius, initPlace)
         {
+            switch (characterType)
+            {
+                case CharacterType.Athlete:
+                    this.Occupation = new Athlete();
+                    break;
+                default:
+                    this.Occupation = null;
+                    break;
+            }
+            this.fixSpeed = ((IStudent)Occupation).FixSpeed;
+            this.CharacterType = characterType;
         }
     }
 }

@@ -4,13 +4,12 @@ namespace Preparation.Utility
     /// <summary>
     /// 存放所有用到的枚举类型
     /// </summary>
-    // public const int numOfObjNotMap = 5;在GameData中
     public enum PlayerStateType
     {
         Null = 0,
         IsAddicted = 1,
         IsEscaped = 2,
-        IsSwinging = 3,
+        IsSwinging = 3,//指后摇
         IsResetting = 4,
         IsMoving = 5,
         IsTreating = 6,
@@ -19,6 +18,7 @@ namespace Preparation.Utility
         IsTreated = 9,
         IsRescued = 10,
         IsStunned = 11,
+        IsTryingToAttack = 12,//指前摇
     }
     public enum GameObjType
     {
@@ -32,10 +32,9 @@ namespace Preparation.Utility
         Wall = 6,
         Grass = 7,
         Generator = 8,  // 发电机
-        BirthPoint = 9,
-        Doorway = 10,
-        EmergencyExit = 11,
-        OutOfBoundBlock = 12,  // 范围外
+        Doorway = 9,
+        EmergencyExit = 10,
+        OutOfBoundBlock = 11,  // 范围外
     }
     public enum ShapeType
     {
@@ -74,7 +73,7 @@ namespace Preparation.Utility
     {
         Null = 0,
         Assassin = 1,
-        Vampire = 2,
+        Athlete = 2,
         RecoverAfterBattle = 3,
         SpeedUpWhenLeavingGrass = 4,
         PSkill4 = 5,
@@ -118,11 +117,9 @@ namespace Preparation.Utility
         BirthPoint4 = 4,
         BirthPoint5 = 5,
         Wall = 6,
-        Grass1 = 7,
-        Grass2 = 8,
-        Grass3 = 9,
-        Generator = 10,  // 发电机
-        Doorway = 11,
-        EmergencyExit = 12
+        Grass = 7,
+        Generator = 8,  // 发电机
+        Doorway = 9,
+        EmergencyExit = 10
     }
 }

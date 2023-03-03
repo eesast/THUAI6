@@ -37,10 +37,9 @@ namespace Gaming
                   || gameMap.BirthPointList[playerInitInfo.birthPointIdx].Parent != null)*/
                 return GameObj.invalidID;
 
-            XY pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex].Position;
+            XY pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex];
             // Console.WriteLine($"x,y: {pos.x},{pos.y}");
             Character newPlayer = (GameData.IsGhost(playerInitInfo.characterType)) ? new Ghost(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType) : new Student(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType);
-            gameMap.BirthPointList[playerInitInfo.birthPointIndex].Parent = newPlayer;
             gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
             try
             {
@@ -338,7 +337,7 @@ namespace Gaming
         {
             foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                if (((uint)keyValuePair.Key) <= GameData.numOfObjNotMap)
+                if (!GameData.IsMap(keyValuePair.Key))
                 {
                     gameMap.GameObjLockDict[keyValuePair.Key].EnterWriteLock();
                     try
@@ -369,7 +368,7 @@ namespace Gaming
             var gameObjList = new List<IGameObj>();
             foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                if (((uint)keyValuePair.Key) <= GameData.numOfObjNotMap)
+                if (!GameData.IsMap(keyValuePair.Key))
                 {
                     gameMap.GameObjLockDict[keyValuePair.Key].EnterReadLock();
                     try

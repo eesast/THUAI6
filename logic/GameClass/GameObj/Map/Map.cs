@@ -9,8 +9,8 @@ namespace GameClass.GameObj
     public partial class Map : IMap
     {
 
-        private readonly Dictionary<uint, BirthPoint> birthPointList;  // 出生点列表
-        public Dictionary<uint, BirthPoint> BirthPointList => birthPointList;
+        private readonly Dictionary<uint, XY> birthPointList;  // 出生点列表
+        public Dictionary<uint, XY> BirthPointList => birthPointList;
 
         private Dictionary<GameObjType, IList<IGameObj>> gameObjDict;
         public Dictionary<GameObjType, IList<IGameObj>> GameObjDict => gameObjDict;
@@ -106,7 +106,7 @@ namespace GameClass.GameObj
             ProtoGameMap = new uint[mapResource.GetLength(0), mapResource.GetLength(1)];
             Array.Copy(mapResource, ProtoGameMap, mapResource.Length);
 
-            birthPointList = new Dictionary<uint, BirthPoint>(GameData.numOfBirthPoint);
+            birthPointList = new Dictionary<uint, XY>(GameData.numOfBirthPoint);
 
             for (int i = 0; i < GameData.rows; ++i)
             {
@@ -173,17 +173,7 @@ namespace GameClass.GameObj
                         case (uint)MapInfoObjType.BirthPoint4:
                         case (uint)MapInfoObjType.BirthPoint5:
                             {
-                                BirthPoint newBirthPoint = new BirthPoint(GameData.GetCellCenterPos(i, j));
-                                birthPointList.Add(mapResource[i, j], newBirthPoint);
-                                GameObjLockDict[GameObjType.BirthPoint].EnterWriteLock();
-                                try
-                                {
-                                    GameObjDict[GameObjType.BirthPoint].Add(newBirthPoint);
-                                }
-                                finally
-                                {
-                                    GameObjLockDict[GameObjType.BirthPoint].ExitWriteLock();
-                                }
+                                birthPointList.Add(mapResource[i, j], GameData.GetCellCenterPos(i, j));
                                 break;
                             }
                     }

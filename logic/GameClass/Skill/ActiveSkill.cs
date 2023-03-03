@@ -192,7 +192,7 @@ namespace GameClass.Skill
                 }
             }
         }
-        public static IActiveSkill FindIActiveSkill(ActiveSkillType activeSkillType)
+        public static IActiveSkill? FindIActiveSkill(ActiveSkillType activeSkillType)
         {
             switch (activeSkillType)
             {

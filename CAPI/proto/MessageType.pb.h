@@ -57,9 +57,8 @@ namespace protobuf
         WALL = 2,
         GRASS = 3,
         CLASSROOM = 4,
-        BLACKROOM = 5,
-        GATE = 6,
-        HIDDEN_GATE = 7,
+        GATE = 5,
+        HIDDEN_GATE = 6,
         PlaceType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         PlaceType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
@@ -184,10 +183,9 @@ namespace protobuf
         NULL_STATUS = 0,
         IDLE = 1,
         LEARNING = 2,
-        FAIL = 3,
-        EMOTIONAL = 4,
-        QUIT = 5,
-        GRADUATED = 6,
+        ADDICTED = 3,
+        QUIT = 4,
+        GRADUATED = 5,
         StudentState_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         StudentState_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };

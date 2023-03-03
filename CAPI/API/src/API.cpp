@@ -223,22 +223,16 @@ std::future<bool> StudentAPI::StartLearning()
                       { return logic.StartLearning(); });
 }
 
-std::future<bool> StudentAPI::EndLearning()
-{
-    return std::async(std::launch::async, [&]()
-                      { return logic.EndLearning(); });
-}
-
 std::future<bool> StudentAPI::StartHelpMate()
 {
     return std::async(std::launch::async, [&]()
                       { return logic.StartHelpMate(); });
 }
 
-std::future<bool> StudentAPI::EndHelpMate()
+std::future<bool> StudentAPI::StartHealMate()
 {
     return std::async(std::launch::async, [&]()
-                      { return logic.EndHelpMate(); });
+                      { return logic.StartHealMate(); });
 }
 
 std::future<bool> StudentAPI::Graduate()
@@ -256,24 +250,6 @@ std::future<bool> TrickerAPI::Trick(double angleInRadian)
 {
     return std::async(std::launch::async, [&]()
                       { return logic.Trick(angleInRadian); });
-}
-
-std::future<bool> TrickerAPI::StartExam()
-{
-    return std::async(std::launch::async, [&]()
-                      { return logic.StartExam(); });
-}
-
-std::future<bool> TrickerAPI::EndExam()
-{
-    return std::async(std::launch::async, [&]()
-                      { return logic.EndExam(); });
-}
-
-std::future<bool> TrickerAPI::MakeFail()
-{
-    return std::async(std::launch::async, [&]()
-                      { return logic.MakeFail(); });
 }
 
 std::shared_ptr<const THUAI6::Tricker> TrickerAPI::GetSelfInfo() const

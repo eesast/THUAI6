@@ -129,46 +129,22 @@ bool Logic::StartLearning()
     return pComm->StartLearning(playerID);
 }
 
-bool Logic::EndLearning()
-{
-    logger->debug("Called EndLearning");
-    return pComm->EndLearning(playerID);
-}
-
 bool Logic::StartHelpMate()
 {
     logger->debug("Called StartHelpMate");
     return pComm->StartHelpMate(playerID);
 }
 
-bool Logic::EndHelpMate()
+bool Logic::StartHealMate()
 {
-    logger->debug("Called EndHelpMate");
-    return pComm->EndHelpMate(playerID);
+    logger->debug("Called StartHealMate");
+    return pComm->StartHealMate(playerID);
 }
 
 bool Logic::Trick(double angle)
 {
     logger->debug("Called Trick");
     return pComm->Trick(angle, playerID);
-}
-
-bool Logic::StartExam()
-{
-    logger->debug("Called StartExam");
-    return pComm->StartExam(playerID);
-}
-
-bool Logic::EndExam()
-{
-    logger->debug("Called EndExam");
-    return pComm->EndExam(playerID);
-}
-
-bool Logic::MakeFail()
-{
-    logger->debug("Called MakeFail");
-    return pComm->MakeFail(playerID);
 }
 
 bool Logic::WaitThread()

@@ -58,16 +58,11 @@ public:
     virtual bool Graduate() = 0;
 
     virtual bool StartLearning() = 0;
-    virtual bool EndLearning() = 0;
-
     virtual bool StartHelpMate() = 0;
-    virtual bool EndHelpMate() = 0;
+    virtual bool StartHealMate() = 0;
 
     // ITrickerAPI使用的部分
     virtual bool Trick(double angle) = 0;
-    virtual bool StartExam() = 0;
-    virtual bool EndExam() = 0;
-    virtual bool MakeFail() = 0;
 
     virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
 };
@@ -143,9 +138,8 @@ public:
     /*****学生阵营的特定函数*****/
 
     virtual std::future<bool> StartLearning() = 0;
-    virtual std::future<bool> EndLearning() = 0;
     virtual std::future<bool> StartHelpMate() = 0;
-    virtual std::future<bool> EndHelpMate() = 0;
+    virtual std::future<bool> StartHealMate() = 0;
     virtual std::future<bool> Graduate() = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const = 0;
 };
@@ -156,9 +150,6 @@ public:
     /*****捣蛋鬼阵营的特定函数*****/
 
     virtual std::future<bool> Trick(double angleInRadian) = 0;
-    virtual std::future<bool> StartExam() = 0;
-    virtual std::future<bool> EndExam() = 0;
-    virtual std::future<bool> MakeFail() = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const = 0;
 };
 
@@ -216,9 +207,8 @@ public:
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> StartLearning() override;
-    std::future<bool> EndLearning() override;
     std::future<bool> StartHelpMate() override;
-    std::future<bool> EndHelpMate() override;
+    std::future<bool> StartHealMate() override;
     std::future<bool> Graduate() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
@@ -283,9 +273,6 @@ public:
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> Trick(double angleInRadian) override;
-    std::future<bool> StartExam() override;
-    std::future<bool> EndExam() override;
-    std::future<bool> MakeFail() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
 
     void PrintStudent() const override
@@ -342,9 +329,8 @@ public:
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> StartLearning() override;
-    std::future<bool> EndLearning() override;
     std::future<bool> StartHelpMate() override;
-    std::future<bool> EndHelpMate() override;
+    std::future<bool> StartHealMate() override;
     std::future<bool> Graduate() override;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
@@ -396,9 +382,6 @@ public:
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> Trick(double angleInRadian) override;
-    std::future<bool> StartExam() override;
-    std::future<bool> EndExam() override;
-    std::future<bool> MakeFail() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
 
     void PrintStudent() const override;

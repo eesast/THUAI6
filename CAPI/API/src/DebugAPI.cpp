@@ -358,16 +358,6 @@ std::future<bool> StudentDebugAPI::StartLearning()
                         return result; });
 }
 
-std::future<bool> StudentDebugAPI::EndLearning()
-{
-    logger->info("EndLearning: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.EndLearning();
-                        if (!result)
-                            logger->warn("EndLearning: failed at {}ms", Time::TimeSinceStart(startPoint));
-                        return result; });
-}
-
 std::future<bool> StudentDebugAPI::StartHelpMate()
 {
     logger->info("StartHelpMate: called at {}ms", Time::TimeSinceStart(startPoint));
@@ -378,13 +368,13 @@ std::future<bool> StudentDebugAPI::StartHelpMate()
                         return result; });
 }
 
-std::future<bool> StudentDebugAPI::EndHelpMate()
+std::future<bool> StudentDebugAPI::StartHealMate()
 {
-    logger->info("EndHelpMate: called at {}ms", Time::TimeSinceStart(startPoint));
+    logger->info("StartHealMate: called at {}ms", Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [this]()
-                      { auto result = logic.EndHelpMate();
+                      { auto result = logic.StartHealMate();
                         if (!result)
-                            logger->warn("EndHelpMate: failed at {}ms", Time::TimeSinceStart(startPoint));
+                            logger->warn("StartHealMate: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 
@@ -410,36 +400,6 @@ std::future<bool> TrickerDebugAPI::Trick(double angleInRadian)
                       { auto result = logic.Trick(angleInRadian);
                         if (!result)
                             logger->warn("Trick: failed at {}ms", Time::TimeSinceStart(startPoint));
-                        return result; });
-}
-
-std::future<bool> TrickerDebugAPI::StartExam()
-{
-    logger->info("StartExam: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.StartExam();
-                        if (!result)
-                            logger->warn("StartExam: failed at {}ms", Time::TimeSinceStart(startPoint));
-                        return result; });
-}
-
-std::future<bool> TrickerDebugAPI::EndExam()
-{
-    logger->info("EndExam: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.EndExam();
-                        if (!result)
-                            logger->warn("EndExam: failed at {}ms", Time::TimeSinceStart(startPoint));
-                        return result; });
-}
-
-std::future<bool> TrickerDebugAPI::MakeFail()
-{
-    logger->info("MakeFail: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.MakeFail();
-                        if (!result)
-                            logger->warn("MakeFail: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 

@@ -103,10 +103,9 @@ namespace THUAI6
         NullStudentState = 0,
         Idle = 1,
         Learning = 2,
-        Fail = 3,
-        Emotional = 4,
-        Quit = 5,
-        Graduated = 6,
+        Addicted = 3,
+        Quit = 4,
+        Graduated = 5,
     };
 
     // 玩家类
@@ -120,6 +119,7 @@ namespace THUAI6
         int64_t guid;       // 全局唯一ID
         int16_t radius;     // 圆形物体的半径或正方形物体的内切圆半径
 
+        int32_t damage;                  // 攻击伤害
         double timeUntilSkillAvailable;  // 技能冷却时间
 
         PlayerType playerType;  // 玩家类型
@@ -141,8 +141,7 @@ namespace THUAI6
 
     struct Tricker : public Player
     {
-        int32_t damage;  // 攻击伤害
-        bool movable;    // 是否处在攻击后摇中
+        bool movable;  // 是否处在攻击后摇中
 
         TrickerType trickerType;            // 捣蛋鬼类型
         std::vector<TrickerBuffType> buff;  // buff
@@ -174,8 +173,7 @@ namespace THUAI6
         {StudentState::NullStudentState, "NullStudentState"},
         {StudentState::Idle, "Idle"},
         {StudentState::Learning, "Learning"},
-        {StudentState::Fail, "Fail"},
-        {StudentState::Emotional, "Emotional"},
+        {StudentState::Addicted, "Addicted"},
         {StudentState::Quit, "Quit"},
         {StudentState::Graduated, "Graduated"},
     };
@@ -192,7 +190,6 @@ namespace THUAI6
         {PlaceType::Wall, "Wall"},
         {PlaceType::Grass, "Grass"},
         {PlaceType::ClassRoom, "ClassRoom"},
-        {PlaceType::BlackRoom, "BlackRoom"},
         {PlaceType::Gate, "Gate"},
         {PlaceType::HiddenGate, "HiddenGate"},
     };

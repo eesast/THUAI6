@@ -11,9 +11,8 @@ enum PlaceType // 地图中的所有物件类型
     WALL = 2;
     GRASS = 3;
     CLASSROOM = 4;
-    BLACKROOM = 5;
-    GATE = 6;
-    HIDDEN_GATE = 7;
+    GATE = 5;
+    HIDDEN_GATE = 6;
     // 待补充有特殊效果的地形
 
 }
@@ -49,10 +48,9 @@ enum StudentState
     NULL_STATUS = 0;
     IDLE = 1; // 正常状态
     LEARNING = 2; // 学习状态，相当于在修机器
-    FAIL = 3; // 挂科状态，相当于被挂了
-    EMOTIONAL = 4; // EMO状态，相当于倒地了
-    QUIT = 5; // 退学状态，相当于寄了
-    GRADUATED = 6; // 毕业状态，相当于逃脱了
+    ADDICTED = 3; // 血条归零后原地沉迷游戏
+    QUIT = 4; // 退学状态，相当于寄了
+    GRADUATED = 5; // 毕业状态，相当于逃脱了
 }
 
 enum TrickerBuffType // 屠夫可用的增益效果类型

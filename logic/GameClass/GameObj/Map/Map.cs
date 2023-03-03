@@ -22,19 +22,11 @@ namespace GameClass.GameObj
         {
             try
             {
-                uint type = ProtoGameMap[obj.Position.x / GameData.numOfPosGridPerCell, obj.Position.y / GameData.numOfPosGridPerCell];
-                if (type == 2)
-                    return PlaceType.Grass1;
-                else if (type == 3)
-                    return PlaceType.Grass2;
-                else if (type == 4)
-                    return PlaceType.Grass3;
-                else
-                    return PlaceType.Land;  // 其他情况均返回land
+                return (PlaceType)ProtoGameMap[obj.Position.x / GameData.numOfPosGridPerCell, obj.Position.y / GameData.numOfPosGridPerCell];
             }
             catch
             {
-                return PlaceType.Land;
+                return PlaceType.Null;
             }
         }
 
@@ -42,21 +34,11 @@ namespace GameClass.GameObj
         {
             try
             {
-                switch (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell])
-                {
-                    case 2:
-                        return PlaceType.Grass1;
-                    case 3:
-                        return PlaceType.Grass2;
-                    case 4:
-                        return PlaceType.Grass3;
-                    default:
-                        return PlaceType.Land;
-                }
+                return (PlaceType)ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell];
             }
             catch
             {
-                return PlaceType.Land;
+                return PlaceType.Null;
             }
         }
 
@@ -114,7 +96,7 @@ namespace GameClass.GameObj
                 {
                     switch (mapResource[i, j])
                     {
-                        case (uint)MapInfoObjType.Wall:
+                        case (uint)PlaceType.Wall:
                             {
                                 GameObjLockDict[GameObjType.Wall].EnterWriteLock();
                                 try
@@ -127,7 +109,7 @@ namespace GameClass.GameObj
                                 }
                                 break;
                             }
-                        case (uint)MapInfoObjType.Doorway:
+                        case (uint)PlaceType.Doorway:
                             {
                                 GameObjLockDict[GameObjType.Doorway].EnterWriteLock();
                                 try
@@ -141,7 +123,7 @@ namespace GameClass.GameObj
                                 break;
                             }
 
-                        case (uint)MapInfoObjType.EmergencyExit:
+                        case (uint)PlaceType.EmergencyExit:
                             {
                                 GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
                                 try
@@ -154,7 +136,7 @@ namespace GameClass.GameObj
                                 }
                                 break;
                             }
-                        case (uint)MapInfoObjType.Generator:
+                        case (uint)PlaceType.Generator:
                             {
                                 GameObjLockDict[GameObjType.Generator].EnterWriteLock();
                                 try
@@ -167,11 +149,11 @@ namespace GameClass.GameObj
                                 }
                                 break;
                             }
-                        case (uint)MapInfoObjType.BirthPoint1:
-                        case (uint)MapInfoObjType.BirthPoint2:
-                        case (uint)MapInfoObjType.BirthPoint3:
-                        case (uint)MapInfoObjType.BirthPoint4:
-                        case (uint)MapInfoObjType.BirthPoint5:
+                        case (uint)PlaceType.BirthPoint1:
+                        case (uint)PlaceType.BirthPoint2:
+                        case (uint)PlaceType.BirthPoint3:
+                        case (uint)PlaceType.BirthPoint4:
+                        case (uint)PlaceType.BirthPoint5:
                             {
                                 birthPointList.Add(mapResource[i, j], GameData.GetCellCenterPos(i, j));
                                 break;

@@ -8,7 +8,7 @@ namespace GameClass.GameObj
     public class Generator : GameObj
     {
         public Generator(XY initPos) :
-            base(initPos, GameData.numOfPosGridPerCell / 2, PlaceType.Land, GameObjType.Generator)
+            base(initPos, GameData.numOfPosGridPerCell / 2, PlaceType.Null, GameObjType.Generator)
         {
             this.CanMove = false;
         }

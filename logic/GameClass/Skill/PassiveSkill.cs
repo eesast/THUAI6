@@ -89,7 +89,7 @@ namespace GameClass.Skill  // 被动技能开局时就释放，持续到游戏�
                         {
                             lastPlace = nowPlace;
                             nowPlace = player.Place;
-                            if ((lastPlace == PlaceType.Grass1 || lastPlace == PlaceType.Grass2 || lastPlace == PlaceType.Grass3) && nowPlace == PlaceType.Land)
+                            if ((lastPlace == PlaceType.Grass) && nowPlace == PlaceType.Null)
                             {
                                 if (!speedup)
                                 {

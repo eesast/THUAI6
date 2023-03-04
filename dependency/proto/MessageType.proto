@@ -23,6 +23,8 @@ enum PlaceType // 地图中的所有物件类型
     CLASSROOM = 4;
     GATE = 5;
     HIDDEN_GATE = 6;
+    WINDOW = 7;
+    DOOR = 8;
     // 待补充有特殊效果的地形
 
 }
@@ -109,6 +111,7 @@ enum GameState
 {
     NULL_GAME_STATE = 0;
     GAME_START = 1;
-    GAME_RUNNING = 2;
-    GAME_END = 3;
+    STAGE_1 = 2; // 第一阶段：大门没有开
+    STAGE_2 = 3; // 第二阶段：大门已经开了
+    GAME_END = 4;
 }

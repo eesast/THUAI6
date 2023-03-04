@@ -41,7 +41,9 @@ message MessageOfTricker
     int64 player_id = 11;
     int32 view_range = 12; // 视野距离
     int32 radius = 13; // 半径
-    repeated TrickerBuffType buff = 14;
+    int32 treat_progress = 14; // 治疗进度
+    int32 rescue_progress = 15; // 救援进度
+    repeated TrickerBuffType buff = 16;
 }
 
 message MessageOfBullet

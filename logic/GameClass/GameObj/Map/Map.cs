@@ -3,6 +3,7 @@ using System.Threading;
 using Preparation.Interface;
 using Preparation.Utility;
 using System;
+using GameClass.GameObj;
 
 namespace GameClass.GameObj
 {
@@ -72,7 +73,41 @@ namespace GameClass.GameObj
             }
             return player;
         }
-        public Map(uint[,] mapResource)
+        public bool Remove(GameObj gameObj)
+        {
+            bool flag = false;
+            GameObjLockDict[gameObj.Type].EnterWriteLock();
+            try
+            {
+                foreach (GameObj obj in GameObjDict[gameObj.Type])
+                {
+                    if (gameObj.ID == obj.ID)
+                    {
+                        GameObjDict[gameObj.Type].Remove(obj);
+                        flag=true;
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                GameObjLockDict[gameObj.Type].ExitWriteLock();
+            }
+            return flag;
+        }
+        public void Add(GameObj gameObj)
+        {
+            GameObjLockDict[gameObj.Type].EnterWriteLock();
+            try
+            {
+                GameObjDict[gameObj.Type].Add(gameObj);
+            }
+            finally
+            {
+               GameObjLockDict[gameObj.Type].ExitWriteLock();
+            }
+        }
+public Map(uint[,] mapResource)
         {
             gameObjDict = new Dictionary<GameObjType, IList<IGameObj>>();
             gameObjLockDict = new Dictionary<GameObjType, ReaderWriterLockSlim>();

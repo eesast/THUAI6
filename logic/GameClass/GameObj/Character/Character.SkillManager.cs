@@ -7,9 +7,10 @@ namespace GameClass.GameObj
 {
     public partial class Character
     {
-
-        public CharacterType CharacterType { protected set; get; }
-        public IOccupation Occupation { protected set; get; }
+        private readonly CharacterType characterType;
+        public CharacterType CharacterType => characterType;
+        private readonly IOccupation occupation;
+        public IOccupation Occupation => occupation;
 
         private Dictionary<ActiveSkillType, int> timeUntilActiveSkillAvailable;
         public Dictionary<ActiveSkillType, int> TimeUntilActiveSkillAvailable => timeUntilActiveSkillAvailable;
@@ -58,14 +59,25 @@ namespace GameClass.GameObj
             };
         }
 
-        protected Character(XY initPos, int initRadius, PlaceType initPlace) :
+        protected Character(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) :
             base(initPos, initRadius, initPlace, GameObjType.Character)
         {
             this.CanMove = true;
             this.score = 0;
             this.propInventory = null;
             this.buffManager = new BuffManager();
-
+            switch (characterType)
+            {
+                case CharacterType.Assassin:
+                    this.occupation = new Assassin();
+                    break;
+                case CharacterType.Athlete:
+                    this.occupation = new Athlete();
+                    break;
+                default:
+                    this.occupation = null;
+                    break;
+            }
             this.MaxHp = Occupation.MaxHp;
             this.hp = Occupation.MaxHp;
             this.OrgMoveSpeed = Occupation.MoveSpeed;
@@ -75,6 +87,7 @@ namespace GameClass.GameObj
             this.bulletNum = maxBulletNum;
             this.bulletOfPlayer = Occupation.InitBullet;
             this.OriBulletOfPlayer = Occupation.InitBullet;
+            this.characterType = characterType;
 
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)
             {

@@ -36,7 +36,7 @@ C++ 通信组件与选手接口
 - 了解 Visual Studio 的项目属性配置，例如第三方库的链接、预定义宏等  
 - 使用现代 C++ 特性进行编程，避免不安全的旧特性，例如：
   + 尽量避免裸指针，多使用智能指针
-  + 禁止使用 `::operator new`、`::operator new[]`；使用`std::make_unique`、`std::make_shared`、`std::vector` 等代替；
+  + 禁止使用 `::operator new`、`::operator new[]`；使用 `std::make_unique`、`std::make_shared`、`std::vector` 等代替；
   + 禁止使用宏作为编译期常量；使用 `constexpr` 代替；
   + 善用 attribute，例如 `[[nodiscard]]`、`[[fallthrough]]`、`[[noreturn]]` 等；
   + C 语言接口需要基于 RAII 原则进行封装，通过对象的生命周期来关系资源的申请和释放；

@@ -256,7 +256,7 @@ namespace Server
         public override Task<BoolRes> SendMessage(SendMsg request, ServerCallContext context)
         {
             return base.SendMessage(request, context);
-        }     
+        }
 
         public override Task<BoolRes> UseProp(IDMsg request, ServerCallContext context)
         {

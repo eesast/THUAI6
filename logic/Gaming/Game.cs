@@ -39,7 +39,7 @@ namespace Gaming
 
             XY pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex];
             // Console.WriteLine($"x,y: {pos.x},{pos.y}");
-            
+
             Character newPlayer = (GameData.IsGhost(playerInitInfo.characterType)) ? new Ghost(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType) : new Student(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType);
             gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
             try

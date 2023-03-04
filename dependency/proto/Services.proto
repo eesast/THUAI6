@@ -14,8 +14,8 @@ service AvailableService
     // 游戏过程中玩家执行操作的服务
     rpc Move (MoveMsg) returns (MoveRes);
     rpc PickProp (PropMsg) returns (BoolRes);
-    rpc UseProp (IDMsg) returns (BoolRes);
-    rpc UseSkill (IDMsg) returns (BoolRes);
+    rpc UseProp (PropMsg) returns (BoolRes);
+    rpc UseSkill (SkillMsg) returns (BoolRes);
     rpc SendMessage (SendMsg) returns (BoolRes);
     rpc GetMessage (IDMsg) returns (stream MsgRes);
     rpc StartLearning (IDMsg) returns (BoolRes); // 开始修理机器

@@ -1046,11 +1046,11 @@ namespace protobuf
             kTypeFieldNumber = 1,
             kXFieldNumber = 2,
             kFacingDirectionFieldNumber = 4,
-            kGuidFieldNumber = 5,
             kYFieldNumber = 3,
-            kPlaceFieldNumber = 7,
-            kParentTeamIdFieldNumber = 6,
+            kTeamFieldNumber = 6,
+            kGuidFieldNumber = 5,
             kBombRangeFieldNumber = 8,
+            kPlaceFieldNumber = 7,
         };
         // .protobuf.BulletType type = 1;
         void clear_type();
@@ -1082,16 +1082,6 @@ namespace protobuf
         void _internal_set_facing_direction(double value);
 
     public:
-        // int64 guid = 5;
-        void clear_guid();
-        int64_t guid() const;
-        void set_guid(int64_t value);
-
-    private:
-        int64_t _internal_guid() const;
-        void _internal_set_guid(int64_t value);
-
-    public:
         // int32 y = 3;
         void clear_y();
         int32_t y() const;
@@ -1102,24 +1092,24 @@ namespace protobuf
         void _internal_set_y(int32_t value);
 
     public:
-        // .protobuf.PlaceType place = 7;
-        void clear_place();
-        ::protobuf::PlaceType place() const;
-        void set_place(::protobuf::PlaceType value);
+        // .protobuf.PlayerType team = 6;
+        void clear_team();
+        ::protobuf::PlayerType team() const;
+        void set_team(::protobuf::PlayerType value);
 
     private:
-        ::protobuf::PlaceType _internal_place() const;
-        void _internal_set_place(::protobuf::PlaceType value);
+        ::protobuf::PlayerType _internal_team() const;
+        void _internal_set_team(::protobuf::PlayerType value);
 
     public:
-        // int64 parent_team_id = 6;
-        void clear_parent_team_id();
-        int64_t parent_team_id() const;
-        void set_parent_team_id(int64_t value);
+        // int64 guid = 5;
+        void clear_guid();
+        int64_t guid() const;
+        void set_guid(int64_t value);
 
     private:
-        int64_t _internal_parent_team_id() const;
-        void _internal_set_parent_team_id(int64_t value);
+        int64_t _internal_guid() const;
+        void _internal_set_guid(int64_t value);
 
     public:
         // double bomb_range = 8;
@@ -1130,6 +1120,16 @@ namespace protobuf
     private:
         double _internal_bomb_range() const;
         void _internal_set_bomb_range(double value);
+
+    public:
+        // .protobuf.PlaceType place = 7;
+        void clear_place();
+        ::protobuf::PlaceType place() const;
+        void set_place(::protobuf::PlaceType value);
+
+    private:
+        ::protobuf::PlaceType _internal_place() const;
+        void _internal_set_place(::protobuf::PlaceType value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfBullet)
@@ -1146,11 +1146,11 @@ namespace protobuf
             int type_;
             int32_t x_;
             double facing_direction_;
-            int64_t guid_;
             int32_t y_;
-            int place_;
-            int64_t parent_team_id_;
+            int team_;
+            int64_t guid_;
             double bomb_range_;
+            int place_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -4269,28 +4269,28 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfBullet.guid)
     }
 
-    // int64 parent_team_id = 6;
-    inline void MessageOfBullet::clear_parent_team_id()
+    // .protobuf.PlayerType team = 6;
+    inline void MessageOfBullet::clear_team()
     {
-        _impl_.parent_team_id_ = int64_t{0};
+        _impl_.team_ = 0;
     }
-    inline int64_t MessageOfBullet::_internal_parent_team_id() const
+    inline ::protobuf::PlayerType MessageOfBullet::_internal_team() const
     {
-        return _impl_.parent_team_id_;
+        return static_cast<::protobuf::PlayerType>(_impl_.team_);
     }
-    inline int64_t MessageOfBullet::parent_team_id() const
+    inline ::protobuf::PlayerType MessageOfBullet::team() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfBullet.parent_team_id)
-        return _internal_parent_team_id();
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfBullet.team)
+        return _internal_team();
     }
-    inline void MessageOfBullet::_internal_set_parent_team_id(int64_t value)
+    inline void MessageOfBullet::_internal_set_team(::protobuf::PlayerType value)
     {
-        _impl_.parent_team_id_ = value;
+        _impl_.team_ = value;
     }
-    inline void MessageOfBullet::set_parent_team_id(int64_t value)
+    inline void MessageOfBullet::set_team(::protobuf::PlayerType value)
     {
-        _internal_set_parent_team_id(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfBullet.parent_team_id)
+        _internal_set_team(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfBullet.team)
     }
 
     // .protobuf.PlaceType place = 7;

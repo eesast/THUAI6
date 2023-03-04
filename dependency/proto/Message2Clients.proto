@@ -51,7 +51,7 @@ message MessageOfBullet
     int32 y = 3;
     double facing_direction = 4;
     int64 guid = 5;
-    int64 parent_team_id = 6;
+    PlayerType team = 6;
     PlaceType place = 7;
     double bomb_range = 8; 
 }

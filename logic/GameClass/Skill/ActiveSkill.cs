@@ -214,6 +214,10 @@ namespace GameClass.Skill
             {
                 case BecomeInvisible:
                     return ActiveSkillType.BecomeInvisible;
+                case UseKnife:
+                    return ActiveSkillType.UseKnife;
+                case BeginToCharge:
+                    return ActiveSkillType.BeginToCharge;
                 default:
                     return ActiveSkillType.Null;
             }

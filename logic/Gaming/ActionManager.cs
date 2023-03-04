@@ -22,6 +22,20 @@ namespace Gaming
                 return true;
             }
 
+            public bool Stop(Character player)
+            {
+                if (player.PlayerState == PlayerStateType.IsRescuing || player.PlayerState == PlayerStateType.IsRescued
+                    || player.PlayerState == PlayerStateType.IsFixing || player.PlayerState == PlayerStateType.IsMoving
+                    || player.PlayerState == PlayerStateType.IsTreated || player.PlayerState == PlayerStateType.IsTreating
+                    || player.PlayerState == PlayerStateType.IsClosingDoor || player.PlayerState == PlayerStateType.IsOpeningDoor
+                    || player.PlayerState == PlayerStateType.IsClimbingThtoughWindows)
+                {
+                    player.PlayerState = PlayerStateType.Null;
+                    return true;
+                }
+                return false;
+            }
+
             public bool Fix(Student player)// 自动检查有无发电机可修
             {
                 if (player.PlayerState != PlayerStateType.Null || player.IsGhost())

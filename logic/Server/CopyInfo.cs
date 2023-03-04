@@ -20,7 +20,6 @@ namespace Server
             msg.FailNum = 0;
             msg.TimeUntilSkillAvailable = 0;
             //msg.Place = 0; 下面写了
-            msg.Prop = PropType.NullPropType; // 下面写
             msg.StudentType = StudentType.NullStudentType; // 下面写
             msg.Guid = 0;
             msg.State = StudentState.NullStatus;
@@ -103,7 +102,7 @@ namespace Server
 
             //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
             //现在懒得改了，有时间再重整一波
-            if (player.PropInventory == null)
+            /*if (player.PropInventory == null)
                 msg.Prop = PropType.NullPropType;
             else
             {
@@ -112,7 +111,7 @@ namespace Server
                     case Preparation.Utility.PropType.Gem:
                         msg.Prop = PropType.NullPropType;
                         break;
-                    /*case Preparation.Utility.PropType.addLIFE:
+                    case Preparation.Utility.PropType.addLIFE:
                         msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddLife;
                         break;
                     case Preparation.Utility.PropType.addSpeed:
@@ -123,12 +122,12 @@ namespace Server
                         break;
                     case Preparation.Utility.PropType.Spear:
                         msg.MessageOfHuman.Prop = Communication.Proto.PropType.Spear;
-                        break;*/
+                        break;
                     default:
                         msg.Prop = PropType.NullPropType;
                         break;
                 }
-            }
+            }*/
             /*switch (player.PassiveSkillType) 需要对接一下，proto里似乎没有这个
             {
                 case Preparation.Utility.PassiveSkillType.RecoverAfterBattle:
@@ -197,7 +196,7 @@ namespace Server
             msg.Damage = 0;
             msg.TimeUntilSkillAvailable = 0;
             //msg.Place = 0; 下面写了
-            msg.Prop = PropType.NullPropType; // 下面写
+            //msg.Prop = PropType.NullPropType; // 下面写
             msg.TrickerType = TrickerType.NullTrickerType; // 下面写
             msg.Guid = 0;
             msg.Movable = false;
@@ -278,7 +277,7 @@ namespace Server
 
             //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
             //现在懒得改了，有时间再重整一波
-            if (player.PropInventory == null)
+            /*if (player.PropInventory == null)
                 msg.Prop = PropType.NullPropType;
             else
             {
@@ -287,7 +286,7 @@ namespace Server
                     case Preparation.Utility.PropType.Gem:
                         msg.Prop = PropType.NullPropType;
                         break;
-                    /*case Preparation.Utility.PropType.addLIFE:
+                    case Preparation.Utility.PropType.addLIFE:
                         msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddLife;
                         break;
                     case Preparation.Utility.PropType.addSpeed:
@@ -298,12 +297,12 @@ namespace Server
                         break;
                     case Preparation.Utility.PropType.Spear:
                         msg.MessageOfHuman.Prop = Communication.Proto.PropType.Spear;
-                        break;*/
+                        break;
                     default:
                         msg.Prop = PropType.NullPropType;
                         break;
                 }
-            }
+            }*/
             /*switch (player.PassiveSkillType) 需要对接一下，proto里似乎没有这个
             {
                 case Preparation.Utility.PassiveSkillType.RecoverAfterBattle:

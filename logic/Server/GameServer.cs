@@ -245,7 +245,7 @@ namespace Server
             return Task.FromResult(moveRes);
         }
 
-        public override Task<BoolRes> PickProp(PickMsg request, ServerCallContext context)
+        public override Task<BoolRes> PickProp(PropMsg request, ServerCallContext context)
         {
             BoolRes boolRes = new();
             if (request.PropType == Protobuf.PropType.NullPropType)

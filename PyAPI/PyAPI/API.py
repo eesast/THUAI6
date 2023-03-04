@@ -1,11 +1,11 @@
 import PyAPI.structures as THUAI6
-from PyAPI.Interface import ILogic, IHumanAPI, IButcherAPI, IGameTimer, IAI
+from PyAPI.Interface import ILogic, IStudentAPI, ITrickerAPI, IGameTimer, IAI
 from math import pi
 from concurrent.futures import ThreadPoolExecutor, Future
 from typing import List, Union
 
 
-class HumanAPI(IHumanAPI, IGameTimer):
+class StudentAPI(IStudentAPI, IGameTimer):
 
     def __init__(self, logic: ILogic) -> None:
         self.__logic = logic
@@ -68,16 +68,16 @@ class HumanAPI(IHumanAPI, IGameTimer):
     def GetPlayerGUIDs(self) -> List[int]:
         return self.__logic.GetPlayerGUIDs()
 
-    def GetButchers(self) -> List[THUAI6.Butcher]:
-        return self.__logic.GetButchers()
+    def GetTrickers(self) -> List[THUAI6.Tricker]:
+        return self.__logic.GetTrickers()
 
-    def GetHumans(self) -> List[THUAI6.Human]:
-        return self.__logic.GetHumans()
+    def GetStudents(self) -> List[THUAI6.Student]:
+        return self.__logic.GetStudents()
 
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
 
-    def GetSelfInfo(self) -> Union[THUAI6.Human, THUAI6.Butcher]:
+    def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
         return self.__logic.GetSelfInfo()
 
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
@@ -88,10 +88,10 @@ class HumanAPI(IHumanAPI, IGameTimer):
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
-    def PrintHuman(self) -> None:
+    def PrintStudent(self) -> None:
         pass
 
-    def PrintButcher(self) -> None:
+    def PrintTricker(self) -> None:
         pass
 
     def PrintProp(self) -> None:
@@ -102,20 +102,20 @@ class HumanAPI(IHumanAPI, IGameTimer):
 
     # 人类阵营的特殊函数
 
-    def Escape(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.Escape)
+    def Graduate(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.Graduate)
 
-    def StartFixMachine(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.StartFixMachine)
+    def StartLearning(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartLearning)
 
-    def EndFixMachine(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.EndFixMachine)
+    def EndLearning(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.EndLearning)
 
-    def StartSaveHuman(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.StartSaveHuman)
+    def StartHelpMate(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartHelpMate)
 
-    def EndSaveHuman(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.EndSaveHuman)
+    def EndHelpMate(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.EndHelpMate)
 
     # Timer用
 
@@ -129,7 +129,7 @@ class HumanAPI(IHumanAPI, IGameTimer):
         pass
 
 
-class ButcherAPI(IButcherAPI, IGameTimer):
+class TrickerAPI(ITrickerAPI, IGameTimer):
 
     def __init__(self, logic: ILogic) -> None:
         self.__logic = logic
@@ -192,16 +192,16 @@ class ButcherAPI(IButcherAPI, IGameTimer):
     def GetPlayerGUIDs(self) -> List[int]:
         return self.__logic.GetPlayerGUIDs()
 
-    def GetButchers(self) -> List[THUAI6.Butcher]:
-        return self.__logic.GetButchers()
+    def GetTrickers(self) -> List[THUAI6.Tricker]:
+        return self.__logic.GetTrickers()
 
-    def GetHumans(self) -> List[THUAI6.Human]:
-        return self.__logic.GetHumans()
+    def GetStudents(self) -> List[THUAI6.Student]:
+        return self.__logic.GetStudents()
 
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
 
-    def GetSelfInfo(self) -> Union[THUAI6.Human, THUAI6.Butcher]:
+    def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
         return self.__logic.GetSelfInfo()
 
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
@@ -212,10 +212,10 @@ class ButcherAPI(IButcherAPI, IGameTimer):
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
-    def PrintHuman(self) -> None:
+    def PrintStudent(self) -> None:
         pass
 
-    def PrintButcher(self) -> None:
+    def PrintTricker(self) -> None:
         pass
 
     def PrintProp(self) -> None:
@@ -226,17 +226,17 @@ class ButcherAPI(IButcherAPI, IGameTimer):
 
     # 屠夫阵营的特殊函数
 
-    def Attack(self, angle: float) -> Future[bool]:
-        return self.__pool.submit(self.__logic.Attack, angle)
+    def Trick(self, angle: float) -> Future[bool]:
+        return self.__pool.submit(self.__logic.Trick, angle)
 
-    def CarryHuman(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.CarryHuman)
+    def StartExam(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartExam)
 
-    def ReleaseHuman(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.ReleaseHuman)
+    def EndExam(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.EndExam)
 
-    def HangHuman(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.HangHuman)
+    def MakeFail(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.MakeFail)
 
     # Timer用
 

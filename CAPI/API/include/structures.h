@@ -26,9 +26,10 @@ namespace THUAI6
         Land = 1,
         Wall = 2,
         Grass = 3,
-        Machine = 4,
-        Gate = 5,
-        HiddenGate = 6,
+        ClassRoom = 4,
+        BlackRoom = 5,
+        Gate = 6,
+        HiddenGate = 7,
     };
 
     // 形状标志
@@ -49,62 +50,77 @@ namespace THUAI6
         PropType4 = 4,
     };
 
+    enum class BulletType : unsigned char
+    {
+        NullBulletType = 0,
+        LineBullet = 1,
+        CommonBullet = 2,
+        FastBullet = 3,
+        OrdinaryBullet = 4,
+        AtomBomb = 5,
+    };
+
     // 玩家类型
     enum class PlayerType : unsigned char
     {
         NullPlayerType = 0,
-        HumanPlayer = 1,
-        ButcherPlayer = 2,
+        StudentPlayer = 1,
+        TrickerPlayer = 2,
     };
 
-    // 人类类型
-    enum class HumanType : unsigned char
+    // 学生类型
+    enum class StudentType : unsigned char
     {
-        NullHumanType = 0,
-        HumanType1 = 1,
-        HumanType2 = 2,
-        HumanType3 = 3,
-        HumanType4 = 4,
+        NullStudentType = 0,
+        StudentType1 = 1,
+        StudentType2 = 2,
+        StudentType3 = 3,
+        StudentType4 = 4,
     };
 
-    // 屠夫类型
-    enum class ButcherType : unsigned char
+    // 捣蛋鬼类型
+    enum class TrickerType : unsigned char
     {
-        NullButcherType = 0,
-        ButcherType1 = 1,
-        ButcherType2 = 2,
-        ButcherType3 = 3,
-        ButcherType4 = 4,
+        NullTrickerType = 0,
+        TrickerType1 = 1,
+        TrickerType2 = 2,
+        TrickerType3 = 3,
+        TrickerType4 = 4,
     };
 
-    // 人类Buff类型
-    enum class HumanBuffType : unsigned char
+    // 学生Buff类型
+    enum class StudentBuffType : unsigned char
     {
-        NullHumanBuffType = 0,
-        HumanBuffType1 = 1,
-        HumanBuffType2 = 2,
-        HumanBuffType3 = 3,
-        HumanBuffType4 = 4,
+        NullStudentBuffType = 0,
+        StudentBuffType1 = 1,
+        StudentBuffType2 = 2,
+        StudentBuffType3 = 3,
+        StudentBuffType4 = 4,
     };
 
-    enum class ButcherBuffType : unsigned char
+    enum class TrickerBuffType : unsigned char
     {
-        NullButcherBuffType = 0,
-        ButcherBuffType1 = 1,
-        ButcherBuffType2 = 2,
-        ButcherBuffType3 = 3,
-        ButcherBuffType4 = 4,
+        NullTrickerBuffType = 0,
+        TrickerBuffType1 = 1,
+        TrickerBuffType2 = 2,
+        TrickerBuffType3 = 3,
+        TrickerBuffType4 = 4,
     };
 
-    // 人类状态枚举
-    enum class HumanState : unsigned char
+    // 学生状态枚举
+    enum class StudentState : unsigned char
     {
-        NullHumanState = 0,
+        NullStudentState = 0,
         Idle = 1,
-        Fixing = 2,
-        Dying = 3,
-        OnChair = 4,
-        Dead = 5,
+        Learning = 2,
+        Addicted = 3,
+        Quit = 4,
+        Graduated = 5,
+        Treated = 6,
+        Rescued = 7,
+        Stunned = 8,
+        Treating = 9,
+        Rescuing = 10,
     };
 
     // 玩家类
@@ -118,6 +134,7 @@ namespace THUAI6
         int64_t guid;       // 全局唯一ID
         int16_t radius;     // 圆形物体的半径或正方形物体的内切圆半径
 
+        int32_t damage;                  // 攻击伤害
         double timeUntilSkillAvailable;  // 技能冷却时间
 
         PlayerType playerType;  // 玩家类型
@@ -125,23 +142,46 @@ namespace THUAI6
         PlaceType place;        // 所处格子的类型
     };
 
-    struct Human : public Player
+    struct Student : public Player
     {
-        HumanState state;    // 人类状态
-        int32_t life;        // 剩余生命（本次倒地之前还能承受的伤害）
-        int32_t hangedTime;  // 被挂的次数
+        StudentState state;     // 学生状态
+        int32_t determination;  // 剩余毅力（本次Emo之前还能承受的伤害）
+        int32_t failNum;        // 挂科数量
+        double failTime;        // 挂科时间
+        double emoTime;         // EMO时间
 
-        HumanType humanType;              // 人类类型
-        std::vector<HumanBuffType> buff;  // buff
+        StudentType studentType;            // 学生类型
+        std::vector<StudentBuffType> buff;  // buff
     };
 
-    struct Butcher : public Player
+    struct Tricker : public Player
     {
-        int32_t damage;  // 攻击伤害
-        bool movable;    // 是否处在攻击后摇中
+        bool movable;  // 是否处在攻击后摇中
 
-        ButcherType butcherType;            // 屠夫类型
-        std::vector<ButcherBuffType> buff;  // buff
+        TrickerType trickerType;            // 捣蛋鬼类型
+        std::vector<TrickerBuffType> buff;  // buff
+    };
+
+    struct Bullet
+    {
+        BulletType bulletType;   // 子弹类型
+        int32_t x;               // x坐标
+        int32_t y;               // y坐标
+        double facingDirection;  // 朝向
+        int64_t guid;            // 全局唯一ID
+        PlayerType team;         // 子弹所属队伍
+        PlaceType place;         // 所处格子的类型
+        double bombRange;        // 炸弹爆炸范围
+    };
+
+    struct BombedBullet
+    {
+        BulletType bulletType;
+        int32_t x;
+        int32_t y;
+        double facingDirection;
+        int64_t mappingID;
+        double bombRange;
     };
 
     struct Prop
@@ -166,19 +206,24 @@ namespace THUAI6
         {GameState::GameEnd, "GameEnd"},
     };
 
-    inline std::map<HumanState, std::string> humanStateDict{
-        {HumanState::NullHumanState, "NullHumanState"},
-        {HumanState::Idle, "Idle"},
-        {HumanState::Fixing, "Fixing"},
-        {HumanState::Dying, "Dying"},
-        {HumanState::OnChair, "OnChair"},
-        {HumanState::Dead, "Dead"},
+    inline std::map<StudentState, std::string> studentStateDict{
+        {StudentState::NullStudentState, "NullStudentState"},
+        {StudentState::Idle, "Idle"},
+        {StudentState::Learning, "Learning"},
+        {StudentState::Addicted, "Addicted"},
+        {StudentState::Quit, "Quit"},
+        {StudentState::Graduated, "Graduated"},
+        {StudentState::Treated, "Treated"},
+        {StudentState::Rescued, "Rescued"},
+        {StudentState::Stunned, "Stunned"},
+        {StudentState::Treating, "Treating"},
+        {StudentState::Rescuing, "Rescuing"},
     };
 
     inline std::map<PlayerType, std::string> playerTypeDict{
         {PlayerType::NullPlayerType, "NullPlayerType"},
-        {PlayerType::HumanPlayer, "HumanPlayer"},
-        {PlayerType::ButcherPlayer, "ButcherPlayer"},
+        {PlayerType::StudentPlayer, "StudentPlayer"},
+        {PlayerType::TrickerPlayer, "TrickerPlayer"},
     };
 
     inline std::map<PlaceType, std::string> placeTypeDict{
@@ -186,7 +231,7 @@ namespace THUAI6
         {PlaceType::Land, "Land"},
         {PlaceType::Wall, "Wall"},
         {PlaceType::Grass, "Grass"},
-        {PlaceType::Machine, "Machine"},
+        {PlaceType::ClassRoom, "ClassRoom"},
         {PlaceType::Gate, "Gate"},
         {PlaceType::HiddenGate, "HiddenGate"},
     };
@@ -196,13 +241,13 @@ namespace THUAI6
 
     };
 
-    inline std::map<HumanBuffType, std::string> humanBuffDict{
-        {HumanBuffType::NullHumanBuffType, "NullHumanBuffType"},
+    inline std::map<StudentBuffType, std::string> studentBuffDict{
+        {StudentBuffType::NullStudentBuffType, "NullStudentBuffType"},
 
     };
 
-    inline std::map<ButcherBuffType, std::string> butcherBuffDict{
-        {ButcherBuffType::NullButcherBuffType, "NullButcherBuffType"},
+    inline std::map<TrickerBuffType, std::string> trickerBuffDict{
+        {TrickerBuffType::NullTrickerBuffType, "NullTrickerBuffType"},
 
     };
 

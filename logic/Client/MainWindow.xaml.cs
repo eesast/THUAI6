@@ -18,15 +18,11 @@ using Grpc.Core;
 using Protobuf;
 
 // 目前MainWindow还未复现的功能：
-// errordisplayer
+// 部分errordisplayer
 // private void ReactToCommandline()，
 // private void Playback(string fileName, double pbSpeed = 2.0)
-// 绘图函数private void DrawLaser(Point source, double theta, double range,double Width)//三个参数分别为攻击者的位置，攻击方位角（窗口坐标）和攻击半径
-//        private void Attack(object sender,RoutedEventArgs e)
 
 // 交互：private void ClickToSetMode(object sender, RoutedEventArgs e)
-
-// private void KeyBoardControl(object sender, KeyEventArgs e)
 
 // private void Bonus()
 
@@ -41,7 +37,8 @@ namespace Client
         {
             unitHeight = unitWidth = unit = 13;
             bonusflag = true;
-            timer = new DispatcherTimer {
+            timer = new DispatcherTimer
+            {
                 Interval = new TimeSpan(50000)  // 每50ms刷新一次
             };
             timer.Tick += new EventHandler(Refresh);  // 定时器初始化
@@ -55,13 +52,22 @@ namespace Client
             listOfHuman = new List<MessageOfHuman>();
             listOfButcher = new List<MessageOfButcher>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            comInfo[0] = "127.0.0.1";
+            comInfo[0] = "183.172.208.156";
             comInfo[1] = "8888";
-            comInfo[2] = "1";
+            comInfo[2] = "0";
             comInfo[3] = "1";
             comInfo[4] = "1";
-            ConnectToServer(comInfo);
-            OnReceive();
+
+            //ConnectToServer(comInfo);
+            //OnReceive();
+            DrawMap();
+            ZoomMap();
+            MessageOfHuman kurei = new MessageOfHuman();
+            kurei.X = 10000;
+            kurei.Y = 20000;
+            kurei.Speed = 1000;
+            kurei.PlayerId = 0;
+            listOfHuman.Add(kurei);
             // ReactToCommandline();
         }
 
@@ -94,11 +100,20 @@ namespace Client
 
                 PlayerMsg playerMsg = new PlayerMsg();
                 playerMsg.PlayerId = playerID;
-                playerType = Convert.ToInt64(comInfo[3]) switch {
+                playerType = Convert.ToInt64(comInfo[3]) switch
+                {
                     0 => PlayerType.NullPlayerType,
                     1 => PlayerType.HumanPlayer,
                     2 => PlayerType.ButcherPlayer,
                 };
+                if (Convert.ToInt64(comInfo[3]) == 1)
+                {
+                    humanOrButcher = true;
+                }
+                else if (Convert.ToInt64(comInfo[3]) == 2)
+                {
+                    humanOrButcher = false;
+                }
                 playerMsg.PlayerType = playerType;
                 if (playerType == PlayerType.HumanPlayer)
                 {
@@ -157,7 +172,8 @@ namespace Client
         // 绘制道具
         private void DrawProp(MessageOfProp data, string text)
         {
-            TextBox icon = new() {
+            TextBox icon = new()
+            {
                 FontSize = 10,
                 Width = 20,
                 Height = 20,
@@ -219,7 +235,8 @@ namespace Client
             {
                 for (int j = 0; j < defaultMap.GetLength(1); j++)
                 {
-                    mapPatches[i, j] = new() {
+                    mapPatches[i, j] = new()
+                    {
                         Width = unitWidth,
                         Height = unitHeight,
                         HorizontalAlignment = HorizontalAlignment.Left,
@@ -230,31 +247,26 @@ namespace Client
                     // mapPatches[i, j].SetValue(Canvas.TopProperty, (double)(Height / 56.5 * i));  // 用zoommap进行修改
                     switch (defaultMap[i, j])
                     {
-                        case 1:
+                        case 6:
                             mapPatches[i, j].Fill = Brushes.Brown;
                             mapPatches[i, j].Stroke = Brushes.Brown;
                             break;
-                        case 2:
-                        case 3:
-                        case 4:
+                        case 7:
                             mapPatches[i, j].Fill = Brushes.Green;
                             mapPatches[i, j].Stroke = Brushes.Green;
                             break;
-                        case 5:
-                        case 6:
-                        case 7:
                         case 8:
-                        case 9:
-                        case 10:
-                        case 11:
-                        case 12:
-                            mapPatches[i, j].Fill = Brushes.Yellow;
-                            mapPatches[i, j].Stroke = Brushes.Yellow;
-                            break;
-                        case 13:
                             mapPatches[i, j].Fill = Brushes.LightPink;
                             mapPatches[i, j].Stroke = Brushes.LightPink;
-                            break;
+                            break;//machine
+                        case 9:
+                            mapPatches[i, j].Fill = Brushes.LightSkyBlue;
+                            mapPatches[i, j].Stroke = Brushes.LightSkyBlue;
+                            break;//door
+                        case 10:
+                            mapPatches[i, j].Fill = Brushes.LightSalmon;
+                            mapPatches[i, j].Stroke = Brushes.LightSalmon;
+                            break;//emergency
                         default:
                             break;
                     }
@@ -264,88 +276,150 @@ namespace Client
             hasDrawed = true;
         }
 
+        //三个参数分别为攻击者的位置，攻击方位角（窗口坐标）和攻击半径
+        private void DrawLaser(Point source, double theta, double range, double Width)  // 三个参数分别为攻击者的位置，攻击方位角（窗口坐标）和攻击半径
+        {
+            Point[] endPoint = new Point[4];
+            Point target = new();
+            target.X = source.X + range * Math.Cos(theta);
+            target.Y = source.Y + range * Math.Sin(theta);
+            endPoint[0].X = source.X + Width * Math.Cos(theta - Math.PI / 2);
+            endPoint[0].Y = source.Y + Width * Math.Sin(theta - Math.PI / 2);
+            endPoint[1].X = target.X + Width * Math.Cos(theta - Math.PI / 2);
+            endPoint[1].Y = target.Y + Width * Math.Sin(theta - Math.PI / 2);
+            endPoint[2].X = target.X + Width * Math.Cos(theta + Math.PI / 2);
+            endPoint[2].Y = target.Y + Width * Math.Sin(theta + Math.PI / 2);
+            endPoint[3].X = source.X + Width * Math.Cos(theta + Math.PI / 2);
+            endPoint[3].Y = source.Y + Width * Math.Sin(theta + Math.PI / 2);
+            Polygon laserIcon = new();
+            laserIcon.Stroke = System.Windows.Media.Brushes.Red;
+            laserIcon.Fill = System.Windows.Media.Brushes.Red;
+            laserIcon.StrokeThickness = 2;
+            laserIcon.HorizontalAlignment = HorizontalAlignment.Left;
+            laserIcon.VerticalAlignment = VerticalAlignment.Top;
+            PointCollection laserEndPoints = new();
+            for (int i = 0; i < 4; i++)
+            {
+                laserEndPoints.Add(endPoint[i]);
+            }
+            laserIcon.Points = laserEndPoints;
+            UpperLayerOfMap.Children.Add(laserIcon);
+        }
         private async void OnReceive()  // log未更新,switch1,2更新log
         {
-            while (await responseStream.ResponseStream.MoveNext())
+            try
             {
-                lock (drawPicLock)  // 加锁是必要的，画图操作和接收信息操作不能同时进行，否则画图时foreach会有bug
+                while (responseStream != null && await responseStream.ResponseStream.MoveNext())
                 {
-                    listOfHuman.Clear();
-                    listOfButcher.Clear();
-                    listOfProp.Clear();
-                    MessageToClient content = responseStream.ResponseStream.Current;
-                    switch (content.GameState)
+                    lock (drawPicLock)  // 加锁是必要的，画图操作和接收信息操作不能同时进行，否则画图时foreach会有bug
                     {
-                        case GameState.GameStart:
-                            foreach (var obj in content.HumanMessage)
-                            {
-                                listOfHuman.Add(obj);
-                            }
-                            foreach (var obj in content.ButcherMessage)
-                            {
-                                listOfButcher.Add(obj);
-                            }
-                            foreach (var obj in content.PropMessage)
-                            {
-                                listOfProp.Add(obj);
-                            }
-                            GetMap(content.MapMessage);
-                            break;
-                        case GameState.GameRunning:
-                            foreach (var obj in content.HumanMessage)
-                            {
-                                listOfHuman.Add(obj);
-                            }
-                            foreach (var obj in content.ButcherMessage)
-                            {
-                                listOfButcher.Add(obj);
-                            }
-                            foreach (var obj in content.PropMessage)
-                            {
-                                listOfProp.Add(obj);
-                            }
-                            if (!mapFlag)
+                        listOfHuman.Clear();
+                        listOfButcher.Clear();
+                        listOfProp.Clear();
+                        MessageToClient content = responseStream.ResponseStream.Current;
+                        switch (content.GameState)
+                        {
+                            case GameState.GameStart:
+                                foreach (var obj in content.HumanMessage)
+                                {
+                                    if (humanOrButcher && obj.PlayerId == playerID)
+                                    {
+                                        human = obj;
+                                    }
+                                    listOfHuman.Add(obj);
+                                }
+                                foreach (var obj in content.ButcherMessage)
+                                {
+                                    if (!humanOrButcher && obj.PlayerId == playerID)
+                                    {
+                                        butcher = obj;
+                                    }
+                                    listOfButcher.Add(obj);
+                                }
+                                foreach (var obj in content.PropMessage)
+                                {
+                                    listOfProp.Add(obj);
+                                }
                                 GetMap(content.MapMessage);
-                            break;
-                        case GameState.GameEnd:
-                            foreach (var obj in content.HumanMessage)
-                            {
-                                listOfHuman.Add(obj);
-                            }
-                            foreach (var obj in content.ButcherMessage)
-                            {
-                                listOfButcher.Add(obj);
-                            }
-                            foreach (var obj in content.PropMessage)
-                            {
-                                listOfProp.Add(obj);
-                            }
-                            break;
+                                break;
+                            case GameState.GameRunning:
+                                foreach (var obj in content.HumanMessage)
+                                {
+                                    if (humanOrButcher && obj.PlayerId == playerID)
+                                    {
+                                        human = obj;
+                                    }
+                                    listOfHuman.Add(obj);
+                                }
+                                foreach (var obj in content.ButcherMessage)
+                                {
+                                    if (!humanOrButcher && obj.PlayerId == playerID)
+                                    {
+                                        butcher = obj;
+                                    }
+                                    listOfButcher.Add(obj);
+                                }
+                                foreach (var obj in content.PropMessage)
+                                {
+                                    listOfProp.Add(obj);
+                                }
+                                if (!mapFlag)
+                                    GetMap(content.MapMessage);
+                                break;
+                            case GameState.GameEnd:
+                                foreach (var obj in content.HumanMessage)
+                                {
+                                    listOfHuman.Add(obj);
+                                }
+                                foreach (var obj in content.ButcherMessage)
+                                {
+                                    listOfButcher.Add(obj);
+                                }
+                                foreach (var obj in content.PropMessage)
+                                {
+                                    listOfProp.Add(obj);
+                                }
+                                break;
+                        }
                     }
                 }
+                if (responseStream == null)
+                {
+                    throw new Exception("Unconnected");
+                }
             }
+            catch (Exception ex)
+            {
+                ErrorDisplayer error = new("Error: "+ex.ToString());
+                error.Show();
+            }   
         }
 
         private bool CanSee(MessageOfHuman msg)
         {
             if (msg.State == HumanState.Dead)
                 return false;
-            // if (playerID >= 2022 || teamID >= 2022)
-            //     return true;
-            // if (myInfo != null)
-            //{
-            //     if (myInfo.MessageOfCharacter.Guid == msg.Guid)  // 自己能看见自己
-            //         return true;
-            // }
+            //if (playerID >= 2022 || teamID >= 2022)
+            //   return true;
+            if (humanOrButcher && human != null)
+            {
+                if (human.Guid == msg.Guid)  // 自己能看见自己
+                    return true;
+            }
             if (msg.Place == PlaceType.Grass || msg.Place == PlaceType.Gate || msg.Place == PlaceType.HiddenGate)
                 return false;
             if (msg.Place == PlaceType.Land || msg.Place == PlaceType.Machine)
                 return true;
-            // if (myInfo != null)
-            //{
-            //     if (msg.Place != myInfo.MessageOfCharacter.Place)
-            //         return false;
-            // }
+            if (humanOrButcher && human != null)
+            {
+                if (msg.Place != human.Place)
+                    return false;
+            }
+            else if (!humanOrButcher && butcher != null)
+            {
+                if (msg.Place != butcher.Place)
+                    return false;
+            }
             return true;
         }
 
@@ -353,20 +427,25 @@ namespace Client
         {
             // if (playerID >= 2022 || teamID >= 2022)
             //     return true;
-            // if (myInfo != null)
-            //{
-            //     if (myInfo.MessageOfCharacter.Guid == msg.Guid)  // 自己能看见自己
-            //         return true;
-            // }
+            if (!humanOrButcher && butcher != null)
+            {
+                if (butcher.Guid == msg.Guid)  // 自己能看见自己
+                    return true;
+            }
             if (msg.Place == PlaceType.Grass || msg.Place == PlaceType.Gate || msg.Place == PlaceType.HiddenGate)
                 return false;
             if (msg.Place == PlaceType.Land || msg.Place == PlaceType.Machine)
                 return true;
-            // if (myInfo != null)
-            //{
-            //     if (msg.Place != myInfo.MessageOfCharacter.Place)
-            //         return false;
-            // }
+            if (humanOrButcher && human != null)
+            {
+                if (msg.Place != human.Place)
+                    return false;
+            }
+            else if (!humanOrButcher && butcher != null)
+            {
+                if (msg.Place != butcher.Place)
+                    return false;
+            }
             return true;
         }
 
@@ -374,11 +453,16 @@ namespace Client
         {
             if (msg.Place == PlaceType.Land)
                 return true;
-            // if (myInfo != null)
-            //{
-            //     if (msg.Place != myInfo.MessageOfCharacter.Place)
-            //         return false;
-            // }
+            if (humanOrButcher && human != null)
+            {
+                if (msg.Place != human.Place)
+                    return false;
+            }
+            else if (!humanOrButcher && butcher != null)
+            {
+                if (msg.Place != butcher.Place)
+                    return false;
+            }
             return true;
         }
 
@@ -432,7 +516,8 @@ namespace Client
                             StatusBarsOfSurvivor[data.PlayerId].SetValue(data);
                             if (CanSee(data))
                             {
-                                Ellipse icon = new() {
+                                Ellipse icon = new()
+                                {
                                     Width = unitWidth,
                                     Height = unitHeight,
                                     HorizontalAlignment = HorizontalAlignment.Left,
@@ -447,7 +532,8 @@ namespace Client
                         {
                             if (CanSee(data))
                             {
-                                Ellipse icon = new() {
+                                Ellipse icon = new()
+                                {
                                     Width = 10,
                                     Height = 10,
                                     HorizontalAlignment = HorizontalAlignment.Left,
@@ -489,13 +575,126 @@ namespace Client
                 }
                 catch (Exception exc)
                 {
-                    // ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
-                    // error.Show();
+                    ErrorDisplayer error = new("Error: " + exc.ToString());
+                    error.Show();
                     isClientStocked = true;
                     PorC.Content = "▶";
                 }
             }
             counter++;
+        }
+
+        // 键盘控制
+        private void KeyBoardControl(object sender, KeyEventArgs e)
+        {
+            if (!isPlaybackMode)
+            {
+                switch (e.Key)
+                {
+                    case Key.W:
+                    case Key.NumPad8:
+                        MoveMsg msgW = new()
+                        {
+                            PlayerId = playerID,
+                            TimeInMilliseconds = 50,
+                            Angle = Math.PI
+                        };
+                        client.Move(msgW);
+                        break;
+                    case Key.NumPad2:
+                    case Key.S:
+                        MoveMsg msgS = new()
+                        {
+                            PlayerId = playerID,
+                            TimeInMilliseconds = 50,
+                            Angle = 0
+                        };
+                        client.Move(msgS);
+                        break;
+                    case Key.D:
+                    case Key.NumPad6:
+                        MoveMsg msgD = new()
+                        {
+                            PlayerId = playerID,
+                            TimeInMilliseconds = 50,
+                            Angle = Math.PI / 2
+                        };
+                        client.Move(msgD);
+                        break;
+                    case Key.A:
+                    case Key.NumPad4:
+                        MoveMsg msgA = new()
+                        {
+                            PlayerId = playerID,
+                            TimeInMilliseconds = 50,
+                            Angle = 3 * Math.PI / 2
+                        };
+                        client.Move(msgA);
+                        break;
+                    case Key.J:
+                        AttackMsg msgJ = new()
+                        {
+                            PlayerId = playerID,
+                            Angle = Math.PI
+                        };
+                        client.Attack(msgJ);
+                        break;
+                    case Key.F:
+                        PickMsg msgF = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.PickProp(msgF);
+                        break;
+                    case Key.E:
+                        IDMsg msgE = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.UseProp(msgE);
+                        break;
+                    case Key.Q:
+                        IDMsg msgQ = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.UseSkill(msgQ);
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        //鼠标双击
+        private void Attack(object sender, RoutedEventArgs e)
+        {
+            if (!isPlaybackMode)
+            {
+                if (humanOrButcher&&human != null)
+                {
+                    AttackMsg msgJ = new()
+                    {
+                        PlayerId = playerID
+                    };
+                    double mouseY = Mouse.GetPosition(UpperLayerOfMap).X * 1000 / unitWidth;
+                    double mouseX = Mouse.GetPosition(UpperLayerOfMap).Y * 1000 / unitHeight;
+                    msgJ.Angle = Math.Atan2(mouseY - human.Y, mouseX - human.X);
+                    client.Attack(msgJ);
+                }
+                if (!humanOrButcher && butcher != null)
+                {
+                    AttackMsg msgJ = new()
+                    {
+                        PlayerId = playerID
+                    };
+                    double mouseY = Mouse.GetPosition(UpperLayerOfMap).X * 1000 / unitWidth;
+                    double mouseX = Mouse.GetPosition(UpperLayerOfMap).Y * 1000 / unitHeight;
+                    msgJ.Angle = Math.Atan2(mouseY - butcher.Y, mouseX - butcher.X);
+                    client.Attack(msgJ);
+                }
+            }
         }
 
         // 之后需要修改，现在只具有修改按钮形状的功能，并不能实现暂停/继续
@@ -629,62 +828,63 @@ namespace Client
         private List<MessageOfHuman> listOfHuman;
         private List<MessageOfButcher> listOfButcher;
         private object drawPicLock = new object();
+        private MessageOfHuman? human = null;
+        private MessageOfButcher? butcher = null;
+        private bool humanOrButcher;//true for human
 
         private bool bonusflag;
         private bool mapFlag = false;
         private bool hasDrawed = false;
-        public int[,] defaultMap = new int[,] {
-            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 13, 13, 13, 13, 13, 13, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 13, 13, 13, 13, 13, 13, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 13, 13, 13, 13, 13, 1, 1, 1, 1, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 0, 4, 0, 0, 0, 0, 0, 13, 13, 13, 13, 13, 1, 1, 1, 1, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 0, 4, 0, 0, 0, 0, 0, 13, 13, 13, 13, 13, 1, 1, 1, 1, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 0, 4, 0, 0, 0, 0, 0, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 0, 4, 0, 0, 0, 0, 0, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 0, 4, 0, 0, 0, 0, 0, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 0, 4, 0, 0, 0, 0, 0, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 13, 0, 0, 1 },
-            { 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 13, 0, 0, 1 },
-            { 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 13, 0, 0, 1 },
-            { 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 13, 0, 0, 1 },
-            { 1, 0, 1, 1, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 13, 0, 0, 1 },
-            { 1, 0, 1, 1, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 13, 0, 0, 1 },
-            { 1, 0, 1, 1, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 13, 0, 0, 1 },
-            { 1, 0, 1, 1, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 13, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 13, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 13, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 13, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 13, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 13, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 13, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-            { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
-        };
+        public int[,] defaultMap = new int[,] {{ 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 9, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 7, 5, 7, 7, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
+            { 6, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
+            { 6, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
+            { 6, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
+            { 6, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
+            { 6, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
+            { 6, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
+            { 6, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 6, 6, 6, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 }};
 
         private string[] comInfo = new string[5];
     }

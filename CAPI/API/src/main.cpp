@@ -16,13 +16,13 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     bool print = false;
     bool warnOnly = false;
     extern const THUAI6::PlayerType playerType;
-    extern const THUAI6::ButcherType butcherType;
-    extern const THUAI6::HumanType humanType;
+    extern const THUAI6::TrickerType trickerType;
+    extern const THUAI6::StudentType studentType;
     // 仅供早期调试使用
     {
         file = false;
         print = true;
-        Logic logic(playerType, pID, butcherType, humanType);
+        Logic logic(playerType, pID, trickerType, studentType);
         logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);
         return 0;
     }
@@ -70,7 +70,7 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
         std::cerr << "Parsing error: " << e.error() << " for arg " << e.argId() << std::endl;
         return 1;
     }
-    Logic logic(playerType, pID, butcherType, humanType);
+    Logic logic(playerType, pID, trickerType, studentType);
     logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);
     return 0;
 }

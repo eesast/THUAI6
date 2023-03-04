@@ -63,7 +63,7 @@ namespace GameEngine
             (
                 () =>
                 {
-                    if (!obj.IsAvailable && gameTimer.IsGaming) //不能动就直接return，后面都是能动的情况
+                    if (!obj.IsAvailable && gameTimer.IsGaming)
                         return;
                     lock (obj.MoveLock)
                         obj.IsMoving = true;
@@ -73,7 +73,7 @@ namespace GameEngine
                     IGameObj? collisionObj = null;
                     bool isDestroyed = false;
                     new FrameRateTaskExecutor<int>(
-                        () => gameTimer.IsGaming && obj.CanMove && !obj.IsResetting,
+                        () => gameTimer.IsGaming && obj.CanMove && !obj.IsResetting && obj.IsMoving,
                         () =>
                         {
                             moveVecLength = obj.MoveSpeed / GameData.numOfStepPerSecond;
@@ -141,7 +141,7 @@ namespace GameEngine
                                     }
                                 }
                             } while (flag);
-                            if (leftTime > 0)
+                            if (leftTime > 0 && obj.IsMoving)
                             {
                                 Thread.Sleep(leftTime);  // 多移动的在这里补回来
                             }

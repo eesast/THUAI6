@@ -31,26 +31,6 @@ namespace GameClass.GameObj
         }
         public int OrgCD { get; protected set; }
 
-        protected int fixSpeed = 1;
-        /// <summary>
-        /// 修理电机速度
-        /// </summary>
-        public int FixSpeed
-        {
-            get => fixSpeed;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    fixSpeed = value;
-                }
-            }
-        }
-        /// <summary>
-        /// 原初修理电机速度
-        /// </summary>
-        public int OrgFixSpeed { get; protected set; }
-
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;  // 人物最大子弹数
         protected int bulletNum;
@@ -63,20 +43,33 @@ namespace GameClass.GameObj
             get => hp;
             set
             {
-                lock (gameObjLock)
-                    hp = value <= MaxHp ? value : MaxHp;
+                if (value > 0)
+                {
+                    lock (gameObjLock)
+                        hp = value <= MaxHp ? value : MaxHp;
+                }
+                else
+                    lock (gameObjLock)
+                        hp = 0;
             }
         }
 
-        private bool isEscaped = false;
-        public bool IsEscaped
+        private PlayerStateType playerState = PlayerStateType.Null;
+        public PlayerStateType PlayerState
         {
-            get => isEscaped;
+            get
+            {
+                if (IsResetting) return PlayerStateType.IsResetting;
+                if (IsMoving) return PlayerStateType.IsMoving;
+                return playerState;
+            }
             set
             {
-                lock (gameObjLock)
-                    if (!isEscaped && !IsGhost())
-                        isEscaped = value;
+                if (!(value == PlayerStateType.IsMoving || value == PlayerStateType.Null))
+                    lock (gameObjLock)
+                        IsMoving = false;
+
+                lock (gameObjLock) playerState = (value == PlayerStateType.IsMoving) ? PlayerStateType.Null : value;
             }
         }
 
@@ -163,22 +156,6 @@ namespace GameClass.GameObj
                 var oldProp = PropInventory;
                 PropInventory = null;
                 return oldProp;
-            }
-        }
-
-        /// <summary>
-        /// 是否正在更换道具（包括捡起与抛出）
-        /// </summary>
-        private bool isModifyingProp = false;
-        public bool IsModifyingProp
-        {
-            get => isModifyingProp;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    isModifyingProp = value;
-                }
             }
         }
 
@@ -423,19 +400,19 @@ namespace GameClass.GameObj
         #endregion
 
         #region 角色拥有的buff相关属性、方法
-        public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManeger.AddMoveSpeed(add, buffTime, newVal =>
+        public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManager.AddMoveSpeed(add, buffTime, newVal =>
                                                                                                             { MoveSpeed = newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed; },
                                                                                              OrgMoveSpeed);
-        public bool HasFasterSpeed => buffManeger.HasFasterSpeed;
+        public bool HasFasterSpeed => buffManager.HasFasterSpeed;
 
-        public void AddShield(int shieldTime) => buffManeger.AddShield(shieldTime);
-        public bool HasShield => buffManeger.HasShield;
+        public void AddShield(int shieldTime) => buffManager.AddShield(shieldTime);
+        public bool HasShield => buffManager.HasShield;
 
-        public void AddLIFE(int LIFETime) => buffManeger.AddLIFE(LIFETime);
-        public bool HasLIFE => buffManeger.HasLIFE;
+        public void AddLIFE(int LIFETime) => buffManager.AddLIFE(LIFETime);
+        public bool HasLIFE => buffManager.HasLIFE;
 
-        public void AddSpear(int spearTime) => buffManeger.AddSpear(spearTime);
-        public bool HasSpear => buffManeger.HasSpear;
+        public void AddSpear(int spearTime) => buffManager.AddSpear(spearTime);
+        public bool HasSpear => buffManager.HasSpear;
 
         private Array buffTypeArray = Enum.GetValues(typeof(BuffType));
         public Dictionary<BuffType, bool> Buff
@@ -469,7 +446,7 @@ namespace GameClass.GameObj
         }
         private void TryActivatingLIFE()
         {
-            if (buffManeger.TryActivatingLIFE())
+            if (buffManager.TryActivatingLIFE())
             {
                 hp = MaxHp;
             }
@@ -488,29 +465,28 @@ namespace GameClass.GameObj
                 lock (gameObjLock)
                     bulletNum = maxBulletNum;
 
-                buffManeger.ClearAll();
+                buffManager.ClearAll();
                 IsInvisible = false;
                 this.Vampire = this.OriVampire;
             }
         }
-
-        public void Escape()
+        public void Die(PlayerStateType playerStateType)
         {
             lock (gameObjLock)
-                IsResetting = IsEscaped = true;
+            {
+                playerState = playerStateType;
+                CanMove = false;
+                IsResetting = true;
+            }
         }
+
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj.Type == GameObjType.BirthPoint)
-            {
-                if (object.ReferenceEquals(((BirthPoint)targetObj).Parent, this))  // 自己的出生点可以忽略碰撞
-                {
-                    return true;
-                }
-            }
-            else if (targetObj.Type == GameObjType.Prop)  // 自己队的地雷忽略碰撞
+            if (IsResetting)
+                return true;
+            if (targetObj.Type == GameObjType.Prop)  // 自己队的地雷忽略碰撞
             {
                 return true;
             }

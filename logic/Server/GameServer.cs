@@ -6,6 +6,8 @@ using System;
 using System.Net.Http.Headers;
 using Gaming;
 using GameClass.GameObj;
+using Preparation.Utility;
+
 
 namespace Server
 {
@@ -13,9 +15,17 @@ namespace Server
     {
         private Dictionary<long, (SemaphoreSlim, SemaphoreSlim)> semaDict = new();
         private object gameLock = new();
-        private const int playerNum = 2;  // 注意修改
+        private const int playerNum = 1;  // 注意修改
         private MessageToClient currentGameInfo = new();
         private SemaphoreSlim endGameSem = new(0);
+
+        object gameInfo = new();
+        private int isGaming = 0;
+        public bool IsGaming
+        {
+            get => Interlocked.CompareExchange(ref isGaming, 0, 0) != 0;
+            set => Interlocked.Exchange(ref isGaming, value ? 1 : 0);
+        }
         // 以上是测试时用到的定义
 
         protected readonly ArgumentOptions options;
@@ -29,6 +39,46 @@ namespace Server
         private readonly Semaphore endGameInfoSema = new(0, 1);
         // private MessageWriter? mwr = null;
 
+        public SemaphoreSlim StartGameTest()
+        {
+            IsGaming = true;
+            var waitHandle = new SemaphoreSlim(0);
+
+            new Thread
+            (
+                () =>
+                {
+                    new FrameRateTaskExecutor<int>
+                    (
+                        () => IsGaming,
+                        () =>
+                        {
+                            lock (gameInfo)
+                            {
+                                /*for (int i = 0; i < gameInfo.GameObjs.Count; i++)
+                                {
+                                    if (gameInfo.GameObjs[i].Character != null)
+                                    {
+                                        gameInfo.GameObjs[i].Character.X++;
+                                        gameInfo.GameObjs[i].Character.Y--;
+                                    }
+                                }*/
+                            }
+                        },
+                        100,
+                        () =>
+                        {
+                            IsGaming = false;
+                            waitHandle.Release();
+                            return 0;
+                        },
+                        3000//gameTime
+                    ).Start();
+                }
+            )
+            { IsBackground = true }.Start();
+            return waitHandle;
+        }
         public void StartGame()
         {
             bool gameState = game.StartGame((int)options.GameTimeInSecond * 1000);
@@ -63,9 +113,7 @@ namespace Server
 
         public void ReportGame()
         {
-            // currentGameInfo = game.GetCopiedGameInfo();
-            currentGameInfo.HumanMessage[0].X = 1;
-            currentGameInfo.ButcherMessage[0].X = 1;
+            //currentGameInfo = null;
 
             foreach (var kvp in semaDict)
             {
@@ -77,13 +125,29 @@ namespace Server
                 kvp.Value.Item2.Wait();
             }
         }
-        private uint GetBirthPointIdx(long teamID, long playerID)  // 获取出生点位置
+
+        private int PlayerTypeToTeamID(PlayerType playerType)
         {
-            return (uint)((teamID * options.PlayerCountPerTeam) + playerID);
+            if (playerType == PlayerType.StudentPlayer) return 0;
+            if (playerType == PlayerType.TrickerPlayer) return 1;
+            return -1;
+        }
+        private uint GetBirthPointIdx(PlayerType playerType, long playerID)  // 获取出生点位置
+        {
+            return (uint)((PlayerTypeToTeamID(playerType) * options.PlayerCountPerTeam) + playerID + 1);
+        }
+        private bool ValidPlayerTypeAndPlayerID(PlayerType playerType, long playerID)
+        {
+            if (playerType == PlayerType.StudentPlayer && 0 <= playerID && playerID < options.PlayerCountPerTeam)
+                return true; // 人数待修改
+            if (playerType == PlayerType.TrickerPlayer && 0 <= playerID && playerID < options.PlayerCountPerTeam)
+                return true;
+            return false;
         }
 
         public override Task<BoolRes> TryConnection(IDMsg request, ServerCallContext context)
         {
+            Console.WriteLine($"TryConnection ID: {request.PlayerId}");
             var onConnection = new BoolRes();
             lock (gameLock)
             {
@@ -101,6 +165,7 @@ namespace Server
         protected readonly object addPlayerLock = new();
         public override async Task AddPlayer(PlayerMsg request, IServerStreamWriter<MessageToClient> responseStream, ServerCallContext context)
         {
+            Console.WriteLine($"AddPlayer: {request.PlayerId}");
             if (request.PlayerId >= spectatorMinPlayerID && request.PlayerType == PlayerType.NullPlayerType)
             {
                 // 观战模式
@@ -115,23 +180,23 @@ namespace Server
 
             if (game.GameMap.Timer.IsGaming)
                 return;
-            /*if (!ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))  //玩家id是否正确
-            return;
-            if (communicationToGameID[msg.TeamID, msg.PlayerID] != GameObj.invalidID)  //是否已经添加了该玩家
-                return false;
+            if (!ValidPlayerTypeAndPlayerID(request.PlayerType, request.PlayerId))  //玩家id是否正确
+                return;
+            //if (communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId] != GameObj.invalidID)  //是否已经添加了该玩家
+            //return;
 
-            Preparation.Utility.PassiveSkillType passiveSkill;
-            */
+            Preparation.Utility.CharacterType characterType = Preparation.Utility.CharacterType.Athlete; // 待修改
+
             lock (addPlayerLock)
             {
-                /*Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(msg.TeamID, msg.PlayerID), msg.TeamID, msg.PlayerID, passiveSkill, commonSkill);
+                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(request.PlayerType, request.PlayerId), PlayerTypeToTeamID(request.PlayerType), request.PlayerId, characterType);
                 long newPlayerID = game.AddPlayer(playerInitInfo);
-                if (newPlayerID == GameObj.invalidID)
-                    return false;*/
+                //if (newPlayerID == GameObj.invalidID)
+                //return;
                 // 内容待修改
                 var temp = (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1));
                 bool start = false;
-                Console.WriteLine($"Id: {request.PlayerId} joins.");
+                Console.WriteLine($"PlayerType: {request.PlayerType} Id: {request.PlayerId} joins.");
                 lock (semaDict)
                 {
                     semaDict.Add(request.PlayerId, temp);
@@ -157,29 +222,12 @@ namespace Server
             } while (game.GameMap.Timer.IsGaming);
         }
 
-        public override Task<BoolRes> Attack(AttackMsg request, ServerCallContext context)
+        public override Task<BoolRes> Trick(TrickMsg request, ServerCallContext context)
         {
-            return base.Attack(request, context);
-        }
-
-        public override Task<BoolRes> CarryHuman(IDMsg request, ServerCallContext context)
-        {
-            return base.CarryHuman(request, context);
-        }
-
-        public override Task<BoolRes> EndFixMachine(IDMsg request, ServerCallContext context)
-        {
-            return base.EndFixMachine(request, context);
-        }
-
-        public override Task<BoolRes> EndSaveHuman(IDMsg request, ServerCallContext context)
-        {
-            return base.EndSaveHuman(request, context);
-        }
-
-        public override Task<BoolRes> Escape(IDMsg request, ServerCallContext context)
-        {
-            return base.Escape(request, context);
+            game.Attack(request.PlayerId, request.Angle);
+            BoolRes boolRes = new();
+            boolRes.ActSuccess = true;
+            return Task.FromResult(boolRes);
         }
 
         public override Task GetMessage(IDMsg request, IServerStreamWriter<MsgRes> responseStream, ServerCallContext context)
@@ -187,39 +235,27 @@ namespace Server
             return base.GetMessage(request, responseStream, context);
         }
 
-        public override Task<BoolRes> HangHuman(IDMsg request, ServerCallContext context)
-        {
-            return base.HangHuman(request, context);
-        }
-
         public override Task<MoveRes> Move(MoveMsg request, ServerCallContext context)
         {
-            return base.Move(request, context);
+            Console.WriteLine($"Move ID: {request.PlayerId}, TimeInMilliseconds: {request.TimeInMilliseconds}");
+            game.MovePlayer(request.PlayerId, (int)request.TimeInMilliseconds, request.Angle);
+            // 之后game.MovePlayer可能改为bool类型
+            MoveRes moveRes = new();
+            moveRes.ActSuccess = true;
+            return Task.FromResult(moveRes);
         }
 
-        public override Task<BoolRes> PickProp(PickMsg request, ServerCallContext context)
+        public override Task<BoolRes> PickProp(PropMsg request, ServerCallContext context)
         {
-            return base.PickProp(request, context);
-        }
-
-        public override Task<BoolRes> ReleaseHuman(IDMsg request, ServerCallContext context)
-        {
-            return base.ReleaseHuman(request, context);
+            BoolRes boolRes = new();
+            if (request.PropType == Protobuf.PropType.NullPropType)
+                boolRes.ActSuccess = game.PickProp(request.PlayerId, Preparation.Utility.PropType.Null);
+            return Task.FromResult(boolRes);
         }
 
         public override Task<BoolRes> SendMessage(SendMsg request, ServerCallContext context)
         {
             return base.SendMessage(request, context);
-        }
-
-        public override Task<BoolRes> StartFixMachine(IDMsg request, ServerCallContext context)
-        {
-            return base.StartFixMachine(request, context);
-        }
-
-        public override Task<BoolRes> StartSaveHuman(IDMsg request, ServerCallContext context)
-        {
-            return base.StartSaveHuman(request, context);
         }
 
         public override Task<BoolRes> UseProp(IDMsg request, ServerCallContext context)
@@ -232,12 +268,29 @@ namespace Server
             return base.UseSkill(request, context);
         }
 
+        public override Task<BoolRes> Graduate(IDMsg request, ServerCallContext context)
+        {
+            return base.Graduate(request, context);
+        }
+        public override Task<BoolRes> StartHealMate(IDMsg request, ServerCallContext context)
+        {
+            return base.StartHealMate(request, context);
+        }
+        public override Task<BoolRes> StartHelpMate(IDMsg request, ServerCallContext context)
+        {
+            return base.StartHelpMate(request, context);
+        }
+        public override Task<BoolRes> StartLearning(IDMsg request, ServerCallContext context)
+        {
+            return base.StartLearning(request, context);
+        }
+
         public GameServer(ArgumentOptions options)
         {
-            /*this.options = options;
-            if (options.mapResource == DefaultArgumentOptions.MapResource)
-                this.game = new Game(MapInfo.defaultMap, options.TeamCount);
-            else
+            this.options = options;
+            //if (options.mapResource == DefaultArgumentOptions.MapResource)
+            //    this.game = new Game(MapInfo.defaultMap, options.TeamCount);
+            //else
             {
                 uint[,] map = new uint[GameData.rows, GameData.cols];
                 try
@@ -305,7 +358,7 @@ namespace Server
             if (options.Url != DefaultArgumentOptions.Url && options.Token != DefaultArgumentOptions.Token)
             {
                 //this.httpSender = new HttpSender(options.Url, options.Token, "PUT");
-            }*/
+            }
         }
     }
 }

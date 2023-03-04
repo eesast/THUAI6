@@ -8,8 +8,8 @@ import proto.Message2Server_pb2 as Message2Server
 import proto.Message2Clients_pb2 as Message2Clients
 import PyAPI.structures as THUAI6
 from PyAPI.utils import Proto2THUAI6, AssistFunction
-from PyAPI.DebugAPI import HumanDebugAPI, ButcherDebugAPI
-from PyAPI.API import HumanAPI, ButcherAPI
+from PyAPI.DebugAPI import StudentDebugAPI, TrickerDebugAPI
+from PyAPI.API import StudentAPI, TrickerAPI
 from PyAPI.AI import Setting
 from PyAPI.Communication import Communication
 from PyAPI.State import State
@@ -66,22 +66,22 @@ class Logic(ILogic):
 
     # IAPI统一可用的接口
 
-    def GetButchers(self) -> List[THUAI6.Butcher]:
+    def GetTrickers(self) -> List[THUAI6.Tricker]:
         with self.__mtxState:
-            self.__logger.debug("Called GetButchers")
-            return self.__currentState.butchers
+            self.__logger.debug("Called GetTrickers")
+            return self.__currentState.trickers
 
-    def GetHumans(self) -> List[THUAI6.Human]:
+    def GetStudents(self) -> List[THUAI6.Student]:
         with self.__mtxState:
-            self.__logger.debug("Called GetHumans")
-            return self.__currentState.humans
+            self.__logger.debug("Called GetStudents")
+            return self.__currentState.students
 
     def GetProps(self) -> List[THUAI6.Prop]:
         with self.__mtxState:
             self.__logger.debug("Called GetProps")
             return self.__currentState.props
 
-    def GetSelfInfo(self) -> Union[THUAI6.Human, THUAI6.Butcher]:
+    def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
         with self.__mtxState:
             self.__logger.debug("Called GetSelfInfo")
             return self.__currentState.self
@@ -136,45 +136,45 @@ class Logic(ILogic):
         with self.__mtxState:
             return self.__playerGUIDs
 
-    # IHumanAPI使用的接口
+    # IStudentAPI使用的接口
 
-    def Escape(self) -> bool:
-        self.__logger.debug("Called Escape")
-        return self.__comm.Escape(self.__playerID)
+    def Graduate(self) -> bool:
+        self.__logger.debug("Called Graduate")
+        return self.__comm.Graduate(self.__playerID)
 
-    def StartFixMachine(self) -> bool:
-        self.__logger.debug("Called StartFixMachine")
-        return self.__comm.StartFixMachine(self.__playerID)
+    def StartLearning(self) -> bool:
+        self.__logger.debug("Called StartLearning")
+        return self.__comm.StartLearning(self.__playerID)
 
-    def EndFixMachine(self) -> bool:
-        self.__logger.debug("Called EndFixMachine")
-        return self.__comm.EndFixMachine(self.__playerID)
+    def EndLearning(self) -> bool:
+        self.__logger.debug("Called EndLearning")
+        return self.__comm.EndLearning(self.__playerID)
 
-    def StartSaveHuman(self) -> bool:
-        self.__logger.debug("Called StartSaveHuman")
-        return self.__comm.StartSaveHuman(self.__playerID)
+    def StartHelpMate(self) -> bool:
+        self.__logger.debug("Called StartHelpMate")
+        return self.__comm.StartHelpMate(self.__playerID)
 
-    def EndSaveHuman(self) -> bool:
-        self.__logger.debug("Called EndSaveHuman")
-        return self.__comm.EndSaveHuman(self.__playerID)
+    def EndHelpMate(self) -> bool:
+        self.__logger.debug("Called EndHelpMate")
+        return self.__comm.EndHelpMate(self.__playerID)
 
-    # Butcher使用的接口
+    # Tricker使用的接口
 
-    def Attack(self, angle: float) -> bool:
-        self.__logger.debug("Called Attack")
-        return self.__comm.Attack(angle, self.__playerID)
+    def Trick(self, angle: float) -> bool:
+        self.__logger.debug("Called Trick")
+        return self.__comm.Trick(angle, self.__playerID)
 
-    def CarryHuman(self) -> bool:
-        self.__logger.debug("Called CarryHuman")
-        return self.__comm.CarryHuman(self.__playerID)
+    def StartExam(self) -> bool:
+        self.__logger.debug("Called StartExam")
+        return self.__comm.StartExam(self.__playerID)
 
-    def ReleaseHuman(self) -> bool:
-        self.__logger.debug("Called ReleaseHuman")
-        return self.__comm.ReleaseHuman(self.__playerID)
+    def EndExam(self) -> bool:
+        self.__logger.debug("Called EndExam")
+        return self.__comm.EndExam(self.__playerID)
 
-    def HangHuman(self) -> bool:
-        self.__logger.debug("Called HangHuman")
-        return self.__comm.HangHuman(self.__playerID)
+    def MakeFail(self) -> bool:
+        self.__logger.debug("Called MakeFail")
+        return self.__comm.MakeFail(self.__playerID)
 
     # Logic内部逻辑
     def __TryConnection(self) -> bool:
@@ -199,10 +199,10 @@ class Logic(ILogic):
                     # 读取玩家的GUID
                     self.__logger.info("Game start!")
                     self.__playerGUIDs.clear()
-                    for human in clientMsg.human_message:
-                        self.__playerGUIDs.append(human.guid)
-                    for butcher in clientMsg.butcher_message:
-                        self.__playerGUIDs.append(butcher.guid)
+                    for student in clientMsg.student_message:
+                        self.__playerGUIDs.append(student.guid)
+                    for tricker in clientMsg.tricker_message:
+                        self.__playerGUIDs.append(tricker.guid)
                     self.__currentState.guids = self.__playerGUIDs
                     self.__bufferState.guids = self.__playerGUIDs
 
@@ -213,10 +213,10 @@ class Logic(ILogic):
                 elif self.__gameState == THUAI6.GameState.GameRunning:
                     # 读取玩家的GUID
                     self.__playerGUIDs.clear()
-                    for human in clientMsg.human_message:
-                        self.__playerGUIDs.append(human.guid)
-                    for butcher in clientMsg.butcher_message:
-                        self.__playerGUIDs.append(butcher.guid)
+                    for student in clientMsg.student_message:
+                        self.__playerGUIDs.append(student.guid)
+                    for tricker in clientMsg.tricker_message:
+                        self.__playerGUIDs.append(tricker.guid)
                     self.__currentState.guids = self.__playerGUIDs
                     self.__bufferState.guids = self.__playerGUIDs
                     self.__LoadBuffer(clientMsg)
@@ -235,66 +235,38 @@ class Logic(ILogic):
 
     def __LoadBuffer(self, message: Message2Clients.MessageToClient) -> None:
         with self.__cvBuffer:
-            self.__bufferState.humans.clear()
-            self.__bufferState.butchers.clear()
+            self.__bufferState.students.clear()
+            self.__bufferState.trickers.clear()
             self.__bufferState.props.clear()
             self.__logger.debug("Buffer cleared!")
             self.__bufferState.map = Proto2THUAI6.Protobuf2THUAI6Map(
                 message.map_message)
-            if Setting.playerType() == THUAI6.PlayerType.HumanPlayer:
-                for human in message.human_message:
-                    if human.player_id == self.__playerID:
-                        self.__bufferState.self = Proto2THUAI6.Protobuf2THUAI6Human(
-                            human)
-                    self.__bufferState.humans.append(
-                        Proto2THUAI6.Protobuf2THUAI6Human(human))
-                    self.__logger.debug("Add Human!")
-                for butcher in message.butcher_message:
-                    viewRange: int = self.__bufferState.self.viewRange
-                    deltaX: int = butcher.x - self.__bufferState.self.x
-                    deltaY: int = butcher.y - self.__bufferState.self.y
-                    if deltaX * deltaX + deltaY * deltaY <= viewRange * viewRange:
-                        divide: int = max(abs(deltaX), abs(deltaY)) // 100
-                        dx: float = deltaX / divide
-                        dy: float = deltaY / divide
-                        selfX: float = self.__bufferState.self.x
-                        selfY: float = self.__bufferState.self.y
-                        for i in range(divide):
-                            selfX += dx
-                            selfY += dy
-                            if self.__bufferState.map[AssistFunction.GridToCell(int(selfX))][AssistFunction.GridToCell(int(selfY))]:
-                                break
-                        else:
-                            self.__bufferState.butchers.append(
-                                Proto2THUAI6.Protobuf2THUAI6Butcher(butcher))
-                            self.__logger.debug("Add Butcher!")
+            if Setting.playerType() == THUAI6.PlayerType.StudentPlayer:
+                for student in message.student_message:
+                    if student.player_id == self.__playerID:
+                        self.__bufferState.self = Proto2THUAI6.Protobuf2THUAI6Student(
+                            student)
+                    self.__bufferState.students.append(
+                        Proto2THUAI6.Protobuf2THUAI6Student(student))
+                    self.__logger.debug("Add Student!")
+                for tricker in message.tricker_message:
+                    if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, tricker.x, tricker.y, self.__bufferState.map):
+                        self.__bufferState.trickers.append(
+                            Proto2THUAI6.Protobuf2THUAI6Tricker(tricker))
+                        self.__logger.debug("Add Tricker!")
             else:
-                for butcher in message.butcher_message:
-                    if butcher.player_id == self.__playerID:
-                        self.__bufferState.self = Proto2THUAI6.Protobuf2THUAI6Butcher(
-                            butcher)
-                    self.__bufferState.butchers.append(
-                        Proto2THUAI6.Protobuf2THUAI6Butcher(butcher))
-                    self.__logger.debug("Add Butcher!")
-                for human in message.human_message:
-                    viewRange: int = self.__bufferState.self.viewRange
-                    deltaX: int = human.x - self.__bufferState.self.x
-                    deltaY: int = human.y - self.__bufferState.self.y
-                    if deltaX * deltaX + deltaY * deltaY <= viewRange * viewRange:
-                        divide: int = max(abs(deltaX), abs(deltaY)) // 100
-                        dx: float = deltaX / divide
-                        dy: float = deltaY / divide
-                        selfX: float = self.__bufferState.self.x
-                        selfY: float = self.__bufferState.self.y
-                        for i in range(divide):
-                            selfX += dx
-                            selfY += dy
-                            if self.__bufferState.map[AssistFunction.GridToCell(int(selfX))][AssistFunction.GridToCell(int(selfY))]:
-                                break
-                        else:
-                            self.__bufferState.humans.append(
-                                Proto2THUAI6.Protobuf2THUAI6Human(human))
-                            self.__logger.debug("Add Human!")
+                for tricker in message.tricker_message:
+                    if tricker.player_id == self.__playerID:
+                        self.__bufferState.self = Proto2THUAI6.Protobuf2THUAI6Tricker(
+                            tricker)
+                    self.__bufferState.trickers.append(
+                        Proto2THUAI6.Protobuf2THUAI6Tricker(tricker))
+                    self.__logger.debug("Add Tricker!")
+                for student in message.student_message:
+                    if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, student.x, student.y, self.__bufferState.map):
+                        self.__bufferState.students.append(
+                            Proto2THUAI6.Protobuf2THUAI6Student(student))
+                        self.__logger.debug("Add Student!")
             for prop in message.prop_message:
                 self.__bufferState.props.append(
                     Proto2THUAI6.Protobuf2THUAI6Prop(prop))
@@ -365,17 +337,17 @@ class Logic(ILogic):
         self.__comm = Communication(IP, port)
 
         # 构造timer
-        if Setting.playerType() == THUAI6.PlayerType.HumanPlayer:
+        if Setting.playerType() == THUAI6.PlayerType.StudentPlayer:
             if not file and not screen:
-                self.__timer = HumanAPI(self)
+                self.__timer = StudentAPI(self)
             else:
-                self.__timer = HumanDebugAPI(
+                self.__timer = StudentDebugAPI(
                     self, file, screen, warnOnly, self.__playerID)
-        elif Setting.playerType() == THUAI6.PlayerType.ButcherPlayer:
+        elif Setting.playerType() == THUAI6.PlayerType.TrickerPlayer:
             if not file and not screen:
-                self.__timer = ButcherAPI(self)
+                self.__timer = TrickerAPI(self)
             else:
-                self.__timer = ButcherDebugAPI(
+                self.__timer = TrickerDebugAPI(
                     self, file, screen, warnOnly, self.__playerID)
 
         # 构建AI线程

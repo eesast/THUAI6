@@ -163,8 +163,8 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
   - 慎用全局变量、全局函数等
   - 尽可能将各功能模块化，便于日后复用；尽可能降低类与类的耦合，善用继承与多态
   - 适当设计单元测试，保证代码的正确运行
-
 - 注意跨平台问题，代码需保证同时支持 Windows 与 Linux，避免直接的系统调用带来的跨平台问题 
+- 善于使用 [Google](https://www.google.com/) 并使用[**英文**](https://en.wikipedia.org/wiki/American_English)搜索，善于查阅 [Microsoft Learn](https://learn.microsoft.com/)、[cppreference](https://en.cppreference.com/)、[StackOverflow](https://stackoverflow.com/) 以及第三方库官方文档等；不应轻信 [CSDN](https://www.csdn.net/) 等劣质博客社区以及[博客园](https://www.cnblogs.com/)、[简书](https://www.jianshu.com/)等质量参差不齐的博客社区，对其内容需全方位多角度仔细求证方可相信
 - 注意维护开发文档，便于后来者快速了解本仓库代码结构
 - 小组内合理分工，避免个人任务量过重或过轻
 - 做好部会记录，及时完成工作任务，避免拖延到ddl

@@ -4,7 +4,22 @@ namespace Preparation.Utility
     /// <summary>
     /// 存放所有用到的枚举类型
     /// </summary>
-    // public const int numOfObjNotMap = 5;在GameData中
+    public enum PlayerStateType
+    {
+        Null = 0,
+        IsAddicted = 1,
+        IsEscaped = 2,
+        IsSwinging = 3,//指后摇
+        IsResetting = 4,
+        IsMoving = 5,
+        IsTreating = 6,
+        IsRescuing = 7,
+        IsFixing = 8,
+        IsTreated = 9,
+        IsRescued = 10,
+        IsStunned = 11,
+        IsTryingToAttack = 12,//指前摇
+    }
     public enum GameObjType
     {
         Null = 0,
@@ -17,24 +32,15 @@ namespace Preparation.Utility
         Wall = 6,
         Grass = 7,
         Generator = 8,  // 发电机
-        BirthPoint = 9,
-        Doorway = 10,
-        EmergencyExit = 11,
-        OutOfBoundBlock = 12,  // 范围外
+        Doorway = 9,
+        EmergencyExit = 10,
+        OutOfBoundBlock = 11,  // 范围外
     }
     public enum ShapeType
     {
         Null = 0,
         Circle = 1,  // 子弹和人物为圆形，格子为方形
         Square = 2
-    }
-    public enum PlaceType  // 位置标志，包括陆地，草丛。游戏中每一帧都要刷新各个物体的该属性
-    {
-        Null = 0,
-        Land = 1,
-        Grass1 = 2,
-        Grass2 = 3,
-        Grass3 = 4,
     }
     public enum BulletType  // 子弹类型
     {
@@ -59,7 +65,7 @@ namespace Preparation.Utility
     {
         Null = 0,
         Assassin = 1,
-        Vampire = 2,
+        Athlete = 2,
         RecoverAfterBattle = 3,
         SpeedUpWhenLeavingGrass = 4,
         PSkill4 = 5,
@@ -72,7 +78,7 @@ namespace Preparation.Utility
         BecomeVampire = 2,
         NuclearWeapon = 3,
         SuperFast = 4,
-        ASkill4 = 5,
+        UseKnife = 5,
         ASkill5 = 6
     }
     public enum PassiveSkillType
@@ -94,7 +100,7 @@ namespace Preparation.Utility
         Spear = 4
     }
 
-    public enum MapInfoObjType
+    public enum PlaceType
     {
         Null = 0,
         BirthPoint1 = 1,//必须从1开始
@@ -103,11 +109,9 @@ namespace Preparation.Utility
         BirthPoint4 = 4,
         BirthPoint5 = 5,
         Wall = 6,
-        Grass1 = 7,
-        Grass2 = 8,
-        Grass3 = 9,
-        Generator = 10,  // 发电机
-        Doorway = 11,
-        EmergencyExit = 12
+        Grass = 7,
+        Generator = 8,  // 发电机
+        Doorway = 9,
+        EmergencyExit = 10
     }
 }

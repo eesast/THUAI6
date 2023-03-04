@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Reflection.Metadata.Ecma335;
+
 namespace Preparation.Utility
 {
     public static class GameData
     {
         #region 基本常数与常方法
         public const int numOfPosGridPerCell = 1000;  // 每格的【坐标单位】数
-        public const int numOfStepPerSecond = 20;     // 每秒行走的步数
+        public const int numOfStepPerSecond = 100;     // 每秒行走的步数
+        public const int frameDuration = 50;         // 每帧时长
+
         public const int lengthOfMap = 50000;         // 地图长度
         public const int rows = 50;                   // 行数
         public const int cols = 50;                   // 列数
         public const long gameDuration = 600000;      // 游戏时长600000ms = 10min
-        public const long frameDuration = 50;         // 每帧时长
 
         public const int MinSpeed = 1;             // 最小速度
         public const int MaxSpeed = int.MaxValue;  // 最大速度
@@ -19,8 +22,11 @@ namespace Preparation.Utility
         //        public const int numOfGenerator = 7;
         public const int numOfGeneratorRequiredForRepair = 5;
 
-        public const int numOfObjNotMap = 5;
-
+        private const int numOfObjNotMap = 5;
+        public static bool IsMap(GameObjType gameObjType)
+        {
+            return (uint)gameObjType > numOfObjNotMap;
+        }
         public static XY GetCellCenterPos(int x, int y)  // 求格子的中心坐标
         {
             XY ret = new(x * numOfPosGridPerCell + numOfPosGridPerCell / 2, y * numOfPosGridPerCell + numOfPosGridPerCell / 2);
@@ -42,12 +48,22 @@ namespace Preparation.Utility
         {
             return Math.Abs(PosGridToCellX(pos1) - PosGridToCellX(pos2)) <= 1 && Math.Abs(PosGridToCellY(pos1) - PosGridToCellY(pos2)) <= 1;
         }
+
         #endregion
         #region 角色相关
         public const int characterRadius = numOfPosGridPerCell / 2;  // 人物半径
-        public const int basicApOfGhost = 500;                             // 初始攻击力
-        public const int basicHp = 1003;                             // 初始血量
+        public const int basicApOfGhost = 1500000;                             // 攻击力
+        public const int basicTreatSpeed = 100;
+        public const int basicFixSpeed = 100;
+        public const int basicRescueSpeed = 100;
+        public const int basicMaxGamingAddiction = 60000;//基本完全沉迷时间
+        public const int BeginGamingAddiction = 10003;
+        public const int MidGamingAddiction = 30000;
+        public const int basicTreatmentDegree = 1500000;
+        public const int basicRescueDegree = 100000;
+        public const int basicHp = 3000000;                             // 初始血量
         public const int basicCD = 3000;    // 初始子弹冷却
+        public const int basicCastTime = 500;//基本前摇时间
         public const int basicBackswing = 500;//基本后摇时间
         public const int basicRecoveryFromHit = 4300;//基本命中攻击恢复时长
         public const int basicBulletNum = 3;                         // 基本初始子弹量
@@ -65,7 +81,16 @@ namespace Preparation.Utility
         public const int bulletRadius = 200;                         // 默认子弹半径
         public const int reviveTime = 30000;                         // 复活时间
         public const int shieldTimeAtBirth = 3000;                   // 复活时的护盾时间
-        public const int gemToScore = 4;                             // 一个宝石的标准加分
+        public static XY PosWhoDie = new XY(1, 1);
+
+        public static bool IsGhost(CharacterType characterType)
+        {
+            return characterType switch
+            {
+                CharacterType.Assassin => true,
+                _ => false,
+            };
+        }
         #endregion
         #region 道具相关
         public const int MinPropTypeNum = 1;
@@ -73,12 +98,11 @@ namespace Preparation.Utility
         public const int PropRadius = numOfPosGridPerCell / 2;
         public const int PropMoveSpeed = 3000;
         public const int PropMaxMoveDistance = 15 * numOfPosGridPerCell;
-        public const int MaxGemSize = 5;  // 随机生成的宝石最大size
         public const long GemProduceTime = 10000;
         public const long PropProduceTime = 10000;
         public const int PropDuration = 10000;
 
-        public const int degreeOfFixedGenerator = 2000;
+        public const int degreeOfFixedGenerator = 10300000;
         #endregion
         #region 游戏帧相关
         public const long checkInterval = 50;  // 检查位置标志、补充子弹的帧时长

@@ -2,6 +2,16 @@
 syntax = "proto3";
 package protobuf;
 
+enum BulletType
+{
+    NULL_BULLET_TYPE = 0;
+    LINE_BULLET = 1;
+    COMMON_BULLET = 2;
+    FAST_BULLET = 3;
+    ORDINARY_BULLET = 4;
+    ATOM_BOMB = 5;
+}
+
 enum PlaceType // 地图中的所有物件类型
 {
     NULL_PLACE_TYPE = 0;
@@ -51,6 +61,11 @@ enum StudentState
     ADDICTED = 3; // 血条归零后原地沉迷游戏
     QUIT = 4; // 退学状态，相当于寄了
     GRADUATED = 5; // 毕业状态，相当于逃脱了
+    TREATED = 6;
+    RESCUED = 7;
+    STUNNED = 8;
+    TREATING = 9;
+    RESCUING = 10;
 }
 
 enum TrickerBuffType // 屠夫可用的增益效果类型

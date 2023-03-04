@@ -20,11 +20,13 @@ namespace AssistFunction
         return grid / numOfGridPerCell;
     }
 
-    inline bool HaveView(int viewRange, int x, int y, int newX, int newY, const std::vector<std::vector<THUAI6::PlaceType>>& map)
+    inline bool HaveView(int viewRange, int x, int y, int newX, int newY, THUAI6::PlaceType myPlace, THUAI6::PlaceType newPlace, std::vector<std::vector<THUAI6::PlaceType>>& map)
     {
         int deltaX = newX - x;
         int deltaY = newY - y;
         double distance = deltaX * deltaX + deltaY * deltaY;
+        if (newPlace == THUAI6::PlaceType::Grass && myPlace != THUAI6::PlaceType::Grass)  // 草丛外必不可能看到草丛内
+            return false;
         if (distance < viewRange * viewRange)
         {
             int divide = std::max(std::abs(deltaX), std::abs(deltaY)) / 100;
@@ -32,13 +34,22 @@ namespace AssistFunction
             double dy = deltaY / divide;
             double myX = double(x);
             double myY = double(y);
-            for (int i = 0; i < divide; i++)
-            {
-                myX += dx;
-                myY += dy;
-                if (map[GridToCell(myX)][GridToCell(myY)] != THUAI6::PlaceType::Land)
-                    return false;
-            }
+            if (newPlace == THUAI6::PlaceType::Grass && myPlace == THUAI6::PlaceType::Grass)  // 都在草丛内，要另作判断
+                for (int i = 0; i < divide; i++)
+                {
+                    myX += dx;
+                    myY += dy;
+                    if (map[GridToCell(myX)][GridToCell(myY)] != THUAI6::PlaceType::Grass)
+                        return false;
+                }
+            else  // 不在草丛内，只需要没有墙即可
+                for (int i = 0; i < divide; i++)
+                {
+                    myX += dx;
+                    myY += dy;
+                    if (map[GridToCell(myX)][GridToCell(myY)] == THUAI6::PlaceType::Wall)
+                        return false;
+                }
             return true;
         }
         else
@@ -119,6 +130,11 @@ namespace Proto2THUAI6
         {protobuf::StudentState::ADDICTED, THUAI6::StudentState::Addicted},
         {protobuf::StudentState::QUIT, THUAI6::StudentState::Quit},
         {protobuf::StudentState::GRADUATED, THUAI6::StudentState::Graduated},
+        {protobuf::StudentState::RESCUED, THUAI6::StudentState::Rescued},
+        {protobuf::StudentState::TREATED, THUAI6::StudentState::Treated},
+        {protobuf::StudentState::STUNNED, THUAI6::StudentState::Stunned},
+        {protobuf::StudentState::RESCUING, THUAI6::StudentState::Rescuing},
+        {protobuf::StudentState::TREATING, THUAI6::StudentState::Treating},
     };
 
     inline std::map<protobuf::GameState, THUAI6::GameState> gameStateDict{
@@ -126,6 +142,15 @@ namespace Proto2THUAI6
         {protobuf::GameState::GAME_START, THUAI6::GameState::GameStart},
         {protobuf::GameState::GAME_RUNNING, THUAI6::GameState::GameRunning},
         {protobuf::GameState::GAME_END, THUAI6::GameState::GameEnd},
+    };
+
+    inline std::map<protobuf::BulletType, THUAI6::BulletType> bulletTypeDict{
+        {protobuf::BulletType::NULL_BULLET_TYPE, THUAI6::BulletType::NullBulletType},
+        {protobuf::BulletType::COMMON_BULLET, THUAI6::BulletType::CommonBullet},
+        {protobuf::BulletType::FAST_BULLET, THUAI6::BulletType::FastBullet},
+        {protobuf::BulletType::LINE_BULLET, THUAI6::BulletType::LineBullet},
+        {protobuf::BulletType::ORDINARY_BULLET, THUAI6::BulletType::OrdinaryBullet},
+        {protobuf::BulletType::ATOM_BOMB, THUAI6::BulletType::AtomBomb},
     };
 
     // 用于将Protobuf中的类转换为THUAI6的类
@@ -209,6 +234,32 @@ namespace Proto2THUAI6
             map.push_back(row);
         }
         return map;
+    }
+
+    inline std::shared_ptr<THUAI6::Bullet> Protobuf2THUAI6Bullet(const protobuf::MessageOfBullet& bulletMsg)
+    {
+        auto bullet = std::make_shared<THUAI6::Bullet>();
+        bullet->bulletType = bulletTypeDict[bulletMsg.type()];
+        bullet->x = bulletMsg.x();
+        bullet->y = bulletMsg.y();
+        bullet->facingDirection = bulletMsg.facing_direction();
+        bullet->guid = bulletMsg.guid();
+        bullet->team = playerTypeDict[bulletMsg.team()];
+        bullet->place = placeTypeDict[bulletMsg.place()];
+        bullet->bombRange = bulletMsg.bomb_range();
+        return bullet;
+    }
+
+    inline std::shared_ptr<THUAI6::BombedBullet> Protobuf2THUAI6BombedBullet(const protobuf::MessageOfBombedBullet& bombedBulletMsg)
+    {
+        auto bombedBullet = std::make_shared<THUAI6::BombedBullet>();
+        bombedBullet->bulletType = bulletTypeDict[bombedBulletMsg.type()];
+        bombedBullet->x = bombedBulletMsg.x();
+        bombedBullet->y = bombedBulletMsg.y();
+        bombedBullet->facingDirection = bombedBulletMsg.facing_direction();
+        bombedBullet->mappingID = bombedBulletMsg.mapping_id();
+        bombedBullet->bombRange = bombedBulletMsg.bomb_range();
+        return bombedBullet;
     }
 
 }  // namespace Proto2THUAI6

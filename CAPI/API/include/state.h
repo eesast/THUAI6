@@ -20,6 +20,10 @@ struct State
     std::vector<std::shared_ptr<THUAI6::Tricker>> trickers;
     std::vector<std::shared_ptr<THUAI6::Prop>> props;
 
+    std::vector<std::shared_ptr<THUAI6::Bullet>> bullets;
+
+    std::vector<std::shared_ptr<THUAI6::BombedBullet>> bombedBullets;
+
     std::vector<std::vector<THUAI6::PlaceType>> gamemap;
 
     std::vector<int64_t> guids;

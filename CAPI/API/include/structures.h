@@ -50,6 +50,16 @@ namespace THUAI6
         PropType4 = 4,
     };
 
+    enum class BulletType : unsigned char
+    {
+        NullBulletType = 0,
+        LineBullet = 1,
+        CommonBullet = 2,
+        FastBullet = 3,
+        OrdinaryBullet = 4,
+        AtomBomb = 5,
+    };
+
     // 玩家类型
     enum class PlayerType : unsigned char
     {
@@ -106,6 +116,11 @@ namespace THUAI6
         Addicted = 3,
         Quit = 4,
         Graduated = 5,
+        Treated = 6,
+        Rescued = 7,
+        Stunned = 8,
+        Treating = 9,
+        Rescuing = 10,
     };
 
     // 玩家类
@@ -147,6 +162,28 @@ namespace THUAI6
         std::vector<TrickerBuffType> buff;  // buff
     };
 
+    struct Bullet
+    {
+        BulletType bulletType;   // 子弹类型
+        int32_t x;               // x坐标
+        int32_t y;               // y坐标
+        double facingDirection;  // 朝向
+        int64_t guid;            // 全局唯一ID
+        PlayerType team;         // 子弹所属队伍
+        PlaceType place;         // 所处格子的类型
+        double bombRange;        // 炸弹爆炸范围
+    };
+
+    struct BombedBullet
+    {
+        BulletType bulletType;
+        int32_t x;
+        int32_t y;
+        double facingDirection;
+        int64_t mappingID;
+        double bombRange;
+    };
+
     struct Prop
     {
         int32_t x;
@@ -176,6 +213,11 @@ namespace THUAI6
         {StudentState::Addicted, "Addicted"},
         {StudentState::Quit, "Quit"},
         {StudentState::Graduated, "Graduated"},
+        {StudentState::Treated, "Treated"},
+        {StudentState::Rescued, "Rescued"},
+        {StudentState::Stunned, "Stunned"},
+        {StudentState::Treating, "Treating"},
+        {StudentState::Rescuing, "Rescuing"},
     };
 
     inline std::map<PlayerType, std::string> playerTypeDict{

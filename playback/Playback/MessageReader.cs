@@ -45,7 +45,7 @@ namespace Playback
                 fs.Read(bt, 0, bt.Length);
                 for (int i = 0; i < prefixLen; ++i)
                 {
-                    if(i == 2)
+                    if (i == 2)
                     {
                         if (bt[i] == 0)  // 为了做一个兼容，0和5均视为5
                             continue;

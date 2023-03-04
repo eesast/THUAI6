@@ -40,7 +40,7 @@ namespace Playback
         public void WriteOne(MessageToClient msg)
         {
             cos.WriteMessage(msg);
-            if (ms.Length > memoryCapacity) 
+            if (ms.Length > memoryCapacity)
                 Flush();
         }
 

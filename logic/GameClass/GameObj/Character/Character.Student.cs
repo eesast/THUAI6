@@ -95,12 +95,6 @@ namespace GameClass.GameObj
             }
         }
 
-        public void Escape()
-        {
-            lock (gameObjLock)
-                IsResetting = true;
-            PlayerState = PlayerStateType.IsEscaped;
-        }
         public Student(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) : base(initPos, initRadius, initPlace, characterType)
         {
             this.fixSpeed = ((IStudent)Occupation).FixSpeed;

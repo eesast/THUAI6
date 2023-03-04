@@ -132,7 +132,7 @@ namespace Gaming
 
                 if (doorwayForEscape != null && doorwayForEscape.IsOpen)
                 {
-                    player.Escape();
+                    player.Die(PlayerStateType.IsEscaped);
                     return true;
                 }
                 else

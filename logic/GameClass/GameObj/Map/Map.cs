@@ -84,7 +84,7 @@ namespace GameClass.GameObj
                     if (gameObj.ID == obj.ID)
                     {
                         GameObjDict[gameObj.Type].Remove(obj);
-                        flag=true;
+                        flag = true;
                         break;
                     }
                 }
@@ -104,10 +104,10 @@ namespace GameClass.GameObj
             }
             finally
             {
-               GameObjLockDict[gameObj.Type].ExitWriteLock();
+                GameObjLockDict[gameObj.Type].ExitWriteLock();
             }
         }
-public Map(uint[,] mapResource)
+        public Map(uint[,] mapResource)
         {
             gameObjDict = new Dictionary<GameObjType, IList<IGameObj>>();
             gameObjLockDict = new Dictionary<GameObjType, ReaderWriterLockSlim>();

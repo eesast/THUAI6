@@ -34,7 +34,13 @@ C++ 通信组件与选手接口
 - 与逻辑组共同商议通信协议
 - Visual Studio 新建的 C++ 代码文件默认字符编码是 GB2312、默认缩进方式是 TAB，应该注意手动改成 UTF-8 和 空格缩进  
 - 了解 Visual Studio 的项目属性配置，例如第三方库的链接、预定义宏等  
-- 使用现代 C++ 进行编程，尽量避免裸指针，多使用引用和智能指针 
+- 使用现代 C++ 特性进行编程，避免不安全的旧特性，例如：
+  + 尽量避免裸指针，多使用智能指针
+  + 禁止使用 `::operator new`、`::operator new[]`；使用`std::make_unique`、`std::make_shared`、`std::vector` 等代替；
+  + 禁止使用宏作为编译期常量；使用 `constexpr` 代替；
+  + 善用 attribute，例如 `[[nodiscard]]`、`[[fallthrough]]`、`[[noreturn]]` 等；
+  + C 语言接口需要基于 RAII 原则进行封装，通过对象的生命周期来关系资源的申请和释放；
+  + ……
 - 了解 C、C++ 预处理、编译、链接的基本概念  
 - 注意模块化、单元化，降低各个类、各个模块之间的耦合。特别注意避免相互依赖、环形依赖的问题  
 - 遵循头文件（`.h`、`.hpp`）的编写规范  
@@ -44,6 +50,7 @@ C++ 通信组件与选手接口
   + 头文件和 `cpp` 文件各司其职，代码写在改写的位置  
   + 禁止 include .cpp 或 .c 文件
 - 避免忙等待，注意线程安全，做好线程同步  
+- 善于使用 [Google](https://www.google.com/) 并使用[**英文**](https://en.wikipedia.org/wiki/American_English)搜索，善于查阅 [Microsoft Learn](https://learn.microsoft.com/)、[cppreference](https://en.cppreference.com/)、[StackOverflow](https://stackoverflow.com/) 以及第三方库官方文档等；不应轻信 [CSDN](https://www.csdn.net/) 等劣质博客社区以及[博客园](https://www.cnblogs.com/)、[简书](https://www.jianshu.com/)等质量参差不齐的博客社区，对其内容需全方位多角度仔细求证方可相信
 
 ## 开发人员
 

@@ -97,21 +97,6 @@ namespace GameClass.GameObj
 
         public Student(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) : base(initPos, initRadius, initPlace, characterType)
         {
-            lock (gameObjLock)
-                IsResetting = true;
-            PlayerState = PlayerStateType.IsEscaped;
-        }
-        public Student(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) : base(initPos, initRadius, initPlace, characterType)
-        {
-            switch (characterType)
-            {
-                case CharacterType.Athlete:
-                    this.Occupation = new Athlete();
-                    break;
-                default:
-                    this.Occupation = null;
-                    break;
-            }
             this.fixSpeed = ((IStudent)Occupation).FixSpeed;
         }
     }

@@ -7,12 +7,12 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace GameClass.GameObj
-{
-    public class Ghost : Character
+    namespace GameClass.GameObj
     {
-        public Ghost(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) : base(initPos, initRadius, initPlace, characterType)
+        public class Ghost : Character
         {
+            public Ghost(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) : base(initPos, initRadius, initPlace, characterType)
+            {
+            }
         }
     }
-}

@@ -202,7 +202,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.student_message_)*/ {}, /*decltype(_impl_.tricker_message_)*/ {}, /*decltype(_impl_.prop_message_)*/ {}, /*decltype(_impl_.map_message_)*/ nullptr, /*decltype(_impl_.game_state_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.student_message_)*/ {}, /*decltype(_impl_.tricker_message_)*/ {}, /*decltype(_impl_.prop_message_)*/ {}, /*decltype(_impl_.bullet_message_)*/ {}, /*decltype(_impl_.bombed_bullet_message_)*/ {}, /*decltype(_impl_.map_message_)*/ nullptr, /*decltype(_impl_.game_state_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
     struct MessageToClientDefaultTypeInternal
@@ -410,6 +410,8 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.student_message_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.tricker_message_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.prop_message_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.bullet_message_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.bombed_bullet_message_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.map_message_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.game_state_),
     ~0u,  // no _has_bits_
@@ -448,9 +450,9 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
     {95, -1, -1, sizeof(::protobuf::MessageOfMap_Row)},
     {102, -1, -1, sizeof(::protobuf::MessageOfMap)},
     {109, -1, -1, sizeof(::protobuf::MessageToClient)},
-    {120, -1, -1, sizeof(::protobuf::MoveRes)},
-    {129, -1, -1, sizeof(::protobuf::BoolRes)},
-    {136, -1, -1, sizeof(::protobuf::MsgRes)},
+    {122, -1, -1, sizeof(::protobuf::MoveRes)},
+    {131, -1, -1, sizeof(::protobuf::BoolRes)},
+    {138, -1, -1, sizeof(::protobuf::MsgRes)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -509,18 +511,21 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     "ection\030\004 \001(\001\022\022\n\nmapping_id\030\005 \001(\003\"`\n\014Mess"
     "ageOfMap\022\'\n\003row\030\002 \003(\0132\032.protobuf.Message"
     "OfMap.Row\032\'\n\003Row\022 \n\003col\030\001 \003(\0162\023.protobuf"
-    ".PlaceType\"\200\002\n\017MessageToClient\0223\n\017studen"
+    ".PlaceType\"\363\002\n\017MessageToClient\0223\n\017studen"
     "t_message\030\001 \003(\0132\032.protobuf.MessageOfStud"
     "ent\0223\n\017tricker_message\030\002 \003(\0132\032.protobuf."
     "MessageOfTricker\022-\n\014prop_message\030\003 \003(\0132\027"
-    ".protobuf.MessageOfProp\022+\n\013map_message\030\004"
-    " \001(\0132\026.protobuf.MessageOfMap\022\'\n\ngame_sta"
-    "te\030\005 \001(\0162\023.protobuf.GameState\"J\n\007MoveRes"
-    "\022\024\n\014actual_speed\030\001 \001(\003\022\024\n\014actual_angle\030\002"
-    " \001(\001\022\023\n\013act_success\030\003 \001(\010\"\036\n\007BoolRes\022\023\n\013"
-    "act_success\030\001 \001(\010\"P\n\006MsgRes\022\024\n\014have_mess"
-    "age\030\001 \001(\010\022\026\n\016from_player_id\030\002 \001(\003\022\030\n\020mes"
-    "sage_received\030\003 \001(\tb\006proto3";
+    ".protobuf.MessageOfProp\0221\n\016bullet_messag"
+    "e\030\004 \003(\0132\031.protobuf.MessageOfBullet\022>\n\025bo"
+    "mbed_bullet_message\030\005 \003(\0132\037.protobuf.Mes"
+    "sageOfBombedBullet\022+\n\013map_message\030\006 \001(\0132"
+    "\026.protobuf.MessageOfMap\022\'\n\ngame_state\030\007 "
+    "\001(\0162\023.protobuf.GameState\"J\n\007MoveRes\022\024\n\014a"
+    "ctual_speed\030\001 \001(\003\022\024\n\014actual_angle\030\002 \001(\001\022"
+    "\023\n\013act_success\030\003 \001(\010\"\036\n\007BoolRes\022\023\n\013act_s"
+    "uccess\030\001 \001(\010\"P\n\006MsgRes\022\024\n\014have_message\030\001"
+    " \001(\010\022\026\n\016from_player_id\030\002 \001(\003\022\030\n\020message_"
+    "received\030\003 \001(\tb\006proto3";
 static const ::_pbi::DescriptorTable* const descriptor_table_Message2Clients_2eproto_deps[1] = {
     &::descriptor_table_MessageType_2eproto,
 };
@@ -528,7 +533,7 @@ static ::_pbi::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Message2Clients_2eproto = {
     false,
     false,
-    2067,
+    2182,
     descriptor_table_protodef_Message2Clients_2eproto,
     "Message2Clients.proto",
     &descriptor_table_Message2Clients_2eproto_once,
@@ -3972,7 +3977,7 @@ namespace protobuf
         MessageToClient* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.student_message_){from._impl_.student_message_}, decltype(_impl_.tricker_message_){from._impl_.tricker_message_}, decltype(_impl_.prop_message_){from._impl_.prop_message_}, decltype(_impl_.map_message_){nullptr}, decltype(_impl_.game_state_){}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.student_message_){from._impl_.student_message_}, decltype(_impl_.tricker_message_){from._impl_.tricker_message_}, decltype(_impl_.prop_message_){from._impl_.prop_message_}, decltype(_impl_.bullet_message_){from._impl_.bullet_message_}, decltype(_impl_.bombed_bullet_message_){from._impl_.bombed_bullet_message_}, decltype(_impl_.map_message_){nullptr}, decltype(_impl_.game_state_){}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
         if (from._internal_has_map_message())
@@ -3990,7 +3995,7 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.student_message_){arena}, decltype(_impl_.tricker_message_){arena}, decltype(_impl_.prop_message_){arena}, decltype(_impl_.map_message_){nullptr}, decltype(_impl_.game_state_){0}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.student_message_){arena}, decltype(_impl_.tricker_message_){arena}, decltype(_impl_.prop_message_){arena}, decltype(_impl_.bullet_message_){arena}, decltype(_impl_.bombed_bullet_message_){arena}, decltype(_impl_.map_message_){nullptr}, decltype(_impl_.game_state_){0}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
     MessageToClient::~MessageToClient()
@@ -4010,6 +4015,8 @@ namespace protobuf
         _impl_.student_message_.~RepeatedPtrField();
         _impl_.tricker_message_.~RepeatedPtrField();
         _impl_.prop_message_.~RepeatedPtrField();
+        _impl_.bullet_message_.~RepeatedPtrField();
+        _impl_.bombed_bullet_message_.~RepeatedPtrField();
         if (this != internal_default_instance())
             delete _impl_.map_message_;
     }
@@ -4029,6 +4036,8 @@ namespace protobuf
         _impl_.student_message_.Clear();
         _impl_.tricker_message_.Clear();
         _impl_.prop_message_.Clear();
+        _impl_.bullet_message_.Clear();
+        _impl_.bombed_bullet_message_.Clear();
         if (GetArenaForAllocation() == nullptr && _impl_.map_message_ != nullptr)
         {
             delete _impl_.map_message_;
@@ -4100,9 +4109,43 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // .protobuf.MessageOfMap map_message = 4;
+                // repeated .protobuf.MessageOfBullet bullet_message = 4;
                 case 4:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34))
+                    {
+                        ptr -= 1;
+                        do
+                        {
+                            ptr += 1;
+                            ptr = ctx->ParseMessage(_internal_add_bullet_message(), ptr);
+                            CHK_(ptr);
+                            if (!ctx->DataAvailable(ptr))
+                                break;
+                        } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // repeated .protobuf.MessageOfBombedBullet bombed_bullet_message = 5;
+                case 5:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42))
+                    {
+                        ptr -= 1;
+                        do
+                        {
+                            ptr += 1;
+                            ptr = ctx->ParseMessage(_internal_add_bombed_bullet_message(), ptr);
+                            CHK_(ptr);
+                            if (!ctx->DataAvailable(ptr))
+                                break;
+                        } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // .protobuf.MessageOfMap map_message = 6;
+                case 6:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50))
                     {
                         ptr = ctx->ParseMessage(_internal_mutable_map_message(), ptr);
                         CHK_(ptr);
@@ -4110,9 +4153,9 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // .protobuf.GameState game_state = 5;
-                case 5:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40))
+                // .protobuf.GameState game_state = 7;
+                case 7:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56))
                     {
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
@@ -4188,19 +4231,41 @@ namespace protobuf
                 InternalWriteMessage(3, repfield, repfield.GetCachedSize(), target, stream);
         }
 
-        // .protobuf.MessageOfMap map_message = 4;
+        // repeated .protobuf.MessageOfBullet bullet_message = 4;
+        for (unsigned i = 0,
+                      n = static_cast<unsigned>(this->_internal_bullet_message_size());
+             i < n;
+             i++)
+        {
+            const auto& repfield = this->_internal_bullet_message(i);
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(4, repfield, repfield.GetCachedSize(), target, stream);
+        }
+
+        // repeated .protobuf.MessageOfBombedBullet bombed_bullet_message = 5;
+        for (unsigned i = 0,
+                      n = static_cast<unsigned>(this->_internal_bombed_bullet_message_size());
+             i < n;
+             i++)
+        {
+            const auto& repfield = this->_internal_bombed_bullet_message(i);
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(5, repfield, repfield.GetCachedSize(), target, stream);
+        }
+
+        // .protobuf.MessageOfMap map_message = 6;
         if (this->_internal_has_map_message())
         {
             target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-                InternalWriteMessage(4, _Internal::map_message(this), _Internal::map_message(this).GetCachedSize(), target, stream);
+                InternalWriteMessage(6, _Internal::map_message(this), _Internal::map_message(this).GetCachedSize(), target, stream);
         }
 
-        // .protobuf.GameState game_state = 5;
+        // .protobuf.GameState game_state = 7;
         if (this->_internal_game_state() != 0)
         {
             target = stream->EnsureSpace(target);
             target = ::_pbi::WireFormatLite::WriteEnumToArray(
-                5, this->_internal_game_state(), target
+                7, this->_internal_game_state(), target
             );
         }
 
@@ -4247,7 +4312,23 @@ namespace protobuf
                 ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
         }
 
-        // .protobuf.MessageOfMap map_message = 4;
+        // repeated .protobuf.MessageOfBullet bullet_message = 4;
+        total_size += 1UL * this->_internal_bullet_message_size();
+        for (const auto& msg : this->_impl_.bullet_message_)
+        {
+            total_size +=
+                ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+        }
+
+        // repeated .protobuf.MessageOfBombedBullet bombed_bullet_message = 5;
+        total_size += 1UL * this->_internal_bombed_bullet_message_size();
+        for (const auto& msg : this->_impl_.bombed_bullet_message_)
+        {
+            total_size +=
+                ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+        }
+
+        // .protobuf.MessageOfMap map_message = 6;
         if (this->_internal_has_map_message())
         {
             total_size += 1 +
@@ -4256,7 +4337,7 @@ namespace protobuf
                           );
         }
 
-        // .protobuf.GameState game_state = 5;
+        // .protobuf.GameState game_state = 7;
         if (this->_internal_game_state() != 0)
         {
             total_size += 1 +
@@ -4286,6 +4367,8 @@ namespace protobuf
         _this->_impl_.student_message_.MergeFrom(from._impl_.student_message_);
         _this->_impl_.tricker_message_.MergeFrom(from._impl_.tricker_message_);
         _this->_impl_.prop_message_.MergeFrom(from._impl_.prop_message_);
+        _this->_impl_.bullet_message_.MergeFrom(from._impl_.bullet_message_);
+        _this->_impl_.bombed_bullet_message_.MergeFrom(from._impl_.bombed_bullet_message_);
         if (from._internal_has_map_message())
         {
             _this->_internal_mutable_map_message()->::protobuf::MessageOfMap::MergeFrom(
@@ -4320,6 +4403,8 @@ namespace protobuf
         _impl_.student_message_.InternalSwap(&other->_impl_.student_message_);
         _impl_.tricker_message_.InternalSwap(&other->_impl_.tricker_message_);
         _impl_.prop_message_.InternalSwap(&other->_impl_.prop_message_);
+        _impl_.bullet_message_.InternalSwap(&other->_impl_.bullet_message_);
+        _impl_.bombed_bullet_message_.InternalSwap(&other->_impl_.bombed_bullet_message_);
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
             PROTOBUF_FIELD_OFFSET(MessageToClient, _impl_.game_state_) + sizeof(MessageToClient::_impl_.game_state_) - PROTOBUF_FIELD_OFFSET(MessageToClient, _impl_.map_message_)>(
             reinterpret_cast<char*>(&_impl_.map_message_),

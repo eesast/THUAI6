@@ -222,12 +222,14 @@ namespace protobuf
         TREATED = 6,
         RESCUED = 7,
         STUNNED = 8,
+        TREATING = 9,
+        RESCUING = 10,
         StudentState_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         StudentState_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool StudentState_IsValid(int value);
     constexpr StudentState StudentState_MIN = NULL_STATUS;
-    constexpr StudentState StudentState_MAX = STUNNED;
+    constexpr StudentState StudentState_MAX = RESCUING;
     constexpr int StudentState_ARRAYSIZE = StudentState_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StudentState_descriptor();

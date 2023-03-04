@@ -82,7 +82,7 @@ namespace Preparation.Utility
         NuclearWeapon = 3,
         SuperFast = 4,
         UseKnife = 5,
-        ASkill5 = 6
+        BeginToCharge = 6
     }
     public enum PassiveSkillType
     {

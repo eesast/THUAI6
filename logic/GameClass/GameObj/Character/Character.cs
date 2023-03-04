@@ -65,7 +65,7 @@ namespace GameClass.GameObj
             }
             set
             {
-                if (!(value == PlayerStateType.IsMoving || value == PlayerStateType.Null))
+                if (!(value == PlayerStateType.IsMoving))
                     lock (gameObjLock)
                         IsMoving = false;
 

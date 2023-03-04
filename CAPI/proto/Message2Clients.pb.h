@@ -2500,8 +2500,10 @@ namespace protobuf
             kStudentMessageFieldNumber = 1,
             kTrickerMessageFieldNumber = 2,
             kPropMessageFieldNumber = 3,
-            kMapMessageFieldNumber = 4,
-            kGameStateFieldNumber = 5,
+            kBulletMessageFieldNumber = 4,
+            kBombedBulletMessageFieldNumber = 5,
+            kMapMessageFieldNumber = 6,
+            kGameStateFieldNumber = 7,
         };
         // repeated .protobuf.MessageOfStudent student_message = 1;
         int student_message_size() const;
@@ -2569,7 +2571,51 @@ namespace protobuf
         const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfProp>&
             prop_message() const;
 
-        // .protobuf.MessageOfMap map_message = 4;
+        // repeated .protobuf.MessageOfBullet bullet_message = 4;
+        int bullet_message_size() const;
+
+    private:
+        int _internal_bullet_message_size() const;
+
+    public:
+        void clear_bullet_message();
+        ::protobuf::MessageOfBullet* mutable_bullet_message(int index);
+        ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfBullet>*
+            mutable_bullet_message();
+
+    private:
+        const ::protobuf::MessageOfBullet& _internal_bullet_message(int index) const;
+        ::protobuf::MessageOfBullet* _internal_add_bullet_message();
+
+    public:
+        const ::protobuf::MessageOfBullet& bullet_message(int index) const;
+        ::protobuf::MessageOfBullet* add_bullet_message();
+        const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfBullet>&
+            bullet_message() const;
+
+        // repeated .protobuf.MessageOfBombedBullet bombed_bullet_message = 5;
+        int bombed_bullet_message_size() const;
+
+    private:
+        int _internal_bombed_bullet_message_size() const;
+
+    public:
+        void clear_bombed_bullet_message();
+        ::protobuf::MessageOfBombedBullet* mutable_bombed_bullet_message(int index);
+        ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfBombedBullet>*
+            mutable_bombed_bullet_message();
+
+    private:
+        const ::protobuf::MessageOfBombedBullet& _internal_bombed_bullet_message(int index) const;
+        ::protobuf::MessageOfBombedBullet* _internal_add_bombed_bullet_message();
+
+    public:
+        const ::protobuf::MessageOfBombedBullet& bombed_bullet_message(int index) const;
+        ::protobuf::MessageOfBombedBullet* add_bombed_bullet_message();
+        const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfBombedBullet>&
+            bombed_bullet_message() const;
+
+        // .protobuf.MessageOfMap map_message = 6;
         bool has_map_message() const;
 
     private:
@@ -2592,7 +2638,7 @@ namespace protobuf
         );
         ::protobuf::MessageOfMap* unsafe_arena_release_map_message();
 
-        // .protobuf.GameState game_state = 5;
+        // .protobuf.GameState game_state = 7;
         void clear_game_state();
         ::protobuf::GameState game_state() const;
         void set_game_state(::protobuf::GameState value);
@@ -2616,6 +2662,8 @@ namespace protobuf
             ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfStudent> student_message_;
             ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfTricker> tricker_message_;
             ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfProp> prop_message_;
+            ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfBullet> bullet_message_;
+            ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfBombedBullet> bombed_bullet_message_;
             ::protobuf::MessageOfMap* map_message_;
             int game_state_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -5027,7 +5075,107 @@ namespace protobuf
         return _impl_.prop_message_;
     }
 
-    // .protobuf.MessageOfMap map_message = 4;
+    // repeated .protobuf.MessageOfBullet bullet_message = 4;
+    inline int MessageToClient::_internal_bullet_message_size() const
+    {
+        return _impl_.bullet_message_.size();
+    }
+    inline int MessageToClient::bullet_message_size() const
+    {
+        return _internal_bullet_message_size();
+    }
+    inline void MessageToClient::clear_bullet_message()
+    {
+        _impl_.bullet_message_.Clear();
+    }
+    inline ::protobuf::MessageOfBullet* MessageToClient::mutable_bullet_message(int index)
+    {
+        // @@protoc_insertion_point(field_mutable:protobuf.MessageToClient.bullet_message)
+        return _impl_.bullet_message_.Mutable(index);
+    }
+    inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfBullet>*
+        MessageToClient::mutable_bullet_message()
+    {
+        // @@protoc_insertion_point(field_mutable_list:protobuf.MessageToClient.bullet_message)
+        return &_impl_.bullet_message_;
+    }
+    inline const ::protobuf::MessageOfBullet& MessageToClient::_internal_bullet_message(int index) const
+    {
+        return _impl_.bullet_message_.Get(index);
+    }
+    inline const ::protobuf::MessageOfBullet& MessageToClient::bullet_message(int index) const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageToClient.bullet_message)
+        return _internal_bullet_message(index);
+    }
+    inline ::protobuf::MessageOfBullet* MessageToClient::_internal_add_bullet_message()
+    {
+        return _impl_.bullet_message_.Add();
+    }
+    inline ::protobuf::MessageOfBullet* MessageToClient::add_bullet_message()
+    {
+        ::protobuf::MessageOfBullet* _add = _internal_add_bullet_message();
+        // @@protoc_insertion_point(field_add:protobuf.MessageToClient.bullet_message)
+        return _add;
+    }
+    inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfBullet>&
+        MessageToClient::bullet_message() const
+    {
+        // @@protoc_insertion_point(field_list:protobuf.MessageToClient.bullet_message)
+        return _impl_.bullet_message_;
+    }
+
+    // repeated .protobuf.MessageOfBombedBullet bombed_bullet_message = 5;
+    inline int MessageToClient::_internal_bombed_bullet_message_size() const
+    {
+        return _impl_.bombed_bullet_message_.size();
+    }
+    inline int MessageToClient::bombed_bullet_message_size() const
+    {
+        return _internal_bombed_bullet_message_size();
+    }
+    inline void MessageToClient::clear_bombed_bullet_message()
+    {
+        _impl_.bombed_bullet_message_.Clear();
+    }
+    inline ::protobuf::MessageOfBombedBullet* MessageToClient::mutable_bombed_bullet_message(int index)
+    {
+        // @@protoc_insertion_point(field_mutable:protobuf.MessageToClient.bombed_bullet_message)
+        return _impl_.bombed_bullet_message_.Mutable(index);
+    }
+    inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfBombedBullet>*
+        MessageToClient::mutable_bombed_bullet_message()
+    {
+        // @@protoc_insertion_point(field_mutable_list:protobuf.MessageToClient.bombed_bullet_message)
+        return &_impl_.bombed_bullet_message_;
+    }
+    inline const ::protobuf::MessageOfBombedBullet& MessageToClient::_internal_bombed_bullet_message(int index) const
+    {
+        return _impl_.bombed_bullet_message_.Get(index);
+    }
+    inline const ::protobuf::MessageOfBombedBullet& MessageToClient::bombed_bullet_message(int index) const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageToClient.bombed_bullet_message)
+        return _internal_bombed_bullet_message(index);
+    }
+    inline ::protobuf::MessageOfBombedBullet* MessageToClient::_internal_add_bombed_bullet_message()
+    {
+        return _impl_.bombed_bullet_message_.Add();
+    }
+    inline ::protobuf::MessageOfBombedBullet* MessageToClient::add_bombed_bullet_message()
+    {
+        ::protobuf::MessageOfBombedBullet* _add = _internal_add_bombed_bullet_message();
+        // @@protoc_insertion_point(field_add:protobuf.MessageToClient.bombed_bullet_message)
+        return _add;
+    }
+    inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfBombedBullet>&
+        MessageToClient::bombed_bullet_message() const
+    {
+        // @@protoc_insertion_point(field_list:protobuf.MessageToClient.bombed_bullet_message)
+        return _impl_.bombed_bullet_message_;
+    }
+
+    // .protobuf.MessageOfMap map_message = 6;
     inline bool MessageToClient::_internal_has_map_message() const
     {
         return this != internal_default_instance() && _impl_.map_message_ != nullptr;
@@ -5138,7 +5286,7 @@ namespace protobuf
         // @@protoc_insertion_point(field_set_allocated:protobuf.MessageToClient.map_message)
     }
 
-    // .protobuf.GameState game_state = 5;
+    // .protobuf.GameState game_state = 7;
     inline void MessageToClient::clear_game_state()
     {
         _impl_.game_state_ = 0;

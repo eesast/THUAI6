@@ -64,6 +64,8 @@ enum StudentState
     TREATED = 6;
     RESCUED = 7;
     STUNNED = 8;
+    TREATING = 9;
+    RESCUING = 10;
 }
 
 enum TrickerBuffType // 屠夫可用的增益效果类型

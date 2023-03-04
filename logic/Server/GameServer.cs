@@ -114,6 +114,7 @@ namespace Server
         public void ReportGame()
         {
             //currentGameInfo = null;
+            var gameObjList = game.GetGameObj();
 
             foreach (var kvp in semaDict)
             {

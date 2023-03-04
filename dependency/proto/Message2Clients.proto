@@ -13,7 +13,7 @@ message MessageOfStudent
     int32 fail_num = 5; // 挂科的科目数
     double time_until_skill_available = 6;
     PlaceType place = 7;
-    PropType prop = 8;
+    repeated PropType prop = 8;
     StudentType student_type = 9;
     int64 guid = 10;
     StudentState state = 11;
@@ -34,7 +34,7 @@ message MessageOfTricker
     int32 damage = 4; // 对学生造成的心理伤害
     double time_until_skill_available = 5;
     PlaceType place = 6;
-    PropType prop = 7;
+    repeated PropType prop = 7;
     TrickerType tricker_type = 8;
     int64 guid = 9;
     bool movable = 10; // 是否进入了攻击后摇
@@ -87,6 +87,37 @@ message MessageOfPickedProp  //for Unity，直接继承自THUAI5
     int64 mapping_id = 5;
 }
 
+message MessageOfClassroom
+{
+    int32 x = 1;
+    int32 y = 2;
+    int32 progress = 3;
+}
+
+message MessageOfGate
+{
+    int32 x = 1;
+    int32 y = 2;
+    int32 progress = 3;
+}
+
+message MessageOfDoor
+{
+    int32 x = 1;
+    int32 y = 2;
+    bool is_open = 3;
+}
+
+message MessageOfMapObj
+{
+    oneof message_of_map_obj
+    {
+        MessageOfClassroom classroom_message = 1;
+        MessageOfDoor door_message = 2;
+        MessageOfGate gate_message = 3;
+    }
+}
+
 message MessageOfMap
 {
     message Row
@@ -94,17 +125,27 @@ message MessageOfMap
         repeated PlaceType col = 1;
     }
     repeated Row row = 2;
+    repeated MessageOfMapObj map_obj_message = 3;
+}
+
+message MessageOfObj
+{
+    oneof message_of_obj
+    {
+        MessageOfStudent student_message = 1;
+        MessageOfTricker tricker_message = 2;
+        MessageOfProp prop_message = 3;
+        MessageOfBullet bullet_message = 4;
+        MessageOfBombedBullet bombed_bullet_message = 5;
+    }
 }
 
 message MessageToClient
 {
-    repeated MessageOfStudent student_message = 1;
-    repeated MessageOfTricker tricker_message = 2; // 是否真正repeated待定
-    repeated MessageOfProp prop_message = 3;
-    repeated MessageOfBullet bullet_message = 4;
-    repeated MessageOfBombedBullet bombed_bullet_message = 5;
-    MessageOfMap map_message = 6;
-    GameState game_state = 7;
+    repeated MessageOfObj obj_message = 1;
+    MessageOfMap map_message = 2;
+    GameState game_state = 3;
+    int32 finished_num = 4; // 完成的科目数
 }
 
 message MoveRes // 如果打算设计撞墙保留平行速度分量，且需要返回值则可用这个（大概没啥用）

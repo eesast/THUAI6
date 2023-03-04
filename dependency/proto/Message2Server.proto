@@ -22,7 +22,7 @@ message MoveMsg
     int64 time_in_milliseconds = 3;
 }
 
-message PickMsg
+message PropMsg
 {
     int64 player_id = 1;
     PropType prop_type = 2;

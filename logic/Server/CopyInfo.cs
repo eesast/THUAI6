@@ -46,7 +46,7 @@ namespace Server
             msg.PlayerId = 0;
             msg.ViewRange = 0;
             msg.Radius = 0;
-            
+
 
             foreach (KeyValuePair<Preparation.Utility.BuffType, bool> kvp in player.Buff)
             {
@@ -109,21 +109,21 @@ namespace Server
                     case Preparation.Utility.PropType.Gem:
                         msg.Prop.Add(PropType.NullPropType);
                         break;
-                    /*case Preparation.Utility.PropType.addLIFE:
-                        msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddLife;
-                        break;
-                    case Preparation.Utility.PropType.addSpeed:
-                        msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddSpeed;
-                        break;
-                    case Preparation.Utility.PropType.Shield:
-                        msg.MessageOfHuman.Prop = Communication.Proto.PropType.Shield;
-                        break;
-                    case Preparation.Utility.PropType.Spear:
-                        msg.MessageOfHuman.Prop = Communication.Proto.PropType.Spear;
-                        break;
-                    default:
-                        msg.Prop = PropType.NullPropType;
-                        break;*/
+                        /*case Preparation.Utility.PropType.addLIFE:
+                            msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddLife;
+                            break;
+                        case Preparation.Utility.PropType.addSpeed:
+                            msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddSpeed;
+                            break;
+                        case Preparation.Utility.PropType.Shield:
+                            msg.MessageOfHuman.Prop = Communication.Proto.PropType.Shield;
+                            break;
+                        case Preparation.Utility.PropType.Spear:
+                            msg.MessageOfHuman.Prop = Communication.Proto.PropType.Spear;
+                            break;
+                        default:
+                            msg.Prop = PropType.NullPropType;
+                            break;*/
                 }
             }
             /*switch (player.PassiveSkillType) 需要对接一下，proto里似乎没有这个

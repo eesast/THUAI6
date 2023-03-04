@@ -15,21 +15,26 @@ namespace ClientTest
             playerInfo.PlayerType = PlayerType.StudentPlayer;
             playerInfo.StudentType = StudentType.NullStudentType;
             var call = client.AddPlayer(playerInfo);
+            MoveMsg moveMsg = new();
+            moveMsg.PlayerId = 0;
+            moveMsg.PlayerType = PlayerType.StudentPlayer;
+            moveMsg.TimeInMilliseconds = 100;
+            moveMsg.Angle = 0;
+            while (true)
+            {
+                Console.ReadLine();
+                client.Move(moveMsg);
+                Console.WriteLine("Move!");
+            }
+
             while (await call.ResponseStream.MoveNext())
             {
                 var currentGameInfo = call.ResponseStream.Current;
                 if (playerInfo.PlayerType == PlayerType.StudentPlayer)
                 {
-                    for (int i = 0; i < currentGameInfo.StudentMessage.Count; i++)
+                    for (int i = 0; i < currentGameInfo.ObjMessage.Count; i++)
                     {
-                        Console.WriteLine($"Human is at ({currentGameInfo.StudentMessage[i].X}, {currentGameInfo.StudentMessage[i].Y})");
-                    }
-                }
-                if (playerInfo.PlayerType == PlayerType.TrickerPlayer)
-                {
-                    for (int i = 0; i < currentGameInfo.TrickerMessage.Count; i++)
-                    {
-                        Console.WriteLine($"Butcher is at ({currentGameInfo.TrickerMessage[i].X}, {currentGameInfo.TrickerMessage[i].Y})");
+                        //Console.WriteLine($"Human is at ({currentGameInfo.StudentMessage[i].X}, {currentGameInfo.StudentMessage[i].Y})");
                     }
                 }
             }

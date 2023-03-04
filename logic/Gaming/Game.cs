@@ -180,17 +180,18 @@ namespace Gaming
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                return actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
+                var res = actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
 #if DEBUG
                 Console.WriteLine($"PlayerID:{playerID} move to ({player.Position.x},{player.Position.y})!");
 #endif
+                return res;
             }
             else
             {
-                return false;
 #if DEBUG
                 Console.WriteLine($"PlayerID:{playerID} player does not exists!");
 #endif
+                return false;
             }
         }
         public bool Treat(long playerID, long playerTreatedID)

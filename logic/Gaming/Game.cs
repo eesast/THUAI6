@@ -242,6 +242,18 @@ namespace Gaming
             }
             return false;
         }
+        public bool Stop(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                return actionManager.Stop(player);
+            }
+            return false;
+        }
+
         public void Attack(long playerID, double angle)
         {
             if (!gameMap.Timer.IsGaming)

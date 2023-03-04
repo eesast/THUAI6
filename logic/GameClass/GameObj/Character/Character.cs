@@ -477,6 +477,7 @@ namespace GameClass.GameObj
                 playerState = playerStateType;
                 CanMove = false;
                 IsResetting = true;
+                Position = GameData.PosWhoDie;
             }
         }
 

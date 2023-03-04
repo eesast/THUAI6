@@ -95,7 +95,7 @@ namespace GameClass.GameObj
             }
         }
 
-        public void Escape()
+        public Student(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) : base(initPos, initRadius, initPlace, characterType)
         {
             lock (gameObjLock)
                 IsResetting = true;
@@ -113,7 +113,6 @@ namespace GameClass.GameObj
                     break;
             }
             this.fixSpeed = ((IStudent)Occupation).FixSpeed;
-            this.CharacterType = characterType;
         }
     }
 }

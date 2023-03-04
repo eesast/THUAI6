@@ -392,17 +392,17 @@ namespace Server
                 msg.MessageOfBullet.ParentTeamID = bullet.Parent.TeamID;
             switch (bullet.Place)
             {
-                case Preparation.Utility.PlacccceType.Land:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.Land;
+                case Preparation.Utility.PlaceType.Null:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Null;
                     break;
-                case Preparation.Utility.PlacccceType.Grass1:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.Grass1;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass;
                     break;
-                case Preparation.Utility.PlacccceType.Grass2:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.Grass2;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass;
                     break;
-                case Preparation.Utility.PlacccceType.Grass3:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.Grass3;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass;
                     break;
                 default:
                     msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.NullPlaceType;
@@ -459,17 +459,17 @@ namespace Server
             }
             switch (prop.Place)
             {
-                case Preparation.Utility.PlacccceType.Land:
-                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.Land;
+                case Preparation.Utility.PlaceType.Null:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Null;
                     break;
-                case Preparation.Utility.PlacccceType.Grass1:
-                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.Grass1;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass;
                     break;
-                case Preparation.Utility.PlacccceType.Grass2:
-                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.Grass2;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass;
                     break;
-                case Preparation.Utility.PlacccceType.Grass3:
-                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.Grass3;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass;
                     break;
                 default:
                     msg.MessageOfProp.Place = Communication.Proto.PlacccceType.NullPlaceType;

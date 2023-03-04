@@ -470,11 +470,22 @@ namespace GameClass.GameObj
                 this.Vampire = this.OriVampire;
             }
         }
+        public void Die(PlayerStateType playerStateType)
+        {
+            lock (gameObjLock)
+            {
+                playerState = playerStateType;
+                CanMove = false;
+                IsResetting = true;
+            }
+        }
 
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
+            if (IsResetting)
+                return true;
             if (targetObj.Type == GameObjType.Prop)  // 自己队的地雷忽略碰撞
             {
                 return true;

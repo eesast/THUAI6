@@ -242,7 +242,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
             }
             for (const auto& item : message.tricker_message())
             {
-                if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.x(), item.y(), bufferState->gamemap))
+                if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.x(), item.y(), bufferState->studentSelf->place, Proto2THUAI6::placeTypeDict[item.place()], bufferState->gamemap))
                 {
                     bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item));
                     logger->debug("Add Tricker!");
@@ -261,7 +261,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                 logger->debug("Add Tricker!");
             }
             for (const auto& item : message.student_message())
-                if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.x(), item.y(), bufferState->gamemap))
+                if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.x(), item.y(), bufferState->trickerSelf->place, Proto2THUAI6::placeTypeDict[item.place()], bufferState->gamemap))
                 {
                     bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item));
                     logger->debug("Add Student!");
@@ -271,6 +271,16 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         {
             bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item));
             logger->debug("Add Prop!");
+        }
+        for (const auto& item : message.bullet_message())
+        {
+            bufferState->bullets.push_back(Proto2THUAI6::Protobuf2THUAI6Bullet(item));
+            logger->debug("Add Bullet!");
+        }
+        for (const auto& item : message.bombed_bullet_message())
+        {
+            bufferState->bombedBullets.push_back(Proto2THUAI6::Protobuf2THUAI6BombedBullet(item));
+            logger->debug("Add BombedBullet!");
         }
         if (asynchronous)
         {

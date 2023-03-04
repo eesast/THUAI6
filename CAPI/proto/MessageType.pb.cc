@@ -23,43 +23,47 @@ namespace _pbi = _pb::internal;
 namespace protobuf
 {
 }  // namespace protobuf
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_MessageType_2eproto[10];
+static const ::_pb::EnumDescriptor* file_level_enum_descriptors_MessageType_2eproto[11];
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_MessageType_2eproto = nullptr;
 const uint32_t TableStruct_MessageType_2eproto::offsets[1] = {};
 static constexpr ::_pbi::MigrationSchema* schemas = nullptr;
 static constexpr ::_pb::Message* const* file_default_instances = nullptr;
 
 const char descriptor_table_protodef_MessageType_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-    "\n\021MessageType.proto\022\010protobuf*i\n\tPlaceTy"
-    "pe\022\023\n\017NULL_PLACE_TYPE\020\000\022\010\n\004LAND\020\001\022\010\n\004WAL"
-    "L\020\002\022\t\n\005GRASS\020\003\022\r\n\tCLASSROOM\020\004\022\010\n\004GATE\020\005\022"
-    "\017\n\013HIDDEN_GATE\020\006*8\n\tShapeType\022\023\n\017NULL_SH"
-    "APE_TYPE\020\000\022\n\n\006CIRCLE\020\001\022\n\n\006SQUARE\020\002*N\n\010Pr"
-    "opType\022\022\n\016NULL_PROP_TYPE\020\000\022\n\n\006PTYPE1\020\001\022\n"
-    "\n\006PTYPE2\020\002\022\n\n\006PTYPE3\020\003\022\n\n\006PTYPE4\020\004*f\n\017St"
-    "udentBuffType\022\023\n\017NULL_SBUFF_TYPE\020\000\022\016\n\nSB"
-    "UFFTYPE1\020\001\022\016\n\nSBUFFTYPE2\020\002\022\016\n\nSBUFFTYPE3"
-    "\020\003\022\016\n\nSBUFFTYPE4\020\004*^\n\014StudentState\022\017\n\013NU"
-    "LL_STATUS\020\000\022\010\n\004IDLE\020\001\022\014\n\010LEARNING\020\002\022\014\n\010A"
-    "DDICTED\020\003\022\010\n\004QUIT\020\004\022\r\n\tGRADUATED\020\005*f\n\017Tr"
-    "ickerBuffType\022\023\n\017NULL_TBUFF_TYPE\020\000\022\016\n\nTB"
-    "UFFTYPE1\020\001\022\016\n\nTBUFFTYPE2\020\002\022\016\n\nTBUFFTYPE3"
-    "\020\003\022\016\n\nTBUFFTYPE4\020\004*J\n\nPlayerType\022\024\n\020NULL"
-    "_PLAYER_TYPE\020\000\022\022\n\016STUDENT_PLAYER\020\001\022\022\n\016TR"
-    "ICKER_PLAYER\020\002*l\n\013StudentType\022\025\n\021NULL_ST"
-    "UDENT_TYPE\020\000\022\020\n\014STUDENTTYPE1\020\001\022\020\n\014STUDEN"
-    "TTYPE2\020\002\022\020\n\014STUDENTTYPE3\020\003\022\020\n\014STUDENTTYP"
-    "E4\020\004*l\n\013TrickerType\022\025\n\021NULL_TRICKER_TYPE"
-    "\020\000\022\020\n\014TRICKERTYPE1\020\001\022\020\n\014TRICKERTYPE2\020\002\022\020"
-    "\n\014TRICKERTYPE3\020\003\022\020\n\014TRICKERTYPE4\020\004*P\n\tGa"
-    "meState\022\023\n\017NULL_GAME_STATE\020\000\022\016\n\nGAME_STA"
-    "RT\020\001\022\020\n\014GAME_RUNNING\020\002\022\014\n\010GAME_END\020\003b\006pr"
-    "oto3";
+    "\n\021MessageType.proto\022\010protobuf*{\n\nBulletT"
+    "ype\022\024\n\020NULL_BULLET_TYPE\020\000\022\017\n\013LINE_BULLET"
+    "\020\001\022\021\n\rCOMMON_BULLET\020\002\022\017\n\013FAST_BULLET\020\003\022\023"
+    "\n\017ORDINARY_BULLET\020\004\022\r\n\tATOM_BOMB\020\005*i\n\tPl"
+    "aceType\022\023\n\017NULL_PLACE_TYPE\020\000\022\010\n\004LAND\020\001\022\010"
+    "\n\004WALL\020\002\022\t\n\005GRASS\020\003\022\r\n\tCLASSROOM\020\004\022\010\n\004GA"
+    "TE\020\005\022\017\n\013HIDDEN_GATE\020\006*8\n\tShapeType\022\023\n\017NU"
+    "LL_SHAPE_TYPE\020\000\022\n\n\006CIRCLE\020\001\022\n\n\006SQUARE\020\002*"
+    "N\n\010PropType\022\022\n\016NULL_PROP_TYPE\020\000\022\n\n\006PTYPE"
+    "1\020\001\022\n\n\006PTYPE2\020\002\022\n\n\006PTYPE3\020\003\022\n\n\006PTYPE4\020\004*"
+    "f\n\017StudentBuffType\022\023\n\017NULL_SBUFF_TYPE\020\000\022"
+    "\016\n\nSBUFFTYPE1\020\001\022\016\n\nSBUFFTYPE2\020\002\022\016\n\nSBUFF"
+    "TYPE3\020\003\022\016\n\nSBUFFTYPE4\020\004*\205\001\n\014StudentState"
+    "\022\017\n\013NULL_STATUS\020\000\022\010\n\004IDLE\020\001\022\014\n\010LEARNING\020"
+    "\002\022\014\n\010ADDICTED\020\003\022\010\n\004QUIT\020\004\022\r\n\tGRADUATED\020\005"
+    "\022\013\n\007TREATED\020\006\022\013\n\007RESCUED\020\007\022\013\n\007STUNNED\020\010*"
+    "f\n\017TrickerBuffType\022\023\n\017NULL_TBUFF_TYPE\020\000\022"
+    "\016\n\nTBUFFTYPE1\020\001\022\016\n\nTBUFFTYPE2\020\002\022\016\n\nTBUFF"
+    "TYPE3\020\003\022\016\n\nTBUFFTYPE4\020\004*J\n\nPlayerType\022\024\n"
+    "\020NULL_PLAYER_TYPE\020\000\022\022\n\016STUDENT_PLAYER\020\001\022"
+    "\022\n\016TRICKER_PLAYER\020\002*l\n\013StudentType\022\025\n\021NU"
+    "LL_STUDENT_TYPE\020\000\022\020\n\014STUDENTTYPE1\020\001\022\020\n\014S"
+    "TUDENTTYPE2\020\002\022\020\n\014STUDENTTYPE3\020\003\022\020\n\014STUDE"
+    "NTTYPE4\020\004*l\n\013TrickerType\022\025\n\021NULL_TRICKER"
+    "_TYPE\020\000\022\020\n\014TRICKERTYPE1\020\001\022\020\n\014TRICKERTYPE"
+    "2\020\002\022\020\n\014TRICKERTYPE3\020\003\022\020\n\014TRICKERTYPE4\020\004*"
+    "P\n\tGameState\022\023\n\017NULL_GAME_STATE\020\000\022\016\n\nGAM"
+    "E_START\020\001\022\020\n\014GAME_RUNNING\020\002\022\014\n\010GAME_END\020"
+    "\003b\006proto3";
 static ::_pbi::once_flag descriptor_table_MessageType_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_MessageType_2eproto = {
     false,
     false,
-    964,
+    1129,
     descriptor_table_protodef_MessageType_2eproto,
     "MessageType.proto",
     &descriptor_table_MessageType_2eproto_once,
@@ -82,10 +86,31 @@ PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_MessageT
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_MessageType_2eproto(&descriptor_table_MessageType_2eproto);
 namespace protobuf
 {
-    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PlaceType_descriptor()
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* BulletType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
         return file_level_enum_descriptors_MessageType_2eproto[0];
+    }
+    bool BulletType_IsValid(int value)
+    {
+        switch (value)
+        {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PlaceType_descriptor()
+    {
+        ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
+        return file_level_enum_descriptors_MessageType_2eproto[1];
     }
     bool PlaceType_IsValid(int value)
     {
@@ -107,7 +132,7 @@ namespace protobuf
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* ShapeType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
-        return file_level_enum_descriptors_MessageType_2eproto[1];
+        return file_level_enum_descriptors_MessageType_2eproto[2];
     }
     bool ShapeType_IsValid(int value)
     {
@@ -125,7 +150,7 @@ namespace protobuf
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PropType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
-        return file_level_enum_descriptors_MessageType_2eproto[2];
+        return file_level_enum_descriptors_MessageType_2eproto[3];
     }
     bool PropType_IsValid(int value)
     {
@@ -145,7 +170,7 @@ namespace protobuf
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StudentBuffType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
-        return file_level_enum_descriptors_MessageType_2eproto[3];
+        return file_level_enum_descriptors_MessageType_2eproto[4];
     }
     bool StudentBuffType_IsValid(int value)
     {
@@ -165,7 +190,7 @@ namespace protobuf
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StudentState_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
-        return file_level_enum_descriptors_MessageType_2eproto[4];
+        return file_level_enum_descriptors_MessageType_2eproto[5];
     }
     bool StudentState_IsValid(int value)
     {
@@ -177,6 +202,9 @@ namespace protobuf
             case 3:
             case 4:
             case 5:
+            case 6:
+            case 7:
+            case 8:
                 return true;
             default:
                 return false;
@@ -186,7 +214,7 @@ namespace protobuf
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TrickerBuffType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
-        return file_level_enum_descriptors_MessageType_2eproto[5];
+        return file_level_enum_descriptors_MessageType_2eproto[6];
     }
     bool TrickerBuffType_IsValid(int value)
     {
@@ -206,7 +234,7 @@ namespace protobuf
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PlayerType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
-        return file_level_enum_descriptors_MessageType_2eproto[6];
+        return file_level_enum_descriptors_MessageType_2eproto[7];
     }
     bool PlayerType_IsValid(int value)
     {
@@ -224,7 +252,7 @@ namespace protobuf
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StudentType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
-        return file_level_enum_descriptors_MessageType_2eproto[7];
+        return file_level_enum_descriptors_MessageType_2eproto[8];
     }
     bool StudentType_IsValid(int value)
     {
@@ -244,7 +272,7 @@ namespace protobuf
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TrickerType_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
-        return file_level_enum_descriptors_MessageType_2eproto[8];
+        return file_level_enum_descriptors_MessageType_2eproto[9];
     }
     bool TrickerType_IsValid(int value)
     {
@@ -264,7 +292,7 @@ namespace protobuf
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* GameState_descriptor()
     {
         ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_MessageType_2eproto);
-        return file_level_enum_descriptors_MessageType_2eproto[9];
+        return file_level_enum_descriptors_MessageType_2eproto[10];
     }
     bool GameState_IsValid(int value)
     {

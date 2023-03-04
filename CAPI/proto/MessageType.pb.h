@@ -50,6 +50,39 @@ PROTOBUF_NAMESPACE_CLOSE
 namespace protobuf
 {
 
+    enum BulletType : int
+    {
+        NULL_BULLET_TYPE = 0,
+        LINE_BULLET = 1,
+        COMMON_BULLET = 2,
+        FAST_BULLET = 3,
+        ORDINARY_BULLET = 4,
+        ATOM_BOMB = 5,
+        BulletType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+        BulletType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+    };
+    bool BulletType_IsValid(int value);
+    constexpr BulletType BulletType_MIN = NULL_BULLET_TYPE;
+    constexpr BulletType BulletType_MAX = ATOM_BOMB;
+    constexpr int BulletType_ARRAYSIZE = BulletType_MAX + 1;
+
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* BulletType_descriptor();
+    template<typename T>
+    inline const std::string& BulletType_Name(T enum_t_value)
+    {
+        static_assert(::std::is_same<T, BulletType>::value || ::std::is_integral<T>::value, "Incorrect type passed to function BulletType_Name.");
+        return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+            BulletType_descriptor(), enum_t_value
+        );
+    }
+    inline bool BulletType_Parse(
+        ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, BulletType* value
+    )
+    {
+        return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<BulletType>(
+            BulletType_descriptor(), name, value
+        );
+    }
     enum PlaceType : int
     {
         NULL_PLACE_TYPE = 0,
@@ -186,12 +219,15 @@ namespace protobuf
         ADDICTED = 3,
         QUIT = 4,
         GRADUATED = 5,
+        TREATED = 6,
+        RESCUED = 7,
+        STUNNED = 8,
         StudentState_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         StudentState_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool StudentState_IsValid(int value);
     constexpr StudentState StudentState_MIN = NULL_STATUS;
-    constexpr StudentState StudentState_MAX = GRADUATED;
+    constexpr StudentState StudentState_MAX = STUNNED;
     constexpr int StudentState_ARRAYSIZE = StudentState_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StudentState_descriptor();
@@ -388,6 +424,15 @@ namespace protobuf
 
 PROTOBUF_NAMESPACE_OPEN
 
+template<>
+struct is_proto_enum<::protobuf::BulletType> : ::std::true_type
+{
+};
+template<>
+inline const EnumDescriptor* GetEnumDescriptor<::protobuf::BulletType>()
+{
+    return ::protobuf::BulletType_descriptor();
+}
 template<>
 struct is_proto_enum<::protobuf::PlaceType> : ::std::true_type
 {

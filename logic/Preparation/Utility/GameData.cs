@@ -81,6 +81,7 @@ namespace Preparation.Utility
         public const int bulletRadius = 200;                         // 默认子弹半径
         public const int reviveTime = 30000;                         // 复活时间
         public const int shieldTimeAtBirth = 3000;                   // 复活时的护盾时间
+        public static XY PosWhoDie = new XY(1, 1);
 
         public static bool IsGhost(CharacterType characterType)
         {

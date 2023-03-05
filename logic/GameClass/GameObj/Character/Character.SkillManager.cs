@@ -9,7 +9,7 @@ namespace GameClass.GameObj
     {
         private readonly CharacterType characterType;
         public CharacterType CharacterType => characterType;
-        private readonly IOccupation occupation;
+        private readonly IOccupation? occupation;
         public IOccupation Occupation => occupation;
 
         private Dictionary<ActiveSkillType, int> timeUntilActiveSkillAvailable = new();

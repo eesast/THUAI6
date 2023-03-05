@@ -8,7 +8,26 @@ namespace Server
     public static class CopyInfo
     {
         // 下面赋值为0的大概率是还没写完 2023-03-03
-        private static MessageOfStudent Human(Character player)
+        /*public static MessageOfObj? Auto(GameObj gameObj)
+        {
+            if (gameObj.Type == Preparation.Utility.GameObjType.Character)
+            {
+                Character character = (Character)gameObj;
+                if (character.IsGhost())
+                    return Tri
+            }
+            else if (gameObj.Type == Preparation.Utility.GameObjType.Bullet)
+                return Bullet((Bullet)gameObj);
+            else if (gameObj.Type == Preparation.Utility.GameObjType.Prop)
+                return Prop((Prop)gameObj);
+            else if (gameObj.Type == Preparation.Utility.GameObjType.BombedBullet)
+                return BombedBullet((BombedBullet)gameObj);
+            else if (gameObj.Type == Preparation.Utility.GameObjType.PickedProp)
+                return PickedProp((PickedProp)gameObj);
+            else return null;  //先写着防报错
+        }*/
+
+        private static MessageOfStudent? Student(Character player)
         {
             MessageOfStudent msg = new MessageOfStudent();
             if (player.IsGhost()) return null;
@@ -19,7 +38,6 @@ namespace Server
             msg.Determination = player.HP;
             msg.FailNum = 0;
             msg.TimeUntilSkillAvailable = 0;
-            //msg.Place = 0; 下面写了
             msg.StudentType = StudentType.NullStudentType; // 下面写
             msg.Guid = 0;
             msg.State = StudentState.NullStatus;
@@ -28,32 +46,7 @@ namespace Server
             msg.PlayerId = 0;
             msg.ViewRange = 0;
             msg.Radius = 0;
-            //msg.Buff[0] = StudentBuffType.NullSbuffType; 下面写了
 
-            /* THUAI5中的内容
-            msg.BulletNum = player.BulletNum;
-            msg.CanMove = player.CanMove;
-            msg.CD = player.CD;
-            msg.GemNum = player.GemNum;
-            msg.Guid = player.ID;
-            msg.IsResetting = player.IsResetting;
-            
-            msg.LifeNum = player.DeathCount + 1;
-            msg.Radius = player.Radius;
-            
-            msg.TimeUntilCommonSkillAvailable = player.TimeUntilCommonSkillAvailable;
-            msg.TeamID = player.TeamID;
-            msg.PlayerID = player.PlayerID;
-            msg.IsInvisible = player.IsInvisible;
-            msg.FacingDirection = player.FacingDirection;
-
-            //应该要发队伍分数，这里先发个人分数
-            msg.MessageOfHuman.Score = player.Score;
-
-            //这条暂时没啥用
-            msg.MessageOfHuman.TimeUntilUltimateSkillAvailable = 0;
-
-            msg.MessageOfHuman.Vampire = player.Vampire;*/
 
             foreach (KeyValuePair<Preparation.Utility.BuffType, bool> kvp in player.Buff)
             {
@@ -78,19 +71,24 @@ namespace Server
                     }
                 }
             }
-            /*switch (player.Place)
+            switch (player.Place)
             {
-                case Preparation.Utility.PlaceType.Land:
+                case Preparation.Utility.PlaceType.EmergencyExit:
+                    msg.Place = PlaceType.HiddenGate;
+                    break;
+                case Preparation.Utility.PlaceType.Doorway:
+                    msg.Place = PlaceType.Gate;
+                    break;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.Place = PlaceType.Grass;
+                    break;
+                case Preparation.Utility.PlaceType.BirthPoint1:
+                case Preparation.Utility.PlaceType.BirthPoint2:
+                case Preparation.Utility.PlaceType.BirthPoint3:
+                case Preparation.Utility.PlaceType.BirthPoint4:
+                case Preparation.Utility.PlaceType.BirthPoint5:
+                case Preparation.Utility.PlaceType.Null:
                     msg.Place = PlaceType.Land;
-                    break;
-                case Preparation.Utility.PlaceType.Grass1:
-                    msg.Place = PlaceType.Grass;
-                    break;
-                case Preparation.Utility.PlaceType.Grass2:
-                    msg.Place = PlaceType.Grass;
-                    break;
-                case Preparation.Utility.PlaceType.Grass3:
-                    msg.Place = PlaceType.Grass;
                     break;
                 // case Preparation.Utility.PlaceType.Invisible:
                 //     msg.MessageOfHuman.Place = Communication.Proto.PlaceType.Invisible;
@@ -98,36 +96,36 @@ namespace Server
                 default:
                     msg.Place = PlaceType.NullPlaceType;
                     break;
-            }*/
+            }
 
             //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
             //现在懒得改了，有时间再重整一波
-            /*if (player.PropInventory == null)
-                msg.Prop = PropType.NullPropType;
+            if (player.PropInventory == null)
+                msg.Prop.Add(PropType.NullPropType);
             else
             {
                 switch (player.PropInventory.GetPropType())
                 {
                     case Preparation.Utility.PropType.Gem:
-                        msg.Prop = PropType.NullPropType;
+                        msg.Prop.Add(PropType.NullPropType);
                         break;
-                    case Preparation.Utility.PropType.addLIFE:
-                        msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddLife;
-                        break;
-                    case Preparation.Utility.PropType.addSpeed:
-                        msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddSpeed;
-                        break;
-                    case Preparation.Utility.PropType.Shield:
-                        msg.MessageOfHuman.Prop = Communication.Proto.PropType.Shield;
-                        break;
-                    case Preparation.Utility.PropType.Spear:
-                        msg.MessageOfHuman.Prop = Communication.Proto.PropType.Spear;
-                        break;
-                    default:
-                        msg.Prop = PropType.NullPropType;
-                        break;
+                        /*case Preparation.Utility.PropType.addLIFE:
+                            msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddLife;
+                            break;
+                        case Preparation.Utility.PropType.addSpeed:
+                            msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddSpeed;
+                            break;
+                        case Preparation.Utility.PropType.Shield:
+                            msg.MessageOfHuman.Prop = Communication.Proto.PropType.Shield;
+                            break;
+                        case Preparation.Utility.PropType.Spear:
+                            msg.MessageOfHuman.Prop = Communication.Proto.PropType.Spear;
+                            break;
+                        default:
+                            msg.Prop = PropType.NullPropType;
+                            break;*/
                 }
-            }*/
+            }
             /*switch (player.PassiveSkillType) 需要对接一下，proto里似乎没有这个
             {
                 case Preparation.Utility.PassiveSkillType.RecoverAfterBattle:

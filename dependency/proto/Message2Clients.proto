@@ -23,7 +23,8 @@ message MessageOfStudent
     int32 view_range = 16; // 视野距离
     int32 radius = 17; // 半径
     int32 damage = 18;
-    repeated StudentBuffType buff = 19;
+    int32 danger_alert = 19; // 危险警报，在捣蛋鬼靠近时会有预警
+    repeated StudentBuffType buff = 20;
 }
 
 message MessageOfTricker
@@ -149,6 +150,8 @@ message MessageToClient
     MessageOfMap map_message = 2;
     GameState game_state = 3;
     int32 finished_num = 4; // 完成的科目数
+    int32 student_score = 5;
+    int32 tricker_score = 6;
 }
 
 message MoveRes // 如果打算设计撞墙保留平行速度分量，且需要返回值则可用这个（大概没啥用）

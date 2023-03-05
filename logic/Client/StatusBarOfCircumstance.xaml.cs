@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Protobuf;
 
 namespace Client
 {
@@ -27,12 +28,43 @@ namespace Client
             Grid.SetColumnSpan(this, 2);
             Grid.SetRow(this, Row);
             Grid.SetRowSpan(this, 2);
-            initialized = false;
         }
         public void SetFontSize(double fontsize)
         {
-            serial.FontSize = scores.FontSize = star.FontSize = status.FontSize = prop.FontSize = fontsize;
+            time.FontSize = scoresofstudents.FontSize = scoresoftrickers.FontSize = status.FontSize = prop.FontSize = fontsize;
         }
-        private bool initialized;
+
+        public void SetValue(MessageOfAll obj)
+        {
+            time.Text = "Time⏳: " + Convert.ToString(obj.GameTime);
+            status.Text = "📱: " + Convert.ToString(obj.SubjectLeft) + "\n🚪: ";
+            if(obj.GateOpened)
+            {
+                status.Text += "Open\n🆘: ";
+            }
+            else
+            {
+                status.Text += "Close\n🆘: ";
+            }
+            if(obj.HiddenGateRefreshed)
+            {
+                if(obj.HiddenGateOpened)
+                {
+                    status.Text += "Open\n🏃: ";
+                }
+                else
+                {
+                    status.Text += "Refreshed\n🏃: ";
+                }
+            }
+            else
+            {
+                status.Text += "Unrefreshed\n🏃: ";
+            }
+            status.Text += Convert.ToString(obj.StudentGraduated)+ "\n⚰️: ";
+            status.Text += Convert.ToString(obj.StudentQuited);
+            scoresofstudents.Text = "Scores of Survivors: " + Convert.ToString(obj.StudentScore);
+            scoresoftrickers.Text = "Scores of Hunters: " + Convert.ToString(obj.TrickerScore);
+        }
     }
 }

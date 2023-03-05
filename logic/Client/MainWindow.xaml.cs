@@ -49,8 +49,11 @@ namespace Client
             isPlaybackMode = false;
             drawPicLock = new();
             listOfProp = new List<MessageOfProp>();
-            listOfHuman = new List<MessageOfHuman>();
-            listOfButcher = new List<MessageOfButcher>();
+            listOfHuman = new List<MessageOfStudent>();
+            listOfButcher = new List<MessageOfTricker>();
+            listOfBullet=new List<MessageOfBullet>();
+            listOfBombedBullet = new List<MessageOfBombedBullet>();
+            listOfAll=new List<MessageOfAll>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             comInfo[0] = "183.172.208.156";
             comInfo[1] = "8888";
@@ -62,12 +65,15 @@ namespace Client
             //OnReceive();
             DrawMap();
             ZoomMap();
-            MessageOfHuman kurei = new MessageOfHuman();
+            MessageOfStudent kurei = new MessageOfStudent();
             kurei.X = 10000;
             kurei.Y = 20000;
             kurei.Speed = 1000;
             kurei.PlayerId = 0;
             listOfHuman.Add(kurei);
+            MessageOfAll all= new MessageOfAll();
+            all.HiddenGateRefreshed = false;
+            listOfAll.Add(all);
             // ReactToCommandline();
         }
 
@@ -82,7 +88,7 @@ namespace Client
             }
         }
 
-        // 连接Server,comInfo[]的格式：0-ip 1- port 2-playerID 3-playerType 4-human/butcherType
+        // 连接Server,comInfo[]的格式：0-ip 1- port 2-playerID 3-playerType 4-human/TrickerType
         private void ConnectToServer(string[] comInfo)
         {
             if (!isPlaybackMode)
@@ -103,8 +109,8 @@ namespace Client
                 playerType = Convert.ToInt64(comInfo[3]) switch
                 {
                     0 => PlayerType.NullPlayerType,
-                    1 => PlayerType.HumanPlayer,
-                    2 => PlayerType.ButcherPlayer,
+                    1 => PlayerType.StudentPlayer,
+                    2 => PlayerType.TrickerPlayer,
                 };
                 if (Convert.ToInt64(comInfo[3]) == 1)
                 {
@@ -115,47 +121,47 @@ namespace Client
                     humanOrButcher = false;
                 }
                 playerMsg.PlayerType = playerType;
-                if (playerType == PlayerType.HumanPlayer)
+                if (playerType == PlayerType.StudentPlayer)
                 {
                     switch (Convert.ToInt64(comInfo[4]))
                     {
                         case 0:
-                            playerMsg.HumanType = HumanType.NullHumanType;
+                            playerMsg.StudentType = StudentType.NullStudentType;
                             break;
                         case 1:
-                            playerMsg.HumanType = HumanType._1;
+                            playerMsg.StudentType = StudentType._1;
                             break;
                         case 2:
-                            playerMsg.HumanType = HumanType._2;
+                            playerMsg.StudentType = StudentType._2;
                             break;
                         case 3:
-                            playerMsg.HumanType = HumanType._3;
+                            playerMsg.StudentType = StudentType._3;
                             break;
                         case 4:
-                            playerMsg.HumanType = HumanType._4;
+                            playerMsg.StudentType = StudentType._4;
                             break;
                         default:
                             break;
                     }
                 }
-                else if (playerType == PlayerType.ButcherPlayer)
+                else if (playerType == PlayerType.TrickerPlayer)
                 {
                     switch (Convert.ToInt64(comInfo[4]))
                     {
                         case 0:
-                            playerMsg.ButcherType = ButcherType.NullButcherType;
+                            playerMsg.TrickerType = TrickerType.NullTrickerType;
                             break;
                         case 1:
-                            playerMsg.ButcherType = ButcherType._1;
+                            playerMsg.TrickerType = TrickerType._1;
                             break;
                         case 2:
-                            playerMsg.ButcherType = ButcherType._2;
+                            playerMsg.TrickerType = TrickerType._2;
                             break;
                         case 3:
-                            playerMsg.ButcherType = ButcherType._3;
+                            playerMsg.TrickerType = TrickerType._3;
                             break;
                         case 4:
-                            playerMsg.ButcherType = ButcherType._4;
+                            playerMsg.TrickerType = TrickerType._4;
                             break;
                         default:
                             break;
@@ -188,7 +194,7 @@ namespace Client
             UpperLayerOfMap.Children.Add(icon);
         }
 
-        // 获得地图信息
+        // 获得地图信息,未更新数值
         private void GetMap(MessageOfMap obj)
         {
             int[,] map = new int[50, 50];
@@ -264,8 +270,14 @@ namespace Client
                             mapPatches[i, j].Stroke = Brushes.LightSkyBlue;
                             break;//door
                         case 10:
-                            mapPatches[i, j].Fill = Brushes.LightSalmon;
-                            mapPatches[i, j].Stroke = Brushes.LightSalmon;
+                            foreach (var obj in listOfAll)
+                            {
+                                if(obj.HiddenGateRefreshed)
+                                {
+                                    mapPatches[i, j].Fill = Brushes.LightSalmon;
+                                    mapPatches[i, j].Stroke = Brushes.LightSalmon;
+                                }
+                            }
                             break;//emergency
                         default:
                             break;
@@ -305,7 +317,8 @@ namespace Client
             laserIcon.Points = laserEndPoints;
             UpperLayerOfMap.Children.Add(laserIcon);
         }
-        private async void OnReceive()  // log未更新,switch1,2更新log
+
+        private async void OnReceive()  // 已按照3.5版proto更新信息，但是左侧信息栏还未填充。log未更新,switch1,2,3更新log
         {
             try
             {
@@ -316,88 +329,90 @@ namespace Client
                         listOfHuman.Clear();
                         listOfButcher.Clear();
                         listOfProp.Clear();
+                        listOfBombedBullet.Clear();
+                        listOfBullet.Clear();
+                        listOfAll.Clear();
                         MessageToClient content = responseStream.ResponseStream.Current;
                         switch (content.GameState)
                         {
                             case GameState.GameStart:
-                                foreach (var obj in content.HumanMessage)
+                            case GameState.GameRunning:
+                                foreach (var obj in content.ObjMessage)
                                 {
-                                    if (humanOrButcher && obj.PlayerId == playerID)
+                                    switch (obj.MessageOfObjCase)
                                     {
-                                        human = obj;
+                                        case MessageOfObj.MessageOfObjOneofCase.StudentMessage:
+                                            if (humanOrButcher && obj.StudentMessage.PlayerId == playerID)
+                                            {
+                                                human = obj.StudentMessage;
+                                            }
+                                            listOfHuman.Add(obj.StudentMessage);
+                                            break;
+                                        case MessageOfObj.MessageOfObjOneofCase.TrickerMessage:
+                                            if (!humanOrButcher && obj.TrickerMessage.PlayerId == playerID)
+                                            {
+                                                butcher = obj.TrickerMessage;
+                                            }
+                                            listOfButcher.Add(obj.TrickerMessage);
+                                            break;
+                                        case MessageOfObj.MessageOfObjOneofCase.PropMessage:
+                                            listOfProp.Add(obj.PropMessage);
+                                            break;
+                                        case MessageOfObj.MessageOfObjOneofCase.BombedBulletMessage:
+                                            listOfBombedBullet.Add(obj.BombedBulletMessage);
+                                            break;
+                                        case MessageOfObj.MessageOfObjOneofCase.BulletMessage:
+                                            listOfBullet.Add(obj.BulletMessage);
+                                            break;
                                     }
-                                    listOfHuman.Add(obj);
-                                }
-                                foreach (var obj in content.ButcherMessage)
-                                {
-                                    if (!humanOrButcher && obj.PlayerId == playerID)
-                                    {
-                                        butcher = obj;
-                                    }
-                                    listOfButcher.Add(obj);
-                                }
-                                foreach (var obj in content.PropMessage)
-                                {
-                                    listOfProp.Add(obj);
                                 }
                                 GetMap(content.MapMessage);
+                                listOfAll.Add(content.AllMessage);
                                 break;
-                            case GameState.GameRunning:
-                                foreach (var obj in content.HumanMessage)
-                                {
-                                    if (humanOrButcher && obj.PlayerId == playerID)
-                                    {
-                                        human = obj;
-                                    }
-                                    listOfHuman.Add(obj);
-                                }
-                                foreach (var obj in content.ButcherMessage)
-                                {
-                                    if (!humanOrButcher && obj.PlayerId == playerID)
-                                    {
-                                        butcher = obj;
-                                    }
-                                    listOfButcher.Add(obj);
-                                }
-                                foreach (var obj in content.PropMessage)
-                                {
-                                    listOfProp.Add(obj);
-                                }
-                                if (!mapFlag)
-                                    GetMap(content.MapMessage);
-                                break;
+
                             case GameState.GameEnd:
-                                foreach (var obj in content.HumanMessage)
+                                foreach (var obj in content.ObjMessage)
                                 {
-                                    listOfHuman.Add(obj);
+                                    switch (obj.MessageOfObjCase)
+                                    {
+                                        case MessageOfObj.MessageOfObjOneofCase.StudentMessage:
+                                            listOfHuman.Add(obj.StudentMessage);
+                                            break;
+                                        case MessageOfObj.MessageOfObjOneofCase.TrickerMessage:
+                                            listOfButcher.Add(obj.TrickerMessage);
+                                            break;
+                                        case MessageOfObj.MessageOfObjOneofCase.PropMessage:
+                                            listOfProp.Add(obj.PropMessage);
+                                            break;
+                                        case MessageOfObj.MessageOfObjOneofCase.BombedBulletMessage:
+                                            listOfBombedBullet.Add(obj.BombedBulletMessage);
+                                            break;
+                                        case MessageOfObj.MessageOfObjOneofCase.BulletMessage:
+                                            listOfBullet.Add(obj.BulletMessage);
+                                            break;
+                                    }
                                 }
-                                foreach (var obj in content.ButcherMessage)
-                                {
-                                    listOfButcher.Add(obj);
-                                }
-                                foreach (var obj in content.PropMessage)
-                                {
-                                    listOfProp.Add(obj);
-                                }
+                                listOfAll.Add(content.AllMessage);
                                 break;
                         }
                     }
-                }
-                if (responseStream == null)
-                {
-                    throw new Exception("Unconnected");
+                    if (responseStream == null)
+                    {
+                        throw new Exception("Unconnected");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                ErrorDisplayer error = new("Error: "+ex.ToString());
+                ErrorDisplayer error = new("Error: " + ex.ToString());
                 error.Show();
             }   
         }
 
-        private bool CanSee(MessageOfHuman msg)
+        //待修改
+        private bool CanSee(MessageOfStudent msg)
         {
-            if (msg.State == HumanState.Dead)
+            if (msg.State == StudentState.Quit)
                 return false;
             //if (playerID >= 2022 || teamID >= 2022)
             //   return true;
@@ -408,7 +423,7 @@ namespace Client
             }
             if (msg.Place == PlaceType.Grass || msg.Place == PlaceType.Gate || msg.Place == PlaceType.HiddenGate)
                 return false;
-            if (msg.Place == PlaceType.Land || msg.Place == PlaceType.Machine)
+            if (msg.Place == PlaceType.Land || msg.Place == PlaceType.Classroom)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -423,7 +438,7 @@ namespace Client
             return true;
         }
 
-        private bool CanSee(MessageOfButcher msg)
+        private bool CanSee(MessageOfTricker msg)
         {
             // if (playerID >= 2022 || teamID >= 2022)
             //     return true;
@@ -434,7 +449,7 @@ namespace Client
             }
             if (msg.Place == PlaceType.Grass || msg.Place == PlaceType.Gate || msg.Place == PlaceType.HiddenGate)
                 return false;
-            if (msg.Place == PlaceType.Land || msg.Place == PlaceType.Machine)
+            if (msg.Place == PlaceType.Land || msg.Place == PlaceType.Classroom)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -466,7 +481,24 @@ namespace Client
             return true;
         }
 
-        private void Refresh(object? sender, EventArgs e)
+        private bool CanSee(MessageOfBullet msg)
+        {
+            if (msg.Place == PlaceType.Land)
+                return true;
+            if (humanOrButcher && human != null)
+            {
+                if (msg.Place != human.Place)
+                    return false;
+            }
+            else if (!humanOrButcher && butcher != null)
+            {
+                if (msg.Place != butcher.Place)
+                    return false;
+            }
+            return true;
+        }
+
+        private void Refresh(object? sender, EventArgs e) // 已按照3.5版proto更新信息，circumstance栏未更新 log未更新
         {
             // Bonus();
             if (WindowState == WindowState.Maximized)
@@ -483,6 +515,7 @@ namespace Client
             if (StatusBarsOfCircumstance != null)
                 StatusBarsOfCircumstance.SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
             // 完成窗口信息更新
+
             if (!isClientStocked)
             {
                 unit = Math.Sqrt(UpperLayerOfMap.ActualHeight * UpperLayerOfMap.ActualWidth) / 50;
@@ -509,6 +542,10 @@ namespace Client
                     //{
                     lock (drawPicLock)  // 加锁是必要的，画图操作和接收信息操作不能同时进行
                     {
+                        foreach (var data in listOfAll)
+                        {
+                            StatusBarsOfCircumstance.SetValue(data);
+                        }
                         if (!hasDrawed && mapFlag)
                             DrawMap();
                         foreach (var data in listOfHuman)
@@ -530,12 +567,13 @@ namespace Client
                         }
                         foreach (var data in listOfButcher)
                         {
+                            StatusBarsOfHunter.SetValue(data);
                             if (CanSee(data))
                             {
                                 Ellipse icon = new()
                                 {
-                                    Width = 10,
-                                    Height = 10,
+                                    Width = unitWidth,
+                                    Height = unitHeight,
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
                                     Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
@@ -544,7 +582,7 @@ namespace Client
                                 UpperLayerOfMap.Children.Add(icon);
                             }
                         }
-                        foreach (var data in listOfProp)
+                            foreach (var data in listOfProp)
                         {
                             if (CanSee(data))
                             {
@@ -568,7 +606,75 @@ namespace Client
                                 }
                             }
                         }
-
+                        foreach (var data in listOfBullet)
+                        {
+                            if (CanSee(data))
+                            {
+                                Ellipse icon = new()
+                                {
+                                    Width = 10,
+                                    Height = 10,
+                                    HorizontalAlignment = HorizontalAlignment.Left,
+                                    VerticalAlignment = VerticalAlignment.Top,
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                    Fill = Brushes.Red
+                                };
+                                UpperLayerOfMap.Children.Add(icon);
+                            }
+                        }
+                        foreach (var data in listOfBombedBullet)
+                        {
+                            switch (data.Type)
+                            {
+                                case BulletType.FastBullet:
+                                    {
+                                        Ellipse icon = new();
+                                        double bombRange = data.BombRange / 1000;
+                                        icon.Width = bombRange * unitWidth;
+                                        icon.Height = bombRange * unitHeight;
+                                        icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                        icon.VerticalAlignment = VerticalAlignment.Top;
+                                        icon.Margin = new Thickness(data.Y * unitWidth / 1000.0 - bombRange * unitWidth / 2, data.X * unitHeight / 1000.0 - bombRange * unitHeight / 2, 0, 0);
+                                        icon.Fill = Brushes.Red;
+                                        UpperLayerOfMap.Children.Add(icon);
+                                        break;
+                                    }
+                                case BulletType.AtomBomb:
+                                    {
+                                        Ellipse icon = new Ellipse();
+                                        double bombRange = data.BombRange / 1000;
+                                        icon.Width = bombRange * unitWidth;
+                                        icon.Height = bombRange * unitHeight;
+                                        icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                        icon.VerticalAlignment = VerticalAlignment.Top;
+                                        icon.Margin = new Thickness(data.Y * unitWidth / 1000.0 - bombRange * unitWidth / 2, data.X * unitHeight / 1000.0 - bombRange * unitHeight / 2, 0, 0);
+                                        icon.Fill = Brushes.Red;
+                                        UpperLayerOfMap.Children.Add(icon);
+                                        break;
+                                    }
+                                case BulletType.OrdinaryBullet:
+                                    {
+                                        Ellipse icon = new Ellipse();
+                                        double bombRange = data.BombRange / 1000;
+                                        icon.Width = bombRange * unitWidth;
+                                        icon.Height = bombRange * unitHeight;
+                                        icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                        icon.VerticalAlignment = VerticalAlignment.Top;
+                                        icon.Margin = new Thickness(data.Y * unitWidth / 1000.0 - bombRange * unitWidth / 2, data.X * unitHeight / 1000.0 - bombRange * unitHeight / 2, 0, 0);
+                                        icon.Fill = Brushes.Red;
+                                        UpperLayerOfMap.Children.Add(icon);
+                                        break;
+                                    }
+                                case BulletType.LineBullet:
+                                    {
+                                        double bombRange = data.BombRange / 1000;
+                                        DrawLaser(new Point(data.Y * unitWidth / 1000.0, data.X * unitHeight / 1000.0), -data.FacingDirection + Math.PI / 2, bombRange * unitHeight, 0.5 * unitWidth);
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+                        }
                         //}
                         ZoomMap();
                     }
@@ -584,7 +690,7 @@ namespace Client
             counter++;
         }
 
-        // 键盘控制
+        // 键盘控制，未完善
         private void KeyBoardControl(object sender, KeyEventArgs e)
         {
             if (!isPlaybackMode)
@@ -640,21 +746,21 @@ namespace Client
                         client.Attack(msgJ);
                         break;
                     case Key.F:
-                        PickMsg msgF = new()
+                        PropMsg msgF = new()
                         {
                             PlayerId = playerID,
                         };
                         client.PickProp(msgF);
                         break;
                     case Key.E:
-                        IDMsg msgE = new()
+                        PropMsg msgE = new()
                         {
                             PlayerId = playerID,
                         };
                         client.UseProp(msgE);
                         break;
                     case Key.Q:
-                        IDMsg msgQ = new()
+                        SkillMsg msgQ = new()
                         {
                             PlayerId = playerID,
                         };
@@ -825,11 +931,14 @@ namespace Client
         private readonly Rectangle[,] mapPatches = new Rectangle[50, 50];
 
         private List<MessageOfProp> listOfProp;
-        private List<MessageOfHuman> listOfHuman;
-        private List<MessageOfButcher> listOfButcher;
+        private List<MessageOfStudent> listOfHuman;
+        private List<MessageOfTricker> listOfButcher;
+        private List<MessageOfBullet> listOfBullet;
+        private List<MessageOfBombedBullet> listOfBombedBullet;
+        private List<MessageOfAll> listOfAll;
         private object drawPicLock = new object();
-        private MessageOfHuman? human = null;
-        private MessageOfButcher? butcher = null;
+        private MessageOfStudent? human = null;
+        private MessageOfTricker? butcher = null;
         private bool humanOrButcher;//true for human
 
         private bool bonusflag;

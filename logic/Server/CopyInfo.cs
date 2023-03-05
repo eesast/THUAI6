@@ -183,7 +183,7 @@ namespace Server
             return msg;
         }
 
-        private static MessageOfTricker Butcher(Character player)
+        private static MessageOfTricker? Butcher(Character player)
         {
             MessageOfTricker msg = new MessageOfTricker();
             if (!player.IsGhost()) return null;

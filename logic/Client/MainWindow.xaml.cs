@@ -582,7 +582,7 @@ namespace Client
                                 UpperLayerOfMap.Children.Add(icon);
                             }
                         }
-                            foreach (var data in listOfProp)
+                        foreach (var data in listOfProp)
                         {
                             if (CanSee(data))
                             {

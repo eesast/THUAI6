@@ -114,6 +114,7 @@ namespace Server
         public void ReportGame()
         {
             //currentGameInfo = null;
+            var gameObjList = game.GetGameObj();
 
             foreach (var kvp in semaDict)
             {
@@ -191,8 +192,9 @@ namespace Server
             {
                 Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(request.PlayerType, request.PlayerId), PlayerTypeToTeamID(request.PlayerType), request.PlayerId, characterType);
                 long newPlayerID = game.AddPlayer(playerInitInfo);
-                //if (newPlayerID == GameObj.invalidID)
-                //return;
+                if (newPlayerID == GameObj.invalidID)
+                    return;
+                communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId] = newPlayerID;
                 // 内容待修改
                 var temp = (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1));
                 bool start = false;
@@ -238,7 +240,8 @@ namespace Server
         public override Task<MoveRes> Move(MoveMsg request, ServerCallContext context)
         {
             Console.WriteLine($"Move ID: {request.PlayerId}, TimeInMilliseconds: {request.TimeInMilliseconds}");
-            game.MovePlayer(request.PlayerId, (int)request.TimeInMilliseconds, request.Angle);
+            var gameID = communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId];
+            game.MovePlayer(gameID, (int)request.TimeInMilliseconds, request.Angle);
             // 之后game.MovePlayer可能改为bool类型
             MoveRes moveRes = new();
             moveRes.ActSuccess = true;
@@ -257,13 +260,11 @@ namespace Server
         {
             return base.SendMessage(request, context);
         }
-
-        public override Task<BoolRes> UseProp(IDMsg request, ServerCallContext context)
+        public override Task<BoolRes> UseProp(PropMsg request, ServerCallContext context)
         {
             return base.UseProp(request, context);
         }
-
-        public override Task<BoolRes> UseSkill(IDMsg request, ServerCallContext context)
+        public override Task<BoolRes> UseSkill(SkillMsg request, ServerCallContext context)
         {
             return base.UseSkill(request, context);
         }
@@ -272,13 +273,13 @@ namespace Server
         {
             return base.Graduate(request, context);
         }
-        public override Task<BoolRes> StartHealMate(IDMsg request, ServerCallContext context)
+        public override Task<BoolRes> StartRescueMate(IDMsg request, ServerCallContext context)
         {
-            return base.StartHealMate(request, context);
+            return base.StartRescueMate(request, context);
         }
-        public override Task<BoolRes> StartHelpMate(IDMsg request, ServerCallContext context)
+        public override Task<BoolRes> StartTreatMate(IDMsg request, ServerCallContext context)
         {
-            return base.StartHelpMate(request, context);
+            return base.StartTreatMate(request, context);
         }
         public override Task<BoolRes> StartLearning(IDMsg request, ServerCallContext context)
         {

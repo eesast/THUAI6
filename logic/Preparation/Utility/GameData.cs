@@ -7,7 +7,7 @@ namespace Preparation.Utility
     {
         #region 基本常数与常方法
         public const int numOfPosGridPerCell = 1000;  // 每格的【坐标单位】数
-        public const int numOfStepPerSecond = 100;     // 每秒行走的步数
+        public const int numOfStepPerSecond = 20;     // 每秒行走的步数
         public const int frameDuration = 50;         // 每帧时长
 
         public const int lengthOfMap = 50000;         // 地图长度

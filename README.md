@@ -21,7 +21,7 @@ GitLink 镜像地址：[THUAI6: GitLink Mirror](https://www.gitlink.org.cn/EESAS
 
 ### 配置说明
 
-本仓库使用 git 进行版本控制，为所有开发工作共用仓库，请勿上传不必要的文件。主目录文件结构非必要请勿修改，且主目录中已配置的`.gitignore`、`.gitattributes`文件非必要请勿修改；各子目录已预先包含使用`Visual Studio`开发的`.gitignore`模板，可以根据自身需要增加忽略规则；如有必要，可在子目录下自定义`.gitattributes`文件
+本仓库使用 Git 进行版本控制，为所有开发工作共用仓库，请勿上传不必要的文件。主目录文件结构非必要请勿修改，且主目录中已配置的 `.gitignore`、`.gitattributes` 文件非必要请勿修改；各子目录已预先包含使用 `Visual Studio` 开发的 `.gitignore` 模板，可以根据自身需要增加忽略规则；如有必要，可在子目录下自定义 `.gitattributes` 文件
 
 ### 目录分配
 
@@ -46,7 +46,7 @@ GitLink 镜像地址：[THUAI6: GitLink Mirror](https://www.gitlink.org.cn/EESAS
 
 ### 关于社区开发者
 
-- 社区开发者开发工作请遵循 [THUAI6社区开发者贡献指南](./CONTRIBUTING.md)
+- 社区开发者开发工作请遵循 [THUAI6 社区开发者贡献指南](./CONTRIBUTING.md)
 - 社区开发者贡献的代码请遵循 [Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md)  
 
 ### 开发流程
@@ -63,7 +63,7 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 
 - 非必要请勿上传大文件到 Github
 
-- commit 提交信息请遵循 Semantic Commit 规范，即：`type: content `格式
+- commit 提交信息请遵循 [Semantic Commits](https://www.conventionalcommits.org/zh-hans) 规范，即：`type: content` 格式
 
   常用的 commit message type 包括：
 
@@ -90,7 +90,7 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 
 ## 代码风格
 
-本仓库严格规定了`C++`与`CSharp`代码风格，具体配置请参见 [.clang-format](.clang-format)
+本仓库严格规定了 `C++` 与 `CSharp` 代码风格，具体配置请参见 [.clang-format](.clang-format)
 
 ### 风格说明
 
@@ -158,17 +158,41 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 >
 
 - 命名允许较长，但不应过于啰嗦冗余，能完整表明意图即可。
+
 - 代码应保证良好的可读性；**禁止**中学 OI 竞赛的各种“卡常”奇技淫巧！！！效率并非总是最重要的，良好的可读性与可维护性往往更加重要
+
 - 熟练运用面向对象编程的思想，设计架构时尽可能降低模块与模块的耦合性，保证代码的可维护性
+
   - 慎用全局变量、全局函数等
+
   - 尽可能将各功能模块化，便于日后复用；尽可能降低类与类的耦合，善用继承与多态
+
   - 适当设计单元测试，保证代码的正确运行
+
 - 注意跨平台问题，代码需保证同时支持 Windows 与 Linux，避免直接的系统调用带来的跨平台问题 
+
 - 善于使用 [Google](https://www.google.com/) 并使用[**英文**](https://en.wikipedia.org/wiki/American_English)搜索，善于查阅 [Microsoft Learn](https://learn.microsoft.com/)、[cppreference](https://en.cppreference.com/)、[StackOverflow](https://stackoverflow.com/) 以及第三方库官方文档等；不应轻信 [CSDN](https://www.csdn.net/) 等劣质博客社区以及[博客园](https://www.cnblogs.com/)、[简书](https://www.jianshu.com/)等质量参差不齐的博客社区，对其内容需全方位多角度仔细求证方可相信
+
+- Pull requests 模板中的复选框采用 Markdown 格式：
+
+  ```markdown
+  - [ ] 不勾选
+  - [x] 勾选
+  ```
+  
+  效果：
+  
+  - [ ] 不勾选
+  - [x] 勾选
+
 - 注意维护开发文档，便于后来者快速了解本仓库代码结构
+
 - 小组内合理分工，避免个人任务量过重或过轻
-- 做好部会记录，及时完成工作任务，避免拖延到ddl
+
+- 做好部会记录，及时完成工作任务，避免拖延到 ddl
+
 - 各组间多交流，相互了解各自的开发进度，加强协作，遇到困难互相帮助
+
 - 加油，奥里给 ，冲冲冲
 
 ## 开发组成员

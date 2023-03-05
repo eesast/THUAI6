@@ -12,7 +12,7 @@ namespace GameClass.GameObj
         private readonly IOccupation occupation;
         public IOccupation Occupation => occupation;
 
-        private Dictionary<ActiveSkillType, int> timeUntilActiveSkillAvailable;
+        private Dictionary<ActiveSkillType, int> timeUntilActiveSkillAvailable = new();
         public Dictionary<ActiveSkillType, int> TimeUntilActiveSkillAvailable => timeUntilActiveSkillAvailable;
 
         public bool SetTimeUntilActiveSkillAvailable(ActiveSkillType activeSkillType, int timeUntilActiveSkillAvailable)

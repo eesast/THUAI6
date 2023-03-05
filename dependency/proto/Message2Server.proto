@@ -18,32 +18,45 @@ message PlayerMsg
 message MoveMsg
 {
     int64 player_id = 1;
-    double angle = 2;
-    int64 time_in_milliseconds = 3;
+    PlayerType player_type = 2;
+    double angle = 3;
+    int64 time_in_milliseconds = 4;   
 }
 
 message PropMsg
 {
     int64 player_id = 1;
-    PropType prop_type = 2;
+    PlayerType player_type = 2;
+    PropType prop_type = 3;
 }
 
 message SendMsg
 {
     int64 player_id = 1;
-    int64 to_player_id = 2;
-    string message = 3;
+    PlayerType player_type = 2;
+    int64 to_player_id = 3;
+    PlayerType to_player_type = 4;
+    string message = 5;
 }
 
 message TrickMsg // 相当于攻击
 {
     int64 player_id = 1;
-    double angle = 2;
+    PlayerType player_type = 2;
+    double angle = 3;
 }
 
 message IDMsg
 {
     int64 player_id = 1;
+    PlayerType player_type = 2;
+}
+
+message SkillMsg
+{
+    int64 player_id = 1;
+    PlayerType player_type = 2;
+    int32 skill_id = 3;
 }
 
 // 基本继承于THUAI5，为了使发送的信息尽可能不被浪费，暂定不发这类大包。

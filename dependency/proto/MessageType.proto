@@ -111,7 +111,6 @@ enum GameState
 {
     NULL_GAME_STATE = 0;
     GAME_START = 1;
-    STAGE_1 = 2; // 第一阶段：大门没有开
-    STAGE_2 = 3; // 第二阶段：大门已经开了
-    GAME_END = 4;
+    GAME_RUNNING = 2;
+    GAME_END = 3;
 }

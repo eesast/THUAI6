@@ -19,6 +19,9 @@ namespace Preparation.Utility
         IsRescued = 10,
         IsStunned = 11,
         IsTryingToAttack = 12,//指前摇
+        IsOpeningDoor = 13,
+        IsClosingDoor = 14,
+        IsClimbingThtoughWindows = 15,
     }
     public enum GameObjType
     {
@@ -79,7 +82,7 @@ namespace Preparation.Utility
         NuclearWeapon = 3,
         SuperFast = 4,
         UseKnife = 5,
-        ASkill5 = 6
+        BeginToCharge = 6
     }
     public enum PassiveSkillType
     {

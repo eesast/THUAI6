@@ -43,7 +43,7 @@ namespace GameClass.Skill
         public List<IActiveSkill> ListOfIActiveSkill => new(new IActiveSkill[] { new BecomeInvisible(), new UseKnife() });
         public List<IPassiveSkill> ListOfIPassiveSkill => new(new IPassiveSkill[] { });
     }
-    public class Athlete : IOccupation
+    public class Athlete : IStudent
     {
         private const int moveSpeed = GameData.basicMoveSpeed;
         public int MoveSpeed => moveSpeed;
@@ -59,7 +59,9 @@ namespace GameClass.Skill
 
         public BulletType InitBullet => BulletType.CommonAttackOfGhost;
 
-        public List<IActiveSkill> ListOfIActiveSkill => new(new IActiveSkill[] { new BecomeInvisible(), new UseKnife() });
+        public List<IActiveSkill> ListOfIActiveSkill => new(new IActiveSkill[] { new BeginToCharge() });
         public List<IPassiveSkill> ListOfIPassiveSkill => new(new IPassiveSkill[] { });
+
+        public int FixSpeed => GameData.basicFixSpeed;
     }
 }

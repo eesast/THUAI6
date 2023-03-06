@@ -1,5 +1,6 @@
 ﻿using GameClass.Skill;
 using Preparation.Utility;
+using Preparation.Interface;
 
 namespace GameClass.GameObj
 {
@@ -95,7 +96,7 @@ namespace GameClass.GameObj
             }
         }
 
-        public Student(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) : base(initPos, initRadius, initPlace, characterType)
+        public Student(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
             this.fixSpeed = ((IStudent)Occupation).FixSpeed;
         }

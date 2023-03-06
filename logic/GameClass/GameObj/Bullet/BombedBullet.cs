@@ -10,7 +10,7 @@ namespace GameClass.GameObj
         public long MappingID { get; }
         public Bullet bulletHasBombed;
         public BombedBullet(Bullet bullet) :
-            base(bullet.Position, bullet.Radius, bullet.Place, GameObjType.BombedBullet)
+            base(bullet.Position, bullet.Radius, GameObjType.BombedBullet)
         {
             this.bulletHasBombed = bullet;
             this.MappingID = bullet.ID;

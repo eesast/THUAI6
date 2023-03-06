@@ -1,5 +1,6 @@
 ﻿using GameClass.Skill;
 using Preparation.Utility;
+using Preparation.Interface;
 using System.Collections.Generic;
 using System;
 
@@ -9,7 +10,7 @@ namespace GameClass.GameObj
     {
         private readonly CharacterType characterType;
         public CharacterType CharacterType => characterType;
-        private readonly IOccupation? occupation;
+        private readonly IOccupation occupation;
         public IOccupation Occupation => occupation;
 
         private Dictionary<ActiveSkillType, int> timeUntilActiveSkillAvailable = new();
@@ -36,17 +37,17 @@ namespace GameClass.GameObj
             return false;
         }
 
-        public bool UseActiveSkill(ActiveSkillType activeSkillType)
+        public bool UseActiveSkill(Map map, ActiveSkillType activeSkillType)
         {
-            if (Occupation.ListOfIActiveSkill.Contains(ActiveSkillFactory.FindIActiveSkill(activeSkillType)))
-                return ActiveSkillFactory.FindIActiveSkill(activeSkillType).SkillEffect(this);
+            if (Occupation.ListOfIActiveSkill.Contains(activeSkillType))
+                return ActiveSkillFactory.FindIActiveSkill(activeSkillType).SkillEffect(map, this);
             return false;
         }
 
-        public void UsePassiveSkill(PassiveSkillType passiveSkillType)
+        public void UsePassiveSkill(Map map, PassiveSkillType passiveSkillType)
         {
-            if (Occupation.ListOfIPassiveSkill.Contains(PassiveSkillFactory.FindIPassiveSkill(passiveSkillType)))
-                PassiveSkillFactory.FindIPassiveSkill(passiveSkillType).SkillEffect(this);
+            if (Occupation.ListOfIPassiveSkill.Contains(passiveSkillType))
+                PassiveSkillFactory.FindIPassiveSkill(passiveSkillType).SkillEffect(map, this);
             return;
         }
 
@@ -59,8 +60,8 @@ namespace GameClass.GameObj
             };
         }
 
-        protected Character(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) :
-            base(initPos, initRadius, initPlace, GameObjType.Character)
+        protected Character(XY initPos, int initRadius, CharacterType characterType) :
+            base(initPos, initRadius, GameObjType.Character)
         {
             this.CanMove = true;
             this.score = 0;
@@ -91,7 +92,7 @@ namespace GameClass.GameObj
 
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)
             {
-                this.TimeUntilActiveSkillAvailable.Add(ActiveSkillFactory.FindActiveSkillType(activeSkill), 0);
+                this.TimeUntilActiveSkillAvailable.Add(activeSkill, 0);
             }
 
             // UsePassiveSkill();  //创建player时开始被动技能，这一过程也可以放到gamestart时进行

@@ -46,21 +46,13 @@
     {
         Null = 0,
         BecomeInvisible = 1,
-        BecomeVampire = 2,
-        NuclearWeapon = 3,
-        SuperFast = 4,
+        ...
         UseKnife = 5,
         BeginToCharge = 6
     }
     public enum PassiveSkillType
     {
         Null = 0,
-        BecomeInvisible = 1,
-        BecomeVampire = 2,
-        NuclearWeapon = 3,
-        SuperFast = 4,
-        ASkill4 = 5,
-        ASkill5 = 6
     }
   ~~~
 

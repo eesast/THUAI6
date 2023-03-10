@@ -175,6 +175,45 @@ namespace GameClass.GameObj
             }
         }
 
+        private Dictionary<BgmType, double> bgmDictionary = new();
+        public Dictionary<BgmType, double> BgmDictionary
+        {
+            get => bgmDictionary;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    bgmDictionary = value;
+                }
+            }
+        }
+
+        private int alertnessRadius;
+        public int AlertnessRadius
+        {
+            get => alertnessRadius;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    alertnessRadius = value;
+                }
+            }
+        }
+
+        private double concealment;
+        public double Concealment
+        {
+            get => concealment;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    concealment = value;
+                }
+            }
+        }
+
         /// <summary>
         /// 进行一次远程攻击
         /// </summary>

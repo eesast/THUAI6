@@ -38,7 +38,7 @@ namespace Gaming
                 );
             }
 
-            public void BeAddictedToGame(Student player)
+            private void BeAddictedToGame(Student player)
             {
                 new Thread
                     (() =>
@@ -68,11 +68,10 @@ namespace Gaming
                 { IsBackground = true }.Start();
             }
 
-            public void Die(Character player)
+            private void Die(Character player)
             {
 
-                player.CanMove = false;
-                player.IsResetting = true;
+                player.Die(PlayerStateType.IsDeceased);
                 // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
                 // try
                 //{

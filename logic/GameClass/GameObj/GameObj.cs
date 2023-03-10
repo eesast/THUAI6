@@ -93,18 +93,6 @@ namespace GameClass.GameObj
         public bool IsAvailable => !IsMoving && CanMove && !IsResetting;  // 是否能接收指令
         public int Radius { get; }
 
-        private PlaceType place;
-        public PlaceType Place
-        {
-            get => place;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    place = value;
-                }
-            }
-        }
         protected int moveSpeed;
         /// <summary>
         /// 移动速度
@@ -173,11 +161,10 @@ namespace GameClass.GameObj
         protected virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
 
         bool IMoveable.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
-        public GameObj(XY initPos, int initRadius, PlaceType initPlace, GameObjType initType)
+        public GameObj(XY initPos, int initRadius, GameObjType initType)
         {
             this.Position = this.birthPos = initPos;
             this.Radius = initRadius;
-            this.place = initPlace;
             this.type = initType;
             ID = Interlocked.Increment(ref currentMaxID);
         }

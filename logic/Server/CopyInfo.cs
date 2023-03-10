@@ -209,7 +209,7 @@ namespace Server
             msg.CD = player.CD;
             msg.GemNum = player.GemNum;
             msg.Guid = player.ID;
-            msg.IsResetting = player.IsResetting;
+            msg.IsDeceased = player.IsDeceased;
             
             msg.LifeNum = player.DeathCount + 1;
             msg.Radius = player.Radius;

@@ -10,7 +10,7 @@ namespace Preparation.Utility
         IsAddicted = 1,
         IsEscaped = 2,
         IsSwinging = 3,//指后摇
-        IsResetting = 4,
+        IsDeceased = 4,
         IsMoving = 5,
         IsTreating = 6,
         IsRescuing = 7,
@@ -19,9 +19,9 @@ namespace Preparation.Utility
         IsRescued = 10,
         IsStunned = 11,
         IsTryingToAttack = 12,//指前摇
-        IsOpeningDoor = 13,
-        IsClosingDoor = 14,
-        IsClimbingThtoughWindows = 15,
+        IsLockingTheDoor = 13,
+        IsRummagingInTheDrawer = 14,
+        IsClimbingThroughWindows = 15,
     }
     public enum GameObjType
     {
@@ -38,6 +38,8 @@ namespace Preparation.Utility
         Doorway = 9,
         EmergencyExit = 10,
         OutOfBoundBlock = 11,  // 范围外
+        Window = 12,
+        Door = 13,
     }
     public enum ShapeType
     {
@@ -115,6 +117,15 @@ namespace Preparation.Utility
         Grass = 7,
         Generator = 8,  // 发电机
         Doorway = 9,
-        EmergencyExit = 10
+        EmergencyExit = 10,
+        Window = 11,
+        Door = 12,
+    }
+    public enum BgmType
+    {
+        Null = 0,
+        GhostIsComing = 1,
+        StudentIsApproaching = 2,
+        GeneratorIsBeingFixed = 3,
     }
 }

@@ -15,7 +15,7 @@ namespace GameClass.GameObj
         public long MappingID { get; }
         public Prop PropHasPicked;
         public PickedProp(Prop prop) :
-            base(prop.Position, prop.Radius, prop.Place, GameObjType.PickedProp)
+            base(prop.Position, prop.Radius, GameObjType.PickedProp)
         {
             this.PropHasPicked = prop;
             this.MappingID = prop.ID;

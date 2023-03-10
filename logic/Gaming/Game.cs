@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Collections.Generic;
-using GameClass.GameObj;
 using Preparation.Utility;
 using Timothy.FrameRateTask;
 using Preparation.Interface;
+using GameClass.GameObj;
 
 namespace Gaming
 {
@@ -40,7 +40,7 @@ namespace Gaming
             XY pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex];
             // Console.WriteLine($"x,y: {pos.x},{pos.y}");
 
-            Character newPlayer = (GameData.IsGhost(playerInitInfo.characterType)) ? new Ghost(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType) : new Student(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.characterType);
+            Character newPlayer = (GameData.IsGhost(playerInitInfo.characterType)) ? new Ghost(pos, GameData.characterRadius, playerInitInfo.characterType) : new Student(pos, GameData.characterRadius, playerInitInfo.characterType);
             gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
             try
             {
@@ -116,43 +116,7 @@ namespace Gaming
             }
 
             propManager.StartProducing();
-            new Thread
-            (
-                () =>
-                {
-                    new FrameRateTaskExecutor<int>
-                    (
-                        loopCondition: () => gameMap.Timer.IsGaming,
-                        loopToDo: () =>
-                        {
-                            foreach (var kvp in gameMap.GameObjDict)  // 检查物体位置
-                            {
-                                if (kvp.Key == GameObjType.Bullet || kvp.Key == GameObjType.Character || kvp.Key == GameObjType.Prop)
-                                {
-                                    gameMap.GameObjLockDict[kvp.Key].EnterWriteLock();
-                                    try
-                                    {
-                                        foreach (var item in gameMap.GameObjDict[kvp.Key])
-                                        {
-                                            item.Place = gameMap.GetPlaceType(item.Position);
-                                        }
-                                    }
-                                    finally
-                                    {
-                                        gameMap.GameObjLockDict[kvp.Key].ExitWriteLock();
-                                    }
-                                }
-                            }
-                        },
-                        timeInterval: GameData.checkInterval,
-                        finallyReturn: () => 0
-                    )
-                    {
-                        AllowTimeExceed = true
-                    }.Start();
-                }
-            )
-            { IsBackground = true }.Start();
+
             // 开始游戏
             if (!gameMap.Timer.StartGame(milliSeconds))
                 return false;
@@ -180,11 +144,12 @@ namespace Gaming
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                var res = actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
+                bool res = actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
 #if DEBUG
                 Console.WriteLine($"PlayerID:{playerID} move to ({player.Position.x},{player.Position.y})!");
 #endif
                 return res;
+
             }
             else
             {
@@ -192,6 +157,7 @@ namespace Gaming
                 Console.WriteLine($"PlayerID:{playerID} player does not exists!");
 #endif
                 return false;
+
             }
         }
         public bool Treat(long playerID, long playerTreatedID)
@@ -305,7 +271,7 @@ namespace Gaming
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                return skillManager.UseActiveSkill(player, activeSkillType);
+                return skillManager.UseActiveSkill(this.GameMap, player, activeSkillType);
             }
             else
                 return false;
@@ -320,7 +286,7 @@ namespace Gaming
             {
                 foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
                 {
-                    skillManager.UseAllPassiveSkill(player);
+                    skillManager.UseAllPassiveSkill(this.GameMap, player);
                 }
             }
             finally

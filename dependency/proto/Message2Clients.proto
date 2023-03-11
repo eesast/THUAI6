@@ -130,6 +130,7 @@ message MessageOfMapObj
         MessageOfClassroom classroom_message = 1;
         MessageOfDoor door_message = 2;
         MessageOfGate gate_message = 3;
+        MessageOfChest chest_message = 4;
     }
 }
 

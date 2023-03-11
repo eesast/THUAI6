@@ -318,13 +318,13 @@ std::shared_ptr<const THUAI6::Student> StudentAPI::GetSelfInfo() const
     return logic.StudentGetSelfInfo();
 }
 
-std::future<bool> TrickerAPI::Attack()
+std::future<bool> TrickerAPI::Attack(double angleInRadian)
 {
     return std::async(std::launch::async, [&]()
-                      { return logic.Attack(); });
+                      { return logic.Attack(angleInRadian); });
 }
 
-std::future<bool> TrickerAPI::Attack(double angleInRadian)
+std::future<bool> StudentAPI::Attack(double angleInRadian)
 {
     return std::async(std::launch::async, [&]()
                       { return logic.Attack(angleInRadian); });

@@ -475,6 +475,16 @@ std::future<bool> TrickerDebugAPI::Attack(double angleInRadian)
                         return result; });
 }
 
+std::future<bool> StudentDebugAPI::Attack(double angleInRadian)
+{
+    logger->info("Attack: angleInRadian = {}, called at {}ms", angleInRadian, Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [=]()
+                      { auto result = logic.Attack(angleInRadian);
+                        if (!result)
+                            logger->warn("Attack: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
+}
+
 std::shared_ptr<const THUAI6::Tricker> TrickerDebugAPI::GetSelfInfo() const
 {
     return logic.TrickerGetSelfInfo();

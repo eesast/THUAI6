@@ -342,7 +342,7 @@ public:
     std::future<bool> UseProp(THUAI6::PropType prop) override;
     std::future<bool> UseSkill(int32_t skillID) override;
 
-    std::future<bool> Attack() override;
+    std::future<bool> Attack(double angleInRadian) override;
 
     std::future<bool> OpenDoor() override;
     std::future<bool> CloseDoor() override;

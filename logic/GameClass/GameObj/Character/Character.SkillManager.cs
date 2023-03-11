@@ -1,5 +1,6 @@
 ﻿using GameClass.Skill;
 using Preparation.Utility;
+using Preparation.Interface;
 using System.Collections.Generic;
 using System;
 
@@ -7,11 +8,12 @@ namespace GameClass.GameObj
 {
     public partial class Character
     {
+        private readonly CharacterType characterType;
+        public CharacterType CharacterType => characterType;
+        private readonly IOccupation occupation;
+        public IOccupation Occupation => occupation;
 
-        public CharacterType CharacterType { protected set; get; }
-        public IOccupation Occupation { protected set; get; }
-
-        private Dictionary<ActiveSkillType, int> timeUntilActiveSkillAvailable;
+        private Dictionary<ActiveSkillType, int> timeUntilActiveSkillAvailable = new();
         public Dictionary<ActiveSkillType, int> TimeUntilActiveSkillAvailable => timeUntilActiveSkillAvailable;
 
         public bool SetTimeUntilActiveSkillAvailable(ActiveSkillType activeSkillType, int timeUntilActiveSkillAvailable)
@@ -35,17 +37,17 @@ namespace GameClass.GameObj
             return false;
         }
 
-        public bool UseActiveSkill(ActiveSkillType activeSkillType)
+        public bool UseActiveSkill(Map map, ActiveSkillType activeSkillType)
         {
-            if (Occupation.ListOfIActiveSkill.Contains(ActiveSkillFactory.FindIActiveSkill(activeSkillType)))
-                return ActiveSkillFactory.FindIActiveSkill(activeSkillType).SkillEffect(this);
+            if (Occupation.ListOfIActiveSkill.Contains(activeSkillType))
+                return ActiveSkillFactory.FindIActiveSkill(activeSkillType).SkillEffect(map, this);
             return false;
         }
 
-        public void UsePassiveSkill(PassiveSkillType passiveSkillType)
+        public void UsePassiveSkill(Map map, PassiveSkillType passiveSkillType)
         {
-            if (Occupation.ListOfIPassiveSkill.Contains(PassiveSkillFactory.FindIPassiveSkill(passiveSkillType)))
-                PassiveSkillFactory.FindIPassiveSkill(passiveSkillType).SkillEffect(this);
+            if (Occupation.ListOfIPassiveSkill.Contains(passiveSkillType))
+                PassiveSkillFactory.FindIPassiveSkill(passiveSkillType).SkillEffect(map, this);
             return;
         }
 
@@ -58,14 +60,25 @@ namespace GameClass.GameObj
             };
         }
 
-        protected Character(XY initPos, int initRadius, PlaceType initPlace) :
-            base(initPos, initRadius, initPlace, GameObjType.Character)
+        protected Character(XY initPos, int initRadius, CharacterType characterType) :
+            base(initPos, initRadius, GameObjType.Character)
         {
             this.CanMove = true;
             this.score = 0;
             this.propInventory = null;
             this.buffManager = new BuffManager();
-
+            switch (characterType)
+            {
+                case CharacterType.Assassin:
+                    this.occupation = new Assassin();
+                    break;
+                case CharacterType.Athlete:
+                    this.occupation = new Athlete();
+                    break;
+                default:
+                    this.occupation = null;
+                    break;
+            }
             this.MaxHp = Occupation.MaxHp;
             this.hp = Occupation.MaxHp;
             this.OrgMoveSpeed = Occupation.MoveSpeed;
@@ -75,10 +88,11 @@ namespace GameClass.GameObj
             this.bulletNum = maxBulletNum;
             this.bulletOfPlayer = Occupation.InitBullet;
             this.OriBulletOfPlayer = Occupation.InitBullet;
+            this.characterType = characterType;
 
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)
             {
-                this.TimeUntilActiveSkillAvailable.Add(ActiveSkillFactory.FindActiveSkillType(activeSkill), 0);
+                this.TimeUntilActiveSkillAvailable.Add(activeSkill, 0);
             }
 
             // UsePassiveSkill();  //创建player时开始被动技能，这一过程也可以放到gamestart时进行

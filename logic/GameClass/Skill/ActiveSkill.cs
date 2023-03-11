@@ -15,13 +15,13 @@ namespace GameClass.Skill
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
 
-        public bool SkillEffect(Character player)
+        public bool SkillEffect(Map map, Character player)
         {
             return ActiveSkillFactory.SkillEffect(this, player, () =>
-                                                                {
-                                                                    player.Vampire += 0.5;
-                                                                    Debugger.Output(player, "becomes vampire!");
-                                                                },
+            {
+                player.Vampire += 0.5;
+                Debugger.Output(player, "becomes vampire!");
+            },
                                                   () =>
                                                   {
                                                       double tempVam = player.Vampire - 0.5;
@@ -38,7 +38,7 @@ namespace GameClass.Skill
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
 
-        public bool SkillEffect(Character player)
+        public bool SkillEffect(Map map, Character player)
         {
             return ActiveSkillFactory.SkillEffect(this, player, () =>
             {
@@ -59,13 +59,13 @@ namespace GameClass.Skill
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
-        public bool SkillEffect(Character player)
+        public bool SkillEffect(Map map, Character player)
         {
             return ActiveSkillFactory.SkillEffect(this, player, () =>
-                                                                {
-                                                                    player.IsInvisible = true;
-                                                                    Debugger.Output(player, "uses atombomb!");
-                                                                },
+            {
+                player.IsInvisible = true;
+                Debugger.Output(player, "uses atombomb!");
+            },
                                                   () =>
                                                   { player.IsInvisible = false; });
         }
@@ -76,13 +76,13 @@ namespace GameClass.Skill
         public int DurationTime => GameData.commonSkillTime / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
-        public bool SkillEffect(Character player)
+        public bool SkillEffect(Map map, Character player)
         {
             return ActiveSkillFactory.SkillEffect(this, player, () =>
-                                                                {
-                                                                    player.BulletOfPlayer = BulletType.AtomBomb;
-                                                                    Debugger.Output(player, "uses atombomb!");
-                                                                },
+            {
+                player.BulletOfPlayer = BulletType.AtomBomb;
+                Debugger.Output(player, "uses atombomb!");
+            },
                                                   () =>
                                                   { player.BulletOfPlayer = player.OriBulletOfPlayer; });
         }
@@ -93,7 +93,7 @@ namespace GameClass.Skill
         public int DurationTime => GameData.commonSkillTime / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
-        public bool SkillEffect(Character player)
+        public bool SkillEffect(Map map, Character player)
         {
             return ActiveSkillFactory.SkillEffect(this, player, () =>
             {
@@ -110,13 +110,13 @@ namespace GameClass.Skill
         public int DurationTime => GameData.commonSkillTime / 10 * 4;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
-        public bool SkillEffect(Character player)
+        public bool SkillEffect(Map map, Character player)
         {
             return ActiveSkillFactory.SkillEffect(this, player, () =>
-                                                                {
-                                                                    player.AddMoveSpeed(this.DurationTime, 3.0);
-                                                                    Debugger.Output(player, "moves very fast!");
-                                                                },
+            {
+                player.AddMoveSpeed(this.DurationTime, 3.0);
+                Debugger.Output(player, "moves very fast!");
+            },
                                                   () =>
                                                   { });
         }
@@ -127,7 +127,7 @@ namespace GameClass.Skill
         public int DurationTime => GameData.commonSkillTime;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
-        public bool SkillEffect(Character player)
+        public bool SkillEffect(Map map, Character player)
         {
             return false;
         }
@@ -214,6 +214,10 @@ namespace GameClass.Skill
             {
                 case BecomeInvisible:
                     return ActiveSkillType.BecomeInvisible;
+                case UseKnife:
+                    return ActiveSkillType.UseKnife;
+                case BeginToCharge:
+                    return ActiveSkillType.BeginToCharge;
                 default:
                     return ActiveSkillType.Null;
             }

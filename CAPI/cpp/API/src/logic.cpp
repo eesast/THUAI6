@@ -65,14 +65,14 @@ std::vector<std::vector<THUAI6::PlaceType>> Logic::GetFullMap() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called GetFullMap");
-    return currentState->gamemap;
+    return currentState->gameMap->gameMap;
 }
 
 THUAI6::PlaceType Logic::GetPlaceType(int32_t CellX, int32_t CellY) const
 {
     std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called GetPlaceType");
-    return currentState->gamemap[CellX][CellY];
+    return currentState->gameMap->gameMap[CellX][CellY];
 }
 
 bool Logic::Move(int64_t time, double angle)
@@ -87,16 +87,16 @@ bool Logic::PickProp(THUAI6::PropType prop)
     return pComm->PickProp(prop, playerID);
 }
 
-bool Logic::UseProp()
+bool Logic::UseProp(THUAI6::PropType prop)
 {
     logger->debug("Called UseProp");
-    return pComm->UseProp(playerID);
+    return pComm->UseProp(prop, playerID);
 }
 
-bool Logic::UseSkill()
+bool Logic::UseSkill(int32_t skill)
 {
     logger->debug("Called UseSkill");
-    return pComm->UseSkill(playerID);
+    return pComm->UseSkill(skill, playerID);
 }
 
 bool Logic::SendMessage(int64_t toID, std::string message)
@@ -129,22 +129,22 @@ bool Logic::StartLearning()
     return pComm->StartLearning(playerID);
 }
 
-bool Logic::StartHelpMate()
+bool Logic::StartTreatMate()
 {
-    logger->debug("Called StartHelpMate");
-    return pComm->StartHelpMate(playerID);
+    logger->debug("Called StartTreatMate");
+    return pComm->StartTreatMate(playerID);
 }
 
-bool Logic::StartHealMate()
+bool Logic::StartRescueMate()
 {
-    logger->debug("Called StartHealMate");
-    return pComm->StartHealMate(playerID);
+    logger->debug("Called StartRescueMate");
+    return pComm->StartRescueMate(playerID);
 }
 
-bool Logic::Trick(double angle)
+bool Logic::Attack(double angle)
 {
-    logger->debug("Called Trick");
-    return pComm->Trick(angle, playerID);
+    logger->debug("Called Attack");
+    return pComm->Attack(angle, playerID);
 }
 
 bool Logic::WaitThread()
@@ -171,12 +171,14 @@ void Logic::ProcessMessage()
                 case THUAI6::GameState::GameStart:
                     logger->info("Game Start!");
 
-                    // 重新读取玩家的guid，guid确保人类在前屠夫在后
+                    // 重新读取玩家的guid，保证人类在前屠夫在后
                     playerGUIDs.clear();
-                    for (auto student : clientMsg.student_message())
-                        playerGUIDs.push_back(student.guid());
-                    for (auto tricker : clientMsg.tricker_message())
-                        playerGUIDs.push_back(tricker.guid());
+                    for (const auto& obj : clientMsg.obj_message())
+                        if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::StudentMessage)
+                            playerGUIDs.push_back(obj.student_message().guid());
+                    for (const auto& obj : clientMsg.obj_message())
+                        if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::TrickerMessage)
+                            playerGUIDs.push_back(obj.tricker_message().guid());
                     currentState->guids = playerGUIDs;
                     bufferState->guids = playerGUIDs;
 
@@ -189,10 +191,12 @@ void Logic::ProcessMessage()
                 case THUAI6::GameState::GameRunning:
                     // 重新读取玩家的guid，guid确保人类在前屠夫在后
                     playerGUIDs.clear();
-                    for (auto student : clientMsg.student_message())
-                        playerGUIDs.push_back(student.guid());
-                    for (auto tricker : clientMsg.tricker_message())
-                        playerGUIDs.push_back(tricker.guid());
+                    for (const auto& obj : clientMsg.obj_message())
+                        if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::StudentMessage)
+                            playerGUIDs.push_back(obj.student_message().guid());
+                    for (const auto& obj : clientMsg.obj_message())
+                        if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::TrickerMessage)
+                            playerGUIDs.push_back(obj.tricker_message().guid());
                     currentState->guids = playerGUIDs;
                     bufferState->guids = playerGUIDs;
 
@@ -228,60 +232,66 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
 
         logger->debug("Buffer cleared!");
         // 读取新的信息
-        bufferState->gamemap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());
+        bufferState->gameMap = Proto2THUAI6::Protobuf2THUAI6Map(message.map_message());
+        bufferState->gameInfo = Proto2THUAI6::Protobuf2THUAI6GameInfo(message.all_message());
         if (playerType == THUAI6::PlayerType::StudentPlayer)
         {
-            for (const auto& item : message.student_message())
-            {
-                if (item.player_id() == playerID)
+            for (const auto& item : message.obj_message())
+                if (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()] == THUAI6::MessageOfObj::StudentMessage)
                 {
-                    bufferState->studentSelf = Proto2THUAI6::Protobuf2THUAI6Student(item);
+                    if (item.student_message().player_id() == playerID)
+                    {
+                        bufferState->studentSelf = Proto2THUAI6::Protobuf2THUAI6Student(item.student_message());
+                    }
+                    bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item.student_message()));
+                    logger->debug("Add Student!");
                 }
-                bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item));
-                logger->debug("Add Student!");
-            }
-            for (const auto& item : message.tricker_message())
-            {
-                if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.x(), item.y(), bufferState->studentSelf->place, Proto2THUAI6::placeTypeDict[item.place()], bufferState->gamemap))
-                {
-                    bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item));
-                    logger->debug("Add Tricker!");
-                }
-            }
+            for (const auto& item : message.obj_message())
+                if (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()] == THUAI6::MessageOfObj::TrickerMessage)
+                    if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.tricker_message().x(), item.tricker_message().y(), bufferState->studentSelf->place, Proto2THUAI6::placeTypeDict[item.tricker_message().place()], bufferState->gameMap->gameMap))
+                    {
+                        bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message()));
+                        logger->debug("Add Tricker!");
+                    }
         }
         else
         {
-            for (const auto& item : message.tricker_message())
+            for (const auto& item : message.obj_message())
             {
-                if (item.player_id() == playerID)
+                if (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()] == THUAI6::MessageOfObj::TrickerMessage)
                 {
-                    bufferState->trickerSelf = Proto2THUAI6::Protobuf2THUAI6Tricker(item);
+                    if (item.tricker_message().player_id() == playerID)
+                    {
+                        bufferState->trickerSelf = Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message());
+                    }
+                    bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message()));
+                    logger->debug("Add Tricker!");
                 }
-                bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item));
-                logger->debug("Add Tricker!");
             }
-            for (const auto& item : message.student_message())
-                if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.x(), item.y(), bufferState->trickerSelf->place, Proto2THUAI6::placeTypeDict[item.place()], bufferState->gamemap))
-                {
-                    bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item));
-                    logger->debug("Add Student!");
-                }
+            for (const auto& item : message.obj_message())
+                if (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()] == THUAI6::MessageOfObj::StudentMessage)
+                    if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.student_message().x(), item.student_message().y(), bufferState->trickerSelf->place, Proto2THUAI6::placeTypeDict[item.student_message().place()], bufferState->gameMap->gameMap))
+                    {
+                        bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item.student_message()));
+                        logger->debug("Add Student!");
+                    }
         }
-        for (const auto& item : message.prop_message())
-        {
-            bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item));
-            logger->debug("Add Prop!");
-        }
-        for (const auto& item : message.bullet_message())
-        {
-            bufferState->bullets.push_back(Proto2THUAI6::Protobuf2THUAI6Bullet(item));
-            logger->debug("Add Bullet!");
-        }
-        for (const auto& item : message.bombed_bullet_message())
-        {
-            bufferState->bombedBullets.push_back(Proto2THUAI6::Protobuf2THUAI6BombedBullet(item));
-            logger->debug("Add BombedBullet!");
-        }
+        for (const auto& item : message.obj_message())
+            switch (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()])
+            {
+                case THUAI6::MessageOfObj::PropMessage:
+                    bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item.prop_message()));
+                    logger->debug("Add Prop!");
+                    break;
+                case THUAI6::MessageOfObj::BulletMessage:
+                    bufferState->bullets.push_back(Proto2THUAI6::Protobuf2THUAI6Bullet(item.bullet_message()));
+                    logger->debug("Add Bullet!");
+                    break;
+                case THUAI6::MessageOfObj::BombedBulletMessage:
+                    bufferState->bombedBullets.push_back(Proto2THUAI6::Protobuf2THUAI6BombedBullet(item.bombed_bullet_message()));
+                    logger->debug("Add BombedBullet!");
+                    break;
+            }
         if (asynchronous)
         {
             {

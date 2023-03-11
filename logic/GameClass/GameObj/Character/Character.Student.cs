@@ -1,5 +1,6 @@
 ﻿using GameClass.Skill;
 using Preparation.Utility;
+using Preparation.Interface;
 
 namespace GameClass.GameObj
 {
@@ -95,25 +96,9 @@ namespace GameClass.GameObj
             }
         }
 
-        public void Escape()
+        public Student(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
-            lock (gameObjLock)
-                IsResetting = true;
-            PlayerState = PlayerStateType.IsEscaped;
-        }
-        public Student(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) : base(initPos, initRadius, initPlace)
-        {
-            switch (characterType)
-            {
-                case CharacterType.Athlete:
-                    this.Occupation = new Athlete();
-                    break;
-                default:
-                    this.Occupation = null;
-                    break;
-            }
             this.fixSpeed = ((IStudent)Occupation).FixSpeed;
-            this.CharacterType = characterType;
         }
     }
 }

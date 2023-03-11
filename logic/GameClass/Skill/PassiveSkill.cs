@@ -9,10 +9,7 @@ namespace GameClass.Skill  // 被动技能开局时就释放，持续到游戏�
 {
     public class RecoverAfterBattle : IPassiveSkill  // 脱战回血，普通子弹
     {
-        private readonly BulletType initBullet = BulletType.OrdinaryBullet;
-        public BulletType InitBullet => initBullet;
-        // 以上参数以后再改
-        public void SkillEffect(Character player)
+        public void SkillEffect(Map map, Character player)
         {
             const int recoverDegree = 5;  // 每帧回复血量
             int nowHP = player.HP;
@@ -69,12 +66,9 @@ namespace GameClass.Skill  // 被动技能开局时就释放，持续到游戏�
     }
     public class SpeedUpWhenLeavingGrass : IPassiveSkill  // 3倍速
     {
-        private readonly BulletType initBullet = BulletType.FastBullet;
-        public BulletType InitBullet => initBullet;
-        // 以上参数以后再改
-        public void SkillEffect(Character player)
+        public void SkillEffect(Map map, Character player)
         {
-            PlaceType nowPlace = player.Place;
+            PlaceType nowPlace = map.GetPlaceType(player.Position);
             PlaceType lastPlace = nowPlace;
             bool speedup = false;
             const int SpeedUpTime = 2000;  // 加速时间：2s
@@ -88,7 +82,7 @@ namespace GameClass.Skill  // 被动技能开局时就释放，持续到游戏�
                         () =>
                         {
                             lastPlace = nowPlace;
-                            nowPlace = player.Place;
+                            nowPlace = map.GetPlaceType(player.Position);
                             if ((lastPlace == PlaceType.Grass) && nowPlace == PlaceType.Null)
                             {
                                 if (!speedup)
@@ -130,10 +124,7 @@ namespace GameClass.Skill  // 被动技能开局时就释放，持续到游戏�
     }
     public class Vampire : IPassiveSkill  // 被动就是吸血，普通子弹
     {
-        private readonly BulletType initBullet = BulletType.LineBullet;
-        public BulletType InitBullet => initBullet;
-        // 以上参数以后再改
-        public void SkillEffect(Character player)
+        public void SkillEffect(Map map, Character player)
         {
             player.OriVampire = 0.5;
             player.Vampire = player.OriVampire;
@@ -142,10 +133,7 @@ namespace GameClass.Skill  // 被动技能开局时就释放，持续到游戏�
 
     public class NoPassiveSkill : IPassiveSkill  // 没技能，这种情况不应该发生，先定义着以防意外
     {
-        private readonly BulletType initBullet = BulletType.OrdinaryBullet;
-        public BulletType InitBullet => initBullet;
-        // 以上参数以后再改
-        public void SkillEffect(Character player)
+        public void SkillEffect(Map map, Character player)
         {
         }
     }

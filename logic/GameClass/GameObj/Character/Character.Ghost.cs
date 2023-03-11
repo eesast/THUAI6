@@ -11,18 +11,8 @@ namespace GameClass.GameObj
 {
     public class Ghost : Character
     {
-        public Ghost(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) : base(initPos, initRadius, initPlace)
+        public Ghost(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
-            switch (characterType)
-            {
-                case CharacterType.Assassin:
-                    this.Occupation = new Assassin();
-                    break;
-                default:
-                    this.Occupation = null;
-                    break;
-            }
-            this.CharacterType = characterType;
         }
     }
 }

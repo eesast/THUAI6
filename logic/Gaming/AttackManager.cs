@@ -100,7 +100,7 @@ namespace Gaming
                     gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
                 }
 
-                player.Reset();
+                //  player.Reset();
                 //    ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  // 给击杀者加分
 
                 /*    new Thread
@@ -122,7 +122,7 @@ namespace Gaming
                             {
                                 playerBeingShot.CanMove = true;
                             }
-                            playerBeingShot.IsResetting = false;
+                            playerBeingShot.IsDeceased = false;
                         }
                         )
                     { IsBackground = true }.Start();
@@ -154,31 +154,9 @@ namespace Gaming
                 Debugger.Output(bullet, "bombed!");
 #endif
                 bullet.CanMove = false;
-                gameMap.GameObjLockDict[GameObjType.Bullet].EnterWriteLock();
-                try
-                {
-                    foreach (ObjOfCharacter _bullet in gameMap.GameObjDict[GameObjType.Bullet])
-                    {
-                        if (_bullet.ID == bullet.ID)
-                        {
-                            gameMap.GameObjLockDict[GameObjType.BombedBullet].EnterWriteLock();
-                            try
-                            {
-                                gameMap.GameObjDict[GameObjType.BombedBullet].Add(new BombedBullet(bullet));
-                            }
-                            finally
-                            {
-                                gameMap.GameObjLockDict[GameObjType.BombedBullet].ExitWriteLock();
-                            }
-                            gameMap.GameObjDict[GameObjType.Bullet].Remove(_bullet);
-                            break;
-                        }
-                    }
-                }
-                finally
-                {
-                    gameMap.GameObjLockDict[GameObjType.Bullet].ExitWriteLock();
-                }
+
+                if (gameMap.Remove(bullet) && bullet.IsToBomb)
+                    gameMap.Add(new BombedBullet(bullet));
 
                 if (!bullet.IsToBomb)
                 {
@@ -334,12 +312,27 @@ namespace Gaming
                     new Thread
                             (() =>
                             {
+                                new FrameRateTaskExecutor<int>(
+                      loopCondition: () => player.PlayerState == PlayerStateType.IsTryingToAttack && gameMap.Timer.IsGaming,
+                      loopToDo: () =>
+                      {
+                      },
+                      timeInterval: GameData.frameDuration,
+                      finallyReturn: () => 0,
+                      maxTotalDuration: bullet.CastTime
+                  )
 
-                                Thread.Sleep(bullet.CastTime);
+                      .Start();
 
-                                if (gameMap.Timer.IsGaming && player.PlayerState == PlayerStateType.IsTryingToAttack)
+                                if (gameMap.Timer.IsGaming)
                                 {
-                                    player.PlayerState = PlayerStateType.Null;
+                                    if (player.PlayerState == PlayerStateType.IsTryingToAttack)
+                                    {
+                                        player.PlayerState = PlayerStateType.Null;
+                                    }
+                                    else
+                                        bullet.IsMoving = false;
+                                    gameMap.Remove(bullet);
                                 }
                             }
                             )

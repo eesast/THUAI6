@@ -22,6 +22,20 @@ namespace Gaming
                 return true;
             }
 
+            public bool Stop(Character player)
+            {
+                if (player.PlayerState == PlayerStateType.IsRescuing || player.PlayerState == PlayerStateType.IsRescued
+                    || player.PlayerState == PlayerStateType.IsFixing || player.PlayerState == PlayerStateType.IsMoving
+                    || player.PlayerState == PlayerStateType.IsTreated || player.PlayerState == PlayerStateType.IsTreating
+                    || player.PlayerState == PlayerStateType.IsRummagingInTheDrawer || player.PlayerState == PlayerStateType.IsLockingTheDoor
+                    || player.PlayerState == PlayerStateType.IsClimbingThroughWindows)
+                {
+                    player.PlayerState = PlayerStateType.Null;
+                    return true;
+                }
+                return false;
+            }
+
             public bool Fix(Student player)// 自动检查有无发电机可修
             {
                 if (player.PlayerState != PlayerStateType.Null || player.IsGhost())
@@ -132,7 +146,7 @@ namespace Gaming
 
                 if (doorwayForEscape != null && doorwayForEscape.IsOpen)
                 {
-                    player.Escape();
+                    player.Die(PlayerStateType.IsEscaped);
                     return true;
                 }
                 else

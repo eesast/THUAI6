@@ -7,7 +7,7 @@ namespace Preparation.Utility
     {
         #region 基本常数与常方法
         public const int numOfPosGridPerCell = 1000;  // 每格的【坐标单位】数
-        public const int numOfStepPerSecond = 100;     // 每秒行走的步数
+        public const int numOfStepPerSecond = 20;     // 每秒行走的步数
         public const int frameDuration = 50;         // 每帧时长
 
         public const int lengthOfMap = 50000;         // 地图长度
@@ -19,8 +19,8 @@ namespace Preparation.Utility
         public const int MaxSpeed = int.MaxValue;  // 最大速度
 
         public const int numOfBirthPoint = 5;
-        //        public const int numOfGenerator = 7;
-        public const int numOfGeneratorRequiredForRepair = 5;
+        //        public const int numOfGenerator = 9;
+        public const int numOfGeneratorRequiredForRepair = 7;
 
         private const int numOfObjNotMap = 5;
         public static bool IsMap(GameObjType gameObjType)
@@ -81,6 +81,7 @@ namespace Preparation.Utility
         public const int bulletRadius = 200;                         // 默认子弹半径
         public const int reviveTime = 30000;                         // 复活时间
         public const int shieldTimeAtBirth = 3000;                   // 复活时的护盾时间
+        public static XY PosWhoDie = new XY(1, 1);
 
         public static bool IsGhost(CharacterType characterType)
         {

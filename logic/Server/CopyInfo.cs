@@ -1,15 +1,21 @@
 using Protobuf;
 using System.Collections.Generic;
 using GameClass.GameObj;
-/*
+
 namespace Server
 {
+
     public static class CopyInfo
     {
-        public static MessageToClient.Types.GameObjMessage? Auto(GameObj gameObj)
+        // 下面赋值为0的大概率是还没写完 2023-03-03
+        /*public static MessageOfObj? Auto(GameObj gameObj)
         {
             if (gameObj.Type == Preparation.Utility.GameObjType.Character)
-                return Player((Character)gameObj);
+            {
+                Character character = (Character)gameObj;
+                if (character.IsGhost())
+                    return Tri
+            }
             else if (gameObj.Type == Preparation.Utility.GameObjType.Bullet)
                 return Bullet((Bullet)gameObj);
             else if (gameObj.Type == Preparation.Utility.GameObjType.Prop)
@@ -19,56 +25,46 @@ namespace Server
             else if (gameObj.Type == Preparation.Utility.GameObjType.PickedProp)
                 return PickedProp((PickedProp)gameObj);
             else return null;  //先写着防报错
-        }
+        }*/
 
-        private static MessageToClient.Types.GameObjMessage Player(Character player)
+        private static MessageOfStudent? Student(Character player)
         {
-            MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
-            msg.MessageOfCharacter = new MessageOfCharacter();
+            MessageOfStudent msg = new MessageOfStudent();
+            if (player.IsGhost()) return null;
 
-            msg.MessageOfCharacter.X = player.Position.x;
-            msg.MessageOfCharacter.Y = player.Position.y;
-            msg.MessageOfCharacter.AttackRange = player.AttackRange;
-            msg.MessageOfCharacter.BulletNum = player.BulletNum;
-            msg.MessageOfCharacter.CanMove = player.CanMove;
-            msg.MessageOfCharacter.CD = player.CD;
-            msg.MessageOfCharacter.GemNum = player.GemNum;
-            msg.MessageOfCharacter.Guid = player.ID;
-            msg.MessageOfCharacter.IsResetting = player.IsResetting;
-            msg.MessageOfCharacter.Life = player.HP;
-            msg.MessageOfCharacter.LifeNum = player.DeathCount + 1;
-            msg.MessageOfCharacter.Radius = player.Radius;
-            msg.MessageOfCharacter.Speed = player.MoveSpeed;
-            msg.MessageOfCharacter.TimeUntilCommonSkillAvailable = player.TimeUntilCommonSkillAvailable;
-            msg.MessageOfCharacter.TeamID = player.TeamID;
-            msg.MessageOfCharacter.PlayerID = player.PlayerID;
-            msg.MessageOfCharacter.IsInvisible = player.IsInvisible;
-            msg.MessageOfCharacter.FacingDirection = player.FacingDirection;
+            msg.X = player.Position.x;
+            msg.Y = player.Position.y;
+            msg.Speed = player.MoveSpeed;
+            msg.Determination = player.HP;
+            msg.FailNum = 0;
+            msg.TimeUntilSkillAvailable = 0;
+            msg.StudentType = StudentType.NullStudentType; // 下面写
+            msg.Guid = 0;
+            msg.State = StudentState.NullStatus;
+            msg.FailTime = 0;
+            msg.EmoTime = 0;
+            msg.PlayerId = 0;
+            msg.ViewRange = 0;
+            msg.Radius = 0;
 
-            //应该要发队伍分数，这里先发个人分数
-            msg.MessageOfCharacter.Score = player.Score;
 
-            //这条暂时没啥用
-            msg.MessageOfCharacter.TimeUntilUltimateSkillAvailable = 0;
-
-            msg.MessageOfCharacter.Vampire = player.Vampire;
             foreach (KeyValuePair<Preparation.Utility.BuffType, bool> kvp in player.Buff)
             {
                 if (kvp.Value)
                 {
-                    switch(kvp.Key)
+                    switch (kvp.Key) // StudentBuffType具体内容待定
                     {
                         case Preparation.Utility.BuffType.Spear:
-                            msg.MessageOfCharacter.Buff.Add(BuffType.SpearBuff);
+                            msg.Buff.Add(StudentBuffType.NullSbuffType);
                             break;
                         case Preparation.Utility.BuffType.AddLIFE:
-                            msg.MessageOfCharacter.Buff.Add(BuffType.AddLife);
+                            msg.Buff.Add(StudentBuffType.NullSbuffType);
                             break;
                         case Preparation.Utility.BuffType.Shield:
-                            msg.MessageOfCharacter.Buff.Add(BuffType.ShieldBuff);
+                            msg.Buff.Add(StudentBuffType.NullSbuffType);
                             break;
                         case Preparation.Utility.BuffType.AddSpeed:
-                            msg.MessageOfCharacter.Buff.Add(BuffType.MoveSpeed);
+                            msg.Buff.Add(StudentBuffType.NullSbuffType);
                             break;
                         default:
                             break;
@@ -77,111 +73,292 @@ namespace Server
             }
             switch (player.Place)
             {
-                case Preparation.Utility.PlacccceType.Land:
-                    msg.MessageOfCharacter.Place = Communication.Proto.PlacccceType.Land;
+                case Preparation.Utility.PlaceType.EmergencyExit:
+                    msg.Place = PlaceType.HiddenGate;
                     break;
-                case Preparation.Utility.PlacccceType.Grass1:
-                    msg.MessageOfCharacter.Place = Communication.Proto.PlacccceType.Grass1;
+                case Preparation.Utility.PlaceType.Doorway:
+                    msg.Place = PlaceType.Gate;
                     break;
-                case Preparation.Utility.PlacccceType.Grass2:
-                    msg.MessageOfCharacter.Place = Communication.Proto.PlacccceType.Grass2;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.Place = PlaceType.Grass;
                     break;
-                case Preparation.Utility.PlacccceType.Grass3:
-                    msg.MessageOfCharacter.Place = Communication.Proto.PlacccceType.Grass3;
+                case Preparation.Utility.PlaceType.BirthPoint1:
+                case Preparation.Utility.PlaceType.BirthPoint2:
+                case Preparation.Utility.PlaceType.BirthPoint3:
+                case Preparation.Utility.PlaceType.BirthPoint4:
+                case Preparation.Utility.PlaceType.BirthPoint5:
+                case Preparation.Utility.PlaceType.Null:
+                    msg.Place = PlaceType.Land;
                     break;
-               // case Preparation.Utility.PlacccceType.Invisible:
-               //     msg.MessageOfCharacter.Place = Communication.Proto.PlacccceType.Invisible;
-               //     break;
+                // case Preparation.Utility.PlaceType.Invisible:
+                //     msg.MessageOfHuman.Place = Communication.Proto.PlaceType.Invisible;
+                //     break;
                 default:
-                    msg.MessageOfCharacter.Place = Communication.Proto.PlacccceType.NullPlaceType;
+                    msg.Place = PlaceType.NullPlaceType;
                     break;
             }
 
             //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
             //现在懒得改了，有时间再重整一波
             if (player.PropInventory == null)
-                msg.MessageOfCharacter.Prop = Communication.Proto.PropType.NullPropType;
+                msg.Prop.Add(PropType.NullPropType);
             else
             {
                 switch (player.PropInventory.GetPropType())
                 {
                     case Preparation.Utility.PropType.Gem:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.Gem;
+                        msg.Prop.Add(PropType.NullPropType);
                         break;
-                    case Preparation.Utility.PropType.addLIFE:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddLife;
-                        break;
-                    case Preparation.Utility.PropType.addSpeed:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddSpeed;
-                        break;
-                    case Preparation.Utility.PropType.Shield:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.Shield;
-                        break;
-                    case Preparation.Utility.PropType.Spear:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.Spear;
-                        break;
-                    default:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.NullPropType;
-                        break;
+                        /*case Preparation.Utility.PropType.addLIFE:
+                            msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddLife;
+                            break;
+                        case Preparation.Utility.PropType.addSpeed:
+                            msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddSpeed;
+                            break;
+                        case Preparation.Utility.PropType.Shield:
+                            msg.MessageOfHuman.Prop = Communication.Proto.PropType.Shield;
+                            break;
+                        case Preparation.Utility.PropType.Spear:
+                            msg.MessageOfHuman.Prop = Communication.Proto.PropType.Spear;
+                            break;
+                        default:
+                            msg.Prop = PropType.NullPropType;
+                            break;*/
                 }
             }
-            switch (player.PassiveSkillType)
+            /*switch (player.PassiveSkillType) 需要对接一下，proto里似乎没有这个
             {
                 case Preparation.Utility.PassiveSkillType.RecoverAfterBattle:
-                    msg.MessageOfCharacter.PassiveSkillType = Communication.Proto.PassiveSkillType.RecoverAfterBattle;
+                    msg.MessageOfHuman.PassiveSkillType = Communication.Proto.PassiveSkillType.RecoverAfterBattle;
                     break;
                 case Preparation.Utility.PassiveSkillType.SpeedUpWhenLeavingGrass:
-                    msg.MessageOfCharacter.PassiveSkillType = Communication.Proto.PassiveSkillType.SpeedUpWhenLeavingGrass;
+                    msg.MessageOfHuman.PassiveSkillType = Communication.Proto.PassiveSkillType.SpeedUpWhenLeavingGrass;
                     break;
                 case Preparation.Utility.PassiveSkillType.Vampire:
-                    msg.MessageOfCharacter.PassiveSkillType = Communication.Proto.PassiveSkillType.Vampire;
+                    msg.MessageOfHuman.PassiveSkillType = Communication.Proto.PassiveSkillType.Vampire;
                     break;
                 default:
-                    msg.MessageOfCharacter.PassiveSkillType = Communication.Proto.PassiveSkillType.NullPassiveSkillType;
+                    msg.MessageOfHuman.PassiveSkillType = Communication.Proto.PassiveSkillType.NullPassiveSkillType;
                     break;
             }
+
             switch (player.CommonSkillType)
             {
                 case Preparation.Utility.ActiveSkillType.BecomeAssassin:
-                    msg.MessageOfCharacter.ActiveSkillType = Communication.Proto.ActiveSkillType.BecomeAssassin;
+                    msg.MessageOfHuman.ActiveSkillType = Communication.Proto.ActiveSkillType.BecomeAssassin;
                     break;
                 case Preparation.Utility.ActiveSkillType.BecomeVampire:
-                    msg.MessageOfCharacter.ActiveSkillType = Communication.Proto.ActiveSkillType.BecomeVampire;
+                    msg.MessageOfHuman.ActiveSkillType = Communication.Proto.ActiveSkillType.BecomeVampire;
                     break;
                 case Preparation.Utility.ActiveSkillType.NuclearWeapon:
-                    msg.MessageOfCharacter.ActiveSkillType = Communication.Proto.ActiveSkillType.NuclearWeapon;
+                    msg.MessageOfHuman.ActiveSkillType = Communication.Proto.ActiveSkillType.NuclearWeapon;
                     break;
                 case Preparation.Utility.ActiveSkillType.SuperFast:
-                    msg.MessageOfCharacter.ActiveSkillType = Communication.Proto.ActiveSkillType.SuperFast;
+                    msg.MessageOfHuman.ActiveSkillType = Communication.Proto.ActiveSkillType.SuperFast;
                     break;
                 default:
-                    msg.MessageOfCharacter.ActiveSkillType = Communication.Proto.ActiveSkillType.NullActiveSkillType;
+                    msg.MessageOfHuman.ActiveSkillType = Communication.Proto.ActiveSkillType.NullActiveSkillType;
                     break;
             }
 
             switch (player.BulletOfPlayer)
             {
                 case Preparation.Utility.BulletType.AtomBomb:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.AtomBomb;
+                    msg.MessageOfHuman.BulletType = Communication.Proto.BulletType.AtomBomb;
                     break;
                 case Preparation.Utility.BulletType.OrdinaryBullet:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.OrdinaryBullet;
+                    msg.MessageOfHuman.BulletType = Communication.Proto.BulletType.OrdinaryBullet;
                     break;
                 case Preparation.Utility.BulletType.FastBullet:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.FastBullet;
+                    msg.MessageOfHuman.BulletType = Communication.Proto.BulletType.FastBullet;
                     break;
                 case Preparation.Utility.BulletType.LineBullet:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.LineBullet;
+                    msg.MessageOfHuman.BulletType = Communication.Proto.BulletType.LineBullet;
                     break;
                 default:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.NullBulletType;
+                    msg.MessageOfHuman.BulletType = Communication.Proto.BulletType.NullBulletType;
                     break;
-            }
+            }*/
 
             return msg;
         }
 
-        private static MessageToClient.Types.GameObjMessage Bullet(Bullet bullet)
+        private static MessageOfTricker? Butcher(Character player)
+        {
+            MessageOfTricker msg = new MessageOfTricker();
+            if (!player.IsGhost()) return null;
+
+            msg.X = player.Position.x;
+            msg.Y = player.Position.y;
+            msg.Speed = player.MoveSpeed;
+            msg.Damage = 0;
+            msg.TimeUntilSkillAvailable = 0;
+            //msg.Place = 0; 下面写了
+            //msg.Prop = PropType.NullPropType; // 下面写
+            msg.TrickerType = TrickerType.NullTrickerType; // 下面写
+            msg.Guid = 0;
+            msg.Movable = false;
+            msg.PlayerId = 0;
+            msg.ViewRange = 0;
+            msg.Radius = 0;
+            //msg.Buff[0] = ButcherBuffType.NullSbuffType; 下面写了
+
+            /* THUAI5中的内容
+            msg.BulletNum = player.BulletNum;
+            msg.CanMove = player.CanMove;
+            msg.CD = player.CD;
+            msg.GemNum = player.GemNum;
+            msg.Guid = player.ID;
+            msg.IsDeceased = player.IsDeceased;
+            
+            msg.LifeNum = player.DeathCount + 1;
+            msg.Radius = player.Radius;
+            
+            msg.TimeUntilCommonSkillAvailable = player.TimeUntilCommonSkillAvailable;
+            msg.TeamID = player.TeamID;
+            msg.PlayerID = player.PlayerID;
+            msg.IsInvisible = player.IsInvisible;
+            msg.FacingDirection = player.FacingDirection;
+
+            //应该要发队伍分数，这里先发个人分数
+            msg.MessageOfHuman.Score = player.Score;
+
+            //这条暂时没啥用
+            msg.MessageOfHuman.TimeUntilUltimateSkillAvailable = 0;
+
+            msg.MessageOfHuman.Vampire = player.Vampire;*/
+
+            foreach (KeyValuePair<Preparation.Utility.BuffType, bool> kvp in player.Buff)
+            {
+                if (kvp.Value)
+                {
+                    switch (kvp.Key) // ButcherBuffType具体内容待定
+                    {
+                        case Preparation.Utility.BuffType.Spear:
+                            msg.Buff.Add(TrickerBuffType.NullTbuffType);
+                            break;
+                        case Preparation.Utility.BuffType.AddLIFE:
+                            msg.Buff.Add(TrickerBuffType.NullTbuffType);
+                            break;
+                        case Preparation.Utility.BuffType.Shield:
+                            msg.Buff.Add(TrickerBuffType.NullTbuffType);
+                            break;
+                        case Preparation.Utility.BuffType.AddSpeed:
+                            msg.Buff.Add(TrickerBuffType.NullTbuffType);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            /*switch (player.Place)
+            {
+                case Preparation.Utility.PlaceType.Land:
+                    msg.Place = PlaceType.Land;
+                    break;
+                case Preparation.Utility.PlaceType.Grass1:
+                    msg.Place = PlaceType.Grass;
+                    break;
+                case Preparation.Utility.PlaceType.Grass2:
+                    msg.Place = PlaceType.Grass;
+                    break;
+                case Preparation.Utility.PlaceType.Grass3:
+                    msg.Place = PlaceType.Grass;
+                    break;
+                // case Preparation.Utility.PlaceType.Invisible:
+                //     msg.MessageOfHuman.Place = Communication.Proto.PlaceType.Invisible;
+                //     break;
+                default:
+                    msg.Place = PlaceType.NullPlaceType;
+                    break;
+            }*/
+
+            //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
+            //现在懒得改了，有时间再重整一波
+            /*if (player.PropInventory == null)
+                msg.Prop = PropType.NullPropType;
+            else
+            {
+                switch (player.PropInventory.GetPropType())
+                {
+                    case Preparation.Utility.PropType.Gem:
+                        msg.Prop = PropType.NullPropType;
+                        break;
+                    case Preparation.Utility.PropType.addLIFE:
+                        msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddLife;
+                        break;
+                    case Preparation.Utility.PropType.addSpeed:
+                        msg.MessageOfHuman.Prop = Communication.Proto.PropType.AddSpeed;
+                        break;
+                    case Preparation.Utility.PropType.Shield:
+                        msg.MessageOfHuman.Prop = Communication.Proto.PropType.Shield;
+                        break;
+                    case Preparation.Utility.PropType.Spear:
+                        msg.MessageOfHuman.Prop = Communication.Proto.PropType.Spear;
+                        break;
+                    default:
+                        msg.Prop = PropType.NullPropType;
+                        break;
+                }
+            }*/
+            /*switch (player.PassiveSkillType) 需要对接一下，proto里似乎没有这个
+            {
+                case Preparation.Utility.PassiveSkillType.RecoverAfterBattle:
+                    msg.MessageOfHuman.PassiveSkillType = Communication.Proto.PassiveSkillType.RecoverAfterBattle;
+                    break;
+                case Preparation.Utility.PassiveSkillType.SpeedUpWhenLeavingGrass:
+                    msg.MessageOfHuman.PassiveSkillType = Communication.Proto.PassiveSkillType.SpeedUpWhenLeavingGrass;
+                    break;
+                case Preparation.Utility.PassiveSkillType.Vampire:
+                    msg.MessageOfHuman.PassiveSkillType = Communication.Proto.PassiveSkillType.Vampire;
+                    break;
+                default:
+                    msg.MessageOfHuman.PassiveSkillType = Communication.Proto.PassiveSkillType.NullPassiveSkillType;
+                    break;
+            }
+
+            switch (player.CommonSkillType)
+            {
+                case Preparation.Utility.ActiveSkillType.BecomeAssassin:
+                    msg.MessageOfHuman.ActiveSkillType = Communication.Proto.ActiveSkillType.BecomeAssassin;
+                    break;
+                case Preparation.Utility.ActiveSkillType.BecomeVampire:
+                    msg.MessageOfHuman.ActiveSkillType = Communication.Proto.ActiveSkillType.BecomeVampire;
+                    break;
+                case Preparation.Utility.ActiveSkillType.NuclearWeapon:
+                    msg.MessageOfHuman.ActiveSkillType = Communication.Proto.ActiveSkillType.NuclearWeapon;
+                    break;
+                case Preparation.Utility.ActiveSkillType.SuperFast:
+                    msg.MessageOfHuman.ActiveSkillType = Communication.Proto.ActiveSkillType.SuperFast;
+                    break;
+                default:
+                    msg.MessageOfHuman.ActiveSkillType = Communication.Proto.ActiveSkillType.NullActiveSkillType;
+                    break;
+            }
+
+            switch (player.BulletOfPlayer)
+            {
+                case Preparation.Utility.BulletType.AtomBomb:
+                    msg.MessageOfHuman.BulletType = Communication.Proto.BulletType.AtomBomb;
+                    break;
+                case Preparation.Utility.BulletType.OrdinaryBullet:
+                    msg.MessageOfHuman.BulletType = Communication.Proto.BulletType.OrdinaryBullet;
+                    break;
+                case Preparation.Utility.BulletType.FastBullet:
+                    msg.MessageOfHuman.BulletType = Communication.Proto.BulletType.FastBullet;
+                    break;
+                case Preparation.Utility.BulletType.LineBullet:
+                    msg.MessageOfHuman.BulletType = Communication.Proto.BulletType.LineBullet;
+                    break;
+                default:
+                    msg.MessageOfHuman.BulletType = Communication.Proto.BulletType.NullBulletType;
+                    break;
+            }*/
+
+            return msg;
+        }
+
+        /*private static MessageToClient.Types.GameObjMessage Bullet(Bullet bullet)
         {
             MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
             msg.MessageOfBullet = new MessageOfBullet();
@@ -212,56 +389,64 @@ namespace Server
                 msg.MessageOfBullet.ParentTeamID = bullet.Parent.TeamID;
             switch (bullet.Place)
             {
-                case Preparation.Utility.PlacccceType.Land:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.Land;
+                case Preparation.Utility.PlaceType.Null:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Null;
                     break;
-                case Preparation.Utility.PlacccceType.Grass1:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.Grass1;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass;
                     break;
-                case Preparation.Utility.PlacccceType.Grass2:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.Grass2;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass;
                     break;
-                case Preparation.Utility.PlacccceType.Grass3:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.Grass3;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass;
                     break;
                 default:
                     msg.MessageOfBullet.Place = Communication.Proto.PlacccceType.NullPlaceType;
                     break;
             }
             return msg;
-        }
+        }*/
 
-        private static MessageToClient.Types.GameObjMessage Prop(Prop prop)
+        private static MessageOfProp Prop(Prop prop)
         {
-            MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
-            msg.MessageOfProp = new MessageOfProp();
+            MessageOfProp msg = new MessageOfProp();
+            //msg.Type = PropType.NullPropType; 下面写
+            msg.X = prop.Position.x;
+            msg.Y = prop.Position.y;
+            msg.FacingDirection = 0;
+            msg.Guid = 0;
+            msg.Place = PlaceType.NullPlaceType;
+            msg.Size = 0;
+            msg.IsMoving = false;
+            /* THUAI5中的内容
             msg.MessageOfProp.FacingDirection = prop.FacingDirection;
             msg.MessageOfProp.Guid = prop.ID;
-            msg.MessageOfProp.IsMoving = prop.IsMoving;
+            msg.MessageOfProp.IsMoving = prop.IsMoving;*/
+
             switch (prop.GetPropType())
             {
-                case Preparation.Utility.PropType.Gem:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.Gem;
+                /*case Preparation.Utility.PropType.Gem:
+                    msg.Type = PropType.Gem;
                     break;
                 case Preparation.Utility.PropType.addLIFE:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddLife;
+                    msg.Type = PropType.AddLife;
                     break;
                 case Preparation.Utility.PropType.addSpeed:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddSpeed;
+                    msg.Type = PropType.AddSpeed;
                     break;
                 case Preparation.Utility.PropType.Shield:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.Shield;
+                    msg.Type = PropType.Shield;
                     break;
                 case Preparation.Utility.PropType.Spear:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.Spear;
-                    break;
+                    msg.Type = PropType.Spear;
+                    break;*/
                 default:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.NullPropType;
+                    msg.Type = PropType.NullPropType;
                     break;
             }
-            msg.MessageOfProp.X = prop.Position.x;
-            msg.MessageOfProp.Y = prop.Position.y;
-            if(prop is Gem)
+
+            /*if(prop is Gem)
             {
                 msg.MessageOfProp.Size = ((Gem)prop).Size;
             }
@@ -271,35 +456,34 @@ namespace Server
             }
             switch (prop.Place)
             {
-                case Preparation.Utility.PlacccceType.Land:
-                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.Land;
+                case Preparation.Utility.PlaceType.Null:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Null;
                     break;
-                case Preparation.Utility.PlacccceType.Grass1:
-                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.Grass1;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass;
                     break;
-                case Preparation.Utility.PlacccceType.Grass2:
-                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.Grass2;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass;
                     break;
-                case Preparation.Utility.PlacccceType.Grass3:
-                    msg.MessageOfProp.Place = Communication.Proto.PlacccceType.Grass3;
+                case Preparation.Utility.PlaceType.Grass:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass;
                     break;
                 default:
                     msg.MessageOfProp.Place = Communication.Proto.PlacccceType.NullPlaceType;
                     break;
-            }
+            }*/
             return msg;
         }
 
-        private static MessageToClient.Types.GameObjMessage BombedBullet(BombedBullet bombedBullet)
+        /*private static MessageOfBombedBullet BombedBullet(BombedBullet bombedBullet)
         {
-            MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
-            msg.MessageOfBombedBullet = new MessageOfBombedBullet();
+            MessageOfBombedBullet msg = new MessageOfBombedBullet;
 
-            msg.MessageOfBombedBullet.FacingDirection = bombedBullet.bulletHasBombed.FacingDirection;
-            msg.MessageOfBombedBullet.X = bombedBullet.bulletHasBombed.Position.x;
-            msg.MessageOfBombedBullet.Y = bombedBullet.bulletHasBombed.Position.y;
-            msg.MessageOfBombedBullet.MappingID = bombedBullet.MappingID;
-            msg.MessageOfBombedBullet.BombRange = BulletFactory.BulletBombRange(bombedBullet.bulletHasBombed.TypeOfBullet);
+            msg.FacingDirection = bombedBullet.FacingDirection;
+            msg.X = bombedBullet.bulletHasBombed.Position.x;
+            msg.Y = bombedBullet.bulletHasBombed.Position.y;
+            msg.MappingID = bombedBullet.MappingID;
+            msg.BombRange = BulletFactory.BulletBombRange(bombedBullet.bulletHasBombed.TypeOfBullet);
             switch (bombedBullet.bulletHasBombed.TypeOfBullet)
             {
                 case Preparation.Utility.BulletType.OrdinaryBullet:
@@ -319,9 +503,9 @@ namespace Server
                     break;
             }
             return msg;
-        }
+        }*/
 
-        private static MessageToClient.Types.GameObjMessage PickedProp(PickedProp pickedProp)
+        /*private static MessageToClient.Types.GameObjMessage PickedProp(PickedProp pickedProp)
         {
             MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
             msg.MessageOfPickedProp = new MessageOfPickedProp();
@@ -352,7 +536,6 @@ namespace Server
                     break;
             }
             return msg;
-        }
+        }*/
     }
-}*/
-// 等Preparation完成再写
+}

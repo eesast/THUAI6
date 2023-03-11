@@ -61,6 +61,13 @@ public:
     virtual bool StartTreatMate() = 0;
     virtual bool StartRescueMate() = 0;
 
+    virtual bool OpenDoor() = 0;
+    virtual bool CloseDoor() = 0;
+    virtual bool SkipWindow() = 0;
+    virtual bool StartOpenGate() = 0;
+    virtual bool StartOpenChest() = 0;
+    virtual bool EndAllAction() = 0;
+
     // ITrickerAPI使用的部分
     virtual bool Attack(double angle) = 0;
 
@@ -84,6 +91,14 @@ public:
     virtual std::future<bool> PickProp(THUAI6::PropType prop) = 0;
     virtual std::future<bool> UseProp(THUAI6::PropType prop) = 0;
     virtual std::future<bool> UseSkill(int32_t skillID) = 0;
+    virtual std::future<bool> Attack(double angleInRadian) = 0;
+
+    virtual std::future<bool> OpenDoor() = 0;
+    virtual std::future<bool> CloseDoor() = 0;
+    virtual std::future<bool> SkipWindow() = 0;
+    virtual std::future<bool> StartOpenGate() = 0;
+    virtual std::future<bool> StartOpenChest() = 0;
+    virtual std::future<bool> EndAllAction() = 0;
 
     // 发送信息、接受信息，注意收消息时无消息则返回nullopt
     virtual std::future<bool> SendMessage(int64_t, std::string) = 0;
@@ -149,7 +164,6 @@ class ITrickerAPI : public IAPI
 public:
     /*****捣蛋鬼阵营的特定函数*****/
 
-    virtual std::future<bool> Attack(double angleInRadian) = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const = 0;
 };
 
@@ -189,6 +203,15 @@ public:
     std::future<bool> PickProp(THUAI6::PropType prop) override;
     std::future<bool> UseProp(THUAI6::PropType prop) override;
     std::future<bool> UseSkill(int32_t skillID) override;
+
+    std::future<bool> Attack(double angleInRadian) override;
+
+    std::future<bool> OpenDoor() override;
+    std::future<bool> CloseDoor() override;
+    std::future<bool> SkipWindow() override;
+    std::future<bool> StartOpenGate() override;
+    std::future<bool> StartOpenChest() override;
+    std::future<bool> EndAllAction() override;
 
     std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override;
@@ -256,6 +279,13 @@ public:
     std::future<bool> UseProp(THUAI6::PropType prop) override;
     std::future<bool> UseSkill(int32_t skillID) override;
 
+    std::future<bool> OpenDoor() override;
+    std::future<bool> CloseDoor() override;
+    std::future<bool> SkipWindow() override;
+    std::future<bool> StartOpenGate() override;
+    std::future<bool> StartOpenChest() override;
+    std::future<bool> EndAllAction() override;
+
     std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override;
     [[nodiscard]] std::future<std::optional<std::pair<int64_t, std::string>>> GetMessage() override;
@@ -312,6 +342,15 @@ public:
     std::future<bool> UseProp(THUAI6::PropType prop) override;
     std::future<bool> UseSkill(int32_t skillID) override;
 
+    std::future<bool> Attack() override;
+
+    std::future<bool> OpenDoor() override;
+    std::future<bool> CloseDoor() override;
+    std::future<bool> SkipWindow() override;
+    std::future<bool> StartOpenGate() override;
+    std::future<bool> StartOpenChest() override;
+    std::future<bool> EndAllAction() override;
+
     std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override;
     [[nodiscard]] std::future<std::optional<std::pair<int64_t, std::string>>> GetMessage() override;
@@ -364,6 +403,13 @@ public:
     std::future<bool> PickProp(THUAI6::PropType prop) override;
     std::future<bool> UseProp(THUAI6::PropType prop) override;
     std::future<bool> UseSkill(int32_t skillID) override;
+
+    std::future<bool> OpenDoor() override;
+    std::future<bool> CloseDoor() override;
+    std::future<bool> SkipWindow() override;
+    std::future<bool> StartOpenGate() override;
+    std::future<bool> StartOpenChest() override;
+    std::future<bool> EndAllAction() override;
 
     std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override;

@@ -101,6 +101,78 @@ std::future<bool> TrickerAPI::UseSkill(int32_t skillID)
                       { return logic.UseSkill(skillID); });
 }
 
+std::future<bool> StudentAPI::OpenDoor()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.OpenDoor(); });
+}
+
+std::future<bool> TrickerAPI::OpenDoor()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.OpenDoor(); });
+}
+
+std::future<bool> StudentAPI::CloseDoor()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.CloseDoor(); });
+}
+
+std::future<bool> TrickerAPI::CloseDoor()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.CloseDoor(); });
+}
+
+std::future<bool> StudentAPI::SkipWindow()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.SkipWindow(); });
+}
+
+std::future<bool> TrickerAPI::SkipWindow()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.SkipWindow(); });
+}
+
+std::future<bool> StudentAPI::StartOpenGate()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.StartOpenGate(); });
+}
+
+std::future<bool> TrickerAPI::StartOpenGate()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.StartOpenGate(); });
+}
+
+std::future<bool> StudentAPI::StartOpenChest()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.StartOpenChest(); });
+}
+
+std::future<bool> TrickerAPI::StartOpenChest()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.StartOpenChest(); });
+}
+
+std::future<bool> StudentAPI::EndAllAction()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.EndAllAction(); });
+}
+
+std::future<bool> TrickerAPI::EndAllAction()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.EndAllAction(); });
+}
+
 std::future<bool> StudentAPI::SendMessage(int64_t toID, std::string message)
 {
     return std::async(std::launch::async, [&]()
@@ -244,6 +316,12 @@ std::future<bool> StudentAPI::Graduate()
 std::shared_ptr<const THUAI6::Student> StudentAPI::GetSelfInfo() const
 {
     return logic.StudentGetSelfInfo();
+}
+
+std::future<bool> TrickerAPI::Attack()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.Attack(); });
 }
 
 std::future<bool> TrickerAPI::Attack(double angleInRadian)

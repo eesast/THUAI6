@@ -147,6 +147,42 @@ bool Logic::Attack(double angle)
     return pComm->Attack(angle, playerID);
 }
 
+bool Logic::OpenDoor()
+{
+    logger->debug("Called OpenDoor");
+    return pComm->OpenDoor(playerID);
+}
+
+bool Logic::CloseDoor()
+{
+    logger->debug("Called CloseDoor");
+    return pComm->CloseDoor(playerID);
+}
+
+bool Logic::SkipWindow()
+{
+    logger->debug("Called SkipWindow");
+    return pComm->SkipWindow(playerID);
+}
+
+bool Logic::StartOpenGate()
+{
+    logger->debug("Called StartOpenGate");
+    return pComm->StartOpenGate(playerID);
+}
+
+bool Logic::StartOpenChest()
+{
+    logger->debug("Called StartOpenChest");
+    return pComm->StartOpenChest(playerID);
+}
+
+bool Logic::EndAllAction()
+{
+    logger->debug("Called EndAllAction");
+    return pComm->EndAllAction(playerID);
+}
+
 bool Logic::WaitThread()
 {
     Update();

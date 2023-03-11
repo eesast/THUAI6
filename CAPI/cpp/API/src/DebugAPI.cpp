@@ -206,6 +206,78 @@ std::future<bool> TrickerDebugAPI::UseSkill(int32_t skillID)
                         return result; });
 }
 
+std::future<bool> StudentDebugAPI::OpenDoor()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.OpenDoor(); });
+}
+
+std::future<bool> TrickerDebugAPI::OpenDoor()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.OpenDoor(); });
+}
+
+std::future<bool> StudentDebugAPI::CloseDoor()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.CloseDoor(); });
+}
+
+std::future<bool> TrickerDebugAPI::CloseDoor()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.CloseDoor(); });
+}
+
+std::future<bool> StudentDebugAPI::SkipWindow()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.SkipWindow(); });
+}
+
+std::future<bool> TrickerDebugAPI::SkipWindow()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.SkipWindow(); });
+}
+
+std::future<bool> StudentDebugAPI::StartOpenGate()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.StartOpenGate(); });
+}
+
+std::future<bool> TrickerDebugAPI::StartOpenGate()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.StartOpenGate(); });
+}
+
+std::future<bool> StudentDebugAPI::StartOpenChest()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.StartOpenChest(); });
+}
+
+std::future<bool> TrickerDebugAPI::StartOpenChest()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.StartOpenChest(); });
+}
+
+std::future<bool> StudentDebugAPI::EndAllAction()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.EndAllAction(); });
+}
+
+std::future<bool> TrickerDebugAPI::EndAllAction()
+{
+    return std::async(std::launch::async, [&]()
+                      { return logic.EndAllAction(); });
+}
+
 std::future<bool> StudentDebugAPI::SendMessage(int64_t toID, std::string message)
 {
     logger->info("SendMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));

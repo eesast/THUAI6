@@ -73,7 +73,7 @@ enum PlayerState
     ATTACKING = 12; // 前摇
     LOCKING = 13;
     RUMMAGING = 14;
-    CLIMBING = 15;
+    CLIMBING = 15; // 翻窗
 
 }
 

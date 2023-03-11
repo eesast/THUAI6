@@ -14,16 +14,16 @@ message MessageOfStudent
     double time_until_skill_available = 6;
     PlaceType place = 7;
     repeated PropType prop = 8;
-    StudentType student_type = 9;
+    PlayerState player_state = 9;
     int64 guid = 10;
-    StudentState state = 11;
+    PlayerState state = 11;
     double fail_time = 12; // 挂科的时间
     double emo_time = 14; // EMO的时间
     int64 player_id = 15;
     int32 view_range = 16; // 视野距离
     int32 radius = 17; // 半径
     int32 damage = 18;
-    int32 danger_alert = 19; // 危险警报，在捣蛋鬼靠近时会有预警
+    double danger_alert = 19; // 危险警报，在捣蛋鬼靠近时会有预警
     int32 score = 20;
     int32 treat_progress = 21; // 治疗进度
     int32 rescue_progress = 22; // 救援进度
@@ -45,7 +45,10 @@ message MessageOfTricker
     int64 player_id = 11;
     int32 view_range = 12; // 视野距离
     int32 radius = 13; // 半径
-    repeated TrickerBuffType buff = 14;
+    PlayerState player_state = 14;
+    double trick_desire = 15;
+    double class_volume = 16;
+    repeated TrickerBuffType buff = 17;
 }
 
 message MessageOfBullet
@@ -111,6 +114,13 @@ message MessageOfDoor
     int32 x = 1;
     int32 y = 2;
     bool is_open = 3;
+}
+
+message MessageOfChest
+{
+    int32 x = 1;
+    int32 y = 2;
+    int32 progress = 3;
 }
 
 message MessageOfMapObj

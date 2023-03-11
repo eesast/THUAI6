@@ -27,5 +27,6 @@ service AvailableService
     rpc CloseDoor (IDMsg) returns (BoolRes); // 关门
     rpc SkipWindow (IDMsg) returns (BoolRes); // 窗户
     rpc StartOpenGate (IDMsg) returns (BoolRes); // 开闸门
+    rpc StartOpenChest (IDMsg) returns (BoolRes);
     rpc EndAllAction (IDMsg) returns (BoolRes); // 结束所有动作
 }

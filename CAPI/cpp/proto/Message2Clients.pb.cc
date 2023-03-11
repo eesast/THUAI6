@@ -26,7 +26,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.buff_)*/ {}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, /*decltype(_impl_.x_)*/ 0, /*decltype(_impl_.y_)*/ 0, /*decltype(_impl_.speed_)*/ 0, /*decltype(_impl_.determination_)*/ 0, /*decltype(_impl_.time_until_skill_available_)*/ 0, /*decltype(_impl_.fail_num_)*/ 0, /*decltype(_impl_.place_)*/ 0, /*decltype(_impl_.prop_)*/ 0, /*decltype(_impl_.student_type_)*/ 0, /*decltype(_impl_.guid_)*/ int64_t{0}, /*decltype(_impl_.fail_time_)*/ 0, /*decltype(_impl_.state_)*/ 0, /*decltype(_impl_.view_range_)*/ 0, /*decltype(_impl_.emo_time_)*/ 0, /*decltype(_impl_.player_id_)*/ int64_t{0}, /*decltype(_impl_.radius_)*/ 0, /*decltype(_impl_.damage_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.prop_)*/ {}, /*decltype(_impl_._prop_cached_byte_size_)*/ {0}, /*decltype(_impl_.buff_)*/ {}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, /*decltype(_impl_.x_)*/ 0, /*decltype(_impl_.y_)*/ 0, /*decltype(_impl_.speed_)*/ 0, /*decltype(_impl_.determination_)*/ 0, /*decltype(_impl_.time_until_skill_available_)*/ 0, /*decltype(_impl_.fail_num_)*/ 0, /*decltype(_impl_.place_)*/ 0, /*decltype(_impl_.guid_)*/ int64_t{0}, /*decltype(_impl_.player_state_)*/ 0, /*decltype(_impl_.state_)*/ 0, /*decltype(_impl_.fail_time_)*/ 0, /*decltype(_impl_.emo_time_)*/ 0, /*decltype(_impl_.player_id_)*/ int64_t{0}, /*decltype(_impl_.view_range_)*/ 0, /*decltype(_impl_.radius_)*/ 0, /*decltype(_impl_.danger_alert_)*/ 0, /*decltype(_impl_.damage_)*/ 0, /*decltype(_impl_.score_)*/ 0, /*decltype(_impl_.treat_progress_)*/ 0, /*decltype(_impl_.rescue_progress_)*/ 0, /*decltype(_impl_.student_type_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
     struct MessageOfStudentDefaultTypeInternal
@@ -48,7 +48,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.buff_)*/ {}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, /*decltype(_impl_.x_)*/ 0, /*decltype(_impl_.y_)*/ 0, /*decltype(_impl_.speed_)*/ 0, /*decltype(_impl_.damage_)*/ 0, /*decltype(_impl_.time_until_skill_available_)*/ 0, /*decltype(_impl_.place_)*/ 0, /*decltype(_impl_.prop_)*/ 0, /*decltype(_impl_.guid_)*/ int64_t{0}, /*decltype(_impl_.tricker_type_)*/ 0, /*decltype(_impl_.movable_)*/ false, /*decltype(_impl_.player_id_)*/ int64_t{0}, /*decltype(_impl_.view_range_)*/ 0, /*decltype(_impl_.radius_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.prop_)*/ {}, /*decltype(_impl_._prop_cached_byte_size_)*/ {0}, /*decltype(_impl_.buff_)*/ {}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, /*decltype(_impl_.x_)*/ 0, /*decltype(_impl_.y_)*/ 0, /*decltype(_impl_.speed_)*/ 0, /*decltype(_impl_.damage_)*/ 0, /*decltype(_impl_.time_until_skill_available_)*/ 0, /*decltype(_impl_.place_)*/ 0, /*decltype(_impl_.tricker_type_)*/ 0, /*decltype(_impl_.guid_)*/ int64_t{0}, /*decltype(_impl_.player_id_)*/ int64_t{0}, /*decltype(_impl_.movable_)*/ false, /*decltype(_impl_.view_range_)*/ 0, /*decltype(_impl_.radius_)*/ 0, /*decltype(_impl_.player_state_)*/ 0, /*decltype(_impl_.trick_desire_)*/ 0, /*decltype(_impl_.class_volume_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
     struct MessageOfTrickerDefaultTypeInternal
@@ -154,6 +154,116 @@ namespace protobuf
         };
     };
     PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MessageOfPickedPropDefaultTypeInternal _MessageOfPickedProp_default_instance_;
+    PROTOBUF_CONSTEXPR MessageOfClassroom::MessageOfClassroom(
+        ::_pbi::ConstantInitialized
+    ) :
+        _impl_{
+            /*decltype(_impl_.x_)*/ 0, /*decltype(_impl_.y_)*/ 0, /*decltype(_impl_.progress_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
+    {
+    }
+    struct MessageOfClassroomDefaultTypeInternal
+    {
+        PROTOBUF_CONSTEXPR MessageOfClassroomDefaultTypeInternal() :
+            _instance(::_pbi::ConstantInitialized{})
+        {
+        }
+        ~MessageOfClassroomDefaultTypeInternal()
+        {
+        }
+        union
+        {
+            MessageOfClassroom _instance;
+        };
+    };
+    PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MessageOfClassroomDefaultTypeInternal _MessageOfClassroom_default_instance_;
+    PROTOBUF_CONSTEXPR MessageOfGate::MessageOfGate(
+        ::_pbi::ConstantInitialized
+    ) :
+        _impl_{
+            /*decltype(_impl_.x_)*/ 0, /*decltype(_impl_.y_)*/ 0, /*decltype(_impl_.progress_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
+    {
+    }
+    struct MessageOfGateDefaultTypeInternal
+    {
+        PROTOBUF_CONSTEXPR MessageOfGateDefaultTypeInternal() :
+            _instance(::_pbi::ConstantInitialized{})
+        {
+        }
+        ~MessageOfGateDefaultTypeInternal()
+        {
+        }
+        union
+        {
+            MessageOfGate _instance;
+        };
+    };
+    PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MessageOfGateDefaultTypeInternal _MessageOfGate_default_instance_;
+    PROTOBUF_CONSTEXPR MessageOfDoor::MessageOfDoor(
+        ::_pbi::ConstantInitialized
+    ) :
+        _impl_{
+            /*decltype(_impl_.x_)*/ 0, /*decltype(_impl_.y_)*/ 0, /*decltype(_impl_.is_open_)*/ false, /*decltype(_impl_._cached_size_)*/ {}}
+    {
+    }
+    struct MessageOfDoorDefaultTypeInternal
+    {
+        PROTOBUF_CONSTEXPR MessageOfDoorDefaultTypeInternal() :
+            _instance(::_pbi::ConstantInitialized{})
+        {
+        }
+        ~MessageOfDoorDefaultTypeInternal()
+        {
+        }
+        union
+        {
+            MessageOfDoor _instance;
+        };
+    };
+    PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MessageOfDoorDefaultTypeInternal _MessageOfDoor_default_instance_;
+    PROTOBUF_CONSTEXPR MessageOfChest::MessageOfChest(
+        ::_pbi::ConstantInitialized
+    ) :
+        _impl_{
+            /*decltype(_impl_.x_)*/ 0, /*decltype(_impl_.y_)*/ 0, /*decltype(_impl_.progress_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
+    {
+    }
+    struct MessageOfChestDefaultTypeInternal
+    {
+        PROTOBUF_CONSTEXPR MessageOfChestDefaultTypeInternal() :
+            _instance(::_pbi::ConstantInitialized{})
+        {
+        }
+        ~MessageOfChestDefaultTypeInternal()
+        {
+        }
+        union
+        {
+            MessageOfChest _instance;
+        };
+    };
+    PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MessageOfChestDefaultTypeInternal _MessageOfChest_default_instance_;
+    PROTOBUF_CONSTEXPR MessageOfMapObj::MessageOfMapObj(
+        ::_pbi::ConstantInitialized
+    ) :
+        _impl_{
+            /*decltype(_impl_.message_of_map_obj_)*/ {}, /*decltype(_impl_._cached_size_)*/ {}, /*decltype(_impl_._oneof_case_)*/ {}}
+    {
+    }
+    struct MessageOfMapObjDefaultTypeInternal
+    {
+        PROTOBUF_CONSTEXPR MessageOfMapObjDefaultTypeInternal() :
+            _instance(::_pbi::ConstantInitialized{})
+        {
+        }
+        ~MessageOfMapObjDefaultTypeInternal()
+        {
+        }
+        union
+        {
+            MessageOfMapObj _instance;
+        };
+    };
+    PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MessageOfMapObjDefaultTypeInternal _MessageOfMapObj_default_instance_;
     PROTOBUF_CONSTEXPR MessageOfMap_Row::MessageOfMap_Row(
         ::_pbi::ConstantInitialized
     ) :
@@ -180,7 +290,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.row_)*/ {}, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.row_)*/ {}, /*decltype(_impl_.map_obj_message_)*/ {}, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
     struct MessageOfMapDefaultTypeInternal
@@ -198,11 +308,55 @@ namespace protobuf
         };
     };
     PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MessageOfMapDefaultTypeInternal _MessageOfMap_default_instance_;
+    PROTOBUF_CONSTEXPR MessageOfObj::MessageOfObj(
+        ::_pbi::ConstantInitialized
+    ) :
+        _impl_{
+            /*decltype(_impl_.message_of_obj_)*/ {}, /*decltype(_impl_._cached_size_)*/ {}, /*decltype(_impl_._oneof_case_)*/ {}}
+    {
+    }
+    struct MessageOfObjDefaultTypeInternal
+    {
+        PROTOBUF_CONSTEXPR MessageOfObjDefaultTypeInternal() :
+            _instance(::_pbi::ConstantInitialized{})
+        {
+        }
+        ~MessageOfObjDefaultTypeInternal()
+        {
+        }
+        union
+        {
+            MessageOfObj _instance;
+        };
+    };
+    PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MessageOfObjDefaultTypeInternal _MessageOfObj_default_instance_;
+    PROTOBUF_CONSTEXPR MessageOfAll::MessageOfAll(
+        ::_pbi::ConstantInitialized
+    ) :
+        _impl_{
+            /*decltype(_impl_.game_time_)*/ 0, /*decltype(_impl_.subject_left_)*/ 0, /*decltype(_impl_.student_graduated_)*/ 0, /*decltype(_impl_.student_quited_)*/ 0, /*decltype(_impl_.student_score_)*/ 0, /*decltype(_impl_.tricker_score_)*/ 0, /*decltype(_impl_.gate_opened_)*/ false, /*decltype(_impl_.hidden_gate_refreshed_)*/ false, /*decltype(_impl_.hidden_gate_opened_)*/ false, /*decltype(_impl_._cached_size_)*/ {}}
+    {
+    }
+    struct MessageOfAllDefaultTypeInternal
+    {
+        PROTOBUF_CONSTEXPR MessageOfAllDefaultTypeInternal() :
+            _instance(::_pbi::ConstantInitialized{})
+        {
+        }
+        ~MessageOfAllDefaultTypeInternal()
+        {
+        }
+        union
+        {
+            MessageOfAll _instance;
+        };
+    };
+    PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MessageOfAllDefaultTypeInternal _MessageOfAll_default_instance_;
     PROTOBUF_CONSTEXPR MessageToClient::MessageToClient(
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.student_message_)*/ {}, /*decltype(_impl_.tricker_message_)*/ {}, /*decltype(_impl_.prop_message_)*/ {}, /*decltype(_impl_.bullet_message_)*/ {}, /*decltype(_impl_.bombed_bullet_message_)*/ {}, /*decltype(_impl_.map_message_)*/ nullptr, /*decltype(_impl_.game_state_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.obj_message_)*/ {}, /*decltype(_impl_.map_message_)*/ nullptr, /*decltype(_impl_.all_message_)*/ nullptr, /*decltype(_impl_.game_state_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
     struct MessageToClientDefaultTypeInternal
@@ -287,7 +441,7 @@ namespace protobuf
     };
     PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 MsgResDefaultTypeInternal _MsgRes_default_instance_;
 }  // namespace protobuf
-static ::_pb::Metadata file_level_metadata_Message2Clients_2eproto[12];
+static ::_pb::Metadata file_level_metadata_Message2Clients_2eproto[19];
 static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_Message2Clients_2eproto = nullptr;
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_Message2Clients_2eproto = nullptr;
 
@@ -306,7 +460,7 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.time_until_skill_available_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.place_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.prop_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.student_type_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.player_state_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.guid_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.state_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.fail_time_),
@@ -315,6 +469,11 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.view_range_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.radius_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.damage_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.danger_alert_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.score_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.treat_progress_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.rescue_progress_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.student_type_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfStudent, _impl_.buff_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfTricker, _internal_metadata_),
@@ -335,6 +494,9 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfTricker, _impl_.player_id_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfTricker, _impl_.view_range_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfTricker, _impl_.radius_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfTricker, _impl_.player_state_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfTricker, _impl_.trick_desire_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfTricker, _impl_.class_volume_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfTricker, _impl_.buff_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfBullet, _internal_metadata_),
@@ -388,6 +550,53 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfPickedProp, _impl_.facing_direction_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfPickedProp, _impl_.mapping_id_),
     ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfClassroom, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfClassroom, _impl_.x_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfClassroom, _impl_.y_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfClassroom, _impl_.progress_),
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfGate, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfGate, _impl_.x_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfGate, _impl_.y_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfGate, _impl_.progress_),
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfDoor, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfDoor, _impl_.x_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfDoor, _impl_.y_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfDoor, _impl_.is_open_),
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfChest, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfChest, _impl_.x_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfChest, _impl_.y_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfChest, _impl_.progress_),
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfMapObj, _internal_metadata_),
+    ~0u,  // no _extensions_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfMapObj, _impl_._oneof_case_[0]),
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfMapObj, _impl_.message_of_map_obj_),
+    ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfMap_Row, _internal_metadata_),
     ~0u,  // no _extensions_
     ~0u,  // no _oneof_case_
@@ -401,19 +610,44 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     ~0u,  // no _weak_field_map_
     ~0u,  // no _inlined_string_donated_
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfMap, _impl_.row_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfMap, _impl_.map_obj_message_),
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfObj, _internal_metadata_),
+    ~0u,  // no _extensions_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfObj, _impl_._oneof_case_[0]),
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfObj, _impl_.message_of_obj_),
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.game_time_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.subject_left_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.student_graduated_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.student_quited_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.student_score_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.tricker_score_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.gate_opened_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.hidden_gate_refreshed_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.hidden_gate_opened_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _internal_metadata_),
     ~0u,  // no _extensions_
     ~0u,  // no _oneof_case_
     ~0u,  // no _weak_field_map_
     ~0u,  // no _inlined_string_donated_
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.student_message_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.tricker_message_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.prop_message_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.bullet_message_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.bombed_bullet_message_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.obj_message_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.map_message_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.game_state_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _impl_.all_message_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MoveRes, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -442,17 +676,24 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
     {0, -1, -1, sizeof(::protobuf::MessageOfStudent)},
-    {24, -1, -1, sizeof(::protobuf::MessageOfTricker)},
-    {44, -1, -1, sizeof(::protobuf::MessageOfBullet)},
-    {58, -1, -1, sizeof(::protobuf::MessageOfBombedBullet)},
-    {70, -1, -1, sizeof(::protobuf::MessageOfProp)},
-    {84, -1, -1, sizeof(::protobuf::MessageOfPickedProp)},
-    {95, -1, -1, sizeof(::protobuf::MessageOfMap_Row)},
-    {102, -1, -1, sizeof(::protobuf::MessageOfMap)},
-    {109, -1, -1, sizeof(::protobuf::MessageToClient)},
-    {122, -1, -1, sizeof(::protobuf::MoveRes)},
-    {131, -1, -1, sizeof(::protobuf::BoolRes)},
-    {138, -1, -1, sizeof(::protobuf::MsgRes)},
+    {29, -1, -1, sizeof(::protobuf::MessageOfTricker)},
+    {52, -1, -1, sizeof(::protobuf::MessageOfBullet)},
+    {66, -1, -1, sizeof(::protobuf::MessageOfBombedBullet)},
+    {78, -1, -1, sizeof(::protobuf::MessageOfProp)},
+    {92, -1, -1, sizeof(::protobuf::MessageOfPickedProp)},
+    {103, -1, -1, sizeof(::protobuf::MessageOfClassroom)},
+    {112, -1, -1, sizeof(::protobuf::MessageOfGate)},
+    {121, -1, -1, sizeof(::protobuf::MessageOfDoor)},
+    {130, -1, -1, sizeof(::protobuf::MessageOfChest)},
+    {139, -1, -1, sizeof(::protobuf::MessageOfMapObj)},
+    {150, -1, -1, sizeof(::protobuf::MessageOfMap_Row)},
+    {157, -1, -1, sizeof(::protobuf::MessageOfMap)},
+    {165, -1, -1, sizeof(::protobuf::MessageOfObj)},
+    {177, -1, -1, sizeof(::protobuf::MessageOfAll)},
+    {192, -1, -1, sizeof(::protobuf::MessageToClient)},
+    {202, -1, -1, sizeof(::protobuf::MoveRes)},
+    {211, -1, -1, sizeof(::protobuf::BoolRes)},
+    {218, -1, -1, sizeof(::protobuf::MsgRes)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -462,8 +703,15 @@ static const ::_pb::Message* const file_default_instances[] = {
     &::protobuf::_MessageOfBombedBullet_default_instance_._instance,
     &::protobuf::_MessageOfProp_default_instance_._instance,
     &::protobuf::_MessageOfPickedProp_default_instance_._instance,
+    &::protobuf::_MessageOfClassroom_default_instance_._instance,
+    &::protobuf::_MessageOfGate_default_instance_._instance,
+    &::protobuf::_MessageOfDoor_default_instance_._instance,
+    &::protobuf::_MessageOfChest_default_instance_._instance,
+    &::protobuf::_MessageOfMapObj_default_instance_._instance,
     &::protobuf::_MessageOfMap_Row_default_instance_._instance,
     &::protobuf::_MessageOfMap_default_instance_._instance,
+    &::protobuf::_MessageOfObj_default_instance_._instance,
+    &::protobuf::_MessageOfAll_default_instance_._instance,
     &::protobuf::_MessageToClient_default_instance_._instance,
     &::protobuf::_MoveRes_default_instance_._instance,
     &::protobuf::_BoolRes_default_instance_._instance,
@@ -472,60 +720,88 @@ static const ::_pb::Message* const file_default_instances[] = {
 
 const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
     "\n\025Message2Clients.proto\022\010protobuf\032\021Messa"
-    "geType.proto\"\301\003\n\020MessageOfStudent\022\t\n\001x\030\001"
+    "geType.proto\"\303\004\n\020MessageOfStudent\022\t\n\001x\030\001"
     " \001(\005\022\t\n\001y\030\002 \001(\005\022\r\n\005speed\030\003 \001(\005\022\025\n\rdeterm"
     "ination\030\004 \001(\005\022\020\n\010fail_num\030\005 \001(\005\022\"\n\032time_"
     "until_skill_available\030\006 \001(\001\022\"\n\005place\030\007 \001"
-    "(\0162\023.protobuf.PlaceType\022 \n\004prop\030\010 \001(\0162\022."
-    "protobuf.PropType\022+\n\014student_type\030\t \001(\0162"
-    "\025.protobuf.StudentType\022\014\n\004guid\030\n \001(\003\022%\n\005"
-    "state\030\013 \001(\0162\026.protobuf.StudentState\022\021\n\tf"
-    "ail_time\030\014 \001(\001\022\020\n\010emo_time\030\016 \001(\001\022\021\n\tplay"
-    "er_id\030\017 \001(\003\022\022\n\nview_range\030\020 \001(\005\022\016\n\006radiu"
-    "s\030\021 \001(\005\022\016\n\006damage\030\022 \001(\005\022\'\n\004buff\030\023 \003(\0162\031."
-    "protobuf.StudentBuffType\"\335\002\n\020MessageOfTr"
-    "icker\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\r\n\005speed\030\003 \001"
-    "(\005\022\016\n\006damage\030\004 \001(\005\022\"\n\032time_until_skill_a"
-    "vailable\030\005 \001(\001\022\"\n\005place\030\006 \001(\0162\023.protobuf"
-    ".PlaceType\022 \n\004prop\030\007 \001(\0162\022.protobuf.Prop"
-    "Type\022+\n\014tricker_type\030\010 \001(\0162\025.protobuf.Tr"
-    "ickerType\022\014\n\004guid\030\t \001(\003\022\017\n\007movable\030\n \001(\010"
-    "\022\021\n\tplayer_id\030\013 \001(\003\022\022\n\nview_range\030\014 \001(\005\022"
-    "\016\n\006radius\030\r \001(\005\022\'\n\004buff\030\016 \003(\0162\031.protobuf"
-    ".TrickerBuffType\"\317\001\n\017MessageOfBullet\022\"\n\004"
-    "type\030\001 \001(\0162\024.protobuf.BulletType\022\t\n\001x\030\002 "
-    "\001(\005\022\t\n\001y\030\003 \001(\005\022\030\n\020facing_direction\030\004 \001(\001"
-    "\022\014\n\004guid\030\005 \001(\003\022\"\n\004team\030\006 \001(\0162\024.protobuf."
-    "PlayerType\022\"\n\005place\030\007 \001(\0162\023.protobuf.Pla"
-    "ceType\022\022\n\nbomb_range\030\010 \001(\001\"\223\001\n\025MessageOf"
-    "BombedBullet\022\"\n\004type\030\001 \001(\0162\024.protobuf.Bu"
-    "lletType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\030\n\020facing"
-    "_direction\030\004 \001(\001\022\022\n\nmapping_id\030\005 \001(\003\022\022\n\n"
-    "bomb_range\030\006 \001(\001\"\264\001\n\rMessageOfProp\022 \n\004ty"
-    "pe\030\001 \001(\0162\022.protobuf.PropType\022\t\n\001x\030\002 \001(\005\022"
-    "\t\n\001y\030\003 \001(\005\022\030\n\020facing_direction\030\004 \001(\001\022\014\n\004"
-    "guid\030\005 \001(\003\022\"\n\005place\030\006 \001(\0162\023.protobuf.Pla"
-    "ceType\022\014\n\004size\030\007 \001(\005\022\021\n\tis_moving\030\010 \001(\010\""
-    "{\n\023MessageOfPickedProp\022 \n\004type\030\001 \001(\0162\022.p"
-    "rotobuf.PropType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\030"
-    "\n\020facing_direction\030\004 \001(\001\022\022\n\nmapping_id\030\005"
-    " \001(\003\"`\n\014MessageOfMap\022\'\n\003row\030\002 \003(\0132\032.prot"
-    "obuf.MessageOfMap.Row\032\'\n\003Row\022 \n\003col\030\001 \003("
-    "\0162\023.protobuf.PlaceType\"\363\002\n\017MessageToClie"
-    "nt\0223\n\017student_message\030\001 \003(\0132\032.protobuf.M"
-    "essageOfStudent\0223\n\017tricker_message\030\002 \003(\013"
-    "2\032.protobuf.MessageOfTricker\022-\n\014prop_mes"
-    "sage\030\003 \003(\0132\027.protobuf.MessageOfProp\0221\n\016b"
-    "ullet_message\030\004 \003(\0132\031.protobuf.MessageOf"
-    "Bullet\022>\n\025bombed_bullet_message\030\005 \003(\0132\037."
-    "protobuf.MessageOfBombedBullet\022+\n\013map_me"
-    "ssage\030\006 \001(\0132\026.protobuf.MessageOfMap\022\'\n\ng"
-    "ame_state\030\007 \001(\0162\023.protobuf.GameState\"J\n\007"
-    "MoveRes\022\024\n\014actual_speed\030\001 \001(\003\022\024\n\014actual_"
-    "angle\030\002 \001(\001\022\023\n\013act_success\030\003 \001(\010\"\036\n\007Bool"
-    "Res\022\023\n\013act_success\030\001 \001(\010\"P\n\006MsgRes\022\024\n\014ha"
-    "ve_message\030\001 \001(\010\022\026\n\016from_player_id\030\002 \001(\003"
-    "\022\030\n\020message_received\030\003 \001(\tb\006proto3";
+    "(\0162\023.protobuf.PlaceType\022 \n\004prop\030\010 \003(\0162\022."
+    "protobuf.PropType\022+\n\014player_state\030\t \001(\0162"
+    "\025.protobuf.PlayerState\022\014\n\004guid\030\n \001(\003\022$\n\005"
+    "state\030\013 \001(\0162\025.protobuf.PlayerState\022\021\n\tfa"
+    "il_time\030\014 \001(\001\022\020\n\010emo_time\030\016 \001(\001\022\021\n\tplaye"
+    "r_id\030\017 \001(\003\022\022\n\nview_range\030\020 \001(\005\022\016\n\006radius"
+    "\030\021 \001(\005\022\016\n\006damage\030\022 \001(\005\022\024\n\014danger_alert\030\023"
+    " \001(\001\022\r\n\005score\030\024 \001(\005\022\026\n\016treat_progress\030\025 "
+    "\001(\005\022\027\n\017rescue_progress\030\026 \001(\005\022+\n\014student_"
+    "type\030\027 \001(\0162\025.protobuf.StudentType\022\'\n\004buf"
+    "f\030\030 \003(\0162\031.protobuf.StudentBuffType\"\266\003\n\020M"
+    "essageOfTricker\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\r\n"
+    "\005speed\030\003 \001(\005\022\016\n\006damage\030\004 \001(\005\022\"\n\032time_unt"
+    "il_skill_available\030\005 \001(\001\022\"\n\005place\030\006 \001(\0162"
+    "\023.protobuf.PlaceType\022 \n\004prop\030\007 \003(\0162\022.pro"
+    "tobuf.PropType\022+\n\014tricker_type\030\010 \001(\0162\025.p"
+    "rotobuf.TrickerType\022\014\n\004guid\030\t \001(\003\022\017\n\007mov"
+    "able\030\n \001(\010\022\021\n\tplayer_id\030\013 \001(\003\022\022\n\nview_ra"
+    "nge\030\014 \001(\005\022\016\n\006radius\030\r \001(\005\022+\n\014player_stat"
+    "e\030\016 \001(\0162\025.protobuf.PlayerState\022\024\n\014trick_"
+    "desire\030\017 \001(\001\022\024\n\014class_volume\030\020 \001(\001\022\'\n\004bu"
+    "ff\030\021 \003(\0162\031.protobuf.TrickerBuffType\"\317\001\n\017"
+    "MessageOfBullet\022\"\n\004type\030\001 \001(\0162\024.protobuf"
+    ".BulletType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\030\n\020fac"
+    "ing_direction\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\022\"\n\004tea"
+    "m\030\006 \001(\0162\024.protobuf.PlayerType\022\"\n\005place\030\007"
+    " \001(\0162\023.protobuf.PlaceType\022\022\n\nbomb_range\030"
+    "\010 \001(\001\"\223\001\n\025MessageOfBombedBullet\022\"\n\004type\030"
+    "\001 \001(\0162\024.protobuf.BulletType\022\t\n\001x\030\002 \001(\005\022\t"
+    "\n\001y\030\003 \001(\005\022\030\n\020facing_direction\030\004 \001(\001\022\022\n\nm"
+    "apping_id\030\005 \001(\003\022\022\n\nbomb_range\030\006 \001(\001\"\264\001\n\r"
+    "MessageOfProp\022 \n\004type\030\001 \001(\0162\022.protobuf.P"
+    "ropType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\030\n\020facing_"
+    "direction\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\022\"\n\005place\030\006"
+    " \001(\0162\023.protobuf.PlaceType\022\014\n\004size\030\007 \001(\005\022"
+    "\021\n\tis_moving\030\010 \001(\010\"{\n\023MessageOfPickedPro"
+    "p\022 \n\004type\030\001 \001(\0162\022.protobuf.PropType\022\t\n\001x"
+    "\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\030\n\020facing_direction\030\004 "
+    "\001(\001\022\022\n\nmapping_id\030\005 \001(\003\"<\n\022MessageOfClas"
+    "sroom\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\020\n\010progress\030"
+    "\003 \001(\005\"7\n\rMessageOfGate\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002"
+    " \001(\005\022\020\n\010progress\030\003 \001(\005\"6\n\rMessageOfDoor\022"
+    "\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\017\n\007is_open\030\003 \001(\010\"8"
+    "\n\016MessageOfChest\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\020"
+    "\n\010progress\030\003 \001(\005\"\367\001\n\017MessageOfMapObj\0229\n\021"
+    "classroom_message\030\001 \001(\0132\034.protobuf.Messa"
+    "geOfClassroomH\000\022/\n\014door_message\030\002 \001(\0132\027."
+    "protobuf.MessageOfDoorH\000\022/\n\014gate_message"
+    "\030\003 \001(\0132\027.protobuf.MessageOfGateH\000\0221\n\rche"
+    "st_message\030\004 \001(\0132\030.protobuf.MessageOfChe"
+    "stH\000B\024\n\022message_of_map_obj\"\224\001\n\014MessageOf"
+    "Map\022\'\n\003row\030\002 \003(\0132\032.protobuf.MessageOfMap"
+    ".Row\0222\n\017map_obj_message\030\003 \003(\0132\031.protobuf"
+    ".MessageOfMapObj\032\'\n\003Row\022 \n\003col\030\001 \003(\0162\023.p"
+    "rotobuf.PlaceType\"\266\002\n\014MessageOfObj\0225\n\017st"
+    "udent_message\030\001 \001(\0132\032.protobuf.MessageOf"
+    "StudentH\000\0225\n\017tricker_message\030\002 \001(\0132\032.pro"
+    "tobuf.MessageOfTrickerH\000\022/\n\014prop_message"
+    "\030\003 \001(\0132\027.protobuf.MessageOfPropH\000\0223\n\016bul"
+    "let_message\030\004 \001(\0132\031.protobuf.MessageOfBu"
+    "lletH\000\022@\n\025bombed_bullet_message\030\005 \001(\0132\037."
+    "protobuf.MessageOfBombedBulletH\000B\020\n\016mess"
+    "age_of_obj\"\350\001\n\014MessageOfAll\022\021\n\tgame_time"
+    "\030\001 \001(\005\022\024\n\014subject_left\030\002 \001(\005\022\031\n\021student_"
+    "graduated\030\003 \001(\005\022\026\n\016student_quited\030\004 \001(\005\022"
+    "\025\n\rstudent_score\030\005 \001(\005\022\025\n\rtricker_score\030"
+    "\006 \001(\005\022\023\n\013gate_opened\030\007 \001(\010\022\035\n\025hidden_gat"
+    "e_refreshed\030\010 \001(\010\022\032\n\022hidden_gate_opened\030"
+    "\t \001(\010\"\301\001\n\017MessageToClient\022+\n\013obj_message"
+    "\030\001 \003(\0132\026.protobuf.MessageOfObj\022+\n\013map_me"
+    "ssage\030\002 \001(\0132\026.protobuf.MessageOfMap\022\'\n\ng"
+    "ame_state\030\003 \001(\0162\023.protobuf.GameState\022+\n\013"
+    "all_message\030\004 \001(\0132\026.protobuf.MessageOfAl"
+    "l\"J\n\007MoveRes\022\024\n\014actual_speed\030\001 \001(\003\022\024\n\014ac"
+    "tual_angle\030\002 \001(\001\022\023\n\013act_success\030\003 \001(\010\"\036\n"
+    "\007BoolRes\022\023\n\013act_success\030\001 \001(\010\"P\n\006MsgRes\022"
+    "\024\n\014have_message\030\001 \001(\010\022\026\n\016from_player_id\030"
+    "\002 \001(\003\022\030\n\020message_received\030\003 \001(\tb\006proto3";
 static const ::_pbi::DescriptorTable* const descriptor_table_Message2Clients_2eproto_deps[1] = {
     &::descriptor_table_MessageType_2eproto,
 };
@@ -533,13 +809,13 @@ static ::_pbi::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Message2Clients_2eproto = {
     false,
     false,
-    2194,
+    3319,
     descriptor_table_protodef_Message2Clients_2eproto,
     "Message2Clients.proto",
     &descriptor_table_Message2Clients_2eproto_once,
     descriptor_table_Message2Clients_2eproto_deps,
     1,
-    12,
+    19,
     schemas,
     file_default_instances,
     TableStruct_Message2Clients_2eproto::offsets,
@@ -576,10 +852,10 @@ namespace protobuf
         MessageOfStudent* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.buff_){from._impl_.buff_}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){}, decltype(_impl_.y_){}, decltype(_impl_.speed_){}, decltype(_impl_.determination_){}, decltype(_impl_.time_until_skill_available_){}, decltype(_impl_.fail_num_){}, decltype(_impl_.place_){}, decltype(_impl_.prop_){}, decltype(_impl_.student_type_){}, decltype(_impl_.guid_){}, decltype(_impl_.fail_time_){}, decltype(_impl_.state_){}, decltype(_impl_.view_range_){}, decltype(_impl_.emo_time_){}, decltype(_impl_.player_id_){}, decltype(_impl_.radius_){}, decltype(_impl_.damage_){}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.prop_){from._impl_.prop_}, /*decltype(_impl_._prop_cached_byte_size_)*/ {0}, decltype(_impl_.buff_){from._impl_.buff_}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){}, decltype(_impl_.y_){}, decltype(_impl_.speed_){}, decltype(_impl_.determination_){}, decltype(_impl_.time_until_skill_available_){}, decltype(_impl_.fail_num_){}, decltype(_impl_.place_){}, decltype(_impl_.guid_){}, decltype(_impl_.player_state_){}, decltype(_impl_.state_){}, decltype(_impl_.fail_time_){}, decltype(_impl_.emo_time_){}, decltype(_impl_.player_id_){}, decltype(_impl_.view_range_){}, decltype(_impl_.radius_){}, decltype(_impl_.danger_alert_){}, decltype(_impl_.damage_){}, decltype(_impl_.score_){}, decltype(_impl_.treat_progress_){}, decltype(_impl_.rescue_progress_){}, decltype(_impl_.student_type_){}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-        ::memcpy(&_impl_.x_, &from._impl_.x_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.damage_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.damage_));
+        ::memcpy(&_impl_.x_, &from._impl_.x_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.student_type_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.student_type_));
         // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfStudent)
     }
 
@@ -590,7 +866,7 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.buff_){arena}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){0}, decltype(_impl_.y_){0}, decltype(_impl_.speed_){0}, decltype(_impl_.determination_){0}, decltype(_impl_.time_until_skill_available_){0}, decltype(_impl_.fail_num_){0}, decltype(_impl_.place_){0}, decltype(_impl_.prop_){0}, decltype(_impl_.student_type_){0}, decltype(_impl_.guid_){int64_t{0}}, decltype(_impl_.fail_time_){0}, decltype(_impl_.state_){0}, decltype(_impl_.view_range_){0}, decltype(_impl_.emo_time_){0}, decltype(_impl_.player_id_){int64_t{0}}, decltype(_impl_.radius_){0}, decltype(_impl_.damage_){0}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.prop_){arena}, /*decltype(_impl_._prop_cached_byte_size_)*/ {0}, decltype(_impl_.buff_){arena}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){0}, decltype(_impl_.y_){0}, decltype(_impl_.speed_){0}, decltype(_impl_.determination_){0}, decltype(_impl_.time_until_skill_available_){0}, decltype(_impl_.fail_num_){0}, decltype(_impl_.place_){0}, decltype(_impl_.guid_){int64_t{0}}, decltype(_impl_.player_state_){0}, decltype(_impl_.state_){0}, decltype(_impl_.fail_time_){0}, decltype(_impl_.emo_time_){0}, decltype(_impl_.player_id_){int64_t{0}}, decltype(_impl_.view_range_){0}, decltype(_impl_.radius_){0}, decltype(_impl_.danger_alert_){0}, decltype(_impl_.damage_){0}, decltype(_impl_.score_){0}, decltype(_impl_.treat_progress_){0}, decltype(_impl_.rescue_progress_){0}, decltype(_impl_.student_type_){0}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
     MessageOfStudent::~MessageOfStudent()
@@ -607,6 +883,7 @@ namespace protobuf
     inline void MessageOfStudent::SharedDtor()
     {
         GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+        _impl_.prop_.~RepeatedField();
         _impl_.buff_.~RepeatedField();
     }
 
@@ -622,8 +899,9 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
+        _impl_.prop_.Clear();
         _impl_.buff_.Clear();
-        ::memset(&_impl_.x_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.damage_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.damage_));
+        ::memset(&_impl_.x_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.student_type_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.student_type_));
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -709,24 +987,29 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // .protobuf.PropType prop = 8;
+                // repeated .protobuf.PropType prop = 8;
                 case 8:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64))
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 66))
+                    {
+                        ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedEnumParser(_internal_mutable_prop(), ptr, ctx);
+                        CHK_(ptr);
+                    }
+                    else if (static_cast<uint8_t>(tag) == 64)
                     {
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
-                        _internal_set_prop(static_cast<::protobuf::PropType>(val));
+                        _internal_add_prop(static_cast<::protobuf::PropType>(val));
                     }
                     else
                         goto handle_unusual;
                     continue;
-                // .protobuf.StudentType student_type = 9;
+                // .protobuf.PlayerState player_state = 9;
                 case 9:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 72))
                     {
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
-                        _internal_set_student_type(static_cast<::protobuf::StudentType>(val));
+                        _internal_set_player_state(static_cast<::protobuf::PlayerState>(val));
                     }
                     else
                         goto handle_unusual;
@@ -741,13 +1024,13 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // .protobuf.StudentState state = 11;
+                // .protobuf.PlayerState state = 11;
                 case 11:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 88))
                     {
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
-                        _internal_set_state(static_cast<::protobuf::StudentState>(val));
+                        _internal_set_state(static_cast<::protobuf::PlayerState>(val));
                     }
                     else
                         goto handle_unusual;
@@ -812,14 +1095,65 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // repeated .protobuf.StudentBuffType buff = 19;
+                // double danger_alert = 19;
                 case 19:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 154))
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 153))
+                    {
+                        _impl_.danger_alert_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+                        ptr += sizeof(double);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 score = 20;
+                case 20:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 160))
+                    {
+                        _impl_.score_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 treat_progress = 21;
+                case 21:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 168))
+                    {
+                        _impl_.treat_progress_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 rescue_progress = 22;
+                case 22:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 176))
+                    {
+                        _impl_.rescue_progress_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // .protobuf.StudentType student_type = 23;
+                case 23:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 184))
+                    {
+                        uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        CHK_(ptr);
+                        _internal_set_student_type(static_cast<::protobuf::StudentType>(val));
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // repeated .protobuf.StudentBuffType buff = 24;
+                case 24:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 194))
                     {
                         ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedEnumParser(_internal_mutable_buff(), ptr, ctx);
                         CHK_(ptr);
                     }
-                    else if (static_cast<uint8_t>(tag) == 152)
+                    else if (static_cast<uint8_t>(tag) == 192)
                     {
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
@@ -917,21 +1251,23 @@ namespace protobuf
             );
         }
 
-        // .protobuf.PropType prop = 8;
-        if (this->_internal_prop() != 0)
+        // repeated .protobuf.PropType prop = 8;
         {
-            target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteEnumToArray(
-                8, this->_internal_prop(), target
-            );
+            int byte_size = _impl_._prop_cached_byte_size_.load(std::memory_order_relaxed);
+            if (byte_size > 0)
+            {
+                target = stream->WriteEnumPacked(
+                    8, _impl_.prop_, byte_size, target
+                );
+            }
         }
 
-        // .protobuf.StudentType student_type = 9;
-        if (this->_internal_student_type() != 0)
+        // .protobuf.PlayerState player_state = 9;
+        if (this->_internal_player_state() != 0)
         {
             target = stream->EnsureSpace(target);
             target = ::_pbi::WireFormatLite::WriteEnumToArray(
-                9, this->_internal_student_type(), target
+                9, this->_internal_player_state(), target
             );
         }
 
@@ -942,7 +1278,7 @@ namespace protobuf
             target = ::_pbi::WireFormatLite::WriteInt64ToArray(10, this->_internal_guid(), target);
         }
 
-        // .protobuf.StudentState state = 11;
+        // .protobuf.PlayerState state = 11;
         if (this->_internal_state() != 0)
         {
             target = stream->EnsureSpace(target);
@@ -1001,13 +1337,54 @@ namespace protobuf
             target = ::_pbi::WireFormatLite::WriteInt32ToArray(18, this->_internal_damage(), target);
         }
 
-        // repeated .protobuf.StudentBuffType buff = 19;
+        // double danger_alert = 19;
+        static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+        double tmp_danger_alert = this->_internal_danger_alert();
+        uint64_t raw_danger_alert;
+        memcpy(&raw_danger_alert, &tmp_danger_alert, sizeof(tmp_danger_alert));
+        if (raw_danger_alert != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteDoubleToArray(19, this->_internal_danger_alert(), target);
+        }
+
+        // int32 score = 20;
+        if (this->_internal_score() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(20, this->_internal_score(), target);
+        }
+
+        // int32 treat_progress = 21;
+        if (this->_internal_treat_progress() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(21, this->_internal_treat_progress(), target);
+        }
+
+        // int32 rescue_progress = 22;
+        if (this->_internal_rescue_progress() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(22, this->_internal_rescue_progress(), target);
+        }
+
+        // .protobuf.StudentType student_type = 23;
+        if (this->_internal_student_type() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteEnumToArray(
+                23, this->_internal_student_type(), target
+            );
+        }
+
+        // repeated .protobuf.StudentBuffType buff = 24;
         {
             int byte_size = _impl_._buff_cached_byte_size_.load(std::memory_order_relaxed);
             if (byte_size > 0)
             {
                 target = stream->WriteEnumPacked(
-                    19, _impl_.buff_, byte_size, target
+                    24, _impl_.buff_, byte_size, target
                 );
             }
         }
@@ -1031,7 +1408,27 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        // repeated .protobuf.StudentBuffType buff = 19;
+        // repeated .protobuf.PropType prop = 8;
+        {
+            size_t data_size = 0;
+            unsigned int count = static_cast<unsigned int>(this->_internal_prop_size());
+            for (unsigned int i = 0; i < count; i++)
+            {
+                data_size += ::_pbi::WireFormatLite::EnumSize(
+                    this->_internal_prop(static_cast<int>(i))
+                );
+            }
+            if (data_size > 0)
+            {
+                total_size += 1 +
+                              ::_pbi::WireFormatLite::Int32Size(static_cast<int32_t>(data_size));
+            }
+            int cached_size = ::_pbi::ToCachedSize(data_size);
+            _impl_._prop_cached_byte_size_.store(cached_size, std::memory_order_relaxed);
+            total_size += data_size;
+        }
+
+        // repeated .protobuf.StudentBuffType buff = 24;
         {
             size_t data_size = 0;
             unsigned int count = static_cast<unsigned int>(this->_internal_buff_size());
@@ -1098,24 +1495,24 @@ namespace protobuf
                           ::_pbi::WireFormatLite::EnumSize(this->_internal_place());
         }
 
-        // .protobuf.PropType prop = 8;
-        if (this->_internal_prop() != 0)
-        {
-            total_size += 1 +
-                          ::_pbi::WireFormatLite::EnumSize(this->_internal_prop());
-        }
-
-        // .protobuf.StudentType student_type = 9;
-        if (this->_internal_student_type() != 0)
-        {
-            total_size += 1 +
-                          ::_pbi::WireFormatLite::EnumSize(this->_internal_student_type());
-        }
-
         // int64 guid = 10;
         if (this->_internal_guid() != 0)
         {
             total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_guid());
+        }
+
+        // .protobuf.PlayerState player_state = 9;
+        if (this->_internal_player_state() != 0)
+        {
+            total_size += 1 +
+                          ::_pbi::WireFormatLite::EnumSize(this->_internal_player_state());
+        }
+
+        // .protobuf.PlayerState state = 11;
+        if (this->_internal_state() != 0)
+        {
+            total_size += 1 +
+                          ::_pbi::WireFormatLite::EnumSize(this->_internal_state());
         }
 
         // double fail_time = 12;
@@ -1126,22 +1523,6 @@ namespace protobuf
         if (raw_fail_time != 0)
         {
             total_size += 1 + 8;
-        }
-
-        // .protobuf.StudentState state = 11;
-        if (this->_internal_state() != 0)
-        {
-            total_size += 1 +
-                          ::_pbi::WireFormatLite::EnumSize(this->_internal_state());
-        }
-
-        // int32 view_range = 16;
-        if (this->_internal_view_range() != 0)
-        {
-            total_size += 2 +
-                          ::_pbi::WireFormatLite::Int32Size(
-                              this->_internal_view_range()
-                          );
         }
 
         // double emo_time = 14;
@@ -1160,6 +1541,15 @@ namespace protobuf
             total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_player_id());
         }
 
+        // int32 view_range = 16;
+        if (this->_internal_view_range() != 0)
+        {
+            total_size += 2 +
+                          ::_pbi::WireFormatLite::Int32Size(
+                              this->_internal_view_range()
+                          );
+        }
+
         // int32 radius = 17;
         if (this->_internal_radius() != 0)
         {
@@ -1169,6 +1559,16 @@ namespace protobuf
                           );
         }
 
+        // double danger_alert = 19;
+        static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+        double tmp_danger_alert = this->_internal_danger_alert();
+        uint64_t raw_danger_alert;
+        memcpy(&raw_danger_alert, &tmp_danger_alert, sizeof(tmp_danger_alert));
+        if (raw_danger_alert != 0)
+        {
+            total_size += 2 + 8;
+        }
+
         // int32 damage = 18;
         if (this->_internal_damage() != 0)
         {
@@ -1176,6 +1576,40 @@ namespace protobuf
                           ::_pbi::WireFormatLite::Int32Size(
                               this->_internal_damage()
                           );
+        }
+
+        // int32 score = 20;
+        if (this->_internal_score() != 0)
+        {
+            total_size += 2 +
+                          ::_pbi::WireFormatLite::Int32Size(
+                              this->_internal_score()
+                          );
+        }
+
+        // int32 treat_progress = 21;
+        if (this->_internal_treat_progress() != 0)
+        {
+            total_size += 2 +
+                          ::_pbi::WireFormatLite::Int32Size(
+                              this->_internal_treat_progress()
+                          );
+        }
+
+        // int32 rescue_progress = 22;
+        if (this->_internal_rescue_progress() != 0)
+        {
+            total_size += 2 +
+                          ::_pbi::WireFormatLite::Int32Size(
+                              this->_internal_rescue_progress()
+                          );
+        }
+
+        // .protobuf.StudentType student_type = 23;
+        if (this->_internal_student_type() != 0)
+        {
+            total_size += 2 +
+                          ::_pbi::WireFormatLite::EnumSize(this->_internal_student_type());
         }
 
         return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -1198,6 +1632,7 @@ namespace protobuf
         uint32_t cached_has_bits = 0;
         (void)cached_has_bits;
 
+        _this->_impl_.prop_.MergeFrom(from._impl_.prop_);
         _this->_impl_.buff_.MergeFrom(from._impl_.buff_);
         if (from._internal_x() != 0)
         {
@@ -1231,17 +1666,17 @@ namespace protobuf
         {
             _this->_internal_set_place(from._internal_place());
         }
-        if (from._internal_prop() != 0)
-        {
-            _this->_internal_set_prop(from._internal_prop());
-        }
-        if (from._internal_student_type() != 0)
-        {
-            _this->_internal_set_student_type(from._internal_student_type());
-        }
         if (from._internal_guid() != 0)
         {
             _this->_internal_set_guid(from._internal_guid());
+        }
+        if (from._internal_player_state() != 0)
+        {
+            _this->_internal_set_player_state(from._internal_player_state());
+        }
+        if (from._internal_state() != 0)
+        {
+            _this->_internal_set_state(from._internal_state());
         }
         static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
         double tmp_fail_time = from._internal_fail_time();
@@ -1250,14 +1685,6 @@ namespace protobuf
         if (raw_fail_time != 0)
         {
             _this->_internal_set_fail_time(from._internal_fail_time());
-        }
-        if (from._internal_state() != 0)
-        {
-            _this->_internal_set_state(from._internal_state());
-        }
-        if (from._internal_view_range() != 0)
-        {
-            _this->_internal_set_view_range(from._internal_view_range());
         }
         static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
         double tmp_emo_time = from._internal_emo_time();
@@ -1271,13 +1698,41 @@ namespace protobuf
         {
             _this->_internal_set_player_id(from._internal_player_id());
         }
+        if (from._internal_view_range() != 0)
+        {
+            _this->_internal_set_view_range(from._internal_view_range());
+        }
         if (from._internal_radius() != 0)
         {
             _this->_internal_set_radius(from._internal_radius());
         }
+        static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+        double tmp_danger_alert = from._internal_danger_alert();
+        uint64_t raw_danger_alert;
+        memcpy(&raw_danger_alert, &tmp_danger_alert, sizeof(tmp_danger_alert));
+        if (raw_danger_alert != 0)
+        {
+            _this->_internal_set_danger_alert(from._internal_danger_alert());
+        }
         if (from._internal_damage() != 0)
         {
             _this->_internal_set_damage(from._internal_damage());
+        }
+        if (from._internal_score() != 0)
+        {
+            _this->_internal_set_score(from._internal_score());
+        }
+        if (from._internal_treat_progress() != 0)
+        {
+            _this->_internal_set_treat_progress(from._internal_treat_progress());
+        }
+        if (from._internal_rescue_progress() != 0)
+        {
+            _this->_internal_set_rescue_progress(from._internal_rescue_progress());
+        }
+        if (from._internal_student_type() != 0)
+        {
+            _this->_internal_set_student_type(from._internal_student_type());
         }
         _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
@@ -1300,9 +1755,10 @@ namespace protobuf
     {
         using std::swap;
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+        _impl_.prop_.InternalSwap(&other->_impl_.prop_);
         _impl_.buff_.InternalSwap(&other->_impl_.buff_);
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-            PROTOBUF_FIELD_OFFSET(MessageOfStudent, _impl_.damage_) + sizeof(MessageOfStudent::_impl_.damage_) - PROTOBUF_FIELD_OFFSET(MessageOfStudent, _impl_.x_)>(
+            PROTOBUF_FIELD_OFFSET(MessageOfStudent, _impl_.student_type_) + sizeof(MessageOfStudent::_impl_.student_type_) - PROTOBUF_FIELD_OFFSET(MessageOfStudent, _impl_.x_)>(
             reinterpret_cast<char*>(&_impl_.x_),
             reinterpret_cast<char*>(&other->_impl_.x_)
         );
@@ -1334,10 +1790,10 @@ namespace protobuf
         MessageOfTricker* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.buff_){from._impl_.buff_}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){}, decltype(_impl_.y_){}, decltype(_impl_.speed_){}, decltype(_impl_.damage_){}, decltype(_impl_.time_until_skill_available_){}, decltype(_impl_.place_){}, decltype(_impl_.prop_){}, decltype(_impl_.guid_){}, decltype(_impl_.tricker_type_){}, decltype(_impl_.movable_){}, decltype(_impl_.player_id_){}, decltype(_impl_.view_range_){}, decltype(_impl_.radius_){}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.prop_){from._impl_.prop_}, /*decltype(_impl_._prop_cached_byte_size_)*/ {0}, decltype(_impl_.buff_){from._impl_.buff_}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){}, decltype(_impl_.y_){}, decltype(_impl_.speed_){}, decltype(_impl_.damage_){}, decltype(_impl_.time_until_skill_available_){}, decltype(_impl_.place_){}, decltype(_impl_.tricker_type_){}, decltype(_impl_.guid_){}, decltype(_impl_.player_id_){}, decltype(_impl_.movable_){}, decltype(_impl_.view_range_){}, decltype(_impl_.radius_){}, decltype(_impl_.player_state_){}, decltype(_impl_.trick_desire_){}, decltype(_impl_.class_volume_){}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-        ::memcpy(&_impl_.x_, &from._impl_.x_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.radius_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.radius_));
+        ::memcpy(&_impl_.x_, &from._impl_.x_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.class_volume_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.class_volume_));
         // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfTricker)
     }
 
@@ -1348,7 +1804,7 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.buff_){arena}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){0}, decltype(_impl_.y_){0}, decltype(_impl_.speed_){0}, decltype(_impl_.damage_){0}, decltype(_impl_.time_until_skill_available_){0}, decltype(_impl_.place_){0}, decltype(_impl_.prop_){0}, decltype(_impl_.guid_){int64_t{0}}, decltype(_impl_.tricker_type_){0}, decltype(_impl_.movable_){false}, decltype(_impl_.player_id_){int64_t{0}}, decltype(_impl_.view_range_){0}, decltype(_impl_.radius_){0}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.prop_){arena}, /*decltype(_impl_._prop_cached_byte_size_)*/ {0}, decltype(_impl_.buff_){arena}, /*decltype(_impl_._buff_cached_byte_size_)*/ {0}, decltype(_impl_.x_){0}, decltype(_impl_.y_){0}, decltype(_impl_.speed_){0}, decltype(_impl_.damage_){0}, decltype(_impl_.time_until_skill_available_){0}, decltype(_impl_.place_){0}, decltype(_impl_.tricker_type_){0}, decltype(_impl_.guid_){int64_t{0}}, decltype(_impl_.player_id_){int64_t{0}}, decltype(_impl_.movable_){false}, decltype(_impl_.view_range_){0}, decltype(_impl_.radius_){0}, decltype(_impl_.player_state_){0}, decltype(_impl_.trick_desire_){0}, decltype(_impl_.class_volume_){0}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
     MessageOfTricker::~MessageOfTricker()
@@ -1365,6 +1821,7 @@ namespace protobuf
     inline void MessageOfTricker::SharedDtor()
     {
         GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+        _impl_.prop_.~RepeatedField();
         _impl_.buff_.~RepeatedField();
     }
 
@@ -1380,8 +1837,9 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
+        _impl_.prop_.Clear();
         _impl_.buff_.Clear();
-        ::memset(&_impl_.x_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.radius_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.radius_));
+        ::memset(&_impl_.x_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.class_volume_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.class_volume_));
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -1457,13 +1915,18 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // .protobuf.PropType prop = 7;
+                // repeated .protobuf.PropType prop = 7;
                 case 7:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56))
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 58))
+                    {
+                        ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedEnumParser(_internal_mutable_prop(), ptr, ctx);
+                        CHK_(ptr);
+                    }
+                    else if (static_cast<uint8_t>(tag) == 56)
                     {
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
-                        _internal_set_prop(static_cast<::protobuf::PropType>(val));
+                        _internal_add_prop(static_cast<::protobuf::PropType>(val));
                     }
                     else
                         goto handle_unusual;
@@ -1529,14 +1992,45 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // repeated .protobuf.TrickerBuffType buff = 14;
+                // .protobuf.PlayerState player_state = 14;
                 case 14:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 114))
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 112))
+                    {
+                        uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        CHK_(ptr);
+                        _internal_set_player_state(static_cast<::protobuf::PlayerState>(val));
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // double trick_desire = 15;
+                case 15:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 121))
+                    {
+                        _impl_.trick_desire_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+                        ptr += sizeof(double);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // double class_volume = 16;
+                case 16:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 129))
+                    {
+                        _impl_.class_volume_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+                        ptr += sizeof(double);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // repeated .protobuf.TrickerBuffType buff = 17;
+                case 17:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 138))
                     {
                         ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedEnumParser(_internal_mutable_buff(), ptr, ctx);
                         CHK_(ptr);
                     }
-                    else if (static_cast<uint8_t>(tag) == 112)
+                    else if (static_cast<uint8_t>(tag) == 136)
                     {
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
@@ -1627,13 +2121,15 @@ namespace protobuf
             );
         }
 
-        // .protobuf.PropType prop = 7;
-        if (this->_internal_prop() != 0)
+        // repeated .protobuf.PropType prop = 7;
         {
-            target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteEnumToArray(
-                7, this->_internal_prop(), target
-            );
+            int byte_size = _impl_._prop_cached_byte_size_.load(std::memory_order_relaxed);
+            if (byte_size > 0)
+            {
+                target = stream->WriteEnumPacked(
+                    7, _impl_.prop_, byte_size, target
+                );
+            }
         }
 
         // .protobuf.TrickerType tricker_type = 8;
@@ -1680,13 +2176,44 @@ namespace protobuf
             target = ::_pbi::WireFormatLite::WriteInt32ToArray(13, this->_internal_radius(), target);
         }
 
-        // repeated .protobuf.TrickerBuffType buff = 14;
+        // .protobuf.PlayerState player_state = 14;
+        if (this->_internal_player_state() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteEnumToArray(
+                14, this->_internal_player_state(), target
+            );
+        }
+
+        // double trick_desire = 15;
+        static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+        double tmp_trick_desire = this->_internal_trick_desire();
+        uint64_t raw_trick_desire;
+        memcpy(&raw_trick_desire, &tmp_trick_desire, sizeof(tmp_trick_desire));
+        if (raw_trick_desire != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteDoubleToArray(15, this->_internal_trick_desire(), target);
+        }
+
+        // double class_volume = 16;
+        static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+        double tmp_class_volume = this->_internal_class_volume();
+        uint64_t raw_class_volume;
+        memcpy(&raw_class_volume, &tmp_class_volume, sizeof(tmp_class_volume));
+        if (raw_class_volume != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteDoubleToArray(16, this->_internal_class_volume(), target);
+        }
+
+        // repeated .protobuf.TrickerBuffType buff = 17;
         {
             int byte_size = _impl_._buff_cached_byte_size_.load(std::memory_order_relaxed);
             if (byte_size > 0)
             {
                 target = stream->WriteEnumPacked(
-                    14, _impl_.buff_, byte_size, target
+                    17, _impl_.buff_, byte_size, target
                 );
             }
         }
@@ -1710,7 +2237,27 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        // repeated .protobuf.TrickerBuffType buff = 14;
+        // repeated .protobuf.PropType prop = 7;
+        {
+            size_t data_size = 0;
+            unsigned int count = static_cast<unsigned int>(this->_internal_prop_size());
+            for (unsigned int i = 0; i < count; i++)
+            {
+                data_size += ::_pbi::WireFormatLite::EnumSize(
+                    this->_internal_prop(static_cast<int>(i))
+                );
+            }
+            if (data_size > 0)
+            {
+                total_size += 1 +
+                              ::_pbi::WireFormatLite::Int32Size(static_cast<int32_t>(data_size));
+            }
+            int cached_size = ::_pbi::ToCachedSize(data_size);
+            _impl_._prop_cached_byte_size_.store(cached_size, std::memory_order_relaxed);
+            total_size += data_size;
+        }
+
+        // repeated .protobuf.TrickerBuffType buff = 17;
         {
             size_t data_size = 0;
             unsigned int count = static_cast<unsigned int>(this->_internal_buff_size());
@@ -1722,7 +2269,7 @@ namespace protobuf
             }
             if (data_size > 0)
             {
-                total_size += 1 +
+                total_size += 2 +
                               ::_pbi::WireFormatLite::Int32Size(static_cast<int32_t>(data_size));
             }
             int cached_size = ::_pbi::ToCachedSize(data_size);
@@ -1771,11 +2318,11 @@ namespace protobuf
                           ::_pbi::WireFormatLite::EnumSize(this->_internal_place());
         }
 
-        // .protobuf.PropType prop = 7;
-        if (this->_internal_prop() != 0)
+        // .protobuf.TrickerType tricker_type = 8;
+        if (this->_internal_tricker_type() != 0)
         {
             total_size += 1 +
-                          ::_pbi::WireFormatLite::EnumSize(this->_internal_prop());
+                          ::_pbi::WireFormatLite::EnumSize(this->_internal_tricker_type());
         }
 
         // int64 guid = 9;
@@ -1784,23 +2331,16 @@ namespace protobuf
             total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_guid());
         }
 
-        // .protobuf.TrickerType tricker_type = 8;
-        if (this->_internal_tricker_type() != 0)
+        // int64 player_id = 11;
+        if (this->_internal_player_id() != 0)
         {
-            total_size += 1 +
-                          ::_pbi::WireFormatLite::EnumSize(this->_internal_tricker_type());
+            total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_player_id());
         }
 
         // bool movable = 10;
         if (this->_internal_movable() != 0)
         {
             total_size += 1 + 1;
-        }
-
-        // int64 player_id = 11;
-        if (this->_internal_player_id() != 0)
-        {
-            total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_player_id());
         }
 
         // int32 view_range = 12;
@@ -1813,6 +2353,33 @@ namespace protobuf
         if (this->_internal_radius() != 0)
         {
             total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_radius());
+        }
+
+        // .protobuf.PlayerState player_state = 14;
+        if (this->_internal_player_state() != 0)
+        {
+            total_size += 1 +
+                          ::_pbi::WireFormatLite::EnumSize(this->_internal_player_state());
+        }
+
+        // double trick_desire = 15;
+        static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+        double tmp_trick_desire = this->_internal_trick_desire();
+        uint64_t raw_trick_desire;
+        memcpy(&raw_trick_desire, &tmp_trick_desire, sizeof(tmp_trick_desire));
+        if (raw_trick_desire != 0)
+        {
+            total_size += 1 + 8;
+        }
+
+        // double class_volume = 16;
+        static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+        double tmp_class_volume = this->_internal_class_volume();
+        uint64_t raw_class_volume;
+        memcpy(&raw_class_volume, &tmp_class_volume, sizeof(tmp_class_volume));
+        if (raw_class_volume != 0)
+        {
+            total_size += 2 + 8;
         }
 
         return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -1835,6 +2402,7 @@ namespace protobuf
         uint32_t cached_has_bits = 0;
         (void)cached_has_bits;
 
+        _this->_impl_.prop_.MergeFrom(from._impl_.prop_);
         _this->_impl_.buff_.MergeFrom(from._impl_.buff_);
         if (from._internal_x() != 0)
         {
@@ -1864,25 +2432,21 @@ namespace protobuf
         {
             _this->_internal_set_place(from._internal_place());
         }
-        if (from._internal_prop() != 0)
+        if (from._internal_tricker_type() != 0)
         {
-            _this->_internal_set_prop(from._internal_prop());
+            _this->_internal_set_tricker_type(from._internal_tricker_type());
         }
         if (from._internal_guid() != 0)
         {
             _this->_internal_set_guid(from._internal_guid());
         }
-        if (from._internal_tricker_type() != 0)
+        if (from._internal_player_id() != 0)
         {
-            _this->_internal_set_tricker_type(from._internal_tricker_type());
+            _this->_internal_set_player_id(from._internal_player_id());
         }
         if (from._internal_movable() != 0)
         {
             _this->_internal_set_movable(from._internal_movable());
-        }
-        if (from._internal_player_id() != 0)
-        {
-            _this->_internal_set_player_id(from._internal_player_id());
         }
         if (from._internal_view_range() != 0)
         {
@@ -1891,6 +2455,26 @@ namespace protobuf
         if (from._internal_radius() != 0)
         {
             _this->_internal_set_radius(from._internal_radius());
+        }
+        if (from._internal_player_state() != 0)
+        {
+            _this->_internal_set_player_state(from._internal_player_state());
+        }
+        static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+        double tmp_trick_desire = from._internal_trick_desire();
+        uint64_t raw_trick_desire;
+        memcpy(&raw_trick_desire, &tmp_trick_desire, sizeof(tmp_trick_desire));
+        if (raw_trick_desire != 0)
+        {
+            _this->_internal_set_trick_desire(from._internal_trick_desire());
+        }
+        static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+        double tmp_class_volume = from._internal_class_volume();
+        uint64_t raw_class_volume;
+        memcpy(&raw_class_volume, &tmp_class_volume, sizeof(tmp_class_volume));
+        if (raw_class_volume != 0)
+        {
+            _this->_internal_set_class_volume(from._internal_class_volume());
         }
         _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
@@ -1913,9 +2497,10 @@ namespace protobuf
     {
         using std::swap;
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+        _impl_.prop_.InternalSwap(&other->_impl_.prop_);
         _impl_.buff_.InternalSwap(&other->_impl_.buff_);
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-            PROTOBUF_FIELD_OFFSET(MessageOfTricker, _impl_.radius_) + sizeof(MessageOfTricker::_impl_.radius_) - PROTOBUF_FIELD_OFFSET(MessageOfTricker, _impl_.x_)>(
+            PROTOBUF_FIELD_OFFSET(MessageOfTricker, _impl_.class_volume_) + sizeof(MessageOfTricker::_impl_.class_volume_) - PROTOBUF_FIELD_OFFSET(MessageOfTricker, _impl_.x_)>(
             reinterpret_cast<char*>(&_impl_.x_),
             reinterpret_cast<char*>(&other->_impl_.x_)
         );
@@ -3507,6 +4092,1593 @@ namespace protobuf
 
     // ===================================================================
 
+    class MessageOfClassroom::_Internal
+    {
+    public:
+    };
+
+    MessageOfClassroom::MessageOfClassroom(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned) :
+        ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned)
+    {
+        SharedCtor(arena, is_message_owned);
+        // @@protoc_insertion_point(arena_constructor:protobuf.MessageOfClassroom)
+    }
+    MessageOfClassroom::MessageOfClassroom(const MessageOfClassroom& from) :
+        ::PROTOBUF_NAMESPACE_ID::Message()
+    {
+        MessageOfClassroom* const _this = this;
+        (void)_this;
+        new (&_impl_) Impl_{
+            decltype(_impl_.x_){}, decltype(_impl_.y_){}, decltype(_impl_.progress_){}, /*decltype(_impl_._cached_size_)*/ {}};
+
+        _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+        ::memcpy(&_impl_.x_, &from._impl_.x_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.progress_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.progress_));
+        // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfClassroom)
+    }
+
+    inline void MessageOfClassroom::SharedCtor(
+        ::_pb::Arena* arena, bool is_message_owned
+    )
+    {
+        (void)arena;
+        (void)is_message_owned;
+        new (&_impl_) Impl_{
+            decltype(_impl_.x_){0}, decltype(_impl_.y_){0}, decltype(_impl_.progress_){0}, /*decltype(_impl_._cached_size_)*/ {}};
+    }
+
+    MessageOfClassroom::~MessageOfClassroom()
+    {
+        // @@protoc_insertion_point(destructor:protobuf.MessageOfClassroom)
+        if (auto* arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>())
+        {
+            (void)arena;
+            return;
+        }
+        SharedDtor();
+    }
+
+    inline void MessageOfClassroom::SharedDtor()
+    {
+        GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+    }
+
+    void MessageOfClassroom::SetCachedSize(int size) const
+    {
+        _impl_._cached_size_.Set(size);
+    }
+
+    void MessageOfClassroom::Clear()
+    {
+        // @@protoc_insertion_point(message_clear_start:protobuf.MessageOfClassroom)
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        ::memset(&_impl_.x_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.progress_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.progress_));
+        _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+    }
+
+    const char* MessageOfClassroom::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
+    {
+#define CHK_(x)                       \
+    if (PROTOBUF_PREDICT_FALSE(!(x))) \
+    goto failure
+        while (!ctx->Done(&ptr))
+        {
+            uint32_t tag;
+            ptr = ::_pbi::ReadTag(ptr, &tag);
+            switch (tag >> 3)
+            {
+                // int32 x = 1;
+                case 1:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8))
+                    {
+                        _impl_.x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 y = 2;
+                case 2:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16))
+                    {
+                        _impl_.y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 progress = 3;
+                case 3:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24))
+                    {
+                        _impl_.progress_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                default:
+                    goto handle_unusual;
+            }  // switch
+        handle_unusual:
+            if ((tag == 0) || ((tag & 7) == 4))
+            {
+                CHK_(ptr);
+                ctx->SetLastTag(tag);
+                goto message_done;
+            }
+            ptr = UnknownFieldParse(
+                tag,
+                _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+                ptr,
+                ctx
+            );
+            CHK_(ptr != nullptr);
+        }  // while
+    message_done:
+        return ptr;
+    failure:
+        ptr = nullptr;
+        goto message_done;
+#undef CHK_
+    }
+
+    uint8_t* MessageOfClassroom::_InternalSerialize(
+        uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream
+    ) const
+    {
+        // @@protoc_insertion_point(serialize_to_array_start:protobuf.MessageOfClassroom)
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        // int32 x = 1;
+        if (this->_internal_x() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_x(), target);
+        }
+
+        // int32 y = 2;
+        if (this->_internal_y() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_y(), target);
+        }
+
+        // int32 progress = 3;
+        if (this->_internal_progress() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_progress(), target);
+        }
+
+        if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
+        {
+            target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream
+            );
+        }
+        // @@protoc_insertion_point(serialize_to_array_end:protobuf.MessageOfClassroom)
+        return target;
+    }
+
+    size_t MessageOfClassroom::ByteSizeLong() const
+    {
+        // @@protoc_insertion_point(message_byte_size_start:protobuf.MessageOfClassroom)
+        size_t total_size = 0;
+
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        // int32 x = 1;
+        if (this->_internal_x() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_x());
+        }
+
+        // int32 y = 2;
+        if (this->_internal_y() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_y());
+        }
+
+        // int32 progress = 3;
+        if (this->_internal_progress() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_progress());
+        }
+
+        return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+    }
+
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MessageOfClassroom::_class_data_ = {
+        ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+        MessageOfClassroom::MergeImpl};
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData* MessageOfClassroom::GetClassData() const
+    {
+        return &_class_data_;
+    }
+
+    void MessageOfClassroom::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg)
+    {
+        auto* const _this = static_cast<MessageOfClassroom*>(&to_msg);
+        auto& from = static_cast<const MessageOfClassroom&>(from_msg);
+        // @@protoc_insertion_point(class_specific_merge_from_start:protobuf.MessageOfClassroom)
+        GOOGLE_DCHECK_NE(&from, _this);
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        if (from._internal_x() != 0)
+        {
+            _this->_internal_set_x(from._internal_x());
+        }
+        if (from._internal_y() != 0)
+        {
+            _this->_internal_set_y(from._internal_y());
+        }
+        if (from._internal_progress() != 0)
+        {
+            _this->_internal_set_progress(from._internal_progress());
+        }
+        _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+    }
+
+    void MessageOfClassroom::CopyFrom(const MessageOfClassroom& from)
+    {
+        // @@protoc_insertion_point(class_specific_copy_from_start:protobuf.MessageOfClassroom)
+        if (&from == this)
+            return;
+        Clear();
+        MergeFrom(from);
+    }
+
+    bool MessageOfClassroom::IsInitialized() const
+    {
+        return true;
+    }
+
+    void MessageOfClassroom::InternalSwap(MessageOfClassroom* other)
+    {
+        using std::swap;
+        _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+        ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+            PROTOBUF_FIELD_OFFSET(MessageOfClassroom, _impl_.progress_) + sizeof(MessageOfClassroom::_impl_.progress_) - PROTOBUF_FIELD_OFFSET(MessageOfClassroom, _impl_.x_)>(
+            reinterpret_cast<char*>(&_impl_.x_),
+            reinterpret_cast<char*>(&other->_impl_.x_)
+        );
+    }
+
+    ::PROTOBUF_NAMESPACE_ID::Metadata MessageOfClassroom::GetMetadata() const
+    {
+        return ::_pbi::AssignDescriptors(
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[6]
+        );
+    }
+
+    // ===================================================================
+
+    class MessageOfGate::_Internal
+    {
+    public:
+    };
+
+    MessageOfGate::MessageOfGate(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned) :
+        ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned)
+    {
+        SharedCtor(arena, is_message_owned);
+        // @@protoc_insertion_point(arena_constructor:protobuf.MessageOfGate)
+    }
+    MessageOfGate::MessageOfGate(const MessageOfGate& from) :
+        ::PROTOBUF_NAMESPACE_ID::Message()
+    {
+        MessageOfGate* const _this = this;
+        (void)_this;
+        new (&_impl_) Impl_{
+            decltype(_impl_.x_){}, decltype(_impl_.y_){}, decltype(_impl_.progress_){}, /*decltype(_impl_._cached_size_)*/ {}};
+
+        _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+        ::memcpy(&_impl_.x_, &from._impl_.x_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.progress_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.progress_));
+        // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfGate)
+    }
+
+    inline void MessageOfGate::SharedCtor(
+        ::_pb::Arena* arena, bool is_message_owned
+    )
+    {
+        (void)arena;
+        (void)is_message_owned;
+        new (&_impl_) Impl_{
+            decltype(_impl_.x_){0}, decltype(_impl_.y_){0}, decltype(_impl_.progress_){0}, /*decltype(_impl_._cached_size_)*/ {}};
+    }
+
+    MessageOfGate::~MessageOfGate()
+    {
+        // @@protoc_insertion_point(destructor:protobuf.MessageOfGate)
+        if (auto* arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>())
+        {
+            (void)arena;
+            return;
+        }
+        SharedDtor();
+    }
+
+    inline void MessageOfGate::SharedDtor()
+    {
+        GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+    }
+
+    void MessageOfGate::SetCachedSize(int size) const
+    {
+        _impl_._cached_size_.Set(size);
+    }
+
+    void MessageOfGate::Clear()
+    {
+        // @@protoc_insertion_point(message_clear_start:protobuf.MessageOfGate)
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        ::memset(&_impl_.x_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.progress_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.progress_));
+        _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+    }
+
+    const char* MessageOfGate::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
+    {
+#define CHK_(x)                       \
+    if (PROTOBUF_PREDICT_FALSE(!(x))) \
+    goto failure
+        while (!ctx->Done(&ptr))
+        {
+            uint32_t tag;
+            ptr = ::_pbi::ReadTag(ptr, &tag);
+            switch (tag >> 3)
+            {
+                // int32 x = 1;
+                case 1:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8))
+                    {
+                        _impl_.x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 y = 2;
+                case 2:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16))
+                    {
+                        _impl_.y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 progress = 3;
+                case 3:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24))
+                    {
+                        _impl_.progress_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                default:
+                    goto handle_unusual;
+            }  // switch
+        handle_unusual:
+            if ((tag == 0) || ((tag & 7) == 4))
+            {
+                CHK_(ptr);
+                ctx->SetLastTag(tag);
+                goto message_done;
+            }
+            ptr = UnknownFieldParse(
+                tag,
+                _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+                ptr,
+                ctx
+            );
+            CHK_(ptr != nullptr);
+        }  // while
+    message_done:
+        return ptr;
+    failure:
+        ptr = nullptr;
+        goto message_done;
+#undef CHK_
+    }
+
+    uint8_t* MessageOfGate::_InternalSerialize(
+        uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream
+    ) const
+    {
+        // @@protoc_insertion_point(serialize_to_array_start:protobuf.MessageOfGate)
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        // int32 x = 1;
+        if (this->_internal_x() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_x(), target);
+        }
+
+        // int32 y = 2;
+        if (this->_internal_y() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_y(), target);
+        }
+
+        // int32 progress = 3;
+        if (this->_internal_progress() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_progress(), target);
+        }
+
+        if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
+        {
+            target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream
+            );
+        }
+        // @@protoc_insertion_point(serialize_to_array_end:protobuf.MessageOfGate)
+        return target;
+    }
+
+    size_t MessageOfGate::ByteSizeLong() const
+    {
+        // @@protoc_insertion_point(message_byte_size_start:protobuf.MessageOfGate)
+        size_t total_size = 0;
+
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        // int32 x = 1;
+        if (this->_internal_x() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_x());
+        }
+
+        // int32 y = 2;
+        if (this->_internal_y() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_y());
+        }
+
+        // int32 progress = 3;
+        if (this->_internal_progress() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_progress());
+        }
+
+        return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+    }
+
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MessageOfGate::_class_data_ = {
+        ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+        MessageOfGate::MergeImpl};
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData* MessageOfGate::GetClassData() const
+    {
+        return &_class_data_;
+    }
+
+    void MessageOfGate::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg)
+    {
+        auto* const _this = static_cast<MessageOfGate*>(&to_msg);
+        auto& from = static_cast<const MessageOfGate&>(from_msg);
+        // @@protoc_insertion_point(class_specific_merge_from_start:protobuf.MessageOfGate)
+        GOOGLE_DCHECK_NE(&from, _this);
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        if (from._internal_x() != 0)
+        {
+            _this->_internal_set_x(from._internal_x());
+        }
+        if (from._internal_y() != 0)
+        {
+            _this->_internal_set_y(from._internal_y());
+        }
+        if (from._internal_progress() != 0)
+        {
+            _this->_internal_set_progress(from._internal_progress());
+        }
+        _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+    }
+
+    void MessageOfGate::CopyFrom(const MessageOfGate& from)
+    {
+        // @@protoc_insertion_point(class_specific_copy_from_start:protobuf.MessageOfGate)
+        if (&from == this)
+            return;
+        Clear();
+        MergeFrom(from);
+    }
+
+    bool MessageOfGate::IsInitialized() const
+    {
+        return true;
+    }
+
+    void MessageOfGate::InternalSwap(MessageOfGate* other)
+    {
+        using std::swap;
+        _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+        ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+            PROTOBUF_FIELD_OFFSET(MessageOfGate, _impl_.progress_) + sizeof(MessageOfGate::_impl_.progress_) - PROTOBUF_FIELD_OFFSET(MessageOfGate, _impl_.x_)>(
+            reinterpret_cast<char*>(&_impl_.x_),
+            reinterpret_cast<char*>(&other->_impl_.x_)
+        );
+    }
+
+    ::PROTOBUF_NAMESPACE_ID::Metadata MessageOfGate::GetMetadata() const
+    {
+        return ::_pbi::AssignDescriptors(
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[7]
+        );
+    }
+
+    // ===================================================================
+
+    class MessageOfDoor::_Internal
+    {
+    public:
+    };
+
+    MessageOfDoor::MessageOfDoor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned) :
+        ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned)
+    {
+        SharedCtor(arena, is_message_owned);
+        // @@protoc_insertion_point(arena_constructor:protobuf.MessageOfDoor)
+    }
+    MessageOfDoor::MessageOfDoor(const MessageOfDoor& from) :
+        ::PROTOBUF_NAMESPACE_ID::Message()
+    {
+        MessageOfDoor* const _this = this;
+        (void)_this;
+        new (&_impl_) Impl_{
+            decltype(_impl_.x_){}, decltype(_impl_.y_){}, decltype(_impl_.is_open_){}, /*decltype(_impl_._cached_size_)*/ {}};
+
+        _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+        ::memcpy(&_impl_.x_, &from._impl_.x_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.is_open_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.is_open_));
+        // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfDoor)
+    }
+
+    inline void MessageOfDoor::SharedCtor(
+        ::_pb::Arena* arena, bool is_message_owned
+    )
+    {
+        (void)arena;
+        (void)is_message_owned;
+        new (&_impl_) Impl_{
+            decltype(_impl_.x_){0}, decltype(_impl_.y_){0}, decltype(_impl_.is_open_){false}, /*decltype(_impl_._cached_size_)*/ {}};
+    }
+
+    MessageOfDoor::~MessageOfDoor()
+    {
+        // @@protoc_insertion_point(destructor:protobuf.MessageOfDoor)
+        if (auto* arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>())
+        {
+            (void)arena;
+            return;
+        }
+        SharedDtor();
+    }
+
+    inline void MessageOfDoor::SharedDtor()
+    {
+        GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+    }
+
+    void MessageOfDoor::SetCachedSize(int size) const
+    {
+        _impl_._cached_size_.Set(size);
+    }
+
+    void MessageOfDoor::Clear()
+    {
+        // @@protoc_insertion_point(message_clear_start:protobuf.MessageOfDoor)
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        ::memset(&_impl_.x_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.is_open_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.is_open_));
+        _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+    }
+
+    const char* MessageOfDoor::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
+    {
+#define CHK_(x)                       \
+    if (PROTOBUF_PREDICT_FALSE(!(x))) \
+    goto failure
+        while (!ctx->Done(&ptr))
+        {
+            uint32_t tag;
+            ptr = ::_pbi::ReadTag(ptr, &tag);
+            switch (tag >> 3)
+            {
+                // int32 x = 1;
+                case 1:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8))
+                    {
+                        _impl_.x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 y = 2;
+                case 2:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16))
+                    {
+                        _impl_.y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // bool is_open = 3;
+                case 3:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24))
+                    {
+                        _impl_.is_open_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                default:
+                    goto handle_unusual;
+            }  // switch
+        handle_unusual:
+            if ((tag == 0) || ((tag & 7) == 4))
+            {
+                CHK_(ptr);
+                ctx->SetLastTag(tag);
+                goto message_done;
+            }
+            ptr = UnknownFieldParse(
+                tag,
+                _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+                ptr,
+                ctx
+            );
+            CHK_(ptr != nullptr);
+        }  // while
+    message_done:
+        return ptr;
+    failure:
+        ptr = nullptr;
+        goto message_done;
+#undef CHK_
+    }
+
+    uint8_t* MessageOfDoor::_InternalSerialize(
+        uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream
+    ) const
+    {
+        // @@protoc_insertion_point(serialize_to_array_start:protobuf.MessageOfDoor)
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        // int32 x = 1;
+        if (this->_internal_x() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_x(), target);
+        }
+
+        // int32 y = 2;
+        if (this->_internal_y() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_y(), target);
+        }
+
+        // bool is_open = 3;
+        if (this->_internal_is_open() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteBoolToArray(3, this->_internal_is_open(), target);
+        }
+
+        if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
+        {
+            target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream
+            );
+        }
+        // @@protoc_insertion_point(serialize_to_array_end:protobuf.MessageOfDoor)
+        return target;
+    }
+
+    size_t MessageOfDoor::ByteSizeLong() const
+    {
+        // @@protoc_insertion_point(message_byte_size_start:protobuf.MessageOfDoor)
+        size_t total_size = 0;
+
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        // int32 x = 1;
+        if (this->_internal_x() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_x());
+        }
+
+        // int32 y = 2;
+        if (this->_internal_y() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_y());
+        }
+
+        // bool is_open = 3;
+        if (this->_internal_is_open() != 0)
+        {
+            total_size += 1 + 1;
+        }
+
+        return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+    }
+
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MessageOfDoor::_class_data_ = {
+        ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+        MessageOfDoor::MergeImpl};
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData* MessageOfDoor::GetClassData() const
+    {
+        return &_class_data_;
+    }
+
+    void MessageOfDoor::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg)
+    {
+        auto* const _this = static_cast<MessageOfDoor*>(&to_msg);
+        auto& from = static_cast<const MessageOfDoor&>(from_msg);
+        // @@protoc_insertion_point(class_specific_merge_from_start:protobuf.MessageOfDoor)
+        GOOGLE_DCHECK_NE(&from, _this);
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        if (from._internal_x() != 0)
+        {
+            _this->_internal_set_x(from._internal_x());
+        }
+        if (from._internal_y() != 0)
+        {
+            _this->_internal_set_y(from._internal_y());
+        }
+        if (from._internal_is_open() != 0)
+        {
+            _this->_internal_set_is_open(from._internal_is_open());
+        }
+        _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+    }
+
+    void MessageOfDoor::CopyFrom(const MessageOfDoor& from)
+    {
+        // @@protoc_insertion_point(class_specific_copy_from_start:protobuf.MessageOfDoor)
+        if (&from == this)
+            return;
+        Clear();
+        MergeFrom(from);
+    }
+
+    bool MessageOfDoor::IsInitialized() const
+    {
+        return true;
+    }
+
+    void MessageOfDoor::InternalSwap(MessageOfDoor* other)
+    {
+        using std::swap;
+        _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+        ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+            PROTOBUF_FIELD_OFFSET(MessageOfDoor, _impl_.is_open_) + sizeof(MessageOfDoor::_impl_.is_open_) - PROTOBUF_FIELD_OFFSET(MessageOfDoor, _impl_.x_)>(
+            reinterpret_cast<char*>(&_impl_.x_),
+            reinterpret_cast<char*>(&other->_impl_.x_)
+        );
+    }
+
+    ::PROTOBUF_NAMESPACE_ID::Metadata MessageOfDoor::GetMetadata() const
+    {
+        return ::_pbi::AssignDescriptors(
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[8]
+        );
+    }
+
+    // ===================================================================
+
+    class MessageOfChest::_Internal
+    {
+    public:
+    };
+
+    MessageOfChest::MessageOfChest(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned) :
+        ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned)
+    {
+        SharedCtor(arena, is_message_owned);
+        // @@protoc_insertion_point(arena_constructor:protobuf.MessageOfChest)
+    }
+    MessageOfChest::MessageOfChest(const MessageOfChest& from) :
+        ::PROTOBUF_NAMESPACE_ID::Message()
+    {
+        MessageOfChest* const _this = this;
+        (void)_this;
+        new (&_impl_) Impl_{
+            decltype(_impl_.x_){}, decltype(_impl_.y_){}, decltype(_impl_.progress_){}, /*decltype(_impl_._cached_size_)*/ {}};
+
+        _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+        ::memcpy(&_impl_.x_, &from._impl_.x_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.progress_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.progress_));
+        // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfChest)
+    }
+
+    inline void MessageOfChest::SharedCtor(
+        ::_pb::Arena* arena, bool is_message_owned
+    )
+    {
+        (void)arena;
+        (void)is_message_owned;
+        new (&_impl_) Impl_{
+            decltype(_impl_.x_){0}, decltype(_impl_.y_){0}, decltype(_impl_.progress_){0}, /*decltype(_impl_._cached_size_)*/ {}};
+    }
+
+    MessageOfChest::~MessageOfChest()
+    {
+        // @@protoc_insertion_point(destructor:protobuf.MessageOfChest)
+        if (auto* arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>())
+        {
+            (void)arena;
+            return;
+        }
+        SharedDtor();
+    }
+
+    inline void MessageOfChest::SharedDtor()
+    {
+        GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+    }
+
+    void MessageOfChest::SetCachedSize(int size) const
+    {
+        _impl_._cached_size_.Set(size);
+    }
+
+    void MessageOfChest::Clear()
+    {
+        // @@protoc_insertion_point(message_clear_start:protobuf.MessageOfChest)
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        ::memset(&_impl_.x_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.progress_) - reinterpret_cast<char*>(&_impl_.x_)) + sizeof(_impl_.progress_));
+        _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+    }
+
+    const char* MessageOfChest::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
+    {
+#define CHK_(x)                       \
+    if (PROTOBUF_PREDICT_FALSE(!(x))) \
+    goto failure
+        while (!ctx->Done(&ptr))
+        {
+            uint32_t tag;
+            ptr = ::_pbi::ReadTag(ptr, &tag);
+            switch (tag >> 3)
+            {
+                // int32 x = 1;
+                case 1:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8))
+                    {
+                        _impl_.x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 y = 2;
+                case 2:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16))
+                    {
+                        _impl_.y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 progress = 3;
+                case 3:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24))
+                    {
+                        _impl_.progress_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                default:
+                    goto handle_unusual;
+            }  // switch
+        handle_unusual:
+            if ((tag == 0) || ((tag & 7) == 4))
+            {
+                CHK_(ptr);
+                ctx->SetLastTag(tag);
+                goto message_done;
+            }
+            ptr = UnknownFieldParse(
+                tag,
+                _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+                ptr,
+                ctx
+            );
+            CHK_(ptr != nullptr);
+        }  // while
+    message_done:
+        return ptr;
+    failure:
+        ptr = nullptr;
+        goto message_done;
+#undef CHK_
+    }
+
+    uint8_t* MessageOfChest::_InternalSerialize(
+        uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream
+    ) const
+    {
+        // @@protoc_insertion_point(serialize_to_array_start:protobuf.MessageOfChest)
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        // int32 x = 1;
+        if (this->_internal_x() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_x(), target);
+        }
+
+        // int32 y = 2;
+        if (this->_internal_y() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_y(), target);
+        }
+
+        // int32 progress = 3;
+        if (this->_internal_progress() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_progress(), target);
+        }
+
+        if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
+        {
+            target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream
+            );
+        }
+        // @@protoc_insertion_point(serialize_to_array_end:protobuf.MessageOfChest)
+        return target;
+    }
+
+    size_t MessageOfChest::ByteSizeLong() const
+    {
+        // @@protoc_insertion_point(message_byte_size_start:protobuf.MessageOfChest)
+        size_t total_size = 0;
+
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        // int32 x = 1;
+        if (this->_internal_x() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_x());
+        }
+
+        // int32 y = 2;
+        if (this->_internal_y() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_y());
+        }
+
+        // int32 progress = 3;
+        if (this->_internal_progress() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_progress());
+        }
+
+        return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+    }
+
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MessageOfChest::_class_data_ = {
+        ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+        MessageOfChest::MergeImpl};
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData* MessageOfChest::GetClassData() const
+    {
+        return &_class_data_;
+    }
+
+    void MessageOfChest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg)
+    {
+        auto* const _this = static_cast<MessageOfChest*>(&to_msg);
+        auto& from = static_cast<const MessageOfChest&>(from_msg);
+        // @@protoc_insertion_point(class_specific_merge_from_start:protobuf.MessageOfChest)
+        GOOGLE_DCHECK_NE(&from, _this);
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        if (from._internal_x() != 0)
+        {
+            _this->_internal_set_x(from._internal_x());
+        }
+        if (from._internal_y() != 0)
+        {
+            _this->_internal_set_y(from._internal_y());
+        }
+        if (from._internal_progress() != 0)
+        {
+            _this->_internal_set_progress(from._internal_progress());
+        }
+        _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+    }
+
+    void MessageOfChest::CopyFrom(const MessageOfChest& from)
+    {
+        // @@protoc_insertion_point(class_specific_copy_from_start:protobuf.MessageOfChest)
+        if (&from == this)
+            return;
+        Clear();
+        MergeFrom(from);
+    }
+
+    bool MessageOfChest::IsInitialized() const
+    {
+        return true;
+    }
+
+    void MessageOfChest::InternalSwap(MessageOfChest* other)
+    {
+        using std::swap;
+        _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+        ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+            PROTOBUF_FIELD_OFFSET(MessageOfChest, _impl_.progress_) + sizeof(MessageOfChest::_impl_.progress_) - PROTOBUF_FIELD_OFFSET(MessageOfChest, _impl_.x_)>(
+            reinterpret_cast<char*>(&_impl_.x_),
+            reinterpret_cast<char*>(&other->_impl_.x_)
+        );
+    }
+
+    ::PROTOBUF_NAMESPACE_ID::Metadata MessageOfChest::GetMetadata() const
+    {
+        return ::_pbi::AssignDescriptors(
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[9]
+        );
+    }
+
+    // ===================================================================
+
+    class MessageOfMapObj::_Internal
+    {
+    public:
+        static const ::protobuf::MessageOfClassroom& classroom_message(const MessageOfMapObj* msg);
+        static const ::protobuf::MessageOfDoor& door_message(const MessageOfMapObj* msg);
+        static const ::protobuf::MessageOfGate& gate_message(const MessageOfMapObj* msg);
+        static const ::protobuf::MessageOfChest& chest_message(const MessageOfMapObj* msg);
+    };
+
+    const ::protobuf::MessageOfClassroom&
+        MessageOfMapObj::_Internal::classroom_message(const MessageOfMapObj* msg)
+    {
+        return *msg->_impl_.message_of_map_obj_.classroom_message_;
+    }
+    const ::protobuf::MessageOfDoor&
+        MessageOfMapObj::_Internal::door_message(const MessageOfMapObj* msg)
+    {
+        return *msg->_impl_.message_of_map_obj_.door_message_;
+    }
+    const ::protobuf::MessageOfGate&
+        MessageOfMapObj::_Internal::gate_message(const MessageOfMapObj* msg)
+    {
+        return *msg->_impl_.message_of_map_obj_.gate_message_;
+    }
+    const ::protobuf::MessageOfChest&
+        MessageOfMapObj::_Internal::chest_message(const MessageOfMapObj* msg)
+    {
+        return *msg->_impl_.message_of_map_obj_.chest_message_;
+    }
+    void MessageOfMapObj::set_allocated_classroom_message(::protobuf::MessageOfClassroom* classroom_message)
+    {
+        ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+        clear_message_of_map_obj();
+        if (classroom_message)
+        {
+            ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+                ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(classroom_message);
+            if (message_arena != submessage_arena)
+            {
+                classroom_message = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+                    message_arena, classroom_message, submessage_arena
+                );
+            }
+            set_has_classroom_message();
+            _impl_.message_of_map_obj_.classroom_message_ = classroom_message;
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageOfMapObj.classroom_message)
+    }
+    void MessageOfMapObj::set_allocated_door_message(::protobuf::MessageOfDoor* door_message)
+    {
+        ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+        clear_message_of_map_obj();
+        if (door_message)
+        {
+            ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+                ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(door_message);
+            if (message_arena != submessage_arena)
+            {
+                door_message = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+                    message_arena, door_message, submessage_arena
+                );
+            }
+            set_has_door_message();
+            _impl_.message_of_map_obj_.door_message_ = door_message;
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageOfMapObj.door_message)
+    }
+    void MessageOfMapObj::set_allocated_gate_message(::protobuf::MessageOfGate* gate_message)
+    {
+        ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+        clear_message_of_map_obj();
+        if (gate_message)
+        {
+            ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+                ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(gate_message);
+            if (message_arena != submessage_arena)
+            {
+                gate_message = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+                    message_arena, gate_message, submessage_arena
+                );
+            }
+            set_has_gate_message();
+            _impl_.message_of_map_obj_.gate_message_ = gate_message;
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageOfMapObj.gate_message)
+    }
+    void MessageOfMapObj::set_allocated_chest_message(::protobuf::MessageOfChest* chest_message)
+    {
+        ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+        clear_message_of_map_obj();
+        if (chest_message)
+        {
+            ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+                ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(chest_message);
+            if (message_arena != submessage_arena)
+            {
+                chest_message = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+                    message_arena, chest_message, submessage_arena
+                );
+            }
+            set_has_chest_message();
+            _impl_.message_of_map_obj_.chest_message_ = chest_message;
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageOfMapObj.chest_message)
+    }
+    MessageOfMapObj::MessageOfMapObj(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned) :
+        ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned)
+    {
+        SharedCtor(arena, is_message_owned);
+        // @@protoc_insertion_point(arena_constructor:protobuf.MessageOfMapObj)
+    }
+    MessageOfMapObj::MessageOfMapObj(const MessageOfMapObj& from) :
+        ::PROTOBUF_NAMESPACE_ID::Message()
+    {
+        MessageOfMapObj* const _this = this;
+        (void)_this;
+        new (&_impl_) Impl_{
+            decltype(_impl_.message_of_map_obj_){}, /*decltype(_impl_._cached_size_)*/ {}, /*decltype(_impl_._oneof_case_)*/ {}};
+
+        _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+        clear_has_message_of_map_obj();
+        switch (from.message_of_map_obj_case())
+        {
+            case kClassroomMessage:
+                {
+                    _this->_internal_mutable_classroom_message()->::protobuf::MessageOfClassroom::MergeFrom(
+                        from._internal_classroom_message()
+                    );
+                    break;
+                }
+            case kDoorMessage:
+                {
+                    _this->_internal_mutable_door_message()->::protobuf::MessageOfDoor::MergeFrom(
+                        from._internal_door_message()
+                    );
+                    break;
+                }
+            case kGateMessage:
+                {
+                    _this->_internal_mutable_gate_message()->::protobuf::MessageOfGate::MergeFrom(
+                        from._internal_gate_message()
+                    );
+                    break;
+                }
+            case kChestMessage:
+                {
+                    _this->_internal_mutable_chest_message()->::protobuf::MessageOfChest::MergeFrom(
+                        from._internal_chest_message()
+                    );
+                    break;
+                }
+            case MESSAGE_OF_MAP_OBJ_NOT_SET:
+                {
+                    break;
+                }
+        }
+        // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfMapObj)
+    }
+
+    inline void MessageOfMapObj::SharedCtor(
+        ::_pb::Arena* arena, bool is_message_owned
+    )
+    {
+        (void)arena;
+        (void)is_message_owned;
+        new (&_impl_) Impl_{
+            decltype(_impl_.message_of_map_obj_){}, /*decltype(_impl_._cached_size_)*/ {}, /*decltype(_impl_._oneof_case_)*/ {}};
+        clear_has_message_of_map_obj();
+    }
+
+    MessageOfMapObj::~MessageOfMapObj()
+    {
+        // @@protoc_insertion_point(destructor:protobuf.MessageOfMapObj)
+        if (auto* arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>())
+        {
+            (void)arena;
+            return;
+        }
+        SharedDtor();
+    }
+
+    inline void MessageOfMapObj::SharedDtor()
+    {
+        GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+        if (has_message_of_map_obj())
+        {
+            clear_message_of_map_obj();
+        }
+    }
+
+    void MessageOfMapObj::SetCachedSize(int size) const
+    {
+        _impl_._cached_size_.Set(size);
+    }
+
+    void MessageOfMapObj::clear_message_of_map_obj()
+    {
+        // @@protoc_insertion_point(one_of_clear_start:protobuf.MessageOfMapObj)
+        switch (message_of_map_obj_case())
+        {
+            case kClassroomMessage:
+                {
+                    if (GetArenaForAllocation() == nullptr)
+                    {
+                        delete _impl_.message_of_map_obj_.classroom_message_;
+                    }
+                    break;
+                }
+            case kDoorMessage:
+                {
+                    if (GetArenaForAllocation() == nullptr)
+                    {
+                        delete _impl_.message_of_map_obj_.door_message_;
+                    }
+                    break;
+                }
+            case kGateMessage:
+                {
+                    if (GetArenaForAllocation() == nullptr)
+                    {
+                        delete _impl_.message_of_map_obj_.gate_message_;
+                    }
+                    break;
+                }
+            case kChestMessage:
+                {
+                    if (GetArenaForAllocation() == nullptr)
+                    {
+                        delete _impl_.message_of_map_obj_.chest_message_;
+                    }
+                    break;
+                }
+            case MESSAGE_OF_MAP_OBJ_NOT_SET:
+                {
+                    break;
+                }
+        }
+        _impl_._oneof_case_[0] = MESSAGE_OF_MAP_OBJ_NOT_SET;
+    }
+
+    void MessageOfMapObj::Clear()
+    {
+        // @@protoc_insertion_point(message_clear_start:protobuf.MessageOfMapObj)
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        clear_message_of_map_obj();
+        _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+    }
+
+    const char* MessageOfMapObj::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
+    {
+#define CHK_(x)                       \
+    if (PROTOBUF_PREDICT_FALSE(!(x))) \
+    goto failure
+        while (!ctx->Done(&ptr))
+        {
+            uint32_t tag;
+            ptr = ::_pbi::ReadTag(ptr, &tag);
+            switch (tag >> 3)
+            {
+                // .protobuf.MessageOfClassroom classroom_message = 1;
+                case 1:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10))
+                    {
+                        ptr = ctx->ParseMessage(_internal_mutable_classroom_message(), ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // .protobuf.MessageOfDoor door_message = 2;
+                case 2:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18))
+                    {
+                        ptr = ctx->ParseMessage(_internal_mutable_door_message(), ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // .protobuf.MessageOfGate gate_message = 3;
+                case 3:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26))
+                    {
+                        ptr = ctx->ParseMessage(_internal_mutable_gate_message(), ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // .protobuf.MessageOfChest chest_message = 4;
+                case 4:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34))
+                    {
+                        ptr = ctx->ParseMessage(_internal_mutable_chest_message(), ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                default:
+                    goto handle_unusual;
+            }  // switch
+        handle_unusual:
+            if ((tag == 0) || ((tag & 7) == 4))
+            {
+                CHK_(ptr);
+                ctx->SetLastTag(tag);
+                goto message_done;
+            }
+            ptr = UnknownFieldParse(
+                tag,
+                _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+                ptr,
+                ctx
+            );
+            CHK_(ptr != nullptr);
+        }  // while
+    message_done:
+        return ptr;
+    failure:
+        ptr = nullptr;
+        goto message_done;
+#undef CHK_
+    }
+
+    uint8_t* MessageOfMapObj::_InternalSerialize(
+        uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream
+    ) const
+    {
+        // @@protoc_insertion_point(serialize_to_array_start:protobuf.MessageOfMapObj)
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        // .protobuf.MessageOfClassroom classroom_message = 1;
+        if (_internal_has_classroom_message())
+        {
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(1, _Internal::classroom_message(this), _Internal::classroom_message(this).GetCachedSize(), target, stream);
+        }
+
+        // .protobuf.MessageOfDoor door_message = 2;
+        if (_internal_has_door_message())
+        {
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(2, _Internal::door_message(this), _Internal::door_message(this).GetCachedSize(), target, stream);
+        }
+
+        // .protobuf.MessageOfGate gate_message = 3;
+        if (_internal_has_gate_message())
+        {
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(3, _Internal::gate_message(this), _Internal::gate_message(this).GetCachedSize(), target, stream);
+        }
+
+        // .protobuf.MessageOfChest chest_message = 4;
+        if (_internal_has_chest_message())
+        {
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(4, _Internal::chest_message(this), _Internal::chest_message(this).GetCachedSize(), target, stream);
+        }
+
+        if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
+        {
+            target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream
+            );
+        }
+        // @@protoc_insertion_point(serialize_to_array_end:protobuf.MessageOfMapObj)
+        return target;
+    }
+
+    size_t MessageOfMapObj::ByteSizeLong() const
+    {
+        // @@protoc_insertion_point(message_byte_size_start:protobuf.MessageOfMapObj)
+        size_t total_size = 0;
+
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        switch (message_of_map_obj_case())
+        {
+            // .protobuf.MessageOfClassroom classroom_message = 1;
+            case kClassroomMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+                                      *_impl_.message_of_map_obj_.classroom_message_
+                                  );
+                    break;
+                }
+            // .protobuf.MessageOfDoor door_message = 2;
+            case kDoorMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+                                      *_impl_.message_of_map_obj_.door_message_
+                                  );
+                    break;
+                }
+            // .protobuf.MessageOfGate gate_message = 3;
+            case kGateMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+                                      *_impl_.message_of_map_obj_.gate_message_
+                                  );
+                    break;
+                }
+            // .protobuf.MessageOfChest chest_message = 4;
+            case kChestMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+                                      *_impl_.message_of_map_obj_.chest_message_
+                                  );
+                    break;
+                }
+            case MESSAGE_OF_MAP_OBJ_NOT_SET:
+                {
+                    break;
+                }
+        }
+        return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+    }
+
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MessageOfMapObj::_class_data_ = {
+        ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+        MessageOfMapObj::MergeImpl};
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData* MessageOfMapObj::GetClassData() const
+    {
+        return &_class_data_;
+    }
+
+    void MessageOfMapObj::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg)
+    {
+        auto* const _this = static_cast<MessageOfMapObj*>(&to_msg);
+        auto& from = static_cast<const MessageOfMapObj&>(from_msg);
+        // @@protoc_insertion_point(class_specific_merge_from_start:protobuf.MessageOfMapObj)
+        GOOGLE_DCHECK_NE(&from, _this);
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        switch (from.message_of_map_obj_case())
+        {
+            case kClassroomMessage:
+                {
+                    _this->_internal_mutable_classroom_message()->::protobuf::MessageOfClassroom::MergeFrom(
+                        from._internal_classroom_message()
+                    );
+                    break;
+                }
+            case kDoorMessage:
+                {
+                    _this->_internal_mutable_door_message()->::protobuf::MessageOfDoor::MergeFrom(
+                        from._internal_door_message()
+                    );
+                    break;
+                }
+            case kGateMessage:
+                {
+                    _this->_internal_mutable_gate_message()->::protobuf::MessageOfGate::MergeFrom(
+                        from._internal_gate_message()
+                    );
+                    break;
+                }
+            case kChestMessage:
+                {
+                    _this->_internal_mutable_chest_message()->::protobuf::MessageOfChest::MergeFrom(
+                        from._internal_chest_message()
+                    );
+                    break;
+                }
+            case MESSAGE_OF_MAP_OBJ_NOT_SET:
+                {
+                    break;
+                }
+        }
+        _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+    }
+
+    void MessageOfMapObj::CopyFrom(const MessageOfMapObj& from)
+    {
+        // @@protoc_insertion_point(class_specific_copy_from_start:protobuf.MessageOfMapObj)
+        if (&from == this)
+            return;
+        Clear();
+        MergeFrom(from);
+    }
+
+    bool MessageOfMapObj::IsInitialized() const
+    {
+        return true;
+    }
+
+    void MessageOfMapObj::InternalSwap(MessageOfMapObj* other)
+    {
+        using std::swap;
+        _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+        swap(_impl_.message_of_map_obj_, other->_impl_.message_of_map_obj_);
+        swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
+    }
+
+    ::PROTOBUF_NAMESPACE_ID::Metadata MessageOfMapObj::GetMetadata() const
+    {
+        return ::_pbi::AssignDescriptors(
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[10]
+        );
+    }
+
+    // ===================================================================
+
     class MessageOfMap_Row::_Internal
     {
     public:
@@ -3732,7 +5904,7 @@ namespace protobuf
     ::PROTOBUF_NAMESPACE_ID::Metadata MessageOfMap_Row::GetMetadata() const
     {
         return ::_pbi::AssignDescriptors(
-            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[6]
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[11]
         );
     }
 
@@ -3755,7 +5927,7 @@ namespace protobuf
         MessageOfMap* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.row_){from._impl_.row_}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.row_){from._impl_.row_}, decltype(_impl_.map_obj_message_){from._impl_.map_obj_message_}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
         // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfMap)
@@ -3768,7 +5940,7 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.row_){arena}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.row_){arena}, decltype(_impl_.map_obj_message_){arena}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
     MessageOfMap::~MessageOfMap()
@@ -3786,6 +5958,7 @@ namespace protobuf
     {
         GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
         _impl_.row_.~RepeatedPtrField();
+        _impl_.map_obj_message_.~RepeatedPtrField();
     }
 
     void MessageOfMap::SetCachedSize(int size) const
@@ -3801,6 +5974,7 @@ namespace protobuf
         (void)cached_has_bits;
 
         _impl_.row_.Clear();
+        _impl_.map_obj_message_.Clear();
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -3828,6 +6002,23 @@ namespace protobuf
                             if (!ctx->DataAvailable(ptr))
                                 break;
                         } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // repeated .protobuf.MessageOfMapObj map_obj_message = 3;
+                case 3:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26))
+                    {
+                        ptr -= 1;
+                        do
+                        {
+                            ptr += 1;
+                            ptr = ctx->ParseMessage(_internal_add_map_obj_message(), ptr);
+                            CHK_(ptr);
+                            if (!ctx->DataAvailable(ptr))
+                                break;
+                        } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
                     }
                     else
                         goto handle_unusual;
@@ -3877,6 +6068,17 @@ namespace protobuf
                 InternalWriteMessage(2, repfield, repfield.GetCachedSize(), target, stream);
         }
 
+        // repeated .protobuf.MessageOfMapObj map_obj_message = 3;
+        for (unsigned i = 0,
+                      n = static_cast<unsigned>(this->_internal_map_obj_message_size());
+             i < n;
+             i++)
+        {
+            const auto& repfield = this->_internal_map_obj_message(i);
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(3, repfield, repfield.GetCachedSize(), target, stream);
+        }
+
         if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
         {
             target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -3904,6 +6106,14 @@ namespace protobuf
                 ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
         }
 
+        // repeated .protobuf.MessageOfMapObj map_obj_message = 3;
+        total_size += 1UL * this->_internal_map_obj_message_size();
+        for (const auto& msg : this->_impl_.map_obj_message_)
+        {
+            total_size +=
+                ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+        }
+
         return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
     }
 
@@ -3925,6 +6135,7 @@ namespace protobuf
         (void)cached_has_bits;
 
         _this->_impl_.row_.MergeFrom(from._impl_.row_);
+        _this->_impl_.map_obj_message_.MergeFrom(from._impl_.map_obj_message_);
         _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
 
@@ -3947,12 +6158,1031 @@ namespace protobuf
         using std::swap;
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
         _impl_.row_.InternalSwap(&other->_impl_.row_);
+        _impl_.map_obj_message_.InternalSwap(&other->_impl_.map_obj_message_);
     }
 
     ::PROTOBUF_NAMESPACE_ID::Metadata MessageOfMap::GetMetadata() const
     {
         return ::_pbi::AssignDescriptors(
-            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[7]
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[12]
+        );
+    }
+
+    // ===================================================================
+
+    class MessageOfObj::_Internal
+    {
+    public:
+        static const ::protobuf::MessageOfStudent& student_message(const MessageOfObj* msg);
+        static const ::protobuf::MessageOfTricker& tricker_message(const MessageOfObj* msg);
+        static const ::protobuf::MessageOfProp& prop_message(const MessageOfObj* msg);
+        static const ::protobuf::MessageOfBullet& bullet_message(const MessageOfObj* msg);
+        static const ::protobuf::MessageOfBombedBullet& bombed_bullet_message(const MessageOfObj* msg);
+    };
+
+    const ::protobuf::MessageOfStudent&
+        MessageOfObj::_Internal::student_message(const MessageOfObj* msg)
+    {
+        return *msg->_impl_.message_of_obj_.student_message_;
+    }
+    const ::protobuf::MessageOfTricker&
+        MessageOfObj::_Internal::tricker_message(const MessageOfObj* msg)
+    {
+        return *msg->_impl_.message_of_obj_.tricker_message_;
+    }
+    const ::protobuf::MessageOfProp&
+        MessageOfObj::_Internal::prop_message(const MessageOfObj* msg)
+    {
+        return *msg->_impl_.message_of_obj_.prop_message_;
+    }
+    const ::protobuf::MessageOfBullet&
+        MessageOfObj::_Internal::bullet_message(const MessageOfObj* msg)
+    {
+        return *msg->_impl_.message_of_obj_.bullet_message_;
+    }
+    const ::protobuf::MessageOfBombedBullet&
+        MessageOfObj::_Internal::bombed_bullet_message(const MessageOfObj* msg)
+    {
+        return *msg->_impl_.message_of_obj_.bombed_bullet_message_;
+    }
+    void MessageOfObj::set_allocated_student_message(::protobuf::MessageOfStudent* student_message)
+    {
+        ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+        clear_message_of_obj();
+        if (student_message)
+        {
+            ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+                ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(student_message);
+            if (message_arena != submessage_arena)
+            {
+                student_message = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+                    message_arena, student_message, submessage_arena
+                );
+            }
+            set_has_student_message();
+            _impl_.message_of_obj_.student_message_ = student_message;
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageOfObj.student_message)
+    }
+    void MessageOfObj::set_allocated_tricker_message(::protobuf::MessageOfTricker* tricker_message)
+    {
+        ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+        clear_message_of_obj();
+        if (tricker_message)
+        {
+            ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+                ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(tricker_message);
+            if (message_arena != submessage_arena)
+            {
+                tricker_message = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+                    message_arena, tricker_message, submessage_arena
+                );
+            }
+            set_has_tricker_message();
+            _impl_.message_of_obj_.tricker_message_ = tricker_message;
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageOfObj.tricker_message)
+    }
+    void MessageOfObj::set_allocated_prop_message(::protobuf::MessageOfProp* prop_message)
+    {
+        ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+        clear_message_of_obj();
+        if (prop_message)
+        {
+            ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+                ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(prop_message);
+            if (message_arena != submessage_arena)
+            {
+                prop_message = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+                    message_arena, prop_message, submessage_arena
+                );
+            }
+            set_has_prop_message();
+            _impl_.message_of_obj_.prop_message_ = prop_message;
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageOfObj.prop_message)
+    }
+    void MessageOfObj::set_allocated_bullet_message(::protobuf::MessageOfBullet* bullet_message)
+    {
+        ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+        clear_message_of_obj();
+        if (bullet_message)
+        {
+            ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+                ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(bullet_message);
+            if (message_arena != submessage_arena)
+            {
+                bullet_message = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+                    message_arena, bullet_message, submessage_arena
+                );
+            }
+            set_has_bullet_message();
+            _impl_.message_of_obj_.bullet_message_ = bullet_message;
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageOfObj.bullet_message)
+    }
+    void MessageOfObj::set_allocated_bombed_bullet_message(::protobuf::MessageOfBombedBullet* bombed_bullet_message)
+    {
+        ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+        clear_message_of_obj();
+        if (bombed_bullet_message)
+        {
+            ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+                ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(bombed_bullet_message);
+            if (message_arena != submessage_arena)
+            {
+                bombed_bullet_message = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+                    message_arena, bombed_bullet_message, submessage_arena
+                );
+            }
+            set_has_bombed_bullet_message();
+            _impl_.message_of_obj_.bombed_bullet_message_ = bombed_bullet_message;
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageOfObj.bombed_bullet_message)
+    }
+    MessageOfObj::MessageOfObj(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned) :
+        ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned)
+    {
+        SharedCtor(arena, is_message_owned);
+        // @@protoc_insertion_point(arena_constructor:protobuf.MessageOfObj)
+    }
+    MessageOfObj::MessageOfObj(const MessageOfObj& from) :
+        ::PROTOBUF_NAMESPACE_ID::Message()
+    {
+        MessageOfObj* const _this = this;
+        (void)_this;
+        new (&_impl_) Impl_{
+            decltype(_impl_.message_of_obj_){}, /*decltype(_impl_._cached_size_)*/ {}, /*decltype(_impl_._oneof_case_)*/ {}};
+
+        _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+        clear_has_message_of_obj();
+        switch (from.message_of_obj_case())
+        {
+            case kStudentMessage:
+                {
+                    _this->_internal_mutable_student_message()->::protobuf::MessageOfStudent::MergeFrom(
+                        from._internal_student_message()
+                    );
+                    break;
+                }
+            case kTrickerMessage:
+                {
+                    _this->_internal_mutable_tricker_message()->::protobuf::MessageOfTricker::MergeFrom(
+                        from._internal_tricker_message()
+                    );
+                    break;
+                }
+            case kPropMessage:
+                {
+                    _this->_internal_mutable_prop_message()->::protobuf::MessageOfProp::MergeFrom(
+                        from._internal_prop_message()
+                    );
+                    break;
+                }
+            case kBulletMessage:
+                {
+                    _this->_internal_mutable_bullet_message()->::protobuf::MessageOfBullet::MergeFrom(
+                        from._internal_bullet_message()
+                    );
+                    break;
+                }
+            case kBombedBulletMessage:
+                {
+                    _this->_internal_mutable_bombed_bullet_message()->::protobuf::MessageOfBombedBullet::MergeFrom(
+                        from._internal_bombed_bullet_message()
+                    );
+                    break;
+                }
+            case MESSAGE_OF_OBJ_NOT_SET:
+                {
+                    break;
+                }
+        }
+        // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfObj)
+    }
+
+    inline void MessageOfObj::SharedCtor(
+        ::_pb::Arena* arena, bool is_message_owned
+    )
+    {
+        (void)arena;
+        (void)is_message_owned;
+        new (&_impl_) Impl_{
+            decltype(_impl_.message_of_obj_){}, /*decltype(_impl_._cached_size_)*/ {}, /*decltype(_impl_._oneof_case_)*/ {}};
+        clear_has_message_of_obj();
+    }
+
+    MessageOfObj::~MessageOfObj()
+    {
+        // @@protoc_insertion_point(destructor:protobuf.MessageOfObj)
+        if (auto* arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>())
+        {
+            (void)arena;
+            return;
+        }
+        SharedDtor();
+    }
+
+    inline void MessageOfObj::SharedDtor()
+    {
+        GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+        if (has_message_of_obj())
+        {
+            clear_message_of_obj();
+        }
+    }
+
+    void MessageOfObj::SetCachedSize(int size) const
+    {
+        _impl_._cached_size_.Set(size);
+    }
+
+    void MessageOfObj::clear_message_of_obj()
+    {
+        // @@protoc_insertion_point(one_of_clear_start:protobuf.MessageOfObj)
+        switch (message_of_obj_case())
+        {
+            case kStudentMessage:
+                {
+                    if (GetArenaForAllocation() == nullptr)
+                    {
+                        delete _impl_.message_of_obj_.student_message_;
+                    }
+                    break;
+                }
+            case kTrickerMessage:
+                {
+                    if (GetArenaForAllocation() == nullptr)
+                    {
+                        delete _impl_.message_of_obj_.tricker_message_;
+                    }
+                    break;
+                }
+            case kPropMessage:
+                {
+                    if (GetArenaForAllocation() == nullptr)
+                    {
+                        delete _impl_.message_of_obj_.prop_message_;
+                    }
+                    break;
+                }
+            case kBulletMessage:
+                {
+                    if (GetArenaForAllocation() == nullptr)
+                    {
+                        delete _impl_.message_of_obj_.bullet_message_;
+                    }
+                    break;
+                }
+            case kBombedBulletMessage:
+                {
+                    if (GetArenaForAllocation() == nullptr)
+                    {
+                        delete _impl_.message_of_obj_.bombed_bullet_message_;
+                    }
+                    break;
+                }
+            case MESSAGE_OF_OBJ_NOT_SET:
+                {
+                    break;
+                }
+        }
+        _impl_._oneof_case_[0] = MESSAGE_OF_OBJ_NOT_SET;
+    }
+
+    void MessageOfObj::Clear()
+    {
+        // @@protoc_insertion_point(message_clear_start:protobuf.MessageOfObj)
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        clear_message_of_obj();
+        _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+    }
+
+    const char* MessageOfObj::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
+    {
+#define CHK_(x)                       \
+    if (PROTOBUF_PREDICT_FALSE(!(x))) \
+    goto failure
+        while (!ctx->Done(&ptr))
+        {
+            uint32_t tag;
+            ptr = ::_pbi::ReadTag(ptr, &tag);
+            switch (tag >> 3)
+            {
+                // .protobuf.MessageOfStudent student_message = 1;
+                case 1:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10))
+                    {
+                        ptr = ctx->ParseMessage(_internal_mutable_student_message(), ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // .protobuf.MessageOfTricker tricker_message = 2;
+                case 2:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18))
+                    {
+                        ptr = ctx->ParseMessage(_internal_mutable_tricker_message(), ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // .protobuf.MessageOfProp prop_message = 3;
+                case 3:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26))
+                    {
+                        ptr = ctx->ParseMessage(_internal_mutable_prop_message(), ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // .protobuf.MessageOfBullet bullet_message = 4;
+                case 4:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34))
+                    {
+                        ptr = ctx->ParseMessage(_internal_mutable_bullet_message(), ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // .protobuf.MessageOfBombedBullet bombed_bullet_message = 5;
+                case 5:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42))
+                    {
+                        ptr = ctx->ParseMessage(_internal_mutable_bombed_bullet_message(), ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                default:
+                    goto handle_unusual;
+            }  // switch
+        handle_unusual:
+            if ((tag == 0) || ((tag & 7) == 4))
+            {
+                CHK_(ptr);
+                ctx->SetLastTag(tag);
+                goto message_done;
+            }
+            ptr = UnknownFieldParse(
+                tag,
+                _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+                ptr,
+                ctx
+            );
+            CHK_(ptr != nullptr);
+        }  // while
+    message_done:
+        return ptr;
+    failure:
+        ptr = nullptr;
+        goto message_done;
+#undef CHK_
+    }
+
+    uint8_t* MessageOfObj::_InternalSerialize(
+        uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream
+    ) const
+    {
+        // @@protoc_insertion_point(serialize_to_array_start:protobuf.MessageOfObj)
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        // .protobuf.MessageOfStudent student_message = 1;
+        if (_internal_has_student_message())
+        {
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(1, _Internal::student_message(this), _Internal::student_message(this).GetCachedSize(), target, stream);
+        }
+
+        // .protobuf.MessageOfTricker tricker_message = 2;
+        if (_internal_has_tricker_message())
+        {
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(2, _Internal::tricker_message(this), _Internal::tricker_message(this).GetCachedSize(), target, stream);
+        }
+
+        // .protobuf.MessageOfProp prop_message = 3;
+        if (_internal_has_prop_message())
+        {
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(3, _Internal::prop_message(this), _Internal::prop_message(this).GetCachedSize(), target, stream);
+        }
+
+        // .protobuf.MessageOfBullet bullet_message = 4;
+        if (_internal_has_bullet_message())
+        {
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(4, _Internal::bullet_message(this), _Internal::bullet_message(this).GetCachedSize(), target, stream);
+        }
+
+        // .protobuf.MessageOfBombedBullet bombed_bullet_message = 5;
+        if (_internal_has_bombed_bullet_message())
+        {
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(5, _Internal::bombed_bullet_message(this), _Internal::bombed_bullet_message(this).GetCachedSize(), target, stream);
+        }
+
+        if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
+        {
+            target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream
+            );
+        }
+        // @@protoc_insertion_point(serialize_to_array_end:protobuf.MessageOfObj)
+        return target;
+    }
+
+    size_t MessageOfObj::ByteSizeLong() const
+    {
+        // @@protoc_insertion_point(message_byte_size_start:protobuf.MessageOfObj)
+        size_t total_size = 0;
+
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        switch (message_of_obj_case())
+        {
+            // .protobuf.MessageOfStudent student_message = 1;
+            case kStudentMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+                                      *_impl_.message_of_obj_.student_message_
+                                  );
+                    break;
+                }
+            // .protobuf.MessageOfTricker tricker_message = 2;
+            case kTrickerMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+                                      *_impl_.message_of_obj_.tricker_message_
+                                  );
+                    break;
+                }
+            // .protobuf.MessageOfProp prop_message = 3;
+            case kPropMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+                                      *_impl_.message_of_obj_.prop_message_
+                                  );
+                    break;
+                }
+            // .protobuf.MessageOfBullet bullet_message = 4;
+            case kBulletMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+                                      *_impl_.message_of_obj_.bullet_message_
+                                  );
+                    break;
+                }
+            // .protobuf.MessageOfBombedBullet bombed_bullet_message = 5;
+            case kBombedBulletMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+                                      *_impl_.message_of_obj_.bombed_bullet_message_
+                                  );
+                    break;
+                }
+            case MESSAGE_OF_OBJ_NOT_SET:
+                {
+                    break;
+                }
+        }
+        return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+    }
+
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MessageOfObj::_class_data_ = {
+        ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+        MessageOfObj::MergeImpl};
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData* MessageOfObj::GetClassData() const
+    {
+        return &_class_data_;
+    }
+
+    void MessageOfObj::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg)
+    {
+        auto* const _this = static_cast<MessageOfObj*>(&to_msg);
+        auto& from = static_cast<const MessageOfObj&>(from_msg);
+        // @@protoc_insertion_point(class_specific_merge_from_start:protobuf.MessageOfObj)
+        GOOGLE_DCHECK_NE(&from, _this);
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        switch (from.message_of_obj_case())
+        {
+            case kStudentMessage:
+                {
+                    _this->_internal_mutable_student_message()->::protobuf::MessageOfStudent::MergeFrom(
+                        from._internal_student_message()
+                    );
+                    break;
+                }
+            case kTrickerMessage:
+                {
+                    _this->_internal_mutable_tricker_message()->::protobuf::MessageOfTricker::MergeFrom(
+                        from._internal_tricker_message()
+                    );
+                    break;
+                }
+            case kPropMessage:
+                {
+                    _this->_internal_mutable_prop_message()->::protobuf::MessageOfProp::MergeFrom(
+                        from._internal_prop_message()
+                    );
+                    break;
+                }
+            case kBulletMessage:
+                {
+                    _this->_internal_mutable_bullet_message()->::protobuf::MessageOfBullet::MergeFrom(
+                        from._internal_bullet_message()
+                    );
+                    break;
+                }
+            case kBombedBulletMessage:
+                {
+                    _this->_internal_mutable_bombed_bullet_message()->::protobuf::MessageOfBombedBullet::MergeFrom(
+                        from._internal_bombed_bullet_message()
+                    );
+                    break;
+                }
+            case MESSAGE_OF_OBJ_NOT_SET:
+                {
+                    break;
+                }
+        }
+        _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+    }
+
+    void MessageOfObj::CopyFrom(const MessageOfObj& from)
+    {
+        // @@protoc_insertion_point(class_specific_copy_from_start:protobuf.MessageOfObj)
+        if (&from == this)
+            return;
+        Clear();
+        MergeFrom(from);
+    }
+
+    bool MessageOfObj::IsInitialized() const
+    {
+        return true;
+    }
+
+    void MessageOfObj::InternalSwap(MessageOfObj* other)
+    {
+        using std::swap;
+        _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+        swap(_impl_.message_of_obj_, other->_impl_.message_of_obj_);
+        swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
+    }
+
+    ::PROTOBUF_NAMESPACE_ID::Metadata MessageOfObj::GetMetadata() const
+    {
+        return ::_pbi::AssignDescriptors(
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[13]
+        );
+    }
+
+    // ===================================================================
+
+    class MessageOfAll::_Internal
+    {
+    public:
+    };
+
+    MessageOfAll::MessageOfAll(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned) :
+        ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned)
+    {
+        SharedCtor(arena, is_message_owned);
+        // @@protoc_insertion_point(arena_constructor:protobuf.MessageOfAll)
+    }
+    MessageOfAll::MessageOfAll(const MessageOfAll& from) :
+        ::PROTOBUF_NAMESPACE_ID::Message()
+    {
+        MessageOfAll* const _this = this;
+        (void)_this;
+        new (&_impl_) Impl_{
+            decltype(_impl_.game_time_){}, decltype(_impl_.subject_left_){}, decltype(_impl_.student_graduated_){}, decltype(_impl_.student_quited_){}, decltype(_impl_.student_score_){}, decltype(_impl_.tricker_score_){}, decltype(_impl_.gate_opened_){}, decltype(_impl_.hidden_gate_refreshed_){}, decltype(_impl_.hidden_gate_opened_){}, /*decltype(_impl_._cached_size_)*/ {}};
+
+        _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+        ::memcpy(&_impl_.game_time_, &from._impl_.game_time_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.hidden_gate_opened_) - reinterpret_cast<char*>(&_impl_.game_time_)) + sizeof(_impl_.hidden_gate_opened_));
+        // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfAll)
+    }
+
+    inline void MessageOfAll::SharedCtor(
+        ::_pb::Arena* arena, bool is_message_owned
+    )
+    {
+        (void)arena;
+        (void)is_message_owned;
+        new (&_impl_) Impl_{
+            decltype(_impl_.game_time_){0}, decltype(_impl_.subject_left_){0}, decltype(_impl_.student_graduated_){0}, decltype(_impl_.student_quited_){0}, decltype(_impl_.student_score_){0}, decltype(_impl_.tricker_score_){0}, decltype(_impl_.gate_opened_){false}, decltype(_impl_.hidden_gate_refreshed_){false}, decltype(_impl_.hidden_gate_opened_){false}, /*decltype(_impl_._cached_size_)*/ {}};
+    }
+
+    MessageOfAll::~MessageOfAll()
+    {
+        // @@protoc_insertion_point(destructor:protobuf.MessageOfAll)
+        if (auto* arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>())
+        {
+            (void)arena;
+            return;
+        }
+        SharedDtor();
+    }
+
+    inline void MessageOfAll::SharedDtor()
+    {
+        GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+    }
+
+    void MessageOfAll::SetCachedSize(int size) const
+    {
+        _impl_._cached_size_.Set(size);
+    }
+
+    void MessageOfAll::Clear()
+    {
+        // @@protoc_insertion_point(message_clear_start:protobuf.MessageOfAll)
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        ::memset(&_impl_.game_time_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.hidden_gate_opened_) - reinterpret_cast<char*>(&_impl_.game_time_)) + sizeof(_impl_.hidden_gate_opened_));
+        _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+    }
+
+    const char* MessageOfAll::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
+    {
+#define CHK_(x)                       \
+    if (PROTOBUF_PREDICT_FALSE(!(x))) \
+    goto failure
+        while (!ctx->Done(&ptr))
+        {
+            uint32_t tag;
+            ptr = ::_pbi::ReadTag(ptr, &tag);
+            switch (tag >> 3)
+            {
+                // int32 game_time = 1;
+                case 1:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8))
+                    {
+                        _impl_.game_time_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 subject_left = 2;
+                case 2:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16))
+                    {
+                        _impl_.subject_left_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 student_graduated = 3;
+                case 3:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24))
+                    {
+                        _impl_.student_graduated_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 student_quited = 4;
+                case 4:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32))
+                    {
+                        _impl_.student_quited_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 student_score = 5;
+                case 5:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40))
+                    {
+                        _impl_.student_score_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 tricker_score = 6;
+                case 6:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48))
+                    {
+                        _impl_.tricker_score_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // bool gate_opened = 7;
+                case 7:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56))
+                    {
+                        _impl_.gate_opened_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // bool hidden_gate_refreshed = 8;
+                case 8:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64))
+                    {
+                        _impl_.hidden_gate_refreshed_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // bool hidden_gate_opened = 9;
+                case 9:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 72))
+                    {
+                        _impl_.hidden_gate_opened_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                default:
+                    goto handle_unusual;
+            }  // switch
+        handle_unusual:
+            if ((tag == 0) || ((tag & 7) == 4))
+            {
+                CHK_(ptr);
+                ctx->SetLastTag(tag);
+                goto message_done;
+            }
+            ptr = UnknownFieldParse(
+                tag,
+                _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+                ptr,
+                ctx
+            );
+            CHK_(ptr != nullptr);
+        }  // while
+    message_done:
+        return ptr;
+    failure:
+        ptr = nullptr;
+        goto message_done;
+#undef CHK_
+    }
+
+    uint8_t* MessageOfAll::_InternalSerialize(
+        uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream
+    ) const
+    {
+        // @@protoc_insertion_point(serialize_to_array_start:protobuf.MessageOfAll)
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        // int32 game_time = 1;
+        if (this->_internal_game_time() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_game_time(), target);
+        }
+
+        // int32 subject_left = 2;
+        if (this->_internal_subject_left() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_subject_left(), target);
+        }
+
+        // int32 student_graduated = 3;
+        if (this->_internal_student_graduated() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_student_graduated(), target);
+        }
+
+        // int32 student_quited = 4;
+        if (this->_internal_student_quited() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(4, this->_internal_student_quited(), target);
+        }
+
+        // int32 student_score = 5;
+        if (this->_internal_student_score() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(5, this->_internal_student_score(), target);
+        }
+
+        // int32 tricker_score = 6;
+        if (this->_internal_tricker_score() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(6, this->_internal_tricker_score(), target);
+        }
+
+        // bool gate_opened = 7;
+        if (this->_internal_gate_opened() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteBoolToArray(7, this->_internal_gate_opened(), target);
+        }
+
+        // bool hidden_gate_refreshed = 8;
+        if (this->_internal_hidden_gate_refreshed() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteBoolToArray(8, this->_internal_hidden_gate_refreshed(), target);
+        }
+
+        // bool hidden_gate_opened = 9;
+        if (this->_internal_hidden_gate_opened() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteBoolToArray(9, this->_internal_hidden_gate_opened(), target);
+        }
+
+        if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
+        {
+            target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+                _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream
+            );
+        }
+        // @@protoc_insertion_point(serialize_to_array_end:protobuf.MessageOfAll)
+        return target;
+    }
+
+    size_t MessageOfAll::ByteSizeLong() const
+    {
+        // @@protoc_insertion_point(message_byte_size_start:protobuf.MessageOfAll)
+        size_t total_size = 0;
+
+        uint32_t cached_has_bits = 0;
+        // Prevent compiler warnings about cached_has_bits being unused
+        (void)cached_has_bits;
+
+        // int32 game_time = 1;
+        if (this->_internal_game_time() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_game_time());
+        }
+
+        // int32 subject_left = 2;
+        if (this->_internal_subject_left() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_subject_left());
+        }
+
+        // int32 student_graduated = 3;
+        if (this->_internal_student_graduated() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_student_graduated());
+        }
+
+        // int32 student_quited = 4;
+        if (this->_internal_student_quited() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_student_quited());
+        }
+
+        // int32 student_score = 5;
+        if (this->_internal_student_score() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_student_score());
+        }
+
+        // int32 tricker_score = 6;
+        if (this->_internal_tricker_score() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_tricker_score());
+        }
+
+        // bool gate_opened = 7;
+        if (this->_internal_gate_opened() != 0)
+        {
+            total_size += 1 + 1;
+        }
+
+        // bool hidden_gate_refreshed = 8;
+        if (this->_internal_hidden_gate_refreshed() != 0)
+        {
+            total_size += 1 + 1;
+        }
+
+        // bool hidden_gate_opened = 9;
+        if (this->_internal_hidden_gate_opened() != 0)
+        {
+            total_size += 1 + 1;
+        }
+
+        return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+    }
+
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MessageOfAll::_class_data_ = {
+        ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+        MessageOfAll::MergeImpl};
+    const ::PROTOBUF_NAMESPACE_ID::Message::ClassData* MessageOfAll::GetClassData() const
+    {
+        return &_class_data_;
+    }
+
+    void MessageOfAll::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg)
+    {
+        auto* const _this = static_cast<MessageOfAll*>(&to_msg);
+        auto& from = static_cast<const MessageOfAll&>(from_msg);
+        // @@protoc_insertion_point(class_specific_merge_from_start:protobuf.MessageOfAll)
+        GOOGLE_DCHECK_NE(&from, _this);
+        uint32_t cached_has_bits = 0;
+        (void)cached_has_bits;
+
+        if (from._internal_game_time() != 0)
+        {
+            _this->_internal_set_game_time(from._internal_game_time());
+        }
+        if (from._internal_subject_left() != 0)
+        {
+            _this->_internal_set_subject_left(from._internal_subject_left());
+        }
+        if (from._internal_student_graduated() != 0)
+        {
+            _this->_internal_set_student_graduated(from._internal_student_graduated());
+        }
+        if (from._internal_student_quited() != 0)
+        {
+            _this->_internal_set_student_quited(from._internal_student_quited());
+        }
+        if (from._internal_student_score() != 0)
+        {
+            _this->_internal_set_student_score(from._internal_student_score());
+        }
+        if (from._internal_tricker_score() != 0)
+        {
+            _this->_internal_set_tricker_score(from._internal_tricker_score());
+        }
+        if (from._internal_gate_opened() != 0)
+        {
+            _this->_internal_set_gate_opened(from._internal_gate_opened());
+        }
+        if (from._internal_hidden_gate_refreshed() != 0)
+        {
+            _this->_internal_set_hidden_gate_refreshed(from._internal_hidden_gate_refreshed());
+        }
+        if (from._internal_hidden_gate_opened() != 0)
+        {
+            _this->_internal_set_hidden_gate_opened(from._internal_hidden_gate_opened());
+        }
+        _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+    }
+
+    void MessageOfAll::CopyFrom(const MessageOfAll& from)
+    {
+        // @@protoc_insertion_point(class_specific_copy_from_start:protobuf.MessageOfAll)
+        if (&from == this)
+            return;
+        Clear();
+        MergeFrom(from);
+    }
+
+    bool MessageOfAll::IsInitialized() const
+    {
+        return true;
+    }
+
+    void MessageOfAll::InternalSwap(MessageOfAll* other)
+    {
+        using std::swap;
+        _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+        ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+            PROTOBUF_FIELD_OFFSET(MessageOfAll, _impl_.hidden_gate_opened_) + sizeof(MessageOfAll::_impl_.hidden_gate_opened_) - PROTOBUF_FIELD_OFFSET(MessageOfAll, _impl_.game_time_)>(
+            reinterpret_cast<char*>(&_impl_.game_time_),
+            reinterpret_cast<char*>(&other->_impl_.game_time_)
+        );
+    }
+
+    ::PROTOBUF_NAMESPACE_ID::Metadata MessageOfAll::GetMetadata() const
+    {
+        return ::_pbi::AssignDescriptors(
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[14]
         );
     }
 
@@ -3962,12 +7192,18 @@ namespace protobuf
     {
     public:
         static const ::protobuf::MessageOfMap& map_message(const MessageToClient* msg);
+        static const ::protobuf::MessageOfAll& all_message(const MessageToClient* msg);
     };
 
     const ::protobuf::MessageOfMap&
         MessageToClient::_Internal::map_message(const MessageToClient* msg)
     {
         return *msg->_impl_.map_message_;
+    }
+    const ::protobuf::MessageOfAll&
+        MessageToClient::_Internal::all_message(const MessageToClient* msg)
+    {
+        return *msg->_impl_.all_message_;
     }
     MessageToClient::MessageToClient(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned) :
         ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned)
@@ -3981,12 +7217,16 @@ namespace protobuf
         MessageToClient* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.student_message_){from._impl_.student_message_}, decltype(_impl_.tricker_message_){from._impl_.tricker_message_}, decltype(_impl_.prop_message_){from._impl_.prop_message_}, decltype(_impl_.bullet_message_){from._impl_.bullet_message_}, decltype(_impl_.bombed_bullet_message_){from._impl_.bombed_bullet_message_}, decltype(_impl_.map_message_){nullptr}, decltype(_impl_.game_state_){}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.obj_message_){from._impl_.obj_message_}, decltype(_impl_.map_message_){nullptr}, decltype(_impl_.all_message_){nullptr}, decltype(_impl_.game_state_){}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
         if (from._internal_has_map_message())
         {
             _this->_impl_.map_message_ = new ::protobuf::MessageOfMap(*from._impl_.map_message_);
+        }
+        if (from._internal_has_all_message())
+        {
+            _this->_impl_.all_message_ = new ::protobuf::MessageOfAll(*from._impl_.all_message_);
         }
         _this->_impl_.game_state_ = from._impl_.game_state_;
         // @@protoc_insertion_point(copy_constructor:protobuf.MessageToClient)
@@ -3999,7 +7239,7 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.student_message_){arena}, decltype(_impl_.tricker_message_){arena}, decltype(_impl_.prop_message_){arena}, decltype(_impl_.bullet_message_){arena}, decltype(_impl_.bombed_bullet_message_){arena}, decltype(_impl_.map_message_){nullptr}, decltype(_impl_.game_state_){0}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.obj_message_){arena}, decltype(_impl_.map_message_){nullptr}, decltype(_impl_.all_message_){nullptr}, decltype(_impl_.game_state_){0}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
     MessageToClient::~MessageToClient()
@@ -4016,13 +7256,11 @@ namespace protobuf
     inline void MessageToClient::SharedDtor()
     {
         GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-        _impl_.student_message_.~RepeatedPtrField();
-        _impl_.tricker_message_.~RepeatedPtrField();
-        _impl_.prop_message_.~RepeatedPtrField();
-        _impl_.bullet_message_.~RepeatedPtrField();
-        _impl_.bombed_bullet_message_.~RepeatedPtrField();
+        _impl_.obj_message_.~RepeatedPtrField();
         if (this != internal_default_instance())
             delete _impl_.map_message_;
+        if (this != internal_default_instance())
+            delete _impl_.all_message_;
     }
 
     void MessageToClient::SetCachedSize(int size) const
@@ -4037,16 +7275,17 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        _impl_.student_message_.Clear();
-        _impl_.tricker_message_.Clear();
-        _impl_.prop_message_.Clear();
-        _impl_.bullet_message_.Clear();
-        _impl_.bombed_bullet_message_.Clear();
+        _impl_.obj_message_.Clear();
         if (GetArenaForAllocation() == nullptr && _impl_.map_message_ != nullptr)
         {
             delete _impl_.map_message_;
         }
         _impl_.map_message_ = nullptr;
+        if (GetArenaForAllocation() == nullptr && _impl_.all_message_ != nullptr)
+        {
+            delete _impl_.all_message_;
+        }
+        _impl_.all_message_ = nullptr;
         _impl_.game_state_ = 0;
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
@@ -4062,7 +7301,7 @@ namespace protobuf
             ptr = ::_pbi::ReadTag(ptr, &tag);
             switch (tag >> 3)
             {
-                // repeated .protobuf.MessageOfStudent student_message = 1;
+                // repeated .protobuf.MessageOfObj obj_message = 1;
                 case 1:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10))
                     {
@@ -4070,7 +7309,7 @@ namespace protobuf
                         do
                         {
                             ptr += 1;
-                            ptr = ctx->ParseMessage(_internal_add_student_message(), ptr);
+                            ptr = ctx->ParseMessage(_internal_add_obj_message(), ptr);
                             CHK_(ptr);
                             if (!ctx->DataAvailable(ptr))
                                 break;
@@ -4079,77 +7318,9 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // repeated .protobuf.MessageOfTricker tricker_message = 2;
+                // .protobuf.MessageOfMap map_message = 2;
                 case 2:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18))
-                    {
-                        ptr -= 1;
-                        do
-                        {
-                            ptr += 1;
-                            ptr = ctx->ParseMessage(_internal_add_tricker_message(), ptr);
-                            CHK_(ptr);
-                            if (!ctx->DataAvailable(ptr))
-                                break;
-                        } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
-                    }
-                    else
-                        goto handle_unusual;
-                    continue;
-                // repeated .protobuf.MessageOfProp prop_message = 3;
-                case 3:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26))
-                    {
-                        ptr -= 1;
-                        do
-                        {
-                            ptr += 1;
-                            ptr = ctx->ParseMessage(_internal_add_prop_message(), ptr);
-                            CHK_(ptr);
-                            if (!ctx->DataAvailable(ptr))
-                                break;
-                        } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
-                    }
-                    else
-                        goto handle_unusual;
-                    continue;
-                // repeated .protobuf.MessageOfBullet bullet_message = 4;
-                case 4:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34))
-                    {
-                        ptr -= 1;
-                        do
-                        {
-                            ptr += 1;
-                            ptr = ctx->ParseMessage(_internal_add_bullet_message(), ptr);
-                            CHK_(ptr);
-                            if (!ctx->DataAvailable(ptr))
-                                break;
-                        } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<34>(ptr));
-                    }
-                    else
-                        goto handle_unusual;
-                    continue;
-                // repeated .protobuf.MessageOfBombedBullet bombed_bullet_message = 5;
-                case 5:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42))
-                    {
-                        ptr -= 1;
-                        do
-                        {
-                            ptr += 1;
-                            ptr = ctx->ParseMessage(_internal_add_bombed_bullet_message(), ptr);
-                            CHK_(ptr);
-                            if (!ctx->DataAvailable(ptr))
-                                break;
-                        } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<42>(ptr));
-                    }
-                    else
-                        goto handle_unusual;
-                    continue;
-                // .protobuf.MessageOfMap map_message = 6;
-                case 6:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50))
                     {
                         ptr = ctx->ParseMessage(_internal_mutable_map_message(), ptr);
                         CHK_(ptr);
@@ -4157,13 +7328,23 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // .protobuf.GameState game_state = 7;
-                case 7:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56))
+                // .protobuf.GameState game_state = 3;
+                case 3:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24))
                     {
                         uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
                         _internal_set_game_state(static_cast<::protobuf::GameState>(val));
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // .protobuf.MessageOfAll all_message = 4;
+                case 4:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34))
+                    {
+                        ptr = ctx->ParseMessage(_internal_mutable_all_message(), ptr);
+                        CHK_(ptr);
                     }
                     else
                         goto handle_unusual;
@@ -4202,75 +7383,38 @@ namespace protobuf
         uint32_t cached_has_bits = 0;
         (void)cached_has_bits;
 
-        // repeated .protobuf.MessageOfStudent student_message = 1;
+        // repeated .protobuf.MessageOfObj obj_message = 1;
         for (unsigned i = 0,
-                      n = static_cast<unsigned>(this->_internal_student_message_size());
+                      n = static_cast<unsigned>(this->_internal_obj_message_size());
              i < n;
              i++)
         {
-            const auto& repfield = this->_internal_student_message(i);
+            const auto& repfield = this->_internal_obj_message(i);
             target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
                 InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
         }
 
-        // repeated .protobuf.MessageOfTricker tricker_message = 2;
-        for (unsigned i = 0,
-                      n = static_cast<unsigned>(this->_internal_tricker_message_size());
-             i < n;
-             i++)
-        {
-            const auto& repfield = this->_internal_tricker_message(i);
-            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-                InternalWriteMessage(2, repfield, repfield.GetCachedSize(), target, stream);
-        }
-
-        // repeated .protobuf.MessageOfProp prop_message = 3;
-        for (unsigned i = 0,
-                      n = static_cast<unsigned>(this->_internal_prop_message_size());
-             i < n;
-             i++)
-        {
-            const auto& repfield = this->_internal_prop_message(i);
-            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-                InternalWriteMessage(3, repfield, repfield.GetCachedSize(), target, stream);
-        }
-
-        // repeated .protobuf.MessageOfBullet bullet_message = 4;
-        for (unsigned i = 0,
-                      n = static_cast<unsigned>(this->_internal_bullet_message_size());
-             i < n;
-             i++)
-        {
-            const auto& repfield = this->_internal_bullet_message(i);
-            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-                InternalWriteMessage(4, repfield, repfield.GetCachedSize(), target, stream);
-        }
-
-        // repeated .protobuf.MessageOfBombedBullet bombed_bullet_message = 5;
-        for (unsigned i = 0,
-                      n = static_cast<unsigned>(this->_internal_bombed_bullet_message_size());
-             i < n;
-             i++)
-        {
-            const auto& repfield = this->_internal_bombed_bullet_message(i);
-            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-                InternalWriteMessage(5, repfield, repfield.GetCachedSize(), target, stream);
-        }
-
-        // .protobuf.MessageOfMap map_message = 6;
+        // .protobuf.MessageOfMap map_message = 2;
         if (this->_internal_has_map_message())
         {
             target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-                InternalWriteMessage(6, _Internal::map_message(this), _Internal::map_message(this).GetCachedSize(), target, stream);
+                InternalWriteMessage(2, _Internal::map_message(this), _Internal::map_message(this).GetCachedSize(), target, stream);
         }
 
-        // .protobuf.GameState game_state = 7;
+        // .protobuf.GameState game_state = 3;
         if (this->_internal_game_state() != 0)
         {
             target = stream->EnsureSpace(target);
             target = ::_pbi::WireFormatLite::WriteEnumToArray(
-                7, this->_internal_game_state(), target
+                3, this->_internal_game_state(), target
             );
+        }
+
+        // .protobuf.MessageOfAll all_message = 4;
+        if (this->_internal_has_all_message())
+        {
+            target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+                InternalWriteMessage(4, _Internal::all_message(this), _Internal::all_message(this).GetCachedSize(), target, stream);
         }
 
         if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
@@ -4292,47 +7436,15 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        // repeated .protobuf.MessageOfStudent student_message = 1;
-        total_size += 1UL * this->_internal_student_message_size();
-        for (const auto& msg : this->_impl_.student_message_)
+        // repeated .protobuf.MessageOfObj obj_message = 1;
+        total_size += 1UL * this->_internal_obj_message_size();
+        for (const auto& msg : this->_impl_.obj_message_)
         {
             total_size +=
                 ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
         }
 
-        // repeated .protobuf.MessageOfTricker tricker_message = 2;
-        total_size += 1UL * this->_internal_tricker_message_size();
-        for (const auto& msg : this->_impl_.tricker_message_)
-        {
-            total_size +=
-                ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
-        }
-
-        // repeated .protobuf.MessageOfProp prop_message = 3;
-        total_size += 1UL * this->_internal_prop_message_size();
-        for (const auto& msg : this->_impl_.prop_message_)
-        {
-            total_size +=
-                ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
-        }
-
-        // repeated .protobuf.MessageOfBullet bullet_message = 4;
-        total_size += 1UL * this->_internal_bullet_message_size();
-        for (const auto& msg : this->_impl_.bullet_message_)
-        {
-            total_size +=
-                ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
-        }
-
-        // repeated .protobuf.MessageOfBombedBullet bombed_bullet_message = 5;
-        total_size += 1UL * this->_internal_bombed_bullet_message_size();
-        for (const auto& msg : this->_impl_.bombed_bullet_message_)
-        {
-            total_size +=
-                ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
-        }
-
-        // .protobuf.MessageOfMap map_message = 6;
+        // .protobuf.MessageOfMap map_message = 2;
         if (this->_internal_has_map_message())
         {
             total_size += 1 +
@@ -4341,7 +7453,16 @@ namespace protobuf
                           );
         }
 
-        // .protobuf.GameState game_state = 7;
+        // .protobuf.MessageOfAll all_message = 4;
+        if (this->_internal_has_all_message())
+        {
+            total_size += 1 +
+                          ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+                              *_impl_.all_message_
+                          );
+        }
+
+        // .protobuf.GameState game_state = 3;
         if (this->_internal_game_state() != 0)
         {
             total_size += 1 +
@@ -4368,15 +7489,17 @@ namespace protobuf
         uint32_t cached_has_bits = 0;
         (void)cached_has_bits;
 
-        _this->_impl_.student_message_.MergeFrom(from._impl_.student_message_);
-        _this->_impl_.tricker_message_.MergeFrom(from._impl_.tricker_message_);
-        _this->_impl_.prop_message_.MergeFrom(from._impl_.prop_message_);
-        _this->_impl_.bullet_message_.MergeFrom(from._impl_.bullet_message_);
-        _this->_impl_.bombed_bullet_message_.MergeFrom(from._impl_.bombed_bullet_message_);
+        _this->_impl_.obj_message_.MergeFrom(from._impl_.obj_message_);
         if (from._internal_has_map_message())
         {
             _this->_internal_mutable_map_message()->::protobuf::MessageOfMap::MergeFrom(
                 from._internal_map_message()
+            );
+        }
+        if (from._internal_has_all_message())
+        {
+            _this->_internal_mutable_all_message()->::protobuf::MessageOfAll::MergeFrom(
+                from._internal_all_message()
             );
         }
         if (from._internal_game_state() != 0)
@@ -4404,11 +7527,7 @@ namespace protobuf
     {
         using std::swap;
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-        _impl_.student_message_.InternalSwap(&other->_impl_.student_message_);
-        _impl_.tricker_message_.InternalSwap(&other->_impl_.tricker_message_);
-        _impl_.prop_message_.InternalSwap(&other->_impl_.prop_message_);
-        _impl_.bullet_message_.InternalSwap(&other->_impl_.bullet_message_);
-        _impl_.bombed_bullet_message_.InternalSwap(&other->_impl_.bombed_bullet_message_);
+        _impl_.obj_message_.InternalSwap(&other->_impl_.obj_message_);
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
             PROTOBUF_FIELD_OFFSET(MessageToClient, _impl_.game_state_) + sizeof(MessageToClient::_impl_.game_state_) - PROTOBUF_FIELD_OFFSET(MessageToClient, _impl_.map_message_)>(
             reinterpret_cast<char*>(&_impl_.map_message_),
@@ -4419,7 +7538,7 @@ namespace protobuf
     ::PROTOBUF_NAMESPACE_ID::Metadata MessageToClient::GetMetadata() const
     {
         return ::_pbi::AssignDescriptors(
-            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[8]
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[15]
         );
     }
 
@@ -4699,7 +7818,7 @@ namespace protobuf
     ::PROTOBUF_NAMESPACE_ID::Metadata MoveRes::GetMetadata() const
     {
         return ::_pbi::AssignDescriptors(
-            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[9]
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[16]
         );
     }
 
@@ -4909,7 +8028,7 @@ namespace protobuf
     ::PROTOBUF_NAMESPACE_ID::Metadata BoolRes::GetMetadata() const
     {
         return ::_pbi::AssignDescriptors(
-            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[10]
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[17]
         );
     }
 
@@ -5205,7 +8324,7 @@ namespace protobuf
     ::PROTOBUF_NAMESPACE_ID::Metadata MsgRes::GetMetadata() const
     {
         return ::_pbi::AssignDescriptors(
-            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[11]
+            &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once, file_level_metadata_Message2Clients_2eproto[18]
         );
     }
 
@@ -5249,6 +8368,36 @@ PROTOBUF_NOINLINE ::protobuf::MessageOfPickedProp*
     return Arena::CreateMessageInternal<::protobuf::MessageOfPickedProp>(arena);
 }
 template<>
+PROTOBUF_NOINLINE ::protobuf::MessageOfClassroom*
+    Arena::CreateMaybeMessage<::protobuf::MessageOfClassroom>(Arena* arena)
+{
+    return Arena::CreateMessageInternal<::protobuf::MessageOfClassroom>(arena);
+}
+template<>
+PROTOBUF_NOINLINE ::protobuf::MessageOfGate*
+    Arena::CreateMaybeMessage<::protobuf::MessageOfGate>(Arena* arena)
+{
+    return Arena::CreateMessageInternal<::protobuf::MessageOfGate>(arena);
+}
+template<>
+PROTOBUF_NOINLINE ::protobuf::MessageOfDoor*
+    Arena::CreateMaybeMessage<::protobuf::MessageOfDoor>(Arena* arena)
+{
+    return Arena::CreateMessageInternal<::protobuf::MessageOfDoor>(arena);
+}
+template<>
+PROTOBUF_NOINLINE ::protobuf::MessageOfChest*
+    Arena::CreateMaybeMessage<::protobuf::MessageOfChest>(Arena* arena)
+{
+    return Arena::CreateMessageInternal<::protobuf::MessageOfChest>(arena);
+}
+template<>
+PROTOBUF_NOINLINE ::protobuf::MessageOfMapObj*
+    Arena::CreateMaybeMessage<::protobuf::MessageOfMapObj>(Arena* arena)
+{
+    return Arena::CreateMessageInternal<::protobuf::MessageOfMapObj>(arena);
+}
+template<>
 PROTOBUF_NOINLINE ::protobuf::MessageOfMap_Row*
     Arena::CreateMaybeMessage<::protobuf::MessageOfMap_Row>(Arena* arena)
 {
@@ -5259,6 +8408,18 @@ PROTOBUF_NOINLINE ::protobuf::MessageOfMap*
     Arena::CreateMaybeMessage<::protobuf::MessageOfMap>(Arena* arena)
 {
     return Arena::CreateMessageInternal<::protobuf::MessageOfMap>(arena);
+}
+template<>
+PROTOBUF_NOINLINE ::protobuf::MessageOfObj*
+    Arena::CreateMaybeMessage<::protobuf::MessageOfObj>(Arena* arena)
+{
+    return Arena::CreateMessageInternal<::protobuf::MessageOfObj>(arena);
+}
+template<>
+PROTOBUF_NOINLINE ::protobuf::MessageOfAll*
+    Arena::CreateMaybeMessage<::protobuf::MessageOfAll>(Arena* arena)
+{
+    return Arena::CreateMessageInternal<::protobuf::MessageOfAll>(arena);
 }
 template<>
 PROTOBUF_NOINLINE ::protobuf::MessageToClient*

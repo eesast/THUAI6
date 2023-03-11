@@ -44,8 +44,8 @@ public:
     // 供IAPI使用的操作相关的部分
     virtual bool Move(int64_t time, double angle) = 0;
     virtual bool PickProp(THUAI6::PropType prop) = 0;
-    virtual bool UseProp() = 0;
-    virtual bool UseSkill() = 0;
+    virtual bool UseProp(THUAI6::PropType prop) = 0;
+    virtual bool UseSkill(int32_t skillID) = 0;
     virtual bool SendMessage(int64_t toID, std::string message) = 0;
     virtual bool HaveMessage() = 0;
     virtual std::optional<std::pair<int64_t, std::string>> GetMessage() = 0;
@@ -58,11 +58,11 @@ public:
     virtual bool Graduate() = 0;
 
     virtual bool StartLearning() = 0;
-    virtual bool StartHelpMate() = 0;
-    virtual bool StartHealMate() = 0;
+    virtual bool StartTreatMate() = 0;
+    virtual bool StartRescueMate() = 0;
 
     // ITrickerAPI使用的部分
-    virtual bool Trick(double angle) = 0;
+    virtual bool Attack(double angle) = 0;
 
     virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
 };
@@ -82,8 +82,8 @@ public:
 
     // 捡道具、使用技能
     virtual std::future<bool> PickProp(THUAI6::PropType prop) = 0;
-    virtual std::future<bool> UseProp() = 0;
-    virtual std::future<bool> UseSkill() = 0;
+    virtual std::future<bool> UseProp(THUAI6::PropType prop) = 0;
+    virtual std::future<bool> UseSkill(int32_t skillID) = 0;
 
     // 发送信息、接受信息，注意收消息时无消息则返回nullopt
     virtual std::future<bool> SendMessage(int64_t, std::string) = 0;
@@ -138,8 +138,8 @@ public:
     /*****学生阵营的特定函数*****/
 
     virtual std::future<bool> StartLearning() = 0;
-    virtual std::future<bool> StartHelpMate() = 0;
-    virtual std::future<bool> StartHealMate() = 0;
+    virtual std::future<bool> StartTreatMate() = 0;
+    virtual std::future<bool> StartRescueMate() = 0;
     virtual std::future<bool> Graduate() = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const = 0;
 };
@@ -149,7 +149,7 @@ class ITrickerAPI : public IAPI
 public:
     /*****捣蛋鬼阵营的特定函数*****/
 
-    virtual std::future<bool> Trick(double angleInRadian) = 0;
+    virtual std::future<bool> Attack(double angleInRadian) = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const = 0;
 };
 
@@ -187,8 +187,8 @@ public:
     std::future<bool> MoveDown(int64_t timeInMilliseconds) override;
 
     std::future<bool> PickProp(THUAI6::PropType prop) override;
-    std::future<bool> UseProp() override;
-    std::future<bool> UseSkill() override;
+    std::future<bool> UseProp(THUAI6::PropType prop) override;
+    std::future<bool> UseSkill(int32_t skillID) override;
 
     std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override;
@@ -207,8 +207,8 @@ public:
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> StartLearning() override;
-    std::future<bool> StartHelpMate() override;
-    std::future<bool> StartHealMate() override;
+    std::future<bool> StartTreatMate() override;
+    std::future<bool> StartRescueMate() override;
     std::future<bool> Graduate() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
@@ -253,8 +253,8 @@ public:
     std::future<bool> MoveDown(int64_t timeInMilliseconds) override;
 
     std::future<bool> PickProp(THUAI6::PropType prop) override;
-    std::future<bool> UseProp() override;
-    std::future<bool> UseSkill() override;
+    std::future<bool> UseProp(THUAI6::PropType prop) override;
+    std::future<bool> UseSkill(int32_t skillID) override;
 
     std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override;
@@ -272,7 +272,7 @@ public:
 
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
 
-    std::future<bool> Trick(double angleInRadian) override;
+    std::future<bool> Attack(double angleInRadian) override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
 
     void PrintStudent() const override
@@ -309,8 +309,8 @@ public:
     std::future<bool> MoveDown(int64_t timeInMilliseconds) override;
 
     std::future<bool> PickProp(THUAI6::PropType prop) override;
-    std::future<bool> UseProp() override;
-    std::future<bool> UseSkill() override;
+    std::future<bool> UseProp(THUAI6::PropType prop) override;
+    std::future<bool> UseSkill(int32_t skillID) override;
 
     std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override;
@@ -329,8 +329,8 @@ public:
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> StartLearning() override;
-    std::future<bool> StartHelpMate() override;
-    std::future<bool> StartHealMate() override;
+    std::future<bool> StartTreatMate() override;
+    std::future<bool> StartRescueMate() override;
     std::future<bool> Graduate() override;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
@@ -362,8 +362,8 @@ public:
     std::future<bool> MoveDown(int64_t timeInMilliseconds) override;
 
     std::future<bool> PickProp(THUAI6::PropType prop) override;
-    std::future<bool> UseProp() override;
-    std::future<bool> UseSkill() override;
+    std::future<bool> UseProp(THUAI6::PropType prop) override;
+    std::future<bool> UseSkill(int32_t skillID) override;
 
     std::future<bool> SendMessage(int64_t, std::string) override;
     [[nodiscard]] std::future<bool> HaveMessage() override;
@@ -381,7 +381,7 @@ public:
 
     [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
 
-    std::future<bool> Trick(double angleInRadian) override;
+    std::future<bool> Attack(double angleInRadian) override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
 
     void PrintStudent() const override;

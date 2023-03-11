@@ -49,38 +49,43 @@ struct TableStruct_Message2Server_2eproto
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Message2Server_2eproto;
 namespace protobuf
 {
+    class AttackMsg;
+    struct AttackMsgDefaultTypeInternal;
+    extern AttackMsgDefaultTypeInternal _AttackMsg_default_instance_;
     class IDMsg;
     struct IDMsgDefaultTypeInternal;
     extern IDMsgDefaultTypeInternal _IDMsg_default_instance_;
     class MoveMsg;
     struct MoveMsgDefaultTypeInternal;
     extern MoveMsgDefaultTypeInternal _MoveMsg_default_instance_;
-    class PickMsg;
-    struct PickMsgDefaultTypeInternal;
-    extern PickMsgDefaultTypeInternal _PickMsg_default_instance_;
     class PlayerMsg;
     struct PlayerMsgDefaultTypeInternal;
     extern PlayerMsgDefaultTypeInternal _PlayerMsg_default_instance_;
+    class PropMsg;
+    struct PropMsgDefaultTypeInternal;
+    extern PropMsgDefaultTypeInternal _PropMsg_default_instance_;
     class SendMsg;
     struct SendMsgDefaultTypeInternal;
     extern SendMsgDefaultTypeInternal _SendMsg_default_instance_;
-    class TrickMsg;
-    struct TrickMsgDefaultTypeInternal;
-    extern TrickMsgDefaultTypeInternal _TrickMsg_default_instance_;
+    class SkillMsg;
+    struct SkillMsgDefaultTypeInternal;
+    extern SkillMsgDefaultTypeInternal _SkillMsg_default_instance_;
 }  // namespace protobuf
 PROTOBUF_NAMESPACE_OPEN
+template<>
+::protobuf::AttackMsg* Arena::CreateMaybeMessage<::protobuf::AttackMsg>(Arena*);
 template<>
 ::protobuf::IDMsg* Arena::CreateMaybeMessage<::protobuf::IDMsg>(Arena*);
 template<>
 ::protobuf::MoveMsg* Arena::CreateMaybeMessage<::protobuf::MoveMsg>(Arena*);
 template<>
-::protobuf::PickMsg* Arena::CreateMaybeMessage<::protobuf::PickMsg>(Arena*);
-template<>
 ::protobuf::PlayerMsg* Arena::CreateMaybeMessage<::protobuf::PlayerMsg>(Arena*);
+template<>
+::protobuf::PropMsg* Arena::CreateMaybeMessage<::protobuf::PropMsg>(Arena*);
 template<>
 ::protobuf::SendMsg* Arena::CreateMaybeMessage<::protobuf::SendMsg>(Arena*);
 template<>
-::protobuf::TrickMsg* Arena::CreateMaybeMessage<::protobuf::TrickMsg>(Arena*);
+::protobuf::SkillMsg* Arena::CreateMaybeMessage<::protobuf::SkillMsg>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace protobuf
 {
@@ -509,8 +514,9 @@ namespace protobuf
         enum : int
         {
             kPlayerIdFieldNumber = 1,
-            kAngleFieldNumber = 2,
-            kTimeInMillisecondsFieldNumber = 3,
+            kAngleFieldNumber = 3,
+            kTimeInMillisecondsFieldNumber = 4,
+            kPlayerTypeFieldNumber = 2,
         };
         // int64 player_id = 1;
         void clear_player_id();
@@ -522,7 +528,7 @@ namespace protobuf
         void _internal_set_player_id(int64_t value);
 
     public:
-        // double angle = 2;
+        // double angle = 3;
         void clear_angle();
         double angle() const;
         void set_angle(double value);
@@ -532,7 +538,7 @@ namespace protobuf
         void _internal_set_angle(double value);
 
     public:
-        // int64 time_in_milliseconds = 3;
+        // int64 time_in_milliseconds = 4;
         void clear_time_in_milliseconds();
         int64_t time_in_milliseconds() const;
         void set_time_in_milliseconds(int64_t value);
@@ -540,6 +546,16 @@ namespace protobuf
     private:
         int64_t _internal_time_in_milliseconds() const;
         void _internal_set_time_in_milliseconds(int64_t value);
+
+    public:
+        // .protobuf.PlayerType player_type = 2;
+        void clear_player_type();
+        ::protobuf::PlayerType player_type() const;
+        void set_player_type(::protobuf::PlayerType value);
+
+    private:
+        ::protobuf::PlayerType _internal_player_type() const;
+        void _internal_set_player_type(::protobuf::PlayerType value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.MoveMsg)
@@ -556,6 +572,7 @@ namespace protobuf
             int64_t player_id_;
             double angle_;
             int64_t time_in_milliseconds_;
+            int player_type_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -566,31 +583,31 @@ namespace protobuf
     };
     // -------------------------------------------------------------------
 
-    class PickMsg final :
-        public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.PickMsg) */
+    class PropMsg final :
+        public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.PropMsg) */
     {
     public:
-        inline PickMsg() :
-            PickMsg(nullptr)
+        inline PropMsg() :
+            PropMsg(nullptr)
         {
         }
-        ~PickMsg() override;
-        explicit PROTOBUF_CONSTEXPR PickMsg(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+        ~PropMsg() override;
+        explicit PROTOBUF_CONSTEXPR PropMsg(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-        PickMsg(const PickMsg& from);
-        PickMsg(PickMsg&& from) noexcept
+        PropMsg(const PropMsg& from);
+        PropMsg(PropMsg&& from) noexcept
             :
-            PickMsg()
+            PropMsg()
         {
             *this = ::std::move(from);
         }
 
-        inline PickMsg& operator=(const PickMsg& from)
+        inline PropMsg& operator=(const PropMsg& from)
         {
             CopyFrom(from);
             return *this;
         }
-        inline PickMsg& operator=(PickMsg&& from) noexcept
+        inline PropMsg& operator=(PropMsg&& from) noexcept
         {
             if (this == &from)
                 return *this;
@@ -621,24 +638,24 @@ namespace protobuf
         {
             return default_instance().GetMetadata().reflection;
         }
-        static const PickMsg& default_instance()
+        static const PropMsg& default_instance()
         {
             return *internal_default_instance();
         }
-        static inline const PickMsg* internal_default_instance()
+        static inline const PropMsg* internal_default_instance()
         {
-            return reinterpret_cast<const PickMsg*>(
-                &_PickMsg_default_instance_
+            return reinterpret_cast<const PropMsg*>(
+                &_PropMsg_default_instance_
             );
         }
         static constexpr int kIndexInFileMessages =
             2;
 
-        friend void swap(PickMsg& a, PickMsg& b)
+        friend void swap(PropMsg& a, PropMsg& b)
         {
             a.Swap(&b);
         }
-        inline void Swap(PickMsg* other)
+        inline void Swap(PropMsg* other)
         {
             if (other == this)
                 return;
@@ -657,7 +674,7 @@ namespace protobuf
                 ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
             }
         }
-        void UnsafeArenaSwap(PickMsg* other)
+        void UnsafeArenaSwap(PropMsg* other)
         {
             if (other == this)
                 return;
@@ -667,16 +684,16 @@ namespace protobuf
 
         // implements Message ----------------------------------------------
 
-        PickMsg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final
+        PropMsg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final
         {
-            return CreateMaybeMessage<PickMsg>(arena);
+            return CreateMaybeMessage<PropMsg>(arena);
         }
         using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-        void CopyFrom(const PickMsg& from);
+        void CopyFrom(const PropMsg& from);
         using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-        void MergeFrom(const PickMsg& from)
+        void MergeFrom(const PropMsg& from)
         {
-            PickMsg::MergeImpl(*this, from);
+            PropMsg::MergeImpl(*this, from);
         }
 
     private:
@@ -700,17 +717,17 @@ namespace protobuf
         void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
         void SharedDtor();
         void SetCachedSize(int size) const final;
-        void InternalSwap(PickMsg* other);
+        void InternalSwap(PropMsg* other);
 
     private:
         friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
         static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName()
         {
-            return "protobuf.PickMsg";
+            return "protobuf.PropMsg";
         }
 
     protected:
-        explicit PickMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned = false);
+        explicit PropMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned = false);
 
     public:
         static const ClassData _class_data_;
@@ -725,7 +742,8 @@ namespace protobuf
         enum : int
         {
             kPlayerIdFieldNumber = 1,
-            kPropTypeFieldNumber = 2,
+            kPlayerTypeFieldNumber = 2,
+            kPropTypeFieldNumber = 3,
         };
         // int64 player_id = 1;
         void clear_player_id();
@@ -737,7 +755,17 @@ namespace protobuf
         void _internal_set_player_id(int64_t value);
 
     public:
-        // .protobuf.PropType prop_type = 2;
+        // .protobuf.PlayerType player_type = 2;
+        void clear_player_type();
+        ::protobuf::PlayerType player_type() const;
+        void set_player_type(::protobuf::PlayerType value);
+
+    private:
+        ::protobuf::PlayerType _internal_player_type() const;
+        void _internal_set_player_type(::protobuf::PlayerType value);
+
+    public:
+        // .protobuf.PropType prop_type = 3;
         void clear_prop_type();
         ::protobuf::PropType prop_type() const;
         void set_prop_type(::protobuf::PropType value);
@@ -747,7 +775,7 @@ namespace protobuf
         void _internal_set_prop_type(::protobuf::PropType value);
 
     public:
-        // @@protoc_insertion_point(class_scope:protobuf.PickMsg)
+        // @@protoc_insertion_point(class_scope:protobuf.PropMsg)
 
     private:
         class _Internal;
@@ -759,6 +787,7 @@ namespace protobuf
         struct Impl_
         {
             int64_t player_id_;
+            int player_type_;
             int prop_type_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
@@ -928,11 +957,13 @@ namespace protobuf
 
         enum : int
         {
-            kMessageFieldNumber = 3,
+            kMessageFieldNumber = 5,
             kPlayerIdFieldNumber = 1,
-            kToPlayerIdFieldNumber = 2,
+            kToPlayerIdFieldNumber = 3,
+            kPlayerTypeFieldNumber = 2,
+            kToPlayerTypeFieldNumber = 4,
         };
-        // string message = 3;
+        // string message = 5;
         void clear_message();
         const std::string& message() const;
         template<typename ArgT0 = const std::string&, typename... ArgT>
@@ -957,7 +988,7 @@ namespace protobuf
         void _internal_set_player_id(int64_t value);
 
     public:
-        // int64 to_player_id = 2;
+        // int64 to_player_id = 3;
         void clear_to_player_id();
         int64_t to_player_id() const;
         void set_to_player_id(int64_t value);
@@ -965,6 +996,26 @@ namespace protobuf
     private:
         int64_t _internal_to_player_id() const;
         void _internal_set_to_player_id(int64_t value);
+
+    public:
+        // .protobuf.PlayerType player_type = 2;
+        void clear_player_type();
+        ::protobuf::PlayerType player_type() const;
+        void set_player_type(::protobuf::PlayerType value);
+
+    private:
+        ::protobuf::PlayerType _internal_player_type() const;
+        void _internal_set_player_type(::protobuf::PlayerType value);
+
+    public:
+        // .protobuf.PlayerType to_player_type = 4;
+        void clear_to_player_type();
+        ::protobuf::PlayerType to_player_type() const;
+        void set_to_player_type(::protobuf::PlayerType value);
+
+    private:
+        ::protobuf::PlayerType _internal_to_player_type() const;
+        void _internal_set_to_player_type(::protobuf::PlayerType value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.SendMsg)
@@ -981,6 +1032,8 @@ namespace protobuf
             ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr message_;
             int64_t player_id_;
             int64_t to_player_id_;
+            int player_type_;
+            int to_player_type_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -991,31 +1044,31 @@ namespace protobuf
     };
     // -------------------------------------------------------------------
 
-    class TrickMsg final :
-        public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.TrickMsg) */
+    class AttackMsg final :
+        public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.AttackMsg) */
     {
     public:
-        inline TrickMsg() :
-            TrickMsg(nullptr)
+        inline AttackMsg() :
+            AttackMsg(nullptr)
         {
         }
-        ~TrickMsg() override;
-        explicit PROTOBUF_CONSTEXPR TrickMsg(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+        ~AttackMsg() override;
+        explicit PROTOBUF_CONSTEXPR AttackMsg(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-        TrickMsg(const TrickMsg& from);
-        TrickMsg(TrickMsg&& from) noexcept
+        AttackMsg(const AttackMsg& from);
+        AttackMsg(AttackMsg&& from) noexcept
             :
-            TrickMsg()
+            AttackMsg()
         {
             *this = ::std::move(from);
         }
 
-        inline TrickMsg& operator=(const TrickMsg& from)
+        inline AttackMsg& operator=(const AttackMsg& from)
         {
             CopyFrom(from);
             return *this;
         }
-        inline TrickMsg& operator=(TrickMsg&& from) noexcept
+        inline AttackMsg& operator=(AttackMsg&& from) noexcept
         {
             if (this == &from)
                 return *this;
@@ -1046,24 +1099,24 @@ namespace protobuf
         {
             return default_instance().GetMetadata().reflection;
         }
-        static const TrickMsg& default_instance()
+        static const AttackMsg& default_instance()
         {
             return *internal_default_instance();
         }
-        static inline const TrickMsg* internal_default_instance()
+        static inline const AttackMsg* internal_default_instance()
         {
-            return reinterpret_cast<const TrickMsg*>(
-                &_TrickMsg_default_instance_
+            return reinterpret_cast<const AttackMsg*>(
+                &_AttackMsg_default_instance_
             );
         }
         static constexpr int kIndexInFileMessages =
             4;
 
-        friend void swap(TrickMsg& a, TrickMsg& b)
+        friend void swap(AttackMsg& a, AttackMsg& b)
         {
             a.Swap(&b);
         }
-        inline void Swap(TrickMsg* other)
+        inline void Swap(AttackMsg* other)
         {
             if (other == this)
                 return;
@@ -1082,7 +1135,7 @@ namespace protobuf
                 ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
             }
         }
-        void UnsafeArenaSwap(TrickMsg* other)
+        void UnsafeArenaSwap(AttackMsg* other)
         {
             if (other == this)
                 return;
@@ -1092,16 +1145,16 @@ namespace protobuf
 
         // implements Message ----------------------------------------------
 
-        TrickMsg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final
+        AttackMsg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final
         {
-            return CreateMaybeMessage<TrickMsg>(arena);
+            return CreateMaybeMessage<AttackMsg>(arena);
         }
         using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-        void CopyFrom(const TrickMsg& from);
+        void CopyFrom(const AttackMsg& from);
         using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-        void MergeFrom(const TrickMsg& from)
+        void MergeFrom(const AttackMsg& from)
         {
-            TrickMsg::MergeImpl(*this, from);
+            AttackMsg::MergeImpl(*this, from);
         }
 
     private:
@@ -1125,17 +1178,17 @@ namespace protobuf
         void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
         void SharedDtor();
         void SetCachedSize(int size) const final;
-        void InternalSwap(TrickMsg* other);
+        void InternalSwap(AttackMsg* other);
 
     private:
         friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
         static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName()
         {
-            return "protobuf.TrickMsg";
+            return "protobuf.AttackMsg";
         }
 
     protected:
-        explicit TrickMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned = false);
+        explicit AttackMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned = false);
 
     public:
         static const ClassData _class_data_;
@@ -1150,7 +1203,8 @@ namespace protobuf
         enum : int
         {
             kPlayerIdFieldNumber = 1,
-            kAngleFieldNumber = 2,
+            kAngleFieldNumber = 3,
+            kPlayerTypeFieldNumber = 2,
         };
         // int64 player_id = 1;
         void clear_player_id();
@@ -1162,7 +1216,7 @@ namespace protobuf
         void _internal_set_player_id(int64_t value);
 
     public:
-        // double angle = 2;
+        // double angle = 3;
         void clear_angle();
         double angle() const;
         void set_angle(double value);
@@ -1172,7 +1226,17 @@ namespace protobuf
         void _internal_set_angle(double value);
 
     public:
-        // @@protoc_insertion_point(class_scope:protobuf.TrickMsg)
+        // .protobuf.PlayerType player_type = 2;
+        void clear_player_type();
+        ::protobuf::PlayerType player_type() const;
+        void set_player_type(::protobuf::PlayerType value);
+
+    private:
+        ::protobuf::PlayerType _internal_player_type() const;
+        void _internal_set_player_type(::protobuf::PlayerType value);
+
+    public:
+        // @@protoc_insertion_point(class_scope:protobuf.AttackMsg)
 
     private:
         class _Internal;
@@ -1185,6 +1249,7 @@ namespace protobuf
         {
             int64_t player_id_;
             double angle_;
+            int player_type_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -1354,6 +1419,7 @@ namespace protobuf
         enum : int
         {
             kPlayerIdFieldNumber = 1,
+            kPlayerTypeFieldNumber = 2,
         };
         // int64 player_id = 1;
         void clear_player_id();
@@ -1363,6 +1429,16 @@ namespace protobuf
     private:
         int64_t _internal_player_id() const;
         void _internal_set_player_id(int64_t value);
+
+    public:
+        // .protobuf.PlayerType player_type = 2;
+        void clear_player_type();
+        ::protobuf::PlayerType player_type() const;
+        void set_player_type(::protobuf::PlayerType value);
+
+    private:
+        ::protobuf::PlayerType _internal_player_type() const;
+        void _internal_set_player_type(::protobuf::PlayerType value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.IDMsg)
@@ -1377,6 +1453,223 @@ namespace protobuf
         struct Impl_
         {
             int64_t player_id_;
+            int player_type_;
+            mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+        };
+        union
+        {
+            Impl_ _impl_;
+        };
+        friend struct ::TableStruct_Message2Server_2eproto;
+    };
+    // -------------------------------------------------------------------
+
+    class SkillMsg final :
+        public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.SkillMsg) */
+    {
+    public:
+        inline SkillMsg() :
+            SkillMsg(nullptr)
+        {
+        }
+        ~SkillMsg() override;
+        explicit PROTOBUF_CONSTEXPR SkillMsg(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+        SkillMsg(const SkillMsg& from);
+        SkillMsg(SkillMsg&& from) noexcept
+            :
+            SkillMsg()
+        {
+            *this = ::std::move(from);
+        }
+
+        inline SkillMsg& operator=(const SkillMsg& from)
+        {
+            CopyFrom(from);
+            return *this;
+        }
+        inline SkillMsg& operator=(SkillMsg&& from) noexcept
+        {
+            if (this == &from)
+                return *this;
+            if (GetOwningArena() == from.GetOwningArena()
+#ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+                && GetOwningArena() != nullptr
+#endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+            )
+            {
+                InternalSwap(&from);
+            }
+            else
+            {
+                CopyFrom(from);
+            }
+            return *this;
+        }
+
+        static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor()
+        {
+            return GetDescriptor();
+        }
+        static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor()
+        {
+            return default_instance().GetMetadata().descriptor;
+        }
+        static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection()
+        {
+            return default_instance().GetMetadata().reflection;
+        }
+        static const SkillMsg& default_instance()
+        {
+            return *internal_default_instance();
+        }
+        static inline const SkillMsg* internal_default_instance()
+        {
+            return reinterpret_cast<const SkillMsg*>(
+                &_SkillMsg_default_instance_
+            );
+        }
+        static constexpr int kIndexInFileMessages =
+            6;
+
+        friend void swap(SkillMsg& a, SkillMsg& b)
+        {
+            a.Swap(&b);
+        }
+        inline void Swap(SkillMsg* other)
+        {
+            if (other == this)
+                return;
+#ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+            if (GetOwningArena() != nullptr &&
+                GetOwningArena() == other->GetOwningArena())
+            {
+#else   // PROTOBUF_FORCE_COPY_IN_SWAP
+            if (GetOwningArena() == other->GetOwningArena())
+            {
+#endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+                InternalSwap(other);
+            }
+            else
+            {
+                ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+            }
+        }
+        void UnsafeArenaSwap(SkillMsg* other)
+        {
+            if (other == this)
+                return;
+            GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+            InternalSwap(other);
+        }
+
+        // implements Message ----------------------------------------------
+
+        SkillMsg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final
+        {
+            return CreateMaybeMessage<SkillMsg>(arena);
+        }
+        using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+        void CopyFrom(const SkillMsg& from);
+        using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+        void MergeFrom(const SkillMsg& from)
+        {
+            SkillMsg::MergeImpl(*this, from);
+        }
+
+    private:
+        static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+
+    public:
+        PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+        bool IsInitialized() const final;
+
+        size_t ByteSizeLong() const final;
+        const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+        uint8_t* _InternalSerialize(
+            uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream
+        ) const final;
+        int GetCachedSize() const final
+        {
+            return _impl_._cached_size_.Get();
+        }
+
+    private:
+        void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+        void SharedDtor();
+        void SetCachedSize(int size) const final;
+        void InternalSwap(SkillMsg* other);
+
+    private:
+        friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+        static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName()
+        {
+            return "protobuf.SkillMsg";
+        }
+
+    protected:
+        explicit SkillMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned = false);
+
+    public:
+        static const ClassData _class_data_;
+        const ::PROTOBUF_NAMESPACE_ID::Message::ClassData* GetClassData() const final;
+
+        ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+        // nested types ----------------------------------------------------
+
+        // accessors -------------------------------------------------------
+
+        enum : int
+        {
+            kPlayerIdFieldNumber = 1,
+            kPlayerTypeFieldNumber = 2,
+            kSkillIdFieldNumber = 3,
+        };
+        // int64 player_id = 1;
+        void clear_player_id();
+        int64_t player_id() const;
+        void set_player_id(int64_t value);
+
+    private:
+        int64_t _internal_player_id() const;
+        void _internal_set_player_id(int64_t value);
+
+    public:
+        // .protobuf.PlayerType player_type = 2;
+        void clear_player_type();
+        ::protobuf::PlayerType player_type() const;
+        void set_player_type(::protobuf::PlayerType value);
+
+    private:
+        ::protobuf::PlayerType _internal_player_type() const;
+        void _internal_set_player_type(::protobuf::PlayerType value);
+
+    public:
+        // int32 skill_id = 3;
+        void clear_skill_id();
+        int32_t skill_id() const;
+        void set_skill_id(int32_t value);
+
+    private:
+        int32_t _internal_skill_id() const;
+        void _internal_set_skill_id(int32_t value);
+
+    public:
+        // @@protoc_insertion_point(class_scope:protobuf.SkillMsg)
+
+    private:
+        class _Internal;
+
+        template<typename T>
+        friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+        typedef void InternalArenaConstructable_;
+        typedef void DestructorSkippable_;
+        struct Impl_
+        {
+            int64_t player_id_;
+            int player_type_;
+            int32_t skill_id_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -1581,7 +1874,31 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MoveMsg.player_id)
     }
 
-    // double angle = 2;
+    // .protobuf.PlayerType player_type = 2;
+    inline void MoveMsg::clear_player_type()
+    {
+        _impl_.player_type_ = 0;
+    }
+    inline ::protobuf::PlayerType MoveMsg::_internal_player_type() const
+    {
+        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
+    }
+    inline ::protobuf::PlayerType MoveMsg::player_type() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MoveMsg.player_type)
+        return _internal_player_type();
+    }
+    inline void MoveMsg::_internal_set_player_type(::protobuf::PlayerType value)
+    {
+        _impl_.player_type_ = value;
+    }
+    inline void MoveMsg::set_player_type(::protobuf::PlayerType value)
+    {
+        _internal_set_player_type(value);
+        // @@protoc_insertion_point(field_set:protobuf.MoveMsg.player_type)
+    }
+
+    // double angle = 3;
     inline void MoveMsg::clear_angle()
     {
         _impl_.angle_ = 0;
@@ -1605,7 +1922,7 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MoveMsg.angle)
     }
 
-    // int64 time_in_milliseconds = 3;
+    // int64 time_in_milliseconds = 4;
     inline void MoveMsg::clear_time_in_milliseconds()
     {
         _impl_.time_in_milliseconds_ = int64_t{0};
@@ -1631,54 +1948,78 @@ namespace protobuf
 
     // -------------------------------------------------------------------
 
-    // PickMsg
+    // PropMsg
 
     // int64 player_id = 1;
-    inline void PickMsg::clear_player_id()
+    inline void PropMsg::clear_player_id()
     {
         _impl_.player_id_ = int64_t{0};
     }
-    inline int64_t PickMsg::_internal_player_id() const
+    inline int64_t PropMsg::_internal_player_id() const
     {
         return _impl_.player_id_;
     }
-    inline int64_t PickMsg::player_id() const
+    inline int64_t PropMsg::player_id() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.PickMsg.player_id)
+        // @@protoc_insertion_point(field_get:protobuf.PropMsg.player_id)
         return _internal_player_id();
     }
-    inline void PickMsg::_internal_set_player_id(int64_t value)
+    inline void PropMsg::_internal_set_player_id(int64_t value)
     {
         _impl_.player_id_ = value;
     }
-    inline void PickMsg::set_player_id(int64_t value)
+    inline void PropMsg::set_player_id(int64_t value)
     {
         _internal_set_player_id(value);
-        // @@protoc_insertion_point(field_set:protobuf.PickMsg.player_id)
+        // @@protoc_insertion_point(field_set:protobuf.PropMsg.player_id)
     }
 
-    // .protobuf.PropType prop_type = 2;
-    inline void PickMsg::clear_prop_type()
+    // .protobuf.PlayerType player_type = 2;
+    inline void PropMsg::clear_player_type()
+    {
+        _impl_.player_type_ = 0;
+    }
+    inline ::protobuf::PlayerType PropMsg::_internal_player_type() const
+    {
+        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
+    }
+    inline ::protobuf::PlayerType PropMsg::player_type() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.PropMsg.player_type)
+        return _internal_player_type();
+    }
+    inline void PropMsg::_internal_set_player_type(::protobuf::PlayerType value)
+    {
+        _impl_.player_type_ = value;
+    }
+    inline void PropMsg::set_player_type(::protobuf::PlayerType value)
+    {
+        _internal_set_player_type(value);
+        // @@protoc_insertion_point(field_set:protobuf.PropMsg.player_type)
+    }
+
+    // .protobuf.PropType prop_type = 3;
+    inline void PropMsg::clear_prop_type()
     {
         _impl_.prop_type_ = 0;
     }
-    inline ::protobuf::PropType PickMsg::_internal_prop_type() const
+    inline ::protobuf::PropType PropMsg::_internal_prop_type() const
     {
         return static_cast<::protobuf::PropType>(_impl_.prop_type_);
     }
-    inline ::protobuf::PropType PickMsg::prop_type() const
+    inline ::protobuf::PropType PropMsg::prop_type() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.PickMsg.prop_type)
+        // @@protoc_insertion_point(field_get:protobuf.PropMsg.prop_type)
         return _internal_prop_type();
     }
-    inline void PickMsg::_internal_set_prop_type(::protobuf::PropType value)
+    inline void PropMsg::_internal_set_prop_type(::protobuf::PropType value)
     {
         _impl_.prop_type_ = value;
     }
-    inline void PickMsg::set_prop_type(::protobuf::PropType value)
+    inline void PropMsg::set_prop_type(::protobuf::PropType value)
     {
         _internal_set_prop_type(value);
-        // @@protoc_insertion_point(field_set:protobuf.PickMsg.prop_type)
+        // @@protoc_insertion_point(field_set:protobuf.PropMsg.prop_type)
     }
 
     // -------------------------------------------------------------------
@@ -1709,7 +2050,31 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.SendMsg.player_id)
     }
 
-    // int64 to_player_id = 2;
+    // .protobuf.PlayerType player_type = 2;
+    inline void SendMsg::clear_player_type()
+    {
+        _impl_.player_type_ = 0;
+    }
+    inline ::protobuf::PlayerType SendMsg::_internal_player_type() const
+    {
+        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
+    }
+    inline ::protobuf::PlayerType SendMsg::player_type() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.SendMsg.player_type)
+        return _internal_player_type();
+    }
+    inline void SendMsg::_internal_set_player_type(::protobuf::PlayerType value)
+    {
+        _impl_.player_type_ = value;
+    }
+    inline void SendMsg::set_player_type(::protobuf::PlayerType value)
+    {
+        _internal_set_player_type(value);
+        // @@protoc_insertion_point(field_set:protobuf.SendMsg.player_type)
+    }
+
+    // int64 to_player_id = 3;
     inline void SendMsg::clear_to_player_id()
     {
         _impl_.to_player_id_ = int64_t{0};
@@ -1733,7 +2098,31 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.SendMsg.to_player_id)
     }
 
-    // string message = 3;
+    // .protobuf.PlayerType to_player_type = 4;
+    inline void SendMsg::clear_to_player_type()
+    {
+        _impl_.to_player_type_ = 0;
+    }
+    inline ::protobuf::PlayerType SendMsg::_internal_to_player_type() const
+    {
+        return static_cast<::protobuf::PlayerType>(_impl_.to_player_type_);
+    }
+    inline ::protobuf::PlayerType SendMsg::to_player_type() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.SendMsg.to_player_type)
+        return _internal_to_player_type();
+    }
+    inline void SendMsg::_internal_set_to_player_type(::protobuf::PlayerType value)
+    {
+        _impl_.to_player_type_ = value;
+    }
+    inline void SendMsg::set_to_player_type(::protobuf::PlayerType value)
+    {
+        _internal_set_to_player_type(value);
+        // @@protoc_insertion_point(field_set:protobuf.SendMsg.to_player_type)
+    }
+
+    // string message = 5;
     inline void SendMsg::clear_message()
     {
         _impl_.message_.ClearToEmpty();
@@ -1792,54 +2181,78 @@ namespace protobuf
 
     // -------------------------------------------------------------------
 
-    // TrickMsg
+    // AttackMsg
 
     // int64 player_id = 1;
-    inline void TrickMsg::clear_player_id()
+    inline void AttackMsg::clear_player_id()
     {
         _impl_.player_id_ = int64_t{0};
     }
-    inline int64_t TrickMsg::_internal_player_id() const
+    inline int64_t AttackMsg::_internal_player_id() const
     {
         return _impl_.player_id_;
     }
-    inline int64_t TrickMsg::player_id() const
+    inline int64_t AttackMsg::player_id() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.TrickMsg.player_id)
+        // @@protoc_insertion_point(field_get:protobuf.AttackMsg.player_id)
         return _internal_player_id();
     }
-    inline void TrickMsg::_internal_set_player_id(int64_t value)
+    inline void AttackMsg::_internal_set_player_id(int64_t value)
     {
         _impl_.player_id_ = value;
     }
-    inline void TrickMsg::set_player_id(int64_t value)
+    inline void AttackMsg::set_player_id(int64_t value)
     {
         _internal_set_player_id(value);
-        // @@protoc_insertion_point(field_set:protobuf.TrickMsg.player_id)
+        // @@protoc_insertion_point(field_set:protobuf.AttackMsg.player_id)
     }
 
-    // double angle = 2;
-    inline void TrickMsg::clear_angle()
+    // .protobuf.PlayerType player_type = 2;
+    inline void AttackMsg::clear_player_type()
+    {
+        _impl_.player_type_ = 0;
+    }
+    inline ::protobuf::PlayerType AttackMsg::_internal_player_type() const
+    {
+        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
+    }
+    inline ::protobuf::PlayerType AttackMsg::player_type() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.AttackMsg.player_type)
+        return _internal_player_type();
+    }
+    inline void AttackMsg::_internal_set_player_type(::protobuf::PlayerType value)
+    {
+        _impl_.player_type_ = value;
+    }
+    inline void AttackMsg::set_player_type(::protobuf::PlayerType value)
+    {
+        _internal_set_player_type(value);
+        // @@protoc_insertion_point(field_set:protobuf.AttackMsg.player_type)
+    }
+
+    // double angle = 3;
+    inline void AttackMsg::clear_angle()
     {
         _impl_.angle_ = 0;
     }
-    inline double TrickMsg::_internal_angle() const
+    inline double AttackMsg::_internal_angle() const
     {
         return _impl_.angle_;
     }
-    inline double TrickMsg::angle() const
+    inline double AttackMsg::angle() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.TrickMsg.angle)
+        // @@protoc_insertion_point(field_get:protobuf.AttackMsg.angle)
         return _internal_angle();
     }
-    inline void TrickMsg::_internal_set_angle(double value)
+    inline void AttackMsg::_internal_set_angle(double value)
     {
         _impl_.angle_ = value;
     }
-    inline void TrickMsg::set_angle(double value)
+    inline void AttackMsg::set_angle(double value)
     {
         _internal_set_angle(value);
-        // @@protoc_insertion_point(field_set:protobuf.TrickMsg.angle)
+        // @@protoc_insertion_point(field_set:protobuf.AttackMsg.angle)
     }
 
     // -------------------------------------------------------------------
@@ -1870,9 +2283,111 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.IDMsg.player_id)
     }
 
+    // .protobuf.PlayerType player_type = 2;
+    inline void IDMsg::clear_player_type()
+    {
+        _impl_.player_type_ = 0;
+    }
+    inline ::protobuf::PlayerType IDMsg::_internal_player_type() const
+    {
+        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
+    }
+    inline ::protobuf::PlayerType IDMsg::player_type() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.IDMsg.player_type)
+        return _internal_player_type();
+    }
+    inline void IDMsg::_internal_set_player_type(::protobuf::PlayerType value)
+    {
+        _impl_.player_type_ = value;
+    }
+    inline void IDMsg::set_player_type(::protobuf::PlayerType value)
+    {
+        _internal_set_player_type(value);
+        // @@protoc_insertion_point(field_set:protobuf.IDMsg.player_type)
+    }
+
+    // -------------------------------------------------------------------
+
+    // SkillMsg
+
+    // int64 player_id = 1;
+    inline void SkillMsg::clear_player_id()
+    {
+        _impl_.player_id_ = int64_t{0};
+    }
+    inline int64_t SkillMsg::_internal_player_id() const
+    {
+        return _impl_.player_id_;
+    }
+    inline int64_t SkillMsg::player_id() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.SkillMsg.player_id)
+        return _internal_player_id();
+    }
+    inline void SkillMsg::_internal_set_player_id(int64_t value)
+    {
+        _impl_.player_id_ = value;
+    }
+    inline void SkillMsg::set_player_id(int64_t value)
+    {
+        _internal_set_player_id(value);
+        // @@protoc_insertion_point(field_set:protobuf.SkillMsg.player_id)
+    }
+
+    // .protobuf.PlayerType player_type = 2;
+    inline void SkillMsg::clear_player_type()
+    {
+        _impl_.player_type_ = 0;
+    }
+    inline ::protobuf::PlayerType SkillMsg::_internal_player_type() const
+    {
+        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
+    }
+    inline ::protobuf::PlayerType SkillMsg::player_type() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.SkillMsg.player_type)
+        return _internal_player_type();
+    }
+    inline void SkillMsg::_internal_set_player_type(::protobuf::PlayerType value)
+    {
+        _impl_.player_type_ = value;
+    }
+    inline void SkillMsg::set_player_type(::protobuf::PlayerType value)
+    {
+        _internal_set_player_type(value);
+        // @@protoc_insertion_point(field_set:protobuf.SkillMsg.player_type)
+    }
+
+    // int32 skill_id = 3;
+    inline void SkillMsg::clear_skill_id()
+    {
+        _impl_.skill_id_ = 0;
+    }
+    inline int32_t SkillMsg::_internal_skill_id() const
+    {
+        return _impl_.skill_id_;
+    }
+    inline int32_t SkillMsg::skill_id() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.SkillMsg.skill_id)
+        return _internal_skill_id();
+    }
+    inline void SkillMsg::_internal_set_skill_id(int32_t value)
+    {
+        _impl_.skill_id_ = value;
+    }
+    inline void SkillMsg::set_skill_id(int32_t value)
+    {
+        _internal_set_skill_id(value);
+        // @@protoc_insertion_point(field_set:protobuf.SkillMsg.skill_id)
+    }
+
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif  // __GNUC__
+    // -------------------------------------------------------------------
+
     // -------------------------------------------------------------------
 
     // -------------------------------------------------------------------

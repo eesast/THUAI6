@@ -69,6 +69,8 @@ namespace Proto2THUAI6
         {protobuf::PlaceType::CLASSROOM, THUAI6::PlaceType::ClassRoom},
         {protobuf::PlaceType::GATE, THUAI6::PlaceType::Gate},
         {protobuf::PlaceType::HIDDEN_GATE, THUAI6::PlaceType::HiddenGate},
+        {protobuf::PlaceType::WINDOW, THUAI6::PlaceType::Window},
+        {protobuf::PlaceType::DOOR, THUAI6::PlaceType::Door},
     };
 
     inline std::map<protobuf::ShapeType, THUAI6::ShapeType> shapeTypeDict{
@@ -123,18 +125,18 @@ namespace Proto2THUAI6
         {protobuf::TrickerBuffType::TBUFFTYPE4, THUAI6::TrickerBuffType::TrickerBuffType4},
     };
 
-    inline std::map<protobuf::StudentState, THUAI6::StudentState> studentStateDict{
-        {protobuf::StudentState::NULL_STATUS, THUAI6::StudentState::NullStudentState},
-        {protobuf::StudentState::IDLE, THUAI6::StudentState::Idle},
-        {protobuf::StudentState::LEARNING, THUAI6::StudentState::Learning},
-        {protobuf::StudentState::ADDICTED, THUAI6::StudentState::Addicted},
-        {protobuf::StudentState::QUIT, THUAI6::StudentState::Quit},
-        {protobuf::StudentState::GRADUATED, THUAI6::StudentState::Graduated},
-        {protobuf::StudentState::RESCUED, THUAI6::StudentState::Rescued},
-        {protobuf::StudentState::TREATED, THUAI6::StudentState::Treated},
-        {protobuf::StudentState::STUNNED, THUAI6::StudentState::Stunned},
-        {protobuf::StudentState::RESCUING, THUAI6::StudentState::Rescuing},
-        {protobuf::StudentState::TREATING, THUAI6::StudentState::Treating},
+    inline std::map<protobuf::PlayerState, THUAI6::PlayerState> playerStateDict{
+        {protobuf::PlayerState::NULL_STATUS, THUAI6::PlayerState::NullState},
+        {protobuf::PlayerState::IDLE, THUAI6::PlayerState::Idle},
+        {protobuf::PlayerState::LEARNING, THUAI6::PlayerState::Learning},
+        {protobuf::PlayerState::ADDICTED, THUAI6::PlayerState::Addicted},
+        {protobuf::PlayerState::QUIT, THUAI6::PlayerState::Quit},
+        {protobuf::PlayerState::GRADUATED, THUAI6::PlayerState::Graduated},
+        {protobuf::PlayerState::RESCUED, THUAI6::PlayerState::Rescued},
+        {protobuf::PlayerState::TREATED, THUAI6::PlayerState::Treated},
+        {protobuf::PlayerState::STUNNED, THUAI6::PlayerState::Stunned},
+        {protobuf::PlayerState::RESCUING, THUAI6::PlayerState::Rescuing},
+        {protobuf::PlayerState::TREATING, THUAI6::PlayerState::Treating},
     };
 
     inline std::map<protobuf::GameState, THUAI6::GameState> gameStateDict{
@@ -153,6 +155,23 @@ namespace Proto2THUAI6
         {protobuf::BulletType::ATOM_BOMB, THUAI6::BulletType::AtomBomb},
     };
 
+    inline std::map<protobuf::MessageOfObj::MessageOfObjCase, THUAI6::MessageOfObj> messageOfObjDict{
+        {protobuf::MessageOfObj::kStudentMessage, THUAI6::MessageOfObj::StudentMessage},
+        {protobuf::MessageOfObj::kTrickerMessage, THUAI6::MessageOfObj::TrickerMessage},
+        {protobuf::MessageOfObj::kPropMessage, THUAI6::MessageOfObj::PropMessage},
+        {protobuf::MessageOfObj::kBulletMessage, THUAI6::MessageOfObj::BulletMessage},
+        {protobuf::MessageOfObj::kBombedBulletMessage, THUAI6::MessageOfObj::BombedBulletMessage},
+        {protobuf::MessageOfObj::MESSAGE_OF_OBJ_NOT_SET, THUAI6::MessageOfObj::NullMessageOfObj},
+    };
+
+    inline std::map<protobuf::MessageOfMapObj::MessageOfMapObjCase, THUAI6::MessageOfMapObj> messageOfMapObjDict{
+        {protobuf::MessageOfMapObj::MessageOfMapObjCase::kClassroomMessage, THUAI6::MessageOfMapObj::ClassroomMessage},
+        {protobuf::MessageOfMapObj::MessageOfMapObjCase::kDoorMessage, THUAI6::MessageOfMapObj::DoorMessage},
+        {protobuf::MessageOfMapObj::MessageOfMapObjCase::kGateMessage, THUAI6::MessageOfMapObj::GateMessage},
+        {protobuf::MessageOfMapObj::MessageOfMapObjCase::kChestMessage, THUAI6::MessageOfMapObj::ChestMessage},
+
+    };
+
     // 用于将Protobuf中的类转换为THUAI6的类
     inline std::shared_ptr<THUAI6::Tricker> Protobuf2THUAI6Tricker(const protobuf::MessageOfTricker& trickerMsg)
     {
@@ -163,10 +182,13 @@ namespace Proto2THUAI6
         tricker->damage = trickerMsg.damage();
         tricker->timeUntilSkillAvailable = trickerMsg.time_until_skill_available();
         tricker->place = placeTypeDict[trickerMsg.place()];
-        tricker->prop = propTypeDict[trickerMsg.prop()];
+        tricker->playerState = playerStateDict[trickerMsg.player_state()];
+        for (int i = 0; i < trickerMsg.prop().size(); i++)
+        {
+            tricker->props.push_back(propTypeDict[trickerMsg.prop(i)]);
+        }
         tricker->trickerType = trickerTypeDict[trickerMsg.tricker_type()];
         tricker->guid = trickerMsg.guid();
-        tricker->movable = trickerMsg.movable();
         tricker->playerID = trickerMsg.player_id();
         tricker->viewRange = trickerMsg.view_range();
         tricker->radius = trickerMsg.radius();
@@ -191,9 +213,12 @@ namespace Proto2THUAI6
         student->timeUntilSkillAvailable = studentMsg.time_until_skill_available();
         student->damage = studentMsg.damage();
         student->playerType = THUAI6::PlayerType::StudentPlayer;
-        student->prop = propTypeDict[studentMsg.prop()];
+        for (int i = 0; i < studentMsg.prop().size(); i++)
+        {
+            student->props.push_back(propTypeDict[studentMsg.prop(i)]);
+        }
         student->place = placeTypeDict[studentMsg.place()];
-        student->state = studentStateDict[studentMsg.state()];
+        student->playerState = playerStateDict[studentMsg.state()];
         student->determination = studentMsg.determination();
         student->failNum = studentMsg.fail_num();
         student->failTime = studentMsg.fail_time();
@@ -221,9 +246,9 @@ namespace Proto2THUAI6
         return prop;
     }
 
-    inline std::vector<std::vector<THUAI6::PlaceType>> Protobuf2THUAI6Map(const protobuf::MessageOfMap& mapMsg)
+    inline std::shared_ptr<THUAI6::GameMap> Protobuf2THUAI6Map(const protobuf::MessageOfMap& mapMsg)
     {
-        std::vector<std::vector<THUAI6::PlaceType>> map;
+        auto map = std::make_shared<THUAI6::GameMap>();
         for (int i = 0; i < mapMsg.row_size(); i++)
         {
             std::vector<THUAI6::PlaceType> row;
@@ -231,9 +256,39 @@ namespace Proto2THUAI6
             {
                 row.push_back(placeTypeDict[mapMsg.row(i).col(j)]);
             }
-            map.push_back(row);
+            map->gameMap.push_back(row);
         }
+        for (const auto& item : mapMsg.map_obj_message())
+            switch (messageOfMapObjDict[item.message_of_map_obj_case()])
+            {
+                case THUAI6::MessageOfMapObj::ClassroomMessage:
+                    map->classRoomState.emplace(std::make_pair(item.classroom_message().x(), item.classroom_message().y()), item.classroom_message().progress());
+                    break;
+                case THUAI6::MessageOfMapObj::DoorMessage:
+                    map->doorState.emplace(std::make_pair(item.door_message().x(), item.door_message().y()), item.door_message().is_open());
+                    break;
+                case THUAI6::MessageOfMapObj::GateMessage:
+                    map->gateState.emplace(std::make_pair(item.gate_message().x(), item.gate_message().y()), item.gate_message().progress());
+                    break;
+                default:
+                    break;
+            }
         return map;
+    }
+
+    inline std::shared_ptr<THUAI6::GameInfo> Protobuf2THUAI6GameInfo(const protobuf::MessageOfAll& allMsg)
+    {
+        auto gameInfo = std::make_shared<THUAI6::GameInfo>();
+        gameInfo->gameTime = allMsg.game_time();
+        gameInfo->subjectLeft = allMsg.subject_left();
+        gameInfo->studentGraduated = allMsg.student_graduated();
+        gameInfo->studentQuited = allMsg.student_quited();
+        gameInfo->studentScore = allMsg.student_score();
+        gameInfo->trickerScore = allMsg.tricker_score();
+        gameInfo->gateOpened = allMsg.gate_opened();
+        gameInfo->hiddenGateOpened = allMsg.hidden_gate_opened();
+        gameInfo->hiddenGateRefreshed = allMsg.hidden_gate_refreshed();
+        return gameInfo;
     }
 
     inline std::shared_ptr<THUAI6::Bullet> Protobuf2THUAI6Bullet(const protobuf::MessageOfBullet& bulletMsg)
@@ -275,6 +330,8 @@ namespace THUAI62Proto
         {THUAI6::PlaceType::ClassRoom, protobuf::PlaceType::CLASSROOM},
         {THUAI6::PlaceType::Gate, protobuf::PlaceType::GATE},
         {THUAI6::PlaceType::HiddenGate, protobuf::PlaceType::HIDDEN_GATE},
+        {THUAI6::PlaceType::Door, protobuf::PlaceType::DOOR},
+        {THUAI6::PlaceType::Window, protobuf::PlaceType::WINDOW},
     };
 
     inline std::map<THUAI6::ShapeType, protobuf::ShapeType> shapeTypeDict{
@@ -346,45 +403,60 @@ namespace THUAI62Proto
         return playerMsg;
     }
 
-    inline protobuf::IDMsg THUAI62ProtobufID(int playerID)
+    inline protobuf::IDMsg THUAI62ProtobufID(int playerID, THUAI6::PlayerType playerType)
     {
         protobuf::IDMsg idMsg;
         idMsg.set_player_id(playerID);
+        idMsg.set_player_type(playerTypeDict[playerType]);
         return idMsg;
     }
 
-    inline protobuf::MoveMsg THUAI62ProtobufMove(int64_t time, double angle, int64_t id)
+    inline protobuf::MoveMsg THUAI62ProtobufMove(int64_t time, double angle, int64_t id, THUAI6::PlayerType playerType)
     {
         protobuf::MoveMsg moveMsg;
         moveMsg.set_time_in_milliseconds(time);
         moveMsg.set_angle(angle);
         moveMsg.set_player_id(id);
+        moveMsg.set_player_type(playerTypeDict[playerType]);
         return moveMsg;
     }
 
-    inline protobuf::PickMsg THUAI62ProtobufPick(THUAI6::PropType prop, int64_t id)
+    inline protobuf::PropMsg THUAI62ProtobufProp(THUAI6::PropType prop, int64_t id, THUAI6::PlayerType playerType)
     {
-        protobuf::PickMsg pickMsg;
+        protobuf::PropMsg pickMsg;
         pickMsg.set_prop_type(propTypeDict[prop]);
         pickMsg.set_player_id(id);
+        pickMsg.set_player_type(playerTypeDict[playerType]);
         return pickMsg;
     }
 
-    inline protobuf::SendMsg THUAI62ProtobufSend(std::string msg, int64_t toID, int64_t id)
+    inline protobuf::SendMsg THUAI62ProtobufSend(std::string msg, int64_t toID, int64_t id, THUAI6::PlayerType playerType, THUAI6::PlayerType toType)
     {
         protobuf::SendMsg sendMsg;
         sendMsg.set_message(msg);
         sendMsg.set_to_player_id(toID);
         sendMsg.set_player_id(id);
+        sendMsg.set_player_type(playerTypeDict[playerType]);
+        sendMsg.set_to_player_type(playerTypeDict[toType]);
         return sendMsg;
     }
 
-    inline protobuf::TrickMsg THUAI62ProtobufTrick(double angle, int64_t id)
+    inline protobuf::AttackMsg THUAI62ProtobufAttack(double angle, int64_t id, THUAI6::PlayerType playerType)
     {
-        protobuf::TrickMsg trickMsg;
-        trickMsg.set_angle(angle);
-        trickMsg.set_player_id(id);
-        return trickMsg;
+        protobuf::AttackMsg attackMsg;
+        attackMsg.set_angle(angle);
+        attackMsg.set_player_id(id);
+        attackMsg.set_player_type(playerTypeDict[playerType]);
+        return attackMsg;
+    }
+
+    inline protobuf::SkillMsg THUAI62ProtobufSkill(int32_t skillID, int64_t id, THUAI6::PlayerType playerType)
+    {
+        protobuf::SkillMsg skillMsg;
+        skillMsg.set_skill_id(skillID);
+        skillMsg.set_player_id(id);
+        skillMsg.set_player_type(playerTypeDict[playerType]);
+        return skillMsg;
     }
 }  // namespace THUAI62Proto
 

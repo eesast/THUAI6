@@ -12,6 +12,8 @@ namespace Preparation.Interface
         Dictionary<GameObjType, IList<IGameObj>> GameObjDict { get; }
         Dictionary<GameObjType, ReaderWriterLockSlim> GameObjLockDict { get; }
 
+        public uint[,] ProtoGameMap { get; }
+        public PlaceType GetPlaceType(IGameObj obj);
         public bool IsOutOfBound(IGameObj obj);
         public IOutOfBound GetOutOfBound(XY pos);  // 返回新建的一个OutOfBound对象
     }

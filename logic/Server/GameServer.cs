@@ -239,7 +239,7 @@ namespace Server
 
         public override Task<MoveRes> Move(MoveMsg request, ServerCallContext context)
         {
-            Console.WriteLine($"Move ID: {request.PlayerId}, TimeInMilliseconds: {request.TimeInMilliseconds}");
+            Console.WriteLine($"SetPos ID: {request.PlayerId}, TimeInMilliseconds: {request.TimeInMilliseconds}");
             var gameID = communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId];
             game.MovePlayer(gameID, (int)request.TimeInMilliseconds, request.Angle);
             // 之后game.MovePlayer可能改为bool类型

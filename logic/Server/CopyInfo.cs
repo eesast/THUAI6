@@ -42,7 +42,7 @@ namespace Server
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
             //msg.StudentMessage.StudentType; // 下面写
             msg.StudentMessage.Guid = player.ID;
-            msg.StudentMessage.State = StudentState.NullStatus;
+            //msg.StudentMessage.State = player.PlayerState;
             msg.StudentMessage.FailTime = 0;
             msg.StudentMessage.EmoTime = 0;
             msg.StudentMessage.PlayerId = 0;

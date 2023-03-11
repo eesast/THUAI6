@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using Gaming;
 using GameClass.GameObj;
 using Preparation.Utility;
+using Playback;
 
 
 namespace Server
@@ -37,7 +38,7 @@ namespace Server
         private readonly object messageToAllClientsLock = new();
         public static readonly long SendMessageToClientIntervalInMilliseconds = 50;
         private readonly Semaphore endGameInfoSema = new(0, 1);
-        // private MessageWriter? mwr = null;
+        private MessageWriter? mwr = null;
 
         public SemaphoreSlim StartGameTest()
         {
@@ -85,14 +86,24 @@ namespace Server
             var waitHandle = new SemaphoreSlim(gameState == true ? 1 : 0);  // 注意修改
             new Thread(() =>
             {
+                bool flag = true;
                 new FrameRateTaskExecutor<int>
                 (
                     () => game.GameMap.Timer.IsGaming,
-                    ReportGame,
-                    1000,
                     () =>
                     {
-                        ReportGame();  // 最后发一次消息，唤醒发消息的线程，防止发消息的线程由于有概率处在 Wait 状态而卡住
+                        if (flag == true)
+                        {
+                            ReportGame(GameState.GameStart);
+                            flag = false;
+                        }
+                        else ReportGame(GameState.GameRunning);
+                    },
+                    SendMessageToClientIntervalInMilliseconds,
+                    () =>
+                    {
+                        ReportGame(GameState.GameEnd);  // 最后发一次消息，唤醒发消息的线程，防止发消息的线程由于有概率处在 Wait 状态而卡住
+                        OnGameEnd();
                         return 0;
                     }
                 ).Start();
@@ -109,12 +120,41 @@ namespace Server
         public void WaitForEnd()
         {
             this.endGameSem.Wait();
+            mwr?.Dispose();
         }
 
-        public void ReportGame()
+        private void OnGameEnd()
         {
-            //currentGameInfo = null;
-            var gameObjList = game.GetGameObj();
+            game.ClearAllLists();
+            mwr?.Flush();
+            //if (options.ResultFileName != DefaultArgumentOptions.FileName)
+                //SaveGameResult(options.ResultFileName + ".json");
+            //SendGameResult();
+            endGameInfoSema.Release();
+        }
+
+        public void ReportGame(GameState gameState, bool requiredGaming = true)
+        {
+            var gameObjList = game.GetGameObj();            
+            lock (messageToAllClientsLock)
+            {
+                //currentGameInfo.MapMessage = (Messa(game.GameMap));
+                switch (gameState)
+                {
+                    case GameState.GameRunning:
+                    case GameState.GameStart:
+                    case GameState.GameEnd:
+                        foreach (GameObj gameObj in gameObjList)
+                        {
+                            currentGameInfo.ObjMessage.Add(CopyInfo.Auto(gameObj));
+                        }
+                        currentGameInfo.GameState = gameState;
+                        mwr?.WriteOne(currentGameInfo);
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             foreach (var kvp in semaDict)
             {
@@ -145,7 +185,19 @@ namespace Server
                 return true;
             return false;
         }
-
+        private MessageOfMap MapMsg(Map map)
+        {
+            MessageOfMap msgOfMap = new MessageOfMap();
+            for (int i = 0; i < GameData.rows; i++)
+            {
+                msgOfMap.Row.Add(new MessageOfMap.Types.Row());
+                for (int j = 0; j < GameData.cols; j++)
+                {
+                    //msgOfMap.Row[i].Col.Add((int)map.ProtoGameMap[i, j]); int转placetype
+                }
+            }
+            return msgOfMap;
+        }
         public override Task<BoolRes> TryConnection(IDMsg request, ServerCallContext context)
         {
             Console.WriteLine($"TryConnection ID: {request.PlayerId}");
@@ -224,7 +276,8 @@ namespace Server
             } while (game.GameMap.Timer.IsGaming);
         }
 
-        public override Task<BoolRes> Trick(TrickMsg request, ServerCallContext context)
+        public override Task<BoolRes> Attack(AttackMsg request, ServerCallContext context)
+        
         {
             game.Attack(request.PlayerId, request.Angle);
             BoolRes boolRes = new();
@@ -348,7 +401,7 @@ namespace Server
             {
                 try
                 {
-                    //mwr = new MessageWriter(options.FileName, options.TeamCount, options.PlayerCountPerTeam);
+                    mwr = new MessageWriter(options.FileName, options.TeamCount, options.PlayerCountPerTeam);
                 }
                 catch
                 {

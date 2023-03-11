@@ -25,6 +25,7 @@ enum PlaceType // 地图中的所有物件类型
     HIDDEN_GATE = 6;
     WINDOW = 7;
     DOOR = 8;
+    BOX = 9;
     // 待补充有特殊效果的地形
 
 }

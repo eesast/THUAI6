@@ -27,7 +27,8 @@ message MessageOfStudent
     int32 score = 20;
     int32 treat_progress = 21; // 治疗进度
     int32 rescue_progress = 22; // 救援进度
-    repeated StudentBuffType buff = 23;
+    StudentType student_type = 23;
+    repeated StudentBuffType buff = 24;
 }
 
 message MessageOfTricker

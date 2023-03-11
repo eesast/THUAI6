@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <array>
+#include <map>
 
 #include "structures.h"
 
@@ -24,7 +25,9 @@ struct State
 
     std::vector<std::shared_ptr<THUAI6::BombedBullet>> bombedBullets;
 
-    std::vector<std::vector<THUAI6::PlaceType>> gamemap;
+    std::shared_ptr<THUAI6::GameMap> gameMap;
+
+    std::shared_ptr<THUAI6::GameInfo> gameInfo;
 
     std::vector<int64_t> guids;
 };

@@ -26,18 +26,25 @@ public:
     }
     bool Move(int64_t time, double angle, int64_t playerID);
     bool PickProp(THUAI6::PropType prop, int64_t playerID);
-    bool UseProp(int64_t playerID);
-    bool UseSkill(int64_t playerID);
+    bool UseProp(THUAI6::PropType prop, int64_t playerID);
+    bool UseSkill(int32_t skillID, int64_t playerID);
     std::optional<std::pair<int64_t, std::string>> GetMessage();
     bool HaveMessage();
     bool SendMessage(int64_t toID, std::string message, int64_t playerID);
+    bool OpenDoor(int64_t playerID);
+    bool CloseDoor(int64_t playerID);
+    bool SkipWindow(int64_t playerID);
+    bool StartOpenGate(int64_t playerID);
+    bool StartOpenChest(int64_t playerID);
+    bool EndAllAction(int64_t playerID);
+
     bool Graduate(int64_t playerID);
 
     bool StartLearning(int64_t playerID);
-    bool StartHelpMate(int64_t playerID);
-    bool StartHealMate(int64_t playerID);
+    bool StartTreatMate(int64_t playerID);
+    bool StartRescueMate(int64_t playerID);
 
-    bool Trick(double angle, int64_t playerID);
+    bool Attack(double angle, int64_t playerID);
 
     bool TryConnection(int64_t playerID);
     protobuf::MessageToClient GetMessage2Client();
@@ -47,6 +54,7 @@ public:
 
 private:
     std::unique_ptr<protobuf::AvailableService::Stub> THUAI6Stub;
+    THUAI6::PlayerType playerType;
     bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
     ConcurrentQueue<std::pair<int64_t, std::string>> messageQueue;

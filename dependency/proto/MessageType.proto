@@ -25,7 +25,7 @@ enum PlaceType // 地图中的所有物件类型
     HIDDEN_GATE = 6;
     WINDOW = 7;
     DOOR = 8;
-    BOX = 9;
+    CHEST = 9;
     // 待补充有特殊效果的地形
 
 }
@@ -56,7 +56,7 @@ enum StudentBuffType // 人类可用的增益效果类型
     SBUFFTYPE4 = 4;
 }
 
-enum StudentState
+enum PlayerState
 {
     NULL_STATUS = 0;
     IDLE = 1; // 正常状态
@@ -69,6 +69,12 @@ enum StudentState
     STUNNED = 8;
     TREATING = 9;
     RESCUING = 10;
+    SWINGING = 11; // 后摇
+    ATTACKING = 12; // 前摇
+    LOCKING = 13;
+    RUMMAGING = 14;
+    CLIMBING = 15;
+
 }
 
 enum TrickerBuffType // 屠夫可用的增益效果类型

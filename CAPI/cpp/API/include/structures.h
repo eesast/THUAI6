@@ -27,9 +27,11 @@ namespace THUAI6
         Wall = 2,
         Grass = 3,
         ClassRoom = 4,
-        BlackRoom = 5,
-        Gate = 6,
-        HiddenGate = 7,
+        Gate = 5,
+        HiddenGate = 6,
+        Window = 7,
+        Door = 8,
+        Chest = 9,
     };
 
     // 形状标志
@@ -108,9 +110,9 @@ namespace THUAI6
     };
 
     // 学生状态枚举
-    enum class StudentState : unsigned char
+    enum class PlayerState : unsigned char
     {
-        NullStudentState = 0,
+        NullState = 0,
         Idle = 1,
         Learning = 2,
         Addicted = 3,
@@ -121,6 +123,30 @@ namespace THUAI6
         Stunned = 8,
         Treating = 9,
         Rescuing = 10,
+        Swinging = 11,
+        Attacking = 12,
+        Locking = 13,
+        Rummaging = 14,
+        Climbing = 15,
+    };
+
+    enum class MessageOfObj : unsigned char
+    {
+        NullMessageOfObj = 0,
+        StudentMessage = 1,
+        TrickerMessage = 2,
+        PropMessage = 3,
+        BulletMessage = 4,
+        BombedBulletMessage = 5,
+    };
+
+    enum class MessageOfMapObj : unsigned char
+    {
+        NullMessageOfMapObj = 0,
+        ClassroomMessage = 1,
+        DoorMessage = 2,
+        GateMessage = 3,
+        ChestMessage = 4,
     };
 
     // 玩家类
@@ -138,26 +164,25 @@ namespace THUAI6
         double timeUntilSkillAvailable;  // 技能冷却时间
 
         PlayerType playerType;  // 玩家类型
-        PropType prop;          // 手上的道具类型
-        PlaceType place;        // 所处格子的类型
+        std::vector<PropType> props;
+        PlaceType place;  // 所处格子的类型
+
+        PlayerState playerState;
     };
 
     struct Student : public Player
     {
-        StudentState state;     // 学生状态
+        StudentType studentType;
         int32_t determination;  // 剩余毅力（本次Emo之前还能承受的伤害）
         int32_t failNum;        // 挂科数量
         double failTime;        // 挂科时间
         double emoTime;         // EMO时间
 
-        StudentType studentType;            // 学生类型
         std::vector<StudentBuffType> buff;  // buff
     };
 
     struct Tricker : public Player
     {
-        bool movable;  // 是否处在攻击后摇中
-
         TrickerType trickerType;            // 捣蛋鬼类型
         std::vector<TrickerBuffType> buff;  // buff
     };
@@ -196,6 +221,31 @@ namespace THUAI6
         bool isMoving;
     };
 
+    struct GameMap
+    {
+        std::vector<std::vector<PlaceType>> gameMap;
+        std::map<std::pair<int32_t, int32_t>, int32_t> classRoomState;
+
+        std::map<std::pair<int32_t, int32_t>, int32_t> gateState;
+
+        std::map<std::pair<int32_t, int32_t>, bool> doorState;
+
+        std::map<std::pair<int32_t, int32_t>, int32_t> chestState;
+    };
+
+    struct GameInfo
+    {
+        int32_t gameTime;
+        int32_t subjectLeft;
+        int32_t studentGraduated;
+        int32_t studentQuited;
+        int32_t studentScore;
+        int32_t trickerScore;
+        bool gateOpened;
+        bool hiddenGateRefreshed;
+        bool hiddenGateOpened;
+    };
+
     // 仅供DEBUG使用，名称可改动
     // 还没写完，后面待续
 
@@ -206,18 +256,23 @@ namespace THUAI6
         {GameState::GameEnd, "GameEnd"},
     };
 
-    inline std::map<StudentState, std::string> studentStateDict{
-        {StudentState::NullStudentState, "NullStudentState"},
-        {StudentState::Idle, "Idle"},
-        {StudentState::Learning, "Learning"},
-        {StudentState::Addicted, "Addicted"},
-        {StudentState::Quit, "Quit"},
-        {StudentState::Graduated, "Graduated"},
-        {StudentState::Treated, "Treated"},
-        {StudentState::Rescued, "Rescued"},
-        {StudentState::Stunned, "Stunned"},
-        {StudentState::Treating, "Treating"},
-        {StudentState::Rescuing, "Rescuing"},
+    inline std::map<PlayerState, std::string> playerStateDict{
+        {PlayerState::NullState, "NullState"},
+        {PlayerState::Idle, "Idle"},
+        {PlayerState::Learning, "Learning"},
+        {PlayerState::Addicted, "Addicted"},
+        {PlayerState::Quit, "Quit"},
+        {PlayerState::Graduated, "Graduated"},
+        {PlayerState::Treated, "Treated"},
+        {PlayerState::Rescued, "Rescued"},
+        {PlayerState::Stunned, "Stunned"},
+        {PlayerState::Treating, "Treating"},
+        {PlayerState::Rescuing, "Rescuing"},
+        {PlayerState::Swinging, "Swinging"},
+        {PlayerState::Attacking, "Attacking"},
+        {PlayerState::Locking, "Locking"},
+        {PlayerState::Rummaging, "Rummaging"},
+        {PlayerState::Climbing, "Climbing"},
     };
 
     inline std::map<PlayerType, std::string> playerTypeDict{
@@ -234,6 +289,9 @@ namespace THUAI6
         {PlaceType::ClassRoom, "ClassRoom"},
         {PlaceType::Gate, "Gate"},
         {PlaceType::HiddenGate, "HiddenGate"},
+        {PlaceType::Door, "Door"},
+        {PlaceType::Window, "Window"},
+        {PlaceType::Chest, "Chest"},
     };
 
     inline std::map<PropType, std::string> propTypeDict{
@@ -249,6 +307,23 @@ namespace THUAI6
     inline std::map<TrickerBuffType, std::string> trickerBuffDict{
         {TrickerBuffType::NullTrickerBuffType, "NullTrickerBuffType"},
 
+    };
+
+    inline std::map<MessageOfObj, std::string> messageOfObjDict{
+        {MessageOfObj::NullMessageOfObj, "NullMessageOfObj"},
+        {MessageOfObj::StudentMessage, "StudentMessage"},
+        {MessageOfObj::TrickerMessage, "TrickerMessage"},
+        {MessageOfObj::PropMessage, "PropMessage"},
+        {MessageOfObj::BulletMessage, "BulletMessage"},
+        {MessageOfObj::BombedBulletMessage, "BombedBulletMessage"},
+    };
+
+    inline std::map<MessageOfMapObj, std::string> messageOfMapObjDict{
+        {MessageOfMapObj::NullMessageOfMapObj, "NullMessageOfMapObj"},
+        {MessageOfMapObj::ClassroomMessage, "ClassroomMessage"},
+        {MessageOfMapObj::DoorMessage, "DoorMessage"},
+        {MessageOfMapObj::GateMessage, "GateMessage"},
+        {MessageOfMapObj::ChestMessage, "ChestMessage"},
     };
 
 }  // namespace THUAI6

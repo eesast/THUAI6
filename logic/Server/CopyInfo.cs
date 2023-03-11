@@ -30,29 +30,29 @@ namespace Server
 
         private static MessageOfObj? Student(Character player)
         {
-             MessageOfObj msg = new MessageOfObj();
-             if (player.IsGhost()) return null;
+            MessageOfObj msg = new MessageOfObj();
+            if (player.IsGhost()) return null;
 
-             msg.StudentMessage.X = player.Position.x;
-             msg.StudentMessage.Y = player.Position.y;
-             msg.StudentMessage.Speed = player.MoveSpeed;
-             msg.StudentMessage.Determination = player.HP;
-             //msg.StudentMessage.FailNum = 0;
-             foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
+            msg.StudentMessage.X = player.Position.x;
+            msg.StudentMessage.Y = player.Position.y;
+            msg.StudentMessage.Speed = player.MoveSpeed;
+            msg.StudentMessage.Determination = player.HP;
+            //msg.StudentMessage.FailNum = 0;
+            foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
-             //msg.StudentMessage.StudentType; // 下面写
-             msg.StudentMessage.Guid = player.ID;
-             msg.StudentMessage.State = StudentState.NullStatus;
-             msg.StudentMessage.FailTime = 0;
-             msg.StudentMessage.EmoTime = 0;
-             msg.StudentMessage.PlayerId = 0;
-             msg.StudentMessage.ViewRange = 0;
-             msg.StudentMessage.Radius = 0;
-             msg.StudentMessage.Damage = 0;
-             msg.StudentMessage.DangerAlert = 0;
-             msg.StudentMessage.Score = 0;
-             msg.StudentMessage.TreatProgress = 0;
-             msg.StudentMessage.RescueProgress = 0;                  
+            //msg.StudentMessage.StudentType; // 下面写
+            msg.StudentMessage.Guid = player.ID;
+            msg.StudentMessage.State = StudentState.NullStatus;
+            msg.StudentMessage.FailTime = 0;
+            msg.StudentMessage.EmoTime = 0;
+            msg.StudentMessage.PlayerId = 0;
+            msg.StudentMessage.ViewRange = 0;
+            msg.StudentMessage.Radius = 0;
+            msg.StudentMessage.Damage = 0;
+            msg.StudentMessage.DangerAlert = 0;
+            msg.StudentMessage.Score = 0;
+            msg.StudentMessage.TreatProgress = 0;
+            msg.StudentMessage.RescueProgress = 0;
 
             foreach (KeyValuePair<Preparation.Utility.BuffType, bool> kvp in player.Buff)
             {
@@ -61,33 +61,33 @@ namespace Server
                     switch (kvp.Key) // StudentBuffType具体内容待定
                     {
                         case Preparation.Utility.BuffType.Spear:
-                           msg.StudentMessage.Buff.Add(StudentBuffType.NullSbuffType);
+                            msg.StudentMessage.Buff.Add(StudentBuffType.NullSbuffType);
                             break;
                         case Preparation.Utility.BuffType.AddLIFE:
-                           msg.StudentMessage.Buff.Add(StudentBuffType.NullSbuffType);
+                            msg.StudentMessage.Buff.Add(StudentBuffType.NullSbuffType);
                             break;
                         case Preparation.Utility.BuffType.Shield:
-                           msg.StudentMessage.Buff.Add(StudentBuffType.NullSbuffType);
+                            msg.StudentMessage.Buff.Add(StudentBuffType.NullSbuffType);
                             break;
                         case Preparation.Utility.BuffType.AddSpeed:
-                           msg.StudentMessage.Buff.Add(StudentBuffType.NullSbuffType);
+                            msg.StudentMessage.Buff.Add(StudentBuffType.NullSbuffType);
                             break;
                         default:
                             break;
                     }
                 }
             }
-            
+
             //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
             //现在懒得改了，有时间再重整一波
             if (player.PropInventory == null)
-               msg.StudentMessage.Prop.Add(PropType.NullPropType);
+                msg.StudentMessage.Prop.Add(PropType.NullPropType);
             else
             {
                 switch (player.PropInventory.GetPropType())
                 {
                     case Preparation.Utility.PropType.Gem:
-                       msg.StudentMessage.Prop.Add(PropType.NullPropType);
+                        msg.StudentMessage.Prop.Add(PropType.NullPropType);
                         break;
                         /*case Preparation.Utility.PropType.addLIFE:
                            msg.StudentMessage.MessageOfHuman.Prop = Communication.Proto.PropType.AddLife;
@@ -106,7 +106,7 @@ namespace Server
                             break;*/
                 }
             }
-            
+
             return msg;
         }
 
@@ -130,8 +130,8 @@ namespace Server
             msg.TrickerMessage.Radius = 0;
             //msg.TrickerMessage.Buff[0] = ButcherBuffType.NullSbuffType; 下面写了
 
-            
-            
+
+
             foreach (KeyValuePair<Preparation.Utility.BuffType, bool> kvp in player.Buff)
             {
                 if (kvp.Value)
@@ -205,7 +205,7 @@ namespace Server
                         break;
                 }
             }*/
-            
+
             return msg;
         }
 
@@ -238,7 +238,7 @@ namespace Server
                     break;
             }
             //if (bullet.Parent != null)
-                //msg.BulletMessage.MessageOfBullet.ParentTeamID = bullet.Parent.TeamID;
+            //msg.BulletMessage.MessageOfBullet.ParentTeamID = bullet.Parent.TeamID;
             /*switch (bullet.Place)
             {
                 case Preparation.Utility.PlaceType.Null:
@@ -270,7 +270,7 @@ namespace Server
             msg.PropMessage.Guid = 0;
             msg.PropMessage.Place = PlaceType.NullPlaceType;
             msg.PropMessage.Size = 0;
-            msg.PropMessage.IsMoving = false;           
+            msg.PropMessage.IsMoving = false;
 
             switch (prop.GetPropType())
             {
@@ -326,7 +326,7 @@ namespace Server
         private static MessageOfObj BombedBullet(BombedBullet bombedBullet)
         {
             MessageOfObj msg = new MessageOfObj();
-                        
+
             msg.BombedBulletMessage.X = bombedBullet.bulletHasBombed.Position.x;
             msg.BombedBulletMessage.Y = bombedBullet.bulletHasBombed.Position.y;
             //msg.BombedBulletMessage.FacingDirection = bombedBullet.FacingDirection; XY类型转double?

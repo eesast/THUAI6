@@ -128,14 +128,14 @@ namespace Server
             game.ClearAllLists();
             mwr?.Flush();
             //if (options.ResultFileName != DefaultArgumentOptions.FileName)
-                //SaveGameResult(options.ResultFileName + ".json");
+            //SaveGameResult(options.ResultFileName + ".json");
             //SendGameResult();
             endGameInfoSema.Release();
         }
 
         public void ReportGame(GameState gameState, bool requiredGaming = true)
         {
-            var gameObjList = game.GetGameObj();            
+            var gameObjList = game.GetGameObj();
             lock (messageToAllClientsLock)
             {
                 //currentGameInfo.MapMessage = (Messa(game.GameMap));
@@ -277,7 +277,7 @@ namespace Server
         }
 
         public override Task<BoolRes> Attack(AttackMsg request, ServerCallContext context)
-        
+
         {
             game.Attack(request.PlayerId, request.Angle);
             BoolRes boolRes = new();

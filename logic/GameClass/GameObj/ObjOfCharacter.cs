@@ -21,8 +21,8 @@ namespace GameClass.GameObj
             }
         }
         // LHR注：本来考虑在构造函数里设置parent属性，见THUAI4在游戏引擎中才设置该属性，作罢。——2021/9/24
-        public ObjOfCharacter(XY initPos, int initRadius, PlaceType initPlace, GameObjType initType) :
-            base(initPos, initRadius, initPlace, initType)
+        public ObjOfCharacter(XY initPos, int initRadius, GameObjType initType) :
+            base(initPos, initRadius, initType)
         {
         }
     }

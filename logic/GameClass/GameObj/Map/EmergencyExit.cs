@@ -9,7 +9,7 @@ namespace GameClass.GameObj
     public class EmergencyExit : GameObj
     {
         public EmergencyExit(XY initPos) :
-            base(initPos, GameData.numOfPosGridPerCell / 2, PlaceType.Null, GameObjType.EmergencyExit)
+            base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.EmergencyExit)
         {
             this.CanMove = false;
         }

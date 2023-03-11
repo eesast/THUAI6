@@ -59,7 +59,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                if (IsResetting) return PlayerStateType.IsResetting;
+                if (IsResetting) return PlayerStateType.IsDeceased;
                 if (IsMoving) return PlayerStateType.IsMoving;
                 return playerState;
             }

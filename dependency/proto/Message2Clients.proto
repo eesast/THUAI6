@@ -14,16 +14,21 @@ message MessageOfStudent
     double time_until_skill_available = 6;
     PlaceType place = 7;
     repeated PropType prop = 8;
-    StudentType student_type = 9;
+    PlayerState player_state = 9;
     int64 guid = 10;
-    StudentState state = 11;
+    PlayerState state = 11;
     double fail_time = 12; // 挂科的时间
     double emo_time = 14; // EMO的时间
     int64 player_id = 15;
     int32 view_range = 16; // 视野距离
     int32 radius = 17; // 半径
     int32 damage = 18;
-    repeated StudentBuffType buff = 19;
+    double danger_alert = 19; // 危险警报，在捣蛋鬼靠近时会有预警
+    int32 score = 20;
+    int32 treat_progress = 21; // 治疗进度
+    int32 rescue_progress = 22; // 救援进度
+    StudentType student_type = 23;
+    repeated StudentBuffType buff = 24;
 }
 
 message MessageOfTricker
@@ -41,9 +46,10 @@ message MessageOfTricker
     int64 player_id = 11;
     int32 view_range = 12; // 视野距离
     int32 radius = 13; // 半径
-    int32 treat_progress = 14; // 治疗进度
-    int32 rescue_progress = 15; // 救援进度
-    repeated TrickerBuffType buff = 16;
+    PlayerState player_state = 14;
+    double trick_desire = 15;
+    double class_volume = 16;
+    repeated TrickerBuffType buff = 17;
 }
 
 message MessageOfBullet
@@ -111,6 +117,13 @@ message MessageOfDoor
     bool is_open = 3;
 }
 
+message MessageOfChest
+{
+    int32 x = 1;
+    int32 y = 2;
+    int32 progress = 3;
+}
+
 message MessageOfMapObj
 {
     oneof message_of_map_obj
@@ -118,6 +131,7 @@ message MessageOfMapObj
         MessageOfClassroom classroom_message = 1;
         MessageOfDoor door_message = 2;
         MessageOfGate gate_message = 3;
+        MessageOfChest chest_message = 4;
     }
 }
 
@@ -143,12 +157,25 @@ message MessageOfObj
     }
 }
 
+message MessageOfAll
+{
+    int32 game_time = 1;
+    int32 subject_left = 2; // 剩余的科目数
+    int32 student_graduated = 3; // 已经毕业的学生数
+    int32 student_quited = 4; // 已经退学的学生数
+    int32 student_score = 5;
+    int32 tricker_score = 6;
+    bool gate_opened = 7;
+    bool hidden_gate_refreshed = 8;
+    bool hidden_gate_opened = 9;
+}
+
 message MessageToClient
 {
     repeated MessageOfObj obj_message = 1;
     MessageOfMap map_message = 2;
     GameState game_state = 3;
-    int32 finished_num = 4; // 完成的科目数
+    MessageOfAll all_message = 4;
 }
 
 message MoveRes // 如果打算设计撞墙保留平行速度分量，且需要返回值则可用这个（大概没啥用）

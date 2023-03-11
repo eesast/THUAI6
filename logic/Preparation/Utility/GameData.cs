@@ -19,8 +19,8 @@ namespace Preparation.Utility
         public const int MaxSpeed = int.MaxValue;  // 最大速度
 
         public const int numOfBirthPoint = 5;
-        //        public const int numOfGenerator = 7;
-        public const int numOfGeneratorRequiredForRepair = 5;
+        //        public const int numOfGenerator = 9;
+        public const int numOfGeneratorRequiredForRepair = 7;
 
         private const int numOfObjNotMap = 5;
         public static bool IsMap(GameObjType gameObjType)

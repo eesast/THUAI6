@@ -8,7 +8,7 @@ namespace GameClass.GameObj
     public class Wall : GameObj
     {
         public Wall(XY initPos) :
-            base(initPos, GameData.numOfPosGridPerCell / 2, PlaceType.Null, GameObjType.Wall)
+            base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Wall)
         {
             this.CanMove = false;
         }

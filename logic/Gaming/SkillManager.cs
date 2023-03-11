@@ -11,18 +11,18 @@ namespace Gaming
         readonly SkillManager skillManager;
         private class SkillManager
         {
-            public bool UseActiveSkill(Character character, ActiveSkillType activeSkillType)
+            public bool UseActiveSkill(Map gamemap, Character character, ActiveSkillType activeSkillType)
             {
-                return character.UseActiveSkill(activeSkillType);
+                return character.UseActiveSkill(gamemap, activeSkillType);
             }
-            public void UsePassiveSkill(Character character, PassiveSkillType passiveSkillType)
+            public void UsePassiveSkill(Map gamemap, Character character, PassiveSkillType passiveSkillType)
             {
-                character.UsePassiveSkill(passiveSkillType);
+                character.UsePassiveSkill(gamemap, passiveSkillType);
             }
-            public void UseAllPassiveSkill(Character character)
+            public void UseAllPassiveSkill(Map gamemap, Character character)
             {
                 foreach (var passiveSkill in character.Occupation.ListOfIPassiveSkill)
-                    character.UsePassiveSkill(PassiveSkillFactory.FindpassiveSkillType(passiveSkill));
+                    character.UsePassiveSkill(gamemap, passiveSkill);
             }
         }
     }

@@ -33,74 +33,77 @@ namespace Client
             serial.FontSize = scores.FontSize = star.FontSize = status.FontSize = prop.FontSize = fontsize;
         }
 
-        private void SetStaticValue(MessageOfHuman obj)
+        private void SetStaticValue(MessageOfStudent obj)
         {
-            switch (obj.HumanType)  // 参数未设定
+            switch (obj.StudentType)  // 参数未设定
             {
-                case HumanType._1:
+                case StudentType._1:
                     coolTime = 10000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nSkill:HumanType1";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nSkill:StudentType1";
                     break;
-                case HumanType._2:
+                case StudentType._2:
                     coolTime = 20000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nSkill:HumanType2";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nSkill:StudentType2";
                     break;
-                case HumanType._3:
+                case StudentType._3:
                     coolTime = 30000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nSkill:HumanType3";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nSkill:StudentType3";
                     break;
-                case HumanType._4:
+                case StudentType._4:
                     coolTime = 40000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nSkill:HumanType4";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nSkill:StudentType4";
                     break;
-                case HumanType.NullHumanType:
+                case StudentType.NullStudentType:
                     coolTime = 10000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nSkill:NullHumanType";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nSkill:NullStudentType";
                     break;
             }
             initialized = true;
         }
-        private void SetDynamicValue(MessageOfHuman obj)
+        private void SetDynamicValue(MessageOfStudent obj)
         {
             skillprogress.Value = 100 - obj.TimeUntilSkillAvailable / coolTime * 100;
-            if (obj.State == HumanState.Dead)
+            if (obj.State == StudentState.Quit)
             {
                 skillprogress.Value = 0;
                 skillprogress.Background = Brushes.Gray;
             }
             else
                 skillprogress.Background = Brushes.White;
-            Func<MessageOfHuman, int> life =
+            Func<MessageOfStudent, int> life =
                 (obj) =>
             {
-                if (obj.State == HumanState.Dead || obj.State == HumanState.OnChair || obj.State == HumanState.Dying)
+                if (obj.State == StudentState.Quit || obj.State == StudentState.Addicted)
                     return 0;
                 else
-                    return obj.Life;
+                    return obj.Determination;
             };
             // star.Text = "⭐：";准备放剩余被挂次数
-            status.Text = "🔧：" + Convert.ToString(1) + "\n🏃：" + Convert.ToString(obj.Speed) + "\n♥：" + Convert.ToString(life(obj)) + "\n🛡：" + Convert.ToString(0);
-            scores.Text = "Scores:" + Convert.ToString(0);
-            switch (obj.Prop)
+            status.Text = "🔧：" + Convert.ToString(0) + "\n🏃：" + Convert.ToString(obj.Speed) + "\n♥：" + Convert.ToString(life(obj)) + "\n🛡：" + Convert.ToString(0);
+            scores.Text = "Scores:" +obj.Score;
+            foreach (var icon in obj.Prop)
             {
-                case PropType.Ptype1:
-                    prop.Text = "🔧";
-                    break;
-                case PropType.Ptype2:
-                    prop.Text = "🛡";
-                    break;
-                case PropType.Ptype3:
-                    prop.Text = "♥";
-                    break;
-                case PropType.Ptype4:
-                    prop.Text = "⛸";
-                    break;
-                default:
-                    prop.Text = "  ";
-                    break;
-            }
+                switch (icon)
+                {
+                    case PropType.Ptype1:
+                        prop.Text = "🔧";
+                        break;
+                    case PropType.Ptype2:
+                        prop.Text = "🛡";
+                        break;
+                    case PropType.Ptype3:
+                        prop.Text = "♥";
+                        break;
+                    case PropType.Ptype4:
+                        prop.Text = "⛸";
+                        break;
+                    default:
+                        prop.Text = "  ";
+                        break;
+                }
+            }  
         }
-        public void SetValue(MessageOfHuman obj)
+        public void SetValue(MessageOfStudent obj)
         {
             if (!initialized)
                 SetStaticValue(obj);

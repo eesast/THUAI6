@@ -39,34 +39,34 @@ namespace Client
             serial.FontSize = scores.FontSize = star.FontSize = status.FontSize = prop.FontSize = fontsize;
         }
 
-        private void SetStaticValue(MessageOfButcher obj)
+        private void SetStaticValue(MessageOfTricker obj)
         {
-            switch (obj.ButcherType)  // 参数未设定
+            switch (obj.TrickerType)  // 参数未设定
             {
-                case ButcherType._1:
+                case TrickerType._1:
                     coolTime = 10000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:ButcherType1";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:TrickerType1";
                     break;
-                case ButcherType._2:
+                case TrickerType._2:
                     coolTime = 20000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:ButcherType2";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:TrickerType2";
                     break;
-                case ButcherType._3:
+                case TrickerType._3:
                     coolTime = 30000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:ButcherType3";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:TrickerType3";
                     break;
-                case ButcherType._4:
+                case TrickerType._4:
                     coolTime = 40000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:ButcherType4";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:TrickerType4";
                     break;
-                case ButcherType.NullButcherType:
+                case TrickerType.NullTrickerType:
                     coolTime = 10000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:NullButcherType";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:NullTrickerType";
                     break;
             }
             initialized = true;
         }
-        private void SetDynamicValue(MessageOfButcher obj)
+        private void SetDynamicValue(MessageOfTricker obj)
         {
             skillprogress.Value = 100 - obj.TimeUntilSkillAvailable / coolTime * 100;
             if (!obj.Movable)  // 认为movable为真时可动
@@ -79,26 +79,29 @@ namespace Client
             // star.Text = "⭐：";不知道要放什么
             status.Text = "🏹：" + Convert.ToString(1) + "\n🏃：" + Convert.ToString(obj.Speed) + "\n🤺：" + Convert.ToString(2) + "\n🗡：" + Convert.ToString(obj.Damage);
             scores.Text = "Scores:" + Convert.ToString(0);
-            switch (obj.Prop)
+            foreach(var icon in obj.Prop)
             {
-                case PropType.Ptype1:
-                    prop.Text = "🔧";
-                    break;
-                case PropType.Ptype2:
-                    prop.Text = "🛡";
-                    break;
-                case PropType.Ptype3:
-                    prop.Text = "♥";
-                    break;
-                case PropType.Ptype4:
-                    prop.Text = "⛸";
-                    break;
-                default:
-                    prop.Text = "  ";
-                    break;
+                switch (icon)
+                {
+                    case PropType.Ptype1:
+                        prop.Text = "🔧";
+                        break;
+                    case PropType.Ptype2:
+                        prop.Text = "🛡";
+                        break;
+                    case PropType.Ptype3:
+                        prop.Text = "♥";
+                        break;
+                    case PropType.Ptype4:
+                        prop.Text = "⛸";
+                        break;
+                    default:
+                        prop.Text = "  ";
+                        break;
+                }
             }
         }
-        public void SetValue(MessageOfButcher obj)
+        public void SetValue(MessageOfTricker obj)
         {
             if (!initialized)
                 SetStaticValue(obj);

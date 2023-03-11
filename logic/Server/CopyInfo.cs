@@ -183,7 +183,7 @@ namespace Server
             return msg;
         }
 
-        private static MessageOfTricker Butcher(Character player)
+        private static MessageOfTricker? Butcher(Character player)
         {
             MessageOfTricker msg = new MessageOfTricker();
             if (!player.IsGhost()) return null;
@@ -209,7 +209,7 @@ namespace Server
             msg.CD = player.CD;
             msg.GemNum = player.GemNum;
             msg.Guid = player.ID;
-            msg.IsResetting = player.IsResetting;
+            msg.IsDeceased = player.IsDeceased;
             
             msg.LifeNum = player.DeathCount + 1;
             msg.Radius = player.Radius;

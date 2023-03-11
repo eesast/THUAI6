@@ -11,7 +11,7 @@ namespace GameClass.GameObj
 {
     public class Ghost : Character
     {
-        public Ghost(XY initPos, int initRadius, PlaceType initPlace, CharacterType characterType) : base(initPos, initRadius, initPlace, characterType)
+        public Ghost(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
         }
     }

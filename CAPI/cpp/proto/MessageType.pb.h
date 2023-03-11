@@ -92,12 +92,15 @@ namespace protobuf
         CLASSROOM = 4,
         GATE = 5,
         HIDDEN_GATE = 6,
+        WINDOW = 7,
+        DOOR = 8,
+        CHEST = 9,
         PlaceType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         PlaceType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool PlaceType_IsValid(int value);
     constexpr PlaceType PlaceType_MIN = NULL_PLACE_TYPE;
-    constexpr PlaceType PlaceType_MAX = HIDDEN_GATE;
+    constexpr PlaceType PlaceType_MAX = CHEST;
     constexpr int PlaceType_ARRAYSIZE = PlaceType_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PlaceType_descriptor();
@@ -211,7 +214,7 @@ namespace protobuf
             StudentBuffType_descriptor(), name, value
         );
     }
-    enum StudentState : int
+    enum PlayerState : int
     {
         NULL_STATUS = 0,
         IDLE = 1,
@@ -224,29 +227,34 @@ namespace protobuf
         STUNNED = 8,
         TREATING = 9,
         RESCUING = 10,
-        StudentState_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
-        StudentState_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+        SWINGING = 11,
+        ATTACKING = 12,
+        LOCKING = 13,
+        RUMMAGING = 14,
+        CLIMBING = 15,
+        PlayerState_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+        PlayerState_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
-    bool StudentState_IsValid(int value);
-    constexpr StudentState StudentState_MIN = NULL_STATUS;
-    constexpr StudentState StudentState_MAX = RESCUING;
-    constexpr int StudentState_ARRAYSIZE = StudentState_MAX + 1;
+    bool PlayerState_IsValid(int value);
+    constexpr PlayerState PlayerState_MIN = NULL_STATUS;
+    constexpr PlayerState PlayerState_MAX = CLIMBING;
+    constexpr int PlayerState_ARRAYSIZE = PlayerState_MAX + 1;
 
-    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StudentState_descriptor();
+    const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PlayerState_descriptor();
     template<typename T>
-    inline const std::string& StudentState_Name(T enum_t_value)
+    inline const std::string& PlayerState_Name(T enum_t_value)
     {
-        static_assert(::std::is_same<T, StudentState>::value || ::std::is_integral<T>::value, "Incorrect type passed to function StudentState_Name.");
+        static_assert(::std::is_same<T, PlayerState>::value || ::std::is_integral<T>::value, "Incorrect type passed to function PlayerState_Name.");
         return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
-            StudentState_descriptor(), enum_t_value
+            PlayerState_descriptor(), enum_t_value
         );
     }
-    inline bool StudentState_Parse(
-        ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, StudentState* value
+    inline bool PlayerState_Parse(
+        ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, PlayerState* value
     )
     {
-        return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<StudentState>(
-            StudentState_descriptor(), name, value
+        return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<PlayerState>(
+            PlayerState_descriptor(), name, value
         );
     }
     enum TrickerBuffType : int
@@ -472,13 +480,13 @@ inline const EnumDescriptor* GetEnumDescriptor<::protobuf::StudentBuffType>()
     return ::protobuf::StudentBuffType_descriptor();
 }
 template<>
-struct is_proto_enum<::protobuf::StudentState> : ::std::true_type
+struct is_proto_enum<::protobuf::PlayerState> : ::std::true_type
 {
 };
 template<>
-inline const EnumDescriptor* GetEnumDescriptor<::protobuf::StudentState>()
+inline const EnumDescriptor* GetEnumDescriptor<::protobuf::PlayerState>()
 {
-    return ::protobuf::StudentState_descriptor();
+    return ::protobuf::PlayerState_descriptor();
 }
 template<>
 struct is_proto_enum<::protobuf::TrickerBuffType> : ::std::true_type

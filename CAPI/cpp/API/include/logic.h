@@ -102,8 +102,8 @@ private:
     // 供IAPI使用的操作相关的部分
     bool Move(int64_t time, double angle) override;
     bool PickProp(THUAI6::PropType prop) override;
-    bool UseProp() override;
-    bool UseSkill() override;
+    bool UseProp(THUAI6::PropType prop) override;
+    bool UseSkill(int32_t skillID) override;
 
     bool SendMessage(int64_t toID, std::string message) override;
     bool HaveMessage() override;
@@ -113,10 +113,10 @@ private:
 
     bool StartLearning() override;
 
-    bool StartHelpMate() override;
-    bool StartHealMate() override;
+    bool StartTreatMate() override;
+    bool StartRescueMate() override;
 
-    bool Trick(double angle) override;
+    bool Attack(double angle) override;
 
     bool WaitThread() override;
 

@@ -21,11 +21,12 @@ service AvailableService
     rpc StartLearning (IDMsg) returns (BoolRes); // 开始修理机器
     rpc StartRescueMate (IDMsg) returns (BoolRes); // 开始救人
     rpc StartTreatMate (IDMsg) returns (BoolRes);
-    rpc Trick (TrickMsg) returns (BoolRes); // 攻击
+    rpc Attack (AttackMsg) returns (BoolRes); // 攻击
     rpc Graduate (IDMsg) returns (BoolRes); // 相当于逃跑
     rpc OpenDoor (IDMsg) returns (BoolRes); // 开门
     rpc CloseDoor (IDMsg) returns (BoolRes); // 关门
     rpc SkipWindow (IDMsg) returns (BoolRes); // 窗户
     rpc StartOpenGate (IDMsg) returns (BoolRes); // 开闸门
+    rpc StartOpenChest (IDMsg) returns (BoolRes);
     rpc EndAllAction (IDMsg) returns (BoolRes); // 结束所有动作
 }

@@ -39,7 +39,7 @@ message SendMsg
     string message = 5;
 }
 
-message TrickMsg // 相当于攻击
+message AttackMsg // 相当于攻击
 {
     int64 player_id = 1;
     PlayerType player_type = 2;

@@ -122,7 +122,7 @@ namespace Gaming
                             {
                                 playerBeingShot.CanMove = true;
                             }
-                            playerBeingShot.IsResetting = false;
+                            playerBeingShot.IsDeceased = false;
                         }
                         )
                     { IsBackground = true }.Start();

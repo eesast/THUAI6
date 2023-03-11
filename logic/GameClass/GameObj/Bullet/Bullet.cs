@@ -38,7 +38,7 @@ namespace GameClass.GameObj
             return false;
         }
         public Bullet(Character player, int radius) :
-            base(player.Position, radius, PlaceType.Null, GameObjType.Bullet)
+            base(player.Position, radius, GameObjType.Bullet)
         {
             this.CanMove = true;
             this.moveSpeed = this.Speed;

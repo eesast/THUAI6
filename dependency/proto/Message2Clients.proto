@@ -10,8 +10,8 @@ message MessageOfStudent
     int32 y = 2;
     int32 speed = 3;
     int32 determination = 4; // 剩余的学习毅力，相当于血量
-    int32 fail_num = 5; // 挂科的科目数
-    double time_until_skill_available = 6;
+    //int32 fail_num = 5; // 挂科的科目数
+    repeated double time_until_skill_available = 6;
     PlaceType place = 7;
     repeated PropType prop = 8;
     PlayerState player_state = 9;
@@ -142,7 +142,6 @@ message MessageOfMap
         repeated PlaceType col = 1;
     }
     repeated Row row = 2;
-    repeated MessageOfMapObj map_obj_message = 3;
 }
 
 message MessageOfObj
@@ -154,6 +153,7 @@ message MessageOfObj
         MessageOfProp prop_message = 3;
         MessageOfBullet bullet_message = 4;
         MessageOfBombedBullet bombed_bullet_message = 5;
+        MessageOfMapObj map_obj_message = 6;
     }
 }
 

@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\dependency\proto\Protos.csproj" />
+    <ProjectReference Include="..\..\playback\Playback\Playback.csproj" />
     <ProjectReference Include="..\GameClass\GameClass.csproj" />
     <ProjectReference Include="..\GameEngine\GameEngine.csproj" />
     <ProjectReference Include="..\Gaming\Gaming.csproj" />

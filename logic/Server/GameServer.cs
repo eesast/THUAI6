@@ -82,8 +82,8 @@ namespace Server
         }
         public void StartGame()
         {
-            bool gameState = game.StartGame((int)options.GameTimeInSecond * 1000);
-            var waitHandle = new SemaphoreSlim(gameState == true ? 1 : 0);  // 注意修改
+            game.StartGame((int)options.GameTimeInSecond * 1000);
+            Thread.Sleep(1);
             new Thread(() =>
             {
                 bool flag = true;
@@ -109,13 +109,6 @@ namespace Server
                 ).Start();
             })
             { IsBackground = true }.Start();
-            new Thread(() =>
-            {
-                waitHandle.Wait();
-                this.endGameSem.Release();
-            })
-            { IsBackground = true }.Start();
-
         }
         public void WaitForEnd()
         {
@@ -136,9 +129,11 @@ namespace Server
         public void ReportGame(GameState gameState, bool requiredGaming = true)
         {
             var gameObjList = game.GetGameObj();
+            currentGameInfo = new();
             lock (messageToAllClientsLock)
             {
                 //currentGameInfo.MapMessage = (Messa(game.GameMap));
+                if (gameState == GameState.GameStart) currentGameInfo.MapMessage = MapMsg(game.GameMap.ProtoGameMap);
                 switch (gameState)
                 {
                     case GameState.GameRunning:
@@ -149,6 +144,7 @@ namespace Server
                             currentGameInfo.ObjMessage.Add(CopyInfo.Auto(gameObj));
                         }
                         currentGameInfo.GameState = gameState;
+                        currentGameInfo.AllMessage = new(); // 还没写
                         mwr?.WriteOne(currentGameInfo);
                         break;
                     default:
@@ -185,7 +181,24 @@ namespace Server
                 return true;
             return false;
         }
-        private MessageOfMap MapMsg(Map map)
+
+        private Protobuf.PlaceType IntToPlaceType(uint n)
+        {
+            switch (n)
+            {
+                case 0: return Protobuf.PlaceType.Land;
+                case 6: return Protobuf.PlaceType.Wall;
+                case 7: return Protobuf.PlaceType.Grass;
+                case 8: return Protobuf.PlaceType.Classroom;
+                case 9: return Protobuf.PlaceType.Gate;
+                case 10: return Protobuf.PlaceType.HiddenGate;
+                case 11: return Protobuf.PlaceType.Window;
+                case 12: return Protobuf.PlaceType.Door;
+                case 13: return Protobuf.PlaceType.Chest;
+                default: return Protobuf.PlaceType.NullPlaceType;
+            }
+        }
+        private MessageOfMap MapMsg(uint[, ] map)
         {
             MessageOfMap msgOfMap = new MessageOfMap();
             for (int i = 0; i < GameData.rows; i++)
@@ -193,7 +206,7 @@ namespace Server
                 msgOfMap.Row.Add(new MessageOfMap.Types.Row());
                 for (int j = 0; j < GameData.cols; j++)
                 {
-                    //msgOfMap.Row[i].Col.Add((int)map.ProtoGameMap[i, j]); int转placetype
+                    msgOfMap.Row[i].Col.Add(IntToPlaceType(map[i, j]));
                 }
             }
             return msgOfMap;
@@ -270,14 +283,13 @@ namespace Server
                 if (currentGameInfo != null)
                 {
                     await responseStream.WriteAsync(currentGameInfo);
-                    Console.WriteLine("Send!");
+                    //Console.WriteLine("Send!");
                 }
                 semaDict[request.PlayerId].Item2.Release();
             } while (game.GameMap.Timer.IsGaming);
         }
 
         public override Task<BoolRes> Attack(AttackMsg request, ServerCallContext context)
-
         {
             game.Attack(request.PlayerId, request.Angle);
             BoolRes boolRes = new();
@@ -292,7 +304,9 @@ namespace Server
 
         public override Task<MoveRes> Move(MoveMsg request, ServerCallContext context)
         {
+#if DEBUG
             Console.WriteLine($"Move ID: {request.PlayerId}, TimeInMilliseconds: {request.TimeInMilliseconds}");
+#endif            
             var gameID = communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId];
             game.MovePlayer(gameID, (int)request.TimeInMilliseconds, request.Angle);
             // 之后game.MovePlayer可能改为bool类型
@@ -336,7 +350,12 @@ namespace Server
         }
         public override Task<BoolRes> StartLearning(IDMsg request, ServerCallContext context)
         {
-            return base.StartLearning(request, context);
+#if DEBUG
+            Console.WriteLine($"StartLearning ID: {request.PlayerId}");
+#endif     
+            BoolRes boolRes = new();
+            boolRes.ActSuccess = game.Fix(request.PlayerId);
+            return Task.FromResult(boolRes);
         }
 
         public GameServer(ArgumentOptions options)

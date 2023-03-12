@@ -29,15 +29,15 @@ namespace ClientTest
 
             while (await call.ResponseStream.MoveNext())
             {
+                Console.WriteLine("hi");
                 var currentGameInfo = call.ResponseStream.Current;
-                if (playerInfo.PlayerType == PlayerType.StudentPlayer)
+                for (int i = 0; i < currentGameInfo.ObjMessage.Count; i++)
                 {
-                    for (int i = 0; i < currentGameInfo.ObjMessage.Count; i++)
-                    {
-                        //Console.WriteLine($"Human is at ({currentGameInfo.StudentMessage[i].X}, {currentGameInfo.StudentMessage[i].Y})");
-                    }
+                    if (currentGameInfo.ObjMessage[i].MessageOfObjCase == MessageOfObj.MessageOfObjOneofCase.StudentMessage )
+                        Console.WriteLine($"Human is at ({currentGameInfo.ObjMessage[i].StudentMessage.X}, {currentGameInfo.ObjMessage[i].StudentMessage.Y})");
                 }
             }
+            
         }
     }
 }

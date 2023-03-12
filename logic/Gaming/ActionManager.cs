@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using GameClass.GameObj;
@@ -38,7 +39,7 @@ namespace Gaming
 
             public bool Fix(Student player)// 自动检查有无发电机可修
             {
-                if (player.PlayerState != PlayerStateType.Null || player.IsGhost())
+                if (player.IsGhost() || (player.PlayerState != PlayerStateType.Null && player.PlayerState != PlayerStateType.IsMoving))
                     return false;
                 Generator? generatorForFix = null;
 
@@ -72,7 +73,7 @@ namespace Gaming
                       loopCondition: () => player.PlayerState == PlayerStateType.IsFixing && gameMap.Timer.IsGaming && generatorForFix.DegreeOfFRepair < GameData.degreeOfFixedGenerator && GameData.ApproachToInteract(player.Position, generatorForFix.Position),
                       loopToDo: () =>
                       {
-                          return !generatorForFix.Repair(player.FixSpeed * GameData.frameDuration);
+                          generatorForFix.Repair(player.FixSpeed * GameData.frameDuration);
                       },
                       timeInterval: GameData.frameDuration,
                       finallyReturn: () => 0

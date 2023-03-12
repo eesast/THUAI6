@@ -6,7 +6,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 所有物，具有主人（Parent）（特定玩家）属性的对象
     /// </summary>
-    public abstract class ObjOfCharacter : GameObj, IObjOfCharacter
+    public abstract class ObjOfCharacter : Moveable, IObjOfCharacter
     {
         private ICharacter? parent = null;  // 主人
         public ICharacter? Parent

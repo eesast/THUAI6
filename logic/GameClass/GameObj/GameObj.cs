@@ -7,13 +7,10 @@ namespace GameClass.GameObj
     /// <summary>
     /// 一切游戏元素的总基类，与THUAI4不同，继承IMoveable接口（出于一切物体其实都是可运动的指导思想）——LHR
     /// </summary>
-    public abstract class GameObj : IMoveable
+    public abstract class GameObj : IGameObj
     {
         protected readonly object gameObjLock = new();
-        /// <summary>
-        /// 可移动物体专用锁
-        /// </summary>
-        public object MoveLock => gameObjLock;
+        public object GameLock => gameObjLock;
 
         protected readonly XY birthPos;
 
@@ -38,7 +35,9 @@ namespace GameClass.GameObj
                 }
             }
         }
-        public abstract bool IsRigid { get; }
+
+        protected PlaceType place;
+        public PlaceType Place { get => place; }
 
         private XY facingDirection = new(1, 0);
         public XY FacingDirection
@@ -50,6 +49,9 @@ namespace GameClass.GameObj
                     facingDirection = value;
             }
         }
+
+        public abstract bool IsRigid { get; }
+
         public abstract ShapeType Shape { get; }
 
         private bool canMove;
@@ -61,19 +63,6 @@ namespace GameClass.GameObj
                 lock (gameObjLock)
                 {
                     canMove = value;
-                }
-            }
-        }
-
-        private bool isMoving;
-        public bool IsMoving
-        {
-            get => isMoving;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    isMoving = value;
                 }
             }
         }
@@ -90,77 +79,14 @@ namespace GameClass.GameObj
                 }
             }
         }
-        public bool IsAvailable => !IsMoving && CanMove && !IsResetting;  // 是否能接收指令
+
         public int Radius { get; }
 
-        protected int moveSpeed;
-        /// <summary>
-        /// 移动速度
-        /// </summary>
-        public int MoveSpeed
-        {
-            get => moveSpeed;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    moveSpeed = value;
-                }
-            }
-        }
-        /// <summary>
-        /// 原初移动速度
-        /// </summary>
-        public int OrgMoveSpeed { get; protected set; }
-
-        // 移动，改变坐标
-        public long Move(XY moveVec)
-        {
-            lock (gameObjLock)
-            {
-                FacingDirection = moveVec;
-                this.Position += moveVec;
-            }
-            return (long)(moveVec * moveVec);
-        }
-        /// <summary>
-        /// 设置位置
-        /// </summary>
-        /// <param name="newpos">新位置</param>
-        public void SetPosition(XY newpos)
-        {
-            Position = newpos;
-        }
-        /// <summary>
-        /// 设置移动速度
-        /// </summary>
-        /// <param name="newMoveSpeed">新速度</param>
-        public void SetMoveSpeed(int newMoveSpeed)
-        {
-            MoveSpeed = newMoveSpeed;
-        }
-        /// <summary>
-        /// 复活时数据重置
-        /// </summary>
-        public virtual void Reset()
-        {
-            lock (gameObjLock)
-            {
-                facingDirection = new XY(1, 0);
-                isMoving = false;
-                canMove = false;
-                isResetting = true;
-                this.position = birthPos;
-            }
-        }
-        /// <summary>
-        /// 为了使IgnoreCollide多态化并使GameObj能不报错地继承IMoveable
-        /// 在xfgg点播下设计了这个抽象辅助方法，在具体类中实现
         /// </summary>
         /// <returns> 依具体类及该方法参数而定，默认为false </returns>
         protected virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
 
-        bool IMoveable.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
+        bool IGameObj.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
         public GameObj(XY initPos, int initRadius, GameObjType initType)
         {
             this.Position = this.birthPos = initPos;

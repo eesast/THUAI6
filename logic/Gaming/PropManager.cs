@@ -110,7 +110,8 @@ namespace Gaming
                     if (player.PropInventory != null)  // 若角色原来有道具，则原始道具掉落在原地
                     {
                         dropProp = player.PropInventory;
-                        dropProp.SetNewPos(GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell));
+                        XY res = GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell);
+                        dropProp.ReSetPos(res, gameMap.GetPlaceType(res));
                     }
                     player.PropInventory = pickProp;
                     gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
@@ -151,7 +152,7 @@ namespace Gaming
                     return;
 
                 prop.CanMove = true;
-                prop.SetNewPos(player.Position);
+                prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
                 gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
                 try
                 {
@@ -187,16 +188,16 @@ namespace Gaming
                                     switch (r.Next(0, 4))
                                     {
                                         case 0:
-                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new AddLIFE(randPos));
+                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new AddLIFE(randPos, gameMap.GetPlaceType(randPos)));
                                             break;
                                         case 1:
-                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new AddSpeed(randPos));
+                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new AddSpeed(randPos, gameMap.GetPlaceType(randPos)));
                                             break;
                                         case 2:
-                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new Shield(randPos));
+                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new Shield(randPos, gameMap.GetPlaceType(randPos)));
                                             break;
                                         case 3:
-                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new Spear(randPos));
+                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new Spear(randPos, gameMap.GetPlaceType(randPos)));
                                             break;
                                         default:
                                             break;
@@ -230,11 +231,11 @@ namespace Gaming
                     }
                 );
                 availableCellForGenerateProp = new List<XY>();
-                for (int i = 0; i < gameMap.ProtoGameMap.GetLength(0); i++)
+                for (int i = 0; i < gameMap.protoGameMap.GetLength(0); i++)
                 {
-                    for (int j = 0; j < gameMap.ProtoGameMap.GetLength(1); j++)
+                    for (int j = 0; j < gameMap.protoGameMap.GetLength(1); j++)
                     {
-                        if (gameMap.ProtoGameMap[i, j] == (int)PlaceType.Null)
+                        if (gameMap.protoGameMap[i, j] == (int)PlaceType.Null)
                         {
                             availableCellForGenerateProp.Add(GameData.GetCellCenterPos(i, j));
                         }

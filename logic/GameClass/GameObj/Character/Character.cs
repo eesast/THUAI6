@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace GameClass.GameObj
 {
-    public partial class Character : GameObj, ICharacter  // 负责人LHR摆烂终了
+    public partial class Character : Moveable, ICharacter  // 负责人LHR摆烂终了
     {
         private readonly object beAttackedLock = new();
 
@@ -175,23 +175,55 @@ namespace GameClass.GameObj
             }
         }
 
+        private Dictionary<BgmType, double> bgmDictionary = new();
+        public Dictionary<BgmType, double> BgmDictionary
+        {
+            get => bgmDictionary;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    bgmDictionary = value;
+                }
+            }
+        }
+
+        private int alertnessRadius;
+        public int AlertnessRadius
+        {
+            get => alertnessRadius;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    alertnessRadius = value;
+                }
+            }
+        }
+
+        private double concealment;
+        public double Concealment
+        {
+            get => concealment;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    concealment = value;
+                }
+            }
+        }
+
         /// <summary>
-        /// 进行一次远程攻击
+        /// 进行一次攻击
         /// </summary>
-        /// <param name="posOffset">子弹初始位置偏差值</param>
         /// <returns>攻击操作发出的子弹</returns>
-        public Bullet? RemoteAttack(XY posOffset)
+        public Bullet? Attack(XY pos, PlaceType place)
         {
             if (TrySubBulletNum())
-                return ProduceOneBullet(this.Position + posOffset);
+                return BulletFactory.GetBullet(this, place, pos);
             else
                 return null;
-        }
-        protected Bullet? ProduceOneBullet(XY initPos)
-        {
-            var newBullet = BulletFactory.GetBullet(this);
-            newBullet?.SetPosition(initPos);
-            return newBullet;
         }
 
         /// <summary>
@@ -452,24 +484,24 @@ namespace GameClass.GameObj
             }
         }
         #endregion
-        public override void Reset()  // 要加锁吗？
-        {
-            lock (gameObjLock)
-            {
-                //         _ = AddDeathCount();
-                base.Reset();
-                this.MoveSpeed = OrgMoveSpeed;
-                HP = MaxHp;
-                PropInventory = null;
-                BulletOfPlayer = OriBulletOfPlayer;
-                lock (gameObjLock)
-                    bulletNum = maxBulletNum;
+        /*     public override void Reset()  // 要加锁吗？
+             {
+                 lock (gameObjLock)
+                 {
+                     //         _ = AddDeathCount();
+                     base.Reset();
+                     this.MoveSpeed = OrgMoveSpeed;
+                     HP = MaxHp;
+                     PropInventory = null;
+                     BulletOfPlayer = OriBulletOfPlayer;
+                     lock (gameObjLock)
+                         bulletNum = maxBulletNum;
 
-                buffManager.ClearAll();
-                IsInvisible = false;
-                this.Vampire = this.OriVampire;
-            }
-        }
+                     buffManager.ClearAll();
+                     IsInvisible = false;
+                     this.Vampire = this.OriVampire;
+                 }
+             }*/
         public void Die(PlayerStateType playerStateType)
         {
             lock (gameObjLock)
@@ -478,6 +510,7 @@ namespace GameClass.GameObj
                 CanMove = false;
                 IsResetting = true;
                 Position = GameData.PosWhoDie;
+                place = PlaceType.Grass;
             }
         }
 

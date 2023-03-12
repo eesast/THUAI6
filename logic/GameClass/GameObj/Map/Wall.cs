@@ -10,6 +10,7 @@ namespace GameClass.GameObj
         public Wall(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Wall)
         {
+            this.place = PlaceType.Wall;
             this.CanMove = false;
         }
         public override bool IsRigid => true;

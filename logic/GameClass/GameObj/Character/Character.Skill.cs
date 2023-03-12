@@ -53,16 +53,13 @@ namespace GameClass.GameObj
 
         public bool IsGhost()
         {
-            return this.CharacterType switch
-            {
-                CharacterType.Assassin => true,
-                _ => false,
-            };
+            return GameData.IsGhost(CharacterType);
         }
 
         protected Character(XY initPos, int initRadius, CharacterType characterType) :
             base(initPos, initRadius, GameObjType.Character)
         {
+            this.place = PlaceType.Null;
             this.CanMove = true;
             this.score = 0;
             this.propInventory = null;
@@ -88,6 +85,8 @@ namespace GameClass.GameObj
             this.bulletNum = maxBulletNum;
             this.bulletOfPlayer = Occupation.InitBullet;
             this.OriBulletOfPlayer = Occupation.InitBullet;
+            this.concealment = Occupation.Concealment;
+            this.alertnessRadius = Occupation.AlertnessRadius;
             this.characterType = characterType;
 
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)

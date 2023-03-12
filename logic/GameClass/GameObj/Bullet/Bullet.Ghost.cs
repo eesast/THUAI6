@@ -6,8 +6,8 @@ namespace GameClass.GameObj
 {
     internal sealed class CommonAttackOfGhost : Bullet
     {
-        public CommonAttackOfGhost(Character player, int radius = GameData.bulletRadius) :
-            base(player, radius)
+        public CommonAttackOfGhost(Character player, PlaceType placeType, XY pos, int radius = GameData.bulletRadius) :
+            base(player, radius, placeType, pos)
         {
         }
         public override double BulletBombRange => 0;
@@ -28,8 +28,8 @@ namespace GameClass.GameObj
     }
     internal sealed class FlyingKnife : Bullet
     {
-        public FlyingKnife(Character player, int radius = GameData.bulletRadius) :
-            base(player, radius)
+        public FlyingKnife(Character player, PlaceType placeType, XY pos, int radius = GameData.bulletRadius) :
+            base(player, radius, placeType, pos)
         {
         }
         public override double BulletBombRange => 0;
@@ -51,8 +51,8 @@ namespace GameClass.GameObj
 
     internal sealed class AtomBomb : Bullet
     {
-        public AtomBomb(Character player, int radius = GameData.bulletRadius) :
-            base(player, radius)
+        public AtomBomb(Character player, PlaceType placeType, XY pos, int radius = GameData.bulletRadius) :
+            base(player, radius, placeType, pos)
         {
         }
         public override double BulletBombRange => GameData.basicBulletBombRange / 3 * 7;
@@ -75,8 +75,8 @@ namespace GameClass.GameObj
 
     internal sealed class OrdinaryBullet : Bullet  // 1倍攻击范围，1倍攻击力，一倍速
     {
-        public OrdinaryBullet(Character player, int radius = GameData.bulletRadius) :
-            base(player, radius)
+        public OrdinaryBullet(Character player, PlaceType placeType, XY pos, int radius = GameData.bulletRadius) :
+            base(player, radius, placeType, pos)
         {
         }
         public override double BulletBombRange => GameData.basicBulletBombRange / 6 * 5;
@@ -98,8 +98,8 @@ namespace GameClass.GameObj
 
     internal sealed class FastBullet : Bullet  // 1倍攻击范围，0.2倍攻击力，2倍速
     {
-        public FastBullet(Character player, int radius = GameData.bulletRadius) :
-            base(player, radius)
+        public FastBullet(Character player, PlaceType placeType, XY pos, int radius = GameData.bulletRadius) :
+            base(player, radius, placeType, pos)
         {
         }
         public override double BulletBombRange => GameData.basicBulletBombRange / 4 * 2;
@@ -122,8 +122,8 @@ namespace GameClass.GameObj
 
     internal sealed class LineBullet : Bullet  // 直线爆炸，宽度1格，长度为2倍爆炸范围
     {
-        public LineBullet(Character player, int radius = GameData.bulletRadius) :
-            base(player, radius)
+        public LineBullet(Character player, PlaceType placeType, XY pos, int radius = GameData.bulletRadius) :
+            base(player, radius, placeType, pos)
         {
         }
         public override double BulletBombRange => GameData.basicBulletBombRange / 3 * 4;

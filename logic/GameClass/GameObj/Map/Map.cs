@@ -18,12 +18,13 @@ namespace GameClass.GameObj
         private Dictionary<GameObjType, ReaderWriterLockSlim> gameObjLockDict;
         public Dictionary<GameObjType, ReaderWriterLockSlim> GameObjLockDict => gameObjLockDict;
 
-        public readonly uint[,] ProtoGameMap;
-        public PlaceType GetPlaceType(GameObj obj)
+        public readonly uint[,] protoGameMap;
+        public uint[,] ProtoGameMap => protoGameMap;
+        public PlaceType GetPlaceType(IGameObj obj)
         {
             try
             {
-                return (PlaceType)ProtoGameMap[obj.Position.x / GameData.numOfPosGridPerCell, obj.Position.y / GameData.numOfPosGridPerCell];
+                return (PlaceType)protoGameMap[obj.Position.x / GameData.numOfPosGridPerCell, obj.Position.y / GameData.numOfPosGridPerCell];
             }
             catch
             {
@@ -35,7 +36,7 @@ namespace GameClass.GameObj
         {
             try
             {
-                return (PlaceType)ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell];
+                return (PlaceType)protoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell];
             }
             catch
             {
@@ -120,8 +121,8 @@ namespace GameClass.GameObj
                 }
             }
 
-            ProtoGameMap = new uint[mapResource.GetLength(0), mapResource.GetLength(1)];
-            Array.Copy(mapResource, ProtoGameMap, mapResource.Length);
+            protoGameMap = new uint[mapResource.GetLength(0), mapResource.GetLength(1)];
+            Array.Copy(mapResource, protoGameMap, mapResource.Length);
 
             birthPointList = new Dictionary<uint, XY>(GameData.numOfBirthPoint);
 

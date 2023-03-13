@@ -32,7 +32,7 @@ namespace Server
         protected readonly ArgumentOptions options;
         protected readonly Game game;
         private uint spectatorMinPlayerID = 2022;
-        private List<Tuple<PlayerType, uint>> spectatorList = new List<Tuple<PlayerType, uint>>();
+        private List<uint> spectatorList = new List<uint>();
         public int TeamCount => options.TeamCount;
         protected long[,] communicationToGameID;  // 通信用的ID映射到游戏内的ID,[i,j]表示team：i，player：j的id。
         private readonly object messageToAllClientsLock = new();
@@ -163,21 +163,19 @@ namespace Server
             }
         }
 
-        private int PlayerTypeToTeamID(PlayerType playerType)
+        private int PlayerIDToTeamID(long playerID)
         {
-            if (playerType == PlayerType.StudentPlayer) return 0;
-            if (playerType == PlayerType.TrickerPlayer) return 1;
+            if (0 <= playerID && playerID < options.PlayerCountPerTeam) return 0;
+            if (playerID == options.PlayerCountPerTeam) return 1;
             return -1;
         }
-        private uint GetBirthPointIdx(PlayerType playerType, long playerID)  // 获取出生点位置
+        private uint GetBirthPointIdx(long playerID)  // 获取出生点位置
         {
-            return (uint)((PlayerTypeToTeamID(playerType) * options.PlayerCountPerTeam) + playerID + 1);
+            return (uint)(playerID + 1);
         }
-        private bool ValidPlayerTypeAndPlayerID(PlayerType playerType, long playerID)
+        private bool ValidPlayerID(long playerID)
         {
-            if (playerType == PlayerType.StudentPlayer && 0 <= playerID && playerID < options.PlayerCountPerTeam)
-                return true; // 人数待修改
-            if (playerType == PlayerType.TrickerPlayer && 0 <= playerID && playerID < options.PlayerCountPerTeam)
+            if (0 <= playerID && playerID < options.PlayerCountPerTeam + 1)
                 return true;
             return false;
         }
@@ -232,10 +230,10 @@ namespace Server
         public override async Task AddPlayer(PlayerMsg request, IServerStreamWriter<MessageToClient> responseStream, ServerCallContext context)
         {
             Console.WriteLine($"AddPlayer: {request.PlayerId}");
-            if (request.PlayerId >= spectatorMinPlayerID && request.PlayerType == PlayerType.NullPlayerType)
+            if (request.PlayerId >= spectatorMinPlayerID)
             {
                 // 观战模式
-                Tuple<PlayerType, uint> tp = new Tuple<PlayerType, uint>(request.PlayerType, (uint)request.PlayerId);
+                uint tp = (uint) request.PlayerId;
                 if (!spectatorList.Contains(tp))
                 {
                     spectatorList.Add(tp);
@@ -246,7 +244,7 @@ namespace Server
 
             if (game.GameMap.Timer.IsGaming)
                 return;
-            if (!ValidPlayerTypeAndPlayerID(request.PlayerType, request.PlayerId))  //玩家id是否正确
+            if (!ValidPlayerID(request.PlayerId))  //玩家id是否正确
                 return;
             //if (communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId] != GameObj.invalidID)  //是否已经添加了该玩家
             //return;
@@ -255,15 +253,15 @@ namespace Server
 
             lock (addPlayerLock)
             {
-                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(request.PlayerType, request.PlayerId), PlayerTypeToTeamID(request.PlayerType), request.PlayerId, characterType);
+                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(request.PlayerId), PlayerIDToTeamID(request.PlayerId), request.PlayerId, characterType);
                 long newPlayerID = game.AddPlayer(playerInitInfo);
                 if (newPlayerID == GameObj.invalidID)
                     return;
-                communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId] = newPlayerID;
+                communicationToGameID[PlayerIDToTeamID(request.PlayerId), request.PlayerId] = newPlayerID;
                 // 内容待修改
                 var temp = (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1));
                 bool start = false;
-                Console.WriteLine($"PlayerType: {request.PlayerType} Id: {request.PlayerId} joins.");
+                Console.WriteLine($"Id: {request.PlayerId} joins.");
                 lock (semaDict)
                 {
                     semaDict.Add(request.PlayerId, temp);
@@ -307,7 +305,7 @@ namespace Server
 #if DEBUG
             Console.WriteLine($"Move ID: {request.PlayerId}, TimeInMilliseconds: {request.TimeInMilliseconds}");
 #endif            
-            var gameID = communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId];
+            var gameID = communicationToGameID[PlayerIDToTeamID(request.PlayerId), request.PlayerId];
             game.MovePlayer(gameID, (int)request.TimeInMilliseconds, request.Angle);
             // 之后game.MovePlayer可能改为bool类型
             MoveRes moveRes = new();

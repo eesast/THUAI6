@@ -12,12 +12,10 @@ namespace ClientTest
             var client = new AvailableService.AvailableServiceClient(channel);
             PlayerMsg playerInfo = new();
             playerInfo.PlayerId = 0;
-            playerInfo.PlayerType = PlayerType.StudentPlayer;
             playerInfo.StudentType = StudentType.NullStudentType;
             var call = client.AddPlayer(playerInfo);
             MoveMsg moveMsg = new();
             moveMsg.PlayerId = 0;
-            moveMsg.PlayerType = PlayerType.StudentPlayer;
             moveMsg.TimeInMilliseconds = 100;
             moveMsg.Angle = 0;
             while (true)

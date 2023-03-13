@@ -150,7 +150,7 @@ namespace Gaming
 
                                 finally
                                 {
-                                    gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                                    gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
                                 }
                             },
                         timeInterval: GameData.checkInterval,

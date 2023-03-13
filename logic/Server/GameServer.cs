@@ -32,7 +32,7 @@ namespace Server
         protected readonly ArgumentOptions options;
         protected readonly Game game;
         private uint spectatorMinPlayerID = 2022;
-        private List<Tuple<PlayerType, uint>> spectatorList = new List<Tuple<PlayerType, uint>>();
+        private List<uint> spectatorList = new List<uint>();
         public int TeamCount => options.TeamCount;
         protected long[,] communicationToGameID;  // 通信用的ID映射到游戏内的ID,[i,j]表示team：i，player：j的id。
         private readonly object messageToAllClientsLock = new();
@@ -82,8 +82,8 @@ namespace Server
         }
         public void StartGame()
         {
-            bool gameState = game.StartGame((int)options.GameTimeInSecond * 1000);
-            var waitHandle = new SemaphoreSlim(gameState == true ? 1 : 0);  // 注意修改
+            game.StartGame((int)options.GameTimeInSecond * 1000);
+            Thread.Sleep(1);
             new Thread(() =>
             {
                 bool flag = true;
@@ -109,13 +109,6 @@ namespace Server
                 ).Start();
             })
             { IsBackground = true }.Start();
-            new Thread(() =>
-            {
-                waitHandle.Wait();
-                this.endGameSem.Release();
-            })
-            { IsBackground = true }.Start();
-
         }
         public void WaitForEnd()
         {
@@ -136,9 +129,11 @@ namespace Server
         public void ReportGame(GameState gameState, bool requiredGaming = true)
         {
             var gameObjList = game.GetGameObj();
+            currentGameInfo = new();
             lock (messageToAllClientsLock)
             {
                 //currentGameInfo.MapMessage = (Messa(game.GameMap));
+                if (gameState == GameState.GameStart) currentGameInfo.MapMessage = MapMsg(game.GameMap.ProtoGameMap);
                 switch (gameState)
                 {
                     case GameState.GameRunning:
@@ -149,6 +144,7 @@ namespace Server
                             currentGameInfo.ObjMessage.Add(CopyInfo.Auto(gameObj));
                         }
                         currentGameInfo.GameState = gameState;
+                        currentGameInfo.AllMessage = new(); // 还没写
                         mwr?.WriteOne(currentGameInfo);
                         break;
                     default:
@@ -167,25 +163,40 @@ namespace Server
             }
         }
 
-        private int PlayerTypeToTeamID(PlayerType playerType)
+        private int PlayerIDToTeamID(long playerID)
         {
-            if (playerType == PlayerType.StudentPlayer) return 0;
-            if (playerType == PlayerType.TrickerPlayer) return 1;
+            if (0 <= playerID && playerID < options.PlayerCountPerTeam) return 0;
+            if (playerID == options.PlayerCountPerTeam) return 1;
             return -1;
         }
-        private uint GetBirthPointIdx(PlayerType playerType, long playerID)  // 获取出生点位置
+        private uint GetBirthPointIdx(long playerID)  // 获取出生点位置
         {
-            return (uint)((PlayerTypeToTeamID(playerType) * options.PlayerCountPerTeam) + playerID + 1);
+            return (uint)(playerID + 1);
         }
-        private bool ValidPlayerTypeAndPlayerID(PlayerType playerType, long playerID)
+        private bool ValidPlayerID(long playerID)
         {
-            if (playerType == PlayerType.StudentPlayer && 0 <= playerID && playerID < options.PlayerCountPerTeam)
-                return true; // 人数待修改
-            if (playerType == PlayerType.TrickerPlayer && 0 <= playerID && playerID < options.PlayerCountPerTeam)
+            if (0 <= playerID && playerID < options.PlayerCountPerTeam + 1)
                 return true;
             return false;
         }
-        private MessageOfMap MapMsg(Map map)
+
+        private Protobuf.PlaceType IntToPlaceType(uint n)
+        {
+            switch (n)
+            {
+                case 0: return Protobuf.PlaceType.Land;
+                case 6: return Protobuf.PlaceType.Wall;
+                case 7: return Protobuf.PlaceType.Grass;
+                case 8: return Protobuf.PlaceType.Classroom;
+                case 9: return Protobuf.PlaceType.Gate;
+                case 10: return Protobuf.PlaceType.HiddenGate;
+                case 11: return Protobuf.PlaceType.Window;
+                case 12: return Protobuf.PlaceType.Door;
+                case 13: return Protobuf.PlaceType.Chest;
+                default: return Protobuf.PlaceType.NullPlaceType;
+            }
+        }
+        private MessageOfMap MapMsg(uint[,] map)
         {
             MessageOfMap msgOfMap = new MessageOfMap();
             for (int i = 0; i < GameData.rows; i++)
@@ -193,7 +204,7 @@ namespace Server
                 msgOfMap.Row.Add(new MessageOfMap.Types.Row());
                 for (int j = 0; j < GameData.cols; j++)
                 {
-                    //msgOfMap.Row[i].Col.Add((int)map.ProtoGameMap[i, j]); int转placetype
+                    msgOfMap.Row[i].Col.Add(IntToPlaceType(map[i, j]));
                 }
             }
             return msgOfMap;
@@ -219,10 +230,10 @@ namespace Server
         public override async Task AddPlayer(PlayerMsg request, IServerStreamWriter<MessageToClient> responseStream, ServerCallContext context)
         {
             Console.WriteLine($"AddPlayer: {request.PlayerId}");
-            if (request.PlayerId >= spectatorMinPlayerID && request.PlayerType == PlayerType.NullPlayerType)
+            if (request.PlayerId >= spectatorMinPlayerID)
             {
                 // 观战模式
-                Tuple<PlayerType, uint> tp = new Tuple<PlayerType, uint>(request.PlayerType, (uint)request.PlayerId);
+                uint tp = (uint)request.PlayerId;
                 if (!spectatorList.Contains(tp))
                 {
                     spectatorList.Add(tp);
@@ -233,7 +244,7 @@ namespace Server
 
             if (game.GameMap.Timer.IsGaming)
                 return;
-            if (!ValidPlayerTypeAndPlayerID(request.PlayerType, request.PlayerId))  //玩家id是否正确
+            if (!ValidPlayerID(request.PlayerId))  //玩家id是否正确
                 return;
             //if (communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId] != GameObj.invalidID)  //是否已经添加了该玩家
             //return;
@@ -242,15 +253,15 @@ namespace Server
 
             lock (addPlayerLock)
             {
-                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(request.PlayerType, request.PlayerId), PlayerTypeToTeamID(request.PlayerType), request.PlayerId, characterType);
+                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(request.PlayerId), PlayerIDToTeamID(request.PlayerId), request.PlayerId, characterType);
                 long newPlayerID = game.AddPlayer(playerInitInfo);
                 if (newPlayerID == GameObj.invalidID)
                     return;
-                communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId] = newPlayerID;
+                communicationToGameID[PlayerIDToTeamID(request.PlayerId), request.PlayerId] = newPlayerID;
                 // 内容待修改
                 var temp = (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1));
                 bool start = false;
-                Console.WriteLine($"PlayerType: {request.PlayerType} Id: {request.PlayerId} joins.");
+                Console.WriteLine($"Id: {request.PlayerId} joins.");
                 lock (semaDict)
                 {
                     semaDict.Add(request.PlayerId, temp);
@@ -270,14 +281,13 @@ namespace Server
                 if (currentGameInfo != null)
                 {
                     await responseStream.WriteAsync(currentGameInfo);
-                    Console.WriteLine("Send!");
+                    //Console.WriteLine("Send!");
                 }
                 semaDict[request.PlayerId].Item2.Release();
             } while (game.GameMap.Timer.IsGaming);
         }
 
         public override Task<BoolRes> Attack(AttackMsg request, ServerCallContext context)
-
         {
             game.Attack(request.PlayerId, request.Angle);
             BoolRes boolRes = new();
@@ -292,8 +302,10 @@ namespace Server
 
         public override Task<MoveRes> Move(MoveMsg request, ServerCallContext context)
         {
-            Console.WriteLine($"SetPos ID: {request.PlayerId}, TimeInMilliseconds: {request.TimeInMilliseconds}");
-            var gameID = communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId];
+#if DEBUG
+            Console.WriteLine($"Move ID: {request.PlayerId}, TimeInMilliseconds: {request.TimeInMilliseconds}");
+#endif            
+            var gameID = communicationToGameID[PlayerIDToTeamID(request.PlayerId), request.PlayerId];
             game.MovePlayer(gameID, (int)request.TimeInMilliseconds, request.Angle);
             // 之后game.MovePlayer可能改为bool类型
             MoveRes moveRes = new();
@@ -336,7 +348,12 @@ namespace Server
         }
         public override Task<BoolRes> StartLearning(IDMsg request, ServerCallContext context)
         {
-            return base.StartLearning(request, context);
+#if DEBUG
+            Console.WriteLine($"StartLearning ID: {request.PlayerId}");
+#endif     
+            BoolRes boolRes = new();
+            boolRes.ActSuccess = game.Fix(request.PlayerId);
+            return Task.FromResult(boolRes);
         }
 
         public GameServer(ArgumentOptions options)

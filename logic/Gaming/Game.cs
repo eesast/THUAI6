@@ -150,7 +150,7 @@ namespace Gaming
 
                                 finally
                                 {
-                                    gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                                    gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
                                 }
                             },
                         timeInterval: GameData.checkInterval,
@@ -180,10 +180,17 @@ namespace Gaming
             propManager.StartProducing();
 
             // 开始游戏
-            if (!gameMap.Timer.StartGame(milliSeconds))
-                return false;
+            new Thread
+            (
+                () =>
+                {
+                    if (!gameMap.Timer.StartGame(milliSeconds))
+                        return;
 
-            EndGame();  // 游戏结束时要做的事
+                    EndGame();  // 游戏结束时要做的事
+                }
+            )
+            { IsBackground = true }.Start();
 
             return true;
         }

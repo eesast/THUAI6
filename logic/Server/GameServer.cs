@@ -196,7 +196,7 @@ namespace Server
                 default: return Protobuf.PlaceType.NullPlaceType;
             }
         }
-        private MessageOfMap MapMsg(uint[, ] map)
+        private MessageOfMap MapMsg(uint[,] map)
         {
             MessageOfMap msgOfMap = new MessageOfMap();
             for (int i = 0; i < GameData.rows; i++)
@@ -233,7 +233,7 @@ namespace Server
             if (request.PlayerId >= spectatorMinPlayerID)
             {
                 // 观战模式
-                uint tp = (uint) request.PlayerId;
+                uint tp = (uint)request.PlayerId;
                 if (!spectatorList.Contains(tp))
                 {
                     spectatorList.Add(tp);

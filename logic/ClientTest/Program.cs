@@ -31,11 +31,11 @@ namespace ClientTest
                 var currentGameInfo = call.ResponseStream.Current;
                 for (int i = 0; i < currentGameInfo.ObjMessage.Count; i++)
                 {
-                    if (currentGameInfo.ObjMessage[i].MessageOfObjCase == MessageOfObj.MessageOfObjOneofCase.StudentMessage )
+                    if (currentGameInfo.ObjMessage[i].MessageOfObjCase == MessageOfObj.MessageOfObjOneofCase.StudentMessage)
                         Console.WriteLine($"Human is at ({currentGameInfo.ObjMessage[i].StudentMessage.X}, {currentGameInfo.ObjMessage[i].StudentMessage.Y})");
                 }
             }
-            
+
         }
     }
 }

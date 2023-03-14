@@ -1,5 +1,4 @@
-﻿using GameClass.Skill;
-using Preparation.Utility;
+﻿using Preparation.Utility;
 using Preparation.Interface;
 
 namespace GameClass.GameObj
@@ -39,20 +38,6 @@ namespace GameClass.GameObj
             }
         }
         public int OrgTreatSpeed { get; protected set; } = GameData.basicTreatSpeed;
-
-        protected int rescueSpeed = GameData.basicRescueSpeed;
-        public int RescueSpeed
-        {
-            get => rescueSpeed;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    rescueSpeed = value;
-                }
-            }
-        }
-        public int OrgRescueSpeed { get; protected set; } = GameData.basicRescueSpeed;
 
         public int MaxGamingAddiction { get; protected set; }
         private int gamingAddiction;

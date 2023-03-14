@@ -59,7 +59,6 @@ namespace GameClass.GameObj
         {
             get
             {
-                if (IsResetting) return PlayerStateType.IsDeceased;
                 if (IsMoving) return PlayerStateType.IsMoving;
                 return playerState;
             }
@@ -213,6 +212,21 @@ namespace GameClass.GameObj
                 }
             }
         }
+
+        private int timeOfOpeningOrLocking;
+        public int TimeOfOpeningOrLocking
+        {
+            get => timeOfOpeningOrLocking;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    timeOfOpeningOrLocking = value;
+                }
+            }
+        }
+
+
 
         /// <summary>
         /// 进行一次攻击

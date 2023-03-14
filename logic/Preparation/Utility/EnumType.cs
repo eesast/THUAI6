@@ -20,7 +20,7 @@ namespace Preparation.Utility
         IsStunned = 11,
         IsTryingToAttack = 12,//指前摇
         IsLockingTheDoor = 13,
-        IsRummagingInTheDrawer = 14,
+        IsRummagingInTheChest = 14,
         IsClimbingThroughWindows = 15,
     }
     public enum GameObjType
@@ -120,6 +120,7 @@ namespace Preparation.Utility
         EmergencyExit = 10,
         Window = 11,
         Door = 12,
+        Chest = 13,
     }
     public enum BgmType
     {

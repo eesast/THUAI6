@@ -340,7 +340,7 @@ namespace Gaming
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                return skillManager.UseActiveSkill(this.GameMap, player, activeSkillType);
+                return skillManager.UseActiveSkill(player, activeSkillType);
             }
             else
                 return false;
@@ -355,7 +355,7 @@ namespace Gaming
             {
                 foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
                 {
-                    skillManager.UseAllPassiveSkill(this.GameMap, player);
+                    skillManager.UseAllPassiveSkill(player);
                 }
             }
             finally
@@ -446,10 +446,10 @@ namespace Gaming
                 teamList.Add(new Team());
             }
 
-            skillManager = new SkillManager();
             attackManager = new AttackManager(gameMap);
             actionManager = new ActionManager(gameMap);
             propManager = new PropManager(gameMap);
+            skillManager = new SkillManager(gameMap, actionManager, attackManager, propManager);
         }
     }
 }

@@ -12,12 +12,10 @@ namespace ClientTest
             var client = new AvailableService.AvailableServiceClient(channel);
             PlayerMsg playerInfo = new();
             playerInfo.PlayerId = 0;
-            playerInfo.PlayerType = PlayerType.StudentPlayer;
             playerInfo.StudentType = StudentType.NullStudentType;
             var call = client.AddPlayer(playerInfo);
             MoveMsg moveMsg = new();
             moveMsg.PlayerId = 0;
-            moveMsg.PlayerType = PlayerType.StudentPlayer;
             moveMsg.TimeInMilliseconds = 100;
             moveMsg.Angle = 0;
             while (true)
@@ -29,15 +27,15 @@ namespace ClientTest
 
             while (await call.ResponseStream.MoveNext())
             {
+                Console.WriteLine("hi");
                 var currentGameInfo = call.ResponseStream.Current;
-                if (playerInfo.PlayerType == PlayerType.StudentPlayer)
+                for (int i = 0; i < currentGameInfo.ObjMessage.Count; i++)
                 {
-                    for (int i = 0; i < currentGameInfo.ObjMessage.Count; i++)
-                    {
-                        //Console.WriteLine($"Human is at ({currentGameInfo.StudentMessage[i].X}, {currentGameInfo.StudentMessage[i].Y})");
-                    }
+                    if (currentGameInfo.ObjMessage[i].MessageOfObjCase == MessageOfObj.MessageOfObjOneofCase.StudentMessage)
+                        Console.WriteLine($"Human is at ({currentGameInfo.ObjMessage[i].StudentMessage.X}, {currentGameInfo.ObjMessage[i].StudentMessage.Y})");
                 }
             }
+
         }
     }
 }

@@ -179,6 +179,7 @@ namespace Gaming
 
             propManager.StartProducing();
 
+            // 开始游戏
             new Thread
             (
                 () =>

@@ -37,7 +37,7 @@ message MessageOfTricker
     int32 y = 2;
     int32 speed = 3;
     int32 damage = 4; // 对学生造成的心理伤害
-    double time_until_skill_available = 5;
+    repeated double time_until_skill_available = 5;
     PlaceType place = 6;
     repeated PropType prop = 7;
     TrickerType tricker_type = 8;

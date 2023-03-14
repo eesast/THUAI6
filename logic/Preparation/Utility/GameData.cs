@@ -56,7 +56,6 @@ namespace Preparation.Utility
         public const int basicApOfGhost = 1500000;                             // 攻击力
         public const int basicTreatSpeed = 100;
         public const int basicFixSpeed = 100;
-        public const int basicRescueSpeed = 100;
         public const int basicMaxGamingAddiction = 60000;//基本完全沉迷时间
         public const int BeginGamingAddiction = 10003;
         public const int MidGamingAddiction = 30000;
@@ -73,11 +72,12 @@ namespace Preparation.Utility
         public const double basicRemoteAttackRange = 9000;  // 基本远程攻击范围
         public const double basicAttackShortRange = 2700;                 // 基本近程攻击范围
         public const double basicBulletBombRange = 3000;             // 基本子弹爆炸范围
-        public const int basicMoveSpeed = 3800;                      // 基本移动速度，单位：s-1
-        public const int basicBulletMoveSpeed = 5400;                // 基本子弹移动速度，单位：s-1
+        public const int basicMoveSpeed = 1260;                      // 基本移动速度，单位：s-1
+        public const int basicBulletMoveSpeed = 2700;                // 基本子弹移动速度，单位：s-1
         public const int characterMaxSpeed = 12000;                  // 最大速度
         public const double basicConcealment = 1.0;
         public const int basicAlertnessRadius = 30700;
+        public const int basicTimeOfOpeningOrLocking = 3000;
         public const int addScoreWhenKillOneLevelPlayer = 30;        // 击杀一级角色获得的加分
         public const int commonSkillCD = 30000;                      // 普通技能标准冷却时间
         public const int commonSkillTime = 10000;                    // 普通技能标准持续时间
@@ -106,7 +106,6 @@ namespace Preparation.Utility
         public const long PropProduceTime = 10000;
         public const int PropDuration = 10000;
         #endregion
-
         #region 物体相关
         public const int degreeOfFixedGenerator = 10300000;
         #endregion

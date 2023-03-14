@@ -28,7 +28,7 @@ namespace Gaming
                 if (player.PlayerState == PlayerStateType.IsRescuing || player.PlayerState == PlayerStateType.IsRescued
                     || player.PlayerState == PlayerStateType.IsFixing || player.PlayerState == PlayerStateType.IsMoving
                     || player.PlayerState == PlayerStateType.IsTreated || player.PlayerState == PlayerStateType.IsTreating
-                    || player.PlayerState == PlayerStateType.IsRummagingInTheDrawer || player.PlayerState == PlayerStateType.IsLockingTheDoor
+                    || player.PlayerState == PlayerStateType.IsRummagingInTheChest || player.PlayerState == PlayerStateType.IsLockingTheDoor
                     || player.PlayerState == PlayerStateType.IsClimbingThroughWindows)
                 {
                     player.PlayerState = PlayerStateType.Null;

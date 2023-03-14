@@ -1,5 +1,4 @@
-﻿using GameClass.Skill;
-using Preparation.Interface;
+﻿using Preparation.Interface;
 using Preparation.Utility;
 using System;
 using System.Collections.Generic;

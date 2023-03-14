@@ -14,6 +14,7 @@ namespace Preparation.Interface
         public List<PassiveSkillType> ListOfIPassiveSkill { get; }
         public double Concealment { get; }
         public int AlertnessRadius { get; }
+        public int TimeOfOpeningOrLocking { get; }
     }
 
     public interface IGhost : IOccupation
@@ -49,6 +50,9 @@ namespace Preparation.Interface
 
         public int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.3);
         public int AlertnessRadius => alertnessRadius;
+
+        public int timeOfOpeningOrLocking = GameData.basicTimeOfOpeningOrLocking;
+        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
     }
     public class Athlete : IStudent
     {
@@ -77,5 +81,8 @@ namespace Preparation.Interface
 
         public const int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
         public int AlertnessRadius => alertnessRadius;
+
+        public int timeOfOpeningOrLocking = GameData.basicTimeOfOpeningOrLocking;
+        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
     }
 }

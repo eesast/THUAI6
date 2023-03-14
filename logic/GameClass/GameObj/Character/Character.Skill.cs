@@ -1,5 +1,4 @@
-﻿using GameClass.Skill;
-using Preparation.Utility;
+﻿using Preparation.Utility;
 using Preparation.Interface;
 using System.Collections.Generic;
 using System;
@@ -35,20 +34,6 @@ namespace GameClass.GameObj
                 return true;
             }
             return false;
-        }
-
-        public bool UseActiveSkill(Map map, ActiveSkillType activeSkillType)
-        {
-            if (Occupation.ListOfIActiveSkill.Contains(activeSkillType))
-                return ActiveSkillFactory.FindIActiveSkill(activeSkillType).SkillEffect(map, this);
-            return false;
-        }
-
-        public void UsePassiveSkill(Map map, PassiveSkillType passiveSkillType)
-        {
-            if (Occupation.ListOfIPassiveSkill.Contains(passiveSkillType))
-                PassiveSkillFactory.FindIPassiveSkill(passiveSkillType).SkillEffect(map, this);
-            return;
         }
 
         public bool IsGhost()

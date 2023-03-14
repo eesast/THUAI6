@@ -34,7 +34,7 @@ namespace Server
         private uint spectatorMinPlayerID = 2022;
         private List<uint> spectatorList = new List<uint>();
         public int TeamCount => options.TeamCount;
-        protected long[,] communicationToGameID;  // 通信用的ID映射到游戏内的ID,[i,j]表示team：i，player：j的id。
+        protected long[] communicationToGameID;  // 通信用的ID映射到游戏内的ID
         private readonly object messageToAllClientsLock = new();
         public static readonly long SendMessageToClientIntervalInMilliseconds = 50;
         private readonly Semaphore endGameInfoSema = new(0, 1);
@@ -257,7 +257,7 @@ namespace Server
                 long newPlayerID = game.AddPlayer(playerInitInfo);
                 if (newPlayerID == GameObj.invalidID)
                     return;
-                communicationToGameID[PlayerIDToTeamID(request.PlayerId), request.PlayerId] = newPlayerID;
+                communicationToGameID[request.PlayerId] = newPlayerID;
                 // 内容待修改
                 var temp = (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1));
                 bool start = false;
@@ -305,7 +305,7 @@ namespace Server
 #if DEBUG
             Console.WriteLine($"Move ID: {request.PlayerId}, TimeInMilliseconds: {request.TimeInMilliseconds}");
 #endif            
-            var gameID = communicationToGameID[PlayerIDToTeamID(request.PlayerId), request.PlayerId];
+            var gameID = communicationToGameID[request.PlayerId];
             game.MovePlayer(gameID, (int)request.TimeInMilliseconds, request.Angle);
             // 之后game.MovePlayer可能改为bool类型
             MoveRes moveRes = new();
@@ -352,7 +352,8 @@ namespace Server
             Console.WriteLine($"StartLearning ID: {request.PlayerId}");
 #endif     
             BoolRes boolRes = new();
-            boolRes.ActSuccess = game.Fix(request.PlayerId);
+            var gameID = communicationToGameID[request.PlayerId];
+            boolRes.ActSuccess = game.Fix(gameID);
             return Task.FromResult(boolRes);
         }
 
@@ -404,15 +405,9 @@ namespace Server
                 }
                 finally { this.game = new Game(map, options.TeamCount); }
             }
-            communicationToGameID = new long[options.TeamCount, options.PlayerCountPerTeam];
+            communicationToGameID = new long[options.PlayerCountPerTeam + 1];
             //创建server时先设定待加入人物都是invalid
-            for (int i = 0; i < communicationToGameID.GetLength(0); i++)
-            {
-                for (int j = 0; j < communicationToGameID.GetLength(1); j++)
-                {
-                    communicationToGameID[i, j] = GameObj.invalidID;
-                }
-            }
+            for (int i = 0; i < communicationToGameID.GetLength(0); i++) communicationToGameID[i] = GameObj.invalidID;
 
             if (options.FileName != DefaultArgumentOptions.FileName)
             {

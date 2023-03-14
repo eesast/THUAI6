@@ -11,6 +11,7 @@ namespace GameClass.GameObj
         public OutOfBoundBlock(XY initPos) :
             base(initPos, int.MaxValue, GameObjType.OutOfBoundBlock)
         {
+            this.place = PlaceType.Wall;
             this.CanMove = false;
         }
 

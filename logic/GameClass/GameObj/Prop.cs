@@ -21,15 +21,12 @@ namespace GameClass.GameObj
 
         public abstract PropType GetPropType();
 
-        public Prop(XY initPos, int radius = GameData.PropRadius) :
+        public Prop(XY initPos, PlaceType place, int radius = GameData.PropRadius) :
             base(initPos, radius, GameObjType.Prop)
         {
+            this.place = place;
             this.CanMove = false;
             this.moveSpeed = GameData.PropMoveSpeed;
-        }
-        public void SetNewPos(XY pos)
-        {
-            this.Position = pos;
         }
     }
 
@@ -48,8 +45,8 @@ namespace GameClass.GameObj
     /// </summary>
     public sealed class AddSpeed : Prop
     {
-        public AddSpeed(XY initPos) :
-            base(initPos)
+        public AddSpeed(XY initPos, PlaceType placeType) :
+            base(initPos, placeType)
         {
         }
         public override PropType GetPropType() => PropType.addSpeed;
@@ -59,8 +56,8 @@ namespace GameClass.GameObj
     /// </summary>
     public sealed class AddLIFE : Prop
     {
-        public AddLIFE(XY initPos) :
-            base(initPos)
+        public AddLIFE(XY initPos, PlaceType placeType) :
+            base(initPos, placeType)
         {
         }
         public override PropType GetPropType() => PropType.addLIFE;
@@ -70,8 +67,7 @@ namespace GameClass.GameObj
     /// </summary>
     public sealed class Shield : Prop
     {
-        public Shield(XY initPos) :
-            base(initPos)
+        public Shield(XY initPos, PlaceType placeType) : base(initPos, placeType)
         {
         }
         public override PropType GetPropType() => PropType.Shield;
@@ -81,8 +77,7 @@ namespace GameClass.GameObj
     /// </summary>
     public sealed class Spear : Prop
     {
-        public Spear(XY initPos) :
-            base(initPos)
+        public Spear(XY initPos, PlaceType placeType) : base(initPos, placeType)
         {
         }
         public override PropType GetPropType() => PropType.Spear;

@@ -20,6 +20,18 @@ namespace GameEngine
 
         private readonly ITimer gameTimer;
         private readonly Action<IMoveable> EndMove;
+        public readonly uint[,] ProtoGameMap;
+        public PlaceType GetPlaceType(XY Position)
+        {
+            try
+            {
+                return (PlaceType)ProtoGameMap[Position.x / GameData.numOfPosGridPerCell, Position.y / GameData.numOfPosGridPerCell];
+            }
+            catch
+            {
+                return PlaceType.Null;
+            }
+        }
         private readonly CollisionChecker collisionChecker;
         private readonly Func<IMoveable, IGameObj, XY, AfterCollision> OnCollision;
         /// <summary>
@@ -34,6 +46,7 @@ namespace GameEngine
             Action<IMoveable> EndMove
         )
         {
+            this.ProtoGameMap = gameMap.ProtoGameMap;
             this.gameTimer = gameMap.Timer;
             this.EndMove = EndMove;
             this.OnCollision = OnCollision;
@@ -50,9 +63,11 @@ namespace GameEngine
 
             /*由于四周是墙，所以人物永远不可能与越界方块碰撞*/
             XY nextPos = obj.Position + moveVec;
-            double maxLen = collisionChecker.FindMax(obj, nextPos, moveVec);
-            maxLen = Math.Min(maxLen, obj.MoveSpeed / GameData.numOfStepPerSecond);
-            _ = obj.Move(new XY(moveVec.Angle(), maxLen));
+            //double maxLen 
+            _ = collisionChecker.FindMax(obj, nextPos, moveVec);
+            //maxLen = Math.Min(maxLen, obj.MoveSpeed / GameData.numOfStepPerSecond);
+
+            obj.MovingSetPos(moveVec, GetPlaceType(nextPos));
         }
 
         public void MoveObj(IMoveable obj, int moveTime, double direction)
@@ -69,7 +84,8 @@ namespace GameEngine
                         obj.IsMoving = true;
 
                     double moveVecLength = 0.0;
-                    double deltaLen = moveVecLength - Math.Sqrt(obj.Move(new XY(direction, moveVecLength)));  // 转向，并用deltaLen存储行走的误差
+                    XY res = new XY(direction, moveVecLength);
+                    double deltaLen = moveVecLength - Math.Sqrt(obj.MovingSetPos(res, GetPlaceType(obj.Position + res)));  // 转向，并用deltaLen存储行走的误差
                     IGameObj? collisionObj = null;
                     bool isDestroyed = false;
                     new FrameRateTaskExecutor<int>(
@@ -77,17 +93,18 @@ namespace GameEngine
                         () =>
                         {
                             moveVecLength = obj.MoveSpeed / GameData.numOfStepPerSecond;
+                            XY res = new XY(direction, moveVecLength);
 
                             // 越界情况处理：如果越界，则与越界方块碰撞
                             bool flag;  // 循环标志
                             do
                             {
                                 flag = false;
-                                collisionObj = collisionChecker.CheckCollision(obj, new XY(direction, moveVecLength));
+                                collisionObj = collisionChecker.CheckCollision(obj, res);
                                 if (collisionObj == null)
                                     break;
 
-                                switch (OnCollision(obj, collisionObj, new XY(direction, moveVecLength)))
+                                switch (OnCollision(obj, collisionObj, res))
                                 {
                                     case AfterCollision.ContinueCheck:
                                         flag = true;
@@ -97,13 +114,14 @@ namespace GameEngine
                                         isDestroyed = true;
                                         return false;
                                     case AfterCollision.MoveMax:
-                                        MoveMax(obj, new XY(direction, moveVecLength));
+                                        MoveMax(obj, res);
                                         moveVecLength = 0;
+                                        res = new XY(direction, moveVecLength);
                                         break;
                                 }
                             } while (flag);
 
-                            deltaLen += moveVecLength - Math.Sqrt(obj.Move(new XY(direction, moveVecLength)));
+                            deltaLen += moveVecLength - Math.Sqrt(obj.MovingSetPos(res, GetPlaceType(obj.Position + res)));
 
                             return true;
                         },
@@ -118,13 +136,14 @@ namespace GameEngine
                                 if (!isDestroyed)
                                 {
                                     moveVecLength = deltaLen + leftTime * obj.MoveSpeed / GameData.numOfPosGridPerCell;
-                                    if ((collisionObj = collisionChecker.CheckCollision(obj, new XY(direction, moveVecLength))) == null)
+                                    XY res = new XY(direction, moveVecLength);
+                                    if ((collisionObj = collisionChecker.CheckCollision(obj, res)) == null)
                                     {
-                                        obj.Move(new XY(direction, moveVecLength));
+                                        obj.MovingSetPos(res, GetPlaceType(obj.Position + res));
                                     }
                                     else
                                     {
-                                        switch (OnCollision(obj, collisionObj, new XY(direction, moveVecLength)))
+                                        switch (OnCollision(obj, collisionObj, res))
                                         {
                                             case AfterCollision.ContinueCheck:
                                                 flag = true;
@@ -134,8 +153,9 @@ namespace GameEngine
                                                 isDestroyed = true;
                                                 break;
                                             case AfterCollision.MoveMax:
-                                                MoveMax(obj, new XY(direction, moveVecLength));
+                                                MoveMax(obj, res);
                                                 moveVecLength = 0;
+                                                res = new XY(direction, moveVecLength);
                                                 break;
                                         }
                                     }

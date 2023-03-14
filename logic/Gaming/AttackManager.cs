@@ -38,7 +38,7 @@ namespace Gaming
                 );
             }
 
-            public void BeAddictedToGame(Student player)
+            private void BeAddictedToGame(Student player)
             {
                 new Thread
                     (() =>
@@ -68,11 +68,10 @@ namespace Gaming
                 { IsBackground = true }.Start();
             }
 
-            public void Die(Character player)
+            private void Die(Character player)
             {
 
-                player.CanMove = false;
-                player.IsResetting = true;
+                player.Die(PlayerStateType.IsDeceased);
                 // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
                 // try
                 //{
@@ -87,7 +86,8 @@ namespace Gaming
                 if (player.PropInventory != null)  // 若角色原来有道具，则原始道具掉落在原地
                 {
                     dropProp = player.PropInventory;
-                    dropProp.SetNewPos(GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell));
+                    XY res = GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell);
+                    dropProp.ReSetPos(res, gameMap.GetPlaceType(res));
                 }
                 gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
                 try
@@ -298,12 +298,14 @@ namespace Gaming
                 if (player.PlayerState != PlayerStateType.Null || player.PlayerState != PlayerStateType.IsMoving)
                     return false;
 
-                Bullet? bullet = player.RemoteAttack(
-                    new XY  // 子弹紧贴人物生成。
+                XY res = new XY  // 子弹紧贴人物生成。
                     (
                         (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Cos(angle)),
                         (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))
-                    )
+                    );
+
+                Bullet? bullet = player.Attack(
+                    res, gameMap.GetPlaceType(res)
                 );
                 if (bullet.CastTime > 0)
                 {

@@ -12,6 +12,8 @@ namespace Preparation.Interface
         public int MaxBulletNum { get; }
         public List<ActiveSkillType> ListOfIActiveSkill { get; }
         public List<PassiveSkillType> ListOfIPassiveSkill { get; }
+        public double Concealment { get; }
+        public int AlertnessRadius { get; }
     }
 
     public interface IGhost : IOccupation
@@ -41,6 +43,12 @@ namespace Preparation.Interface
 
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.BecomeInvisible, ActiveSkillType.UseKnife });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public double concealment = GameData.basicConcealment * 1.5;
+        public double Concealment => concealment;
+
+        public int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.3);
+        public int AlertnessRadius => alertnessRadius;
     }
     public class Athlete : IStudent
     {
@@ -61,6 +69,13 @@ namespace Preparation.Interface
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.BeginToCharge });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
 
-        public int FixSpeed => GameData.basicFixSpeed / 10 * 6;
+        public const int fixSpeed = GameData.basicFixSpeed / 10 * 6;
+        public int FixSpeed => fixSpeed;
+
+        public const double concealment = GameData.basicConcealment * 0.9;
+        public double Concealment => concealment;
+
+        public const int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
+        public int AlertnessRadius => alertnessRadius;
     }
 }

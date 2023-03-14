@@ -32,6 +32,7 @@ namespace Server
         {
             MessageOfObj msg = new MessageOfObj();
             if (player.IsGhost()) return null;
+            msg.StudentMessage = new();
 
             msg.StudentMessage.X = player.Position.x;
             msg.StudentMessage.Y = player.Position.y;
@@ -42,7 +43,7 @@ namespace Server
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
             //msg.StudentMessage.StudentType; // 下面写
             msg.StudentMessage.Guid = player.ID;
-            msg.StudentMessage.State = StudentState.NullStatus;
+            // msg.StudentMessage.State = player.PlayerState;
             msg.StudentMessage.FailTime = 0;
             msg.StudentMessage.EmoTime = 0;
             msg.StudentMessage.PlayerId = 0;
@@ -114,6 +115,7 @@ namespace Server
         {
             MessageOfObj msg = new MessageOfObj();
             if (!player.IsGhost()) return null;
+            msg.TrickerMessage = new();
 
             msg.TrickerMessage.X = player.Position.x;
             msg.TrickerMessage.Y = player.Position.y;
@@ -212,6 +214,7 @@ namespace Server
         private static MessageOfObj Bullet(Bullet bullet)
         {
             MessageOfObj msg = new MessageOfObj();
+            msg.BulletMessage = new();
             msg.BulletMessage.X = bullet.Position.x;
             msg.BulletMessage.Y = bullet.Position.y;
             //msg.BulletMessage.FacingDirection = bullet.FacingDirection; // XY转double?
@@ -263,6 +266,7 @@ namespace Server
         private static MessageOfObj Prop(Prop prop)
         {
             MessageOfObj msg = new MessageOfObj();
+            msg.PropMessage = new();
             //msg.PropMessage.Type = PropType.NullPropType; 下面写
             msg.PropMessage.X = prop.Position.x;
             msg.PropMessage.Y = prop.Position.y;
@@ -326,7 +330,7 @@ namespace Server
         private static MessageOfObj BombedBullet(BombedBullet bombedBullet)
         {
             MessageOfObj msg = new MessageOfObj();
-
+            msg.BombedBulletMessage = new();
             msg.BombedBulletMessage.X = bombedBullet.bulletHasBombed.Position.x;
             msg.BombedBulletMessage.Y = bombedBullet.bulletHasBombed.Position.y;
             //msg.BombedBulletMessage.FacingDirection = bombedBullet.FacingDirection; XY类型转double?

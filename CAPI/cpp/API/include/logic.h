@@ -118,6 +118,13 @@ private:
 
     bool Attack(double angle) override;
 
+    bool OpenDoor() override;
+    bool CloseDoor() override;
+    bool SkipWindow() override;
+    bool StartOpenGate() override;
+    bool StartOpenChest() override;
+    bool EndAllAction() override;
+
     bool WaitThread() override;
 
     int GetCounter() const override;

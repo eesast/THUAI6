@@ -1,9 +1,14 @@
 # THUAI6
+
 清华大学第六届人工智能挑战赛电子系赛道（原电子系第 24 届队式程序设计大赛 teamstyle24）
 
 Gitee 镜像地址：[THUAI6: Gitee Mirror](https://gitee.com/eesast/THUAI6)
 
 GitLink 镜像地址：[THUAI6: GitLink Mirror](https://www.gitlink.org.cn/EESAST/THUAI6)
+
+项目主页：[THUAI6 Project Home Page](https://eesast.github.io/THUAI6)
+
+关于本届及历届清华大学人工智能挑战赛与队式程序设计大赛的更多内容参见：[THUAI6 Github Wiki](https://github.com/eesast/THUAI6/wiki)  
 
 ## 赛题背景
 

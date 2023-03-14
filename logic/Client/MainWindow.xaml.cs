@@ -54,8 +54,13 @@ namespace Client
             listOfBullet=new List<MessageOfBullet>();
             listOfBombedBullet = new List<MessageOfBombedBullet>();
             listOfAll = new List<MessageOfAll>();
+            MapObjDict = new Dictionary<MessageOfMapObj.MessageOfMapObjOneofCase, List<MessageOfMapObj>>();
+            MapObjDict.Add(MessageOfMapObj.MessageOfMapObjOneofCase.ClassroomMessage, new List<MessageOfMapObj>());
+            MapObjDict.Add(MessageOfMapObj.MessageOfMapObjOneofCase.GateMessage, new List<MessageOfMapObj>());
+            MapObjDict.Add(MessageOfMapObj.MessageOfMapObjOneofCase.DoorMessage, new List<MessageOfMapObj>());
+            MapObjDict.Add(MessageOfMapObj.MessageOfMapObjOneofCase.ChestMessage, new List<MessageOfMapObj>());
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            comInfo[0] = "183.172.212.19";
+            comInfo[0] = "127.0.0.1";
             comInfo[1] = "8888";
             comInfo[2] = "0";
             comInfo[3] = "1";
@@ -330,6 +335,10 @@ namespace Client
                         listOfBombedBullet.Clear();
                         listOfBullet.Clear();
                         listOfAll.Clear();
+                        MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.ClassroomMessage].Clear();
+                        MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.DoorMessage].Clear();
+                        MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.ChestMessage].Clear();
+                        MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.GateMessage].Clear();
                         MessageToClient content = responseStream.ResponseStream.Current;
                         switch (content.GameState)
                         {
@@ -360,6 +369,23 @@ namespace Client
                                             break;
                                         case MessageOfObj.MessageOfObjOneofCase.BulletMessage:
                                             listOfBullet.Add(obj.BulletMessage);
+                                            break;
+                                        case MessageOfObj.MessageOfObjOneofCase.MapObjMessage:
+                                            switch (obj.MapObjMessage.MessageOfMapObjCase)
+                                            {
+                                                case MessageOfMapObj.MessageOfMapObjOneofCase.ClassroomMessage:
+                                                    MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.ClassroomMessage].Add(obj.MapObjMessage);
+                                                    break;
+                                                case MessageOfMapObj.MessageOfMapObjOneofCase.DoorMessage:
+                                                    MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.DoorMessage].Add(obj.MapObjMessage);
+                                                    break;
+                                                case MessageOfMapObj.MessageOfMapObjOneofCase.ChestMessage:
+                                                    MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.ChestMessage].Add(obj.MapObjMessage);
+                                                    break;
+                                                case MessageOfMapObj.MessageOfMapObjOneofCase.GateMessage:
+                                                    MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.GateMessage].Add(obj.MapObjMessage);
+                                                    break;
+                                            }
                                             break;
                                     }
                                 }
@@ -394,6 +420,23 @@ namespace Client
                                         case MessageOfObj.MessageOfObjOneofCase.BulletMessage:
                                             listOfBullet.Add(obj.BulletMessage);
                                             break;
+                                        case MessageOfObj.MessageOfObjOneofCase.MapObjMessage:
+                                            switch (obj.MapObjMessage.MessageOfMapObjCase)
+                                            {
+                                                case MessageOfMapObj.MessageOfMapObjOneofCase.ClassroomMessage:
+                                                    MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.ClassroomMessage].Add(obj.MapObjMessage);
+                                                    break;
+                                                case MessageOfMapObj.MessageOfMapObjOneofCase.DoorMessage:
+                                                    MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.DoorMessage].Add(obj.MapObjMessage);
+                                                    break;
+                                                case MessageOfMapObj.MessageOfMapObjOneofCase.ChestMessage:
+                                                    MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.ChestMessage].Add(obj.MapObjMessage);
+                                                    break;
+                                                case MessageOfMapObj.MessageOfMapObjOneofCase.GateMessage:
+                                                    MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.GateMessage].Add(obj.MapObjMessage);
+                                                    break;
+                                            }
+                                            break;
                                     }
                                 }
                                 listOfAll.Add(content.AllMessage);
@@ -419,6 +462,23 @@ namespace Client
                                         case MessageOfObj.MessageOfObjOneofCase.BulletMessage:
                                             listOfBullet.Add(obj.BulletMessage);
                                             break;
+                                        case MessageOfObj.MessageOfObjOneofCase.MapObjMessage:
+                                            switch (obj.MapObjMessage.MessageOfMapObjCase)
+                                            {
+                                                case MessageOfMapObj.MessageOfMapObjOneofCase.ClassroomMessage:
+                                                    MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.ClassroomMessage].Add(obj.MapObjMessage);
+                                                    break;
+                                                case MessageOfMapObj.MessageOfMapObjOneofCase.DoorMessage:
+                                                    MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.DoorMessage].Add(obj.MapObjMessage);
+                                                    break;
+                                                case MessageOfMapObj.MessageOfMapObjOneofCase.ChestMessage:
+                                                    MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.ChestMessage].Add(obj.MapObjMessage);
+                                                    break;
+                                                case MessageOfMapObj.MessageOfMapObjOneofCase.GateMessage:
+                                                    MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.GateMessage].Add(obj.MapObjMessage);
+                                                    break;
+                                            }
+                                            break;
                                     }
                                 }
                                 listOfAll.Add(content.AllMessage);
@@ -438,6 +498,14 @@ namespace Client
             }   
         }
 
+        private int GetX(int x)
+        {
+            return x / 1000 + 1;
+        }
+        private int GetY(int y)
+        {
+            return y / 1000 + 1;
+        }
         //待修改
         private bool CanSee(MessageOfStudent msg)
         {
@@ -703,6 +771,24 @@ namespace Client
                                 default:
                                     break;
                             }
+                        }
+                        foreach (var data in MapObjDict[MessageOfMapObj.MessageOfMapObjOneofCase.ClassroomMessage])
+                        {
+                            TextBox icon = new()
+                            {
+                                FontSize = 10 * UpperLayerOfMap.ActualHeight / 650,
+                                Width = unitWidth,
+                                Height = unitHeight,
+                                Text = Convert.ToString(data.ClassroomMessage.Progress),
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Top,
+                                Margin = new Thickness(data.ClassroomMessage.Y * unitWidth / 1000.0 - unitWidth / 2, data.ClassroomMessage.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                //Margin = new Thickness(25,25, 0, 0),
+                                Background = Brushes.Transparent,
+                                BorderBrush = Brushes.Transparent,
+                                IsReadOnly = true
+                            };
+                            UpperLayerOfMap.Children.Add(icon);
                         }
                         //}
                         ZoomMap();
@@ -971,6 +1057,7 @@ namespace Client
         private List<MessageOfBullet> listOfBullet;
         private List<MessageOfBombedBullet> listOfBombedBullet;
         private List<MessageOfAll> listOfAll;
+        private Dictionary<MessageOfMapObj.MessageOfMapObjOneofCase, List<MessageOfMapObj>> MapObjDict;
         private object drawPicLock = new object();
         private MessageOfStudent? human = null;
         private MessageOfTricker? butcher = null;

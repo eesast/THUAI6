@@ -10,7 +10,7 @@ message MessageOfStudent
     int32 y = 2;
     int32 speed = 3;
     int32 determination = 4; // 剩余的学习毅力，相当于血量
-    //int32 fail_num = 5; // 挂科的科目数
+    int32 addiction = 5; // 沉迷时间，相当于真实血量
     repeated double time_until_skill_available = 6;
     PlaceType place = 7;
     repeated PropType prop = 8;

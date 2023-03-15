@@ -22,6 +22,7 @@ namespace Preparation.Utility
         IsLockingTheDoor = 13,
         IsRummagingInTheChest = 14,
         IsClimbingThroughWindows = 15,
+        IsUsingSpecialSkill = 16,
     }
     public enum GameObjType
     {

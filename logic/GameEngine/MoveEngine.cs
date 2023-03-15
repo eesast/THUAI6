@@ -74,12 +74,12 @@ namespace GameEngine
         {
             if (obj.IsMoving)  // 已经移动的物体不能再移动
                 return;
+            if (!obj.IsAvailable || !gameTimer.IsGaming)
+                return;
             new Thread
             (
                 () =>
                 {
-                    if (!obj.IsAvailable && gameTimer.IsGaming)
-                        return;
                     lock (obj.MoveLock)
                         obj.IsMoving = true;
 
@@ -93,7 +93,7 @@ namespace GameEngine
                         () =>
                         {
                             moveVecLength = obj.MoveSpeed / GameData.numOfStepPerSecond;
-                            XY res = new XY(direction, moveVecLength);
+                            res = new XY(direction, moveVecLength);
 
                             // 越界情况处理：如果越界，则与越界方块碰撞
                             bool flag;  // 循环标志
@@ -136,7 +136,7 @@ namespace GameEngine
                                 if (!isDestroyed)
                                 {
                                     moveVecLength = deltaLen + leftTime * obj.MoveSpeed / GameData.numOfPosGridPerCell;
-                                    XY res = new XY(direction, moveVecLength);
+                                    res = new XY(direction, moveVecLength);
                                     if ((collisionObj = collisionChecker.CheckCollision(obj, res)) == null)
                                     {
                                         obj.MovingSetPos(res, GetPlaceType(obj.Position + res));

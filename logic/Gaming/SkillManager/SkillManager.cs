@@ -14,7 +14,20 @@ namespace Gaming
             public bool UseActiveSkill(Character character, ActiveSkillType activeSkillType)
             {
                 if (character.Occupation.ListOfIActiveSkill.Contains(activeSkillType))
-                    return FindIActiveSkill(activeSkillType).SkillEffect(character);
+                    switch (activeSkillType) 
+                    {
+                        case ActiveSkillType.BecomeInvisible:
+                            BecomeInvisible(character);
+                            break;
+                        case ActiveSkillType.UseKnife:
+                            UseKnife(character);
+                            break;
+                        case ActiveSkillType.BeginToCharge:
+                            BeginToCharge(character);
+                            break;
+                        default: 
+                            return false;
+                    }
                 return false;
             }
             public void UsePassiveSkill(Character character, PassiveSkillType passiveSkillType)

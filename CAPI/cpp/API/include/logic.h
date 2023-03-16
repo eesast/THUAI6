@@ -99,6 +99,13 @@ private:
     std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
     THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
 
+    bool IsDoorOpen(int32_t CellX, int32_t CellY) const override;
+    int32_t GetClassroomProgress(int32_t CellX, int32_t CellY) const override;
+    int32_t GetChestProgress(int32_t CellX, int32_t CellY) const override;
+    int32_t GetGateProgress(int32_t CellX, int32_t CellY) const override;
+
+    std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const override;
+
     // 供IAPI使用的操作相关的部分
     bool Move(int64_t time, double angle) override;
     bool PickProp(THUAI6::PropType prop) override;

@@ -50,11 +50,12 @@ public:
     protobuf::MessageToClient GetMessage2Client();
     void AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::StudentType studentType, THUAI6::TrickerType trickerType);
 
+    std::vector<std::vector<THUAI6::PlaceType>> GetMap(int64_t playerID);
+
     void ReadMessage(int64_t playerID);
 
 private:
     std::unique_ptr<protobuf::AvailableService::Stub> THUAI6Stub;
-    THUAI6::PlayerType playerType;
     bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
     ConcurrentQueue<std::pair<int64_t, std::string>> messageQueue;

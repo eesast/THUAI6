@@ -76,9 +76,6 @@ namespace protobuf
     class MessageOfMap;
     struct MessageOfMapDefaultTypeInternal;
     extern MessageOfMapDefaultTypeInternal _MessageOfMap_default_instance_;
-    class MessageOfMapObj;
-    struct MessageOfMapObjDefaultTypeInternal;
-    extern MessageOfMapObjDefaultTypeInternal _MessageOfMapObj_default_instance_;
     class MessageOfMap_Row;
     struct MessageOfMap_RowDefaultTypeInternal;
     extern MessageOfMap_RowDefaultTypeInternal _MessageOfMap_Row_default_instance_;
@@ -126,8 +123,6 @@ template<>
 ::protobuf::MessageOfGate* Arena::CreateMaybeMessage<::protobuf::MessageOfGate>(Arena*);
 template<>
 ::protobuf::MessageOfMap* Arena::CreateMaybeMessage<::protobuf::MessageOfMap>(Arena*);
-template<>
-::protobuf::MessageOfMapObj* Arena::CreateMaybeMessage<::protobuf::MessageOfMapObj>(Arena*);
 template<>
 ::protobuf::MessageOfMap_Row* Arena::CreateMaybeMessage<::protobuf::MessageOfMap_Row>(Arena*);
 template<>
@@ -310,20 +305,18 @@ namespace protobuf
 
         enum : int
         {
+            kTimeUntilSkillAvailableFieldNumber = 6,
             kPropFieldNumber = 8,
             kBuffFieldNumber = 24,
             kXFieldNumber = 1,
             kYFieldNumber = 2,
             kSpeedFieldNumber = 3,
             kDeterminationFieldNumber = 4,
-            kTimeUntilSkillAvailableFieldNumber = 6,
-            kFailNumFieldNumber = 5,
+            kAddictionFieldNumber = 5,
             kPlaceFieldNumber = 7,
             kGuidFieldNumber = 10,
             kPlayerStateFieldNumber = 9,
             kStateFieldNumber = 11,
-            kFailTimeFieldNumber = 12,
-            kEmoTimeFieldNumber = 14,
             kPlayerIdFieldNumber = 15,
             kViewRangeFieldNumber = 16,
             kRadiusFieldNumber = 17,
@@ -334,6 +327,32 @@ namespace protobuf
             kRescueProgressFieldNumber = 22,
             kStudentTypeFieldNumber = 23,
         };
+        // repeated double time_until_skill_available = 6;
+        int time_until_skill_available_size() const;
+
+    private:
+        int _internal_time_until_skill_available_size() const;
+
+    public:
+        void clear_time_until_skill_available();
+
+    private:
+        double _internal_time_until_skill_available(int index) const;
+        const ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>&
+            _internal_time_until_skill_available() const;
+        void _internal_add_time_until_skill_available(double value);
+        ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>*
+            _internal_mutable_time_until_skill_available();
+
+    public:
+        double time_until_skill_available(int index) const;
+        void set_time_until_skill_available(int index, double value);
+        void add_time_until_skill_available(double value);
+        const ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>&
+            time_until_skill_available() const;
+        ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>*
+            mutable_time_until_skill_available();
+
         // repeated .protobuf.PropType prop = 8;
         int prop_size() const;
 
@@ -416,24 +435,14 @@ namespace protobuf
         void _internal_set_determination(int32_t value);
 
     public:
-        // double time_until_skill_available = 6;
-        void clear_time_until_skill_available();
-        double time_until_skill_available() const;
-        void set_time_until_skill_available(double value);
+        // int32 addiction = 5;
+        void clear_addiction();
+        int32_t addiction() const;
+        void set_addiction(int32_t value);
 
     private:
-        double _internal_time_until_skill_available() const;
-        void _internal_set_time_until_skill_available(double value);
-
-    public:
-        // int32 fail_num = 5;
-        void clear_fail_num();
-        int32_t fail_num() const;
-        void set_fail_num(int32_t value);
-
-    private:
-        int32_t _internal_fail_num() const;
-        void _internal_set_fail_num(int32_t value);
+        int32_t _internal_addiction() const;
+        void _internal_set_addiction(int32_t value);
 
     public:
         // .protobuf.PlaceType place = 7;
@@ -474,26 +483,6 @@ namespace protobuf
     private:
         ::protobuf::PlayerState _internal_state() const;
         void _internal_set_state(::protobuf::PlayerState value);
-
-    public:
-        // double fail_time = 12;
-        void clear_fail_time();
-        double fail_time() const;
-        void set_fail_time(double value);
-
-    private:
-        double _internal_fail_time() const;
-        void _internal_set_fail_time(double value);
-
-    public:
-        // double emo_time = 14;
-        void clear_emo_time();
-        double emo_time() const;
-        void set_emo_time(double value);
-
-    private:
-        double _internal_emo_time() const;
-        void _internal_set_emo_time(double value);
 
     public:
         // int64 player_id = 15;
@@ -597,6 +586,7 @@ namespace protobuf
         typedef void DestructorSkippable_;
         struct Impl_
         {
+            ::PROTOBUF_NAMESPACE_ID::RepeatedField<double> time_until_skill_available_;
             ::PROTOBUF_NAMESPACE_ID::RepeatedField<int> prop_;
             mutable std::atomic<int> _prop_cached_byte_size_;
             ::PROTOBUF_NAMESPACE_ID::RepeatedField<int> buff_;
@@ -605,14 +595,11 @@ namespace protobuf
             int32_t y_;
             int32_t speed_;
             int32_t determination_;
-            double time_until_skill_available_;
-            int32_t fail_num_;
+            int32_t addiction_;
             int place_;
             int64_t guid_;
             int player_state_;
             int state_;
-            double fail_time_;
-            double emo_time_;
             int64_t player_id_;
             int32_t view_range_;
             int32_t radius_;
@@ -790,13 +777,13 @@ namespace protobuf
 
         enum : int
         {
+            kTimeUntilSkillAvailableFieldNumber = 5,
             kPropFieldNumber = 7,
             kBuffFieldNumber = 17,
             kXFieldNumber = 1,
             kYFieldNumber = 2,
             kSpeedFieldNumber = 3,
             kDamageFieldNumber = 4,
-            kTimeUntilSkillAvailableFieldNumber = 5,
             kPlaceFieldNumber = 6,
             kTrickerTypeFieldNumber = 8,
             kGuidFieldNumber = 9,
@@ -808,6 +795,32 @@ namespace protobuf
             kTrickDesireFieldNumber = 15,
             kClassVolumeFieldNumber = 16,
         };
+        // repeated double time_until_skill_available = 5;
+        int time_until_skill_available_size() const;
+
+    private:
+        int _internal_time_until_skill_available_size() const;
+
+    public:
+        void clear_time_until_skill_available();
+
+    private:
+        double _internal_time_until_skill_available(int index) const;
+        const ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>&
+            _internal_time_until_skill_available() const;
+        void _internal_add_time_until_skill_available(double value);
+        ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>*
+            _internal_mutable_time_until_skill_available();
+
+    public:
+        double time_until_skill_available(int index) const;
+        void set_time_until_skill_available(int index, double value);
+        void add_time_until_skill_available(double value);
+        const ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>&
+            time_until_skill_available() const;
+        ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>*
+            mutable_time_until_skill_available();
+
         // repeated .protobuf.PropType prop = 7;
         int prop_size() const;
 
@@ -888,16 +901,6 @@ namespace protobuf
     private:
         int32_t _internal_damage() const;
         void _internal_set_damage(int32_t value);
-
-    public:
-        // double time_until_skill_available = 5;
-        void clear_time_until_skill_available();
-        double time_until_skill_available() const;
-        void set_time_until_skill_available(double value);
-
-    private:
-        double _internal_time_until_skill_available() const;
-        void _internal_set_time_until_skill_available(double value);
 
     public:
         // .protobuf.PlaceType place = 6;
@@ -1011,6 +1014,7 @@ namespace protobuf
         typedef void DestructorSkippable_;
         struct Impl_
         {
+            ::PROTOBUF_NAMESPACE_ID::RepeatedField<double> time_until_skill_available_;
             ::PROTOBUF_NAMESPACE_ID::RepeatedField<int> prop_;
             mutable std::atomic<int> _prop_cached_byte_size_;
             ::PROTOBUF_NAMESPACE_ID::RepeatedField<int> buff_;
@@ -1019,7 +1023,6 @@ namespace protobuf
             int32_t y_;
             int32_t speed_;
             int32_t damage_;
-            double time_until_skill_available_;
             int place_;
             int tricker_type_;
             int64_t guid_;
@@ -2948,313 +2951,6 @@ namespace protobuf
     };
     // -------------------------------------------------------------------
 
-    class MessageOfMapObj final :
-        public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.MessageOfMapObj) */
-    {
-    public:
-        inline MessageOfMapObj() :
-            MessageOfMapObj(nullptr)
-        {
-        }
-        ~MessageOfMapObj() override;
-        explicit PROTOBUF_CONSTEXPR MessageOfMapObj(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
-
-        MessageOfMapObj(const MessageOfMapObj& from);
-        MessageOfMapObj(MessageOfMapObj&& from) noexcept
-            :
-            MessageOfMapObj()
-        {
-            *this = ::std::move(from);
-        }
-
-        inline MessageOfMapObj& operator=(const MessageOfMapObj& from)
-        {
-            CopyFrom(from);
-            return *this;
-        }
-        inline MessageOfMapObj& operator=(MessageOfMapObj&& from) noexcept
-        {
-            if (this == &from)
-                return *this;
-            if (GetOwningArena() == from.GetOwningArena()
-#ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-                && GetOwningArena() != nullptr
-#endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-            )
-            {
-                InternalSwap(&from);
-            }
-            else
-            {
-                CopyFrom(from);
-            }
-            return *this;
-        }
-
-        static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor()
-        {
-            return GetDescriptor();
-        }
-        static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor()
-        {
-            return default_instance().GetMetadata().descriptor;
-        }
-        static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection()
-        {
-            return default_instance().GetMetadata().reflection;
-        }
-        static const MessageOfMapObj& default_instance()
-        {
-            return *internal_default_instance();
-        }
-        enum MessageOfMapObjCase
-        {
-            kClassroomMessage = 1,
-            kDoorMessage = 2,
-            kGateMessage = 3,
-            kChestMessage = 4,
-            MESSAGE_OF_MAP_OBJ_NOT_SET = 0,
-        };
-
-        static inline const MessageOfMapObj* internal_default_instance()
-        {
-            return reinterpret_cast<const MessageOfMapObj*>(
-                &_MessageOfMapObj_default_instance_
-            );
-        }
-        static constexpr int kIndexInFileMessages =
-            10;
-
-        friend void swap(MessageOfMapObj& a, MessageOfMapObj& b)
-        {
-            a.Swap(&b);
-        }
-        inline void Swap(MessageOfMapObj* other)
-        {
-            if (other == this)
-                return;
-#ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-            if (GetOwningArena() != nullptr &&
-                GetOwningArena() == other->GetOwningArena())
-            {
-#else   // PROTOBUF_FORCE_COPY_IN_SWAP
-            if (GetOwningArena() == other->GetOwningArena())
-            {
-#endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-                InternalSwap(other);
-            }
-            else
-            {
-                ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
-            }
-        }
-        void UnsafeArenaSwap(MessageOfMapObj* other)
-        {
-            if (other == this)
-                return;
-            GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
-            InternalSwap(other);
-        }
-
-        // implements Message ----------------------------------------------
-
-        MessageOfMapObj* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final
-        {
-            return CreateMaybeMessage<MessageOfMapObj>(arena);
-        }
-        using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-        void CopyFrom(const MessageOfMapObj& from);
-        using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-        void MergeFrom(const MessageOfMapObj& from)
-        {
-            MessageOfMapObj::MergeImpl(*this, from);
-        }
-
-    private:
-        static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
-
-    public:
-        PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-        bool IsInitialized() const final;
-
-        size_t ByteSizeLong() const final;
-        const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-        uint8_t* _InternalSerialize(
-            uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream
-        ) const final;
-        int GetCachedSize() const final
-        {
-            return _impl_._cached_size_.Get();
-        }
-
-    private:
-        void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
-        void SharedDtor();
-        void SetCachedSize(int size) const final;
-        void InternalSwap(MessageOfMapObj* other);
-
-    private:
-        friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-        static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName()
-        {
-            return "protobuf.MessageOfMapObj";
-        }
-
-    protected:
-        explicit MessageOfMapObj(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned = false);
-
-    public:
-        static const ClassData _class_data_;
-        const ::PROTOBUF_NAMESPACE_ID::Message::ClassData* GetClassData() const final;
-
-        ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-
-        // nested types ----------------------------------------------------
-
-        // accessors -------------------------------------------------------
-
-        enum : int
-        {
-            kClassroomMessageFieldNumber = 1,
-            kDoorMessageFieldNumber = 2,
-            kGateMessageFieldNumber = 3,
-            kChestMessageFieldNumber = 4,
-        };
-        // .protobuf.MessageOfClassroom classroom_message = 1;
-        bool has_classroom_message() const;
-
-    private:
-        bool _internal_has_classroom_message() const;
-
-    public:
-        void clear_classroom_message();
-        const ::protobuf::MessageOfClassroom& classroom_message() const;
-        PROTOBUF_NODISCARD ::protobuf::MessageOfClassroom* release_classroom_message();
-        ::protobuf::MessageOfClassroom* mutable_classroom_message();
-        void set_allocated_classroom_message(::protobuf::MessageOfClassroom* classroom_message);
-
-    private:
-        const ::protobuf::MessageOfClassroom& _internal_classroom_message() const;
-        ::protobuf::MessageOfClassroom* _internal_mutable_classroom_message();
-
-    public:
-        void unsafe_arena_set_allocated_classroom_message(
-            ::protobuf::MessageOfClassroom* classroom_message
-        );
-        ::protobuf::MessageOfClassroom* unsafe_arena_release_classroom_message();
-
-        // .protobuf.MessageOfDoor door_message = 2;
-        bool has_door_message() const;
-
-    private:
-        bool _internal_has_door_message() const;
-
-    public:
-        void clear_door_message();
-        const ::protobuf::MessageOfDoor& door_message() const;
-        PROTOBUF_NODISCARD ::protobuf::MessageOfDoor* release_door_message();
-        ::protobuf::MessageOfDoor* mutable_door_message();
-        void set_allocated_door_message(::protobuf::MessageOfDoor* door_message);
-
-    private:
-        const ::protobuf::MessageOfDoor& _internal_door_message() const;
-        ::protobuf::MessageOfDoor* _internal_mutable_door_message();
-
-    public:
-        void unsafe_arena_set_allocated_door_message(
-            ::protobuf::MessageOfDoor* door_message
-        );
-        ::protobuf::MessageOfDoor* unsafe_arena_release_door_message();
-
-        // .protobuf.MessageOfGate gate_message = 3;
-        bool has_gate_message() const;
-
-    private:
-        bool _internal_has_gate_message() const;
-
-    public:
-        void clear_gate_message();
-        const ::protobuf::MessageOfGate& gate_message() const;
-        PROTOBUF_NODISCARD ::protobuf::MessageOfGate* release_gate_message();
-        ::protobuf::MessageOfGate* mutable_gate_message();
-        void set_allocated_gate_message(::protobuf::MessageOfGate* gate_message);
-
-    private:
-        const ::protobuf::MessageOfGate& _internal_gate_message() const;
-        ::protobuf::MessageOfGate* _internal_mutable_gate_message();
-
-    public:
-        void unsafe_arena_set_allocated_gate_message(
-            ::protobuf::MessageOfGate* gate_message
-        );
-        ::protobuf::MessageOfGate* unsafe_arena_release_gate_message();
-
-        // .protobuf.MessageOfChest chest_message = 4;
-        bool has_chest_message() const;
-
-    private:
-        bool _internal_has_chest_message() const;
-
-    public:
-        void clear_chest_message();
-        const ::protobuf::MessageOfChest& chest_message() const;
-        PROTOBUF_NODISCARD ::protobuf::MessageOfChest* release_chest_message();
-        ::protobuf::MessageOfChest* mutable_chest_message();
-        void set_allocated_chest_message(::protobuf::MessageOfChest* chest_message);
-
-    private:
-        const ::protobuf::MessageOfChest& _internal_chest_message() const;
-        ::protobuf::MessageOfChest* _internal_mutable_chest_message();
-
-    public:
-        void unsafe_arena_set_allocated_chest_message(
-            ::protobuf::MessageOfChest* chest_message
-        );
-        ::protobuf::MessageOfChest* unsafe_arena_release_chest_message();
-
-        void clear_message_of_map_obj();
-        MessageOfMapObjCase message_of_map_obj_case() const;
-        // @@protoc_insertion_point(class_scope:protobuf.MessageOfMapObj)
-
-    private:
-        class _Internal;
-        void set_has_classroom_message();
-        void set_has_door_message();
-        void set_has_gate_message();
-        void set_has_chest_message();
-
-        inline bool has_message_of_map_obj() const;
-        inline void clear_has_message_of_map_obj();
-
-        template<typename T>
-        friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
-        typedef void InternalArenaConstructable_;
-        typedef void DestructorSkippable_;
-        struct Impl_
-        {
-            union MessageOfMapObjUnion
-            {
-                constexpr MessageOfMapObjUnion() :
-                    _constinit_{}
-                {
-                }
-                ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized _constinit_;
-                ::protobuf::MessageOfClassroom* classroom_message_;
-                ::protobuf::MessageOfDoor* door_message_;
-                ::protobuf::MessageOfGate* gate_message_;
-                ::protobuf::MessageOfChest* chest_message_;
-            } message_of_map_obj_;
-            mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-            uint32_t _oneof_case_[1];
-        };
-        union
-        {
-            Impl_ _impl_;
-        };
-        friend struct ::TableStruct_Message2Clients_2eproto;
-    };
-    // -------------------------------------------------------------------
-
     class MessageOfMap_Row final :
         public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.MessageOfMap.Row) */
     {
@@ -3321,7 +3017,7 @@ namespace protobuf
             );
         }
         static constexpr int kIndexInFileMessages =
-            11;
+            10;
 
         friend void swap(MessageOfMap_Row& a, MessageOfMap_Row& b)
         {
@@ -3525,7 +3221,7 @@ namespace protobuf
             );
         }
         static constexpr int kIndexInFileMessages =
-            12;
+            11;
 
         friend void swap(MessageOfMap& a, MessageOfMap& b)
         {
@@ -3620,7 +3316,6 @@ namespace protobuf
         enum : int
         {
             kRowFieldNumber = 2,
-            kMapObjMessageFieldNumber = 3,
         };
         // repeated .protobuf.MessageOfMap.Row row = 2;
         int row_size() const;
@@ -3644,28 +3339,6 @@ namespace protobuf
         const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfMap_Row>&
             row() const;
 
-        // repeated .protobuf.MessageOfMapObj map_obj_message = 3;
-        int map_obj_message_size() const;
-
-    private:
-        int _internal_map_obj_message_size() const;
-
-    public:
-        void clear_map_obj_message();
-        ::protobuf::MessageOfMapObj* mutable_map_obj_message(int index);
-        ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfMapObj>*
-            mutable_map_obj_message();
-
-    private:
-        const ::protobuf::MessageOfMapObj& _internal_map_obj_message(int index) const;
-        ::protobuf::MessageOfMapObj* _internal_add_map_obj_message();
-
-    public:
-        const ::protobuf::MessageOfMapObj& map_obj_message(int index) const;
-        ::protobuf::MessageOfMapObj* add_map_obj_message();
-        const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfMapObj>&
-            map_obj_message() const;
-
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfMap)
 
     private:
@@ -3678,7 +3351,6 @@ namespace protobuf
         struct Impl_
         {
             ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfMap_Row> row_;
-            ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfMapObj> map_obj_message_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -3755,6 +3427,10 @@ namespace protobuf
             kPropMessage = 3,
             kBulletMessage = 4,
             kBombedBulletMessage = 5,
+            kClassroomMessage = 6,
+            kDoorMessage = 7,
+            kGateMessage = 8,
+            kChestMessage = 9,
             MESSAGE_OF_OBJ_NOT_SET = 0,
         };
 
@@ -3765,7 +3441,7 @@ namespace protobuf
             );
         }
         static constexpr int kIndexInFileMessages =
-            13;
+            12;
 
         friend void swap(MessageOfObj& a, MessageOfObj& b)
         {
@@ -3862,6 +3538,10 @@ namespace protobuf
             kPropMessageFieldNumber = 3,
             kBulletMessageFieldNumber = 4,
             kBombedBulletMessageFieldNumber = 5,
+            kClassroomMessageFieldNumber = 6,
+            kDoorMessageFieldNumber = 7,
+            kGateMessageFieldNumber = 8,
+            kChestMessageFieldNumber = 9,
         };
         // .protobuf.MessageOfStudent student_message = 1;
         bool has_student_message() const;
@@ -3978,6 +3658,98 @@ namespace protobuf
         );
         ::protobuf::MessageOfBombedBullet* unsafe_arena_release_bombed_bullet_message();
 
+        // .protobuf.MessageOfClassroom classroom_message = 6;
+        bool has_classroom_message() const;
+
+    private:
+        bool _internal_has_classroom_message() const;
+
+    public:
+        void clear_classroom_message();
+        const ::protobuf::MessageOfClassroom& classroom_message() const;
+        PROTOBUF_NODISCARD ::protobuf::MessageOfClassroom* release_classroom_message();
+        ::protobuf::MessageOfClassroom* mutable_classroom_message();
+        void set_allocated_classroom_message(::protobuf::MessageOfClassroom* classroom_message);
+
+    private:
+        const ::protobuf::MessageOfClassroom& _internal_classroom_message() const;
+        ::protobuf::MessageOfClassroom* _internal_mutable_classroom_message();
+
+    public:
+        void unsafe_arena_set_allocated_classroom_message(
+            ::protobuf::MessageOfClassroom* classroom_message
+        );
+        ::protobuf::MessageOfClassroom* unsafe_arena_release_classroom_message();
+
+        // .protobuf.MessageOfDoor door_message = 7;
+        bool has_door_message() const;
+
+    private:
+        bool _internal_has_door_message() const;
+
+    public:
+        void clear_door_message();
+        const ::protobuf::MessageOfDoor& door_message() const;
+        PROTOBUF_NODISCARD ::protobuf::MessageOfDoor* release_door_message();
+        ::protobuf::MessageOfDoor* mutable_door_message();
+        void set_allocated_door_message(::protobuf::MessageOfDoor* door_message);
+
+    private:
+        const ::protobuf::MessageOfDoor& _internal_door_message() const;
+        ::protobuf::MessageOfDoor* _internal_mutable_door_message();
+
+    public:
+        void unsafe_arena_set_allocated_door_message(
+            ::protobuf::MessageOfDoor* door_message
+        );
+        ::protobuf::MessageOfDoor* unsafe_arena_release_door_message();
+
+        // .protobuf.MessageOfGate gate_message = 8;
+        bool has_gate_message() const;
+
+    private:
+        bool _internal_has_gate_message() const;
+
+    public:
+        void clear_gate_message();
+        const ::protobuf::MessageOfGate& gate_message() const;
+        PROTOBUF_NODISCARD ::protobuf::MessageOfGate* release_gate_message();
+        ::protobuf::MessageOfGate* mutable_gate_message();
+        void set_allocated_gate_message(::protobuf::MessageOfGate* gate_message);
+
+    private:
+        const ::protobuf::MessageOfGate& _internal_gate_message() const;
+        ::protobuf::MessageOfGate* _internal_mutable_gate_message();
+
+    public:
+        void unsafe_arena_set_allocated_gate_message(
+            ::protobuf::MessageOfGate* gate_message
+        );
+        ::protobuf::MessageOfGate* unsafe_arena_release_gate_message();
+
+        // .protobuf.MessageOfChest chest_message = 9;
+        bool has_chest_message() const;
+
+    private:
+        bool _internal_has_chest_message() const;
+
+    public:
+        void clear_chest_message();
+        const ::protobuf::MessageOfChest& chest_message() const;
+        PROTOBUF_NODISCARD ::protobuf::MessageOfChest* release_chest_message();
+        ::protobuf::MessageOfChest* mutable_chest_message();
+        void set_allocated_chest_message(::protobuf::MessageOfChest* chest_message);
+
+    private:
+        const ::protobuf::MessageOfChest& _internal_chest_message() const;
+        ::protobuf::MessageOfChest* _internal_mutable_chest_message();
+
+    public:
+        void unsafe_arena_set_allocated_chest_message(
+            ::protobuf::MessageOfChest* chest_message
+        );
+        ::protobuf::MessageOfChest* unsafe_arena_release_chest_message();
+
         void clear_message_of_obj();
         MessageOfObjCase message_of_obj_case() const;
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfObj)
@@ -3989,6 +3761,10 @@ namespace protobuf
         void set_has_prop_message();
         void set_has_bullet_message();
         void set_has_bombed_bullet_message();
+        void set_has_classroom_message();
+        void set_has_door_message();
+        void set_has_gate_message();
+        void set_has_chest_message();
 
         inline bool has_message_of_obj() const;
         inline void clear_has_message_of_obj();
@@ -4011,6 +3787,10 @@ namespace protobuf
                 ::protobuf::MessageOfProp* prop_message_;
                 ::protobuf::MessageOfBullet* bullet_message_;
                 ::protobuf::MessageOfBombedBullet* bombed_bullet_message_;
+                ::protobuf::MessageOfClassroom* classroom_message_;
+                ::protobuf::MessageOfDoor* door_message_;
+                ::protobuf::MessageOfGate* gate_message_;
+                ::protobuf::MessageOfChest* chest_message_;
             } message_of_obj_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
             uint32_t _oneof_case_[1];
@@ -4089,7 +3869,7 @@ namespace protobuf
             );
         }
         static constexpr int kIndexInFileMessages =
-            14;
+            13;
 
         friend void swap(MessageOfAll& a, MessageOfAll& b)
         {
@@ -4377,7 +4157,7 @@ namespace protobuf
             );
         }
         static constexpr int kIndexInFileMessages =
-            15;
+            14;
 
         friend void swap(MessageToClient& a, MessageToClient& b)
         {
@@ -4470,9 +4250,8 @@ namespace protobuf
         enum : int
         {
             kObjMessageFieldNumber = 1,
-            kMapMessageFieldNumber = 2,
-            kAllMessageFieldNumber = 4,
-            kGameStateFieldNumber = 3,
+            kAllMessageFieldNumber = 3,
+            kGameStateFieldNumber = 2,
         };
         // repeated .protobuf.MessageOfObj obj_message = 1;
         int obj_message_size() const;
@@ -4496,30 +4275,7 @@ namespace protobuf
         const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfObj>&
             obj_message() const;
 
-        // .protobuf.MessageOfMap map_message = 2;
-        bool has_map_message() const;
-
-    private:
-        bool _internal_has_map_message() const;
-
-    public:
-        void clear_map_message();
-        const ::protobuf::MessageOfMap& map_message() const;
-        PROTOBUF_NODISCARD ::protobuf::MessageOfMap* release_map_message();
-        ::protobuf::MessageOfMap* mutable_map_message();
-        void set_allocated_map_message(::protobuf::MessageOfMap* map_message);
-
-    private:
-        const ::protobuf::MessageOfMap& _internal_map_message() const;
-        ::protobuf::MessageOfMap* _internal_mutable_map_message();
-
-    public:
-        void unsafe_arena_set_allocated_map_message(
-            ::protobuf::MessageOfMap* map_message
-        );
-        ::protobuf::MessageOfMap* unsafe_arena_release_map_message();
-
-        // .protobuf.MessageOfAll all_message = 4;
+        // .protobuf.MessageOfAll all_message = 3;
         bool has_all_message() const;
 
     private:
@@ -4542,7 +4298,7 @@ namespace protobuf
         );
         ::protobuf::MessageOfAll* unsafe_arena_release_all_message();
 
-        // .protobuf.GameState game_state = 3;
+        // .protobuf.GameState game_state = 2;
         void clear_game_state();
         ::protobuf::GameState game_state() const;
         void set_game_state(::protobuf::GameState value);
@@ -4564,7 +4320,6 @@ namespace protobuf
         struct Impl_
         {
             ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfObj> obj_message_;
-            ::protobuf::MessageOfMap* map_message_;
             ::protobuf::MessageOfAll* all_message_;
             int game_state_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -4643,7 +4398,7 @@ namespace protobuf
             );
         }
         static constexpr int kIndexInFileMessages =
-            16;
+            15;
 
         friend void swap(MoveRes& a, MoveRes& b)
         {
@@ -4859,7 +4614,7 @@ namespace protobuf
             );
         }
         static constexpr int kIndexInFileMessages =
-            17;
+            16;
 
         friend void swap(BoolRes& a, BoolRes& b)
         {
@@ -5051,7 +4806,7 @@ namespace protobuf
             );
         }
         static constexpr int kIndexInFileMessages =
-            18;
+            17;
 
         friend void swap(MsgRes& a, MsgRes& b)
         {
@@ -5310,52 +5065,87 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfStudent.determination)
     }
 
-    // int32 fail_num = 5;
-    inline void MessageOfStudent::clear_fail_num()
+    // int32 addiction = 5;
+    inline void MessageOfStudent::clear_addiction()
     {
-        _impl_.fail_num_ = 0;
+        _impl_.addiction_ = 0;
     }
-    inline int32_t MessageOfStudent::_internal_fail_num() const
+    inline int32_t MessageOfStudent::_internal_addiction() const
     {
-        return _impl_.fail_num_;
+        return _impl_.addiction_;
     }
-    inline int32_t MessageOfStudent::fail_num() const
+    inline int32_t MessageOfStudent::addiction() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfStudent.fail_num)
-        return _internal_fail_num();
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfStudent.addiction)
+        return _internal_addiction();
     }
-    inline void MessageOfStudent::_internal_set_fail_num(int32_t value)
+    inline void MessageOfStudent::_internal_set_addiction(int32_t value)
     {
-        _impl_.fail_num_ = value;
+        _impl_.addiction_ = value;
     }
-    inline void MessageOfStudent::set_fail_num(int32_t value)
+    inline void MessageOfStudent::set_addiction(int32_t value)
     {
-        _internal_set_fail_num(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfStudent.fail_num)
+        _internal_set_addiction(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfStudent.addiction)
     }
 
-    // double time_until_skill_available = 6;
+    // repeated double time_until_skill_available = 6;
+    inline int MessageOfStudent::_internal_time_until_skill_available_size() const
+    {
+        return _impl_.time_until_skill_available_.size();
+    }
+    inline int MessageOfStudent::time_until_skill_available_size() const
+    {
+        return _internal_time_until_skill_available_size();
+    }
     inline void MessageOfStudent::clear_time_until_skill_available()
     {
-        _impl_.time_until_skill_available_ = 0;
+        _impl_.time_until_skill_available_.Clear();
     }
-    inline double MessageOfStudent::_internal_time_until_skill_available() const
+    inline double MessageOfStudent::_internal_time_until_skill_available(int index) const
+    {
+        return _impl_.time_until_skill_available_.Get(index);
+    }
+    inline double MessageOfStudent::time_until_skill_available(int index) const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfStudent.time_until_skill_available)
+        return _internal_time_until_skill_available(index);
+    }
+    inline void MessageOfStudent::set_time_until_skill_available(int index, double value)
+    {
+        _impl_.time_until_skill_available_.Set(index, value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfStudent.time_until_skill_available)
+    }
+    inline void MessageOfStudent::_internal_add_time_until_skill_available(double value)
+    {
+        _impl_.time_until_skill_available_.Add(value);
+    }
+    inline void MessageOfStudent::add_time_until_skill_available(double value)
+    {
+        _internal_add_time_until_skill_available(value);
+        // @@protoc_insertion_point(field_add:protobuf.MessageOfStudent.time_until_skill_available)
+    }
+    inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>&
+        MessageOfStudent::_internal_time_until_skill_available() const
     {
         return _impl_.time_until_skill_available_;
     }
-    inline double MessageOfStudent::time_until_skill_available() const
+    inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>&
+        MessageOfStudent::time_until_skill_available() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfStudent.time_until_skill_available)
+        // @@protoc_insertion_point(field_list:protobuf.MessageOfStudent.time_until_skill_available)
         return _internal_time_until_skill_available();
     }
-    inline void MessageOfStudent::_internal_set_time_until_skill_available(double value)
+    inline ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>*
+        MessageOfStudent::_internal_mutable_time_until_skill_available()
     {
-        _impl_.time_until_skill_available_ = value;
+        return &_impl_.time_until_skill_available_;
     }
-    inline void MessageOfStudent::set_time_until_skill_available(double value)
+    inline ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>*
+        MessageOfStudent::mutable_time_until_skill_available()
     {
-        _internal_set_time_until_skill_available(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfStudent.time_until_skill_available)
+        // @@protoc_insertion_point(field_mutable_list:protobuf.MessageOfStudent.time_until_skill_available)
+        return _internal_mutable_time_until_skill_available();
     }
 
     // .protobuf.PlaceType place = 7;
@@ -5506,54 +5296,6 @@ namespace protobuf
     {
         _internal_set_state(value);
         // @@protoc_insertion_point(field_set:protobuf.MessageOfStudent.state)
-    }
-
-    // double fail_time = 12;
-    inline void MessageOfStudent::clear_fail_time()
-    {
-        _impl_.fail_time_ = 0;
-    }
-    inline double MessageOfStudent::_internal_fail_time() const
-    {
-        return _impl_.fail_time_;
-    }
-    inline double MessageOfStudent::fail_time() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfStudent.fail_time)
-        return _internal_fail_time();
-    }
-    inline void MessageOfStudent::_internal_set_fail_time(double value)
-    {
-        _impl_.fail_time_ = value;
-    }
-    inline void MessageOfStudent::set_fail_time(double value)
-    {
-        _internal_set_fail_time(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfStudent.fail_time)
-    }
-
-    // double emo_time = 14;
-    inline void MessageOfStudent::clear_emo_time()
-    {
-        _impl_.emo_time_ = 0;
-    }
-    inline double MessageOfStudent::_internal_emo_time() const
-    {
-        return _impl_.emo_time_;
-    }
-    inline double MessageOfStudent::emo_time() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfStudent.emo_time)
-        return _internal_emo_time();
-    }
-    inline void MessageOfStudent::_internal_set_emo_time(double value)
-    {
-        _impl_.emo_time_ = value;
-    }
-    inline void MessageOfStudent::set_emo_time(double value)
-    {
-        _internal_set_emo_time(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfStudent.emo_time)
     }
 
     // int64 player_id = 15;
@@ -5926,28 +5668,63 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfTricker.damage)
     }
 
-    // double time_until_skill_available = 5;
+    // repeated double time_until_skill_available = 5;
+    inline int MessageOfTricker::_internal_time_until_skill_available_size() const
+    {
+        return _impl_.time_until_skill_available_.size();
+    }
+    inline int MessageOfTricker::time_until_skill_available_size() const
+    {
+        return _internal_time_until_skill_available_size();
+    }
     inline void MessageOfTricker::clear_time_until_skill_available()
     {
-        _impl_.time_until_skill_available_ = 0;
+        _impl_.time_until_skill_available_.Clear();
     }
-    inline double MessageOfTricker::_internal_time_until_skill_available() const
+    inline double MessageOfTricker::_internal_time_until_skill_available(int index) const
+    {
+        return _impl_.time_until_skill_available_.Get(index);
+    }
+    inline double MessageOfTricker::time_until_skill_available(int index) const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfTricker.time_until_skill_available)
+        return _internal_time_until_skill_available(index);
+    }
+    inline void MessageOfTricker::set_time_until_skill_available(int index, double value)
+    {
+        _impl_.time_until_skill_available_.Set(index, value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfTricker.time_until_skill_available)
+    }
+    inline void MessageOfTricker::_internal_add_time_until_skill_available(double value)
+    {
+        _impl_.time_until_skill_available_.Add(value);
+    }
+    inline void MessageOfTricker::add_time_until_skill_available(double value)
+    {
+        _internal_add_time_until_skill_available(value);
+        // @@protoc_insertion_point(field_add:protobuf.MessageOfTricker.time_until_skill_available)
+    }
+    inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>&
+        MessageOfTricker::_internal_time_until_skill_available() const
     {
         return _impl_.time_until_skill_available_;
     }
-    inline double MessageOfTricker::time_until_skill_available() const
+    inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>&
+        MessageOfTricker::time_until_skill_available() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfTricker.time_until_skill_available)
+        // @@protoc_insertion_point(field_list:protobuf.MessageOfTricker.time_until_skill_available)
         return _internal_time_until_skill_available();
     }
-    inline void MessageOfTricker::_internal_set_time_until_skill_available(double value)
+    inline ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>*
+        MessageOfTricker::_internal_mutable_time_until_skill_available()
     {
-        _impl_.time_until_skill_available_ = value;
+        return &_impl_.time_until_skill_available_;
     }
-    inline void MessageOfTricker::set_time_until_skill_available(double value)
+    inline ::PROTOBUF_NAMESPACE_ID::RepeatedField<double>*
+        MessageOfTricker::mutable_time_until_skill_available()
     {
-        _internal_set_time_until_skill_available(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfTricker.time_until_skill_available)
+        // @@protoc_insertion_point(field_mutable_list:protobuf.MessageOfTricker.time_until_skill_available)
+        return _internal_mutable_time_until_skill_available();
     }
 
     // .protobuf.PlaceType place = 6;
@@ -7268,398 +7045,6 @@ namespace protobuf
 
     // -------------------------------------------------------------------
 
-    // MessageOfMapObj
-
-    // .protobuf.MessageOfClassroom classroom_message = 1;
-    inline bool MessageOfMapObj::_internal_has_classroom_message() const
-    {
-        return message_of_map_obj_case() == kClassroomMessage;
-    }
-    inline bool MessageOfMapObj::has_classroom_message() const
-    {
-        return _internal_has_classroom_message();
-    }
-    inline void MessageOfMapObj::set_has_classroom_message()
-    {
-        _impl_._oneof_case_[0] = kClassroomMessage;
-    }
-    inline void MessageOfMapObj::clear_classroom_message()
-    {
-        if (_internal_has_classroom_message())
-        {
-            if (GetArenaForAllocation() == nullptr)
-            {
-                delete _impl_.message_of_map_obj_.classroom_message_;
-            }
-            clear_has_message_of_map_obj();
-        }
-    }
-    inline ::protobuf::MessageOfClassroom* MessageOfMapObj::release_classroom_message()
-    {
-        // @@protoc_insertion_point(field_release:protobuf.MessageOfMapObj.classroom_message)
-        if (_internal_has_classroom_message())
-        {
-            clear_has_message_of_map_obj();
-            ::protobuf::MessageOfClassroom* temp = _impl_.message_of_map_obj_.classroom_message_;
-            if (GetArenaForAllocation() != nullptr)
-            {
-                temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-            }
-            _impl_.message_of_map_obj_.classroom_message_ = nullptr;
-            return temp;
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-    inline const ::protobuf::MessageOfClassroom& MessageOfMapObj::_internal_classroom_message() const
-    {
-        return _internal_has_classroom_message() ? *_impl_.message_of_map_obj_.classroom_message_ : reinterpret_cast<::protobuf::MessageOfClassroom&>(::protobuf::_MessageOfClassroom_default_instance_);
-    }
-    inline const ::protobuf::MessageOfClassroom& MessageOfMapObj::classroom_message() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfMapObj.classroom_message)
-        return _internal_classroom_message();
-    }
-    inline ::protobuf::MessageOfClassroom* MessageOfMapObj::unsafe_arena_release_classroom_message()
-    {
-        // @@protoc_insertion_point(field_unsafe_arena_release:protobuf.MessageOfMapObj.classroom_message)
-        if (_internal_has_classroom_message())
-        {
-            clear_has_message_of_map_obj();
-            ::protobuf::MessageOfClassroom* temp = _impl_.message_of_map_obj_.classroom_message_;
-            _impl_.message_of_map_obj_.classroom_message_ = nullptr;
-            return temp;
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-    inline void MessageOfMapObj::unsafe_arena_set_allocated_classroom_message(::protobuf::MessageOfClassroom* classroom_message)
-    {
-        clear_message_of_map_obj();
-        if (classroom_message)
-        {
-            set_has_classroom_message();
-            _impl_.message_of_map_obj_.classroom_message_ = classroom_message;
-        }
-        // @@protoc_insertion_point(field_unsafe_arena_set_allocated:protobuf.MessageOfMapObj.classroom_message)
-    }
-    inline ::protobuf::MessageOfClassroom* MessageOfMapObj::_internal_mutable_classroom_message()
-    {
-        if (!_internal_has_classroom_message())
-        {
-            clear_message_of_map_obj();
-            set_has_classroom_message();
-            _impl_.message_of_map_obj_.classroom_message_ = CreateMaybeMessage<::protobuf::MessageOfClassroom>(GetArenaForAllocation());
-        }
-        return _impl_.message_of_map_obj_.classroom_message_;
-    }
-    inline ::protobuf::MessageOfClassroom* MessageOfMapObj::mutable_classroom_message()
-    {
-        ::protobuf::MessageOfClassroom* _msg = _internal_mutable_classroom_message();
-        // @@protoc_insertion_point(field_mutable:protobuf.MessageOfMapObj.classroom_message)
-        return _msg;
-    }
-
-    // .protobuf.MessageOfDoor door_message = 2;
-    inline bool MessageOfMapObj::_internal_has_door_message() const
-    {
-        return message_of_map_obj_case() == kDoorMessage;
-    }
-    inline bool MessageOfMapObj::has_door_message() const
-    {
-        return _internal_has_door_message();
-    }
-    inline void MessageOfMapObj::set_has_door_message()
-    {
-        _impl_._oneof_case_[0] = kDoorMessage;
-    }
-    inline void MessageOfMapObj::clear_door_message()
-    {
-        if (_internal_has_door_message())
-        {
-            if (GetArenaForAllocation() == nullptr)
-            {
-                delete _impl_.message_of_map_obj_.door_message_;
-            }
-            clear_has_message_of_map_obj();
-        }
-    }
-    inline ::protobuf::MessageOfDoor* MessageOfMapObj::release_door_message()
-    {
-        // @@protoc_insertion_point(field_release:protobuf.MessageOfMapObj.door_message)
-        if (_internal_has_door_message())
-        {
-            clear_has_message_of_map_obj();
-            ::protobuf::MessageOfDoor* temp = _impl_.message_of_map_obj_.door_message_;
-            if (GetArenaForAllocation() != nullptr)
-            {
-                temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-            }
-            _impl_.message_of_map_obj_.door_message_ = nullptr;
-            return temp;
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-    inline const ::protobuf::MessageOfDoor& MessageOfMapObj::_internal_door_message() const
-    {
-        return _internal_has_door_message() ? *_impl_.message_of_map_obj_.door_message_ : reinterpret_cast<::protobuf::MessageOfDoor&>(::protobuf::_MessageOfDoor_default_instance_);
-    }
-    inline const ::protobuf::MessageOfDoor& MessageOfMapObj::door_message() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfMapObj.door_message)
-        return _internal_door_message();
-    }
-    inline ::protobuf::MessageOfDoor* MessageOfMapObj::unsafe_arena_release_door_message()
-    {
-        // @@protoc_insertion_point(field_unsafe_arena_release:protobuf.MessageOfMapObj.door_message)
-        if (_internal_has_door_message())
-        {
-            clear_has_message_of_map_obj();
-            ::protobuf::MessageOfDoor* temp = _impl_.message_of_map_obj_.door_message_;
-            _impl_.message_of_map_obj_.door_message_ = nullptr;
-            return temp;
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-    inline void MessageOfMapObj::unsafe_arena_set_allocated_door_message(::protobuf::MessageOfDoor* door_message)
-    {
-        clear_message_of_map_obj();
-        if (door_message)
-        {
-            set_has_door_message();
-            _impl_.message_of_map_obj_.door_message_ = door_message;
-        }
-        // @@protoc_insertion_point(field_unsafe_arena_set_allocated:protobuf.MessageOfMapObj.door_message)
-    }
-    inline ::protobuf::MessageOfDoor* MessageOfMapObj::_internal_mutable_door_message()
-    {
-        if (!_internal_has_door_message())
-        {
-            clear_message_of_map_obj();
-            set_has_door_message();
-            _impl_.message_of_map_obj_.door_message_ = CreateMaybeMessage<::protobuf::MessageOfDoor>(GetArenaForAllocation());
-        }
-        return _impl_.message_of_map_obj_.door_message_;
-    }
-    inline ::protobuf::MessageOfDoor* MessageOfMapObj::mutable_door_message()
-    {
-        ::protobuf::MessageOfDoor* _msg = _internal_mutable_door_message();
-        // @@protoc_insertion_point(field_mutable:protobuf.MessageOfMapObj.door_message)
-        return _msg;
-    }
-
-    // .protobuf.MessageOfGate gate_message = 3;
-    inline bool MessageOfMapObj::_internal_has_gate_message() const
-    {
-        return message_of_map_obj_case() == kGateMessage;
-    }
-    inline bool MessageOfMapObj::has_gate_message() const
-    {
-        return _internal_has_gate_message();
-    }
-    inline void MessageOfMapObj::set_has_gate_message()
-    {
-        _impl_._oneof_case_[0] = kGateMessage;
-    }
-    inline void MessageOfMapObj::clear_gate_message()
-    {
-        if (_internal_has_gate_message())
-        {
-            if (GetArenaForAllocation() == nullptr)
-            {
-                delete _impl_.message_of_map_obj_.gate_message_;
-            }
-            clear_has_message_of_map_obj();
-        }
-    }
-    inline ::protobuf::MessageOfGate* MessageOfMapObj::release_gate_message()
-    {
-        // @@protoc_insertion_point(field_release:protobuf.MessageOfMapObj.gate_message)
-        if (_internal_has_gate_message())
-        {
-            clear_has_message_of_map_obj();
-            ::protobuf::MessageOfGate* temp = _impl_.message_of_map_obj_.gate_message_;
-            if (GetArenaForAllocation() != nullptr)
-            {
-                temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-            }
-            _impl_.message_of_map_obj_.gate_message_ = nullptr;
-            return temp;
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-    inline const ::protobuf::MessageOfGate& MessageOfMapObj::_internal_gate_message() const
-    {
-        return _internal_has_gate_message() ? *_impl_.message_of_map_obj_.gate_message_ : reinterpret_cast<::protobuf::MessageOfGate&>(::protobuf::_MessageOfGate_default_instance_);
-    }
-    inline const ::protobuf::MessageOfGate& MessageOfMapObj::gate_message() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfMapObj.gate_message)
-        return _internal_gate_message();
-    }
-    inline ::protobuf::MessageOfGate* MessageOfMapObj::unsafe_arena_release_gate_message()
-    {
-        // @@protoc_insertion_point(field_unsafe_arena_release:protobuf.MessageOfMapObj.gate_message)
-        if (_internal_has_gate_message())
-        {
-            clear_has_message_of_map_obj();
-            ::protobuf::MessageOfGate* temp = _impl_.message_of_map_obj_.gate_message_;
-            _impl_.message_of_map_obj_.gate_message_ = nullptr;
-            return temp;
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-    inline void MessageOfMapObj::unsafe_arena_set_allocated_gate_message(::protobuf::MessageOfGate* gate_message)
-    {
-        clear_message_of_map_obj();
-        if (gate_message)
-        {
-            set_has_gate_message();
-            _impl_.message_of_map_obj_.gate_message_ = gate_message;
-        }
-        // @@protoc_insertion_point(field_unsafe_arena_set_allocated:protobuf.MessageOfMapObj.gate_message)
-    }
-    inline ::protobuf::MessageOfGate* MessageOfMapObj::_internal_mutable_gate_message()
-    {
-        if (!_internal_has_gate_message())
-        {
-            clear_message_of_map_obj();
-            set_has_gate_message();
-            _impl_.message_of_map_obj_.gate_message_ = CreateMaybeMessage<::protobuf::MessageOfGate>(GetArenaForAllocation());
-        }
-        return _impl_.message_of_map_obj_.gate_message_;
-    }
-    inline ::protobuf::MessageOfGate* MessageOfMapObj::mutable_gate_message()
-    {
-        ::protobuf::MessageOfGate* _msg = _internal_mutable_gate_message();
-        // @@protoc_insertion_point(field_mutable:protobuf.MessageOfMapObj.gate_message)
-        return _msg;
-    }
-
-    // .protobuf.MessageOfChest chest_message = 4;
-    inline bool MessageOfMapObj::_internal_has_chest_message() const
-    {
-        return message_of_map_obj_case() == kChestMessage;
-    }
-    inline bool MessageOfMapObj::has_chest_message() const
-    {
-        return _internal_has_chest_message();
-    }
-    inline void MessageOfMapObj::set_has_chest_message()
-    {
-        _impl_._oneof_case_[0] = kChestMessage;
-    }
-    inline void MessageOfMapObj::clear_chest_message()
-    {
-        if (_internal_has_chest_message())
-        {
-            if (GetArenaForAllocation() == nullptr)
-            {
-                delete _impl_.message_of_map_obj_.chest_message_;
-            }
-            clear_has_message_of_map_obj();
-        }
-    }
-    inline ::protobuf::MessageOfChest* MessageOfMapObj::release_chest_message()
-    {
-        // @@protoc_insertion_point(field_release:protobuf.MessageOfMapObj.chest_message)
-        if (_internal_has_chest_message())
-        {
-            clear_has_message_of_map_obj();
-            ::protobuf::MessageOfChest* temp = _impl_.message_of_map_obj_.chest_message_;
-            if (GetArenaForAllocation() != nullptr)
-            {
-                temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-            }
-            _impl_.message_of_map_obj_.chest_message_ = nullptr;
-            return temp;
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-    inline const ::protobuf::MessageOfChest& MessageOfMapObj::_internal_chest_message() const
-    {
-        return _internal_has_chest_message() ? *_impl_.message_of_map_obj_.chest_message_ : reinterpret_cast<::protobuf::MessageOfChest&>(::protobuf::_MessageOfChest_default_instance_);
-    }
-    inline const ::protobuf::MessageOfChest& MessageOfMapObj::chest_message() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfMapObj.chest_message)
-        return _internal_chest_message();
-    }
-    inline ::protobuf::MessageOfChest* MessageOfMapObj::unsafe_arena_release_chest_message()
-    {
-        // @@protoc_insertion_point(field_unsafe_arena_release:protobuf.MessageOfMapObj.chest_message)
-        if (_internal_has_chest_message())
-        {
-            clear_has_message_of_map_obj();
-            ::protobuf::MessageOfChest* temp = _impl_.message_of_map_obj_.chest_message_;
-            _impl_.message_of_map_obj_.chest_message_ = nullptr;
-            return temp;
-        }
-        else
-        {
-            return nullptr;
-        }
-    }
-    inline void MessageOfMapObj::unsafe_arena_set_allocated_chest_message(::protobuf::MessageOfChest* chest_message)
-    {
-        clear_message_of_map_obj();
-        if (chest_message)
-        {
-            set_has_chest_message();
-            _impl_.message_of_map_obj_.chest_message_ = chest_message;
-        }
-        // @@protoc_insertion_point(field_unsafe_arena_set_allocated:protobuf.MessageOfMapObj.chest_message)
-    }
-    inline ::protobuf::MessageOfChest* MessageOfMapObj::_internal_mutable_chest_message()
-    {
-        if (!_internal_has_chest_message())
-        {
-            clear_message_of_map_obj();
-            set_has_chest_message();
-            _impl_.message_of_map_obj_.chest_message_ = CreateMaybeMessage<::protobuf::MessageOfChest>(GetArenaForAllocation());
-        }
-        return _impl_.message_of_map_obj_.chest_message_;
-    }
-    inline ::protobuf::MessageOfChest* MessageOfMapObj::mutable_chest_message()
-    {
-        ::protobuf::MessageOfChest* _msg = _internal_mutable_chest_message();
-        // @@protoc_insertion_point(field_mutable:protobuf.MessageOfMapObj.chest_message)
-        return _msg;
-    }
-
-    inline bool MessageOfMapObj::has_message_of_map_obj() const
-    {
-        return message_of_map_obj_case() != MESSAGE_OF_MAP_OBJ_NOT_SET;
-    }
-    inline void MessageOfMapObj::clear_has_message_of_map_obj()
-    {
-        _impl_._oneof_case_[0] = MESSAGE_OF_MAP_OBJ_NOT_SET;
-    }
-    inline MessageOfMapObj::MessageOfMapObjCase MessageOfMapObj::message_of_map_obj_case() const
-    {
-        return MessageOfMapObj::MessageOfMapObjCase(_impl_._oneof_case_[0]);
-    }
-    // -------------------------------------------------------------------
-
     // MessageOfMap_Row
 
     // repeated .protobuf.PlaceType col = 1;
@@ -7768,56 +7153,6 @@ namespace protobuf
     {
         // @@protoc_insertion_point(field_list:protobuf.MessageOfMap.row)
         return _impl_.row_;
-    }
-
-    // repeated .protobuf.MessageOfMapObj map_obj_message = 3;
-    inline int MessageOfMap::_internal_map_obj_message_size() const
-    {
-        return _impl_.map_obj_message_.size();
-    }
-    inline int MessageOfMap::map_obj_message_size() const
-    {
-        return _internal_map_obj_message_size();
-    }
-    inline void MessageOfMap::clear_map_obj_message()
-    {
-        _impl_.map_obj_message_.Clear();
-    }
-    inline ::protobuf::MessageOfMapObj* MessageOfMap::mutable_map_obj_message(int index)
-    {
-        // @@protoc_insertion_point(field_mutable:protobuf.MessageOfMap.map_obj_message)
-        return _impl_.map_obj_message_.Mutable(index);
-    }
-    inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfMapObj>*
-        MessageOfMap::mutable_map_obj_message()
-    {
-        // @@protoc_insertion_point(field_mutable_list:protobuf.MessageOfMap.map_obj_message)
-        return &_impl_.map_obj_message_;
-    }
-    inline const ::protobuf::MessageOfMapObj& MessageOfMap::_internal_map_obj_message(int index) const
-    {
-        return _impl_.map_obj_message_.Get(index);
-    }
-    inline const ::protobuf::MessageOfMapObj& MessageOfMap::map_obj_message(int index) const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfMap.map_obj_message)
-        return _internal_map_obj_message(index);
-    }
-    inline ::protobuf::MessageOfMapObj* MessageOfMap::_internal_add_map_obj_message()
-    {
-        return _impl_.map_obj_message_.Add();
-    }
-    inline ::protobuf::MessageOfMapObj* MessageOfMap::add_map_obj_message()
-    {
-        ::protobuf::MessageOfMapObj* _add = _internal_add_map_obj_message();
-        // @@protoc_insertion_point(field_add:protobuf.MessageOfMap.map_obj_message)
-        return _add;
-    }
-    inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<::protobuf::MessageOfMapObj>&
-        MessageOfMap::map_obj_message() const
-    {
-        // @@protoc_insertion_point(field_list:protobuf.MessageOfMap.map_obj_message)
-        return _impl_.map_obj_message_;
     }
 
     // -------------------------------------------------------------------
@@ -8294,6 +7629,382 @@ namespace protobuf
         return _msg;
     }
 
+    // .protobuf.MessageOfClassroom classroom_message = 6;
+    inline bool MessageOfObj::_internal_has_classroom_message() const
+    {
+        return message_of_obj_case() == kClassroomMessage;
+    }
+    inline bool MessageOfObj::has_classroom_message() const
+    {
+        return _internal_has_classroom_message();
+    }
+    inline void MessageOfObj::set_has_classroom_message()
+    {
+        _impl_._oneof_case_[0] = kClassroomMessage;
+    }
+    inline void MessageOfObj::clear_classroom_message()
+    {
+        if (_internal_has_classroom_message())
+        {
+            if (GetArenaForAllocation() == nullptr)
+            {
+                delete _impl_.message_of_obj_.classroom_message_;
+            }
+            clear_has_message_of_obj();
+        }
+    }
+    inline ::protobuf::MessageOfClassroom* MessageOfObj::release_classroom_message()
+    {
+        // @@protoc_insertion_point(field_release:protobuf.MessageOfObj.classroom_message)
+        if (_internal_has_classroom_message())
+        {
+            clear_has_message_of_obj();
+            ::protobuf::MessageOfClassroom* temp = _impl_.message_of_obj_.classroom_message_;
+            if (GetArenaForAllocation() != nullptr)
+            {
+                temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+            }
+            _impl_.message_of_obj_.classroom_message_ = nullptr;
+            return temp;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    inline const ::protobuf::MessageOfClassroom& MessageOfObj::_internal_classroom_message() const
+    {
+        return _internal_has_classroom_message() ? *_impl_.message_of_obj_.classroom_message_ : reinterpret_cast<::protobuf::MessageOfClassroom&>(::protobuf::_MessageOfClassroom_default_instance_);
+    }
+    inline const ::protobuf::MessageOfClassroom& MessageOfObj::classroom_message() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfObj.classroom_message)
+        return _internal_classroom_message();
+    }
+    inline ::protobuf::MessageOfClassroom* MessageOfObj::unsafe_arena_release_classroom_message()
+    {
+        // @@protoc_insertion_point(field_unsafe_arena_release:protobuf.MessageOfObj.classroom_message)
+        if (_internal_has_classroom_message())
+        {
+            clear_has_message_of_obj();
+            ::protobuf::MessageOfClassroom* temp = _impl_.message_of_obj_.classroom_message_;
+            _impl_.message_of_obj_.classroom_message_ = nullptr;
+            return temp;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    inline void MessageOfObj::unsafe_arena_set_allocated_classroom_message(::protobuf::MessageOfClassroom* classroom_message)
+    {
+        clear_message_of_obj();
+        if (classroom_message)
+        {
+            set_has_classroom_message();
+            _impl_.message_of_obj_.classroom_message_ = classroom_message;
+        }
+        // @@protoc_insertion_point(field_unsafe_arena_set_allocated:protobuf.MessageOfObj.classroom_message)
+    }
+    inline ::protobuf::MessageOfClassroom* MessageOfObj::_internal_mutable_classroom_message()
+    {
+        if (!_internal_has_classroom_message())
+        {
+            clear_message_of_obj();
+            set_has_classroom_message();
+            _impl_.message_of_obj_.classroom_message_ = CreateMaybeMessage<::protobuf::MessageOfClassroom>(GetArenaForAllocation());
+        }
+        return _impl_.message_of_obj_.classroom_message_;
+    }
+    inline ::protobuf::MessageOfClassroom* MessageOfObj::mutable_classroom_message()
+    {
+        ::protobuf::MessageOfClassroom* _msg = _internal_mutable_classroom_message();
+        // @@protoc_insertion_point(field_mutable:protobuf.MessageOfObj.classroom_message)
+        return _msg;
+    }
+
+    // .protobuf.MessageOfDoor door_message = 7;
+    inline bool MessageOfObj::_internal_has_door_message() const
+    {
+        return message_of_obj_case() == kDoorMessage;
+    }
+    inline bool MessageOfObj::has_door_message() const
+    {
+        return _internal_has_door_message();
+    }
+    inline void MessageOfObj::set_has_door_message()
+    {
+        _impl_._oneof_case_[0] = kDoorMessage;
+    }
+    inline void MessageOfObj::clear_door_message()
+    {
+        if (_internal_has_door_message())
+        {
+            if (GetArenaForAllocation() == nullptr)
+            {
+                delete _impl_.message_of_obj_.door_message_;
+            }
+            clear_has_message_of_obj();
+        }
+    }
+    inline ::protobuf::MessageOfDoor* MessageOfObj::release_door_message()
+    {
+        // @@protoc_insertion_point(field_release:protobuf.MessageOfObj.door_message)
+        if (_internal_has_door_message())
+        {
+            clear_has_message_of_obj();
+            ::protobuf::MessageOfDoor* temp = _impl_.message_of_obj_.door_message_;
+            if (GetArenaForAllocation() != nullptr)
+            {
+                temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+            }
+            _impl_.message_of_obj_.door_message_ = nullptr;
+            return temp;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    inline const ::protobuf::MessageOfDoor& MessageOfObj::_internal_door_message() const
+    {
+        return _internal_has_door_message() ? *_impl_.message_of_obj_.door_message_ : reinterpret_cast<::protobuf::MessageOfDoor&>(::protobuf::_MessageOfDoor_default_instance_);
+    }
+    inline const ::protobuf::MessageOfDoor& MessageOfObj::door_message() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfObj.door_message)
+        return _internal_door_message();
+    }
+    inline ::protobuf::MessageOfDoor* MessageOfObj::unsafe_arena_release_door_message()
+    {
+        // @@protoc_insertion_point(field_unsafe_arena_release:protobuf.MessageOfObj.door_message)
+        if (_internal_has_door_message())
+        {
+            clear_has_message_of_obj();
+            ::protobuf::MessageOfDoor* temp = _impl_.message_of_obj_.door_message_;
+            _impl_.message_of_obj_.door_message_ = nullptr;
+            return temp;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    inline void MessageOfObj::unsafe_arena_set_allocated_door_message(::protobuf::MessageOfDoor* door_message)
+    {
+        clear_message_of_obj();
+        if (door_message)
+        {
+            set_has_door_message();
+            _impl_.message_of_obj_.door_message_ = door_message;
+        }
+        // @@protoc_insertion_point(field_unsafe_arena_set_allocated:protobuf.MessageOfObj.door_message)
+    }
+    inline ::protobuf::MessageOfDoor* MessageOfObj::_internal_mutable_door_message()
+    {
+        if (!_internal_has_door_message())
+        {
+            clear_message_of_obj();
+            set_has_door_message();
+            _impl_.message_of_obj_.door_message_ = CreateMaybeMessage<::protobuf::MessageOfDoor>(GetArenaForAllocation());
+        }
+        return _impl_.message_of_obj_.door_message_;
+    }
+    inline ::protobuf::MessageOfDoor* MessageOfObj::mutable_door_message()
+    {
+        ::protobuf::MessageOfDoor* _msg = _internal_mutable_door_message();
+        // @@protoc_insertion_point(field_mutable:protobuf.MessageOfObj.door_message)
+        return _msg;
+    }
+
+    // .protobuf.MessageOfGate gate_message = 8;
+    inline bool MessageOfObj::_internal_has_gate_message() const
+    {
+        return message_of_obj_case() == kGateMessage;
+    }
+    inline bool MessageOfObj::has_gate_message() const
+    {
+        return _internal_has_gate_message();
+    }
+    inline void MessageOfObj::set_has_gate_message()
+    {
+        _impl_._oneof_case_[0] = kGateMessage;
+    }
+    inline void MessageOfObj::clear_gate_message()
+    {
+        if (_internal_has_gate_message())
+        {
+            if (GetArenaForAllocation() == nullptr)
+            {
+                delete _impl_.message_of_obj_.gate_message_;
+            }
+            clear_has_message_of_obj();
+        }
+    }
+    inline ::protobuf::MessageOfGate* MessageOfObj::release_gate_message()
+    {
+        // @@protoc_insertion_point(field_release:protobuf.MessageOfObj.gate_message)
+        if (_internal_has_gate_message())
+        {
+            clear_has_message_of_obj();
+            ::protobuf::MessageOfGate* temp = _impl_.message_of_obj_.gate_message_;
+            if (GetArenaForAllocation() != nullptr)
+            {
+                temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+            }
+            _impl_.message_of_obj_.gate_message_ = nullptr;
+            return temp;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    inline const ::protobuf::MessageOfGate& MessageOfObj::_internal_gate_message() const
+    {
+        return _internal_has_gate_message() ? *_impl_.message_of_obj_.gate_message_ : reinterpret_cast<::protobuf::MessageOfGate&>(::protobuf::_MessageOfGate_default_instance_);
+    }
+    inline const ::protobuf::MessageOfGate& MessageOfObj::gate_message() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfObj.gate_message)
+        return _internal_gate_message();
+    }
+    inline ::protobuf::MessageOfGate* MessageOfObj::unsafe_arena_release_gate_message()
+    {
+        // @@protoc_insertion_point(field_unsafe_arena_release:protobuf.MessageOfObj.gate_message)
+        if (_internal_has_gate_message())
+        {
+            clear_has_message_of_obj();
+            ::protobuf::MessageOfGate* temp = _impl_.message_of_obj_.gate_message_;
+            _impl_.message_of_obj_.gate_message_ = nullptr;
+            return temp;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    inline void MessageOfObj::unsafe_arena_set_allocated_gate_message(::protobuf::MessageOfGate* gate_message)
+    {
+        clear_message_of_obj();
+        if (gate_message)
+        {
+            set_has_gate_message();
+            _impl_.message_of_obj_.gate_message_ = gate_message;
+        }
+        // @@protoc_insertion_point(field_unsafe_arena_set_allocated:protobuf.MessageOfObj.gate_message)
+    }
+    inline ::protobuf::MessageOfGate* MessageOfObj::_internal_mutable_gate_message()
+    {
+        if (!_internal_has_gate_message())
+        {
+            clear_message_of_obj();
+            set_has_gate_message();
+            _impl_.message_of_obj_.gate_message_ = CreateMaybeMessage<::protobuf::MessageOfGate>(GetArenaForAllocation());
+        }
+        return _impl_.message_of_obj_.gate_message_;
+    }
+    inline ::protobuf::MessageOfGate* MessageOfObj::mutable_gate_message()
+    {
+        ::protobuf::MessageOfGate* _msg = _internal_mutable_gate_message();
+        // @@protoc_insertion_point(field_mutable:protobuf.MessageOfObj.gate_message)
+        return _msg;
+    }
+
+    // .protobuf.MessageOfChest chest_message = 9;
+    inline bool MessageOfObj::_internal_has_chest_message() const
+    {
+        return message_of_obj_case() == kChestMessage;
+    }
+    inline bool MessageOfObj::has_chest_message() const
+    {
+        return _internal_has_chest_message();
+    }
+    inline void MessageOfObj::set_has_chest_message()
+    {
+        _impl_._oneof_case_[0] = kChestMessage;
+    }
+    inline void MessageOfObj::clear_chest_message()
+    {
+        if (_internal_has_chest_message())
+        {
+            if (GetArenaForAllocation() == nullptr)
+            {
+                delete _impl_.message_of_obj_.chest_message_;
+            }
+            clear_has_message_of_obj();
+        }
+    }
+    inline ::protobuf::MessageOfChest* MessageOfObj::release_chest_message()
+    {
+        // @@protoc_insertion_point(field_release:protobuf.MessageOfObj.chest_message)
+        if (_internal_has_chest_message())
+        {
+            clear_has_message_of_obj();
+            ::protobuf::MessageOfChest* temp = _impl_.message_of_obj_.chest_message_;
+            if (GetArenaForAllocation() != nullptr)
+            {
+                temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+            }
+            _impl_.message_of_obj_.chest_message_ = nullptr;
+            return temp;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    inline const ::protobuf::MessageOfChest& MessageOfObj::_internal_chest_message() const
+    {
+        return _internal_has_chest_message() ? *_impl_.message_of_obj_.chest_message_ : reinterpret_cast<::protobuf::MessageOfChest&>(::protobuf::_MessageOfChest_default_instance_);
+    }
+    inline const ::protobuf::MessageOfChest& MessageOfObj::chest_message() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfObj.chest_message)
+        return _internal_chest_message();
+    }
+    inline ::protobuf::MessageOfChest* MessageOfObj::unsafe_arena_release_chest_message()
+    {
+        // @@protoc_insertion_point(field_unsafe_arena_release:protobuf.MessageOfObj.chest_message)
+        if (_internal_has_chest_message())
+        {
+            clear_has_message_of_obj();
+            ::protobuf::MessageOfChest* temp = _impl_.message_of_obj_.chest_message_;
+            _impl_.message_of_obj_.chest_message_ = nullptr;
+            return temp;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    inline void MessageOfObj::unsafe_arena_set_allocated_chest_message(::protobuf::MessageOfChest* chest_message)
+    {
+        clear_message_of_obj();
+        if (chest_message)
+        {
+            set_has_chest_message();
+            _impl_.message_of_obj_.chest_message_ = chest_message;
+        }
+        // @@protoc_insertion_point(field_unsafe_arena_set_allocated:protobuf.MessageOfObj.chest_message)
+    }
+    inline ::protobuf::MessageOfChest* MessageOfObj::_internal_mutable_chest_message()
+    {
+        if (!_internal_has_chest_message())
+        {
+            clear_message_of_obj();
+            set_has_chest_message();
+            _impl_.message_of_obj_.chest_message_ = CreateMaybeMessage<::protobuf::MessageOfChest>(GetArenaForAllocation());
+        }
+        return _impl_.message_of_obj_.chest_message_;
+    }
+    inline ::protobuf::MessageOfChest* MessageOfObj::mutable_chest_message()
+    {
+        ::protobuf::MessageOfChest* _msg = _internal_mutable_chest_message();
+        // @@protoc_insertion_point(field_mutable:protobuf.MessageOfObj.chest_message)
+        return _msg;
+    }
+
     inline bool MessageOfObj::has_message_of_obj() const
     {
         return message_of_obj_case() != MESSAGE_OF_OBJ_NOT_SET;
@@ -8580,118 +8291,7 @@ namespace protobuf
         return _impl_.obj_message_;
     }
 
-    // .protobuf.MessageOfMap map_message = 2;
-    inline bool MessageToClient::_internal_has_map_message() const
-    {
-        return this != internal_default_instance() && _impl_.map_message_ != nullptr;
-    }
-    inline bool MessageToClient::has_map_message() const
-    {
-        return _internal_has_map_message();
-    }
-    inline void MessageToClient::clear_map_message()
-    {
-        if (GetArenaForAllocation() == nullptr && _impl_.map_message_ != nullptr)
-        {
-            delete _impl_.map_message_;
-        }
-        _impl_.map_message_ = nullptr;
-    }
-    inline const ::protobuf::MessageOfMap& MessageToClient::_internal_map_message() const
-    {
-        const ::protobuf::MessageOfMap* p = _impl_.map_message_;
-        return p != nullptr ? *p : reinterpret_cast<const ::protobuf::MessageOfMap&>(::protobuf::_MessageOfMap_default_instance_);
-    }
-    inline const ::protobuf::MessageOfMap& MessageToClient::map_message() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageToClient.map_message)
-        return _internal_map_message();
-    }
-    inline void MessageToClient::unsafe_arena_set_allocated_map_message(
-        ::protobuf::MessageOfMap* map_message
-    )
-    {
-        if (GetArenaForAllocation() == nullptr)
-        {
-            delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.map_message_);
-        }
-        _impl_.map_message_ = map_message;
-        if (map_message)
-        {
-        }
-        else
-        {
-        }
-        // @@protoc_insertion_point(field_unsafe_arena_set_allocated:protobuf.MessageToClient.map_message)
-    }
-    inline ::protobuf::MessageOfMap* MessageToClient::release_map_message()
-    {
-        ::protobuf::MessageOfMap* temp = _impl_.map_message_;
-        _impl_.map_message_ = nullptr;
-#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
-        auto* old = reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
-        temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-        if (GetArenaForAllocation() == nullptr)
-        {
-            delete old;
-        }
-#else   // PROTOBUF_FORCE_COPY_IN_RELEASE
-        if (GetArenaForAllocation() != nullptr)
-        {
-            temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-        }
-#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
-        return temp;
-    }
-    inline ::protobuf::MessageOfMap* MessageToClient::unsafe_arena_release_map_message()
-    {
-        // @@protoc_insertion_point(field_release:protobuf.MessageToClient.map_message)
-
-        ::protobuf::MessageOfMap* temp = _impl_.map_message_;
-        _impl_.map_message_ = nullptr;
-        return temp;
-    }
-    inline ::protobuf::MessageOfMap* MessageToClient::_internal_mutable_map_message()
-    {
-        if (_impl_.map_message_ == nullptr)
-        {
-            auto* p = CreateMaybeMessage<::protobuf::MessageOfMap>(GetArenaForAllocation());
-            _impl_.map_message_ = p;
-        }
-        return _impl_.map_message_;
-    }
-    inline ::protobuf::MessageOfMap* MessageToClient::mutable_map_message()
-    {
-        ::protobuf::MessageOfMap* _msg = _internal_mutable_map_message();
-        // @@protoc_insertion_point(field_mutable:protobuf.MessageToClient.map_message)
-        return _msg;
-    }
-    inline void MessageToClient::set_allocated_map_message(::protobuf::MessageOfMap* map_message)
-    {
-        ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-        if (message_arena == nullptr)
-        {
-            delete _impl_.map_message_;
-        }
-        if (map_message)
-        {
-            ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-                ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(map_message);
-            if (message_arena != submessage_arena)
-            {
-                map_message = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-                    message_arena, map_message, submessage_arena
-                );
-            }
-        }
-        else
-        {
-        }
-        _impl_.map_message_ = map_message;
-        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageToClient.map_message)
-    }
-
-    // .protobuf.GameState game_state = 3;
+    // .protobuf.GameState game_state = 2;
     inline void MessageToClient::clear_game_state()
     {
         _impl_.game_state_ = 0;
@@ -8715,7 +8315,7 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageToClient.game_state)
     }
 
-    // .protobuf.MessageOfAll all_message = 4;
+    // .protobuf.MessageOfAll all_message = 3;
     inline bool MessageToClient::_internal_has_all_message() const
     {
         return this != internal_default_instance() && _impl_.all_message_ != nullptr;
@@ -9042,8 +8642,6 @@ namespace protobuf
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif  // __GNUC__
-    // -------------------------------------------------------------------
-
     // -------------------------------------------------------------------
 
     // -------------------------------------------------------------------

@@ -138,15 +138,10 @@ namespace THUAI6
         PropMessage = 3,
         BulletMessage = 4,
         BombedBulletMessage = 5,
-    };
-
-    enum class MessageOfMapObj : unsigned char
-    {
-        NullMessageOfMapObj = 0,
-        ClassroomMessage = 1,
-        DoorMessage = 2,
-        GateMessage = 3,
-        ChestMessage = 4,
+        ClassroomMessage = 6,
+        DoorMessage = 7,
+        GateMessage = 8,
+        ChestMessage = 9,
     };
 
     // 玩家类
@@ -160,8 +155,8 @@ namespace THUAI6
         int64_t guid;       // 全局唯一ID
         int16_t radius;     // 圆形物体的半径或正方形物体的内切圆半径
 
-        int32_t damage;                  // 攻击伤害
-        double timeUntilSkillAvailable;  // 技能冷却时间
+        int32_t damage;                               // 攻击伤害
+        std::vector<double> timeUntilSkillAvailable;  // 技能冷却时间
 
         PlayerType playerType;  // 玩家类型
         std::vector<PropType> props;
@@ -174,9 +169,7 @@ namespace THUAI6
     {
         StudentType studentType;
         int32_t determination;  // 剩余毅力（本次Emo之前还能承受的伤害）
-        int32_t failNum;        // 挂科数量
-        double failTime;        // 挂科时间
-        double emoTime;         // EMO时间
+        int32_t addiction;
 
         std::vector<StudentBuffType> buff;  // buff
     };
@@ -223,7 +216,6 @@ namespace THUAI6
 
     struct GameMap
     {
-        std::vector<std::vector<PlaceType>> gameMap;
         std::map<std::pair<int32_t, int32_t>, int32_t> classRoomState;
 
         std::map<std::pair<int32_t, int32_t>, int32_t> gateState;
@@ -316,14 +308,11 @@ namespace THUAI6
         {MessageOfObj::PropMessage, "PropMessage"},
         {MessageOfObj::BulletMessage, "BulletMessage"},
         {MessageOfObj::BombedBulletMessage, "BombedBulletMessage"},
-    };
-
-    inline std::map<MessageOfMapObj, std::string> messageOfMapObjDict{
-        {MessageOfMapObj::NullMessageOfMapObj, "NullMessageOfMapObj"},
-        {MessageOfMapObj::ClassroomMessage, "ClassroomMessage"},
-        {MessageOfMapObj::DoorMessage, "DoorMessage"},
-        {MessageOfMapObj::GateMessage, "GateMessage"},
-        {MessageOfMapObj::ChestMessage, "ChestMessage"},
+        {MessageOfObj::NullMessageOfObj, "NullMessageOfObj"},
+        {MessageOfObj::ClassroomMessage, "ClassroomMessage"},
+        {MessageOfObj::DoorMessage, "DoorMessage"},
+        {MessageOfObj::GateMessage, "GateMessage"},
+        {MessageOfObj::ChestMessage, "ChestMessage"},
     };
 
 }  // namespace THUAI6

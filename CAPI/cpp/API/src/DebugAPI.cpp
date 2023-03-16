@@ -410,6 +410,56 @@ std::vector<std::vector<THUAI6::PlaceType>> TrickerDebugAPI::GetFullMap() const
     return logic.GetFullMap();
 }
 
+bool StudentDebugAPI::IsDoorOpen(int32_t cellX, int32_t cellY) const
+{
+    return logic.IsDoorOpen(cellX, cellY);
+}
+
+bool TrickerDebugAPI::IsDoorOpen(int32_t cellX, int32_t cellY) const
+{
+    return logic.IsDoorOpen(cellX, cellY);
+}
+
+int32_t StudentDebugAPI::GetClassroomProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetClassroomProgress(cellX, cellY);
+}
+
+int32_t TrickerDebugAPI::GetClassroomProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetClassroomProgress(cellX, cellY);
+}
+
+int32_t StudentDebugAPI::GetChestProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetChestProgress(cellX, cellY);
+}
+
+int32_t TrickerDebugAPI::GetChestProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetChestProgress(cellX, cellY);
+}
+
+int32_t StudentDebugAPI::GetGateProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetGateProgress(cellX, cellY);
+}
+
+int32_t TrickerDebugAPI::GetGateProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetGateProgress(cellX, cellY);
+}
+
+std::shared_ptr<const THUAI6::GameInfo> StudentDebugAPI::GetGameInfo() const
+{
+    return logic.GetGameInfo();
+}
+
+std::shared_ptr<const THUAI6::GameInfo> TrickerDebugAPI::GetGameInfo() const
+{
+    return logic.GetGameInfo();
+}
+
 const std::vector<int64_t> StudentDebugAPI::GetPlayerGUIDs() const
 {
     return logic.GetPlayerGUIDs();
@@ -492,17 +542,21 @@ std::shared_ptr<const THUAI6::Tricker> TrickerDebugAPI::GetSelfInfo() const
 
 void StudentDebugAPI::PrintStudent() const
 {
-    for (auto student : logic.GetStudents())
+    for (const auto& student : logic.GetStudents())
     {
         logger->info("******Student Info******");
         logger->info("playerID={}, GUID={}, x={}, y={}", student->playerID, student->guid, student->x, student->y);
-        logger->info("speed={}, view range={}, damage={}, skill time={}, place={}", student->speed, student->viewRange, student->damage, student->timeUntilSkillAvailable, THUAI6::placeTypeDict[student->place]);
-        logger->info("state={}, determination={}, fail num={}, fail time={}, emo time={}", THUAI6::playerStateDict[student->playerState], student->determination, student->failNum, student->failTime, student->emoTime);
+        logger->info("speed={}, view range={}, damage={}, place={}", student->speed, student->viewRange, student->damage, THUAI6::placeTypeDict[student->place]);
+        logger->info("state={}, determination={}, addiction={}", THUAI6::playerStateDict[student->playerState], student->determination, student->addiction);
+        std::string skillTime = "skill time=";
+        for (const auto& time : student->timeUntilSkillAvailable)
+            skillTime += std::to_string(time) + ", ";
+        logger->info(skillTime);
         std::string studentBuff = "buff=";
         std::string studentProp = "prop=";
-        for (auto buff : student->buff)
+        for (const auto& buff : student->buff)
             studentBuff += THUAI6::studentBuffDict[buff] + ", ";
-        for (auto prop : student->props)
+        for (const auto& prop : student->props)
             studentProp += THUAI6::propTypeDict[prop] + ", ";
         logger->info(studentBuff);
         logger->info(studentProp);
@@ -512,17 +566,21 @@ void StudentDebugAPI::PrintStudent() const
 
 void TrickerDebugAPI::PrintStudent() const
 {
-    for (auto student : logic.GetStudents())
+    for (const auto& student : logic.GetStudents())
     {
         logger->info("******Student Info******");
         logger->info("playerID={}, GUID={}, x={}, y={}", student->playerID, student->guid, student->x, student->y);
-        logger->info("speed={}, view range={}, damage={}, skill time={}, place={}", student->speed, student->viewRange, student->damage, student->timeUntilSkillAvailable, THUAI6::placeTypeDict[student->place]);
-        logger->info("state={}, determination={}, fail num={}, fail time={}, emo time={}", THUAI6::playerStateDict[student->playerState], student->determination, student->failNum, student->failTime, student->emoTime);
+        logger->info("speed={}, view range={}, damage={}, place={}", student->speed, student->viewRange, student->damage, THUAI6::placeTypeDict[student->place]);
+        logger->info("state={}, determination={}, addiction={}", THUAI6::playerStateDict[student->playerState], student->determination, student->addiction);
+        std::string skillTime = "skill time=";
+        for (const auto& time : student->timeUntilSkillAvailable)
+            skillTime += std::to_string(time) + ", ";
+        logger->info(skillTime);
         std::string studentBuff = "buff=";
         std::string studentProp = "prop=";
-        for (auto buff : student->buff)
+        for (const auto& buff : student->buff)
             studentBuff += THUAI6::studentBuffDict[buff] + ", ";
-        for (auto prop : student->props)
+        for (const auto& prop : student->props)
             studentProp += THUAI6::propTypeDict[prop] + ", ";
         logger->info(studentBuff);
         logger->info(studentProp);
@@ -532,18 +590,22 @@ void TrickerDebugAPI::PrintStudent() const
 
 void StudentDebugAPI::PrintTricker() const
 {
-    for (auto tricker : logic.GetTrickers())
+    for (const auto& tricker : logic.GetTrickers())
     {
         logger->info("******Tricker Info******");
         logger->info("playerID={}, GUID={}, x={}, y={}", tricker->playerID, tricker->guid, tricker->x, tricker->y);
-        logger->info("speed={}, view range={}, skill time={}, place={}", tricker->speed, tricker->viewRange, tricker->timeUntilSkillAvailable, THUAI6::placeTypeDict[tricker->place]);
+        logger->info("speed={}, view range={}, place={}", tricker->speed, tricker->viewRange, THUAI6::placeTypeDict[tricker->place]);
         logger->info("damage={}, state={}", tricker->damage, THUAI6::playerStateDict[tricker->playerState]);
+        std::string skillTime = "skill time=";
+        for (const auto& time : tricker->timeUntilSkillAvailable)
+            skillTime += std::to_string(time) + ", ";
+        logger->info(skillTime);
         std::string trickerBuff = "buff=";
-        for (auto buff : tricker->buff)
+        for (const auto& buff : tricker->buff)
             trickerBuff += THUAI6::trickerBuffDict[buff] + ", ";
         logger->info(trickerBuff);
         std::string trickerProp = "prop=";
-        for (auto prop : tricker->props)
+        for (const auto& prop : tricker->props)
             trickerProp += THUAI6::propTypeDict[prop] + ", ";
         logger->info(trickerProp);
         logger->info("************************");
@@ -556,14 +618,18 @@ void TrickerDebugAPI::PrintTricker() const
     {
         logger->info("******Tricker Info******");
         logger->info("playerID={}, GUID={}, x={}, y={}", tricker->playerID, tricker->guid, tricker->x, tricker->y);
-        logger->info("speed={}, view range={}, skill time={}, place={}", tricker->speed, tricker->viewRange, tricker->timeUntilSkillAvailable, THUAI6::placeTypeDict[tricker->place]);
+        logger->info("speed={}, view range={}, place={}", tricker->speed, tricker->viewRange, THUAI6::placeTypeDict[tricker->place]);
         logger->info("damage={}, state={}", tricker->damage, THUAI6::playerStateDict[tricker->playerState]);
+        std::string skillTime = "skill time=";
+        for (const auto& time : tricker->timeUntilSkillAvailable)
+            skillTime += std::to_string(time) + ", ";
+        logger->info(skillTime);
         std::string trickerBuff = "buff=";
-        for (auto buff : tricker->buff)
+        for (const auto& buff : tricker->buff)
             trickerBuff += THUAI6::trickerBuffDict[buff] + ", ";
         logger->info(trickerBuff);
         std::string trickerProp = "prop=";
-        for (auto prop : tricker->props)
+        for (const auto& prop : tricker->props)
             trickerProp += THUAI6::propTypeDict[prop] + ", ";
         logger->info(trickerProp);
         logger->info("************************");
@@ -595,14 +661,18 @@ void StudentDebugAPI::PrintSelfInfo() const
     auto self = logic.StudentGetSelfInfo();
     logger->info("******Self Info******");
     logger->info("playerID={}, GUID={}, x={}, y={}", self->playerID, self->guid, self->x, self->y);
-    logger->info("speed={}, view range={}, damage={}, skill time={}, place={}", self->speed, self->viewRange, self->damage, self->timeUntilSkillAvailable, THUAI6::placeTypeDict[self->place]);
-    logger->info("state={}, determination={}, fail num={}, fail time={}, emo time={}", THUAI6::playerStateDict[self->playerState], self->determination, self->failNum, self->failTime, self->emoTime);
+    logger->info("speed={}, view range={}, damage={}, place={}", self->speed, self->viewRange, self->damage, THUAI6::placeTypeDict[self->place]);
+    logger->info("state={}, determination={}, addiction", THUAI6::playerStateDict[self->playerState], self->determination, self->addiction);
+    std::string skillTime = "skill time=";
+    for (const auto& time : self->timeUntilSkillAvailable)
+        skillTime += std::to_string(time) + ", ";
+    logger->info(skillTime);
     std::string studentBuff = "buff=";
-    for (auto buff : self->buff)
+    for (const auto& buff : self->buff)
         studentBuff += THUAI6::studentBuffDict[buff] + ", ";
     logger->info(studentBuff);
     std::string studentProp = "prop=";
-    for (auto prop : self->props)
+    for (const auto& prop : self->props)
         studentProp += THUAI6::propTypeDict[prop] + ", ";
     logger->info(studentProp);
     logger->info("*********************");
@@ -613,14 +683,18 @@ void TrickerDebugAPI::PrintSelfInfo() const
     auto self = logic.TrickerGetSelfInfo();
     logger->info("******Self Info******");
     logger->info("playerID={}, GUID={}, x={}, y={}", self->playerID, self->guid, self->x, self->y);
-    logger->info("speed={}, view range={}, skill time={}, place={}", self->speed, self->viewRange, self->timeUntilSkillAvailable, THUAI6::placeTypeDict[self->place]);
+    logger->info("speed={}, view range={}, place={}", self->speed, self->viewRange, THUAI6::placeTypeDict[self->place]);
     logger->info("damage={}, state={}", self->damage, THUAI6::playerStateDict[self->playerState]);
+    std::string skillTime = "skill time=";
+    for (const auto& time : self->timeUntilSkillAvailable)
+        skillTime += std::to_string(time) + ", ";
+    logger->info(skillTime);
     std::string trickerBuff = "buff=";
-    for (auto buff : self->buff)
+    for (const auto& buff : self->buff)
         trickerBuff += THUAI6::trickerBuffDict[buff] + ", ";
     logger->info(trickerBuff);
     std::string trickerProp = "prop=";
-    for (auto prop : self->props)
+    for (const auto& prop : self->props)
         trickerProp += THUAI6::propTypeDict[prop] + ", ";
     logger->info(trickerProp);
     logger->info("*********************");

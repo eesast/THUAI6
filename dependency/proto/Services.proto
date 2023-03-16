@@ -29,4 +29,5 @@ service AvailableService
     rpc StartOpenGate (IDMsg) returns (BoolRes); // 开闸门
     rpc StartOpenChest (IDMsg) returns (BoolRes);
     rpc EndAllAction (IDMsg) returns (BoolRes); // 结束所有动作
+    rpc GetMap (IDMsg) returns (MessageOfMap); // 游戏开始时候获取地图
 }

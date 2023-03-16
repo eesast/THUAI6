@@ -460,12 +460,12 @@ std::shared_ptr<const THUAI6::GameInfo> TrickerDebugAPI::GetGameInfo() const
     return logic.GetGameInfo();
 }
 
-const std::vector<int64_t> StudentDebugAPI::GetPlayerGUIDs() const
+std::vector<int64_t> StudentDebugAPI::GetPlayerGUIDs() const
 {
     return logic.GetPlayerGUIDs();
 }
 
-const std::vector<int64_t> TrickerDebugAPI::GetPlayerGUIDs() const
+std::vector<int64_t> TrickerDebugAPI::GetPlayerGUIDs() const
 {
     return logic.GetPlayerGUIDs();
 }

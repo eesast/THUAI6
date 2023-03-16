@@ -90,21 +90,21 @@ private:
 
     // 提供给API使用的函数
 
-    std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
-    std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const override;
-    std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
-    std::shared_ptr<const THUAI6::Student> StudentGetSelfInfo() const override;
-    std::shared_ptr<const THUAI6::Tricker> TrickerGetSelfInfo() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
+    [[nodiscard]] std::shared_ptr<const THUAI6::Student> StudentGetSelfInfo() const override;
+    [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> TrickerGetSelfInfo() const override;
 
-    std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
-    THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
+    [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
+    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const override;
 
-    bool IsDoorOpen(int32_t CellX, int32_t CellY) const override;
-    int32_t GetClassroomProgress(int32_t CellX, int32_t CellY) const override;
-    int32_t GetChestProgress(int32_t CellX, int32_t CellY) const override;
-    int32_t GetGateProgress(int32_t CellX, int32_t CellY) const override;
+    [[nodiscard]] bool IsDoorOpen(int32_t cellX, int32_t cellY) const override;
+    [[nodiscard]] int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const override;
+    [[nodiscard]] int32_t GetChestProgress(int32_t cellX, int32_t cellY) const override;
+    [[nodiscard]] int32_t GetGateProgress(int32_t cellX, int32_t cellY) const override;
 
-    std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const override;
+    [[nodiscard]] std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const override;
 
     // 供IAPI使用的操作相关的部分
     bool Move(int64_t time, double angle) override;
@@ -136,7 +136,7 @@ private:
 
     int GetCounter() const override;
 
-    const std::vector<int64_t> GetPlayerGUIDs() const override;
+    std::vector<int64_t> GetPlayerGUIDs() const override;
 
     bool TryConnection();
 

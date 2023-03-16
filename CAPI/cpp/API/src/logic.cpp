@@ -68,51 +68,51 @@ std::vector<std::vector<THUAI6::PlaceType>> Logic::GetFullMap() const
     return currentState->gameMap;
 }
 
-THUAI6::PlaceType Logic::GetPlaceType(int32_t CellX, int32_t CellY) const
+THUAI6::PlaceType Logic::GetPlaceType(int32_t cellX, int32_t cellY) const
 {
     std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called GetPlaceType");
-    return currentState->gameMap[CellX][CellY];
+    return currentState->gameMap[cellX][cellY];
 }
 
-bool Logic::IsDoorOpen(int32_t CellX, int32_t CellY) const
+bool Logic::IsDoorOpen(int32_t cellX, int32_t cellY) const
 {
     std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called IsDoorOpen");
-    auto pos = std::make_pair(CellX, CellY);
+    auto pos = std::make_pair(cellX, cellY);
     if (currentState->mapInfo->doorState.count(pos) == 0)
         return false;
     else
         return currentState->mapInfo->doorState[pos];
 }
 
-int32_t Logic::GetClassroomProgress(int32_t CellX, int32_t CellY) const
+int32_t Logic::GetClassroomProgress(int32_t cellX, int32_t cellY) const
 {
     std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called GetClassroomProgress");
-    auto pos = std::make_pair(CellX, CellY);
+    auto pos = std::make_pair(cellX, cellY);
     if (currentState->mapInfo->classRoomState.count(pos) == 0)
         return 0;
     else
         return currentState->mapInfo->classRoomState[pos];
 }
 
-int32_t Logic::GetChestProgress(int32_t CellX, int32_t CellY) const
+int32_t Logic::GetChestProgress(int32_t cellX, int32_t cellY) const
 {
     std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called GetChestProgress");
-    auto pos = std::make_pair(CellX, CellY);
+    auto pos = std::make_pair(cellX, cellY);
     if (currentState->mapInfo->chestState.count(pos) == 0)
         return 0;
     else
         return currentState->mapInfo->chestState[pos];
 }
 
-int32_t Logic::GetGateProgress(int32_t CellX, int32_t CellY) const
+int32_t Logic::GetGateProgress(int32_t cellX, int32_t cellY) const
 {
     std::unique_lock<std::mutex> lock(mtxState);
     logger->debug("Called GetGateProgress");
-    auto pos = std::make_pair(CellX, CellY);
+    auto pos = std::make_pair(cellX, cellY);
     if (currentState->mapInfo->gateState.count(pos) == 0)
         return 0;
     else
@@ -501,7 +501,7 @@ int Logic::GetCounter() const
     return counterState;
 }
 
-const std::vector<int64_t> Logic::GetPlayerGUIDs() const
+std::vector<int64_t> Logic::GetPlayerGUIDs() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
     return currentState->guids;

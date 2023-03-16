@@ -71,6 +71,7 @@ namespace Proto2THUAI6
         {protobuf::PlaceType::HIDDEN_GATE, THUAI6::PlaceType::HiddenGate},
         {protobuf::PlaceType::WINDOW, THUAI6::PlaceType::Window},
         {protobuf::PlaceType::DOOR, THUAI6::PlaceType::Door},
+        {protobuf::PlaceType::CHEST, THUAI6::PlaceType::Chest},
     };
 
     inline std::map<protobuf::ShapeType, THUAI6::ShapeType> shapeTypeDict{

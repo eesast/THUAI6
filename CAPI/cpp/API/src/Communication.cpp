@@ -293,7 +293,7 @@ std::vector<std::vector<THUAI6::PlaceType>> Communication::GetMap(int64_t player
             {
                 row.push_back(Proto2THUAI6::placeTypeDict[mapResult.row(i).col(j)]);
             }
-            map.push_back(row);
+            map.push_back(std::move(row));
         }
         return map;
     }

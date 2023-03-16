@@ -32,21 +32,21 @@ class ILogic
 
 public:
     // 获取服务器发来的消息
-    virtual std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const = 0;
-    virtual std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const = 0;
-    virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
-    virtual std::shared_ptr<const THUAI6::Student> StudentGetSelfInfo() const = 0;
-    virtual std::shared_ptr<const THUAI6::Tricker> TrickerGetSelfInfo() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> StudentGetSelfInfo() const = 0;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Tricker> TrickerGetSelfInfo() const = 0;
 
-    virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
-    virtual THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const = 0;
+    [[nodiscard]] virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
+    [[nodiscard]] virtual THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const = 0;
 
-    virtual int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const = 0;
-    virtual int32_t GetChestProgress(int32_t cellX, int32_t cellY) const = 0;
-    virtual int32_t GetGateProgress(int32_t cellX, int32_t cellY) const = 0;
-    virtual bool IsDoorOpen(int32_t cellX, int32_t cellY) const = 0;
+    [[nodiscard]] virtual int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const = 0;
+    [[nodiscard]] virtual int32_t GetChestProgress(int32_t cellX, int32_t cellY) const = 0;
+    [[nodiscard]] virtual int32_t GetGateProgress(int32_t cellX, int32_t cellY) const = 0;
+    [[nodiscard]] virtual bool IsDoorOpen(int32_t cellX, int32_t cellY) const = 0;
 
-    virtual std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const = 0;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const = 0;
 
     // 供IAPI使用的操作相关的部分
     virtual bool Move(int64_t time, double angle) = 0;
@@ -78,7 +78,7 @@ public:
     // ITrickerAPI使用的部分
     virtual bool Attack(double angle) = 0;
 
-    virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
+    virtual std::vector<int64_t> GetPlayerGUIDs() const = 0;
 };
 
 class IAPI
@@ -124,7 +124,7 @@ public:
 
     // 获取地图信息，视野外的地图统一为Land
     [[nodiscard]] virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
-    [[nodiscard]] virtual THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const = 0;
+    [[nodiscard]] virtual THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const = 0;
 
     [[nodiscard]] virtual bool IsDoorOpen(int32_t cellX, int32_t cellY) const = 0;
     [[nodiscard]] virtual int32_t GetChestProgress(int32_t cellX, int32_t cellY) const = 0;
@@ -134,7 +134,7 @@ public:
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const = 0;
 
     // 获取所有玩家的GUID
-    [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
+    [[nodiscard]] virtual std::vector<int64_t> GetPlayerGUIDs() const = 0;
 
     // 获取游戏目前所进行的帧数
     [[nodiscard]] virtual int GetFrameCount() const = 0;
@@ -239,7 +239,7 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
     [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
-    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
+    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const override;
 
     [[nodiscard]] bool IsDoorOpen(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetChestProgress(int32_t cellX, int32_t cellY) const override;
@@ -248,7 +248,7 @@ public:
 
     [[nodiscard]] std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const override;
 
-    [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
+    [[nodiscard]] std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> StartLearning() override;
     std::future<bool> StartTreatMate() override;
@@ -319,7 +319,7 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
     [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
-    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
+    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const override;
 
     [[nodiscard]] bool IsDoorOpen(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetChestProgress(int32_t cellX, int32_t cellY) const override;
@@ -328,7 +328,7 @@ public:
 
     [[nodiscard]] std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const override;
 
-    [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
+    [[nodiscard]] std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> Attack(double angleInRadian) override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
@@ -391,7 +391,7 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
     [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
-    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
+    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const override;
 
     [[nodiscard]] bool IsDoorOpen(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetChestProgress(int32_t cellX, int32_t cellY) const override;
@@ -400,7 +400,7 @@ public:
 
     [[nodiscard]] std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const override;
 
-    [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
+    [[nodiscard]] std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> StartLearning() override;
     std::future<bool> StartTreatMate() override;
@@ -458,7 +458,7 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
     [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
-    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
+    [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const override;
 
     [[nodiscard]] bool IsDoorOpen(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetChestProgress(int32_t cellX, int32_t cellY) const override;
@@ -467,7 +467,7 @@ public:
 
     [[nodiscard]] std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const override;
 
-    [[nodiscard]] const std::vector<int64_t> GetPlayerGUIDs() const override;
+    [[nodiscard]] std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> Attack(double angleInRadian) override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;

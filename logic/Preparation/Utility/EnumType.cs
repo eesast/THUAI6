@@ -58,7 +58,7 @@ namespace Preparation.Utility
         LineBullet = 4,      // 直线子弹
         FlyingKnife = 5,     //飞刀
         CommonAttackOfGhost = 6,
-        Ram = 7,
+        // Ram = 7,
     }
     public enum PropType  // 道具类型
     {

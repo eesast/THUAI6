@@ -33,7 +33,7 @@ namespace Gaming
                 return ActiveSkillEffect(skill, player, () =>
                 {
                     player.AddMoveSpeed(skill.DurationTime, 3.0);
-                    player.BulletOfPlayer = BulletType.Ram;
+                    //player.BulletOfPlayer = BulletType.Ram;
                     new Thread
           (
               () =>
@@ -49,8 +49,8 @@ namespace Gaming
                             {
                                 if (character.IsGhost() != player.IsGhost() && XY.Distance(player.Position + new XY(player.FacingDirection, player.Radius), character.Position) <= character.Radius)
                                 {
-                                    if (attackManager.Attack(player, player.FacingDirection.Angle()))
-                                        attackManager.BeStunned(player, GameData.TimeOfStudentFainting);
+                                    attackManager.BeStunned(character, GameData.TimeOfGhostFainting);
+                                    attackManager.BeStunned(player, GameData.TimeOfStudentFainting);
                                     break;
                                 }
                             }

@@ -101,7 +101,7 @@ namespace Preparation.Utility
         /// <summary>
         /// BeginToCharge
         /// </summary>
-        //public const int TimeOfGhostFainting = 7220;=AP of Ram
+        public const int TimeOfGhostFainting = 7220;//=AP of Ram
         public const int TimeOfStudentFainting = 2090;
 
         #endregion

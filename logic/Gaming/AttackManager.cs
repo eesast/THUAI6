@@ -159,8 +159,8 @@ namespace Gaming
                             {
                                 BeAddictedToGame((Student)objBeingShot);
                             }
-                        if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)
-                            BeStunned((Character)objBeingShot, bullet.AP);
+                        //       if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)
+                        //          BeStunned((Character)objBeingShot, bullet.AP);
                         break;
                     default:
                         break;

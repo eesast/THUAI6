@@ -297,47 +297,51 @@ namespace Gaming
                         (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))
                     );
 
-                Bullet? bullet = player.Attack(
-                    res, gameMap.GetPlaceType(res)
-                );
-                if (bullet.CastTime > 0)
-                {
-                    player.PlayerState = PlayerStateType.IsTryingToAttack;
+                Bullet? bullet = player.Attack(res, gameMap.GetPlaceType(res));
 
-                    new Thread
-                            (() =>
-                            {
-                                new FrameRateTaskExecutor<int>(
-                                loopCondition: () => player.PlayerState == PlayerStateType.IsTryingToAttack && gameMap.Timer.IsGaming,
-                                loopToDo: () =>
-                                {
-                                },
-                                timeInterval: GameData.frameDuration,
-                                finallyReturn: () => 0,
-                                maxTotalDuration: bullet.CastTime
-                  )
-
-                      .Start();
-
-                                if (gameMap.Timer.IsGaming)
-                                {
-                                    if (player.PlayerState == PlayerStateType.IsTryingToAttack)
-                                    {
-                                        player.PlayerState = PlayerStateType.Null;
-                                    }
-                                    else
-                                        bullet.IsMoving = false;
-                                    gameMap.Remove(bullet);
-                                }
-                            }
-                            )
-                    { IsBackground = true }.Start();
-                }
                 if (bullet != null)
                 {
                     bullet.CanMove = true;
                     gameMap.Add(bullet);
                     moveEngine.MoveObj(bullet, (int)((bullet.BulletAttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
+
+
+                    if (bullet.CastTime > 0)
+                    {
+                        player.PlayerState = PlayerStateType.IsTryingToAttack;
+
+                        new Thread
+                                (() =>
+                                {
+                                    new FrameRateTaskExecutor<int>(
+                                    loopCondition: () => player.PlayerState == PlayerStateType.IsTryingToAttack && gameMap.Timer.IsGaming,
+                                    loopToDo: () =>
+                                    {
+                                    },
+                                    timeInterval: GameData.frameDuration,
+                                    finallyReturn: () => 0,
+                                    maxTotalDuration: bullet.CastTime
+                      )
+
+                          .Start();
+
+                                    if (gameMap.Timer.IsGaming)
+                                    {
+                                        if (player.PlayerState == PlayerStateType.IsTryingToAttack)
+                                        {
+                                            player.PlayerState = PlayerStateType.Null;
+                                        }
+                                        else
+                                            bullet.IsMoving = false;
+                                        gameMap.Remove(bullet);
+                                    }
+                                }
+                                )
+                        { IsBackground = true }.Start();
+                    }
+                }
+                if (bullet != null)
+                {
 #if DEBUG
                     Console.WriteLine($"playerID:{player.ID} successfully attacked!");
 #endif

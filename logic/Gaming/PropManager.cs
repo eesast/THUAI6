@@ -114,26 +114,9 @@ namespace Gaming
                         dropProp.ReSetPos(res, gameMap.GetPlaceType(res));
                     }
                     player.PropInventory = pickProp;
-                    gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
-                    try
-                    {
-                        gameMap.GameObjDict[GameObjType.Prop].Remove((Preparation.Interface.IGameObj)pickProp);
-                        if (dropProp != null)
-                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)dropProp);
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
-                    }
-                    gameMap.GameObjLockDict[GameObjType.PickedProp].EnterWriteLock();
-                    try
-                    {
-                        gameMap.GameObjDict[GameObjType.PickedProp].Add(new PickedProp(pickProp));
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.PickedProp].ExitWriteLock();
-                    }
+                    gameMap.Remove(pickProp);
+                    if (dropProp != null) gameMap.Add(dropProp);
+                    gameMap.Add(new PickedProp(pickProp));
 
                     return true;
                 }
@@ -153,15 +136,8 @@ namespace Gaming
 
                 prop.CanMove = true;
                 prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
-                gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
-                try
-                {
-                    gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)prop);
-                }
-                finally
-                {
-                    gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
-                }
+                gameMap.Add(prop);
+
                 timeInMilliseconds = timeInMilliseconds < GameData.PropMaxMoveDistance / prop.MoveSpeed * 1000 ? timeInMilliseconds : GameData.PropMaxMoveDistance / prop.MoveSpeed * 1000;
                 moveEngine.MoveObj(prop, timeInMilliseconds, angle);
             }
@@ -182,30 +158,23 @@ namespace Gaming
                                 int rand = r.Next(0, len);
                                 XY randPos = availableCellForGenerateProp[rand];
 
-                                gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
-                                try
+
+                                switch (r.Next(0, 4))
                                 {
-                                    switch (r.Next(0, 4))
-                                    {
-                                        case 0:
-                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new AddLIFE(randPos, gameMap.GetPlaceType(randPos)));
-                                            break;
-                                        case 1:
-                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new AddSpeed(randPos, gameMap.GetPlaceType(randPos)));
-                                            break;
-                                        case 2:
-                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new Shield(randPos, gameMap.GetPlaceType(randPos)));
-                                            break;
-                                        case 3:
-                                            gameMap.GameObjDict[GameObjType.Prop].Add((Preparation.Interface.IGameObj)new Spear(randPos, gameMap.GetPlaceType(randPos)));
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                                finally
-                                {
-                                    gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
+                                    case 0:
+                                        gameMap.Add(new AddLIFE(randPos, gameMap.GetPlaceType(randPos)));
+                                        break;
+                                    case 1:
+                                        gameMap.Add(new AddSpeed(randPos, gameMap.GetPlaceType(randPos)));
+                                        break;
+                                    case 2:
+                                        gameMap.Add(new Shield(randPos, gameMap.GetPlaceType(randPos)));
+                                        break;
+                                    case 3:
+                                        gameMap.Add(new Spear(randPos, gameMap.GetPlaceType(randPos)));
+                                        break;
+                                    default:
+                                        break;
                                 }
                             },
                             GameData.PropProduceTime,

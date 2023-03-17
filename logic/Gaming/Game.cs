@@ -197,14 +197,6 @@ namespace Gaming
 
         public void EndGame()
         {
-            gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
-            /*try
-            {
-            }
-            finally
-            {
-            }*/
-            gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
         }
         public bool MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
         {

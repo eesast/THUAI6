@@ -89,16 +89,9 @@ namespace Gaming
                     XY res = GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell);
                     dropProp.ReSetPos(res, gameMap.GetPlaceType(res));
                 }
-                gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
-                try
-                {
-                    if (dropProp != null)
-                        gameMap.GameObjDict[GameObjType.Prop].Add(dropProp);
-                }
-                finally
-                {
-                    gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
-                }
+
+                if (dropProp != null)
+                    gameMap.Add(dropProp);
 
                 //  player.Reset();
                 //    ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  // 给击杀者加分
@@ -220,7 +213,7 @@ namespace Gaming
                 {
                     if (CanBeBombed(bullet, kvp.Key))
                     {
-                        gameMap.GameObjLockDict[kvp.Key].EnterWriteLock();
+                        gameMap.GameObjLockDict[kvp.Key].EnterReadLock();
                         try
                         {
                             foreach (var item in gameMap.GameObjDict[kvp.Key])
@@ -232,7 +225,7 @@ namespace Gaming
                         }
                         finally
                         {
-                            gameMap.GameObjLockDict[kvp.Key].ExitWriteLock();
+                            gameMap.GameObjLockDict[kvp.Key].ExitReadLock();
                         }
                     }
                 }
@@ -315,13 +308,13 @@ namespace Gaming
                             (() =>
                             {
                                 new FrameRateTaskExecutor<int>(
-                      loopCondition: () => player.PlayerState == PlayerStateType.IsTryingToAttack && gameMap.Timer.IsGaming,
-                      loopToDo: () =>
-                      {
-                      },
-                      timeInterval: GameData.frameDuration,
-                      finallyReturn: () => 0,
-                      maxTotalDuration: bullet.CastTime
+                                loopCondition: () => player.PlayerState == PlayerStateType.IsTryingToAttack && gameMap.Timer.IsGaming,
+                                loopToDo: () =>
+                                {
+                                },
+                                timeInterval: GameData.frameDuration,
+                                finallyReturn: () => 0,
+                                maxTotalDuration: bullet.CastTime
                   )
 
                       .Start();
@@ -343,15 +336,7 @@ namespace Gaming
                 if (bullet != null)
                 {
                     bullet.CanMove = true;
-                    gameMap.GameObjLockDict[GameObjType.Bullet].EnterWriteLock();
-                    try
-                    {
-                        gameMap.GameObjDict[GameObjType.Bullet].Add(bullet);
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Bullet].ExitWriteLock();
-                    }
+                    gameMap.Add(bullet);
                     moveEngine.MoveObj(bullet, (int)((bullet.BulletAttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
 #if DEBUG
                     Console.WriteLine($"playerID:{player.ID} successfully attacked!");

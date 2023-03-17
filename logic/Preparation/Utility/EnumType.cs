@@ -41,7 +41,7 @@ namespace Preparation.Utility
         OutOfBoundBlock = 11,  // 范围外
         Window = 12,
         Door = 13,
-
+        Chest = 14,
     }
     public enum ShapeType
     {

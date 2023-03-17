@@ -5,5 +5,5 @@ protoc Services.proto --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_cpp_plug
 protoc Services.proto --cpp_out=.
 chmod -R 755 ./
 ./format.sh
-mv -f ./*.h ../../CAPI/proto
-mv -f ./*.cc ../../CAPI/proto
+mv -f ./*.h ../../CAPI/cpp/proto
+mv -f ./*.cc ../../CAPI/cpp/proto

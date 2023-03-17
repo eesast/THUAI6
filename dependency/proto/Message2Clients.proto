@@ -10,15 +10,15 @@ message MessageOfStudent
     int32 y = 2;
     int32 speed = 3;
     int32 determination = 4; // 剩余的学习毅力，相当于血量
-    //int32 fail_num = 5; // 挂科的科目数
+    int32 addiction = 5; // 沉迷程度，相当于真实血量
     repeated double time_until_skill_available = 6;
     PlaceType place = 7;
     repeated PropType prop = 8;
     PlayerState player_state = 9;
     int64 guid = 10;
     PlayerState state = 11;
-    double fail_time = 12; // 挂科的时间
-    double emo_time = 14; // EMO的时间
+    // double fail_time = 12; // 挂科的时间
+    // double emo_time = 14; // EMO的时间
     int64 player_id = 15;
     int32 view_range = 16; // 视野距离
     int32 radius = 17; // 半径
@@ -37,7 +37,7 @@ message MessageOfTricker
     int32 y = 2;
     int32 speed = 3;
     int32 damage = 4; // 对学生造成的心理伤害
-    double time_until_skill_available = 5;
+    repeated double time_until_skill_available = 5;
     PlaceType place = 6;
     repeated PropType prop = 7;
     TrickerType tricker_type = 8;
@@ -124,17 +124,6 @@ message MessageOfChest
     int32 progress = 3;
 }
 
-message MessageOfMapObj
-{
-    oneof message_of_map_obj
-    {
-        MessageOfClassroom classroom_message = 1;
-        MessageOfDoor door_message = 2;
-        MessageOfGate gate_message = 3;
-        MessageOfChest chest_message = 4;
-    }
-}
-
 message MessageOfMap
 {
     message Row
@@ -153,7 +142,10 @@ message MessageOfObj
         MessageOfProp prop_message = 3;
         MessageOfBullet bullet_message = 4;
         MessageOfBombedBullet bombed_bullet_message = 5;
-        MessageOfMapObj map_obj_message = 6;
+        MessageOfClassroom classroom_message = 6;
+        MessageOfDoor door_message = 7;
+        MessageOfGate gate_message = 8;
+        MessageOfChest chest_message = 9;
     }
 }
 
@@ -173,9 +165,8 @@ message MessageOfAll
 message MessageToClient
 {
     repeated MessageOfObj obj_message = 1;
-    MessageOfMap map_message = 2;
-    GameState game_state = 3;
-    MessageOfAll all_message = 4;
+    GameState game_state = 2;
+    MessageOfAll all_message = 3;
 }
 
 message MoveRes // 如果打算设计撞墙保留平行速度分量，且需要返回值则可用这个（大概没啥用）

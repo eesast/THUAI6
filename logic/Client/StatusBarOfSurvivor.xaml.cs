@@ -62,8 +62,8 @@ namespace Client
         }
         private void SetDynamicValue(MessageOfStudent obj)
         {
-            skillprogress.Value = 100 - obj.TimeUntilSkillAvailable / coolTime * 100;
-            if (obj.State == StudentState.Quit)
+            skillprogress.Value = 100 - obj.TimeUntilSkillAvailable[0] / coolTime * 100;
+            if (obj.State == PlayerState.Quit)
             {
                 skillprogress.Value = 0;
                 skillprogress.Background = Brushes.Gray;
@@ -73,7 +73,7 @@ namespace Client
             Func<MessageOfStudent, int> life =
                 (obj) =>
             {
-                if (obj.State == StudentState.Quit || obj.State == StudentState.Addicted)
+                if (obj.State == PlayerState.Quit || obj.State == PlayerState.Addicted)
                     return 0;
                 else
                     return obj.Determination;

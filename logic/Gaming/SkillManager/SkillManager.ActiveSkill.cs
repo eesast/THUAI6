@@ -25,12 +25,50 @@ namespace Gaming
                                                       });
             }
 
-            public bool BeginToCharge(Character player)
+            public bool CanBeginToCharge(Character player)
             {
-                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.BeginToCharge), player, () =>
+
+                if ((!player.Commandable())) return false;
+                IActiveSkill skill = player.UseIActiveSkill(ActiveSkillType.CanBeginToCharge);
+                return ActiveSkillEffect(skill, player, () =>
                 {
-                    player.Vampire += 0.5;
-                    Debugger.Output(player, "begin to charge!");
+                    player.AddMoveSpeed(skill.DurationTime, 3.0);
+                    new Thread
+          (
+              () =>
+              {
+                  new FrameRateTaskExecutor<int>(
+                    loopCondition: () => player.Commandable() && gameMap.Timer.IsGaming,
+                    loopToDo: () =>
+                    {/*
+                        gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+                        try
+                        {
+                            foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                            {
+                                if (GameData.ApproachToInteract(generator.Position, player.Position))
+                                {
+                                    generatorForFix = generator;
+                                    break;
+                                }
+                            }
+                        }
+                        finally
+                        {
+                            gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                        }*/
+                    },
+                     timeInterval: GameData.frameDuration,
+                     finallyReturn: () => 0,
+                     maxTotalDuration: skill.DurationTime
+                      )
+
+    .Start();
+              }
+
+          )
+                    { IsBackground = true }.Start();
+                    Debugger.Output(player, "can begin to charge!");
                 },
                                                       () =>
                                                       {
@@ -119,14 +157,13 @@ namespace Gaming
                             Debugger.Output(player, "return to normal.");
 
                             new FrameRateTaskExecutor<int>(
-                                () => player.TimeUntilActiveSkillAvailable[activeSkillType] > 0 && !player.IsResetting,
-                                () =>
+                                loopCondition: () => player.TimeUntilActiveSkillAvailable[activeSkillType] > 0 && !player.IsResetting,
+                                loopToDo: () =>
                                 {
                                     player.AddTimeUntilActiveSkillAvailable(activeSkillType, -(int)GameData.frameDuration);
                                 },
                                 timeInterval: GameData.frameDuration,
-                                () => 0,
-                                maxTotalDuration: (long)(activeSkill.SkillCD - activeSkill.DurationTime)
+                                finallyReturn: () => 0
                             )
                             {
                                 AllowTimeExceed = true,

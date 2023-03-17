@@ -99,6 +99,13 @@
         IsUsingSpecialSkill = 16,
     }
   ~~~
+- 可执行指令的（不用给选手）
+  ~~~csharp
+    public bool Commandable() => (playerState!=PlayerStateType.IsDeceased&&playerState!=PlayerStateType.IsEscaped
+                                  &&playerState!=PlayerStateType.IsAddicted &&playerState!=PlayerStateType.IsStunned
+                                  &&playerState!=PlayerStateType.IsSwinging&&playerState!=PlayerStateType.IsTryingToAttack
+                                  &&playerState!=PlayerStateType.IsClimbingThroughWindows);
+  ~~~
 - Bgm(字典)
 - 得分
 - ~~回血率/原始回血率~~
@@ -115,7 +122,7 @@
 - 各个主动技能CD(字典)
 - 警戒半径
 - double 隐蔽度
-- *翻窗时间*
+- 翻窗时间
 - 开锁门时间
 
 ### 学生：人物

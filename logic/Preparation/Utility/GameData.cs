@@ -78,6 +78,7 @@ namespace Preparation.Utility
         public const double basicConcealment = 1.0;
         public const int basicAlertnessRadius = 30700;
         public const int basicTimeOfOpeningOrLocking = 3000;
+        public const int basicTimeOfClimbingThroughWindows = 870;
         public const int addScoreWhenKillOneLevelPlayer = 30;        // 击杀一级角色获得的加分
         public const int commonSkillCD = 30000;                      // 普通技能标准冷却时间
         public const int commonSkillTime = 10000;                    // 普通技能标准持续时间
@@ -109,7 +110,6 @@ namespace Preparation.Utility
         #region 物体相关
         public const int degreeOfFixedGenerator = 10300000;
         #endregion
-
         #region 游戏帧相关
         public const long checkInterval = 50;  // 检查位置标志、补充子弹的帧时长
         #endregion

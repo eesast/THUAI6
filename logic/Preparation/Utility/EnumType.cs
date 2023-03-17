@@ -41,6 +41,7 @@ namespace Preparation.Utility
         OutOfBoundBlock = 11,  // 范围外
         Window = 12,
         Door = 13,
+
     }
     public enum ShapeType
     {
@@ -85,7 +86,7 @@ namespace Preparation.Utility
         NuclearWeapon = 3,
         SuperFast = 4,
         UseKnife = 5,
-        BeginToCharge = 6
+        CanBeginToCharge = 6
     }
     public enum PassiveSkillType
     {

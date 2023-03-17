@@ -14,7 +14,7 @@ namespace Gaming
             public bool UseActiveSkill(Character character, ActiveSkillType activeSkillType)
             {
                 if (character.Occupation.ListOfIActiveSkill.Contains(activeSkillType))
-                    switch (activeSkillType) 
+                    switch (activeSkillType)
                     {
                         case ActiveSkillType.BecomeInvisible:
                             BecomeInvisible(character);
@@ -22,10 +22,10 @@ namespace Gaming
                         case ActiveSkillType.UseKnife:
                             UseKnife(character);
                             break;
-                        case ActiveSkillType.BeginToCharge:
-                            BeginToCharge(character);
+                        case ActiveSkillType.CanBeginToCharge:
+                            CanBeginToCharge(character);
                             break;
-                        default: 
+                        default:
                             return false;
                     }
                 return false;

@@ -13,15 +13,18 @@ namespace GameClass.GameObj
 
         public bool IsBeingUsed { get; set; }
     }
-    public class BeginToCharge : IActiveSkill
+    public class CanBeginToCharge : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD / 3 * 4;
-        public int DurationTime => GameData.commonSkillTime;
+        public int SkillCD => GameData.commonSkillCD / 5;
+        public int DurationTime => GameData.commonSkillTime / 10 * 6;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
 
         public bool IsBeingUsed { get; set; }
+
+        public const int TimeOfGhostFainting = 7220;
+        public const int TimeOfStudentFainting = 2090;
     }
 
     public class BecomeInvisible : IActiveSkill
@@ -88,8 +91,8 @@ namespace GameClass.GameObj
                     return ActiveSkillType.BecomeInvisible;
                 case UseKnife:
                     return ActiveSkillType.UseKnife;
-                case BeginToCharge:
-                    return ActiveSkillType.BeginToCharge;
+                case CanBeginToCharge:
+                    return ActiveSkillType.CanBeginToCharge;
                 default:
                     return ActiveSkillType.Null;
             }

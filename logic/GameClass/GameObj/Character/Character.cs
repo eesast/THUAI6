@@ -72,6 +72,13 @@ namespace GameClass.GameObj
             }
         }
 
+        public bool Commandable() => (playerState != PlayerStateType.IsDeceased && playerState != PlayerStateType.IsEscaped
+                                                            && playerState != PlayerStateType.IsAddicted && playerState != PlayerStateType.IsStunned
+                                                             && playerState != PlayerStateType.IsSwinging && playerState != PlayerStateType.IsTryingToAttack
+                                                              && playerState != PlayerStateType.IsClimbingThroughWindows);
+        public bool InteractingWithMapWithoutMoving() => (playerState == PlayerStateType.IsLockingTheDoor || playerState == PlayerStateType.IsFixing || playerState == PlayerStateType.IsRummagingInTheChest);
+        public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.IsMoving);
+
         //        private int deathCount = 0;
         //       public int DeathCount => deathCount;  // 玩家的死亡次数
 
@@ -226,7 +233,18 @@ namespace GameClass.GameObj
             }
         }
 
-
+        private int timeOfClimbingThroughWindows;
+        public int TimeOfClimbingThroughWindows
+        {
+            get => timeOfClimbingThroughWindows;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    timeOfClimbingThroughWindows = value;
+                }
+            }
+        }
 
         /// <summary>
         /// 进行一次攻击

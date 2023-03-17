@@ -12,6 +12,7 @@ message PlayerMsg
         StudentType student_type = 2;
         TrickerType tricker_type = 3;
     }
+    PlayerType player_type = 4;
 }
 
 message MoveMsg

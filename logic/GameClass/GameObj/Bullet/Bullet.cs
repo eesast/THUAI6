@@ -30,6 +30,7 @@ namespace GameClass.GameObj
         /// <param name="target">被尝试攻击者</param>
         /// <returns>是否可以攻击到</returns>
         public abstract bool CanAttack(GameObj target);
+        public abstract bool CanBeBombed(GameObjType gameObjType);
 
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {

@@ -97,6 +97,14 @@ namespace Preparation.Utility
             };
         }
         #endregion
+        #region 技能相关
+        /// <summary>
+        /// BeginToCharge
+        /// </summary>
+        //public const int TimeOfGhostFainting = 7220;=AP of Ram
+        public const int TimeOfStudentFainting = 2090;
+
+        #endregion
         #region 道具相关
         public const int MinPropTypeNum = 1;
         public const int MaxPropTypeNum = 10;

@@ -33,6 +33,7 @@ namespace Gaming
                 return ActiveSkillEffect(skill, player, () =>
                 {
                     player.AddMoveSpeed(skill.DurationTime, 3.0);
+                    player.BulletOfPlayer = BulletType.Ram;
                     new Thread
           (
               () =>
@@ -40,15 +41,16 @@ namespace Gaming
                   new FrameRateTaskExecutor<int>(
                     loopCondition: () => player.Commandable() && gameMap.Timer.IsGaming,
                     loopToDo: () =>
-                    {/*
+                    {
                         gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
                         try
                         {
                             foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                             {
-                                if (GameData.ApproachToInteract(generator.Position, player.Position))
+                                if (character.IsGhost() != player.IsGhost() && XY.Distance(player.Position + new XY(player.FacingDirection, player.Radius), character.Position) <= character.Radius)
                                 {
-                                    generatorForFix = generator;
+                                    if (attackManager.Attack(player, player.FacingDirection.Angle()))
+                                        attackManager.BeStunned(player, GameData.TimeOfStudentFainting);
                                     break;
                                 }
                             }
@@ -56,7 +58,7 @@ namespace Gaming
                         finally
                         {
                             gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
-                        }*/
+                        }
                     },
                      timeInterval: GameData.frameDuration,
                      finallyReturn: () => 0,

@@ -68,6 +68,32 @@ namespace Gaming
                 { IsBackground = true }.Start();
             }
 
+            public void BeStunned(Character player, int time)
+            {
+                new Thread
+                    (() =>
+                    {
+                        player.PlayerState = PlayerStateType.IsStunned;
+                        new FrameRateTaskExecutor<int>(
+                            () => player.PlayerState == PlayerStateType.IsStunned && gameMap.Timer.IsGaming,
+                            () =>
+                            {
+                            },
+                            timeInterval: GameData.frameDuration,
+                            () =>
+                            {
+                                if (player.PlayerState == PlayerStateType.IsStunned)
+                                    player.PlayerState = PlayerStateType.Null;
+                                return 0;
+                            },
+                            maxTotalDuration: time
+                        )
+                            .Start();
+                    }
+                    )
+                { IsBackground = true }.Start();
+            }
+
             private void Die(Character player)
             {
 
@@ -122,21 +148,21 @@ namespace Gaming
                 */
             }
 
-            private bool CanBeBombed(Bullet bullet, GameObjType gameObjType)
-            {
-                if (gameObjType == GameObjType.Character) return true;
-                return false;
-            }
             private void BombObj(Bullet bullet, GameObj objBeingShot)
             {
                 switch (objBeingShot.Type)
                 {
                     case GameObjType.Character:
-                        if (!((Character)objBeingShot).IsGhost())
+
+                        if ((!((Character)objBeingShot).IsGhost()) && bullet.Parent.IsGhost())
                             if (((Character)objBeingShot).BeAttacked(bullet))
                             {
                                 BeAddictedToGame((Student)objBeingShot);
                             }
+                        if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)
+                            BeStunned((Character)objBeingShot, bullet.AP);
+                        break;
+                    default:
                         break;
                 }
             }
@@ -211,7 +237,7 @@ namespace Gaming
 
                 foreach (var kvp in gameMap.GameObjDict)
                 {
-                    if (CanBeBombed(bullet, kvp.Key))
+                    if (bullet.CanBeBombed(kvp.Key))
                     {
                         gameMap.GameObjLockDict[kvp.Key].EnterReadLock();
                         try

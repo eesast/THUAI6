@@ -22,9 +22,6 @@ namespace GameClass.GameObj
         public object ActiveSkillLock => commonSkillLock;
 
         public bool IsBeingUsed { get; set; }
-
-        public const int TimeOfGhostFainting = 7220;
-        public const int TimeOfStudentFainting = 2090;
     }
 
     public class BecomeInvisible : IActiveSkill

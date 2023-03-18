@@ -108,16 +108,15 @@ namespace Gaming
                 //     gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
                 // }
 
-                Prop? dropProp = null;
-                if (player.PropInventory != null)  // 若角色原来有道具，则原始道具掉落在原地
+                for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {
-                    dropProp = player.PropInventory;
-                    XY res = GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell);
-                    dropProp.ReSetPos(res, gameMap.GetPlaceType(res));
+                    Prop? prop = player.UseProp(i);
+                    if (prop != null)
+                    {
+                        prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
+                        gameMap.Add(prop);
+                    }
                 }
-
-                if (dropProp != null)
-                    gameMap.Add(dropProp);
 
                 //  player.Reset();
                 //    ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  // 给击杀者加分

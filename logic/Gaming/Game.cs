@@ -293,24 +293,24 @@ namespace Gaming
                 _ = attackManager.Attack(player, angle);
             }
         }
-        public void UseProp(long playerID)
+        public void UseProp(long playerID, int indexing)
         {
             if (!gameMap.Timer.IsGaming)
                 return;
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                propManager.UseProp(player);
+                propManager.UseProp(player, indexing);
             }
         }
-        public void ThrowProp(long playerID, int timeInmillionSeconds, double angle)
+        public void ThrowProp(long playerID, int indexing)
         {
             if (!gameMap.Timer.IsGaming)
                 return;
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                propManager.ThrowProp(player, timeInmillionSeconds, angle);
+                propManager.ThrowProp(player, indexing);
             }
         }
         public bool PickProp(long playerID, PropType propType = PropType.Null)

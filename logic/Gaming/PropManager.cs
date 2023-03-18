@@ -28,11 +28,11 @@ namespace Gaming
                 ProduceProp();
             }
 
-            public void UseProp(Character player)
+            public void UseProp(Character player, int indexing)
             {
                 if (player.IsResetting)
                     return;
-                Prop? prop = player.UseProp();
+                Prop? prop = player.UseProp(indexing);
                 switch (prop?.GetPropType())
                 {
                     case PropType.Spear:
@@ -62,6 +62,10 @@ namespace Gaming
             {
                 if (player.IsResetting)
                     return false;
+                int indexing = player.IndexingOfAddProp();
+                if (indexing == GameData.maxNumOfPropInPropInventory)
+                    return false;
+
                 Prop? pickProp = null;
                 if (propType == PropType.Null)  // 自动检查有无道具可捡
                 {
@@ -70,9 +74,9 @@ namespace Gaming
                     {
                         foreach (Prop prop in gameMap.GameObjDict[GameObjType.Prop])
                         {
-                            if (GameData.IsInTheSameCell(prop.Position, player.Position) && prop.CanMove == false)
+                            if (GameData.IsInTheSameCell(prop.Position, player.Position))
                             {
-                                pickProp = prop;
+                                player.PropInventory[indexing] = prop;
                             }
                         }
                     }
@@ -92,7 +96,7 @@ namespace Gaming
                             {
                                 if (GameData.IsInTheSameCell(prop.Position, player.Position) && prop.CanMove == false)
                                 {
-                                    pickProp = prop;
+                                    player.PropInventory[indexing] = prop;
                                 }
                             }
                         }
@@ -105,42 +109,26 @@ namespace Gaming
 
                 if (pickProp != null)
                 {
-                    // pickProp.CanMove = false;
-                    Prop? dropProp = null;
-                    if (player.PropInventory != null)  // 若角色原来有道具，则原始道具掉落在原地
-                    {
-                        dropProp = player.PropInventory;
-                        XY res = GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell);
-                        dropProp.ReSetPos(res, gameMap.GetPlaceType(res));
-                    }
-                    player.PropInventory = pickProp;
                     gameMap.Remove(pickProp);
-                    if (dropProp != null) gameMap.Add(dropProp);
                     gameMap.Add(new PickedProp(pickProp));
-
                     return true;
                 }
                 else
                     return false;
             }
 
-            public void ThrowProp(Character player, int timeInMilliseconds, double angle)
+            public void ThrowProp(Character player, int indexing)
             {
-                if (!gameMap.Timer.IsGaming)
+                if (!gameMap.Timer.IsGaming || player.IsResetting)
                     return;
-                if (player.IsResetting)  // 移动中也能扔，但由于“惯性”，可能初始位置会有点变化
-                    return;
-                Prop? prop = player.UseProp();
+                Prop? prop = player.UseProp(indexing);
                 if (prop == null)
                     return;
 
-                prop.CanMove = true;
                 prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
                 gameMap.Add(prop);
-
-                timeInMilliseconds = timeInMilliseconds < GameData.PropMaxMoveDistance / prop.MoveSpeed * 1000 ? timeInMilliseconds : GameData.PropMaxMoveDistance / prop.MoveSpeed * 1000;
-                moveEngine.MoveObj(prop, timeInMilliseconds, angle);
             }
+
             private void ProduceProp()
             {
                 int len = availableCellForGenerateProp.Count;

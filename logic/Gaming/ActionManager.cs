@@ -25,11 +25,7 @@ namespace Gaming
 
             public bool Stop(Character player)
             {
-                if (player.PlayerState == PlayerStateType.IsRescuing || player.PlayerState == PlayerStateType.IsRescued
-                    || player.PlayerState == PlayerStateType.IsFixing || player.PlayerState == PlayerStateType.IsMoving
-                    || player.PlayerState == PlayerStateType.IsTreated || player.PlayerState == PlayerStateType.IsTreating
-                    || player.PlayerState == PlayerStateType.IsRummagingInTheChest || player.PlayerState == PlayerStateType.IsLockingTheDoor
-                    || player.PlayerState == PlayerStateType.IsClimbingThroughWindows)
+                if (player.Commandable())
                 {
                     player.PlayerState = PlayerStateType.Null;
                     return true;
@@ -82,11 +78,11 @@ namespace Gaming
                       .Start();
                   if (generatorForFix.DegreeOfFRepair == GameData.degreeOfFixedGenerator)
                   {
-                      gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
-                      try
+                      Doorway exit = (Doorway)gameMap.GameObjDict[GameObjType.Doorway][1];
+                      if (!exit.PowerSupply)
                       {
-                          Doorway exit = (Doorway)gameMap.GameObjDict[GameObjType.Doorway][1];
-                          if (!exit.PowerSupply)
+                          gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
+                          try
                           {
                               int numOfFixedGenerator = 0;
                               foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
@@ -106,12 +102,12 @@ namespace Gaming
                                   }
                               }
                           }
+                          finally
+                          {
+                              gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
+                          }
                       }
 
-                      finally
-                      {
-                          gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
-                      }
                   }
               }
 
@@ -156,7 +152,9 @@ namespace Gaming
 
             public bool Treat(Student player, Student playerTreated)
             {
-                if (playerTreated.PlayerState == PlayerStateType.Null || player.PlayerState == PlayerStateType.Null || playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
+                if (!((playerTreated.NullOrMoving() || playerTreated.InteractingWithMapWithoutMoving())
+                       && (player.NullOrMoving() || player.InteractingWithMapWithoutMoving()))
+                    || playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
                     return false;
 
                 if (playerTreated.HP + playerTreated.DegreeOfTreatment >= playerTreated.MaxHp)

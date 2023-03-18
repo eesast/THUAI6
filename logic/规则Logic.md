@@ -9,7 +9,10 @@
 
 ## 游戏简介
 - 1位监管者对抗4位求生者的非对称竞技模式
-- 略
+- [本届THUAI电子系赛道为以4名同学和1名捣蛋鬼的求学与阻挠展开的非对称竞技模式，同学需要完成足够的家庭作业和考试，相互督促以避免沉迷娱乐生活，利用道具地形躲避捣蛋鬼的各种干扰诱惑，完成学业；捣蛋鬼则要极力阻止。]
+- [我们的设计是一个非对称游戏，类似第五人格，分为学生、捣蛋鬼两个阵营。在游戏中，学生修完若干课程之后通过考试即可顺利毕业，捣蛋鬼试图干扰学生使其沉迷游戏，以致于无法修完规定课程，直至挂科、退学。]
+[对于选手来说，需要提前制定好学生的学习方案以抵御对方捣蛋鬼的干扰，类似地，也需要制定好捣蛋鬼的行动策略以影响对方学生的学习，也即每队至少要写好两份代码以执行不同阵营的不同策略。]
+[当一局比赛结束（场上的学生有且仅有两种状态：退学或毕业）时，分别记录双方总得分；之后双方换边进行下半场比赛。最终将每队的学生方、捣蛋鬼方的得分相加，比较总得分判断胜负。]
 
 ## 地图
 - 地图为矩形区域，地图上的游戏对象坐标为（x, y），且x和y均为整数。x坐标轴正方向竖直向下，
@@ -91,16 +94,24 @@
         IsStunned = 11,
         IsTryingToAttack = 12,//指前摇
         IsLockingTheDoor = 13,
-        IsRummagingInTheChest = 14,
+        IsOpeningTheChest = 14,
         IsClimbingThroughWindows = 15,
+        IsUsingSpecialSkill = 16,
     }
+  ~~~
+- 可执行指令的（不用给选手）
+  ~~~csharp
+    public bool Commandable() => (playerState!=PlayerStateType.IsDeceased&&playerState!=PlayerStateType.IsEscaped
+                                  &&playerState!=PlayerStateType.IsAddicted &&playerState!=PlayerStateType.IsStunned
+                                  &&playerState!=PlayerStateType.IsSwinging&&playerState!=PlayerStateType.IsTryingToAttack
+                                  &&playerState!=PlayerStateType.IsClimbingThroughWindows);
   ~~~
 - Bgm(字典)
 - 得分
 - ~~回血率/原始回血率~~
 - 当前子弹类型
 - 原始子弹类型
-- 持有道具 *（最多三个）(列表)*
+- 持有道具 （最多三个）(数组)
 - 是否隐身
 - 队伍ID
 - 玩家ID
@@ -111,7 +122,7 @@
 - 各个主动技能CD(字典)
 - 警戒半径
 - double 隐蔽度
-- *翻窗时间*
+- 翻窗时间
 - 开锁门时间
 
 ### 学生：人物
@@ -210,7 +221,7 @@
 3. 修理电机
 4. 开锁门
 5. 翻窗
-6. 翻找箱子
+6. 开启箱子
 
 ### 门
 - *门分别属于三个教学区：三教，五教，六教*
@@ -227,10 +238,31 @@
 - *翻越窗户是一种交互行为，执行时，实质是限定方向的减速运动*
 
 ### 箱子
-- *监管者和求生者都能与箱子交互,同一时刻就允许一人进行翻找*
+- *监管者和求生者都能与箱子交互,同一时刻只允许一人进行开启*
 - *开启箱子有不同概率获得不同道具。*
-- *搜寻物品的基础持续时间为10秒。*
-- *未搜寻完成的箱子在下一次需要重新开始搜寻。*
+- *开启箱子的基础持续时间为10秒。*
+- *未开启完成的箱子在下一次需要重新开始开启。*
+- *箱子开启后其中道具才可以被观测和拿取*
+- [箱子道具不刷新]
+- [箱子不可被关闭]
+- [箱子内道具最多两个]
+
+### 道具
+- 每次玩家试图捡起道具时，需要确保道具栏有空位
+- indexing指道具栏数组下标从0开始
+- 扔道具
+  - Logic内实现
+  ~~~csharp
+    public void ThrowProp(long playerID, int indexing)
+  ~~~
+  - 对应下标出现空位，不会对数组进行重新排序
+- 使用道具
+  - Logic内实现
+  ~~~csharp
+    public void UseProp(long playerID,int indexing)
+  ~~~
+  - 对应下标出现空位，不会对数组进行重新排序
+
 
 ### 治疗
 - 可行动的求生者可以对受伤的其他求生者进行治疗，治疗完成后会回复被治疗程度的血量。

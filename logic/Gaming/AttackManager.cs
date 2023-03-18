@@ -68,6 +68,32 @@ namespace Gaming
                 { IsBackground = true }.Start();
             }
 
+            public void BeStunned(Character player, int time)
+            {
+                new Thread
+                    (() =>
+                    {
+                        player.PlayerState = PlayerStateType.IsStunned;
+                        new FrameRateTaskExecutor<int>(
+                            () => player.PlayerState == PlayerStateType.IsStunned && gameMap.Timer.IsGaming,
+                            () =>
+                            {
+                            },
+                            timeInterval: GameData.frameDuration,
+                            () =>
+                            {
+                                if (player.PlayerState == PlayerStateType.IsStunned)
+                                    player.PlayerState = PlayerStateType.Null;
+                                return 0;
+                            },
+                            maxTotalDuration: time
+                        )
+                            .Start();
+                    }
+                    )
+                { IsBackground = true }.Start();
+            }
+
             private void Die(Character player)
             {
 
@@ -82,22 +108,14 @@ namespace Gaming
                 //     gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
                 // }
 
-                Prop? dropProp = null;
-                if (player.PropInventory != null)  // 若角色原来有道具，则原始道具掉落在原地
+                for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {
-                    dropProp = player.PropInventory;
-                    XY res = GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell);
-                    dropProp.ReSetPos(res, gameMap.GetPlaceType(res));
-                }
-                gameMap.GameObjLockDict[GameObjType.Prop].EnterWriteLock();
-                try
-                {
-                    if (dropProp != null)
-                        gameMap.GameObjDict[GameObjType.Prop].Add(dropProp);
-                }
-                finally
-                {
-                    gameMap.GameObjLockDict[GameObjType.Prop].ExitWriteLock();
+                    Prop? prop = player.UseProp(i);
+                    if (prop != null)
+                    {
+                        prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
+                        gameMap.Add(prop);
+                    }
                 }
 
                 //  player.Reset();
@@ -129,21 +147,21 @@ namespace Gaming
                 */
             }
 
-            private bool CanBeBombed(Bullet bullet, GameObjType gameObjType)
-            {
-                if (gameObjType == GameObjType.Character) return true;
-                return false;
-            }
             private void BombObj(Bullet bullet, GameObj objBeingShot)
             {
                 switch (objBeingShot.Type)
                 {
                     case GameObjType.Character:
-                        if (!((Character)objBeingShot).IsGhost())
+
+                        if ((!((Character)objBeingShot).IsGhost()) && bullet.Parent.IsGhost())
                             if (((Character)objBeingShot).BeAttacked(bullet))
                             {
                                 BeAddictedToGame((Student)objBeingShot);
                             }
+                        //       if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)
+                        //          BeStunned((Character)objBeingShot, bullet.AP);
+                        break;
+                    default:
                         break;
                 }
             }
@@ -218,9 +236,9 @@ namespace Gaming
 
                 foreach (var kvp in gameMap.GameObjDict)
                 {
-                    if (CanBeBombed(bullet, kvp.Key))
+                    if (bullet.CanBeBombed(kvp.Key))
                     {
-                        gameMap.GameObjLockDict[kvp.Key].EnterWriteLock();
+                        gameMap.GameObjLockDict[kvp.Key].EnterReadLock();
                         try
                         {
                             foreach (var item in gameMap.GameObjDict[kvp.Key])
@@ -232,7 +250,7 @@ namespace Gaming
                         }
                         finally
                         {
-                            gameMap.GameObjLockDict[kvp.Key].ExitWriteLock();
+                            gameMap.GameObjLockDict[kvp.Key].ExitReadLock();
                         }
                     }
                 }
@@ -304,55 +322,51 @@ namespace Gaming
                         (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))
                     );
 
-                Bullet? bullet = player.Attack(
-                    res, gameMap.GetPlaceType(res)
-                );
-                if (bullet.CastTime > 0)
-                {
-                    player.PlayerState = PlayerStateType.IsTryingToAttack;
+                Bullet? bullet = player.Attack(res, gameMap.GetPlaceType(res));
 
-                    new Thread
-                            (() =>
-                            {
-                                new FrameRateTaskExecutor<int>(
-                      loopCondition: () => player.PlayerState == PlayerStateType.IsTryingToAttack && gameMap.Timer.IsGaming,
-                      loopToDo: () =>
-                      {
-                      },
-                      timeInterval: GameData.frameDuration,
-                      finallyReturn: () => 0,
-                      maxTotalDuration: bullet.CastTime
-                  )
-
-                      .Start();
-
-                                if (gameMap.Timer.IsGaming)
-                                {
-                                    if (player.PlayerState == PlayerStateType.IsTryingToAttack)
-                                    {
-                                        player.PlayerState = PlayerStateType.Null;
-                                    }
-                                    else
-                                        bullet.IsMoving = false;
-                                    gameMap.Remove(bullet);
-                                }
-                            }
-                            )
-                    { IsBackground = true }.Start();
-                }
                 if (bullet != null)
                 {
                     bullet.CanMove = true;
-                    gameMap.GameObjLockDict[GameObjType.Bullet].EnterWriteLock();
-                    try
-                    {
-                        gameMap.GameObjDict[GameObjType.Bullet].Add(bullet);
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Bullet].ExitWriteLock();
-                    }
+                    gameMap.Add(bullet);
                     moveEngine.MoveObj(bullet, (int)((bullet.BulletAttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
+
+
+                    if (bullet.CastTime > 0)
+                    {
+                        player.PlayerState = PlayerStateType.IsTryingToAttack;
+
+                        new Thread
+                                (() =>
+                                {
+                                    new FrameRateTaskExecutor<int>(
+                                    loopCondition: () => player.PlayerState == PlayerStateType.IsTryingToAttack && gameMap.Timer.IsGaming,
+                                    loopToDo: () =>
+                                    {
+                                    },
+                                    timeInterval: GameData.frameDuration,
+                                    finallyReturn: () => 0,
+                                    maxTotalDuration: bullet.CastTime
+                      )
+
+                          .Start();
+
+                                    if (gameMap.Timer.IsGaming)
+                                    {
+                                        if (player.PlayerState == PlayerStateType.IsTryingToAttack)
+                                        {
+                                            player.PlayerState = PlayerStateType.Null;
+                                        }
+                                        else
+                                            bullet.IsMoving = false;
+                                        gameMap.Remove(bullet);
+                                    }
+                                }
+                                )
+                        { IsBackground = true }.Start();
+                    }
+                }
+                if (bullet != null)
+                {
 #if DEBUG
                     Console.WriteLine($"playerID:{player.ID} successfully attacked!");
 #endif

@@ -50,7 +50,7 @@ public:
     protobuf::MessageToClient GetMessage2Client();
     void AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::StudentType studentType, THUAI6::TrickerType trickerType);
 
-    std::vector<std::vector<THUAI6::PlaceType>> GetMap(int64_t playerID);
+    [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetMap(int64_t playerID);
 
     void ReadMessage(int64_t playerID);
 

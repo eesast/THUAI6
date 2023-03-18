@@ -153,8 +153,8 @@ namespace protobuf
         }
         enum JobTypeCase
         {
-            kStudentType = 3,
-            kTrickerType = 4,
+            kStudentType = 2,
+            kTrickerType = 3,
             JOB_TYPE_NOT_SET = 0,
         };
 
@@ -258,9 +258,9 @@ namespace protobuf
         enum : int
         {
             kPlayerIdFieldNumber = 1,
-            kPlayerTypeFieldNumber = 2,
-            kStudentTypeFieldNumber = 3,
-            kTrickerTypeFieldNumber = 4,
+            kPlayerTypeFieldNumber = 4,
+            kStudentTypeFieldNumber = 2,
+            kTrickerTypeFieldNumber = 3,
         };
         // int64 player_id = 1;
         void clear_player_id();
@@ -272,7 +272,7 @@ namespace protobuf
         void _internal_set_player_id(int64_t value);
 
     public:
-        // .protobuf.PlayerType player_type = 2;
+        // .protobuf.PlayerType player_type = 4;
         void clear_player_type();
         ::protobuf::PlayerType player_type() const;
         void set_player_type(::protobuf::PlayerType value);
@@ -282,7 +282,7 @@ namespace protobuf
         void _internal_set_player_type(::protobuf::PlayerType value);
 
     public:
-        // .protobuf.StudentType student_type = 3;
+        // .protobuf.StudentType student_type = 2;
         bool has_student_type() const;
 
     private:
@@ -298,7 +298,7 @@ namespace protobuf
         void _internal_set_student_type(::protobuf::StudentType value);
 
     public:
-        // .protobuf.TrickerType tricker_type = 4;
+        // .protobuf.TrickerType tricker_type = 3;
         bool has_tricker_type() const;
 
     private:
@@ -514,9 +514,8 @@ namespace protobuf
         enum : int
         {
             kPlayerIdFieldNumber = 1,
-            kAngleFieldNumber = 3,
-            kTimeInMillisecondsFieldNumber = 4,
-            kPlayerTypeFieldNumber = 2,
+            kAngleFieldNumber = 2,
+            kTimeInMillisecondsFieldNumber = 3,
         };
         // int64 player_id = 1;
         void clear_player_id();
@@ -528,7 +527,7 @@ namespace protobuf
         void _internal_set_player_id(int64_t value);
 
     public:
-        // double angle = 3;
+        // double angle = 2;
         void clear_angle();
         double angle() const;
         void set_angle(double value);
@@ -538,7 +537,7 @@ namespace protobuf
         void _internal_set_angle(double value);
 
     public:
-        // int64 time_in_milliseconds = 4;
+        // int64 time_in_milliseconds = 3;
         void clear_time_in_milliseconds();
         int64_t time_in_milliseconds() const;
         void set_time_in_milliseconds(int64_t value);
@@ -546,16 +545,6 @@ namespace protobuf
     private:
         int64_t _internal_time_in_milliseconds() const;
         void _internal_set_time_in_milliseconds(int64_t value);
-
-    public:
-        // .protobuf.PlayerType player_type = 2;
-        void clear_player_type();
-        ::protobuf::PlayerType player_type() const;
-        void set_player_type(::protobuf::PlayerType value);
-
-    private:
-        ::protobuf::PlayerType _internal_player_type() const;
-        void _internal_set_player_type(::protobuf::PlayerType value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.MoveMsg)
@@ -572,7 +561,6 @@ namespace protobuf
             int64_t player_id_;
             double angle_;
             int64_t time_in_milliseconds_;
-            int player_type_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -742,8 +730,7 @@ namespace protobuf
         enum : int
         {
             kPlayerIdFieldNumber = 1,
-            kPlayerTypeFieldNumber = 2,
-            kPropTypeFieldNumber = 3,
+            kPropTypeFieldNumber = 2,
         };
         // int64 player_id = 1;
         void clear_player_id();
@@ -755,17 +742,7 @@ namespace protobuf
         void _internal_set_player_id(int64_t value);
 
     public:
-        // .protobuf.PlayerType player_type = 2;
-        void clear_player_type();
-        ::protobuf::PlayerType player_type() const;
-        void set_player_type(::protobuf::PlayerType value);
-
-    private:
-        ::protobuf::PlayerType _internal_player_type() const;
-        void _internal_set_player_type(::protobuf::PlayerType value);
-
-    public:
-        // .protobuf.PropType prop_type = 3;
+        // .protobuf.PropType prop_type = 2;
         void clear_prop_type();
         ::protobuf::PropType prop_type() const;
         void set_prop_type(::protobuf::PropType value);
@@ -787,7 +764,6 @@ namespace protobuf
         struct Impl_
         {
             int64_t player_id_;
-            int player_type_;
             int prop_type_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
@@ -957,13 +933,11 @@ namespace protobuf
 
         enum : int
         {
-            kMessageFieldNumber = 5,
+            kMessageFieldNumber = 3,
             kPlayerIdFieldNumber = 1,
-            kToPlayerIdFieldNumber = 3,
-            kPlayerTypeFieldNumber = 2,
-            kToPlayerTypeFieldNumber = 4,
+            kToPlayerIdFieldNumber = 2,
         };
-        // string message = 5;
+        // string message = 3;
         void clear_message();
         const std::string& message() const;
         template<typename ArgT0 = const std::string&, typename... ArgT>
@@ -988,7 +962,7 @@ namespace protobuf
         void _internal_set_player_id(int64_t value);
 
     public:
-        // int64 to_player_id = 3;
+        // int64 to_player_id = 2;
         void clear_to_player_id();
         int64_t to_player_id() const;
         void set_to_player_id(int64_t value);
@@ -996,26 +970,6 @@ namespace protobuf
     private:
         int64_t _internal_to_player_id() const;
         void _internal_set_to_player_id(int64_t value);
-
-    public:
-        // .protobuf.PlayerType player_type = 2;
-        void clear_player_type();
-        ::protobuf::PlayerType player_type() const;
-        void set_player_type(::protobuf::PlayerType value);
-
-    private:
-        ::protobuf::PlayerType _internal_player_type() const;
-        void _internal_set_player_type(::protobuf::PlayerType value);
-
-    public:
-        // .protobuf.PlayerType to_player_type = 4;
-        void clear_to_player_type();
-        ::protobuf::PlayerType to_player_type() const;
-        void set_to_player_type(::protobuf::PlayerType value);
-
-    private:
-        ::protobuf::PlayerType _internal_to_player_type() const;
-        void _internal_set_to_player_type(::protobuf::PlayerType value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.SendMsg)
@@ -1032,8 +986,6 @@ namespace protobuf
             ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr message_;
             int64_t player_id_;
             int64_t to_player_id_;
-            int player_type_;
-            int to_player_type_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -1203,8 +1155,7 @@ namespace protobuf
         enum : int
         {
             kPlayerIdFieldNumber = 1,
-            kAngleFieldNumber = 3,
-            kPlayerTypeFieldNumber = 2,
+            kAngleFieldNumber = 2,
         };
         // int64 player_id = 1;
         void clear_player_id();
@@ -1216,7 +1167,7 @@ namespace protobuf
         void _internal_set_player_id(int64_t value);
 
     public:
-        // double angle = 3;
+        // double angle = 2;
         void clear_angle();
         double angle() const;
         void set_angle(double value);
@@ -1224,16 +1175,6 @@ namespace protobuf
     private:
         double _internal_angle() const;
         void _internal_set_angle(double value);
-
-    public:
-        // .protobuf.PlayerType player_type = 2;
-        void clear_player_type();
-        ::protobuf::PlayerType player_type() const;
-        void set_player_type(::protobuf::PlayerType value);
-
-    private:
-        ::protobuf::PlayerType _internal_player_type() const;
-        void _internal_set_player_type(::protobuf::PlayerType value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.AttackMsg)
@@ -1249,7 +1190,6 @@ namespace protobuf
         {
             int64_t player_id_;
             double angle_;
-            int player_type_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -1419,7 +1359,6 @@ namespace protobuf
         enum : int
         {
             kPlayerIdFieldNumber = 1,
-            kPlayerTypeFieldNumber = 2,
         };
         // int64 player_id = 1;
         void clear_player_id();
@@ -1429,16 +1368,6 @@ namespace protobuf
     private:
         int64_t _internal_player_id() const;
         void _internal_set_player_id(int64_t value);
-
-    public:
-        // .protobuf.PlayerType player_type = 2;
-        void clear_player_type();
-        ::protobuf::PlayerType player_type() const;
-        void set_player_type(::protobuf::PlayerType value);
-
-    private:
-        ::protobuf::PlayerType _internal_player_type() const;
-        void _internal_set_player_type(::protobuf::PlayerType value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.IDMsg)
@@ -1453,7 +1382,6 @@ namespace protobuf
         struct Impl_
         {
             int64_t player_id_;
-            int player_type_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -1623,8 +1551,7 @@ namespace protobuf
         enum : int
         {
             kPlayerIdFieldNumber = 1,
-            kPlayerTypeFieldNumber = 2,
-            kSkillIdFieldNumber = 3,
+            kSkillIdFieldNumber = 2,
         };
         // int64 player_id = 1;
         void clear_player_id();
@@ -1636,17 +1563,7 @@ namespace protobuf
         void _internal_set_player_id(int64_t value);
 
     public:
-        // .protobuf.PlayerType player_type = 2;
-        void clear_player_type();
-        ::protobuf::PlayerType player_type() const;
-        void set_player_type(::protobuf::PlayerType value);
-
-    private:
-        ::protobuf::PlayerType _internal_player_type() const;
-        void _internal_set_player_type(::protobuf::PlayerType value);
-
-    public:
-        // int32 skill_id = 3;
+        // int32 skill_id = 2;
         void clear_skill_id();
         int32_t skill_id() const;
         void set_skill_id(int32_t value);
@@ -1668,7 +1585,6 @@ namespace protobuf
         struct Impl_
         {
             int64_t player_id_;
-            int player_type_;
             int32_t skill_id_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
@@ -1712,31 +1628,7 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.PlayerMsg.player_id)
     }
 
-    // .protobuf.PlayerType player_type = 2;
-    inline void PlayerMsg::clear_player_type()
-    {
-        _impl_.player_type_ = 0;
-    }
-    inline ::protobuf::PlayerType PlayerMsg::_internal_player_type() const
-    {
-        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
-    }
-    inline ::protobuf::PlayerType PlayerMsg::player_type() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.PlayerMsg.player_type)
-        return _internal_player_type();
-    }
-    inline void PlayerMsg::_internal_set_player_type(::protobuf::PlayerType value)
-    {
-        _impl_.player_type_ = value;
-    }
-    inline void PlayerMsg::set_player_type(::protobuf::PlayerType value)
-    {
-        _internal_set_player_type(value);
-        // @@protoc_insertion_point(field_set:protobuf.PlayerMsg.player_type)
-    }
-
-    // .protobuf.StudentType student_type = 3;
+    // .protobuf.StudentType student_type = 2;
     inline bool PlayerMsg::_internal_has_student_type() const
     {
         return job_type_case() == kStudentType;
@@ -1785,7 +1677,7 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.PlayerMsg.student_type)
     }
 
-    // .protobuf.TrickerType tricker_type = 4;
+    // .protobuf.TrickerType tricker_type = 3;
     inline bool PlayerMsg::_internal_has_tricker_type() const
     {
         return job_type_case() == kTrickerType;
@@ -1834,6 +1726,30 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.PlayerMsg.tricker_type)
     }
 
+    // .protobuf.PlayerType player_type = 4;
+    inline void PlayerMsg::clear_player_type()
+    {
+        _impl_.player_type_ = 0;
+    }
+    inline ::protobuf::PlayerType PlayerMsg::_internal_player_type() const
+    {
+        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
+    }
+    inline ::protobuf::PlayerType PlayerMsg::player_type() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.PlayerMsg.player_type)
+        return _internal_player_type();
+    }
+    inline void PlayerMsg::_internal_set_player_type(::protobuf::PlayerType value)
+    {
+        _impl_.player_type_ = value;
+    }
+    inline void PlayerMsg::set_player_type(::protobuf::PlayerType value)
+    {
+        _internal_set_player_type(value);
+        // @@protoc_insertion_point(field_set:protobuf.PlayerMsg.player_type)
+    }
+
     inline bool PlayerMsg::has_job_type() const
     {
         return job_type_case() != JOB_TYPE_NOT_SET;
@@ -1874,31 +1790,7 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MoveMsg.player_id)
     }
 
-    // .protobuf.PlayerType player_type = 2;
-    inline void MoveMsg::clear_player_type()
-    {
-        _impl_.player_type_ = 0;
-    }
-    inline ::protobuf::PlayerType MoveMsg::_internal_player_type() const
-    {
-        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
-    }
-    inline ::protobuf::PlayerType MoveMsg::player_type() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MoveMsg.player_type)
-        return _internal_player_type();
-    }
-    inline void MoveMsg::_internal_set_player_type(::protobuf::PlayerType value)
-    {
-        _impl_.player_type_ = value;
-    }
-    inline void MoveMsg::set_player_type(::protobuf::PlayerType value)
-    {
-        _internal_set_player_type(value);
-        // @@protoc_insertion_point(field_set:protobuf.MoveMsg.player_type)
-    }
-
-    // double angle = 3;
+    // double angle = 2;
     inline void MoveMsg::clear_angle()
     {
         _impl_.angle_ = 0;
@@ -1922,7 +1814,7 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MoveMsg.angle)
     }
 
-    // int64 time_in_milliseconds = 4;
+    // int64 time_in_milliseconds = 3;
     inline void MoveMsg::clear_time_in_milliseconds()
     {
         _impl_.time_in_milliseconds_ = int64_t{0};
@@ -1974,31 +1866,7 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.PropMsg.player_id)
     }
 
-    // .protobuf.PlayerType player_type = 2;
-    inline void PropMsg::clear_player_type()
-    {
-        _impl_.player_type_ = 0;
-    }
-    inline ::protobuf::PlayerType PropMsg::_internal_player_type() const
-    {
-        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
-    }
-    inline ::protobuf::PlayerType PropMsg::player_type() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.PropMsg.player_type)
-        return _internal_player_type();
-    }
-    inline void PropMsg::_internal_set_player_type(::protobuf::PlayerType value)
-    {
-        _impl_.player_type_ = value;
-    }
-    inline void PropMsg::set_player_type(::protobuf::PlayerType value)
-    {
-        _internal_set_player_type(value);
-        // @@protoc_insertion_point(field_set:protobuf.PropMsg.player_type)
-    }
-
-    // .protobuf.PropType prop_type = 3;
+    // .protobuf.PropType prop_type = 2;
     inline void PropMsg::clear_prop_type()
     {
         _impl_.prop_type_ = 0;
@@ -2050,31 +1918,7 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.SendMsg.player_id)
     }
 
-    // .protobuf.PlayerType player_type = 2;
-    inline void SendMsg::clear_player_type()
-    {
-        _impl_.player_type_ = 0;
-    }
-    inline ::protobuf::PlayerType SendMsg::_internal_player_type() const
-    {
-        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
-    }
-    inline ::protobuf::PlayerType SendMsg::player_type() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.SendMsg.player_type)
-        return _internal_player_type();
-    }
-    inline void SendMsg::_internal_set_player_type(::protobuf::PlayerType value)
-    {
-        _impl_.player_type_ = value;
-    }
-    inline void SendMsg::set_player_type(::protobuf::PlayerType value)
-    {
-        _internal_set_player_type(value);
-        // @@protoc_insertion_point(field_set:protobuf.SendMsg.player_type)
-    }
-
-    // int64 to_player_id = 3;
+    // int64 to_player_id = 2;
     inline void SendMsg::clear_to_player_id()
     {
         _impl_.to_player_id_ = int64_t{0};
@@ -2098,31 +1942,7 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.SendMsg.to_player_id)
     }
 
-    // .protobuf.PlayerType to_player_type = 4;
-    inline void SendMsg::clear_to_player_type()
-    {
-        _impl_.to_player_type_ = 0;
-    }
-    inline ::protobuf::PlayerType SendMsg::_internal_to_player_type() const
-    {
-        return static_cast<::protobuf::PlayerType>(_impl_.to_player_type_);
-    }
-    inline ::protobuf::PlayerType SendMsg::to_player_type() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.SendMsg.to_player_type)
-        return _internal_to_player_type();
-    }
-    inline void SendMsg::_internal_set_to_player_type(::protobuf::PlayerType value)
-    {
-        _impl_.to_player_type_ = value;
-    }
-    inline void SendMsg::set_to_player_type(::protobuf::PlayerType value)
-    {
-        _internal_set_to_player_type(value);
-        // @@protoc_insertion_point(field_set:protobuf.SendMsg.to_player_type)
-    }
-
-    // string message = 5;
+    // string message = 3;
     inline void SendMsg::clear_message()
     {
         _impl_.message_.ClearToEmpty();
@@ -2207,31 +2027,7 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.AttackMsg.player_id)
     }
 
-    // .protobuf.PlayerType player_type = 2;
-    inline void AttackMsg::clear_player_type()
-    {
-        _impl_.player_type_ = 0;
-    }
-    inline ::protobuf::PlayerType AttackMsg::_internal_player_type() const
-    {
-        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
-    }
-    inline ::protobuf::PlayerType AttackMsg::player_type() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.AttackMsg.player_type)
-        return _internal_player_type();
-    }
-    inline void AttackMsg::_internal_set_player_type(::protobuf::PlayerType value)
-    {
-        _impl_.player_type_ = value;
-    }
-    inline void AttackMsg::set_player_type(::protobuf::PlayerType value)
-    {
-        _internal_set_player_type(value);
-        // @@protoc_insertion_point(field_set:protobuf.AttackMsg.player_type)
-    }
-
-    // double angle = 3;
+    // double angle = 2;
     inline void AttackMsg::clear_angle()
     {
         _impl_.angle_ = 0;
@@ -2283,30 +2079,6 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.IDMsg.player_id)
     }
 
-    // .protobuf.PlayerType player_type = 2;
-    inline void IDMsg::clear_player_type()
-    {
-        _impl_.player_type_ = 0;
-    }
-    inline ::protobuf::PlayerType IDMsg::_internal_player_type() const
-    {
-        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
-    }
-    inline ::protobuf::PlayerType IDMsg::player_type() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.IDMsg.player_type)
-        return _internal_player_type();
-    }
-    inline void IDMsg::_internal_set_player_type(::protobuf::PlayerType value)
-    {
-        _impl_.player_type_ = value;
-    }
-    inline void IDMsg::set_player_type(::protobuf::PlayerType value)
-    {
-        _internal_set_player_type(value);
-        // @@protoc_insertion_point(field_set:protobuf.IDMsg.player_type)
-    }
-
     // -------------------------------------------------------------------
 
     // SkillMsg
@@ -2335,31 +2107,7 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.SkillMsg.player_id)
     }
 
-    // .protobuf.PlayerType player_type = 2;
-    inline void SkillMsg::clear_player_type()
-    {
-        _impl_.player_type_ = 0;
-    }
-    inline ::protobuf::PlayerType SkillMsg::_internal_player_type() const
-    {
-        return static_cast<::protobuf::PlayerType>(_impl_.player_type_);
-    }
-    inline ::protobuf::PlayerType SkillMsg::player_type() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.SkillMsg.player_type)
-        return _internal_player_type();
-    }
-    inline void SkillMsg::_internal_set_player_type(::protobuf::PlayerType value)
-    {
-        _impl_.player_type_ = value;
-    }
-    inline void SkillMsg::set_player_type(::protobuf::PlayerType value)
-    {
-        _internal_set_player_type(value);
-        // @@protoc_insertion_point(field_set:protobuf.SkillMsg.player_type)
-    }
-
-    // int32 skill_id = 3;
+    // int32 skill_id = 2;
     inline void SkillMsg::clear_skill_id()
     {
         _impl_.skill_id_ = 0;

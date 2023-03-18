@@ -279,12 +279,62 @@ std::vector<std::vector<THUAI6::PlaceType>> TrickerAPI::GetFullMap() const
     return logic.GetFullMap();
 }
 
-const std::vector<int64_t> StudentAPI::GetPlayerGUIDs() const
+bool StudentAPI::IsDoorOpen(int32_t cellX, int32_t cellY) const
+{
+    return logic.IsDoorOpen(cellX, cellY);
+}
+
+bool TrickerAPI::IsDoorOpen(int32_t cellX, int32_t cellY) const
+{
+    return logic.IsDoorOpen(cellX, cellY);
+}
+
+int32_t StudentAPI::GetClassroomProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetClassroomProgress(cellX, cellY);
+}
+
+int32_t TrickerAPI::GetClassroomProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetClassroomProgress(cellX, cellY);
+}
+
+int32_t StudentAPI::GetChestProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetChestProgress(cellX, cellY);
+}
+
+int32_t TrickerAPI::GetChestProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetChestProgress(cellX, cellY);
+}
+
+int32_t StudentAPI::GetGateProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetGateProgress(cellX, cellY);
+}
+
+int32_t TrickerAPI::GetGateProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetGateProgress(cellX, cellY);
+}
+
+std::shared_ptr<const THUAI6::GameInfo> StudentAPI::GetGameInfo() const
+{
+    return logic.GetGameInfo();
+}
+
+std::shared_ptr<const THUAI6::GameInfo> TrickerAPI::GetGameInfo() const
+{
+    return logic.GetGameInfo();
+}
+
+std::vector<int64_t> StudentAPI::GetPlayerGUIDs() const
 {
     return logic.GetPlayerGUIDs();
 }
 
-const std::vector<int64_t> TrickerAPI::GetPlayerGUIDs() const
+std::vector<int64_t> TrickerAPI::GetPlayerGUIDs() const
 {
     return logic.GetPlayerGUIDs();
 }

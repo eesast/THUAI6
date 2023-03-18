@@ -42,6 +42,7 @@ namespace protobuf
         "/protobuf.AvailableService/StartOpenGate",
         "/protobuf.AvailableService/StartOpenChest",
         "/protobuf.AvailableService/EndAllAction",
+        "/protobuf.AvailableService/GetMap",
     };
 
     std::unique_ptr<AvailableService::Stub> AvailableService::NewStub(const std::shared_ptr<::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
@@ -71,7 +72,8 @@ namespace protobuf
         rpcmethod_SkipWindow_(AvailableService_method_names[15], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
         rpcmethod_StartOpenGate_(AvailableService_method_names[16], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
         rpcmethod_StartOpenChest_(AvailableService_method_names[17], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
-        rpcmethod_EndAllAction_(AvailableService_method_names[18], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+        rpcmethod_EndAllAction_(AvailableService_method_names[18], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel),
+        rpcmethod_GetMap_(AvailableService_method_names[19], options.suffix_for_stats(), ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
     {
     }
 
@@ -591,6 +593,34 @@ namespace protobuf
         return result;
     }
 
+    ::grpc::Status AvailableService::Stub::GetMap(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::MessageOfMap* response)
+    {
+        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::MessageOfMap, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_GetMap_, context, request, response);
+    }
+
+    void AvailableService::Stub::async::GetMap(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::MessageOfMap* response, std::function<void(::grpc::Status)> f)
+    {
+        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::MessageOfMap, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetMap_, context, request, response, std::move(f));
+    }
+
+    void AvailableService::Stub::async::GetMap(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::MessageOfMap* response, ::grpc::ClientUnaryReactor* reactor)
+    {
+        ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetMap_, context, request, response, reactor);
+    }
+
+    ::grpc::ClientAsyncResponseReader<::protobuf::MessageOfMap>* AvailableService::Stub::PrepareAsyncGetMapRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    {
+        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::MessageOfMap, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_GetMap_, context, request);
+    }
+
+    ::grpc::ClientAsyncResponseReader<::protobuf::MessageOfMap>* AvailableService::Stub::AsyncGetMapRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    {
+        auto* result =
+            this->PrepareAsyncGetMapRaw(context, request, cq);
+        result->StartCall();
+        return result;
+    }
+
     AvailableService::Service::Service()
     {
         AddMethod(new ::grpc::internal::RpcServiceMethod(
@@ -859,6 +889,20 @@ namespace protobuf
                 this
             )
         ));
+        AddMethod(new ::grpc::internal::RpcServiceMethod(
+            AvailableService_method_names[19],
+            ::grpc::internal::RpcMethod::NORMAL_RPC,
+            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::MessageOfMap, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+                [](AvailableService::Service* service,
+                   ::grpc::ServerContext* ctx,
+                   const ::protobuf::IDMsg* req,
+                   ::protobuf::MessageOfMap* resp)
+                {
+                    return service->GetMap(ctx, req, resp);
+                },
+                this
+            )
+        ));
     }
 
     AvailableService::Service::~Service()
@@ -1010,6 +1054,14 @@ namespace protobuf
     }
 
     ::grpc::Status AvailableService::Service::EndAllAction(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+    {
+        (void)context;
+        (void)request;
+        (void)response;
+        return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+
+    ::grpc::Status AvailableService::Service::GetMap(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::MessageOfMap* response)
     {
         (void)context;
         (void)request;

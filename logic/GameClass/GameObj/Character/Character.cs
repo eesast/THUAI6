@@ -260,6 +260,19 @@ namespace GameClass.GameObj
             }
         }
 
+        private int timeOfOpenChest;
+        public int TimeOfOpenChest
+        {
+            get => timeOfOpenChest;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    timeOfOpenChest = value;
+                }
+            }
+        }
+
         /// <summary>
         /// 进行一次攻击
         /// </summary>

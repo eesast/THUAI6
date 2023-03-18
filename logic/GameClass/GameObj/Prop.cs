@@ -5,9 +5,6 @@ namespace GameClass.GameObj
 {
     public abstract class Prop : ObjOfCharacter
     {
-        protected bool laid = false;
-        public bool Laid => laid;  // 道具是否放置在地图上
-
         public override bool IsRigid => true;
 
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
@@ -82,6 +79,34 @@ namespace GameClass.GameObj
         {
         }
         public override PropType GetPropType() => PropType.Spear;
+    }
+    public sealed class Key3 : Prop
+    {
+        public Key3(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        {
+        }
+        public override PropType GetPropType() => PropType.Key3;
+    }
+    public sealed class Key5 : Prop
+    {
+        public Key5(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        {
+        }
+        public override PropType GetPropType() => PropType.Key5;
+    }
+    public sealed class Key6 : Prop
+    {
+        public Key6(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        {
+        }
+        public override PropType GetPropType() => PropType.Key6;
+    }
+    public sealed class Null : Prop
+    {
+        public Null(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        {
+        }
+        public override PropType GetPropType() => PropType.Null;
     }
     #endregion
     // #region 所有坑人地雷

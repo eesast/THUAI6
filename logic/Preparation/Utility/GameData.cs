@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading;
 
 namespace Preparation.Utility
 {
@@ -22,12 +20,14 @@ namespace Preparation.Utility
         public const int numOfBirthPoint = 5;
         //        public const int numOfGenerator = 9;
         public const int numOfGeneratorRequiredForRepair = 7;
+        public const int numOfChest = 8;
 
         private const int numOfObjNotMap = 5;
         public static bool IsMap(GameObjType gameObjType)
         {
             return (uint)gameObjType > numOfObjNotMap;
         }
+
         public static XY GetCellCenterPos(int x, int y)  // 求格子的中心坐标
         {
             XY ret = new(x * numOfPosGridPerCell + numOfPosGridPerCell / 2, y * numOfPosGridPerCell + numOfPosGridPerCell / 2);
@@ -58,6 +58,7 @@ namespace Preparation.Utility
         public const int basicFixSpeed = 100;
         public const int basicTimeOfOpeningOrLocking = 3000;
         public const int basicTimeOfClimbingThroughWindows = 870;
+        public const int basicTimeOfOpenChest = 10000;
 
         public const int basicHp = 3000000;                             // 初始血量
         public const int basicMaxGamingAddiction = 60000;//基本完全沉迷时间
@@ -118,9 +119,12 @@ namespace Preparation.Utility
         public const int PropRadius = numOfPosGridPerCell / 2;
         public const int PropMoveSpeed = 3000;
         public const int PropMaxMoveDistance = 15 * numOfPosGridPerCell;
-        public const long GemProduceTime = 10000;
         public const long PropProduceTime = 10000;
         public const int PropDuration = 10000;
+
+        public const int numOfKeyEachArea = 2;
+        public const int numOfPropTypeNotKey = 4;
+        public const int numOfTeachingBuilding = 3;
         #endregion
         #region 物体相关
         public const int degreeOfFixedGenerator = 10300000;

@@ -16,6 +16,7 @@ namespace Preparation.Interface
         public int AlertnessRadius { get; }
         public int TimeOfOpeningOrLocking { get; }
         public int TimeOfClimbingThroughWindows { get; }
+        public int TimeOfOpenChest { get; }
     }
 
     public interface IGhost : IOccupation
@@ -58,6 +59,8 @@ namespace Preparation.Interface
         public int timeOfClimbingThroughWindows = GameData.basicTimeOfClimbingThroughWindows;
         public int TimeOfClimbingThroughWindows => timeOfClimbingThroughWindows;
 
+        public int timeOfOpenChest = GameData.basicTimeOfOpenChest;
+        public int TimeOfOpenChest => timeOfOpenChest;
     }
     public class Athlete : IStudent
     {
@@ -92,5 +95,8 @@ namespace Preparation.Interface
 
         public int timeOfClimbingThroughWindows = GameData.basicTimeOfClimbingThroughWindows / 87 * 80;
         public int TimeOfClimbingThroughWindows => timeOfClimbingThroughWindows;
+
+        public int timeOfOpenChest = GameData.basicTimeOfOpenChest;
+        public int TimeOfOpenChest => timeOfOpenChest;
     }
 }

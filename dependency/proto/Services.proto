@@ -15,9 +15,10 @@ service AvailableService
     rpc Move (MoveMsg) returns (MoveRes);
     rpc PickProp (PropMsg) returns (BoolRes);
     rpc UseProp (PropMsg) returns (BoolRes);
+    rpc ThrowProp (PropMsg) returns (BoolRes);
     rpc UseSkill (SkillMsg) returns (BoolRes);
     rpc SendMessage (SendMsg) returns (BoolRes);
-    rpc GetMessage (IDMsg) returns (stream MsgRes);
+    // rpc GetMessage (IDMsg) returns (stream MsgRes);
     rpc StartLearning (IDMsg) returns (BoolRes); // 开始修理机器
     rpc StartRescueMate (IDMsg) returns (BoolRes); // 开始救人
     rpc StartTreatMate (IDMsg) returns (BoolRes);

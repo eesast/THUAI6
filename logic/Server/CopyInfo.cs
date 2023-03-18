@@ -27,7 +27,12 @@ namespace Server
                 return PickedProp((PickedProp)gameObj);
             else return null;  //先写着防报错
         }
-
+        public static MessageOfObj? Auto(MessageOfNews news)
+        {
+            MessageOfObj objMsg = new();
+            objMsg.NewsMessage = news;
+            return objMsg;
+        }
         private static MessageOfObj? Student(Character player)
         {
             MessageOfObj msg = new MessageOfObj();
@@ -47,7 +52,6 @@ namespace Server
             msg.StudentMessage.PlayerId = 0;
             msg.StudentMessage.ViewRange = 0;
             msg.StudentMessage.Radius = 0;
-            msg.StudentMessage.Damage = 0;
             msg.StudentMessage.DangerAlert = 0;
             msg.StudentMessage.Score = 0;
             msg.StudentMessage.TreatProgress = 0;
@@ -83,12 +87,12 @@ namespace Server
                 msg.StudentMessage.Prop.Add(PropType.NullPropType);
             else
             {
-                switch (player.PropInventory.GetPropType())
+                /*switch (player.PropInventory.GetPropType())
                 {
                     case Preparation.Utility.PropType.Gem:
                         msg.StudentMessage.Prop.Add(PropType.NullPropType);
                         break;
-                        /*case Preparation.Utility.PropType.addLIFE:
+                        case Preparation.Utility.PropType.addLIFE:
                            msg.StudentMessage.MessageOfHuman.Prop = Communication.Proto.PropType.AddLife;
                             break;
                         case Preparation.Utility.PropType.addSpeed:
@@ -102,8 +106,8 @@ namespace Server
                             break;
                         default:
                            msg.StudentMessage.Prop = PropType.NullPropType;
-                            break;*/
-                }
+                            break;
+                }*/
             }
 
             return msg;
@@ -112,6 +116,7 @@ namespace Server
         private static MessageOfObj? Tricker(Character player)
         {
             MessageOfObj msg = new MessageOfObj();
+            msg.TrickerMessage = new();
             if (!player.IsGhost()) return null;
             msg.TrickerMessage = new();
 
@@ -120,12 +125,11 @@ namespace Server
             msg.TrickerMessage.Speed = player.MoveSpeed;
             msg.TrickerMessage.Damage = 0;
             foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
-                msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
+                msg.TrickerMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
             //msg.TrickerMessage.Place = 0; 下面写了
             //msg.TrickerMessage.Prop = PropType.NullPropType; // 下面写
             msg.TrickerMessage.TrickerType = TrickerType.NullTrickerType; // 下面写
             msg.TrickerMessage.Guid = 0;
-            msg.TrickerMessage.Movable = false;
             msg.TrickerMessage.PlayerId = 0;
             msg.TrickerMessage.ViewRange = 0;
             msg.TrickerMessage.Radius = 0;

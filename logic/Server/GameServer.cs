@@ -20,11 +20,11 @@ namespace Server
         protected readonly ArgumentOptions options;
         private HttpSender? httpSender;
         private object gameLock = new();
-        private object[] teamCommunicationLock;
         private const int playerNum = 1;  // 注意修改
         private MessageToClient currentGameInfo = new();
-        private MessageOfMap currentMapMsg = new();
-        private Queue<MsgRes>[] teamCommunicatonMsg;
+        private MessageOfObj currentMapMsg = new();
+        private object newsLock = new();
+        private List<MessageOfNews> currentNews = new();
         private SemaphoreSlim endGameSem = new(0);
         protected readonly Game game;
         private uint spectatorMinPlayerID = 2022;
@@ -33,7 +33,6 @@ namespace Server
         protected long[] communicationToGameID;  // 通信用的ID映射到游戏内的ID，通信中0-3为Student，4为Tricker
         private readonly object messageToAllClientsLock = new();
         public static readonly long SendMessageToClientIntervalInMilliseconds = 50;
-        private readonly Semaphore endGameInfoSema = new(0, 1);
         private MessageWriter? mwr = null;
 
         public void StartGame()
@@ -117,7 +116,7 @@ namespace Server
             if (options.ResultFileName != DefaultArgumentOptions.FileName)
                 SaveGameResult(options.ResultFileName + ".json");
             //SendGameResult();
-            endGameInfoSema.Release();
+            this.endGameSem.Release();
         }
 
         public void ReportGame(GameState gameState, bool requiredGaming = true)
@@ -126,15 +125,39 @@ namespace Server
             currentGameInfo = new();
             lock (messageToAllClientsLock)
             {
-                //currentGameInfo.MapMessage = (Message(game.GameMap));
                 switch (gameState)
                 {
                     case GameState.GameRunning:
-                    case GameState.GameStart:
                     case GameState.GameEnd:
                         foreach (GameObj gameObj in gameObjList)
                         {
                             currentGameInfo.ObjMessage.Add(CopyInfo.Auto(gameObj));
+                        }
+                        lock (newsLock)
+                        {
+                            foreach (var news in currentNews)
+                            {
+                                currentGameInfo.ObjMessage.Add(CopyInfo.Auto(news));
+                            }
+                            currentNews.Clear();
+                        }
+                        currentGameInfo.GameState = gameState;
+                        currentGameInfo.AllMessage = new(); // 还没写
+                        mwr?.WriteOne(currentGameInfo);
+                        break;
+                    case GameState.GameStart:
+                        currentGameInfo.ObjMessage.Add(currentMapMsg);
+                        foreach (GameObj gameObj in gameObjList)
+                        {
+                            currentGameInfo.ObjMessage.Add(CopyInfo.Auto(gameObj));
+                        }
+                        lock (newsLock)
+                        {
+                            foreach (var news in currentNews)
+                            {
+                                currentGameInfo.ObjMessage.Add(CopyInfo.Auto(news));
+                            }
+                            currentNews.Clear();
                         }
                         currentGameInfo.GameState = gameState;
                         currentGameInfo.AllMessage = new(); // 还没写
@@ -168,7 +191,7 @@ namespace Server
         }
         private uint GetBirthPointIdx(long playerID)  // 获取出生点位置
         {
-            return (uint)(playerID + 1); // ID从0-4，出生点从1-5
+            return (uint)playerID + 1; // ID从0-4,出生点从1-5
         }
         private bool ValidPlayerID(long playerID)
         {
@@ -193,15 +216,16 @@ namespace Server
                 default: return Protobuf.PlaceType.NullPlaceType;
             }
         }
-        private MessageOfMap MapMsg(uint[,] map)
+        private MessageOfObj MapMsg(uint[,] map)
         {
-            MessageOfMap msgOfMap = new MessageOfMap();
+            MessageOfObj msgOfMap = new();
+            msgOfMap.MapMessage = new();
             for (int i = 0; i < GameData.rows; i++)
             {
-                msgOfMap.Row.Add(new MessageOfMap.Types.Row());
+                msgOfMap.MapMessage.Row.Add(new MessageOfMap.Types.Row());
                 for (int j = 0; j < GameData.cols; j++)
                 {
-                    msgOfMap.Row[i].Col.Add(IntToPlaceType(map[i, j]));
+                    msgOfMap.MapMessage.Row[i].Col.Add(IntToPlaceType(map[i, j]));
                 }
             }
             return msgOfMap;
@@ -226,6 +250,7 @@ namespace Server
         protected readonly object addPlayerLock = new();
         public override async Task AddPlayer(PlayerMsg request, IServerStreamWriter<MessageToClient> responseStream, ServerCallContext context)
         {
+            
             Console.WriteLine($"AddPlayer: {request.PlayerId}");
             if (request.PlayerId >= spectatorMinPlayerID)
             {
@@ -246,7 +271,25 @@ namespace Server
             if (communicationToGameID[request.PlayerId] != GameObj.invalidID)  //是否已经添加了该玩家
                 return;
 
-            Preparation.Utility.CharacterType characterType = Preparation.Utility.CharacterType.Athlete; // 待修改
+            Preparation.Utility.CharacterType characterType = Preparation.Utility.CharacterType.Null; // 待修改
+            if (request.PlayerType == PlayerType.StudentPlayer)
+            {
+                switch (request.StudentType)
+                {
+                    default:
+                        characterType = Preparation.Utility.CharacterType.Athlete;
+                        break;
+                }
+            }
+            else if (request.PlayerType == PlayerType.TrickerPlayer)
+            {
+                switch (request.TrickerType)
+                {
+                    default:
+                        characterType = Preparation.Utility.CharacterType.Assassin;
+                        break;
+                }
+            }
 
             lock (addPlayerLock)
             {
@@ -295,18 +338,20 @@ namespace Server
             Console.WriteLine($"Move ID: {request.PlayerId}, TimeInMilliseconds: {request.TimeInMilliseconds}");
 #endif            
             var gameID = communicationToGameID[request.PlayerId];
-            game.MovePlayer(gameID, (int)request.TimeInMilliseconds, request.Angle);
-            // 之后game.MovePlayer可能改为bool类型
             MoveRes moveRes = new();
+            game.MovePlayer(gameID, (int)request.TimeInMilliseconds, request.Angle);
+            // 之后game.MovePlayer可能改为bool类
             moveRes.ActSuccess = true;
+            if (!game.GameMap.Timer.IsGaming) moveRes.ActSuccess = false;
             return Task.FromResult(moveRes);
         }
 
         public override Task<BoolRes> PickProp(PropMsg request, ServerCallContext context)
         {
             BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
             if (request.PropType == Protobuf.PropType.NullPropType)
-                boolRes.ActSuccess = game.PickProp(request.PlayerId, Preparation.Utility.PropType.Null);
+                boolRes.ActSuccess = game.PickProp(gameID, Preparation.Utility.PropType.Null);
             // 待修改
             return Task.FromResult(boolRes);
         }
@@ -320,8 +365,6 @@ namespace Server
                 boolRes.ActSuccess = false;
                 return Task.FromResult(boolRes);
             }
-            MsgRes msg = new();
-            msg.HaveMessage = false;
             if (request.Message.Length > 256)
             {
 #if DEBUG
@@ -332,29 +375,21 @@ namespace Server
             }
             else
             {
-                msg.HaveMessage = true;
-                msg.FromPlayerId = request.PlayerId;
-                msg.MessageReceived = request.Message;
+                MessageOfNews news = new();
+                news.News = request.Message;
+                news.FromId = request.PlayerId;
+                news.ToId = request.ToPlayerId;
+                lock (newsLock)
+                {
+                    currentNews.Add(news);
+                }
 #if DEBUG
-                Console.WriteLine(msg);
+                Console.WriteLine(news.News);
 #endif
-                teamCommunicatonMsg[request.ToPlayerId].Enqueue(msg);
+                //teamCommunicatonMsg[request.ToPlayerId].Enqueue(msg);
             }
             boolRes.ActSuccess = true;
             return Task.FromResult(boolRes);
-        }
-
-        public override Task GetMessage(IDMsg request, IServerStreamWriter<MsgRes> responseStream, ServerCallContext context)
-        {
-            if (!game.GameMap.Timer.IsGaming) return Task.CompletedTask;
-            lock (teamCommunicationLock[request.PlayerId])
-            {
-                while (teamCommunicatonMsg[request.PlayerId].Count > 0)
-                {
-                    responseStream.WriteAsync(teamCommunicatonMsg[request.PlayerId].Dequeue());
-                }
-            }
-            return Task.CompletedTask;
         }
         public override Task<BoolRes> UseProp(PropMsg request, ServerCallContext context)
         {
@@ -436,9 +471,8 @@ namespace Server
                 }
                 finally { this.game = new Game(map, options.TeamCount); }
             }
+            currentMapMsg = MapMsg(game.GameMap.ProtoGameMap);
             communicationToGameID = new long[options.PlayerCountPerTeam + 1];
-            teamCommunicatonMsg = new Queue<MsgRes>[options.PlayerCountPerTeam + 1];
-            teamCommunicationLock = new object[options.PlayerCountPerTeam + 1];
             //创建server时先设定待加入人物都是invalid
             for (int i = 0; i < communicationToGameID.GetLength(0); i++)
             {

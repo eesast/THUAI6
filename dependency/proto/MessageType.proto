@@ -74,7 +74,6 @@ enum PlayerState
     LOCKING = 13;
     RUMMAGING = 14;
     CLIMBING = 15; // 翻窗
-
 }
 
 enum TrickerBuffType // 屠夫可用的增益效果类型

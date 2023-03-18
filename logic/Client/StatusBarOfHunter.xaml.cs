@@ -45,30 +45,29 @@ namespace Client
             {
                 case TrickerType._1:
                     coolTime = 10000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:TrickerType1";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：TrickerType1";
                     break;
                 case TrickerType._2:
                     coolTime = 20000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:TrickerType2";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：TrickerType2";
                     break;
                 case TrickerType._3:
                     coolTime = 30000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:TrickerType3";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：TrickerType3";
                     break;
                 case TrickerType._4:
                     coolTime = 40000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:TrickerType4";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：TrickerType4";
                     break;
                 case TrickerType.NullTrickerType:
                     coolTime = 10000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nSkill:NullTrickerType";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：NullTrickerType";
                     break;
             }
             initialized = true;
         }
         private void SetDynamicValue(MessageOfTricker obj)
         {
-            skillprogress.Value = 100 - obj.TimeUntilSkillAvailable / coolTime * 100;
             if (!obj.Movable)  // 认为movable为真时可动
             {
                 skillprogress.Value = 0;

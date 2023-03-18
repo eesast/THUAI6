@@ -68,7 +68,7 @@ namespace Client
         }
         private void SetDynamicValue(MessageOfTricker obj)
         {
-            if (!obj.Movable)  // 认为movable为真时可动
+            if (obj.PlayerState==PlayerState.Stunned)
             {
                 skillprogress.Value = 0;
                 skillprogress.Background = Brushes.Gray;

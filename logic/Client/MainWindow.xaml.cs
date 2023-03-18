@@ -16,14 +16,13 @@ using System.Diagnostics;
 using System.Windows.Threading;
 using Grpc.Core;
 using Protobuf;
+using Playback;
 
 // 目前MainWindow还未复现的功能：
 // 部分errordisplayer
 // private void ReactToCommandline()，
 // private void Playback(string fileName, double pbSpeed = 2.0)
-
 // 交互：private void ClickToSetMode(object sender, RoutedEventArgs e)
-
 // private void Bonus()
 
 namespace Client
@@ -59,11 +58,11 @@ namespace Client
             listOfDoor = new List<MessageOfDoor>();
             listOfGate = new List<MessageOfGate>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            comInfo[0] = "127.0.0.1";
+            comInfo[0] = "183.172.213.88";
             comInfo[1] = "8888";
-            comInfo[2] = "0";
-            comInfo[3] = "1";
-
+            comInfo[2] = "4";
+            comInfo[3] = "2";
+            comInfo[4] = "1";
             ConnectToServer(comInfo);
             OnReceive();
             //DrawMap();
@@ -91,7 +90,50 @@ namespace Client
             }
         }
 
-        // 连接Server,comInfo[]的格式：0-ip 1- port 2-playerID 3-human/TrickerType
+        // 获得地图信息,未更新数值
+        private void GetMap(MessageOfMap obj)
+        {
+            int[,] map = new int[50, 50];
+            try
+            {
+                for (int i = 0; i < 50; i++)
+                {
+                    for (int j = 0; j < 50; j++)
+                    {
+                        map[i, j] = Convert.ToInt32(obj.Row[i].Col[j]) + 4;//与proto一致
+                    }
+                }
+            }
+            catch
+            {
+                mapFlag = false;
+            }
+            finally
+            {
+                defaultMap = map;
+                mapFlag = true;
+            }
+        }
+
+        //private void Playback(string fileName, double pbSpeed = 2.0)
+        //{
+        //    var pbClient = new PlaybackClient(fileName, pbSpeed);
+        //    int[,]? map;
+        //    if ((map = pbClient.ReadDataFromFile(dataDict, drawPicLock)) != null)
+        //    {
+        //        isClientStocked = false;
+        //        isPlaybackMode = true;
+        //        defaultMap = map;
+        //        mapFlag = true;
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("Failed to read the playback file!");
+        //        isClientStocked = true;
+        //    }
+        //}
+
+        // 连接Server,comInfo[]的格式：0-ip 1- port 2-playerID 3-human/TrickerType 4-occupation
         private void ConnectToServer(string[] comInfo)
         {
             if (!isPlaybackMode)
@@ -115,6 +157,7 @@ namespace Client
                     1 => PlayerType.StudentPlayer,
                     2 => PlayerType.TrickerPlayer,
                 };
+                playerMsg.PlayerType=playerType;
                 if (Convert.ToInt64(comInfo[3]) == 1)
                 {
                     humanOrButcher = true;
@@ -196,30 +239,6 @@ namespace Client
             UpperLayerOfMap.Children.Add(icon);
         }
 
-        // 获得地图信息,未更新数值
-        private void GetMap(MessageOfMap obj)
-        {
-            int[,] map = new int[50, 50];
-            try
-            {
-                for (int i = 0; i < 50; i++)
-                {
-                    for (int j = 0; j < 50; j++)
-                    {
-                        map[i, j] = Convert.ToInt32(obj.Row[i].Col[j])+4;//与proto一致
-                    }
-                }
-            }
-            catch
-            {
-                mapFlag = false;
-            }
-            finally
-            {
-                defaultMap = map;
-                mapFlag = true;
-            }
-        }
         private void ZoomMap()
         {
             for (int i = 0; i < 50; i++)
@@ -381,11 +400,11 @@ namespace Client
                                         case MessageOfObj.MessageOfObjOneofCase.GateMessage:
                                             listOfGate.Add(obj.GateMessage);
                                             break;
+                                        case MessageOfObj.MessageOfObjOneofCase.MapMessage:
+                                            GetMap(obj.MapMessage);
+                                            break;
                                     }
                                 }
-                                IDMsg idMsg = new IDMsg();
-                                idMsg.PlayerId = playerID;
-                                GetMap(client.GetMap(idMsg));
                                 listOfAll.Add(content.AllMessage);
                                 break;
                             case GameState.GameRunning:
@@ -660,7 +679,7 @@ namespace Client
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
                                     Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                    Fill = Brushes.Black,
+                                    Fill = Brushes.Chocolate,
                                 };
                                 UpperLayerOfMap.Children.Add(icon);
                             }

@@ -275,7 +275,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
                 return actionManager.Stop(player);

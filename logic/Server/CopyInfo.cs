@@ -38,14 +38,12 @@ namespace Server
             msg.StudentMessage.Y = player.Position.y;
             msg.StudentMessage.Speed = player.MoveSpeed;
             msg.StudentMessage.Determination = player.HP;
-            //msg.StudentMessage.FailNum = 0;
+            msg.StudentMessage.Addiction = 0;
             foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
             //msg.StudentMessage.StudentType; // 下面写
             msg.StudentMessage.Guid = player.ID;
             // msg.StudentMessage.State = player.PlayerState;
-            msg.StudentMessage.FailTime = 0;
-            msg.StudentMessage.EmoTime = 0;
             msg.StudentMessage.PlayerId = 0;
             msg.StudentMessage.ViewRange = 0;
             msg.StudentMessage.Radius = 0;
@@ -121,7 +119,8 @@ namespace Server
             msg.TrickerMessage.Y = player.Position.y;
             msg.TrickerMessage.Speed = player.MoveSpeed;
             msg.TrickerMessage.Damage = 0;
-            msg.TrickerMessage.TimeUntilSkillAvailable = 0;
+            foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
+                msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
             //msg.TrickerMessage.Place = 0; 下面写了
             //msg.TrickerMessage.Prop = PropType.NullPropType; // 下面写
             msg.TrickerMessage.TrickerType = TrickerType.NullTrickerType; // 下面写

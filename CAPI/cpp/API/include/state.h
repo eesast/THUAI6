@@ -25,7 +25,9 @@ struct State
 
     std::vector<std::shared_ptr<THUAI6::BombedBullet>> bombedBullets;
 
-    std::shared_ptr<THUAI6::GameMap> gameMap;
+    std::vector<std::vector<THUAI6::PlaceType>> gameMap;
+
+    std::shared_ptr<THUAI6::GameMap> mapInfo;
 
     std::shared_ptr<THUAI6::GameInfo> gameInfo;
 

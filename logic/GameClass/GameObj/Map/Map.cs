@@ -96,6 +96,18 @@ namespace GameClass.GameObj
             }
             return flag;
         }
+        public bool RemoveJustFromMap(GameObj gameObj)
+        {
+            GameObjLockDict[gameObj.Type].EnterWriteLock();
+            try
+            {
+                return GameObjDict[gameObj.Type].Remove(gameObj);
+            }
+            finally
+            {
+                GameObjLockDict[gameObj.Type].ExitWriteLock();
+            }
+        }
         public void Add(GameObj gameObj)
         {
             GameObjLockDict[gameObj.Type].EnterWriteLock();
@@ -134,55 +146,22 @@ namespace GameClass.GameObj
                     {
                         case (uint)PlaceType.Wall:
                             {
-                                GameObjLockDict[GameObjType.Wall].EnterWriteLock();
-                                try
-                                {
-                                    GameObjDict[GameObjType.Wall].Add(new Wall(GameData.GetCellCenterPos(i, j)));
-                                }
-                                finally
-                                {
-                                    GameObjLockDict[GameObjType.Wall].ExitWriteLock();
-                                }
+                                Add(new Wall(GameData.GetCellCenterPos(i, j)));
                                 break;
                             }
                         case (uint)PlaceType.Doorway:
                             {
-                                GameObjLockDict[GameObjType.Doorway].EnterWriteLock();
-                                try
-                                {
-                                    GameObjDict[GameObjType.Doorway].Add(new Doorway(GameData.GetCellCenterPos(i, j)));
-                                }
-                                finally
-                                {
-                                    GameObjLockDict[GameObjType.Doorway].ExitWriteLock();
-                                }
+                                Add(new Doorway(GameData.GetCellCenterPos(i, j)));
                                 break;
                             }
-
                         case (uint)PlaceType.EmergencyExit:
                             {
-                                GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
-                                try
-                                {
-                                    GameObjDict[GameObjType.EmergencyExit].Add(new EmergencyExit(GameData.GetCellCenterPos(i, j)));
-                                }
-                                finally
-                                {
-                                    GameObjLockDict[GameObjType.EmergencyExit].ExitWriteLock();
-                                }
+                                Add(new EmergencyExit(GameData.GetCellCenterPos(i, j)));
                                 break;
                             }
                         case (uint)PlaceType.Generator:
                             {
-                                GameObjLockDict[GameObjType.Generator].EnterWriteLock();
-                                try
-                                {
-                                    GameObjDict[GameObjType.Generator].Add(new Generator(GameData.GetCellCenterPos(i, j)));
-                                }
-                                finally
-                                {
-                                    GameObjLockDict[GameObjType.Generator].ExitWriteLock();
-                                }
+                                Add(new Generator(GameData.GetCellCenterPos(i, j)));
                                 break;
                             }
                         case (uint)PlaceType.BirthPoint1:

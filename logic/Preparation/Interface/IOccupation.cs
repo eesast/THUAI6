@@ -15,6 +15,7 @@ namespace Preparation.Interface
         public double Concealment { get; }
         public int AlertnessRadius { get; }
         public int TimeOfOpeningOrLocking { get; }
+        public int TimeOfClimbingThroughWindows { get; }
     }
 
     public interface IGhost : IOccupation
@@ -53,6 +54,10 @@ namespace Preparation.Interface
 
         public int timeOfOpeningOrLocking = GameData.basicTimeOfOpeningOrLocking;
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+
+        public int timeOfClimbingThroughWindows = GameData.basicTimeOfClimbingThroughWindows;
+        public int TimeOfClimbingThroughWindows => timeOfClimbingThroughWindows;
+
     }
     public class Athlete : IStudent
     {
@@ -70,7 +75,7 @@ namespace Preparation.Interface
 
         public BulletType InitBullet => BulletType.Null;
 
-        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.BeginToCharge });
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.CanBeginToCharge });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
 
         public const int fixSpeed = GameData.basicFixSpeed / 10 * 6;
@@ -82,7 +87,10 @@ namespace Preparation.Interface
         public const int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
         public int AlertnessRadius => alertnessRadius;
 
-        public int timeOfOpeningOrLocking = GameData.basicTimeOfOpeningOrLocking;
+        public int timeOfOpeningOrLocking = GameData.basicTimeOfOpeningOrLocking * 12 / 10;
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+
+        public int timeOfClimbingThroughWindows = GameData.basicTimeOfClimbingThroughWindows / 87 * 80;
+        public int TimeOfClimbingThroughWindows => timeOfClimbingThroughWindows;
     }
 }

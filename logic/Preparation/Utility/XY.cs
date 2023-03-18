@@ -17,6 +17,11 @@ namespace Preparation.Utility
             this.x = (int)(length * Math.Cos(angle));
             this.y = (int)(length * Math.Sin(angle));
         }
+        public XY(XY Direction, double length)
+        {
+            this.x = (int)(length * Math.Cos(Direction.Angle()));
+            this.y = (int)(length * Math.Sin(Direction.Angle()));
+        }
         public override string ToString()
         {
             return "(" + x.ToString() + "," + y.ToString() + ")";

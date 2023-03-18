@@ -20,8 +20,9 @@ namespace Preparation.Utility
         IsStunned = 11,
         IsTryingToAttack = 12,//指前摇
         IsLockingTheDoor = 13,
-        IsRummagingInTheChest = 14,
+        IsOpeningTheChest = 14,
         IsClimbingThroughWindows = 15,
+        IsUsingSpecialSkill = 16,
     }
     public enum GameObjType
     {
@@ -40,6 +41,7 @@ namespace Preparation.Utility
         OutOfBoundBlock = 11,  // 范围外
         Window = 12,
         Door = 13,
+        Chest = 14,
     }
     public enum ShapeType
     {
@@ -55,7 +57,8 @@ namespace Preparation.Utility
         FastBullet = 3,      // 快速子弹
         LineBullet = 4,      // 直线子弹
         FlyingKnife = 5,     //飞刀
-        CommonAttackOfGhost = 6
+        CommonAttackOfGhost = 6,
+        // Ram = 7,
     }
     public enum PropType  // 道具类型
     {
@@ -84,7 +87,7 @@ namespace Preparation.Utility
         NuclearWeapon = 3,
         SuperFast = 4,
         UseKnife = 5,
-        BeginToCharge = 6
+        CanBeginToCharge = 6
     }
     public enum PassiveSkillType
     {

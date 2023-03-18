@@ -22,7 +22,11 @@ namespace GameClass.GameObj
         {
             return false;
         }
-
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            if (gameObjType == GameObjType.Character) return true;
+            return false;
+        }
         public override BulletType TypeOfBullet => BulletType.CommonAttackOfGhost;
 
     }
@@ -42,6 +46,11 @@ namespace GameClass.GameObj
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit / 4 * 3;
         public override bool CanAttack(GameObj target)
         {
+            return false;
+        }
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            if (gameObjType == GameObjType.Character) return true;
             return false;
         }
 
@@ -68,6 +77,11 @@ namespace GameClass.GameObj
             // 圆形攻击范围
             return XY.Distance(this.Position, target.Position) <= BulletBombRange;
         }
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            if (gameObjType == GameObjType.Character) return true;
+            return false;
+        }
 
         public override BulletType TypeOfBullet => BulletType.AtomBomb;
 
@@ -91,6 +105,11 @@ namespace GameClass.GameObj
         {
             // 圆形攻击范围
             return XY.Distance(this.Position, target.Position) <= BulletBombRange;
+        }
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            if (gameObjType == GameObjType.Character) return true;
+            return false;
         }
 
         public override BulletType TypeOfBullet => BulletType.OrdinaryBullet;
@@ -116,6 +135,11 @@ namespace GameClass.GameObj
             // 圆形攻击范围
             return XY.Distance(this.Position, target.Position) <= BulletBombRange;
         }
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            if (gameObjType == GameObjType.Character) return true;
+            return false;
+        }
 
         public override BulletType TypeOfBullet => BulletType.FastBullet;
     }
@@ -135,6 +159,11 @@ namespace GameClass.GameObj
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public override bool IsToBomb => true;
 
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            if (gameObjType == GameObjType.Character) return true;
+            return false;
+        }
         public override bool CanAttack(GameObj target)
         {
             double FacingAngle = Math.Atan2(this.FacingDirection.y, this.FacingDirection.x);

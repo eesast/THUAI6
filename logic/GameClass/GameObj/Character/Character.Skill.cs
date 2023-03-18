@@ -12,8 +12,21 @@ namespace GameClass.GameObj
         private readonly IOccupation occupation;
         public IOccupation Occupation => occupation;
 
+
         private Dictionary<ActiveSkillType, int> timeUntilActiveSkillAvailable = new();
         public Dictionary<ActiveSkillType, int> TimeUntilActiveSkillAvailable => timeUntilActiveSkillAvailable;
+
+        private Dictionary<ActiveSkillType, IActiveSkill> iActiveSkillDictionary = new();
+        public Dictionary<ActiveSkillType, IActiveSkill> IActiveSkillDictionary => iActiveSkillDictionary;
+
+        public IActiveSkill? UseIActiveSkill(ActiveSkillType activeSkillType)
+        {
+            if (Occupation.ListOfIActiveSkill.Contains(activeSkillType))
+            {
+                return IActiveSkillDictionary[activeSkillType];
+            }
+            return null;
+        }
 
         public bool SetTimeUntilActiveSkillAvailable(ActiveSkillType activeSkillType, int timeUntilActiveSkillAvailable)
         {
@@ -73,10 +86,13 @@ namespace GameClass.GameObj
             this.concealment = Occupation.Concealment;
             this.alertnessRadius = Occupation.AlertnessRadius;
             this.characterType = characterType;
+            this.TimeOfOpeningOrLocking = Occupation.TimeOfOpeningOrLocking;
+            this.TimeOfClimbingThroughWindows = Occupation.TimeOfClimbingThroughWindows;
 
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)
             {
                 this.TimeUntilActiveSkillAvailable.Add(activeSkill, 0);
+                this.IActiveSkillDictionary.Add(activeSkill, SkillFactory.FindIActiveSkill(activeSkill));
             }
 
             // UsePassiveSkill();  //创建player时开始被动技能，这一过程也可以放到gamestart时进行

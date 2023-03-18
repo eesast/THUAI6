@@ -5,6 +5,8 @@ using Preparation.Utility;
 using System;
 using Timothy.FrameRateTask;
 using GameEngine;
+using System.Numerics;
+using System.Reflection;
 
 namespace Gaming
 {
@@ -15,18 +17,9 @@ namespace Gaming
         {
             private readonly Map gameMap;
 
-            private MoveEngine moveEngine;
-
-            private bool isProducingProp = false;
+            //private MoveEngine moveEngine;
 
             private readonly List<XY> availableCellForGenerateProp;
-            public void StartProducing()
-            {
-                if (isProducingProp)
-                    return;
-                isProducingProp = true;
-                ProduceProp();
-            }
 
             public void UseProp(Character player, int indexing)
             {
@@ -129,10 +122,77 @@ namespace Gaming
                 gameMap.Add(prop);
             }
 
-            private void ProduceProp()
+            private Prop ProduceOnePropNotKey(Random r, XY Pos)
+            {
+                switch (r.Next(0, GameData.numOfPropTypeNotKey))
+                {
+                    case 0:
+                        return new AddLIFE(Pos, gameMap.GetPlaceType(Pos));
+                    case 1:
+                        return new AddSpeed(Pos, gameMap.GetPlaceType(Pos));
+                    case 2:
+                        return new Shield(Pos, gameMap.GetPlaceType(Pos));
+                    case 3:
+                        return new Spear(Pos, gameMap.GetPlaceType(Pos));
+                    default:
+                        return null;
+                }
+            }
+
+            private Chest GetChest(Random r)
+            {
+                int index = r.Next(0, GameData.numOfChest);
+                while (((Chest)(gameMap.GameObjDict[GameObjType.Chest][index])).PropInChest[0] != null) index = (index + 1) % GameData.numOfChest;
+                return (Chest)(gameMap.GameObjDict[GameObjType.Chest][index]);
+            }
+
+            public void StartProducing()
             {
                 int len = availableCellForGenerateProp.Count;
                 Random r = new Random(Environment.TickCount);
+
+                gameMap.GameObjLockDict[GameObjType.Chest].EnterWriteLock();
+                try
+                {
+                    int cou = 0;
+                    while (cou < GameData.numOfKeyEachArea)
+                    {
+                        ++cou;
+                        Chest chest = GetChest(r);
+                        chest.PropInChest[1] = new Key3(chest.Position, PlaceType.Chest);
+                        chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
+                    }
+                    cou = 0;
+                    while (cou < GameData.numOfKeyEachArea)
+                    {
+                        ++cou;
+                        Chest chest = GetChest(r);
+                        chest.PropInChest[1] = new Key5(chest.Position, PlaceType.Chest);
+                        chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
+                    }
+                    cou = 0;
+                    while (cou < GameData.numOfKeyEachArea)
+                    {
+                        ++cou;
+                        Chest chest = GetChest(r);
+                        chest.PropInChest[1] = new Key6(chest.Position, PlaceType.Chest);
+                        chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
+                    }
+
+                    foreach (Chest chest in gameMap.GameObjDict[GameObjType.Chest])
+                    {
+                        if (chest.PropInChest[0] == null)
+                        {
+                            chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
+                            chest.PropInChest[1] = ProduceOnePropNotKey(r, chest.Position);
+                        }
+                    }
+                }
+                finally
+                {
+                    gameMap.GameObjLockDict[GameObjType.Chest].ExitWriteLock();
+                }
+
                 new Thread
                 (
                     () =>
@@ -145,25 +205,7 @@ namespace Gaming
                             {
                                 int rand = r.Next(0, len);
                                 XY randPos = availableCellForGenerateProp[rand];
-
-
-                                switch (r.Next(0, 4))
-                                {
-                                    case 0:
-                                        gameMap.Add(new AddLIFE(randPos, gameMap.GetPlaceType(randPos)));
-                                        break;
-                                    case 1:
-                                        gameMap.Add(new AddSpeed(randPos, gameMap.GetPlaceType(randPos)));
-                                        break;
-                                    case 2:
-                                        gameMap.Add(new Shield(randPos, gameMap.GetPlaceType(randPos)));
-                                        break;
-                                    case 3:
-                                        gameMap.Add(new Spear(randPos, gameMap.GetPlaceType(randPos)));
-                                        break;
-                                    default:
-                                        break;
-                                }
+                                gameMap.Add(ProduceOnePropNotKey(r, randPos));
                             },
                             GameData.PropProduceTime,
                             () => 0
@@ -176,17 +218,17 @@ namespace Gaming
             public PropManager(Map gameMap)  // 道具不能扔过墙
             {
                 this.gameMap = gameMap;
-                this.moveEngine = new MoveEngine(
-                    gameMap: gameMap,
-                    OnCollision: (obj, collision, moveVec) =>
-                    { return MoveEngine.AfterCollision.MoveMax; },
-                    EndMove: obj =>
-                    {
-                        // obj.Place = gameMap.GetPlaceType((GameObj)obj);
-                        obj.CanMove = false;
-                        Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
-                    }
-                );
+                /*            this.moveEngine = new MoveEngine(
+                                gameMap: gameMap,
+                                OnCollision: (obj, collision, moveVec) =>
+                                { return MoveEngine.AfterCollision.MoveMax; },
+                                EndMove: obj =>
+                                {
+                                    // obj.Place = gameMap.GetPlaceType((GameObj)obj);
+                                    obj.CanMove = false;
+                                    Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
+                                }
+                            );*/
                 availableCellForGenerateProp = new List<XY>();
                 for (int i = 0; i < gameMap.protoGameMap.GetLength(0); i++)
                 {

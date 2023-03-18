@@ -67,7 +67,9 @@ namespace Preparation.Utility
         addLIFE = 2,
         Shield = 3,
         Spear = 4,
-        Gem = 5,  // 新增：宝石
+        Key3 = 5,
+        Key5 = 6,
+        Key6 = 7,
     }
     public enum CharacterType  // 职业
     {

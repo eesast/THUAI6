@@ -169,6 +169,7 @@ message MessageOfObj
         MessageOfChest chest_message = 9;
         MessageOfHiddenGate hidden_gate_message = 10;
         MessageOfNews news_message = 11;
+        MessageOfMap map_message = 12;
     }
 }
 

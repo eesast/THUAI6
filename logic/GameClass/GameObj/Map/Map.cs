@@ -164,6 +164,11 @@ namespace GameClass.GameObj
                                 Add(new Generator(GameData.GetCellCenterPos(i, j)));
                                 break;
                             }
+                        case (uint)PlaceType.Chest:
+                            {
+                                Add(new Chest(GameData.GetCellCenterPos(i, j)));
+                                break;
+                            }
                         case (uint)PlaceType.BirthPoint1:
                         case (uint)PlaceType.BirthPoint2:
                         case (uint)PlaceType.BirthPoint3:

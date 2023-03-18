@@ -1,7 +1,4 @@
-﻿using System;
-using System.Numerics;
-using System.Runtime.InteropServices;
-using System.Threading;
+﻿using System.Threading;
 using GameClass.GameObj;
 using GameEngine;
 using Preparation.Utility;
@@ -76,7 +73,7 @@ namespace Gaming
                   )
 
                       .Start();
-                  if (generatorForFix.DegreeOfFRepair == GameData.degreeOfFixedGenerator)
+                  if (generatorForFix.DegreeOfFRepair >= GameData.degreeOfFixedGenerator)
                   {
                       Doorway exit = (Doorway)gameMap.GameObjDict[GameObjType.Doorway][1];
                       if (!exit.PowerSupply)
@@ -175,7 +172,7 @@ namespace Gaming
                () =>
                {
                    new FrameRateTaskExecutor<int>(
-                       loopCondition: () => playerTreated.PlayerState == PlayerStateType.IsTreated && player.PlayerState == PlayerStateType.IsTreating && gameMap.Timer.IsGaming && playerTreated.HP + playerTreated.DegreeOfTreatment < playerTreated.MaxHp && playerTreated.DegreeOfTreatment >= GameData.basicTreatmentDegree && GameData.ApproachToInteract(playerTreated.Position, player.Position),
+                       loopCondition: () => playerTreated.PlayerState == PlayerStateType.IsTreated && player.PlayerState == PlayerStateType.IsTreating && gameMap.Timer.IsGaming && playerTreated.HP + playerTreated.DegreeOfTreatment < playerTreated.MaxHp && playerTreated.DegreeOfTreatment < GameData.basicTreatmentDegree && GameData.ApproachToInteract(playerTreated.Position, player.Position),
                        loopToDo: () =>
                        {
                            playerTreated.DegreeOfTreatment += GameData.frameDuration * player.TreatSpeed;
@@ -230,7 +227,7 @@ namespace Gaming
 
                        .Start();
 
-                   if (rescuedDegree == 1000)
+                   if (rescuedDegree >= 1000)
                    {
                        if (playerRescued.PlayerState == PlayerStateType.IsRescued) playerRescued.PlayerState = PlayerStateType.Null;
                        if (player.PlayerState == PlayerStateType.IsRescuing) player.PlayerState = PlayerStateType.Null;
@@ -242,6 +239,72 @@ namespace Gaming
                    }
                }
            )
+                { IsBackground = true }.Start();
+
+                return true;
+            }
+
+            public bool OpenChest(Character player)
+            {
+                if (!player.Commandable() || player.PlayerState == PlayerStateType.IsOpeningTheChest)
+                    return false;
+                Chest? chestToOpen = null;
+
+
+                gameMap.GameObjLockDict[GameObjType.Chest].EnterReadLock();
+                try
+                {
+                    foreach (Chest chest in gameMap.GameObjDict[GameObjType.Chest])
+                    {
+                        if (GameData.ApproachToInteract(chest.Position, player.Position))
+                        {
+                            chestToOpen = chest;
+                            break;
+                        }
+                    }
+                }
+                finally
+                {
+                    gameMap.GameObjLockDict[GameObjType.Chest].ExitReadLock();
+                }
+
+                if (chestToOpen == null || chestToOpen.IsOpen)
+                    return false;
+
+                player.PlayerState = PlayerStateType.IsOpeningTheChest;
+                new Thread
+          (
+              () =>
+              {
+                  int OpenDegree = 0;
+                  new FrameRateTaskExecutor<int>(
+                      loopCondition: () => player.PlayerState == PlayerStateType.IsOpeningTheChest && gameMap.Timer.IsGaming && OpenDegree < player.TimeOfOpenChest,
+                      loopToDo: () =>
+                      {
+                          OpenDegree += GameData.frameDuration;
+                      },
+                      timeInterval: GameData.frameDuration,
+                      finallyReturn: () => 0
+                  )
+
+                      .Start();
+
+                  if (OpenDegree >= player.TimeOfOpenChest)
+                  {
+                      chestToOpen.IsOpen = true;
+                      if (player.PlayerState == PlayerStateType.IsOpeningTheChest)
+                          player.PlayerState = PlayerStateType.Null;
+                      for (int i = 0; i < GameData.maxNumOfPropInChest; ++i)
+                      {
+                          Prop prop = chestToOpen.PropInChest[i];
+                          chestToOpen.PropInChest[i] = null;
+                          prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
+                          gameMap.Add(prop);
+                      }
+                  }
+              }
+
+          )
                 { IsBackground = true }.Start();
 
                 return true;

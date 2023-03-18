@@ -101,6 +101,13 @@ namespace GameClass.GameObj
         }
         public override PropType GetPropType() => PropType.Key6;
     }
+    public sealed class Null : Prop
+    {
+        public Null(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        {
+        }
+        public override PropType GetPropType() => PropType.Null;
+    }
     #endregion
     // #region 所有坑人地雷
     ///// <summary>

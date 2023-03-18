@@ -58,6 +58,7 @@ namespace Preparation.Utility
         public const int basicFixSpeed = 100;
         public const int basicTimeOfOpeningOrLocking = 3000;
         public const int basicTimeOfClimbingThroughWindows = 870;
+        public const int basicTimeOfOpenChest = 10000;
 
         public const int basicHp = 3000000;                             // 初始血量
         public const int basicMaxGamingAddiction = 60000;//基本完全沉迷时间

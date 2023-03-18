@@ -8,6 +8,8 @@ using Gaming;
 using GameClass.GameObj;
 using Preparation.Utility;
 using Playback;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 
 namespace Server
@@ -15,73 +17,33 @@ namespace Server
     public class GameServer : AvailableService.AvailableServiceBase
     {
         private Dictionary<long, (SemaphoreSlim, SemaphoreSlim)> semaDict = new();
+        protected readonly ArgumentOptions options;
+        private HttpSender? httpSender;
         private object gameLock = new();
+        private object[] teamCommunicationLock;
         private const int playerNum = 1;  // 注意修改
         private MessageToClient currentGameInfo = new();
+        private MessageOfMap currentMapMsg = new();
+        private Queue<MsgRes>[] teamCommunicatonMsg;
         private SemaphoreSlim endGameSem = new(0);
-
-        object gameInfo = new();
-        private int isGaming = 0;
-        public bool IsGaming
-        {
-            get => Interlocked.CompareExchange(ref isGaming, 0, 0) != 0;
-            set => Interlocked.Exchange(ref isGaming, value ? 1 : 0);
-        }
-        // 以上是测试时用到的定义
-
-        protected readonly ArgumentOptions options;
         protected readonly Game game;
         private uint spectatorMinPlayerID = 2022;
         private List<uint> spectatorList = new List<uint>();
         public int TeamCount => options.TeamCount;
-        protected long[] communicationToGameID;  // 通信用的ID映射到游戏内的ID
+        protected long[] communicationToGameID;  // 通信用的ID映射到游戏内的ID，通信中0-3为Student，4为Tricker
         private readonly object messageToAllClientsLock = new();
         public static readonly long SendMessageToClientIntervalInMilliseconds = 50;
         private readonly Semaphore endGameInfoSema = new(0, 1);
         private MessageWriter? mwr = null;
 
-        public SemaphoreSlim StartGameTest()
-        {
-            IsGaming = true;
-            var waitHandle = new SemaphoreSlim(0);
-
-            new Thread
-            (
-                () =>
-                {
-                    new FrameRateTaskExecutor<int>
-                    (
-                        () => IsGaming,
-                        () =>
-                        {
-                            lock (gameInfo)
-                            {
-                                /*for (int i = 0; i < gameInfo.GameObjs.Count; i++)
-                                {
-                                    if (gameInfo.GameObjs[i].Character != null)
-                                    {
-                                        gameInfo.GameObjs[i].Character.X++;
-                                        gameInfo.GameObjs[i].Character.Y--;
-                                    }
-                                }*/
-                            }
-                        },
-                        100,
-                        () =>
-                        {
-                            IsGaming = false;
-                            waitHandle.Release();
-                            return 0;
-                        },
-                        3000//gameTime
-                    ).Start();
-                }
-            )
-            { IsBackground = true }.Start();
-            return waitHandle;
-        }
         public void StartGame()
         {
+            if (game.GameMap.Timer.IsGaming) return;
+            /*foreach (var id in communicationToGameID)
+            {
+                if (id == GameObj.invalidID) return;     //如果有未初始化的玩家，不开始游戏
+            }*/ //测试时人数不够
+            Console.WriteLine("Game starts!");
             game.StartGame((int)options.GameTimeInSecond * 1000);
             Thread.Sleep(1);
             new Thread(() =>
@@ -116,12 +78,44 @@ namespace Server
             mwr?.Dispose();
         }
 
+        private void SaveGameResult(string path)
+        {
+            Dictionary<string, int> result = new Dictionary<string, int>();
+            for (int i = 0; i < TeamCount; i++)
+            {
+                result.Add("Team" + i.ToString(), GetTeamScore(i)); //Team待修改
+            }
+            JsonSerializer serializer = new JsonSerializer();
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                using (JsonWriter writer = new JsonTextWriter(sw))
+                {
+                    serializer.Serialize(writer, result);
+                }
+            }
+        }
+        protected virtual void SendGameResult()		// 天梯的 Server 给网站发消息记录比赛结果
+        {
+            var scores = new JObject[options.TeamCount];
+            for (ushort i = 0; i < options.TeamCount; ++i)
+            {
+                scores[i] = new JObject { ["team_id"] = i.ToString(), ["score"] = GetTeamScore(i) };
+            } // Team待修改
+            httpSender?.SendHttpRequest
+                (
+                    new JObject
+                    {
+                        ["result"] = new JArray(scores)
+                    }
+                );
+        }
+
         private void OnGameEnd()
         {
             game.ClearAllLists();
             mwr?.Flush();
-            //if (options.ResultFileName != DefaultArgumentOptions.FileName)
-            //SaveGameResult(options.ResultFileName + ".json");
+            if (options.ResultFileName != DefaultArgumentOptions.FileName)
+                SaveGameResult(options.ResultFileName + ".json");
             //SendGameResult();
             endGameInfoSema.Release();
         }
@@ -132,8 +126,7 @@ namespace Server
             currentGameInfo = new();
             lock (messageToAllClientsLock)
             {
-                //currentGameInfo.MapMessage = (Messa(game.GameMap));
-                if (gameState == GameState.GameStart) currentGameInfo.MapMessage = MapMsg(game.GameMap.ProtoGameMap);
+                //currentGameInfo.MapMessage = (Message(game.GameMap));
                 switch (gameState)
                 {
                     case GameState.GameRunning:
@@ -162,6 +155,10 @@ namespace Server
                 kvp.Value.Item2.Wait();
             }
         }
+        public int GetTeamScore(long teamID)
+        {
+            return game.GetTeamScore(teamID);
+        }
 
         private int PlayerIDToTeamID(long playerID)
         {
@@ -171,7 +168,7 @@ namespace Server
         }
         private uint GetBirthPointIdx(long playerID)  // 获取出生点位置
         {
-            return (uint)(playerID + 1);
+            return (uint)(playerID + 1); // ID从0-4，出生点从1-5
         }
         private bool ValidPlayerID(long playerID)
         {
@@ -246,8 +243,8 @@ namespace Server
                 return;
             if (!ValidPlayerID(request.PlayerId))  //玩家id是否正确
                 return;
-            //if (communicationToGameID[PlayerTypeToTeamID(request.PlayerType), request.PlayerId] != GameObj.invalidID)  //是否已经添加了该玩家
-            //return;
+            if (communicationToGameID[request.PlayerId] != GameObj.invalidID)  //是否已经添加了该玩家
+                return;
 
             Preparation.Utility.CharacterType characterType = Preparation.Utility.CharacterType.Athlete; // 待修改
 
@@ -265,14 +262,9 @@ namespace Server
                 lock (semaDict)
                 {
                     semaDict.Add(request.PlayerId, temp);
-                    start = semaDict.Count == playerNum;  // 之后补上CheckStart函数
+                    start = semaDict.Count == playerNum;
                 }
-
-                if (start)
-                {
-                    Console.WriteLine("Game starts!");
-                    StartGame();
-                }
+                if (start) StartGame();
             }
 
             do
@@ -289,16 +281,13 @@ namespace Server
 
         public override Task<BoolRes> Attack(AttackMsg request, ServerCallContext context)
         {
-            game.Attack(request.PlayerId, request.Angle);
+            var gameID = communicationToGameID[request.PlayerId];
+            game.Attack(gameID, request.Angle);
             BoolRes boolRes = new();
             boolRes.ActSuccess = true;
             return Task.FromResult(boolRes);
         }
 
-        public override Task GetMessage(IDMsg request, IServerStreamWriter<MsgRes> responseStream, ServerCallContext context)
-        {
-            return base.GetMessage(request, responseStream, context);
-        }
 
         public override Task<MoveRes> Move(MoveMsg request, ServerCallContext context)
         {
@@ -318,12 +307,54 @@ namespace Server
             BoolRes boolRes = new();
             if (request.PropType == Protobuf.PropType.NullPropType)
                 boolRes.ActSuccess = game.PickProp(request.PlayerId, Preparation.Utility.PropType.Null);
+            // 待修改
             return Task.FromResult(boolRes);
         }
 
         public override Task<BoolRes> SendMessage(SendMsg request, ServerCallContext context)
         {
-            return base.SendMessage(request, context);
+            var boolRes = new BoolRes();
+            if (!ValidPlayerID(request.PlayerId) || !ValidPlayerID(request.ToPlayerId)
+                || PlayerIDToTeamID(request.PlayerId) != PlayerIDToTeamID(request.ToPlayerId) || request.PlayerId == request.ToPlayerId)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
+            MsgRes msg = new();
+            msg.HaveMessage = false;
+            if (request.Message.Length > 256)
+            {
+#if DEBUG
+                Console.WriteLine("Message string is too long!");
+#endif
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
+            else
+            {
+                msg.HaveMessage = true;
+                msg.FromPlayerId = request.PlayerId;
+                msg.MessageReceived = request.Message;
+#if DEBUG
+                Console.WriteLine(msg);
+#endif
+                teamCommunicatonMsg[request.ToPlayerId].Enqueue(msg);
+            }
+            boolRes.ActSuccess = true;
+            return Task.FromResult(boolRes);
+        }
+
+        public override Task GetMessage(IDMsg request, IServerStreamWriter<MsgRes> responseStream, ServerCallContext context)
+        {
+            if (!game.GameMap.Timer.IsGaming) return Task.CompletedTask;
+            lock (teamCommunicationLock[request.PlayerId])
+            {
+                while (teamCommunicatonMsg[request.PlayerId].Count > 0)
+                {
+                    responseStream.WriteAsync(teamCommunicatonMsg[request.PlayerId].Dequeue());
+                }
+            }
+            return Task.CompletedTask;
         }
         public override Task<BoolRes> UseProp(PropMsg request, ServerCallContext context)
         {
@@ -406,8 +437,13 @@ namespace Server
                 finally { this.game = new Game(map, options.TeamCount); }
             }
             communicationToGameID = new long[options.PlayerCountPerTeam + 1];
+            teamCommunicatonMsg = new Queue<MsgRes>[options.PlayerCountPerTeam + 1];
+            teamCommunicationLock = new object[options.PlayerCountPerTeam + 1];
             //创建server时先设定待加入人物都是invalid
-            for (int i = 0; i < communicationToGameID.GetLength(0); i++) communicationToGameID[i] = GameObj.invalidID;
+            for (int i = 0; i < communicationToGameID.GetLength(0); i++)
+            {
+                communicationToGameID[i] = GameObj.invalidID;
+            }
 
             if (options.FileName != DefaultArgumentOptions.FileName)
             {

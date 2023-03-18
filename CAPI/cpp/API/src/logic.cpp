@@ -159,13 +159,13 @@ bool Logic::SendMessage(int64_t toID, std::string message)
 bool Logic::HaveMessage()
 {
     logger->debug("Called HaveMessage");
-    return pComm->HaveMessage();
+    return !messageQueue.empty();
 }
 
 std::optional<std::pair<int64_t, std::string>> Logic::GetMessage()
 {
     logger->debug("Called GetMessage");
-    return pComm->GetMessage();
+    return messageQueue.tryPop();
 }
 
 bool Logic::Graduate()
@@ -246,9 +246,6 @@ void Logic::ProcessMessage()
     {
         logger->info("Message thread start!");
         pComm->AddPlayer(playerID, playerType, studentType, trickerType);
-        currentState->gameMap = pComm->GetMap(playerID);
-        bufferState->gameMap = currentState->gameMap;
-        pComm->ReadMessage(playerID);
         while (gameState != THUAI6::GameState::GameEnd)
         {
             auto clientMsg = pComm->GetMessage2Client();  // 在获得新消息之前阻塞
@@ -270,6 +267,24 @@ void Logic::ProcessMessage()
                     currentState->guids = playerGUIDs;
                     bufferState->guids = playerGUIDs;
 
+                    // 读取地图
+                    for (const auto& item : clientMsg.obj_message())
+                        if (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()] == THUAI6::MessageOfObj::MapMessage)
+                        {
+                            auto map = std::vector<std::vector<THUAI6::PlaceType>>();
+                            auto mapResult = item.map_message();
+                            for (int i = 0; i < item.map_message().row_size(); i++)
+                            {
+                                std::vector<THUAI6::PlaceType> row;
+                                for (int j = 0; j < mapResult.row(i).col_size(); j++)
+                                {
+                                    row.push_back(Proto2THUAI6::placeTypeDict[mapResult.row(i).col(j)]);
+                                }
+                                map.push_back(std::move(row));
+                            }
+                            bufferState->gameMap = std::move(map);
+                            currentState->gameMap = bufferState->gameMap;
+                        }
                     LoadBuffer(clientMsg);
 
                     AILoop = true;
@@ -282,6 +297,12 @@ void Logic::ProcessMessage()
                     for (const auto& obj : clientMsg.obj_message())
                         if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::StudentMessage)
                             playerGUIDs.push_back(obj.student_message().guid());
+                        else if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::NewsMessage)
+                        {
+                            auto news = obj.news_message();
+                            if (news.to_id() == playerID)
+                                messageQueue.emplace(std::make_pair(news.from_id(), news.news()));
+                        }
                     for (const auto& obj : clientMsg.obj_message())
                         if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::TrickerMessage)
                             playerGUIDs.push_back(obj.tricker_message().guid());
@@ -334,12 +355,126 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                     logger->debug("Add Student!");
                 }
             for (const auto& item : message.obj_message())
-                if (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()] == THUAI6::MessageOfObj::TrickerMessage)
-                    if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.tricker_message().x(), item.tricker_message().y(), bufferState->studentSelf->place, Proto2THUAI6::placeTypeDict[item.tricker_message().place()], bufferState->gameMap))
-                    {
-                        bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message()));
-                        logger->debug("Add Tricker!");
-                    }
+                switch (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()])
+                {
+                    case THUAI6::MessageOfObj::PropMessage:
+                        if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.prop_message().x(), item.prop_message().y(), bufferState->studentSelf->place, Proto2THUAI6::placeTypeDict[item.prop_message().place()], currentState->gameMap))
+                        {
+                            bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item.prop_message()));
+                            logger->debug("Add Prop!");
+                        }
+                        break;
+                    case THUAI6::MessageOfObj::BulletMessage:
+                        if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.prop_message().x(), item.prop_message().y(), bufferState->studentSelf->place, Proto2THUAI6::placeTypeDict[item.prop_message().place()], currentState->gameMap))
+                        {
+                            bufferState->bullets.push_back(Proto2THUAI6::Protobuf2THUAI6Bullet(item.bullet_message()));
+                            logger->debug("Add Bullet!");
+                        }
+                        break;
+                    case THUAI6::MessageOfObj::ClassroomMessage:
+                        {
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.classroom_message().x(), item.classroom_message().y(), bufferState->studentSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            {
+                                auto pos = std::make_pair(item.classroom_message().x(), item.classroom_message().y());
+                                if (bufferState->mapInfo->classRoomState.count(pos) == 0)
+                                {
+                                    bufferState->mapInfo->classRoomState.emplace(pos, item.classroom_message().progress());
+                                    logger->debug("Add Classroom!");
+                                }
+                                else
+                                {
+                                    bufferState->mapInfo->classRoomState[pos] = item.classroom_message().progress();
+                                    logger->debug("Update Classroom!");
+                                }
+                            }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::ChestMessage:
+                        {
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.chest_message().x(), item.chest_message().y(), bufferState->studentSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            {
+                                auto pos = std::make_pair(item.chest_message().x(), item.chest_message().y());
+                                if (bufferState->mapInfo->chestState.count(pos) == 0)
+                                {
+                                    bufferState->mapInfo->chestState.emplace(pos, item.chest_message().progress());
+                                    logger->debug("Add Chest!");
+                                }
+                                else
+                                {
+                                    bufferState->mapInfo->chestState[pos] = item.chest_message().progress();
+                                    logger->debug("Update Chest!");
+                                }
+                            }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::DoorMessage:
+                        {
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.door_message().x(), item.door_message().y(), bufferState->studentSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            {
+                                auto pos = std::make_pair(item.door_message().x(), item.door_message().y());
+                                if (bufferState->mapInfo->doorState.count(pos) == 0)
+                                {
+                                    bufferState->mapInfo->doorState.emplace(pos, item.door_message().is_open());
+                                    bufferState->mapInfo->doorNumber.emplace(pos, item.door_message().number());
+                                    logger->debug("Add Door!");
+                                }
+                                else
+                                {
+                                    bufferState->mapInfo->doorState[pos] = item.door_message().is_open();
+                                    bufferState->mapInfo->doorNumber[pos] = item.door_message().number();
+                                    logger->debug("Update Door!");
+                                }
+                            }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::HiddenGateMessage:
+                        {
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.hidden_gate_message().x(), item.hidden_gate_message().y(), bufferState->studentSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            {
+                                auto pos = std::make_pair(item.hidden_gate_message().x(), item.hidden_gate_message().y());
+                                if (bufferState->mapInfo->hiddenGateState.count(pos) == 0)
+                                {
+                                    bufferState->mapInfo->hiddenGateState.emplace(pos, item.hidden_gate_message().opened());
+                                    logger->debug("Add HiddenGate!");
+                                }
+                                else
+                                {
+                                    bufferState->mapInfo->hiddenGateState[pos] = item.hidden_gate_message().opened();
+                                    logger->debug("Update HiddenGate!");
+                                }
+                            }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::GateMessage:
+                        {
+                            if (!AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.gate_message().x(), item.gate_message().y(), bufferState->studentSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            {
+                                auto pos = std::make_pair(item.gate_message().x(), item.gate_message().y());
+                                if (bufferState->mapInfo->gateState.count(pos) == 0)
+                                {
+                                    bufferState->mapInfo->gateState.emplace(pos, item.gate_message().progress());
+                                    logger->debug("Add Gate!");
+                                }
+                                else
+                                {
+                                    bufferState->mapInfo->gateState[pos] = item.gate_message().progress();
+                                    logger->debug("Update Gate!");
+                                }
+                            }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::TrickerMessage:
+                        {
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.tricker_message().x(), item.tricker_message().y(), bufferState->studentSelf->place, Proto2THUAI6::placeTypeDict[item.tricker_message().place()], bufferState->gameMap))
+                            {
+                                bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message()));
+                                logger->debug("Add Tricker!");
+                            }
+                        }
+                    case THUAI6::MessageOfObj::NullMessageOfObj:
+                    default:
+                        break;
+                }
         }
         else
         {
@@ -356,92 +491,127 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                 }
             }
             for (const auto& item : message.obj_message())
-                if (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()] == THUAI6::MessageOfObj::StudentMessage)
-                    if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.student_message().x(), item.student_message().y(), bufferState->trickerSelf->place, Proto2THUAI6::placeTypeDict[item.student_message().place()], bufferState->gameMap))
-                    {
-                        bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item.student_message()));
-                        logger->debug("Add Student!");
-                    }
+                switch (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()])
+                {
+                    case THUAI6::MessageOfObj::PropMessage:
+                        if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.prop_message().x(), item.prop_message().y(), bufferState->trickerSelf->place, Proto2THUAI6::placeTypeDict[item.prop_message().place()], currentState->gameMap))
+                        {
+                            bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item.prop_message()));
+                            logger->debug("Add Prop!");
+                        }
+                        break;
+                    case THUAI6::MessageOfObj::BulletMessage:
+                        if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.prop_message().x(), item.prop_message().y(), bufferState->trickerSelf->place, Proto2THUAI6::placeTypeDict[item.prop_message().place()], currentState->gameMap))
+                        {
+                            bufferState->bullets.push_back(Proto2THUAI6::Protobuf2THUAI6Bullet(item.bullet_message()));
+                            logger->debug("Add Bullet!");
+                        }
+                        break;
+                    case THUAI6::MessageOfObj::ClassroomMessage:
+                        {
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.classroom_message().x(), item.classroom_message().y(), bufferState->trickerSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            {
+                                auto pos = std::make_pair(item.classroom_message().x(), item.classroom_message().y());
+                                if (bufferState->mapInfo->classRoomState.count(pos) == 0)
+                                {
+                                    bufferState->mapInfo->classRoomState.emplace(pos, item.classroom_message().progress());
+                                    logger->debug("Add Classroom!");
+                                }
+                                else
+                                {
+                                    bufferState->mapInfo->classRoomState[pos] = item.classroom_message().progress();
+                                    logger->debug("Update Classroom!");
+                                }
+                            }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::ChestMessage:
+                        {
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.chest_message().x(), item.chest_message().y(), bufferState->trickerSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            {
+                                auto pos = std::make_pair(item.chest_message().x(), item.chest_message().y());
+                                if (bufferState->mapInfo->chestState.count(pos) == 0)
+                                {
+                                    bufferState->mapInfo->chestState.emplace(pos, item.chest_message().progress());
+                                    logger->debug("Add Chest!");
+                                }
+                                else
+                                {
+                                    bufferState->mapInfo->chestState[pos] = item.chest_message().progress();
+                                    logger->debug("Update Chest!");
+                                }
+                            }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::DoorMessage:
+                        {
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.door_message().x(), item.door_message().y(), bufferState->trickerSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            {
+                                auto pos = std::make_pair(item.door_message().x(), item.door_message().y());
+                                if (bufferState->mapInfo->doorState.count(pos) == 0)
+                                {
+                                    bufferState->mapInfo->doorState.emplace(pos, item.door_message().is_open());
+                                    bufferState->mapInfo->doorNumber.emplace(pos, item.door_message().number());
+                                    logger->debug("Add Door!");
+                                }
+                                else
+                                {
+                                    bufferState->mapInfo->doorState[pos] = item.door_message().is_open();
+                                    bufferState->mapInfo->doorNumber[pos] = item.door_message().number();
+                                    logger->debug("Update Door!");
+                                }
+                            }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::HiddenGateMessage:
+                        {
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.hidden_gate_message().x(), item.hidden_gate_message().y(), bufferState->trickerSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            {
+                                auto pos = std::make_pair(item.hidden_gate_message().x(), item.hidden_gate_message().y());
+                                if (bufferState->mapInfo->hiddenGateState.count(pos) == 0)
+                                {
+                                    bufferState->mapInfo->hiddenGateState.emplace(pos, item.hidden_gate_message().opened());
+                                    logger->debug("Add HiddenGate!");
+                                }
+                                else
+                                {
+                                    bufferState->mapInfo->hiddenGateState[pos] = item.hidden_gate_message().opened();
+                                    logger->debug("Update HiddenGate!");
+                                }
+                            }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::GateMessage:
+                        {
+                            if (!AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.gate_message().x(), item.gate_message().y(), bufferState->trickerSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            {
+                                auto pos = std::make_pair(item.gate_message().x(), item.gate_message().y());
+                                if (bufferState->mapInfo->gateState.count(pos) == 0)
+                                {
+                                    bufferState->mapInfo->gateState.emplace(pos, item.gate_message().progress());
+                                    logger->debug("Add Gate!");
+                                }
+                                else
+                                {
+                                    bufferState->mapInfo->gateState[pos] = item.gate_message().progress();
+                                    logger->debug("Update Gate!");
+                                }
+                            }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::StudentMessage:
+                        {
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.student_message().x(), item.student_message().y(), bufferState->trickerSelf->place, Proto2THUAI6::placeTypeDict[item.student_message().place()], bufferState->gameMap))
+                            {
+                                bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item.student_message()));
+                                logger->debug("Add Student!");
+                            }
+                        }
+                    case THUAI6::MessageOfObj::NullMessageOfObj:
+                    default:
+                        break;
+                }
         }
-        for (const auto& item : message.obj_message())
-            switch (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()])
-            {
-                case THUAI6::MessageOfObj::PropMessage:
-                    bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item.prop_message()));
-                    logger->debug("Add Prop!");
-                    break;
-                case THUAI6::MessageOfObj::BulletMessage:
-                    bufferState->bullets.push_back(Proto2THUAI6::Protobuf2THUAI6Bullet(item.bullet_message()));
-                    logger->debug("Add Bullet!");
-                    break;
-                case THUAI6::MessageOfObj::BombedBulletMessage:
-                    bufferState->bombedBullets.push_back(Proto2THUAI6::Protobuf2THUAI6BombedBullet(item.bombed_bullet_message()));
-                    logger->debug("Add BombedBullet!");
-                    break;
-                case THUAI6::MessageOfObj::ClassroomMessage:
-                    {
-                        auto pos = std::make_pair(item.classroom_message().x(), item.classroom_message().y());
-                        if (bufferState->mapInfo->classRoomState.count(pos) == 0)
-                        {
-                            bufferState->mapInfo->classRoomState.emplace(pos, item.classroom_message().progress());
-                            logger->debug("Add Classroom!");
-                        }
-                        else
-                        {
-                            bufferState->mapInfo->classRoomState[pos] = item.classroom_message().progress();
-                            logger->debug("Update Classroom!");
-                        }
-                        break;
-                    }
-                case THUAI6::MessageOfObj::ChestMessage:
-                    {
-                        auto pos = std::make_pair(item.chest_message().x(), item.chest_message().y());
-                        if (bufferState->mapInfo->chestState.count(pos) == 0)
-                        {
-                            bufferState->mapInfo->chestState.emplace(pos, item.chest_message().progress());
-                            logger->debug("Add Chest!");
-                        }
-                        else
-                        {
-                            bufferState->mapInfo->chestState[pos] = item.chest_message().progress();
-                            logger->debug("Update Chest!");
-                        }
-                        break;
-                    }
-                case THUAI6::MessageOfObj::DoorMessage:
-                    {
-                        auto pos = std::make_pair(item.door_message().x(), item.door_message().y());
-                        if (bufferState->mapInfo->doorState.count(pos) == 0)
-                        {
-                            bufferState->mapInfo->doorState.emplace(pos, item.door_message().is_open());
-                            logger->debug("Add Door!");
-                        }
-                        else
-                        {
-                            bufferState->mapInfo->doorState[pos] = item.door_message().is_open();
-                            logger->debug("Update Door!");
-                        }
-                        break;
-                    }
-                case THUAI6::MessageOfObj::GateMessage:
-                    {
-                        auto pos = std::make_pair(item.gate_message().x(), item.gate_message().y());
-                        if (bufferState->mapInfo->gateState.count(pos) == 0)
-                        {
-                            bufferState->mapInfo->gateState.emplace(pos, item.gate_message().progress());
-                            logger->debug("Add Gate!");
-                        }
-                        else
-                        {
-                            bufferState->mapInfo->gateState[pos] = item.gate_message().progress();
-                            logger->debug("Update Gate!");
-                        }
-                        break;
-                    }
-                case THUAI6::MessageOfObj::NullMessageOfObj:
-                default:
-                    break;
-            }
         if (asynchronous)
         {
             {
@@ -522,7 +692,10 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
     fileLogger->set_pattern(pattern);
     printLogger->set_pattern(pattern);
     if (file)
+    {
         fileLogger->set_level(spdlog::level::trace);
+        spdlog::flush_every(std::chrono::seconds(1));
+    }
     else
         fileLogger->set_level(spdlog::level::off);
     if (print)

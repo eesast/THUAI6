@@ -9,9 +9,9 @@
 
 int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
 {
-    int pID = 114514;
-    std::string sIP = "114.51.41.91";
-    std::string sPort = "9810";
+    int pID = 0;
+    std::string sIP = "183.172.213.88";
+    std::string sPort = "8888";
     bool file = false;
     bool print = false;
     bool warnOnly = false;
@@ -19,13 +19,13 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     extern const THUAI6::TrickerType trickerType;
     extern const THUAI6::StudentType studentType;
     // 仅供早期调试使用
-    {
-        file = false;
-        print = true;
-        Logic logic(playerType, pID, trickerType, studentType);
-        logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);
-        return 0;
-    }
+    // {
+    //     file = false;
+    //     print = true;
+    //     Logic logic(playerType, pID, trickerType, studentType);
+    //     logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);
+    //     return 0;
+    // }
 
     // 使用cmdline的正式版本
     try
@@ -35,7 +35,7 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
         TCLAP::ValueArg<std::string> serverIP("I", "serverIP", "Server`s IP 127.0.0.1 in default", false, "127.0.0.1", "string");
         cmd.add(serverIP);
 
-        TCLAP::ValueArg<uint16_t> serverPort("P", "serverPort", "Port the server listens to 7777 in default", false, 7777, "USORT");
+        TCLAP::ValueArg<std::string> serverPort("P", "serverPort", "Port the server listens to 7777 in default", false, "7777", "USORT");
         cmd.add(serverPort);
 
         std::vector<int> validPlayerIDs{0, 1, 2, 3};
@@ -70,6 +70,7 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
         std::cerr << "Parsing error: " << e.error() << " for arg " << e.argId() << std::endl;
         return 1;
     }
+    std::cout << file << std::endl;
     Logic logic(playerType, pID, trickerType, studentType);
     logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);
     return 0;

@@ -167,6 +167,9 @@ namespace Proto2THUAI6
         {protobuf::MessageOfObj::MessageOfObjCase::kGateMessage, THUAI6::MessageOfObj::GateMessage},
         {protobuf::MessageOfObj::MessageOfObjCase::kChestMessage, THUAI6::MessageOfObj::ChestMessage},
         {protobuf::MessageOfObj::MessageOfObjCase::MESSAGE_OF_OBJ_NOT_SET, THUAI6::MessageOfObj::NullMessageOfObj},
+        {protobuf::MessageOfObj::MessageOfObjCase::kMapMessage, THUAI6::MessageOfObj::MapMessage},
+        {protobuf::MessageOfObj::MessageOfObjCase::kNewsMessage, THUAI6::MessageOfObj::NewsMessage},
+        {protobuf::MessageOfObj::MessageOfObjCase::kHiddenGateMessage, THUAI6::MessageOfObj::HiddenGateMessage},
 
     };
 
@@ -177,6 +180,11 @@ namespace Proto2THUAI6
         tricker->x = trickerMsg.x();
         tricker->y = trickerMsg.y();
         tricker->speed = trickerMsg.speed();
+        tricker->score = trickerMsg.score();
+        tricker->facingDirection = trickerMsg.facing_direction();
+        tricker->bulletType = bulletTypeDict[trickerMsg.bullet_type()];
+        tricker->trickDesire = trickerMsg.trick_desire();
+        tricker->classVolume = trickerMsg.class_volume();
         tricker->damage = trickerMsg.damage();
         for (int i = 0; i < trickerMsg.time_until_skill_available().size(); i++)
             tricker->timeUntilSkillAvailable.push_back(trickerMsg.time_until_skill_available(i));
@@ -205,9 +213,16 @@ namespace Proto2THUAI6
         student->playerID = studentMsg.player_id();
         student->guid = studentMsg.guid();
         student->radius = studentMsg.radius();
+        student->score = studentMsg.score();
+        student->facingDirection = studentMsg.facing_direction();
+        student->bulletType = bulletTypeDict[studentMsg.bullet_type()];
+        student->learningSpeed = studentMsg.learning_speed();
+        student->treatSpeed = studentMsg.treat_speed();
+        student->treatProgress = studentMsg.treat_progress();
+        student->rescueProgress = studentMsg.rescue_progress();
+        student->dangerAlert = studentMsg.danger_alert();
         for (int i = 0; i < studentMsg.time_until_skill_available().size(); i++)
             student->timeUntilSkillAvailable.push_back(studentMsg.time_until_skill_available(i));
-        student->damage = studentMsg.damage();
         student->playerType = THUAI6::PlayerType::StudentPlayer;
         for (int i = 0; i < studentMsg.prop().size(); i++)
             student->props.push_back(propTypeDict[studentMsg.prop(i)]);
@@ -262,6 +277,7 @@ namespace Proto2THUAI6
         bullet->team = playerTypeDict[bulletMsg.team()];
         bullet->place = placeTypeDict[bulletMsg.place()];
         bullet->bombRange = bulletMsg.bomb_range();
+        bullet->speed = bulletMsg.speed();
         return bullet;
     }
 

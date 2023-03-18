@@ -546,7 +546,7 @@ void StudentDebugAPI::PrintStudent() const
     {
         logger->info("******Student Info******");
         logger->info("playerID={}, GUID={}, x={}, y={}", student->playerID, student->guid, student->x, student->y);
-        logger->info("speed={}, view range={}, damage={}, place={}", student->speed, student->viewRange, student->damage, THUAI6::placeTypeDict[student->place]);
+        logger->info("speed={}, view range={},  place={}", student->speed, student->viewRange, THUAI6::placeTypeDict[student->place]);
         logger->info("state={}, determination={}, addiction={}", THUAI6::playerStateDict[student->playerState], student->determination, student->addiction);
         std::string skillTime = "skill time=";
         for (const auto& time : student->timeUntilSkillAvailable)
@@ -570,7 +570,7 @@ void TrickerDebugAPI::PrintStudent() const
     {
         logger->info("******Student Info******");
         logger->info("playerID={}, GUID={}, x={}, y={}", student->playerID, student->guid, student->x, student->y);
-        logger->info("speed={}, view range={}, damage={}, place={}", student->speed, student->viewRange, student->damage, THUAI6::placeTypeDict[student->place]);
+        logger->info("speed={}, view range={}, place={}", student->speed, student->viewRange, THUAI6::placeTypeDict[student->place]);
         logger->info("state={}, determination={}, addiction={}", THUAI6::playerStateDict[student->playerState], student->determination, student->addiction);
         std::string skillTime = "skill time=";
         for (const auto& time : student->timeUntilSkillAvailable)
@@ -661,7 +661,7 @@ void StudentDebugAPI::PrintSelfInfo() const
     auto self = logic.StudentGetSelfInfo();
     logger->info("******Self Info******");
     logger->info("playerID={}, GUID={}, x={}, y={}", self->playerID, self->guid, self->x, self->y);
-    logger->info("speed={}, view range={}, damage={}, place={}", self->speed, self->viewRange, self->damage, THUAI6::placeTypeDict[self->place]);
+    logger->info("speed={}, view range={}, place={}", self->speed, self->viewRange, THUAI6::placeTypeDict[self->place]);
     logger->info("state={}, determination={}, addiction", THUAI6::playerStateDict[self->playerState], self->determination, self->addiction);
     std::string skillTime = "skill time=";
     for (const auto& time : self->timeUntilSkillAvailable)

@@ -231,32 +231,6 @@ protobuf::MessageToClient Communication::GetMessage2Client()
     return message2Client;
 }
 
-std::optional<std::pair<int64_t, std::string>> Communication::GetMessage()
-{
-    return messageQueue.tryPop();
-}
-
-bool Communication::HaveMessage()
-{
-    return !messageQueue.empty();
-}
-
-void Communication::ReadMessage(int64_t playerID)
-{
-    auto tRead = [=]()
-    {
-        auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-        ClientContext context;
-        protobuf::MsgRes messageReceived;
-        auto reader = THUAI6Stub->GetMessage(&context, request);
-        while (reader->Read(&messageReceived))
-        {
-            messageQueue.emplace(messageReceived.from_player_id(), messageReceived.message_received());
-        }
-    };
-    std::thread(tRead).detach();
-}
-
 void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::StudentType studentType, THUAI6::TrickerType trickerType)
 {
     auto tMessage = [=]()
@@ -275,28 +249,4 @@ void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, T
         }
     };
     std::thread(tMessage).detach();
-}
-
-std::vector<std::vector<THUAI6::PlaceType>> Communication::GetMap(int64_t playerID)
-{
-    protobuf::MessageOfMap mapResult;
-    ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
-    auto status = THUAI6Stub->GetMap(&context, request, &mapResult);
-    if (status.ok())
-    {
-        std::vector<std::vector<THUAI6::PlaceType>> map;
-        for (int i = 0; i < mapResult.row_size(); i++)
-        {
-            std::vector<THUAI6::PlaceType> row;
-            for (int j = 0; j < mapResult.row(i).col_size(); j++)
-            {
-                row.push_back(Proto2THUAI6::placeTypeDict[mapResult.row(i).col(j)]);
-            }
-            map.push_back(std::move(row));
-        }
-        return map;
-    }
-    else
-        return {};
 }

@@ -13,7 +13,6 @@
 #include <condition_variable>
 #include <queue>
 #include <atomic>
-#include "ConcurrentQueue.hpp"
 
 class Logic;
 
@@ -28,8 +27,6 @@ public:
     bool PickProp(THUAI6::PropType prop, int64_t playerID);
     bool UseProp(THUAI6::PropType prop, int64_t playerID);
     bool UseSkill(int32_t skillID, int64_t playerID);
-    std::optional<std::pair<int64_t, std::string>> GetMessage();
-    bool HaveMessage();
     bool SendMessage(int64_t toID, std::string message, int64_t playerID);
     bool OpenDoor(int64_t playerID);
     bool CloseDoor(int64_t playerID);
@@ -50,15 +47,10 @@ public:
     protobuf::MessageToClient GetMessage2Client();
     void AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::StudentType studentType, THUAI6::TrickerType trickerType);
 
-    [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetMap(int64_t playerID);
-
-    void ReadMessage(int64_t playerID);
-
 private:
     std::unique_ptr<protobuf::AvailableService::Stub> THUAI6Stub;
     bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
-    ConcurrentQueue<std::pair<int64_t, std::string>> messageQueue;
     std::mutex mtxMessage;
     std::condition_variable cvMessage;
 };

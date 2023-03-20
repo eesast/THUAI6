@@ -84,8 +84,6 @@ message MessageOfProp // 可拾取道具的信息
     double facing_direction = 4;
     int64 guid = 5;
     PlaceType place = 6;
-    int32 size = 7;
-    bool is_moving = 8;
 }
 
 

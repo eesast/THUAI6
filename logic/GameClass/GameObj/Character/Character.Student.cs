@@ -81,6 +81,21 @@ namespace GameClass.GameObj
             }
         }
 
+        private int timeOfRescue = 0;
+        public int TimeOfRescue
+        {
+            get => timeOfRescue;
+            set
+            {
+                if (value > 0)
+                    lock (gameObjLock)
+                        timeOfRescue = (value < GameData.basicTimeOfRescue) ? value : GameData.basicTimeOfRescue;
+                else
+                    lock (gameObjLock)
+                        timeOfRescue = 0;
+            }
+        }
+
         public Student(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
             this.fixSpeed = ((IStudent)Occupation).FixSpeed;

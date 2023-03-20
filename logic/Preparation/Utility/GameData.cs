@@ -65,7 +65,7 @@ namespace Preparation.Utility
         public const int BeginGamingAddiction = 10003;
         public const int MidGamingAddiction = 30000;
         public const int basicTreatmentDegree = 1500000;
-        public const int basicRescueDegree = 100000;
+        public const int basicTimeOfRescue = 1000;
 
         public const int basicMoveSpeed = 1260;                      // 基本移动速度，单位：s-1
         public const int characterMaxSpeed = 12000;                  // 最大速度

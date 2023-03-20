@@ -234,6 +234,19 @@ namespace GameClass.GameObj
             }
         }
 
+        private int viewRange;
+        public int ViewRange
+        {
+            get => viewRange;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    viewRange = value;
+                }
+            }
+        }
+
         private int timeOfOpeningOrLocking;
         public int TimeOfOpeningOrLocking
         {

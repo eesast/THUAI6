@@ -209,7 +209,7 @@ namespace Gaming
                     return false;
                 player.PlayerState = PlayerStateType.IsRescuing;
                 playerRescued.PlayerState = PlayerStateType.IsRescued;
-                int rescuedDegree = 0;
+                player.TimeOfRescue = 0;
                 new Thread
            (
                () =>
@@ -218,25 +218,26 @@ namespace Gaming
                        loopCondition: () => playerRescued.PlayerState == PlayerStateType.IsRescued && player.PlayerState == PlayerStateType.IsRescuing && gameMap.Timer.IsGaming && GameData.ApproachToInteract(playerRescued.Position, player.Position),
                        loopToDo: () =>
                        {
-                           rescuedDegree += GameData.frameDuration;
+                           player.TimeOfRescue += GameData.frameDuration;
                        },
                        timeInterval: GameData.frameDuration,
                        finallyReturn: () => 0,
-                       maxTotalDuration: 1000
+                       maxTotalDuration: GameData.basicTimeOfRescue
                    )
-
                        .Start();
 
-                   if (rescuedDegree >= 1000)
+                   if (player.TimeOfRescue >= GameData.basicTimeOfRescue)
                    {
                        if (playerRescued.PlayerState == PlayerStateType.IsRescued) playerRescued.PlayerState = PlayerStateType.Null;
                        if (player.PlayerState == PlayerStateType.IsRescuing) player.PlayerState = PlayerStateType.Null;
+
                    }
                    else
                    {
                        if (playerRescued.PlayerState == PlayerStateType.IsRescued) playerRescued.PlayerState = PlayerStateType.Null;
                        if (player.PlayerState == PlayerStateType.IsRescuing) player.PlayerState = PlayerStateType.IsAddicted;
                    }
+                   player.TimeOfRescue = 0;
                }
            )
                 { IsBackground = true }.Start();

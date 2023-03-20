@@ -1,21 +1,145 @@
 using Protobuf;
 using System.Collections.Generic;
 using GameClass.GameObj;
+using System.Numerics;
+using Preparation.Utility;
 
 namespace Server
 {
 
     public static class CopyInfo
     {
-        // 下面赋值为0的大概率是还没写完 2023-03-03
+        private static Protobuf.PlaceType ToPlaceType(Preparation.Utility.PlaceType place)
+        {
+            switch (place)
+            {
+                case Preparation.Utility.PlaceType.Window:
+                    return Protobuf.PlaceType.Window;
+                case Preparation.Utility.PlaceType.EmergencyExit:
+                    return Protobuf.PlaceType.HiddenGate;
+                case Preparation.Utility.PlaceType.Doorway:
+                    return Protobuf.PlaceType.Gate;
+                case Preparation.Utility.PlaceType.Chest:
+                    return Protobuf.PlaceType.Chest;
+                case Preparation.Utility.PlaceType.Door:
+                    return Protobuf.PlaceType.Door;
+                case Preparation.Utility.PlaceType.Generator:
+                    return Protobuf.PlaceType.Classroom;
+                case Preparation.Utility.PlaceType.Grass:
+                    return Protobuf.PlaceType.Grass;
+                case Preparation.Utility.PlaceType.Wall:
+                    return Protobuf.PlaceType.Wall;
+                case Preparation.Utility.PlaceType.Null:
+                case Preparation.Utility.PlaceType.BirthPoint1:
+                case Preparation.Utility.PlaceType.BirthPoint2:
+                case Preparation.Utility.PlaceType.BirthPoint3:
+                case Preparation.Utility.PlaceType.BirthPoint4:
+                case Preparation.Utility.PlaceType.BirthPoint5:
+                    return Protobuf.PlaceType.Land;
+                default:
+                    return Protobuf.PlaceType.NullPlaceType;
+            }
+        }
+
+        private static Protobuf.PropType ToPropType(Preparation.Utility.PropType prop)
+        {
+            switch (prop)
+            {
+                case Preparation.Utility.PropType.Key3:
+                    return Protobuf.PropType.Key3;
+                case Preparation.Utility.PropType.Key5:
+                    return Protobuf.PropType.Key5;
+                case Preparation.Utility.PropType.Key6:
+                    return Protobuf.PropType.Key6;
+                default:
+                    return Protobuf.PropType.NullPropType;
+            }
+        }
+
+        private static Protobuf.PlayerState ToPlayerState(Preparation.Utility.PlayerStateType playerState)
+        {
+            switch (playerState)
+            {
+                case Preparation.Utility.PlayerStateType.IsMoving:
+                case Preparation.Utility.PlayerStateType.Null:
+                    return PlayerState.Idle;
+                case Preparation.Utility.PlayerStateType.IsAddicted:
+                    return PlayerState.Addicted;
+                case Preparation.Utility.PlayerStateType.IsClimbingThroughWindows:
+                    return PlayerState.Climbing;
+                case Preparation.Utility.PlayerStateType.IsDeceased:
+                    return PlayerState.Quit;
+                case Preparation.Utility.PlayerStateType.IsEscaped:
+                    return PlayerState.Graduated;
+                case Preparation.Utility.PlayerStateType.IsFixing:
+                    return PlayerState.Learning;
+                case Preparation.Utility.PlayerStateType.IsLockingTheDoor:
+                    return PlayerState.Locking;
+                case Preparation.Utility.PlayerStateType.IsOpeningTheChest:
+                    return PlayerState.OpeningAChest;
+                case Preparation.Utility.PlayerStateType.IsRescued:
+                    return PlayerState.Rescued;
+                case Preparation.Utility.PlayerStateType.IsRescuing:
+                    return PlayerState.Rescuing;
+                case Preparation.Utility.PlayerStateType.IsStunned:
+                    return PlayerState.Stunned;
+                case Preparation.Utility.PlayerStateType.IsSwinging:
+                    return PlayerState.Swinging;
+                case Preparation.Utility.PlayerStateType.IsTreated:
+                    return PlayerState.Treated;
+                case Preparation.Utility.PlayerStateType.IsTreating:
+                    return PlayerState.Treating;
+                case Preparation.Utility.PlayerStateType.IsTryingToAttack:
+                    return PlayerState.Attacking;
+                case Preparation.Utility.PlayerStateType.IsUsingSpecialSkill:
+                    return PlayerState.UsingSpecialSkill;
+                default:
+                    return PlayerState.NullStatus;
+            }
+        }
+
+        private static Protobuf.StudentBuffType ToStudentBuffType(Preparation.Utility.BuffType buffType)
+        {
+            switch (buffType)
+            {
+                case Preparation.Utility.BuffType.Null:
+                default:
+                    return Protobuf.StudentBuffType.NullSbuffType;
+            }
+        }
+
+        private static Protobuf.BulletType ToBulletType(Preparation.Utility.BulletType bulletType)
+        {
+            switch (bulletType)
+            {
+                case Preparation.Utility.BulletType.FlyingKnife:
+                    return Protobuf.BulletType.FlyingKnife;
+                case Preparation.Utility.BulletType.CommonAttackOfGhost:
+                    return Protobuf.BulletType.CommonAttackOfGhost;
+                default:
+                    return Protobuf.BulletType.NullBulletType;
+            }
+        }
+
+        private static Protobuf.StudentType ToStudentType(Preparation.Utility.CharacterType characterType)
+        {
+            switch (characterType)
+            {
+                case Preparation.Utility.CharacterType.Athlete:
+                    return Protobuf.StudentType.Athlete;
+                default:
+                    return Protobuf.StudentType.NullStudentType;
+            }
+        }
+
         public static MessageOfObj? Auto(GameObj gameObj)
         {
             if (gameObj.Type == Preparation.Utility.GameObjType.Character)
             {
                 Character character = (Character)gameObj;
                 if (character.IsGhost())
-                    return Tricker((Character)character);
-                else return Student((Character)character);
+                    return Tricker((Ghost)character);
+                else return Student((Student)character);
             }
             else if (gameObj.Type == Preparation.Utility.GameObjType.Bullet)
                 return Bullet((Bullet)gameObj);
@@ -28,7 +152,7 @@ namespace Server
             else return null;  //先写着防报错
         }
 
-        private static MessageOfObj? Student(Character player)
+        private static MessageOfObj? Student(Student player)
         {
             MessageOfObj msg = new MessageOfObj();
             if (player.IsGhost()) return null;
@@ -38,74 +162,37 @@ namespace Server
             msg.StudentMessage.Y = player.Position.y;
             msg.StudentMessage.Speed = player.MoveSpeed;
             msg.StudentMessage.Determination = player.HP;
-            msg.StudentMessage.Addiction = 0;
+            msg.StudentMessage.Addiction = player.GamingAddiction;
+
             foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
+
+            foreach (var Value in player.PropInventory)
+                msg.StudentMessage.Prop.Add(ToPropType(Value.GetPropType()));
+
+            msg.StudentMessage.Place = ToPlaceType(player.Place);
             //msg.StudentMessage.StudentType; // 下面写
             msg.StudentMessage.Guid = player.ID;
-            // msg.StudentMessage.State = player.PlayerState;
-            msg.StudentMessage.PlayerId = 0;
-            msg.StudentMessage.ViewRange = 0;
-            msg.StudentMessage.Radius = 0;
-            msg.StudentMessage.Damage = 0;
-            msg.StudentMessage.DangerAlert = 0;
-            msg.StudentMessage.Score = 0;
-            msg.StudentMessage.TreatProgress = 0;
-            msg.StudentMessage.RescueProgress = 0;
+            msg.StudentMessage.State = ToPlayerState(player.PlayerState);
+            msg.StudentMessage.PlayerId = player.PlayerID;
+            msg.StudentMessage.ViewRange = player.ViewRange;
+            msg.StudentMessage.Radius = player.Radius;
+            msg.StudentMessage.DangerAlert = (player.BgmDictionary.ContainsKey(BgmType.GhostIsComing)) ? player.BgmDictionary[BgmType.GhostIsComing] : 0;
+            msg.StudentMessage.Score = player.Score;
+            msg.StudentMessage.TreatProgress = player.DegreeOfTreatment;
+            msg.StudentMessage.RescueProgress = player.TimeOfRescue;
 
             foreach (KeyValuePair<Preparation.Utility.BuffType, bool> kvp in player.Buff)
             {
                 if (kvp.Value)
-                {
-                    switch (kvp.Key) // StudentBuffType具体内容待定
-                    {
-                        case Preparation.Utility.BuffType.Spear:
-                            msg.StudentMessage.Buff.Add(StudentBuffType.NullSbuffType);
-                            break;
-                        case Preparation.Utility.BuffType.AddLIFE:
-                            msg.StudentMessage.Buff.Add(StudentBuffType.NullSbuffType);
-                            break;
-                        case Preparation.Utility.BuffType.Shield:
-                            msg.StudentMessage.Buff.Add(StudentBuffType.NullSbuffType);
-                            break;
-                        case Preparation.Utility.BuffType.AddSpeed:
-                            msg.StudentMessage.Buff.Add(StudentBuffType.NullSbuffType);
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                    msg.StudentMessage.Buff.Add(ToStudentBuffType(kvp.Key));
             }
 
-            //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
-            //现在懒得改了，有时间再重整一波
-            if (player.PropInventory == null)
-                msg.StudentMessage.Prop.Add(PropType.NullPropType);
-            else
-            {
-                switch (player.PropInventory.GetPropType())
-                {
-                    case Preparation.Utility.PropType.Gem:
-                        msg.StudentMessage.Prop.Add(PropType.NullPropType);
-                        break;
-                        /*case Preparation.Utility.PropType.addLIFE:
-                           msg.StudentMessage.MessageOfHuman.Prop = Communication.Proto.PropType.AddLife;
-                            break;
-                        case Preparation.Utility.PropType.addSpeed:
-                           msg.StudentMessage.MessageOfHuman.Prop = Communication.Proto.PropType.AddSpeed;
-                            break;
-                        case Preparation.Utility.PropType.Shield:
-                           msg.StudentMessage.MessageOfHuman.Prop = Communication.Proto.PropType.Shield;
-                            break;
-                        case Preparation.Utility.PropType.Spear:
-                           msg.StudentMessage.MessageOfHuman.Prop = Communication.Proto.PropType.Spear;
-                            break;
-                        default:
-                           msg.StudentMessage.Prop = PropType.NullPropType;
-                            break;*/
-                }
-            }
-
+            msg.StudentMessage.BulletType = ToBulletType(player.BulletOfPlayer);
+            msg.StudentMessage.LearningSpeed = player.FixSpeed;
+            msg.StudentMessage.TreatSpeed = player.TreatSpeed;
+            msg.StudentMessage.FacingDirection = player.FacingDirection.Angle();
+            msg.StudentMessage.StudentType = ToStudentType(player.CharacterType);
             return msg;
         }
 

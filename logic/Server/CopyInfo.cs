@@ -115,7 +115,7 @@ namespace Server
                 case Preparation.Utility.BulletType.FlyingKnife:
                     return Protobuf.BulletType.FlyingKnife;
                 case Preparation.Utility.BulletType.CommonAttackOfGhost:
-                    return Protobuf.BulletType.CommonAttackOfGhost;
+                    return Protobuf.BulletType.CommonAttackOfTricker;
                 default:
                     return Protobuf.BulletType.NullBulletType;
             }
@@ -129,6 +129,16 @@ namespace Server
                     return Protobuf.StudentType.Athlete;
                 default:
                     return Protobuf.StudentType.NullStudentType;
+            }
+        }
+        private static Protobuf.TrickerType ToTrickerType(Preparation.Utility.CharacterType characterType)
+        {
+            switch (characterType)
+            {
+                case Preparation.Utility.CharacterType.Assassin:
+                    return Protobuf.TrickerType.Assassin;
+                default:
+                    return Protobuf.TrickerType.NullTrickerType;
             }
         }
 
@@ -151,6 +161,12 @@ namespace Server
                 return PickedProp((PickedProp)gameObj);
             else return null;  //先写着防报错
         }
+        public static MessageOfObj? Auto(MessageOfNews news)
+        {
+            MessageOfObj objMsg = new();
+            objMsg.NewsMessage = news;
+            return objMsg;
+        }
 
         private static MessageOfObj? Student(Student player)
         {
@@ -171,9 +187,9 @@ namespace Server
                 msg.StudentMessage.Prop.Add(ToPropType(Value.GetPropType()));
 
             msg.StudentMessage.Place = ToPlaceType(player.Place);
-            //msg.StudentMessage.StudentType; // 下面写
             msg.StudentMessage.Guid = player.ID;
-            msg.StudentMessage.State = ToPlayerState(player.PlayerState);
+
+            msg.StudentMessage.PlayerState = ToPlayerState(player.PlayerState);
             msg.StudentMessage.PlayerId = player.PlayerID;
             msg.StudentMessage.ViewRange = player.ViewRange;
             msg.StudentMessage.Radius = player.Radius;
@@ -205,17 +221,18 @@ namespace Server
             msg.TrickerMessage.X = player.Position.x;
             msg.TrickerMessage.Y = player.Position.y;
             msg.TrickerMessage.Speed = player.MoveSpeed;
-            msg.TrickerMessage.Damage = 0;
             foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
-                msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
-            //msg.TrickerMessage.Place = 0; 下面写了
-            //msg.TrickerMessage.Prop = PropType.NullPropType; // 下面写
-            msg.TrickerMessage.TrickerType = TrickerType.NullTrickerType; // 下面写
-            msg.TrickerMessage.Guid = 0;
-            msg.TrickerMessage.Movable = false;
-            msg.TrickerMessage.PlayerId = 0;
-            msg.TrickerMessage.ViewRange = 0;
-            msg.TrickerMessage.Radius = 0;
+                msg.TrickerMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
+            msg.TrickerMessage.Place = ToPlaceType(player.Place);
+            foreach (var Value in player.PropInventory)
+                msg.StudentMessage.Prop.Add(ToPropType(Value.GetPropType()));
+
+            msg.TrickerMessage.TrickerType = ToTrickerType(player.CharacterType); // 下面写
+            msg.TrickerMessage.Guid = player.ID;
+            msg.TrickerMessage.Score = player.Score;
+            msg.TrickerMessage.PlayerId = player.PlayerID;
+            msg.TrickerMessage.ViewRange = player.ViewRange;
+            msg.TrickerMessage.Radius = player.Radius;
             //msg.TrickerMessage.Buff[0] = ButcherBuffType.NullSbuffType; 下面写了
 
 

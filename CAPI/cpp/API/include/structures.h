@@ -142,6 +142,9 @@ namespace THUAI6
         DoorMessage = 7,
         GateMessage = 8,
         ChestMessage = 9,
+        MapMessage = 10,
+        NewsMessage = 11,
+        HiddenGateMessage = 12,
     };
 
     // 玩家类
@@ -154,13 +157,16 @@ namespace THUAI6
         int64_t playerID;   // 玩家ID
         int64_t guid;       // 全局唯一ID
         int16_t radius;     // 圆形物体的半径或正方形物体的内切圆半径
+        int32_t score;      // 分数
 
-        int32_t damage;                               // 攻击伤害
+        double facingDirection;  // 朝向
+
         std::vector<double> timeUntilSkillAvailable;  // 技能冷却时间
 
         PlayerType playerType;  // 玩家类型
         std::vector<PropType> props;
         PlaceType place;  // 所处格子的类型
+        BulletType bulletType;
 
         PlayerState playerState;
     };
@@ -168,14 +174,21 @@ namespace THUAI6
     struct Student : public Player
     {
         StudentType studentType;
-        int32_t determination;  // 剩余毅力（本次Emo之前还能承受的伤害）
-        int32_t addiction;
-
+        int32_t determination;  // 剩余毅力
+        int32_t addiction;      // 沉迷程度
+        int32_t learningSpeed;
+        int32_t treatSpeed;
+        int32_t treatProgress;
+        int32_t rescueProgress;
+        double dangerAlert;
         std::vector<StudentBuffType> buff;  // buff
     };
 
     struct Tricker : public Player
     {
+        int32_t damage;
+        double trickDesire;
+        double classVolume;
         TrickerType trickerType;            // 捣蛋鬼类型
         std::vector<TrickerBuffType> buff;  // buff
     };
@@ -190,6 +203,7 @@ namespace THUAI6
         PlayerType team;         // 子弹所属队伍
         PlaceType place;         // 所处格子的类型
         double bombRange;        // 炸弹爆炸范围
+        int32_t speed;           // 子弹速度
     };
 
     struct BombedBullet
@@ -221,8 +235,11 @@ namespace THUAI6
         std::map<std::pair<int32_t, int32_t>, int32_t> gateState;
 
         std::map<std::pair<int32_t, int32_t>, bool> doorState;
+        std::map<std::pair<int32_t, int32_t>, int32_t> doorNumber;
 
         std::map<std::pair<int32_t, int32_t>, int32_t> chestState;
+
+        std::map<std::pair<int32_t, int32_t>, bool> hiddenGateState;
     };
 
     struct GameInfo
@@ -313,6 +330,9 @@ namespace THUAI6
         {MessageOfObj::DoorMessage, "DoorMessage"},
         {MessageOfObj::GateMessage, "GateMessage"},
         {MessageOfObj::ChestMessage, "ChestMessage"},
+        {MessageOfObj::MapMessage, "MapMessage"},
+        {MessageOfObj::NewsMessage, "NewsMessage"},
+        {MessageOfObj::HiddenGateMessage, "HiddenGateMessage"},
     };
 
 }  // namespace THUAI6

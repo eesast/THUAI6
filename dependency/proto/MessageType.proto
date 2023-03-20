@@ -6,7 +6,7 @@ enum BulletType
 {
     NULL_BULLET_TYPE = 0;
     FLYING_KNIFE = 1;
-    COMMON_ATTACK_OF_GHOST = 2;
+    COMMON_ATTACK_OF_TRICKER = 2;
     FAST_BULLET = 3;
     ORDINARY_BULLET = 4;
     ATOM_BOMB = 5;
@@ -108,7 +108,7 @@ enum StudentType
 enum TrickerType
 {
     NULL_TRICKER_TYPE = 0;
-    TRICKERTYPE1 = 1;
+    ASSASSIN = 1;
     TRICKERTYPE2 = 2;
     TRICKERTYPE3 = 3;
     TRICKERTYPE4 = 4;

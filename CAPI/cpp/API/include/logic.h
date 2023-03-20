@@ -29,6 +29,7 @@
 #include "structures.h"
 #include "state.h"
 #include "Communication.h"
+#include "ConcurrentQueue.hpp"
 
 // 封装了通信组件和对AI对象进行操作
 class Logic : public ILogic
@@ -63,7 +64,7 @@ private:
     std::condition_variable cvAI;
 
     // 信息队列
-    std::queue<std::pair<int64_t, std::string>> messageQueue;
+    ConcurrentQueue<std::pair<int64_t, std::string>> messageQueue;
 
     // 存储状态，分别是现在的状态和缓冲区的状态。
     State state[2];

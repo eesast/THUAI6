@@ -12,13 +12,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FrameRateTask" Version="1.2.0" />
     <PackageReference Include="Google.Protobuf" Version="3.22.1" />
     <PackageReference Include="Grpc" Version="2.46.6" />
     <PackageReference Include="Grpc.Core" Version="2.46.6" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\dependency\proto\Proto.csproj" />
+    <ProjectReference Include="..\..\dependency\proto\Protos.csproj" />
+    <ProjectReference Include="..\..\playback\Playback\Playback.csproj" />
   </ItemGroup>
 
   <ItemGroup>

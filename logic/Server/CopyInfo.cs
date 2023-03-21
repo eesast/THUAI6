@@ -22,7 +22,11 @@ namespace Server
                 case Preparation.Utility.PlaceType.Chest:
                     return Protobuf.PlaceType.Chest;
                 case Preparation.Utility.PlaceType.Door3:
-                    return Protobuf.PlaceType.Door;
+                    return Protobuf.PlaceType.Door3;
+                case Preparation.Utility.PlaceType.Door5:
+                    return Protobuf.PlaceType.Door5;
+                case Preparation.Utility.PlaceType.Door6:
+                    return Protobuf.PlaceType.Door6;
                 case Preparation.Utility.PlaceType.Generator:
                     return Protobuf.PlaceType.Classroom;
                 case Preparation.Utility.PlaceType.Grass:

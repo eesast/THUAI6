@@ -175,13 +175,19 @@ namespace GameClass.GameObj
         public Dictionary<BgmType, double> BgmDictionary
         {
             get => bgmDictionary;
-            set
+            private set
             {
                 lock (gameObjLock)
                 {
                     bgmDictionary = value;
                 }
             }
+        }
+        public void AddBgm(BgmType bgm, double value)
+        {
+            if (BgmDictionary.ContainsKey(bgm))
+                BgmDictionary[bgm] = value;
+            else BgmDictionary.Add(bgm, value);
         }
 
         private int alertnessRadius;

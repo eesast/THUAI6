@@ -14,6 +14,7 @@ namespace Preparation.Interface
         public List<PassiveSkillType> ListOfIPassiveSkill { get; }
         public double Concealment { get; }
         public int AlertnessRadius { get; }
+        public int ViewRange { get; }
         public int TimeOfOpeningOrLocking { get; }
         public int TimeOfClimbingThroughWindows { get; }
         public int TimeOfOpenChest { get; }
@@ -54,6 +55,9 @@ namespace Preparation.Interface
         public int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.3);
         public int AlertnessRadius => alertnessRadius;
 
+        public int viewRange = (int)(GameData.basicViewRange * 1.3);
+        public int ViewRange => viewRange;
+
         public int timeOfOpeningOrLocking = GameData.basicTimeOfOpeningOrLocking;
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
 
@@ -93,6 +97,9 @@ namespace Preparation.Interface
 
         public const int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
         public int AlertnessRadius => alertnessRadius;
+
+        public int viewRange = (int)(GameData.basicViewRange * 1.1);
+        public int ViewRange => viewRange;
 
         public int timeOfOpeningOrLocking = GameData.basicTimeOfOpeningOrLocking * 12 / 10;
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;

@@ -68,12 +68,13 @@ namespace Preparation.Utility
         public const int basicTreatmentDegree = 1500000;
         public const int basicTimeOfRescue = 1000;
 
-        public const int basicMoveSpeed = 1260;                      // 基本移动速度，单位：s-1
+        public const int basicMoveSpeed = 1270;                      // 基本移动速度，单位：s-1
         public const int characterMaxSpeed = 12000;                  // 最大速度
         public const int basicBulletMoveSpeed = 2700;                // 基本子弹移动速度，单位：s-1
 
         public const double basicConcealment = 1.0;
         public const int basicAlertnessRadius = 30700;
+        public const int basicViewRange = 5 * numOfPosGridPerCell;
         public const int maxNumOfPropInPropInventory = 3;
         public const int addScoreWhenKillOneLevelPlayer = 30;        // 击杀一级角色获得的加分
 

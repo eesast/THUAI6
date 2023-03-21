@@ -120,6 +120,27 @@ namespace GameClass.GameObj
                 GameObjLockDict[gameObj.Type].ExitWriteLock();
             }
         }
+        public GameObj? OneForInteract(XY Pos, GameObjType gameObjType)
+        {
+            GameObj? GameObjForInteract = null;
+            GameObjLockDict[gameObjType].EnterReadLock();
+            try
+            {
+                foreach (GameObj gameObj in GameObjDict[gameObjType])
+                {
+                    if (GameData.ApproachToInteract(gameObj.Position, Pos))
+                    {
+                        GameObjForInteract = gameObj;
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                GameObjLockDict[gameObjType].ExitReadLock();
+            }
+            return GameObjForInteract;
+        }
         public Map(uint[,] mapResource)
         {
             gameObjDict = new Dictionary<GameObjType, IList<IGameObj>>();

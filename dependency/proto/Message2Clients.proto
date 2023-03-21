@@ -16,14 +16,12 @@ message MessageOfStudent
     repeated PropType prop = 8;
     PlayerState player_state = 9;
     int64 guid = 10;
-    PlayerState state = 11;
     BulletType bullet_type = 12;
     int32 learning_speed = 13; // 修理电机的速度
     int32 treat_speed = 14; // 治疗的速度
     int64 player_id = 15;
     int32 view_range = 16; // 视野距离
     int32 radius = 17; // 半径
-    // int32 damage = 18;
     double danger_alert = 19; // 危险警报，在捣蛋鬼靠近时会有预警
     int32 score = 20;
     int32 treat_progress = 21; // 治疗进度
@@ -38,13 +36,11 @@ message MessageOfTricker
     int32 x = 1;
     int32 y = 2;
     int32 speed = 3;
-    int32 damage = 4; // 对学生造成的伤害
     repeated double time_until_skill_available = 5;
     PlaceType place = 6;
     repeated PropType prop = 7;
     TrickerType tricker_type = 8;
     int64 guid = 9;
-    // bool movable = 10; // 是否进入了攻击后摇
     int32 score = 10;
     int64 player_id = 11;
     int32 view_range = 12; // 视野距离
@@ -88,8 +84,6 @@ message MessageOfProp // 可拾取道具的信息
     double facing_direction = 4;
     int64 guid = 5;
     PlaceType place = 6;
-    int32 size = 7;
-    bool is_moving = 8;
 }
 
 

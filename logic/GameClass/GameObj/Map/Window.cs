@@ -6,12 +6,12 @@ namespace GameClass.GameObj
     /// <summary>
     /// 出口
     /// </summary>
-    public class Doorway : GameObj
+    public class Window : GameObj
     {
-        public Doorway(XY initPos) :
-            base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Doorway)
+        public Window(XY initPos) :
+            base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Window)
         {
-            this.place = PlaceType.Doorway;
+            this.place = PlaceType.Window;
             this.CanMove = false;
         }
         public override bool IsRigid => true;

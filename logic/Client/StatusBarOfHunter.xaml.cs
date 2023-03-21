@@ -43,7 +43,7 @@ namespace Client
         {
             switch (obj.TrickerType)  // 参数未设定
             {
-                case TrickerType._1:
+                case TrickerType.Assassin:
                     coolTime = 10000;
                     serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：TrickerType1";
                     break;
@@ -76,19 +76,19 @@ namespace Client
             else
                 skillprogress.Background = Brushes.White;
             // star.Text = "⭐：";不知道要放什么
-            status.Text = "🏹：" + Convert.ToString(1) + "\n🏃：" + Convert.ToString(obj.Speed) + "\n🤺：" + Convert.ToString(2) + "\n🗡：" + Convert.ToString(obj.Damage);
+            status.Text = "🏹：" + Convert.ToString(1) + "\n🏃：" + Convert.ToString(obj.Speed) + "\n🤺：" + Convert.ToString(2) + "\n🗡：" + Convert.ToString(0);
             scores.Text = "Scores:" + Convert.ToString(0);
             foreach(var icon in obj.Prop)
             {
                 switch (icon)
                 {
-                    case PropType.Ptype1:
+                    case PropType.Key3:
                         prop.Text = "🔧";
                         break;
-                    case PropType.Ptype2:
+                    case PropType.Key5:
                         prop.Text = "🛡";
                         break;
-                    case PropType.Ptype3:
+                    case PropType.Key6:
                         prop.Text = "♥";
                         break;
                     case PropType.Ptype4:

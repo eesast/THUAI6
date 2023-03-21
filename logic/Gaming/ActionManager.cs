@@ -15,7 +15,7 @@ namespace Gaming
             // 人物移动
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
-                if (playerToMove.PlayerState != PlayerStateType.Null) return false;
+                if (!playerToMove.Commandable()) return false;
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
                 return true;
             }
@@ -32,7 +32,7 @@ namespace Gaming
 
             public bool Fix(Student player)// 自动检查有无发电机可修
             {
-                if (player.IsGhost() || (player.PlayerState != PlayerStateType.Null && player.PlayerState != PlayerStateType.IsMoving))
+                if (player.IsGhost() || (!player.Commandable()) || player.PlayerState == PlayerStateType.IsFixing)
                     return false;
                 Generator? generatorForFix = null;
 
@@ -114,9 +114,48 @@ namespace Gaming
                 return true;
             }
 
+            public bool OpenDoorWay(Student player)
+            {
+                if (!(player.Commandable()) || player.PlayerState == PlayerStateType.IsOpeningTheDoorWay)
+                    return false;
+                Doorway? doorwayToOpen = (Doorway?)gameMap.OneForInteract(player.Position, GameObjType.Doorway);
+                if (doorwayToOpen == null || doorwayToOpen.IsOpening || !doorwayToOpen.PowerSupply)
+                    return false;
+
+                player.PlayerState = PlayerStateType.IsOpeningTheDoorWay;
+                doorwayToOpen.IsOpening = true;
+                new Thread
+          (
+              () =>
+              {
+                  new FrameRateTaskExecutor<int>(
+                      loopCondition: () => doorwayToOpen.IsOpening && player.PlayerState == PlayerStateType.IsOpeningTheDoorWay && gameMap.Timer.IsGaming && doorwayToOpen.OpenDegree < GameData.degreeOfOpenedDoorway && GameData.ApproachToInteract(player.Position, doorwayToOpen.Position),
+                      loopToDo: () =>
+                      {
+                          doorwayToOpen.OpenDegree += GameData.frameDuration;
+                      },
+                      timeInterval: GameData.frameDuration,
+                      finallyReturn: () => 0
+                  )
+
+                      .Start();
+                  doorwayToOpen.IsOpening = false;
+                  if (doorwayToOpen.OpenDegree >= GameData.degreeOfOpenedDoorway)
+                  {
+                      if (player.PlayerState == PlayerStateType.IsOpeningTheDoorWay)
+                          player.PlayerState = PlayerStateType.Null;
+                  }
+              }
+
+          )
+                { IsBackground = true }.Start();
+
+                return true;
+            }
+
             public bool Escape(Student player)
             {
-                if (!(player.PlayerState == PlayerStateType.Null || player.PlayerState == PlayerStateType.IsMoving) || player.IsGhost())
+                if (!(player.Commandable()))
                     return false;
                 Doorway? doorwayForEscape = null;
 
@@ -138,7 +177,7 @@ namespace Gaming
                 }
 
 
-                if (doorwayForEscape != null && doorwayForEscape.IsOpen)
+                if (doorwayForEscape != null && doorwayForEscape.IsOpen())
                 {
                     player.Die(PlayerStateType.IsEscaped);
                     return true;
@@ -149,9 +188,9 @@ namespace Gaming
 
             public bool Treat(Student player, Student playerTreated)
             {
-                if (!((playerTreated.NullOrMoving() || playerTreated.InteractingWithMapWithoutMoving())
-                       && (player.NullOrMoving() || player.InteractingWithMapWithoutMoving()))
-                    || playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
+                if ((!player.Commandable()) || player.PlayerState == PlayerStateType.IsTreating ||
+                    (!playerTreated.Commandable()) ||
+                    playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
                     return false;
 
                 if (playerTreated.HP + playerTreated.DegreeOfTreatment >= playerTreated.MaxHp)
@@ -205,11 +244,11 @@ namespace Gaming
 
             public bool Rescue(Student player, Student playerRescued)
             {
-                if (player.PlayerState != PlayerStateType.Null || playerRescued.PlayerState != PlayerStateType.IsAddicted || !GameData.ApproachToInteract(playerRescued.Position, player.Position))
+                if ((!player.Commandable()) || playerRescued.PlayerState != PlayerStateType.IsAddicted || !GameData.ApproachToInteract(playerRescued.Position, player.Position))
                     return false;
                 player.PlayerState = PlayerStateType.IsRescuing;
                 playerRescued.PlayerState = PlayerStateType.IsRescued;
-                int rescuedDegree = 0;
+                player.TimeOfRescue = 0;
                 new Thread
            (
                () =>
@@ -218,25 +257,26 @@ namespace Gaming
                        loopCondition: () => playerRescued.PlayerState == PlayerStateType.IsRescued && player.PlayerState == PlayerStateType.IsRescuing && gameMap.Timer.IsGaming && GameData.ApproachToInteract(playerRescued.Position, player.Position),
                        loopToDo: () =>
                        {
-                           rescuedDegree += GameData.frameDuration;
+                           player.TimeOfRescue += GameData.frameDuration;
                        },
                        timeInterval: GameData.frameDuration,
                        finallyReturn: () => 0,
-                       maxTotalDuration: 1000
+                       maxTotalDuration: GameData.basicTimeOfRescue
                    )
-
                        .Start();
 
-                   if (rescuedDegree >= 1000)
+                   if (player.TimeOfRescue >= GameData.basicTimeOfRescue)
                    {
                        if (playerRescued.PlayerState == PlayerStateType.IsRescued) playerRescued.PlayerState = PlayerStateType.Null;
                        if (player.PlayerState == PlayerStateType.IsRescuing) player.PlayerState = PlayerStateType.Null;
+
                    }
                    else
                    {
                        if (playerRescued.PlayerState == PlayerStateType.IsRescued) playerRescued.PlayerState = PlayerStateType.Null;
                        if (player.PlayerState == PlayerStateType.IsRescuing) player.PlayerState = PlayerStateType.IsAddicted;
                    }
+                   player.TimeOfRescue = 0;
                }
            )
                 { IsBackground = true }.Start();
@@ -246,7 +286,7 @@ namespace Gaming
 
             public bool OpenChest(Character player)
             {
-                if (!player.Commandable() || player.PlayerState == PlayerStateType.IsOpeningTheChest)
+                if ((!player.Commandable()) || player.PlayerState == PlayerStateType.IsOpeningTheChest)
                     return false;
                 Chest? chestToOpen = null;
 

@@ -58,10 +58,10 @@ namespace Client
             listOfDoor = new List<MessageOfDoor>();
             listOfGate = new List<MessageOfGate>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            comInfo[0] = "183.172.213.88";
+            comInfo[0] = "127.0.0.1";
             comInfo[1] = "8888";
-            comInfo[2] = "4";
-            comInfo[3] = "2";
+            comInfo[2] = "0";
+            comInfo[3] = "1";
             comInfo[4] = "1";
             ConnectToServer(comInfo);
             OnReceive();
@@ -174,7 +174,7 @@ namespace Client
                             playerMsg.StudentType = StudentType.NullStudentType;
                             break;
                         case 1:
-                            playerMsg.StudentType = StudentType._1;
+                            playerMsg.StudentType = StudentType.Athlete;
                             break;
                         case 2:
                             playerMsg.StudentType = StudentType._2;
@@ -197,7 +197,7 @@ namespace Client
                             playerMsg.TrickerType = TrickerType.NullTrickerType;
                             break;
                         case 1:
-                            playerMsg.TrickerType = TrickerType._1;
+                            playerMsg.TrickerType = TrickerType.Assassin;
                             break;
                         case 2:
                             playerMsg.TrickerType = TrickerType._2;
@@ -514,7 +514,7 @@ namespace Client
         //待修改
         private bool CanSee(MessageOfStudent msg)
         {
-            if (msg.State == PlayerState.Quit)
+            if (msg.PlayerState == PlayerState.Quit)
                 return false;
             //if (playerID >= 2022 || teamID >= 2022)
             //   return true;
@@ -690,13 +690,13 @@ namespace Client
                             {
                                 switch (data.Type)
                                 {
-                                    case PropType.Ptype1:
+                                    case PropType.Key3:
                                         DrawProp(data, "🔧");
                                         break;
-                                    case PropType.Ptype2:
+                                    case PropType.Key5:
                                         DrawProp(data, "🛡");
                                         break;
-                                    case PropType.Ptype3:
+                                    case PropType.Key6:
                                         DrawProp(data, "♥");
                                         break;
                                     case PropType.Ptype4:
@@ -767,12 +767,12 @@ namespace Client
                                         UpperLayerOfMap.Children.Add(icon);
                                         break;
                                     }
-                                case BulletType.LineBullet:
+                          /*      case BulletType.LineBullet:
                                     {
                                         double bombRange = data.BombRange / 1000;
                                         DrawLaser(new Point(data.Y * unitWidth / 1000.0, data.X * unitHeight / 1000.0), -data.FacingDirection + Math.PI / 2, bombRange * unitHeight, 0.5 * unitWidth);
                                         break;
-                                    }
+                                    }*/
                                 default:
                                     break;
                             }

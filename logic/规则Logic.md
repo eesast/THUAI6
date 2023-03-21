@@ -31,7 +31,7 @@
 - 枚举类BgmType
   1. 不详的感觉：监管者进入（求生者的警戒半径/监管者的隐蔽度）时，求生者收到；监管者距离求生者越近，Bgm音量越大。bgmVolume=（警戒半径/二者距离）
   2. 期待搞事的感觉：求生者进入（监管者的警戒半径/求生者的隐蔽度）时，监管者收到；监管者距离求生者越近，Bgm音量越大。bgmVolume=（警戒半径/可被发觉的最近的求生者距离）
-  3. 修理电机的声音: 警戒半径内有电机正在被修理时收到；bgmVolume=（警戒半径*电机修理程度/二者距离）/10300000
+  3. 修理电机的声音: 监管者警戒半径内有电机正在被修理时收到；bgmVolume=（警戒半径*电机修理程度/二者距离）/10300000
   ~~~csharp
     public enum BgmType
     {
@@ -101,10 +101,10 @@
   ~~~
 - 可执行指令的（不用给选手）
   ~~~csharp
-    public bool Commandable() => (playerState!=PlayerStateType.IsDeceased&&playerState!=PlayerStateType.IsEscaped
-                                  &&playerState!=PlayerStateType.IsAddicted &&playerState!=PlayerStateType.IsStunned
-                                  &&playerState!=PlayerStateType.IsSwinging&&playerState!=PlayerStateType.IsTryingToAttack
-                                  &&playerState!=PlayerStateType.IsClimbingThroughWindows);
+  public bool Commandable() => (playerState != PlayerStateType.IsDeceased && playerState != PlayerStateType.IsEscaped
+                                && playerState != PlayerStateType.IsAddicted && playerState != PlayerStateType.IsRescuing
+                                && playerState != PlayerStateType.IsSwinging && playerState != PlayerStateType.IsTryingToAttack
+                                && playerState != PlayerStateType.IsClimbingThroughWindows && playerState != PlayerStateType.IsStunned);
   ~~~
 - Bgm(字典)
 - 得分
@@ -125,6 +125,7 @@
 - 翻窗时间
 - 开锁门时间
 - 开箱时间
+- 视野范围
 
 ### 学生：人物
 - 修理电机速度
@@ -134,7 +135,7 @@
 - 沉迷游戏程度
 - 最大沉迷游戏程度
 - 被治疗程度
-- （去）救援（别人）程度
+- *（去）救援（别人）程度*
 
 ### 搞蛋鬼：人物
 无
@@ -169,8 +170,8 @@
 - 道具类型
 
 ### 出口：物体
-- *电力供应（是否可以被打开）*
-- *是否打开*
+- 电力供应（是否可以被打开）
+- 开启进度
 
 ### 紧急出口：物体
 - *是否显现*
@@ -184,10 +185,13 @@
 
 ### 箱子：物体
 - *是否开启*
+- *开箱进度*
+- *是否正在被开启*
 
 ### 门：物体
 - *属于那个教学区*
 - *是否锁上*
+- *是否正在被锁*
 - 不提供是否可以锁上的属性
 
 ### 电机（建议称为homework）：物体
@@ -201,13 +205,15 @@
 
 ### 交互
 - *除了逃离，交互目标与交互者在一个九宫格内则为可交互*
+- *在指令仍在进行时，重复发出同一类型的交互指令是无效的，你需要先发出Stop指令终止进行的指令*
 
 ### 破译与逃脱
 - *每张地图都会刷新 9台电机，求生者需要破译其中的7台*，并开启任意一个大门后从任意一个开启的大门- 逃脱，亦或者在只剩1名求生者的情况下从紧急出口逃脱；
 - 求生者和监管者在靠近电机时，可以看到电机的破译进度条。
 - 紧急出口会在电机破译完成3台的情况下在地图的3-5个固定紧急出口刷新点之一随机刷新。
 - 当求生者只剩1名时，紧急出口盖将会自动打开，该求生者可从紧急出口逃脱。
-- *一般情况下，开启大门所需时间为18秒。*
+- *开启大门所需时间为18秒。*
+- 大门开启的进度不清空
 
 ### 攻击
 - 每次求生者收到攻击后会损失对应子弹的攻击力的血量
@@ -228,7 +234,8 @@
 - *监管者或求生者都需要拿到对应教学区的钥匙才能打开或锁住对应的门*
 - *锁门和开门都需要一定时间，进出门为正常移动过程*
 - *门只有开、锁两种状态，锁住时门有碰撞体积*
-- *当门所在格子内有人时，无法锁门*
+- *当门所在格子内有人时，无法锁门（必须从门外锁门）*
+- *锁门时其他人可以进入门所在格子，锁门过程中断*
 - *钥匙只会出现在箱子中，每个教学区都有2把钥匙*
 
 ### 窗
@@ -268,7 +275,7 @@
 - 可行动的求生者可以对受伤的其他求生者进行治疗，治疗完成后会回复被治疗程度的血量。
 - 治疗时每毫秒增加相当于治疗者治疗速度的被治疗程度
 - 当达到被治疗程度达到1500000或者最大血量与当前血量的差值时，治疗结束。
-
+- 治疗他人未完成时重新发出治疗指令是无效的（无论是否要求治疗同一人）
 - 治疗中断时，被治疗程度保留；被治疗者遭到攻击时被治疗程度清空
 
 ### 沉迷
@@ -279,3 +286,4 @@
 
 ### 救人
 - 一般情况下，救人时间为1秒。
+- *不能两人同时救一个人*

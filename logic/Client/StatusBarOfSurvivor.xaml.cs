@@ -83,9 +83,12 @@ namespace Client
                     break;
             }//不完全
             scores.Text = "Scores:" + obj.Score;
-            skillprogress0.Value = 100 - obj.TimeUntilSkillAvailable[0] / coolTime * 100;
-            skillprogress1.Value = 100 - obj.TimeUntilSkillAvailable[1] / coolTime * 100;
-            skillprogress2.Value = 100 - obj.TimeUntilSkillAvailable[2] / coolTime * 100;
+            if (obj.TimeUntilSkillAvailable[0]>=0)
+                skillprogress0.Value = 100 - obj.TimeUntilSkillAvailable[0] / coolTime * 100;
+            if(obj.TimeUntilSkillAvailable[1] >= 0)
+                skillprogress1.Value = 100 - obj.TimeUntilSkillAvailable[1] / coolTime * 100;
+            if(obj.TimeUntilSkillAvailable[2] >= 0)
+                skillprogress2.Value = 100 - obj.TimeUntilSkillAvailable[2] / coolTime * 100;
             if (obj.PlayerState == PlayerState.Quit)
             {
                 skillprogress0.Value = skillprogress1.Value = skillprogress2.Value = 0;

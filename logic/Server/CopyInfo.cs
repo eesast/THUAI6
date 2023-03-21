@@ -196,6 +196,8 @@ namespace Server
 
             foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
+            for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count(); ++i)
+                msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
 
             foreach (var Value in player.PropInventory)
                 msg.StudentMessage.Prop.Add(ToPropType(Value.GetPropType()));
@@ -237,6 +239,9 @@ namespace Server
             msg.TrickerMessage.Speed = player.MoveSpeed;
             foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
+            for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count(); ++i)
+                msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
+
             msg.TrickerMessage.Place = ToPlaceType(player.Place);
             foreach (var Value in player.PropInventory)
                 msg.StudentMessage.Prop.Add(ToPropType(Value.GetPropType()));

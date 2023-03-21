@@ -848,11 +848,11 @@ namespace Client
                             };
                             if (data.IsOpen)
                             {
-                                icon.Text = Convert.ToString("开");
+                                icon.Text = Convert.ToString("1");
                             }
                             else
                             {
-                                icon.Text = Convert.ToString("闭");
+                                icon.Text = Convert.ToString("0");
                             }    
                             UpperLayerOfMap.Children.Add(icon);
                         }

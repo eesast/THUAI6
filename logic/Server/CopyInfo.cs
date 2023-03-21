@@ -169,7 +169,8 @@ namespace Server
                 case Preparation.Utility.GameObjType.Generator:
                     return Classroom((Generator)gameObj);
                 //   case Preparation.Utility.GameObjType.Chest:
-
+                case Preparation.Utility.GameObjType.Doorway:
+                    return Gate((Doorway)gameObj);
                 default: return null;
             }
         }
@@ -321,7 +322,15 @@ namespace Server
             msg.ClassroomMessage.Progress = generator.DegreeOfFRepair;
             return msg;
         }
-
+        private static MessageOfObj Gate(Doorway doorway)
+        {
+            MessageOfObj msg = new MessageOfObj();
+            msg.GateMessage = new();
+            msg.GateMessage.X = doorway.Position.x;
+            msg.GateMessage.Y = doorway.Position.y;
+            msg.GateMessage.Progress = doorway.OpenDegree;
+            return msg;
+        }
         /*     private static MessageOfObj Chest(Chest chest)
              {
                  MessageOfObj msg = new MessageOfObj();

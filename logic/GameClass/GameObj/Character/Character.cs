@@ -242,7 +242,7 @@ namespace GameClass.GameObj
             {
                 lock (gameObjLock)
                 {
-                    viewRange = value;
+                    viewRange = (value > 0) ? value : 0;
                 }
             }
         }

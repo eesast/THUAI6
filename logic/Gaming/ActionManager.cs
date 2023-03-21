@@ -177,7 +177,7 @@ namespace Gaming
                 }
 
 
-                if (doorwayForEscape != null && doorwayForEscape.IsOpen)
+                if (doorwayForEscape != null && doorwayForEscape.IsOpen())
                 {
                     player.Die(PlayerStateType.IsEscaped);
                     return true;

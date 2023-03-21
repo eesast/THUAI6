@@ -22,13 +22,13 @@ jobs:
         dotnet-version: 6.0.x
         
     - name: Check Logic
-      run: dotnet format "./logic/logic.sln" --severity error --no-restore --verify-no-changes
+      run: dotnet restore && dotnet format "./logic/logic.sln" --severity error --no-restore --verify-no-changes
       
     - name: Check Installer
-      run: dotnet format "./installer/installer.sln" --severity error --no-restore --verify-no-changes
+      run: dotnet restore && dotnet format "./installer/installer.sln" --severity error --no-restore --verify-no-changes
       
     - name: Check Launcher
-      run: dotnet format "./launcher/launcher.sln" --severity error --no-restore --verify-no-changes
+      run: dotnet restore && dotnet format "./launcher/launcher.sln" --severity error --no-restore --verify-no-changes
       
     - name: Check Playback
-      run: dotnet format "./playback/playback.sln" --severity error --no-restore --verify-no-changes
+      run: dotnet restore && dotnet format "./playback/playback.sln" --severity error --no-restore --verify-no-changes

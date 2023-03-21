@@ -60,7 +60,6 @@ namespace GameClass.GameObj
             this.place = PlaceType.Null;
             this.CanMove = true;
             this.score = 0;
-            this.propInventory = null;
             this.buffManager = new BuffManager();
             switch (characterType)
             {

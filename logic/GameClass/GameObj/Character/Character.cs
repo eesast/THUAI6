@@ -12,7 +12,7 @@ namespace GameClass.GameObj
     {
         private readonly object beAttackedLock = new();
 
-        #region 角色的基本属性及方法，包括与道具的交互方法
+        #region 装弹相关的基本属性及方法
         /// <summary>
         /// 装弹冷却
         /// </summary>
@@ -36,95 +36,6 @@ namespace GameClass.GameObj
         protected int bulletNum;
         public int BulletNum => bulletNum;  // 目前持有的子弹数
 
-        public int MaxHp { get; protected set; }  // 最大血量
-        protected int hp;
-        public int HP
-        {
-            get => hp;
-            set
-            {
-                if (value > 0)
-                {
-                    lock (gameObjLock)
-                        hp = value <= MaxHp ? value : MaxHp;
-                }
-                else
-                    lock (gameObjLock)
-                        hp = 0;
-            }
-        }
-
-        private PlayerStateType playerState = PlayerStateType.Null;
-        public PlayerStateType PlayerState
-        {
-            get
-            {
-                if (IsMoving) return PlayerStateType.IsMoving;
-                return playerState;
-            }
-            set
-            {
-                if (!(value == PlayerStateType.IsMoving))
-                    lock (gameObjLock)
-                        IsMoving = false;
-
-                lock (gameObjLock) playerState = (value == PlayerStateType.IsMoving) ? PlayerStateType.Null : value;
-            }
-        }
-
-        public bool Commandable() => (playerState != PlayerStateType.IsDeceased && playerState != PlayerStateType.IsEscaped
-                                                            && playerState != PlayerStateType.IsAddicted && playerState != PlayerStateType.IsRescuing
-                                                             && playerState != PlayerStateType.IsSwinging && playerState != PlayerStateType.IsTryingToAttack
-                                                              && playerState != PlayerStateType.IsClimbingThroughWindows && playerState != PlayerStateType.IsStunned);
-        public bool InteractingWithMapWithoutMoving() => (playerState == PlayerStateType.IsLockingOrOpeningTheDoor || playerState == PlayerStateType.IsFixing || playerState == PlayerStateType.IsOpeningTheChest);
-        public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.IsMoving);
-
-        //        private int deathCount = 0;
-        //       public int DeathCount => deathCount;  // 玩家的死亡次数
-
-        private int score = 0;
-        public int Score
-        {
-            get => score;
-        }
-
-        //      public double AttackRange => BulletFactory.BulletAttackRange(this.BulletOfPlayer);
-
-        private double vampire = 0;  // 回血率：0-1之间
-        public double Vampire
-        {
-            get => vampire;
-            set
-            {
-                if (value > 1)
-                    lock (gameObjLock)
-                        vampire = 1;
-                else if (value < 0)
-                    lock (gameObjLock)
-                        vampire = 0;
-                else
-                    lock (gameObjLock)
-                        vampire = value;
-            }
-        }
-        private double oriVampire = 0;
-        public double OriVampire
-        {
-            get => oriVampire;
-            set
-            {
-                if (value > 1)
-                    lock (gameObjLock)
-                        vampire = 1;
-                else if (value < 0)
-                    lock (gameObjLock)
-                        vampire = 0;
-                else
-                    lock (gameObjLock)
-                        vampire = value;
-            }
-        }
-
         public readonly BulletType OriBulletOfPlayer;
         private BulletType bulletOfPlayer;
         public BulletType BulletOfPlayer
@@ -137,48 +48,113 @@ namespace GameClass.GameObj
             }
         }
 
-        private Prop[] propInventory = new Prop[GameData.maxNumOfPropInPropInventory];
-        public Prop[] PropInventory
+        /// <summary>
+        /// 进行一次攻击
+        /// </summary>
+        /// <returns>攻击操作发出的子弹</returns>
+        public Bullet? Attack(XY pos, PlaceType place)
         {
-            get => propInventory;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    propInventory = value;
-                    Debugger.Output(this, " prop becomes " + (PropInventory == null ? "null" : PropInventory.ToString()));
-                }
-            }
+            if (TrySubBulletNum())
+                return BulletFactory.GetBullet(this, place, pos);
+            else
+                return null;
         }
 
         /// <summary>
-        /// 使用物品栏中的道具
+        /// 尝试将子弹数量减1
         /// </summary>
-        /// <returns>被使用的道具</returns>
-        public Prop? UseProp(int indexing)
+        /// <returns>减操作是否成功</returns>
+        private bool TrySubBulletNum()
         {
-            if (indexing < 0 || indexing >= GameData.maxNumOfPropInPropInventory)
-                return null;
             lock (gameObjLock)
             {
-                Prop prop = propInventory[indexing];
-                PropInventory[indexing] = null;
-                return prop;
+                if (bulletNum > 0)
+                {
+                    --bulletNum;
+                    return true;
+                }
+                return false;
+            }
+        }
+        /// <summary>
+        /// 尝试将子弹数量加1
+        /// </summary>
+        /// <returns>加操作是否成功</returns>
+        public bool TryAddBulletNum()
+        {
+            lock (gameObjLock)
+            {
+                if (bulletNum < maxBulletNum)
+                {
+                    ++bulletNum;
+                    return true;
+                }
+                return false;
             }
         }
 
         /// <summary>
-        /// 如果indexing==GameData.maxNumOfPropInPropInventory表明道具栏为满
+        /// 遭受攻击
         /// </summary>
-        public int IndexingOfAddProp()
+        /// <param name="subHP"></param>
+        /// <param name="hasSpear"></param>
+        /// <param name="attacker">伤害来源</param>
+        /// <returns>人物在受到攻击后死了吗</returns>
+        public bool BeAttacked(Bullet bullet)
         {
-            int indexing = 0;
-            for (; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
-                if (PropInventory[indexing] == null)
-                    break;
-            return indexing;
-        }
 
+            lock (beAttackedLock)
+            {
+                if (hp <= 0)
+                    return false;  // 原来已经死了
+                if (bullet.Parent.TeamID != this.TeamID)
+                {
+
+                    if (HasShield)
+                    {
+                        if (bullet.HasSpear)
+                            _ = TrySubHp(bullet.AP);
+                        else
+                            return false;
+                    }
+                    else
+                    {
+                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * TrySubHp(bullet.AP)));
+                    }
+#if DEBUG
+                    Console.WriteLine($"PlayerID:{ID} is being shot! Now his hp is {hp}.");
+#endif
+                    if (hp <= 0)
+                        TryActivatingLIFE();  // 如果有复活甲
+                }
+                return hp <= 0;
+            }
+        }
+        /// <summary>
+        /// 攻击被反弹，反弹伤害不会再被反弹
+        /// </summary>
+        /// <param name="subHP"></param>
+        /// <param name="hasSpear"></param>
+        /// <param name="bouncer">反弹伤害者</param>
+        /// <returns>是否因反弹伤害而死</returns>
+        private bool BeBounced(int subHP, bool hasSpear, Character? bouncer)
+        {
+            lock (beAttackedLock)
+            {
+                if (hp <= 0)
+                    return false;
+                if (!(bouncer?.TeamID == this.TeamID))
+                {
+                    if (hasSpear || !HasShield)
+                        _ = TrySubHp(subHP);
+                    if (hp <= 0)
+                        TryActivatingLIFE();
+                }
+                return hp <= 0;
+            }
+        }
+        #endregion
+        #region 感知相关的基本属性及方法
         /// <summary>
         /// 是否在隐身
         /// </summary>
@@ -246,7 +222,8 @@ namespace GameClass.GameObj
                 }
             }
         }
-
+        #endregion
+        #region 交互相关的基本属性及方法
         private int timeOfOpeningOrLocking;
         public int TimeOfOpeningOrLocking
         {
@@ -285,49 +262,23 @@ namespace GameClass.GameObj
                 }
             }
         }
-
-        /// <summary>
-        /// 进行一次攻击
-        /// </summary>
-        /// <returns>攻击操作发出的子弹</returns>
-        public Bullet? Attack(XY pos, PlaceType place)
+        #endregion
+        #region 血量相关的基本属性及方法
+        public int MaxHp { get; protected set; }  // 最大血量
+        protected int hp;
+        public int HP
         {
-            if (TrySubBulletNum())
-                return BulletFactory.GetBullet(this, place, pos);
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// 尝试将子弹数量减1
-        /// </summary>
-        /// <returns>减操作是否成功</returns>
-        private bool TrySubBulletNum()
-        {
-            lock (gameObjLock)
+            get => hp;
+            set
             {
-                if (bulletNum > 0)
+                if (value > 0)
                 {
-                    --bulletNum;
-                    return true;
+                    lock (gameObjLock)
+                        hp = value <= MaxHp ? value : MaxHp;
                 }
-                return false;
-            }
-        }
-        /// <summary>
-        /// 尝试将子弹数量加1
-        /// </summary>
-        /// <returns>加操作是否成功</returns>
-        public bool TryAddBulletNum()
-        {
-            lock (gameObjLock)
-            {
-                if (bulletNum < maxBulletNum)
-                {
-                    ++bulletNum;
-                    return true;
-                }
-                return false;
+                else
+                    lock (gameObjLock)
+                        hp = 0;
             }
         }
 
@@ -360,18 +311,118 @@ namespace GameClass.GameObj
             Debugger.Output(this, " hp has subed to: " + hp.ToString());
             return previousHp - hp;
         }
-        /*       /// <summary>
-               /// 增加死亡次数
-               /// </summary>
-               /// <returns>当前死亡次数</returns>
-               private int AddDeathCount()
-               {
-                   lock (gameObjLock)
-                   {
-                       ++deathCount;
-                       return deathCount;
-                   }
-               }*/
+
+        private double vampire = 0;  // 回血率：0-1之间
+        public double Vampire
+        {
+            get => vampire;
+            set
+            {
+                if (value > 1)
+                    lock (gameObjLock)
+                        vampire = 1;
+                else if (value < 0)
+                    lock (gameObjLock)
+                        vampire = 0;
+                else
+                    lock (gameObjLock)
+                        vampire = value;
+            }
+        }
+        private double oriVampire = 0;
+        public double OriVampire
+        {
+            get => oriVampire;
+            set
+            {
+                if (value > 1)
+                    lock (gameObjLock)
+                        vampire = 1;
+                else if (value < 0)
+                    lock (gameObjLock)
+                        vampire = 0;
+                else
+                    lock (gameObjLock)
+                        vampire = value;
+            }
+        }
+        #endregion
+
+        private PlayerStateType playerState = PlayerStateType.Null;
+        public PlayerStateType PlayerState
+        {
+            get
+            {
+                if (IsMoving) return PlayerStateType.IsMoving;
+                return playerState;
+            }
+            set
+            {
+                if (!(value == PlayerStateType.IsMoving))
+                    lock (gameObjLock)
+                        IsMoving = false;
+
+                lock (gameObjLock) playerState = (value == PlayerStateType.IsMoving) ? PlayerStateType.Null : value;
+            }
+        }
+
+        public bool Commandable() => (playerState != PlayerStateType.IsDeceased && playerState != PlayerStateType.IsEscaped
+                                                            && playerState != PlayerStateType.IsAddicted && playerState != PlayerStateType.IsRescuing
+                                                             && playerState != PlayerStateType.IsSwinging && playerState != PlayerStateType.IsTryingToAttack
+                                                              && playerState != PlayerStateType.IsClimbingThroughWindows && playerState != PlayerStateType.IsStunned);
+        public bool InteractingWithMapWithoutMoving() => (playerState == PlayerStateType.IsLockingOrOpeningTheDoor || playerState == PlayerStateType.IsFixing || playerState == PlayerStateType.IsOpeningTheChest);
+        public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.IsMoving);
+
+        private int score = 0;
+        public int Score
+        {
+            get => score;
+        }
+
+        private Prop[] propInventory = new Prop[GameData.maxNumOfPropInPropInventory]
+                                                        {new NullProp(), new NullProp(),new NullProp() };
+        public Prop[] PropInventory
+        {
+            get => propInventory;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    propInventory = value;
+                    Debugger.Output(this, " prop becomes " + (PropInventory == null ? "null" : PropInventory.ToString()));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 使用物品栏中的道具
+        /// </summary>
+        /// <returns>被使用的道具</returns>
+        public Prop UseProp(int indexing)
+        {
+            if (indexing < 0 || indexing >= GameData.maxNumOfPropInPropInventory)
+                return new NullProp();
+            lock (gameObjLock)
+            {
+                Prop prop = propInventory[indexing];
+                PropInventory[indexing] = new NullProp();
+                return prop;
+            }
+        }
+
+        /// <summary>
+        /// 如果indexing==GameData.maxNumOfPropInPropInventory表明道具栏为满
+        /// </summary>
+        public int IndexingOfAddProp()
+        {
+            int indexing = 0;
+            for (; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
+                if (PropInventory[indexing].GetPropType() == PropType.Null)
+                    break;
+            return indexing;
+        }
+
+
         /// <summary>
         /// 加分
         /// </summary>
@@ -394,67 +445,6 @@ namespace GameClass.GameObj
             {
                 score -= sub;
                 Debugger.Output(this, " 's score has been subed to: " + score.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 遭受攻击
-        /// </summary>
-        /// <param name="subHP"></param>
-        /// <param name="hasSpear"></param>
-        /// <param name="attacker">伤害来源</param>
-        /// <returns>人物在受到攻击后死了吗</returns>
-        public bool BeAttacked(Bullet bullet)
-        {
-
-            lock (beAttackedLock)
-            {
-                if (hp <= 0)
-                    return false;  // 原来已经死了
-                if (bullet.Parent.TeamID != this.TeamID)
-                {
-
-                    if (HasShield)
-                    {
-                        if (bullet.HasSpear)
-                            _ = TrySubHp(bullet.AP);
-                        else
-                            return false;
-                    }
-                    else
-                    {
-                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * TrySubHp(bullet.AP)));
-                    }
-#if DEBUG
-                    Console.WriteLine($"PlayerID:{ID} is being shot! Now his hp is {hp}.");
-#endif
-                    if (hp <= 0)
-                        TryActivatingLIFE();  // 如果有复活甲
-                }
-                return hp <= 0;
-            }
-        }
-        /// <summary>
-        /// 攻击被反弹，反弹伤害不会再被反弹
-        /// </summary>
-        /// <param name="subHP"></param>
-        /// <param name="hasSpear"></param>
-        /// <param name="bouncer">反弹伤害者</param>
-        /// <returns>是否因反弹伤害而死</returns>
-        private bool BeBounced(int subHP, bool hasSpear, Character? bouncer)
-        {
-            lock (beAttackedLock)
-            {
-                if (hp <= 0)
-                    return false;
-                if (!(bouncer?.TeamID == this.TeamID))
-                {
-                    if (hasSpear || !HasShield)
-                        _ = TrySubHp(subHP);
-                    if (hp <= 0)
-                        TryActivatingLIFE();
-                }
-                return hp <= 0;
             }
         }
 
@@ -501,7 +491,6 @@ namespace GameClass.GameObj
                 }
             }
         }
-        #endregion
 
         #region 角色拥有的buff相关属性、方法
         public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManager.AddMoveSpeed(add, buffTime, newVal =>

@@ -101,9 +101,9 @@ namespace GameClass.GameObj
         }
         public override PropType GetPropType() => PropType.Key6;
     }
-    public sealed class Null : Prop
+    public sealed class NullProp : Prop
     {
-        public Null(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        public NullProp(PlaceType placeType = PlaceType.Wall) : base(new XY(1, 1), placeType)
         {
         }
         public override PropType GetPropType() => PropType.Null;

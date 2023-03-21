@@ -25,8 +25,8 @@ namespace Gaming
             {
                 if (player.IsResetting)
                     return;
-                Prop? prop = player.UseProp(indexing);
-                switch (prop?.GetPropType())
+                Prop prop = player.UseProp(indexing);
+                switch (prop.GetPropType())
                 {
                     case PropType.Spear:
                         player.AddSpear(GameData.PropDuration);
@@ -59,7 +59,7 @@ namespace Gaming
                 if (indexing == GameData.maxNumOfPropInPropInventory)
                     return false;
 
-                Prop? pickProp = null;
+                Prop pickProp = new NullProp();
                 if (propType == PropType.Null)  // 自动检查有无道具可捡
                 {
                     gameMap.GameObjLockDict[GameObjType.Prop].EnterReadLock();
@@ -100,7 +100,7 @@ namespace Gaming
                     }
                 }
 
-                if (pickProp != null)
+                if (pickProp.GetPropType() != PropType.Null)
                 {
                     gameMap.Remove(pickProp);
                     gameMap.Add(new PickedProp(pickProp));
@@ -114,8 +114,8 @@ namespace Gaming
             {
                 if (!gameMap.Timer.IsGaming || player.IsResetting)
                     return;
-                Prop? prop = player.UseProp(indexing);
-                if (prop == null)
+                Prop prop = player.UseProp(indexing);
+                if (prop.GetPropType() == PropType.Null)
                     return;
 
                 prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
@@ -142,7 +142,7 @@ namespace Gaming
             private Chest GetChest(Random r)
             {
                 int index = r.Next(0, GameData.numOfChest);
-                while (((Chest)(gameMap.GameObjDict[GameObjType.Chest][index])).PropInChest[0] != null) index = (index + 1) % GameData.numOfChest;
+                while (((Chest)(gameMap.GameObjDict[GameObjType.Chest][index])).PropInChest[0].GetPropType() != PropType.Null) index = (index + 1) % GameData.numOfChest;
                 return (Chest)(gameMap.GameObjDict[GameObjType.Chest][index]);
             }
 
@@ -181,7 +181,7 @@ namespace Gaming
 
                     foreach (Chest chest in gameMap.GameObjDict[GameObjType.Chest])
                     {
-                        if (chest.PropInChest[0] == null)
+                        if (chest.PropInChest[0].GetPropType() == PropType.Null)
                         {
                             chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
                             chest.PropInChest[1] = ProduceOnePropNotKey(r, chest.Position);

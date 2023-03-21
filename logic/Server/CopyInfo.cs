@@ -54,6 +54,7 @@ namespace Server
                     return Protobuf.PropType.NullPropType;
             }
         }
+
         private static Protobuf.PlayerState ToPlayerState(Preparation.Utility.PlayerStateType playerState)
         {
             switch (playerState)

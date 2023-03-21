@@ -22,4 +22,3 @@ jobs:
       
     - name: Build Playback
       run: dotnet build "./playback/playback.sln" -c Release
-      

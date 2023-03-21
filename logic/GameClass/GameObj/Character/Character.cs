@@ -76,7 +76,7 @@ namespace GameClass.GameObj
                                                             && playerState != PlayerStateType.IsAddicted && playerState != PlayerStateType.IsStunned
                                                              && playerState != PlayerStateType.IsSwinging && playerState != PlayerStateType.IsTryingToAttack
                                                               && playerState != PlayerStateType.IsClimbingThroughWindows);
-        public bool InteractingWithMapWithoutMoving() => (playerState == PlayerStateType.IsLockingTheDoor || playerState == PlayerStateType.IsFixing || playerState == PlayerStateType.IsOpeningTheChest);
+        public bool InteractingWithMapWithoutMoving() => (playerState == PlayerStateType.IsLockingOrOpeningTheDoor || playerState == PlayerStateType.IsFixing || playerState == PlayerStateType.IsOpeningTheChest);
         public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.IsMoving);
 
         //        private int deathCount = 0;

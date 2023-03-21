@@ -313,7 +313,7 @@ namespace Gaming
                     return false;
                 }
 
-                if (player.PlayerState != PlayerStateType.Null || player.PlayerState != PlayerStateType.IsMoving)
+                if (!player.Commandable())
                     return false;
 
                 XY res = new XY  // 子弹紧贴人物生成。

@@ -71,7 +71,7 @@ namespace Server
                     return PlayerState.Graduated;
                 case Preparation.Utility.PlayerStateType.IsFixing:
                     return PlayerState.Learning;
-                case Preparation.Utility.PlayerStateType.IsLockingTheDoor:
+                case Preparation.Utility.PlayerStateType.IsLockingOrOpeningTheDoor:
                     return PlayerState.Locking;
                 case Preparation.Utility.PlayerStateType.IsOpeningTheChest:
                     return PlayerState.OpeningAChest;
@@ -91,6 +91,8 @@ namespace Server
                     return PlayerState.Attacking;
                 case Preparation.Utility.PlayerStateType.IsUsingSpecialSkill:
                     return PlayerState.UsingSpecialSkill;
+                case Preparation.Utility.PlayerStateType.IsOpeningTheDoorWay:
+                    return PlayerState.OpeningAGate;
                 default:
                     return PlayerState.NullStatus;
             }
@@ -149,22 +151,27 @@ namespace Server
 
         public static MessageOfObj? Auto(GameObj gameObj)
         {
-            if (gameObj.Type == Preparation.Utility.GameObjType.Character)
+            switch (gameObj.Type)
             {
-                Character character = (Character)gameObj;
-                if (character.IsGhost())
-                    return Tricker((Ghost)character);
-                else return Student((Student)character);
+                case Preparation.Utility.GameObjType.Character:
+                    Character character = (Character)gameObj;
+                    if (character.IsGhost())
+                        return Tricker((Ghost)character);
+                    else return Student((Student)character);
+                case Preparation.Utility.GameObjType.Bullet:
+                    return Bullet((Bullet)gameObj);
+                case Preparation.Utility.GameObjType.Prop:
+                    return Prop((Prop)gameObj);
+                case Preparation.Utility.GameObjType.BombedBullet:
+                    return BombedBullet((BombedBullet)gameObj);
+                case Preparation.Utility.GameObjType.PickedProp:
+                    return PickedProp((PickedProp)gameObj);
+                case Preparation.Utility.GameObjType.Generator:
+                    return Classroom((Generator)gameObj);
+                //   case Preparation.Utility.GameObjType.Chest:
+
+                default: return null;
             }
-            else if (gameObj.Type == Preparation.Utility.GameObjType.Bullet)
-                return Bullet((Bullet)gameObj);
-            else if (gameObj.Type == Preparation.Utility.GameObjType.Prop)
-                return Prop((Prop)gameObj);
-            else if (gameObj.Type == Preparation.Utility.GameObjType.BombedBullet)
-                return BombedBullet((BombedBullet)gameObj);
-            else if (gameObj.Type == Preparation.Utility.GameObjType.PickedProp)
-                return PickedProp((PickedProp)gameObj);
-            else return null;  //先写着防报错
         }
         public static MessageOfObj? Auto(MessageOfNews news)
         {
@@ -304,5 +311,25 @@ namespace Server
             msg.MessageOfPickedProp.FacingDirection = pickedProp.PropHasPicked.FacingDirection;*/
             return msg;
         }
+
+        private static MessageOfObj Classroom(Generator generator)
+        {
+            MessageOfObj msg = new MessageOfObj();
+            msg.ClassroomMessage = new();
+            msg.ClassroomMessage.X = generator.Position.x;
+            msg.ClassroomMessage.Y = generator.Position.y;
+            msg.ClassroomMessage.Progress = generator.DegreeOfFRepair;
+            return msg;
+        }
+
+        /*     private static MessageOfObj Chest(Chest chest)
+             {
+                 MessageOfObj msg = new MessageOfObj();
+                 msg.ChestMessage = new();
+                 msg.ChestMessage.X=chest.Position.x;
+                 msg.ChestMessage.Y=chest.Position.y;
+              //   msg.ChestMessage.Progress=generator.DegreeOfFRepair;
+                 return msg;
+             }*/
     }
 }

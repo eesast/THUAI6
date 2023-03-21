@@ -19,10 +19,11 @@ namespace Preparation.Utility
         IsRescued = 10,
         IsStunned = 11,
         IsTryingToAttack = 12,//指前摇
-        IsLockingTheDoor = 13,
+        IsLockingOrOpeningTheDoor = 13,
         IsOpeningTheChest = 14,
         IsClimbingThroughWindows = 15,
         IsUsingSpecialSkill = 16,
+        IsOpeningTheDoorWay = 17,
     }
     public enum GameObjType
     {

@@ -36,6 +36,32 @@ namespace GameClass.GameObj
             }
         }
 
-        public bool IsOpen => powerSupply;
+        private bool isOpening = false;
+        public bool IsOpening
+        {
+            get => isOpening;
+            set
+            {
+                lock (gameObjLock)
+                    isOpening = value;
+            }
+        }
+
+        private int openDegree = 0;
+        public int OpenDegree
+        {
+            get => openDegree;
+            set
+            {
+                if (value > 0)
+                    lock (gameObjLock)
+                        openDegree = (value < GameData.degreeOfOpenedDoorway) ? value : GameData.degreeOfOpenedDoorway;
+                else
+                    lock (gameObjLock)
+                        openDegree = 0;
+            }
+        }
+
+        public bool IsOpen() => (OpenDegree == GameData.degreeOfOpenedDoorway);
     }
 }

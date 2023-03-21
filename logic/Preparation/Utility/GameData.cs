@@ -4,18 +4,20 @@ namespace Preparation.Utility
 {
     public static class GameData
     {
-        #region 基本常数与常方法
-        public const int numOfPosGridPerCell = 1000;  // 每格的【坐标单位】数
+        #region 基本常数
         public const int numOfStepPerSecond = 20;     // 每秒行走的步数
         public const int frameDuration = 50;         // 每帧时长
 
-        public const int lengthOfMap = 50000;         // 地图长度
-        public const int rows = 50;                   // 行数
-        public const int cols = 50;                   // 列数
         public const long gameDuration = 600000;      // 游戏时长600000ms = 10min
 
         public const int MinSpeed = 1;             // 最小速度
         public const int MaxSpeed = int.MaxValue;  // 最大速度
+        #endregion
+        #region 地图相关
+        public const int numOfPosGridPerCell = 1000;  // 每格的【坐标单位】数
+        public const int lengthOfMap = 50000;         // 地图长度
+        public const int rows = 50;                   // 行数
+        public const int cols = 50;                   // 列数
 
         public const int numOfBirthPoint = 5;
         //        public const int numOfGenerator = 9;
@@ -49,7 +51,6 @@ namespace Preparation.Utility
         {
             return Math.Abs(PosGridToCellX(pos1) - PosGridToCellX(pos2)) <= 1 && Math.Abs(PosGridToCellY(pos1) - PosGridToCellY(pos2)) <= 1;
         }
-
         #endregion
         #region 角色相关
         public const int characterRadius = numOfPosGridPerCell / 2 / 5 * 4;  // 人物半径
@@ -128,6 +129,7 @@ namespace Preparation.Utility
         #endregion
         #region 物体相关
         public const int degreeOfFixedGenerator = 10300000;
+        public const int degreeOfOpenedDoorway = 18000;
         public const int maxNumOfPropInChest = 2;
         #endregion
         #region 游戏帧相关

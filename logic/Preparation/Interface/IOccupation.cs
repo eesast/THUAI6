@@ -26,6 +26,7 @@ namespace Preparation.Interface
     public interface IStudent : IOccupation
     {
         public int FixSpeed { get; }
+        public int TreatSpeed { get; }
     }
 
     public class Assassin : IGhost
@@ -83,6 +84,9 @@ namespace Preparation.Interface
 
         public const int fixSpeed = GameData.basicFixSpeed / 10 * 6;
         public int FixSpeed => fixSpeed;
+
+        public const int treatSpeed = GameData.basicTreatSpeed / 10 * 8;
+        public int TreatSpeed => treatSpeed;
 
         public const double concealment = GameData.basicConcealment * 0.9;
         public double Concealment => concealment;

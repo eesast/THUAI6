@@ -23,7 +23,7 @@ namespace GameClass.GameObj
         /// <summary>
         /// 原初修理电机速度
         /// </summary>
-        public int OrgFixSpeed { get; protected set; } = GameData.basicFixSpeed;
+        public int OrgFixSpeed { get; protected set; }
 
         protected int treatSpeed = GameData.basicTreatSpeed;
         public int TreatSpeed
@@ -37,7 +37,7 @@ namespace GameClass.GameObj
                 }
             }
         }
-        public int OrgTreatSpeed { get; protected set; } = GameData.basicTreatSpeed;
+        public int OrgTreatSpeed { get; protected set; }
 
         public int MaxGamingAddiction { get; protected set; }
         private int gamingAddiction;
@@ -98,7 +98,7 @@ namespace GameClass.GameObj
 
         public Student(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
-            this.fixSpeed = ((IStudent)Occupation).FixSpeed;
+            this.OrgFixSpeed = this.fixSpeed = ((IStudent)Occupation).FixSpeed;
         }
     }
 }

@@ -76,6 +76,7 @@ enum PlayerState
     CLIMBING = 15; // 翻窗
     OPENING_A_CHEST =16;
     USING_SPECIAL_SKILL = 17;
+    OPENING_A_GATE =18;
 }
 
 enum TrickerBuffType // 屠夫可用的增益效果类型

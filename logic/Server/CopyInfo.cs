@@ -21,7 +21,7 @@ namespace Server
                     return Protobuf.PlaceType.Gate;
                 case Preparation.Utility.PlaceType.Chest:
                     return Protobuf.PlaceType.Chest;
-                case Preparation.Utility.PlaceType.Door:
+                case Preparation.Utility.PlaceType.Door3:
                     return Protobuf.PlaceType.Door;
                 case Preparation.Utility.PlaceType.Generator:
                     return Protobuf.PlaceType.Classroom;

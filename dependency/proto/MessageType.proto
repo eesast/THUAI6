@@ -24,8 +24,10 @@ enum PlaceType // 地图中的所有物件类型
     GATE = 5;
     HIDDEN_GATE = 6;
     WINDOW = 7;
-    DOOR = 8;
-    CHEST = 9;
+    DOOR3 = 8;
+    DOOR5 = 9;
+    DOOR6 = 10;
+    CHEST = 11;
     // 待补充有特殊效果的地形
 
 }

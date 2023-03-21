@@ -101,10 +101,10 @@
   ~~~
 - 可执行指令的（不用给选手）
   ~~~csharp
-    public bool Commandable() => (playerState!=PlayerStateType.IsDeceased&&playerState!=PlayerStateType.IsEscaped
-                                  &&playerState!=PlayerStateType.IsAddicted &&playerState!=PlayerStateType.IsStunned
-                                  &&playerState!=PlayerStateType.IsSwinging&&playerState!=PlayerStateType.IsTryingToAttack
-                                  &&playerState!=PlayerStateType.IsClimbingThroughWindows);
+  public bool Commandable() => (playerState != PlayerStateType.IsDeceased && playerState != PlayerStateType.IsEscaped
+                                && playerState != PlayerStateType.IsAddicted && playerState != PlayerStateType.IsRescuing
+                                && playerState != PlayerStateType.IsSwinging && playerState != PlayerStateType.IsTryingToAttack
+                                && playerState != PlayerStateType.IsClimbingThroughWindows && playerState != PlayerStateType.IsStunned);
   ~~~
 - Bgm(字典)
 - 得分
@@ -125,7 +125,7 @@
 - 翻窗时间
 - 开锁门时间
 - 开箱时间
-- *视野范围*
+- 视野范围
 
 ### 学生：人物
 - 修理电机速度
@@ -170,8 +170,8 @@
 - 道具类型
 
 ### 出口：物体
-- *电力供应（是否可以被打开）*
-- *开启进度*
+- 电力供应（是否可以被打开）
+- 开启进度
 
 ### 紧急出口：物体
 - *是否显现*
@@ -180,7 +180,7 @@
 ### 墙：物体
 
 ### 窗：物体
-- *是否正在被翻窗*
+- *正在翻窗的人*
 - *窗的朝向*
 
 ### 箱子：物体
@@ -286,3 +286,4 @@
 
 ### 救人
 - 一般情况下，救人时间为1秒。
+- *不能两人同时救一个人*

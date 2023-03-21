@@ -73,9 +73,9 @@ namespace GameClass.GameObj
         }
 
         public bool Commandable() => (playerState != PlayerStateType.IsDeceased && playerState != PlayerStateType.IsEscaped
-                                                            && playerState != PlayerStateType.IsAddicted && playerState != PlayerStateType.IsStunned
+                                                            && playerState != PlayerStateType.IsAddicted && playerState != PlayerStateType.IsRescuing
                                                              && playerState != PlayerStateType.IsSwinging && playerState != PlayerStateType.IsTryingToAttack
-                                                              && playerState != PlayerStateType.IsClimbingThroughWindows);
+                                                              && playerState != PlayerStateType.IsClimbingThroughWindows && playerState != PlayerStateType.IsStunned);
         public bool InteractingWithMapWithoutMoving() => (playerState == PlayerStateType.IsLockingOrOpeningTheDoor || playerState == PlayerStateType.IsFixing || playerState == PlayerStateType.IsOpeningTheChest);
         public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.IsMoving);
 

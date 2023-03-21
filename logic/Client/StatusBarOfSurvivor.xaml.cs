@@ -37,7 +37,7 @@ namespace Client
         {
             switch (obj.StudentType)  // 参数未设定
             {
-                case StudentType._1:
+                case StudentType.Athlete:
                     coolTime = 10000;
                     serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业：StudentType1";
                     break;
@@ -86,7 +86,7 @@ namespace Client
             skillprogress0.Value = 100 - obj.TimeUntilSkillAvailable[0] / coolTime * 100;
             skillprogress1.Value = 100 - obj.TimeUntilSkillAvailable[1] / coolTime * 100;
             skillprogress2.Value = 100 - obj.TimeUntilSkillAvailable[2] / coolTime * 100;
-            if (obj.State == PlayerState.Quit)
+            if (obj.PlayerState == PlayerState.Quit)
             {
                 skillprogress0.Value = skillprogress1.Value = skillprogress2.Value = 0;
                 skillprogress0.Background = skillprogress1.Background= skillprogress2.Background=Brushes.Gray;
@@ -101,13 +101,13 @@ namespace Client
                     case 0:
                         switch (icon)
                         {
-                            case PropType.Ptype1:
+                            case PropType.Key3:
                                 prop0.Text = "🔧";
                                 break;
-                            case PropType.Ptype2:
+                            case PropType.Key5:
                                 prop0.Text = "🛡";
                                 break;
-                            case PropType.Ptype3:
+                            case PropType.Key6:
                                 prop0.Text = "♥";
                                 break;
                             case PropType.Ptype4:
@@ -122,13 +122,13 @@ namespace Client
                     case 1:
                         switch (icon)
                         {
-                            case PropType.Ptype1:
+                            case PropType.Key3:
                                 prop1.Text = "🔧";
                                 break;
-                            case PropType.Ptype2:
+                            case PropType.Key5:
                                 prop1.Text = "🛡";
                                 break;
-                            case PropType.Ptype3:
+                            case PropType.Key6:
                                 prop1.Text = "♥";
                                 break;
                             case PropType.Ptype4:
@@ -143,13 +143,13 @@ namespace Client
                     case 2:
                         switch (icon)
                         {
-                            case PropType.Ptype1:
+                            case PropType.Key3:
                                 prop2.Text = "🔧";
                                 break;
-                            case PropType.Ptype2:
+                            case PropType.Key5:
                                 prop2.Text = "🛡";
                                 break;
-                            case PropType.Ptype3:
+                            case PropType.Key6:
                                 prop2.Text = "♥";
                                 break;
                             case PropType.Ptype4:
@@ -164,13 +164,13 @@ namespace Client
                     case 3:
                         switch (icon)
                         {
-                            case PropType.Ptype1:
+                            case PropType.Key3:
                                 prop3.Text = "🔧";
                                 break;
-                            case PropType.Ptype2:
+                            case PropType.Key5:
                                 prop3.Text = "🛡";
                                 break;
-                            case PropType.Ptype3:
+                            case PropType.Key6:
                                 prop3.Text = "♥";
                                 break;
                             case PropType.Ptype4:

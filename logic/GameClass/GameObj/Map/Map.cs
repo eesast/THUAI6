@@ -141,6 +141,27 @@ namespace GameClass.GameObj
             }
             return GameObjForInteract;
         }
+        public GameObj? OneInTheSameCell(XY Pos, GameObjType gameObjType)
+        {
+            GameObj? GameObjForInteract = null;
+            GameObjLockDict[gameObjType].EnterReadLock();
+            try
+            {
+                foreach (GameObj gameObj in GameObjDict[gameObjType])
+                {
+                    if (GameData.IsInTheSameCell(gameObj.Position, Pos))
+                    {
+                        GameObjForInteract = gameObj;
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                GameObjLockDict[gameObjType].ExitReadLock();
+            }
+            return GameObjForInteract;
+        }
         public GameObj? OneForInteractInACross(XY Pos, GameObjType gameObjType)
         {
             GameObj? GameObjForInteract = null;

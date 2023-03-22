@@ -230,15 +230,15 @@ namespace GameClass.GameObj
         }
         #endregion
         #region 交互相关的基本属性及方法
-        private int timeOfOpeningOrLocking;
-        public int TimeOfOpeningOrLocking
+        private int speedOfOpeningOrLocking;
+        public int SpeedOfOpeningOrLocking
         {
-            get => timeOfOpeningOrLocking;
+            get => speedOfOpeningOrLocking;
             set
             {
                 lock (gameObjLock)
                 {
-                    timeOfOpeningOrLocking = value;
+                    speedOfOpeningOrLocking = value;
                 }
             }
         }

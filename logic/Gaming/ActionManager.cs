@@ -36,25 +36,7 @@ namespace Gaming
             {
                 if (player.IsGhost() || (!player.Commandable()) || player.PlayerState == PlayerStateType.Fixing)
                     return false;
-                Generator? generatorForFix = null;
-
-
-                gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
-                try
-                {
-                    foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
-                    {
-                        if (GameData.ApproachToInteract(generator.Position, player.Position))
-                        {
-                            generatorForFix = generator;
-                            break;
-                        }
-                    }
-                }
-                finally
-                {
-                    gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
-                }
+                Generator? generatorForFix = (Generator?)gameMap.OneForInteract(player.Position, GameObjType.Generator);
 
                 if (generatorForFix == null || generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
                     return false;
@@ -65,7 +47,7 @@ namespace Gaming
               () =>
               {
                   new FrameRateTaskExecutor<int>(
-                      loopCondition: () => player.PlayerState == PlayerStateType.Fixing && gameMap.Timer.IsGaming && generatorForFix.DegreeOfRepair < GameData.degreeOfFixedGenerator && GameData.ApproachToInteract(player.Position, generatorForFix.Position),
+                      loopCondition: () => player.PlayerState == PlayerStateType.Fixing && gameMap.Timer.IsGaming && generatorForFix.DegreeOfRepair < GameData.degreeOfFixedGenerator,
                       loopToDo: () =>
                       {
                           generatorForFix.Repair(player.FixSpeed * GameData.frameDuration);
@@ -73,10 +55,10 @@ namespace Gaming
                       timeInterval: GameData.frameDuration,
                       finallyReturn: () => 0
                   )
-
                       .Start();
                   if (generatorForFix.DegreeOfRepair >= GameData.degreeOfFixedGenerator)
                   {
+                      if (player.PlayerState == PlayerStateType.Fixing) player.PlayerState = PlayerStateType.Null;
                       Doorway exit = (Doorway)gameMap.GameObjDict[GameObjType.Doorway][1];
                       if (!exit.PowerSupply)
                       {
@@ -131,7 +113,7 @@ namespace Gaming
               () =>
               {
                   new FrameRateTaskExecutor<int>(
-                      loopCondition: () => doorwayToOpen.IsOpening && player.PlayerState == PlayerStateType.OpeningTheDoorWay && gameMap.Timer.IsGaming && doorwayToOpen.OpenDegree < GameData.degreeOfOpenedDoorway && GameData.ApproachToInteract(player.Position, doorwayToOpen.Position),
+                      loopCondition: () => player.PlayerState == PlayerStateType.OpeningTheDoorWay && gameMap.Timer.IsGaming && doorwayToOpen.OpenDegree < GameData.degreeOfOpenedDoorway,
                       loopToDo: () =>
                       {
                           doorwayToOpen.OpenDegree += GameData.frameDuration;
@@ -243,7 +225,6 @@ namespace Gaming
                 { IsBackground = true }.Start();
                 return true;
             }
-
             public bool Rescue(Student player, Student playerRescued)
             {
                 if ((!player.Commandable()) || playerRescued.PlayerState != PlayerStateType.Addicted || !GameData.ApproachToInteract(playerRescued.Position, player.Position))
@@ -267,17 +248,8 @@ namespace Gaming
                    )
                        .Start();
 
-                   if (player.TimeOfRescue >= GameData.basicTimeOfRescue)
-                   {
-                       if (playerRescued.PlayerState == PlayerStateType.Rescued) playerRescued.PlayerState = PlayerStateType.Null;
-                       if (player.PlayerState == PlayerStateType.Rescuing) player.PlayerState = PlayerStateType.Null;
-
-                   }
-                   else
-                   {
-                       if (playerRescued.PlayerState == PlayerStateType.Rescued) playerRescued.PlayerState = PlayerStateType.Null;
-                       if (player.PlayerState == PlayerStateType.Rescuing) player.PlayerState = PlayerStateType.Addicted;
-                   }
+                   if (playerRescued.PlayerState == PlayerStateType.Rescued) playerRescued.PlayerState = PlayerStateType.Null;
+                   if (player.PlayerState == PlayerStateType.Rescuing) player.PlayerState = (player.TimeOfRescue >= GameData.basicTimeOfRescue) ? PlayerStateType.Null : PlayerStateType.Addicted;
                    player.TimeOfRescue = 0;
                }
            )
@@ -397,7 +369,7 @@ namespace Gaming
                 if (!(player.Commandable()) || player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor)
                     return false;
                 Door? doorToLock = (Door?)gameMap.OneForInteract(player.Position, GameObjType.Door);
-                if (doorToLock == null)
+                if (doorToLock == null || doorToLock.OpenOrLockDegree > 0)
                     return false;
                 bool flag = false;
                 foreach (Prop prop in player.PropInventory)
@@ -424,33 +396,35 @@ namespace Gaming
                 if (!flag) return false;
 
                 player.PlayerState = PlayerStateType.LockingOrOpeningTheDoor;
+                new Thread
+          (
+              () =>
+              {
+                  new FrameRateTaskExecutor<int>(
+                      loopCondition: () => flag && player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor && gameMap.Timer.IsGaming && doorToLock.OpenOrLockDegree < GameData.degreeOfLockingOrOpeningTheDoor,
+                      loopToDo: () =>
+                      {
+                          Character? character = (Character?)gameMap.OneInTheSameCell(doorToLock.Position, GameObjType.Character);
+                          flag = (character != null);
+                          doorToLock.OpenOrLockDegree += GameData.frameDuration * player.SpeedOfOpeningOrLocking;
+                      },
+                      timeInterval: GameData.frameDuration,
+                      finallyReturn: () => 0
+                  )
 
-                /*     new Thread
-               (
-                   () =>
-                   {
-                       new FrameRateTaskExecutor<int>(
-                           loopCondition: () => player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor && gameMap.Timer.IsGaming && doorToLock.OpenDegree < GameData.degreeOfOpenedDoorway && GameData.ApproachToInteract(player.Position, doorToLock.Position),
-                           loopToDo: () =>
-                           {
-                               doorToLock.OpenDegree += GameData.frameDuration;
-                           },
-                           timeInterval: GameData.frameDuration,
-                           finallyReturn: () => 0
-                       )
+                      .Start();
+                  if (doorToLock.OpenOrLockDegree >= GameData.degreeOfLockingOrOpeningTheDoor)
+                  {
+                      doorToLock.IsOpen = (!doorToLock.IsOpen);
+                  }
+                  if (player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor)
+                      player.PlayerState = PlayerStateType.Null;
+                  doorToLock.OpenOrLockDegree = 0;
+              }
 
-                           .Start();
-                       doorToLock.IsOpening = false;
-                       if (doorToLock.OpenDegree >= GameData.degreeOfOpenedDoorway)
-                       {
-                           if (player.PlayerState == PlayerStateType.OpeningTheDoorWay)
-                               player.PlayerState = PlayerStateType.Null;
-                       }
-                   }
+          )
+                { IsBackground = true }.Start();
 
-               )
-                     { IsBackground = true }.Start();
-                */
                 return true;
             }
 

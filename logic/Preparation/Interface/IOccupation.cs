@@ -58,7 +58,7 @@ namespace Preparation.Interface
         public int viewRange = (int)(GameData.basicViewRange * 1.3);
         public int ViewRange => viewRange;
 
-        public int timeOfOpeningOrLocking = GameData.basicTimeOfOpeningOrLocking;
+        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = GameData.basicGhostSpeedOfClimbingThroughWindows;
@@ -101,7 +101,7 @@ namespace Preparation.Interface
         public int viewRange = (int)(GameData.basicViewRange * 1.1);
         public int ViewRange => viewRange;
 
-        public int timeOfOpeningOrLocking = GameData.basicTimeOfOpeningOrLocking * 12 / 10;
+        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking * 12 / 10;
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows * 12 / 10;

@@ -329,7 +329,7 @@ namespace Server
             msg.ClassroomMessage = new();
             msg.ClassroomMessage.X = generator.Position.x;
             msg.ClassroomMessage.Y = generator.Position.y;
-            msg.ClassroomMessage.Progress = generator.DegreeOfFRepair;
+            msg.ClassroomMessage.Progress = generator.DegreeOfRepair;
             return msg;
         }
         private static MessageOfObj Gate(Doorway doorway)
@@ -347,7 +347,7 @@ namespace Server
                  msg.ChestMessage = new();
                  msg.ChestMessage.X=chest.Position.x;
                  msg.ChestMessage.Y=chest.Position.y;
-              //   msg.ChestMessage.Progress=generator.DegreeOfFRepair;
+              //   msg.ChestMessage.Progress=generator.DegreeOfRepair;
                  return msg;
              }*/
     }

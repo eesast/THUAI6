@@ -139,8 +139,8 @@ namespace Gaming
                                     {
                                         if (XY.Distance(newPlayer.Position, generator.Position) <= newPlayer.AlertnessRadius)
                                         {
-                                            if ((double)newPlayer.AlertnessRadius * generator.DegreeOfFRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position) > bgmVolume)
-                                                bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfFRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position);
+                                            if ((double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position) > bgmVolume)
+                                                bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position);
                                         }
                                     }
                                     if (bgmVolume > 0)
@@ -278,7 +278,7 @@ namespace Gaming
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                return actionManager.Stop(player);
+                return ActionManager.Stop(player);
             }
             return false;
         }

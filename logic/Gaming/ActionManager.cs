@@ -2,6 +2,7 @@
 using System.Threading;
 using GameClass.GameObj;
 using GameEngine;
+using Preparation.Interface;
 using Preparation.Utility;
 using Timothy.FrameRateTask;
 
@@ -21,7 +22,7 @@ namespace Gaming
                 return true;
             }
 
-            public bool Stop(Character player)
+            public static bool Stop(Character player)
             {
                 if (player.Commandable())
                 {
@@ -55,7 +56,7 @@ namespace Gaming
                     gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
                 }
 
-                if (generatorForFix == null || generatorForFix.DegreeOfFRepair == GameData.degreeOfFixedGenerator)
+                if (generatorForFix == null || generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
                     return false;
 
                 player.PlayerState = PlayerStateType.Fixing;
@@ -64,7 +65,7 @@ namespace Gaming
               () =>
               {
                   new FrameRateTaskExecutor<int>(
-                      loopCondition: () => player.PlayerState == PlayerStateType.Fixing && gameMap.Timer.IsGaming && generatorForFix.DegreeOfFRepair < GameData.degreeOfFixedGenerator && GameData.ApproachToInteract(player.Position, generatorForFix.Position),
+                      loopCondition: () => player.PlayerState == PlayerStateType.Fixing && gameMap.Timer.IsGaming && generatorForFix.DegreeOfRepair < GameData.degreeOfFixedGenerator && GameData.ApproachToInteract(player.Position, generatorForFix.Position),
                       loopToDo: () =>
                       {
                           generatorForFix.Repair(player.FixSpeed * GameData.frameDuration);
@@ -74,7 +75,7 @@ namespace Gaming
                   )
 
                       .Start();
-                  if (generatorForFix.DegreeOfFRepair >= GameData.degreeOfFixedGenerator)
+                  if (generatorForFix.DegreeOfRepair >= GameData.degreeOfFixedGenerator)
                   {
                       Doorway exit = (Doorway)gameMap.GameObjDict[GameObjType.Doorway][1];
                       if (!exit.PowerSupply)
@@ -84,7 +85,7 @@ namespace Gaming
                           {
                               int numOfFixedGenerator = 0;
                               foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
-                                  if (generator.DegreeOfFRepair == GameData.degreeOfFixedGenerator)
+                                  if (generator.DegreeOfRepair == GameData.degreeOfFixedGenerator)
                                       ++numOfFixedGenerator;
                               if (numOfFixedGenerator >= GameData.numOfGeneratorRequiredForRepair)
                               {
@@ -284,7 +285,6 @@ namespace Gaming
 
                 return true;
             }
-
             public bool OpenChest(Character player)
             {
                 if ((!player.Commandable()) || player.PlayerState == PlayerStateType.OpeningTheChest)
@@ -320,7 +320,7 @@ namespace Gaming
                       for (int i = 0; i < GameData.maxNumOfPropInChest; ++i)
                       {
                           Prop prop = chestToOpen.PropInChest[i];
-                          chestToOpen.PropInChest[i] = null;
+                          chestToOpen.PropInChest[i] = new NullProp();
                           prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
                           gameMap.Add(prop);
                       }
@@ -353,13 +353,13 @@ namespace Gaming
               {
 
                   new FrameRateTaskExecutor<int>(
-          loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,
-          loopToDo: () => { },
-          timeInterval: GameData.frameDuration,
-          finallyReturn: () => 0,
-          maxTotalDuration: (int)((windowToPlayer + windowForClimb.Position - player.Position).Length() / player.MoveSpeed)
-      )
-          .Start();
+                    loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,
+                    loopToDo: () => { },
+                    timeInterval: GameData.frameDuration,
+                    finallyReturn: () => 0,
+                    maxTotalDuration: (int)((windowToPlayer + windowForClimb.Position - player.Position).Length() / player.MoveSpeed)
+                    )
+                    .Start();
                   if (player.PlayerState != PlayerStateType.ClimbingThroughWindows)
                   {
                       windowForClimb.WhoIsClimbing = null;
@@ -370,13 +370,13 @@ namespace Gaming
                   player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
                   MovePlayer(player, (int)(windowToPlayer.Length() * 3.0 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
                   new FrameRateTaskExecutor<int>(
-          loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && player.IsMoving && gameMap.Timer.IsGaming,
-          loopToDo: () => { },
-          timeInterval: GameData.frameDuration,
-          finallyReturn: () => 0,
-          maxTotalDuration: (int)(windowToPlayer.Length() * 3.0 / player.MoveSpeed)
-      )
-          .Start();
+                    loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && player.IsMoving && gameMap.Timer.IsGaming,
+                    loopToDo: () => { },
+                    timeInterval: GameData.frameDuration,
+                    finallyReturn: () => 0,
+                    maxTotalDuration: (int)(windowToPlayer.Length() * 3.0 / player.MoveSpeed)
+                    )
+                    .Start();
                   XY PosJumpOff = windowForClimb.Position - 2 * windowToPlayer;
                   player.ReSetPos(PosJumpOff, gameMap.GetPlaceType(PosJumpOff));
                   player.MoveSpeed = player.buffManager.ReCalculateFloatBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
@@ -390,6 +390,67 @@ namespace Gaming
           )
                 { IsBackground = true }.Start();
 
+                return true;
+            }
+            public bool LockOrOpenDoor(Character player)
+            {
+                if (!(player.Commandable()) || player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor)
+                    return false;
+                Door? doorToLock = (Door?)gameMap.OneForInteract(player.Position, GameObjType.Door);
+                if (doorToLock == null)
+                    return false;
+                bool flag = false;
+                foreach (Prop prop in player.PropInventory)
+                {
+                    switch (prop.GetPropType())
+                    {
+                        case PropType.Key3:
+                            if (doorToLock.Place == PlaceType.Door3)
+                                flag = true;
+                            break;
+                        case PropType.Key5:
+                            if (doorToLock.Place == PlaceType.Door5)
+                                flag = true;
+                            break;
+                        case PropType.Key6:
+                            if (doorToLock.Place == PlaceType.Door6)
+                                flag = true;
+                            break;
+                        default:
+                            break;
+                    }
+                    if (flag) break;
+                }
+                if (!flag) return false;
+
+                player.PlayerState = PlayerStateType.LockingOrOpeningTheDoor;
+
+                /*     new Thread
+               (
+                   () =>
+                   {
+                       new FrameRateTaskExecutor<int>(
+                           loopCondition: () => doorToLock.IsOpening && player.PlayerState == PlayerStateType.OpeningTheDoorWay && gameMap.Timer.IsGaming && doorToLock.OpenDegree < GameData.degreeOfOpenedDoorway && GameData.ApproachToInteract(player.Position, doorToLock.Position),
+                           loopToDo: () =>
+                           {
+                               doorToLock.OpenDegree += GameData.frameDuration;
+                           },
+                           timeInterval: GameData.frameDuration,
+                           finallyReturn: () => 0
+                       )
+
+                           .Start();
+                       doorToLock.IsOpening = false;
+                       if (doorToLock.OpenDegree >= GameData.degreeOfOpenedDoorway)
+                       {
+                           if (player.PlayerState == PlayerStateType.OpeningTheDoorWay)
+                               player.PlayerState = PlayerStateType.Null;
+                       }
+                   }
+
+               )
+                     { IsBackground = true }.Start();
+                */
                 return true;
             }
 

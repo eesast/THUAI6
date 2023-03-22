@@ -359,7 +359,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                if (PlayerState == PlayerStateType.Null && IsMoving) return PlayerStateType.Moving;
+                if (playerState == PlayerStateType.Null && IsMoving) return PlayerStateType.Moving;
                 return playerState;
             }
             set

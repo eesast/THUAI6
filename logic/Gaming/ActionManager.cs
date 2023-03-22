@@ -379,7 +379,7 @@ namespace Gaming
                     .Start();
                   XY PosJumpOff = windowForClimb.Position - 2 * windowToPlayer;
                   player.ReSetPos(PosJumpOff, gameMap.GetPlaceType(PosJumpOff));
-                  player.MoveSpeed = player.buffManager.ReCalculateFloatBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
+                  player.MoveSpeed = player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
                   windowForClimb.WhoIsClimbing = null;
                   if (player.PlayerState == PlayerStateType.ClimbingThroughWindows)
                   {
@@ -430,7 +430,7 @@ namespace Gaming
                    () =>
                    {
                        new FrameRateTaskExecutor<int>(
-                           loopCondition: () => doorToLock.IsOpening && player.PlayerState == PlayerStateType.OpeningTheDoorWay && gameMap.Timer.IsGaming && doorToLock.OpenDegree < GameData.degreeOfOpenedDoorway && GameData.ApproachToInteract(player.Position, doorToLock.Position),
+                           loopCondition: () => player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor && gameMap.Timer.IsGaming && doorToLock.OpenDegree < GameData.degreeOfOpenedDoorway && GameData.ApproachToInteract(player.Position, doorToLock.Position),
                            loopToDo: () =>
                            {
                                doorToLock.OpenDegree += GameData.frameDuration;

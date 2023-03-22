@@ -8,11 +8,11 @@ namespace GameClass.GameObj
 {
     public partial class Character
     {
-        public readonly BuffManager buffManager;
+        private readonly BuffManager buffManager;
         /// <summary>
         /// 角色携带的buff管理器
         /// </summary>
-        public class BuffManager
+        private class BuffManager
         {
             [StructLayout(LayoutKind.Explicit, Size = 8)]
             private struct BuffValue  // buff参数联合体类型，可能是int或double
@@ -170,6 +170,10 @@ namespace GameClass.GameObj
                     buffListLock[i++] = new object();
                 }
             }
+        }
+        public int ReCalculateBuff(BuffType buffType, int orgVal, int maxVal, int minVal)
+        {
+            return buffManager.ReCalculateFloatBuff(buffType, orgVal, maxVal, minVal);
         }
     }
 }

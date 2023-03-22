@@ -16,7 +16,7 @@ namespace Preparation.Interface
         public int AlertnessRadius { get; }
         public int ViewRange { get; }
         public int TimeOfOpeningOrLocking { get; }
-        public int TimeOfClimbingThroughWindows { get; }
+        public int SpeedOfClimbingThroughWindows { get; }
         public int TimeOfOpenChest { get; }
     }
 
@@ -61,8 +61,8 @@ namespace Preparation.Interface
         public int timeOfOpeningOrLocking = GameData.basicTimeOfOpeningOrLocking;
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
 
-        public int timeOfClimbingThroughWindows = GameData.basicTimeOfClimbingThroughWindows;
-        public int TimeOfClimbingThroughWindows => timeOfClimbingThroughWindows;
+        public int speedOfClimbingThroughWindows = GameData.basicGhostSpeedOfClimbingThroughWindows;
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
         public int timeOfOpenChest = GameData.basicTimeOfOpenChest;
         public int TimeOfOpenChest => timeOfOpenChest;
@@ -104,8 +104,8 @@ namespace Preparation.Interface
         public int timeOfOpeningOrLocking = GameData.basicTimeOfOpeningOrLocking * 12 / 10;
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
 
-        public int timeOfClimbingThroughWindows = GameData.basicTimeOfClimbingThroughWindows / 87 * 80;
-        public int TimeOfClimbingThroughWindows => timeOfClimbingThroughWindows;
+        public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows * 12 / 10;
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
         public int timeOfOpenChest = GameData.basicTimeOfOpenChest;
         public int TimeOfOpenChest => timeOfOpenChest;

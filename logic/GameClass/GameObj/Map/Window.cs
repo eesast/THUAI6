@@ -33,6 +33,5 @@ namespace GameClass.GameObj
                     whoIsClimbing = value;
             }
         }
-
     }
 }

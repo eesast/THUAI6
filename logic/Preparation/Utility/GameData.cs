@@ -43,6 +43,10 @@ namespace Preparation.Utility
         {
             return pos.y / numOfPosGridPerCell;
         }
+        public static XY PosGridToCellXY(XY pos)  // 求坐标所在的格子的y坐标
+        {
+            return new XY(pos.x / numOfPosGridPerCell, pos.y / numOfPosGridPerCell);
+        }
         public static bool IsInTheSameCell(XY pos1, XY pos2)
         {
             return PosGridToCellX(pos1) == PosGridToCellX(pos2) && PosGridToCellY(pos1) == PosGridToCellY(pos2);
@@ -51,6 +55,10 @@ namespace Preparation.Utility
         {
             return Math.Abs(PosGridToCellX(pos1) - PosGridToCellX(pos2)) <= 1 && Math.Abs(PosGridToCellY(pos1) - PosGridToCellY(pos2)) <= 1;
         }
+        public static bool ApproachToInteractInACross(XY pos1, XY pos2)
+        {
+            return (Math.Abs(PosGridToCellX(pos1) - PosGridToCellX(pos2)) + Math.Abs(PosGridToCellY(pos1) - PosGridToCellY(pos2))) <= 1;
+        }
         #endregion
         #region 角色相关
         public const int characterRadius = numOfPosGridPerCell / 2 / 5 * 4;  // 人物半径
@@ -58,7 +66,8 @@ namespace Preparation.Utility
         public const int basicTreatSpeed = 100;
         public const int basicFixSpeed = 100;
         public const int basicTimeOfOpeningOrLocking = 3000;
-        public const int basicTimeOfClimbingThroughWindows = 870;
+        public const int basicStudentSpeedOfClimbingThroughWindows = 611;
+        public const int basicGhostSpeedOfClimbingThroughWindows = 1270;
         public const int basicTimeOfOpenChest = 10000;
 
         public const int basicHp = 3000000;                             // 初始血量

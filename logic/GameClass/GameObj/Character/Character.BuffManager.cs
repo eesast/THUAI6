@@ -8,11 +8,11 @@ namespace GameClass.GameObj
 {
     public partial class Character
     {
-        private readonly BuffManager buffManager;
+        public readonly BuffManager buffManager;
         /// <summary>
         /// 角色携带的buff管理器
         /// </summary>
-        private class BuffManager
+        public class BuffManager
         {
             [StructLayout(LayoutKind.Explicit, Size = 8)]
             private struct BuffValue  // buff参数联合体类型，可能是int或double
@@ -69,7 +69,7 @@ namespace GameClass.GameObj
                 { IsBackground = true }.Start();
             }
 
-            private int ReCalculateFloatBuff(BuffType buffType, int orgVal, int maxVal, int minVal)
+            public int ReCalculateFloatBuff(BuffType buffType, int orgVal, int maxVal, int minVal)
             {
                 double times = 1.0;
                 lock (buffListLock[(int)buffType])

@@ -248,7 +248,7 @@ namespace Server
 
             msg.TrickerMessage.Place = ToPlaceType(player.Place);
             foreach (var value in player.PropInventory)
-                msg.StudentMessage.Prop.Add(ToPropType(Value.GetPropType()));
+                msg.StudentMessage.Prop.Add(ToPropType(value.GetPropType()));
 
             msg.TrickerMessage.TrickerType = ToTrickerType(player.CharacterType);
             msg.TrickerMessage.Guid = player.ID;

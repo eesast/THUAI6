@@ -203,7 +203,7 @@ namespace Server
             for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count(); ++i)
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
 
-            foreach (var Value in player.PropInventory)
+            foreach (var value in player.PropInventory)
                 msg.StudentMessage.Prop.Add(ToPropType(Value.GetPropType()));
 
             msg.StudentMessage.Place = ToPlaceType(player.Place);

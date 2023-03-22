@@ -203,8 +203,8 @@ namespace Server
             for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count(); ++i)
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
 
-            foreach (var Value in player.PropInventory)
-                msg.StudentMessage.Prop.Add(ToPropType(Value.GetPropType()));
+            foreach (var value in player.PropInventory)
+                msg.StudentMessage.Prop.Add(ToPropType(value.GetPropType()));
 
             msg.StudentMessage.Place = ToPlaceType(player.Place);
             msg.StudentMessage.Guid = player.ID;
@@ -247,8 +247,8 @@ namespace Server
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
 
             msg.TrickerMessage.Place = ToPlaceType(player.Place);
-            foreach (var Value in player.PropInventory)
-                msg.StudentMessage.Prop.Add(ToPropType(Value.GetPropType()));
+            foreach (var value in player.PropInventory)
+                msg.StudentMessage.Prop.Add(ToPropType(value.GetPropType()));
 
             msg.TrickerMessage.TrickerType = ToTrickerType(player.CharacterType);
             msg.TrickerMessage.Guid = player.ID;

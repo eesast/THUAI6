@@ -288,25 +288,7 @@ namespace Gaming
             {
                 if ((!player.Commandable()) || player.PlayerState == PlayerStateType.IsOpeningTheChest)
                     return false;
-                Chest? chestToOpen = null;
-
-
-                gameMap.GameObjLockDict[GameObjType.Chest].EnterReadLock();
-                try
-                {
-                    foreach (Chest chest in gameMap.GameObjDict[GameObjType.Chest])
-                    {
-                        if (GameData.ApproachToInteract(chest.Position, player.Position))
-                        {
-                            chestToOpen = chest;
-                            break;
-                        }
-                    }
-                }
-                finally
-                {
-                    gameMap.GameObjLockDict[GameObjType.Chest].ExitReadLock();
-                }
+                Chest? chestToOpen = (Chest?)gameMap.OneForInteract(player.Position, GameObjType.Chest);
 
                 if (chestToOpen == null || chestToOpen.IsOpen)
                     return false;

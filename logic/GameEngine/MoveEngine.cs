@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Threading;
 using Preparation.Interface;
 using Preparation.Utility;
@@ -60,14 +61,11 @@ namespace GameEngine
         /// <param name="moveVec">移动的位移向量</param>
         private void MoveMax(IMoveable obj, XY moveVec)
         {
-
             /*由于四周是墙，所以人物永远不可能与越界方块碰撞*/
             XY nextPos = obj.Position + moveVec;
-            //double maxLen 
-            _ = collisionChecker.FindMax(obj, nextPos, moveVec);
-            //maxLen = Math.Min(maxLen, obj.MoveSpeed / GameData.numOfStepPerSecond);
-
-            obj.MovingSetPos(moveVec, GetPlaceType(nextPos));
+            double maxLen = collisionChecker.FindMax(obj, nextPos, moveVec);
+            maxLen = Math.Min(maxLen, obj.MoveSpeed / GameData.numOfStepPerSecond);
+            obj.MovingSetPos(new XY(moveVec.Angle(), maxLen), GetPlaceType(nextPos));
         }
 
         public void MoveObj(IMoveable obj, int moveTime, double direction)

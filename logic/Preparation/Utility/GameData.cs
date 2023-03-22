@@ -106,6 +106,7 @@ namespace Preparation.Utility
         public const double basicBulletBombRange = 3000;             // 基本子弹爆炸范围
         #endregion
         #region 技能相关
+        public const int maxNumOfSkill = 3;
         public const int commonSkillCD = 30000;                      // 普通技能标准冷却时间
         public const int commonSkillTime = 10000;                    // 普通技能标准持续时间
         /// <summary>

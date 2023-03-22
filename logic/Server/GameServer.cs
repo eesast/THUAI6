@@ -211,8 +211,10 @@ namespace Server
                 case 9: return Protobuf.PlaceType.Gate;
                 case 10: return Protobuf.PlaceType.HiddenGate;
                 case 11: return Protobuf.PlaceType.Window;
-                case 12: return Protobuf.PlaceType.Door;
-                case 13: return Protobuf.PlaceType.Chest;
+                case 12: return Protobuf.PlaceType.Door3;
+                case 13: return Protobuf.PlaceType.Door5;
+                case 14: return Protobuf.PlaceType.Door6;
+                case 15: return Protobuf.PlaceType.Chest;
                 default: return Protobuf.PlaceType.NullPlaceType;
             }
         }

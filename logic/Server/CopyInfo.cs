@@ -21,8 +21,12 @@ namespace Server
                     return Protobuf.PlaceType.Gate;
                 case Preparation.Utility.PlaceType.Chest:
                     return Protobuf.PlaceType.Chest;
-                case Preparation.Utility.PlaceType.Door:
-                    return Protobuf.PlaceType.Door;
+                case Preparation.Utility.PlaceType.Door3:
+                    return Protobuf.PlaceType.Door3;
+                case Preparation.Utility.PlaceType.Door5:
+                    return Protobuf.PlaceType.Door5;
+                case Preparation.Utility.PlaceType.Door6:
+                    return Protobuf.PlaceType.Door6;
                 case Preparation.Utility.PlaceType.Generator:
                     return Protobuf.PlaceType.Classroom;
                 case Preparation.Utility.PlaceType.Grass:
@@ -196,9 +200,11 @@ namespace Server
 
             foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
+            for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count(); ++i)
+                msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
 
-            foreach (var Value in player.PropInventory)
-                msg.StudentMessage.Prop.Add(ToPropType(Value.GetPropType()));
+            foreach (var value in player.PropInventory)
+                msg.StudentMessage.Prop.Add(ToPropType(value.GetPropType()));
 
             msg.StudentMessage.Place = ToPlaceType(player.Place);
             msg.StudentMessage.Guid = player.ID;
@@ -237,9 +243,12 @@ namespace Server
             msg.TrickerMessage.Speed = player.MoveSpeed;
             foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
+            for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count(); ++i)
+                msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
+
             msg.TrickerMessage.Place = ToPlaceType(player.Place);
-            foreach (var Value in player.PropInventory)
-                msg.StudentMessage.Prop.Add(ToPropType(Value.GetPropType()));
+            foreach (var value in player.PropInventory)
+                msg.StudentMessage.Prop.Add(ToPropType(value.GetPropType()));
 
             msg.TrickerMessage.TrickerType = ToTrickerType(player.CharacterType);
             msg.TrickerMessage.Guid = player.ID;

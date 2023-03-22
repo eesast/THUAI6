@@ -190,6 +190,26 @@ namespace GameClass.GameObj
                                 Add(new Chest(GameData.GetCellCenterPos(i, j)));
                                 break;
                             }
+                        case (uint)PlaceType.Door3:
+                            {
+                                Add(new Door(GameData.GetCellCenterPos(i, j), PlaceType.Door3));
+                                break;
+                            }
+                        case (uint)PlaceType.Door5:
+                            {
+                                Add(new Door(GameData.GetCellCenterPos(i, j), PlaceType.Door5));
+                                break;
+                            }
+                        case (uint)PlaceType.Door6:
+                            {
+                                Add(new Door(GameData.GetCellCenterPos(i, j), PlaceType.Door6));
+                                break;
+                            }
+                        case (uint)PlaceType.Window:
+                            {
+                                Add(new Window(GameData.GetCellCenterPos(i, j)));
+                                break;
+                            }
                         case (uint)PlaceType.BirthPoint1:
                         case (uint)PlaceType.BirthPoint2:
                         case (uint)PlaceType.BirthPoint3:

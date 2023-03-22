@@ -111,7 +111,7 @@ namespace Gaming
                                             }
                                         }
                                         if (bgmVolume > 0)
-                                            newPlayer.BgmDictionary.Add(BgmType.StudentIsApproaching, bgmVolume);
+                                            newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
                                     }
                                     else
                                     {
@@ -120,7 +120,7 @@ namespace Gaming
                                             if (person.IsGhost())
                                             {
                                                 if (XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                                    newPlayer.BgmDictionary.Add(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
+                                                    newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
                                                 break;
                                             }
                                         }
@@ -144,7 +144,7 @@ namespace Gaming
                                         }
                                     }
                                     if (bgmVolume > 0)
-                                        newPlayer.BgmDictionary.Add(BgmType.StudentIsApproaching, bgmVolume);
+                                        newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
                                 }
 
 

@@ -125,8 +125,10 @@ namespace Preparation.Utility
         Doorway = 9,
         EmergencyExit = 10,
         Window = 11,
-        Door = 12,
-        Chest = 13,
+        Door3 = 12,
+        Door5 = 13,
+        Door6 = 14,
+        Chest = 15,
     }
     public enum BgmType
     {

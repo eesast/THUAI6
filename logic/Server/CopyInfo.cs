@@ -247,7 +247,7 @@ namespace Server
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
 
             msg.TrickerMessage.Place = ToPlaceType(player.Place);
-            foreach (var Value in player.PropInventory)
+            foreach (var value in player.PropInventory)
                 msg.StudentMessage.Prop.Add(ToPropType(Value.GetPropType()));
 
             msg.TrickerMessage.TrickerType = ToTrickerType(player.CharacterType);

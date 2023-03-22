@@ -59,24 +59,13 @@ namespace Gaming
                 if (indexing == GameData.maxNumOfPropInPropInventory)
                     return false;
 
-                Prop pickProp = new NullProp();
+                Prop? pickProp = new NullProp();
                 if (propType == PropType.Null)  // 自动检查有无道具可捡
                 {
-                    gameMap.GameObjLockDict[GameObjType.Prop].EnterReadLock();
-                    try
-                    {
-                        foreach (Prop prop in gameMap.GameObjDict[GameObjType.Prop])
-                        {
-                            if (GameData.IsInTheSameCell(prop.Position, player.Position))
-                            {
-                                player.PropInventory[indexing] = prop;
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Prop].ExitReadLock();
-                    }
+                    pickProp = (Prop?)gameMap.OneInTheSameCell(player.Position, GameObjType.Prop);
+                    if (pickProp != null)
+                        player.PropInventory[indexing] = pickProp;
+                    else player.PropInventory[indexing] = pickProp = new NullProp();
                 }
                 else
                 {
@@ -89,7 +78,7 @@ namespace Gaming
                             {
                                 if (GameData.IsInTheSameCell(prop.Position, player.Position) && prop.CanMove == false)
                                 {
-                                    player.PropInventory[indexing] = prop;
+                                    pickProp = player.PropInventory[indexing] = prop;
                                 }
                             }
                         }

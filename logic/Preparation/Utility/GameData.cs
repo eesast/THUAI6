@@ -21,7 +21,6 @@ namespace Preparation.Utility
 
         public const int numOfBirthPoint = 5;
         //        public const int numOfGenerator = 9;
-        public const int numOfGeneratorRequiredForRepair = 7;
         public const int numOfChest = 8;
 
         private const int numOfObjNotMap = 5;
@@ -61,6 +60,7 @@ namespace Preparation.Utility
         }
         #endregion
         #region 角色相关
+        public const int numOfStudent = 4;
         public const int characterRadius = numOfPosGridPerCell / 2 / 5 * 4;  // 人物半径
 
         public const int basicTreatSpeed = 100;
@@ -143,6 +143,8 @@ namespace Preparation.Utility
         public const int degreeOfLockingOrOpeningTheDoor = 10000;
         public const int degreeOfOpenedDoorway = 18000;
         public const int maxNumOfPropInChest = 2;
+        public const int numOfGeneratorRequiredForRepair = 7;
+        public const int numOfGeneratorRequiredForEmergencyExit = 3;
         #endregion
         #region 游戏帧相关
         public const long checkInterval = 50;  // 检查位置标志、补充子弹的帧时长

@@ -30,6 +30,14 @@ namespace Preparation.Utility
         {
             return (v1.x * v2.x) + (v1.y * v2.y);
         }
+        public static XY operator *(int a, XY v2)
+        {
+            return new XY(a * v2.x, a * v2.y);
+        }
+        public static XY operator *(XY v2, int a)
+        {
+            return new XY(a * v2.x, a * v2.y);
+        }
         public static XY operator +(XY v1, XY v2)
         {
             return new XY(v1.x + v2.x, v1.y + v2.y);

@@ -16,26 +16,26 @@ namespace GameClass.GameObj
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;
 
-        private int degreeOfFRepair = 0;
-        public int DegreeOfFRepair
+        private int degreeOfRepair = 0;
+        public int DegreeOfRepair
         {
-            get => degreeOfFRepair;
+            get => degreeOfRepair;
             set
             {
                 lock (gameObjLock)
                 {
-                    if (degreeOfFRepair < GameData.degreeOfFixedGenerator)//不允许正常破坏已经修好的发电机
-                        if (value < 0) degreeOfFRepair = 0;
-                        else degreeOfFRepair = value > GameData.degreeOfFixedGenerator ? GameData.degreeOfFixedGenerator : value;
+                    if (degreeOfRepair < GameData.degreeOfFixedGenerator)//不允许正常破坏已经修好的发电机
+                        if (value < 0) degreeOfRepair = 0;
+                        else degreeOfRepair = value > GameData.degreeOfFixedGenerator ? GameData.degreeOfFixedGenerator : value;
                 }
             }
         }
 
         public bool Repair(int addDegree)
         {
-            if (DegreeOfFRepair == GameData.degreeOfFixedGenerator) return false;
-            DegreeOfFRepair += addDegree;
-            if (DegreeOfFRepair == GameData.degreeOfFixedGenerator)
+            if (DegreeOfRepair == GameData.degreeOfFixedGenerator) return false;
+            DegreeOfRepair += addDegree;
+            if (DegreeOfRepair == GameData.degreeOfFixedGenerator)
                 return true;
             else return false;
         }

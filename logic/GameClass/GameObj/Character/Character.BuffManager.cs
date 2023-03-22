@@ -69,7 +69,7 @@ namespace GameClass.GameObj
                 { IsBackground = true }.Start();
             }
 
-            private int ReCalculateFloatBuff(BuffType buffType, int orgVal, int maxVal, int minVal)
+            public int ReCalculateFloatBuff(BuffType buffType, int orgVal, int maxVal, int minVal)
             {
                 double times = 1.0;
                 lock (buffListLock[(int)buffType])
@@ -170,6 +170,10 @@ namespace GameClass.GameObj
                     buffListLock[i++] = new object();
                 }
             }
+        }
+        public int ReCalculateBuff(BuffType buffType, int orgVal, int maxVal, int minVal)
+        {
+            return buffManager.ReCalculateFloatBuff(buffType, orgVal, maxVal, minVal);
         }
     }
 }

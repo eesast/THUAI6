@@ -7,23 +7,23 @@ namespace Preparation.Utility
     public enum PlayerStateType
     {
         Null = 0,
-        IsAddicted = 1,
-        IsEscaped = 2,
-        IsSwinging = 3,//指后摇
-        IsDeceased = 4,
-        IsMoving = 5,
-        IsTreating = 6,
-        IsRescuing = 7,
-        IsFixing = 8,
-        IsTreated = 9,
-        IsRescued = 10,
-        IsStunned = 11,
-        IsTryingToAttack = 12,//指前摇
-        IsLockingOrOpeningTheDoor = 13,
-        IsOpeningTheChest = 14,
-        IsClimbingThroughWindows = 15,
-        IsUsingSpecialSkill = 16,
-        IsOpeningTheDoorWay = 17,
+        Addicted = 1,
+        Escaped = 2,
+        Swinging = 3,//指后摇
+        Deceased = 4,
+        Moving = 5,
+        Treating = 6,
+        Rescuing = 7,
+        Fixing = 8,
+        Treated = 9,
+        Rescued = 10,
+        Stunned = 11,
+        TryingToAttack = 12,//指前摇
+        LockingOrOpeningTheDoor = 13,
+        OpeningTheChest = 14,
+        ClimbingThroughWindows = 15,
+        UsingSkill = 16,
+        OpeningTheDoorWay = 17,
     }
     public enum GameObjType
     {

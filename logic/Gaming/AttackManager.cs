@@ -45,9 +45,9 @@ namespace Gaming
                     {
                         if (player.GamingAddiction > GameData.BeginGamingAddiction && player.GamingAddiction < GameData.MidGamingAddiction)
                             player.GamingAddiction = GameData.MidGamingAddiction;
-                        player.PlayerState = PlayerStateType.IsAddicted;
+                        player.PlayerState = PlayerStateType.Addicted;
                         new FrameRateTaskExecutor<int>(
-                            () => player.PlayerState == PlayerStateType.IsAddicted && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
+                            () => player.PlayerState == PlayerStateType.Addicted && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
                             () =>
                             {
                                 player.GamingAddiction += GameData.frameDuration;
@@ -73,16 +73,16 @@ namespace Gaming
                 new Thread
                     (() =>
                     {
-                        player.PlayerState = PlayerStateType.IsStunned;
+                        player.PlayerState = PlayerStateType.Stunned;
                         new FrameRateTaskExecutor<int>(
-                            () => player.PlayerState == PlayerStateType.IsStunned && gameMap.Timer.IsGaming,
+                            () => player.PlayerState == PlayerStateType.Stunned && gameMap.Timer.IsGaming,
                             () =>
                             {
                             },
                             timeInterval: GameData.frameDuration,
                             () =>
                             {
-                                if (player.PlayerState == PlayerStateType.IsStunned)
+                                if (player.PlayerState == PlayerStateType.Stunned)
                                     player.PlayerState = PlayerStateType.Null;
                                 return 0;
                             },
@@ -97,7 +97,7 @@ namespace Gaming
             private void Die(Character player)
             {
 
-                player.Die(PlayerStateType.IsDeceased);
+                player.Die(PlayerStateType.Deceased);
                 // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
                 // try
                 //{
@@ -140,7 +140,7 @@ namespace Gaming
                             {
                                 playerBeingShot.CanMove = true;
                             }
-                            playerBeingShot.IsDeceased = false;
+                            playerBeingShot.Deceased = false;
                         }
                         )
                     { IsBackground = true }.Start();
@@ -182,14 +182,14 @@ namespace Gaming
                     {
                         if (bullet.Backswing > 0)
                         {
-                            bullet.Parent.PlayerState = PlayerStateType.IsSwinging;
+                            bullet.Parent.PlayerState = PlayerStateType.Swinging;
 
                             new Thread
                                     (() =>
                                     {
                                         Thread.Sleep(bullet.Backswing);
 
-                                        if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
+                                        if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
                                         {
                                             bullet.Parent.PlayerState = PlayerStateType.Null;
                                         }
@@ -204,7 +204,7 @@ namespace Gaming
                     BombObj(bullet, objBeingShot);
                     if (bullet.RecoveryFromHit > 0)
                     {
-                        bullet.Parent.PlayerState = PlayerStateType.IsSwinging;
+                        bullet.Parent.PlayerState = PlayerStateType.Swinging;
 
                         new Thread
                                 (() =>
@@ -212,7 +212,7 @@ namespace Gaming
 
                                     Thread.Sleep(bullet.RecoveryFromHit);
 
-                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
+                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
                                     {
                                         bullet.Parent.PlayerState = PlayerStateType.Null;
                                     }
@@ -263,14 +263,14 @@ namespace Gaming
                 {
                     if (bullet.Backswing > 0)
                     {
-                        bullet.Parent.PlayerState = PlayerStateType.IsSwinging;
+                        bullet.Parent.PlayerState = PlayerStateType.Swinging;
 
                         new Thread
                                 (() =>
                                 {
                                     Thread.Sleep(bullet.Backswing);
 
-                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
+                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
                                     {
                                         bullet.Parent.PlayerState = PlayerStateType.Null;
                                     }
@@ -283,7 +283,7 @@ namespace Gaming
                 {
                     if (bullet.RecoveryFromHit > 0)
                     {
-                        bullet.Parent.PlayerState = PlayerStateType.IsSwinging;
+                        bullet.Parent.PlayerState = PlayerStateType.Swinging;
 
                         new Thread
                                 (() =>
@@ -291,7 +291,7 @@ namespace Gaming
 
                                     Thread.Sleep(bullet.RecoveryFromHit);
 
-                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.IsSwinging)
+                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
                                     {
                                         bullet.Parent.PlayerState = PlayerStateType.Null;
                                     }
@@ -333,13 +333,13 @@ namespace Gaming
 
                     if (bullet.CastTime > 0)
                     {
-                        player.PlayerState = PlayerStateType.IsTryingToAttack;
+                        player.PlayerState = PlayerStateType.TryingToAttack;
 
                         new Thread
                                 (() =>
                                 {
                                     new FrameRateTaskExecutor<int>(
-                                    loopCondition: () => player.PlayerState == PlayerStateType.IsTryingToAttack && gameMap.Timer.IsGaming,
+                                    loopCondition: () => player.PlayerState == PlayerStateType.TryingToAttack && gameMap.Timer.IsGaming,
                                     loopToDo: () =>
                                     {
                                     },
@@ -352,7 +352,7 @@ namespace Gaming
 
                                     if (gameMap.Timer.IsGaming)
                                     {
-                                        if (player.PlayerState == PlayerStateType.IsTryingToAttack)
+                                        if (player.PlayerState == PlayerStateType.TryingToAttack)
                                         {
                                             player.PlayerState = PlayerStateType.Null;
                                         }

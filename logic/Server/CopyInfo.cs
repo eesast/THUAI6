@@ -63,40 +63,40 @@ namespace Server
         {
             switch (playerState)
             {
-                case Preparation.Utility.PlayerStateType.IsMoving:
+                case Preparation.Utility.PlayerStateType.Moving:
                 case Preparation.Utility.PlayerStateType.Null:
                     return PlayerState.Idle;
-                case Preparation.Utility.PlayerStateType.IsAddicted:
+                case Preparation.Utility.PlayerStateType.Addicted:
                     return PlayerState.Addicted;
-                case Preparation.Utility.PlayerStateType.IsClimbingThroughWindows:
+                case Preparation.Utility.PlayerStateType.ClimbingThroughWindows:
                     return PlayerState.Climbing;
-                case Preparation.Utility.PlayerStateType.IsDeceased:
+                case Preparation.Utility.PlayerStateType.Deceased:
                     return PlayerState.Quit;
-                case Preparation.Utility.PlayerStateType.IsEscaped:
+                case Preparation.Utility.PlayerStateType.Escaped:
                     return PlayerState.Graduated;
-                case Preparation.Utility.PlayerStateType.IsFixing:
+                case Preparation.Utility.PlayerStateType.Fixing:
                     return PlayerState.Learning;
-                case Preparation.Utility.PlayerStateType.IsLockingOrOpeningTheDoor:
+                case Preparation.Utility.PlayerStateType.LockingOrOpeningTheDoor:
                     return PlayerState.Locking;
-                case Preparation.Utility.PlayerStateType.IsOpeningTheChest:
+                case Preparation.Utility.PlayerStateType.OpeningTheChest:
                     return PlayerState.OpeningAChest;
-                case Preparation.Utility.PlayerStateType.IsRescued:
+                case Preparation.Utility.PlayerStateType.Rescued:
                     return PlayerState.Rescued;
-                case Preparation.Utility.PlayerStateType.IsRescuing:
+                case Preparation.Utility.PlayerStateType.Rescuing:
                     return PlayerState.Rescuing;
-                case Preparation.Utility.PlayerStateType.IsStunned:
+                case Preparation.Utility.PlayerStateType.Stunned:
                     return PlayerState.Stunned;
-                case Preparation.Utility.PlayerStateType.IsSwinging:
+                case Preparation.Utility.PlayerStateType.Swinging:
                     return PlayerState.Swinging;
-                case Preparation.Utility.PlayerStateType.IsTreated:
+                case Preparation.Utility.PlayerStateType.Treated:
                     return PlayerState.Treated;
-                case Preparation.Utility.PlayerStateType.IsTreating:
+                case Preparation.Utility.PlayerStateType.Treating:
                     return PlayerState.Treating;
-                case Preparation.Utility.PlayerStateType.IsTryingToAttack:
+                case Preparation.Utility.PlayerStateType.TryingToAttack:
                     return PlayerState.Attacking;
-                case Preparation.Utility.PlayerStateType.IsUsingSpecialSkill:
+                case Preparation.Utility.PlayerStateType.UsingSkill:
                     return PlayerState.UsingSpecialSkill;
-                case Preparation.Utility.PlayerStateType.IsOpeningTheDoorWay:
+                case Preparation.Utility.PlayerStateType.OpeningTheDoorWay:
                     return PlayerState.OpeningAGate;
                 default:
                     return PlayerState.NullStatus;
@@ -329,7 +329,7 @@ namespace Server
             msg.ClassroomMessage = new();
             msg.ClassroomMessage.X = generator.Position.x;
             msg.ClassroomMessage.Y = generator.Position.y;
-            msg.ClassroomMessage.Progress = generator.DegreeOfFRepair;
+            msg.ClassroomMessage.Progress = generator.DegreeOfRepair;
             return msg;
         }
         private static MessageOfObj Gate(Doorway doorway)
@@ -347,7 +347,7 @@ namespace Server
                  msg.ChestMessage = new();
                  msg.ChestMessage.X=chest.Position.x;
                  msg.ChestMessage.Y=chest.Position.y;
-              //   msg.ChestMessage.Progress=generator.DegreeOfFRepair;
+              //   msg.ChestMessage.Progress=generator.DegreeOfRepair;
                  return msg;
              }*/
     }

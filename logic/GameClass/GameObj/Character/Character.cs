@@ -230,28 +230,28 @@ namespace GameClass.GameObj
         }
         #endregion
         #region 交互相关的基本属性及方法
-        private int timeOfOpeningOrLocking;
-        public int TimeOfOpeningOrLocking
+        private int speedOfOpeningOrLocking;
+        public int SpeedOfOpeningOrLocking
         {
-            get => timeOfOpeningOrLocking;
+            get => speedOfOpeningOrLocking;
             set
             {
                 lock (gameObjLock)
                 {
-                    timeOfOpeningOrLocking = value;
+                    speedOfOpeningOrLocking = value;
                 }
             }
         }
 
-        private int timeOfClimbingThroughWindows;
-        public int TimeOfClimbingThroughWindows
+        private int speedOfClimbingThroughWindows;
+        public int SpeedOfClimbingThroughWindows
         {
-            get => timeOfClimbingThroughWindows;
+            get => speedOfClimbingThroughWindows;
             set
             {
                 lock (gameObjLock)
                 {
-                    timeOfClimbingThroughWindows = value;
+                    speedOfClimbingThroughWindows = value;
                 }
             }
         }
@@ -359,75 +359,31 @@ namespace GameClass.GameObj
         {
             get
             {
-                if (IsMoving) return PlayerStateType.IsMoving;
+                if (playerState == PlayerStateType.Null && IsMoving) return PlayerStateType.Moving;
                 return playerState;
             }
             set
             {
-                if (!(value == PlayerStateType.IsMoving))
+                if (value != PlayerStateType.Moving)
                     lock (gameObjLock)
                         IsMoving = false;
 
-                lock (gameObjLock) playerState = (value == PlayerStateType.IsMoving) ? PlayerStateType.Null : value;
+                lock (gameObjLock) playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
             }
         }
 
-        public bool Commandable() => (playerState != PlayerStateType.IsDeceased && playerState != PlayerStateType.IsEscaped
-                                                            && playerState != PlayerStateType.IsAddicted && playerState != PlayerStateType.IsRescuing
-                                                             && playerState != PlayerStateType.IsSwinging && playerState != PlayerStateType.IsTryingToAttack
-                                                              && playerState != PlayerStateType.IsClimbingThroughWindows && playerState != PlayerStateType.IsStunned);
-        public bool InteractingWithMapWithoutMoving() => (playerState == PlayerStateType.IsLockingOrOpeningTheDoor || playerState == PlayerStateType.IsFixing || playerState == PlayerStateType.IsOpeningTheChest);
-        public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.IsMoving);
+        public bool Commandable() => (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
+                                                            && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescuing
+                                                             && playerState != PlayerStateType.Swinging && playerState != PlayerStateType.TryingToAttack
+                                                              && playerState != PlayerStateType.ClimbingThroughWindows && playerState != PlayerStateType.Stunned);
+        public bool InteractingWithMapWithoutMoving() => (playerState == PlayerStateType.LockingOrOpeningTheDoor || playerState == PlayerStateType.Fixing || playerState == PlayerStateType.OpeningTheChest);
+        public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
 
         private int score = 0;
         public int Score
         {
             get => score;
         }
-
-        private Prop[] propInventory = new Prop[GameData.maxNumOfPropInPropInventory]
-                                                        {new NullProp(), new NullProp(),new NullProp() };
-        public Prop[] PropInventory
-        {
-            get => propInventory;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    propInventory = value;
-                    Debugger.Output(this, " prop becomes " + (PropInventory == null ? "null" : PropInventory.ToString()));
-                }
-            }
-        }
-
-        /// <summary>
-        /// 使用物品栏中的道具
-        /// </summary>
-        /// <returns>被使用的道具</returns>
-        public Prop UseProp(int indexing)
-        {
-            if (indexing < 0 || indexing >= GameData.maxNumOfPropInPropInventory)
-                return new NullProp();
-            lock (gameObjLock)
-            {
-                Prop prop = propInventory[indexing];
-                PropInventory[indexing] = new NullProp();
-                return prop;
-            }
-        }
-
-        /// <summary>
-        /// 如果indexing==GameData.maxNumOfPropInPropInventory表明道具栏为满
-        /// </summary>
-        public int IndexingOfAddProp()
-        {
-            int indexing = 0;
-            for (; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
-                if (PropInventory[indexing].GetPropType() == PropType.Null)
-                    break;
-            return indexing;
-        }
-
 
         /// <summary>
         /// 加分
@@ -498,7 +454,50 @@ namespace GameClass.GameObj
             }
         }
 
-        #region 角色拥有的buff相关属性、方法
+        #region 道具和buff相关属性、方法
+        private Prop[] propInventory = new Prop[GameData.maxNumOfPropInPropInventory]
+                                                {new NullProp(), new NullProp(),new NullProp() };
+        public Prop[] PropInventory
+        {
+            get => propInventory;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    propInventory = value;
+                    Debugger.Output(this, " prop becomes " + (PropInventory == null ? "null" : PropInventory.ToString()));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 使用物品栏中的道具
+        /// </summary>
+        /// <returns>被使用的道具</returns>
+        public Prop UseProp(int indexing)
+        {
+            if (indexing < 0 || indexing >= GameData.maxNumOfPropInPropInventory)
+                return new NullProp();
+            lock (gameObjLock)
+            {
+                Prop prop = propInventory[indexing];
+                PropInventory[indexing] = new NullProp();
+                return prop;
+            }
+        }
+
+        /// <summary>
+        /// 如果indexing==GameData.maxNumOfPropInPropInventory表明道具栏为满
+        /// </summary>
+        public int IndexingOfAddProp()
+        {
+            int indexing = 0;
+            for (; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
+                if (PropInventory[indexing].GetPropType() == PropType.Null)
+                    break;
+            return indexing;
+        }
+
         public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManager.AddMoveSpeed(add, buffTime, newVal =>
                                                                                                             { MoveSpeed = newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed; },
                                                                                              OrgMoveSpeed);

@@ -257,7 +257,7 @@ namespace Gaming
                     return false;
                 Chest? chestToOpen = (Chest?)gameMap.OneForInteract(player.Position, GameObjType.Chest);
 
-                if (chestToOpen == null || chestToOpen.IsOpen)
+                if (chestToOpen == null || chestToOpen.IsOpen())
                     return false;
 
                 player.PlayerState = PlayerStateType.OpeningTheChest;
@@ -265,12 +265,11 @@ namespace Gaming
           (
               () =>
               {
-                  int OpenDegree = 0;
                   new FrameRateTaskExecutor<int>(
-                      loopCondition: () => player.PlayerState == PlayerStateType.OpeningTheChest && gameMap.Timer.IsGaming && OpenDegree < player.TimeOfOpenChest,
+                      loopCondition: () => player.PlayerState == PlayerStateType.OpeningTheChest && gameMap.Timer.IsGaming && (!chestToOpen.IsOpen()),
                       loopToDo: () =>
                       {
-                          OpenDegree += GameData.frameDuration;
+                          chestToOpen.OpenDegree += GameData.frameDuration * player.SpeedOfOpenChest;
                       },
                       timeInterval: GameData.frameDuration,
                       finallyReturn: () => 0
@@ -278,9 +277,8 @@ namespace Gaming
 
                       .Start();
 
-                  if (OpenDegree >= player.TimeOfOpenChest)
+                  if (chestToOpen.IsOpen())
                   {
-                      chestToOpen.IsOpen = true;
                       if (player.PlayerState == PlayerStateType.OpeningTheChest)
                           player.PlayerState = PlayerStateType.Null;
                       for (int i = 0; i < GameData.maxNumOfPropInChest; ++i)
@@ -291,6 +289,8 @@ namespace Gaming
                           gameMap.Add(prop);
                       }
                   }
+                  else chestToOpen.OpenDegree = 0;
+
               }
 
           )

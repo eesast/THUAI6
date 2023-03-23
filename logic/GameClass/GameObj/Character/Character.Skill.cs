@@ -88,7 +88,7 @@ namespace GameClass.GameObj
             this.characterType = characterType;
             this.SpeedOfOpeningOrLocking = Occupation.TimeOfOpeningOrLocking;
             this.SpeedOfClimbingThroughWindows = Occupation.SpeedOfClimbingThroughWindows;
-            this.TimeOfOpenChest = Occupation.TimeOfOpenChest;
+            this.SpeedOfOpenChest = Occupation.TimeOfOpenChest;
 
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)
             {

@@ -256,15 +256,15 @@ namespace GameClass.GameObj
             }
         }
 
-        private int timeOfOpenChest;
-        public int TimeOfOpenChest
+        private int speedOfOpenChest;
+        public int SpeedOfOpenChest
         {
-            get => timeOfOpenChest;
+            get => speedOfOpenChest;
             set
             {
                 lock (gameObjLock)
                 {
-                    timeOfOpenChest = value;
+                    speedOfOpenChest = value;
                 }
             }
         }

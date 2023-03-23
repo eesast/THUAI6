@@ -20,15 +20,20 @@ namespace GameClass.GameObj
         private Prop[] propInChest = new Prop[GameData.maxNumOfPropInChest] { new NullProp(), new NullProp() };
         public Prop[] PropInChest => propInChest;
 
-        private bool isOpen = false;
-        public bool IsOpen
+        private int openDegree = 0;
+        public int OpenDegree
         {
-            get => isOpen;
+            get => openDegree;
             set
             {
-                lock (gameObjLock)
-                    isOpen = value;
+                if (value > 0)
+                    lock (gameObjLock)
+                        openDegree = (value > GameData.degreeOfOpeningChest) ? GameData.degreeOfOpeningChest : value;
+                else
+                    lock (gameObjLock)
+                        openDegree = 0;
             }
         }
+        public bool IsOpen() => (OpenDegree == GameData.degreeOfOpeningChest);
     }
 }

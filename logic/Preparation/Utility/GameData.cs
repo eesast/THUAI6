@@ -68,7 +68,7 @@ namespace Preparation.Utility
         public const int basicSpeedOfOpeningOrLocking = 3280;
         public const int basicStudentSpeedOfClimbingThroughWindows = 611;
         public const int basicGhostSpeedOfClimbingThroughWindows = 1270;
-        public const int basicTimeOfOpenChest = 10000;
+        public const int basicSpeedOfOpenChest = 1000;
 
         public const int basicHp = 3000000;                             // 初始血量
         public const int basicMaxGamingAddiction = 60000;//基本完全沉迷时间
@@ -141,6 +141,7 @@ namespace Preparation.Utility
         #region 物体相关
         public const int degreeOfFixedGenerator = 10300000;
         public const int degreeOfLockingOrOpeningTheDoor = 10000;
+        public const int degreeOfOpeningChest = 10000;
         public const int degreeOfOpenedDoorway = 18000;
         public const int maxNumOfPropInChest = 2;
         public const int numOfGeneratorRequiredForRepair = 7;

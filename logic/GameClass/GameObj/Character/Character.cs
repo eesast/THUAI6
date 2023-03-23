@@ -10,9 +10,10 @@ namespace GameClass.GameObj
 {
     public partial class Character : Moveable, ICharacter  // 负责人LHR摆烂终了
     {
-        private readonly object beAttackedLock = new();
+        #region 装弹、攻击相关的基本属性及方法
 
-        #region 装弹相关的基本属性及方法
+        protected readonly object beAttackedLock = new();
+
         /// <summary>
         /// 装弹冷却
         /// </summary>
@@ -93,43 +94,7 @@ namespace GameClass.GameObj
             }
         }
 
-        /// <summary>
-        /// 遭受攻击
-        /// </summary>
-        /// <param name="subHP"></param>
-        /// <param name="hasSpear"></param>
-        /// <param name="attacker">伤害来源</param>
-        /// <returns>人物在受到攻击后死了吗</returns>
-        public bool BeAttacked(Bullet bullet)
-        {
-
-            lock (beAttackedLock)
-            {
-                if (hp <= 0)
-                    return false;  // 原来已经死了
-                if (bullet.Parent.TeamID != this.TeamID)
-                {
-
-                    if (HasShield)
-                    {
-                        if (bullet.HasSpear)
-                            _ = TrySubHp(bullet.AP);
-                        else
-                            return false;
-                    }
-                    else
-                    {
-                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * TrySubHp(bullet.AP)));
-                    }
-#if DEBUG
-                    Console.WriteLine($"PlayerID:{ID} is being shot! Now his hp is {hp}.");
-#endif
-                    if (hp <= 0)
-                        TryActivatingLIFE();  // 如果有复活甲
-                }
-                return hp <= 0;
-            }
-        }
+        /*
         /// <summary>
         /// 攻击被反弹，反弹伤害不会再被反弹
         /// </summary>
@@ -152,7 +117,7 @@ namespace GameClass.GameObj
                 }
                 return hp <= 0;
             }
-        }
+        }*/
         #endregion
         #region 感知相关的基本属性及方法
         /// <summary>
@@ -256,15 +221,15 @@ namespace GameClass.GameObj
             }
         }
 
-        private int timeOfOpenChest;
-        public int TimeOfOpenChest
+        private int speedOfOpenChest;
+        public int SpeedOfOpenChest
         {
-            get => timeOfOpenChest;
+            get => speedOfOpenChest;
             set
             {
                 lock (gameObjLock)
                 {
-                    timeOfOpenChest = value;
+                    speedOfOpenChest = value;
                 }
             }
         }
@@ -372,12 +337,18 @@ namespace GameClass.GameObj
             }
         }
 
+        public bool NoHp() => (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
+                                                            && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued);
         public bool Commandable() => (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
-                                                            && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescuing
+                                                            && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
                                                              && playerState != PlayerStateType.Swinging && playerState != PlayerStateType.TryingToAttack
                                                               && playerState != PlayerStateType.ClimbingThroughWindows && playerState != PlayerStateType.Stunned);
         public bool InteractingWithMapWithoutMoving() => (playerState == PlayerStateType.LockingOrOpeningTheDoor || playerState == PlayerStateType.Fixing || playerState == PlayerStateType.OpeningTheChest);
         public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
+        public bool CanBeAwed() => !(playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
+                                                            || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued
+                                                            || playerState == PlayerStateType.Treated || playerState != PlayerStateType.Stunned
+                                                            || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
 
         private int score = 0;
         public int Score
@@ -542,7 +513,7 @@ namespace GameClass.GameObj
                     return false;
             }
         }
-        private void TryActivatingLIFE()
+        protected void TryActivatingLIFE()
         {
             if (buffManager.TryActivatingLIFE())
             {

@@ -25,5 +25,28 @@ namespace GameClass.GameObj
                 return true;  // 不是鬼不碰撞
             return false;
         }
+
+
+        private bool canOpen = false;
+        public bool CanOpen
+        {
+            get => canOpen;
+            set
+            {
+                lock (gameObjLock)
+                    canOpen = value;
+            }
+        }
+
+        private bool isOpen = false;
+        public bool IsOpen
+        {
+            get => isOpen;
+            set
+            {
+                lock (gameObjLock)
+                    isOpen = value;
+            }
+        }
     }
 }

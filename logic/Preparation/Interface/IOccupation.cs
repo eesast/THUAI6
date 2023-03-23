@@ -64,7 +64,7 @@ namespace Preparation.Interface
         public int speedOfClimbingThroughWindows = GameData.basicGhostSpeedOfClimbingThroughWindows;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
-        public int timeOfOpenChest = GameData.basicTimeOfOpenChest;
+        public int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
         public int TimeOfOpenChest => timeOfOpenChest;
     }
     public class Athlete : IStudent
@@ -107,7 +107,7 @@ namespace Preparation.Interface
         public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows * 12 / 10;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
-        public int timeOfOpenChest = GameData.basicTimeOfOpenChest;
+        public int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
         public int TimeOfOpenChest => timeOfOpenChest;
     }
 }

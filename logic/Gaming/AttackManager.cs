@@ -98,15 +98,6 @@ namespace Gaming
             {
 
                 player.Die(PlayerStateType.Deceased);
-                // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
-                // try
-                //{
-                //     gameMap.GameObjDict[GameObjType.Character].Remove(playerBeingShot);
-                // }
-                // finally
-                //{
-                //     gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
-                // }
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {
@@ -117,34 +108,28 @@ namespace Gaming
                         gameMap.Add(prop);
                     }
                 }
+                --gameMap.NumOfSurvivingStudent;
+                if (gameMap.NumOfSurvivingStudent == 1)
+                {
+                    gameMap.GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
+                    try
+                    {
+                        foreach (EmergencyExit emergencyExit in gameMap.GameObjDict[GameObjType.EmergencyExit])
+                            if (emergencyExit.CanOpen)
+                            {
+                                emergencyExit.IsOpen = true;
+                                break;
+                            }
+                    }
+                    finally
+                    {
+                        gameMap.GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
+                    }
+                }
 
                 //  player.Reset();
                 //    ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  // 给击杀者加分
 
-                /*    new Thread
-                        (() =>
-                        {
-
-                            Thread.Sleep(GameData.reviveTime);
-
-                            playerBeingShot.AddShield(GameData.shieldTimeAtBirth);  // 复活加个盾
-
-                            // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
-                            // try
-                            //{
-                            //     gameMap.GameObjDict[GameObjType.Character].Add(playerBeingShot);
-                            // }
-                            // finally { gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock(); }
-
-                            if (gameMap.Timer.IsGaming)
-                            {
-                                playerBeingShot.CanMove = true;
-                            }
-                            playerBeingShot.Deceased = false;
-                        }
-                        )
-                    { IsBackground = true }.Start();
-                */
             }
 
             private void BombObj(Bullet bullet, GameObj objBeingShot)
@@ -154,7 +139,7 @@ namespace Gaming
                     case GameObjType.Character:
 
                         if ((!((Character)objBeingShot).IsGhost()) && bullet.Parent.IsGhost())
-                            if (((Character)objBeingShot).BeAttacked(bullet))
+                            if (((Student)objBeingShot).BeAttacked(bullet))
                             {
                                 BeAddictedToGame((Student)objBeingShot);
                             }

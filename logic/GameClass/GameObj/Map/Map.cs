@@ -13,6 +13,28 @@ namespace GameClass.GameObj
         private readonly Dictionary<uint, XY> birthPointList;  // 出生点列表
         public Dictionary<uint, XY> BirthPointList => birthPointList;
 
+        private object lockForNum = new();
+        private uint numOfRepairedGenerators = 0;
+        public uint NumOfRepairedGenerators
+        {
+            get => numOfRepairedGenerators;
+            set
+            {
+                lock (lockForNum)
+                    numOfRepairedGenerators = value;
+            }
+        }
+        private uint numOfSurvivingStudent = GameData.numOfStudent;
+        public uint NumOfSurvivingStudent
+        {
+            get => numOfSurvivingStudent;
+            set
+            {
+                lock (lockForNum)
+                    numOfSurvivingStudent = value;
+            }
+        }
+
         private Dictionary<GameObjType, IList<IGameObj>> gameObjDict;
         public Dictionary<GameObjType, IList<IGameObj>> GameObjDict => gameObjDict;
         private Dictionary<GameObjType, ReaderWriterLockSlim> gameObjLockDict;
@@ -31,7 +53,6 @@ namespace GameClass.GameObj
                 return PlaceType.Null;
             }
         }
-
         public PlaceType GetPlaceType(XY pos)
         {
             try

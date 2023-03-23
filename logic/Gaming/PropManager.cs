@@ -59,13 +59,10 @@ namespace Gaming
                 if (indexing == GameData.maxNumOfPropInPropInventory)
                     return false;
 
-                Prop? pickProp = new NullProp();
+                Prop pickProp = new NullProp();
                 if (propType == PropType.Null)  // 自动检查有无道具可捡
                 {
-                    pickProp = (Prop?)gameMap.OneInTheSameCell(player.Position, GameObjType.Prop);
-                    if (pickProp != null)
-                        player.PropInventory[indexing] = pickProp;
-                    else player.PropInventory[indexing] = pickProp = new NullProp();
+                    pickProp = player.PropInventory[indexing] = ((Prop?)gameMap.OneInTheSameCell(player.Position, GameObjType.Prop)) ?? new NullProp();
                 }
                 else
                 {

@@ -10,8 +10,10 @@ namespace GameClass.GameObj
 {
     public partial class Character : Moveable, ICharacter  // 负责人LHR摆烂终了
     {
+        #region 装弹、攻击相关的基本属性及方法
 
-        #region 装弹攻击相关的基本属性及方法
+        protected readonly object beAttackedLock = new();
+
         /// <summary>
         /// 装弹冷却
         /// </summary>

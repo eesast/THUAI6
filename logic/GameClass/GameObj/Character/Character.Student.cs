@@ -6,8 +6,6 @@ namespace GameClass.GameObj
 {
     public class Student : Character
     {
-
-        private readonly object beAttackedLock = new();
         /// <summary>
         /// 遭受攻击
         /// </summary>

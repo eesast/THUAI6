@@ -257,7 +257,7 @@ namespace Gaming
                     return false;
                 Chest? chestToOpen = (Chest?)gameMap.OneForInteract(player.Position, GameObjType.Chest);
 
-                if (chestToOpen == null || chestToOpen.IsOpen())
+                if (chestToOpen == null || chestToOpen.IsOpen() || chestToOpen.OpenDegree > 0)
                     return false;
 
                 player.PlayerState = PlayerStateType.OpeningTheChest;

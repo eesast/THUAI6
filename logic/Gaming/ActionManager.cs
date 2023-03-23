@@ -398,8 +398,7 @@ namespace Gaming
                       loopCondition: () => flag && player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor && gameMap.Timer.IsGaming && doorToLock.OpenOrLockDegree < GameData.degreeOfLockingOrOpeningTheDoor,
                       loopToDo: () =>
                       {
-                          Character? character = (Character?)gameMap.OneInTheSameCell(doorToLock.Position, GameObjType.Character);
-                          flag = (character != null);
+                          flag = ((gameMap.OneInTheSameCell(doorToLock.Position, GameObjType.Character)) != null);
                           doorToLock.OpenOrLockDegree += GameData.frameDuration * player.SpeedOfOpeningOrLocking;
                       },
                       timeInterval: GameData.frameDuration,

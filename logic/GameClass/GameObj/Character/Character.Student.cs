@@ -1,10 +1,51 @@
 ﻿using Preparation.Utility;
 using Preparation.Interface;
+using System;
 
 namespace GameClass.GameObj
 {
     public class Student : Character
     {
+
+        private readonly object beAttackedLock = new();
+        /// <summary>
+        /// 遭受攻击
+        /// </summary>
+        /// <param name="subHP"></param>
+        /// <param name="hasSpear"></param>
+        /// <param name="attacker">伤害来源</param>
+        /// <returns>人物在受到攻击后死了吗</returns>
+        public bool BeAttacked(Bullet bullet)
+        {
+
+            lock (beAttackedLock)
+            {
+                if (hp <= 0 || NoHp())
+                    return false;  // 原来已经死了
+                if (bullet.Parent.TeamID != this.TeamID)
+                {
+                    if (CanBeAwed()) PlayerState = PlayerStateType.Stunned;
+                    if (HasShield)
+                    {
+                        if (bullet.HasSpear)
+                            _ = TrySubHp(bullet.AP);
+                        else
+                            return false;
+                    }
+                    else
+                    {
+                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * TrySubHp(bullet.AP)));
+                    }
+#if DEBUG
+                    Console.WriteLine($"PlayerID:{ID} is being shot! Now his hp is {hp}.");
+#endif
+                    if (hp <= 0)
+                        TryActivatingLIFE();  // 如果有复活甲
+                }
+                return hp <= 0;
+            }
+        }
+
         protected int fixSpeed;
         /// <summary>
         /// 修理电机速度

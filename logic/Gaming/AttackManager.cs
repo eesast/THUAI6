@@ -139,7 +139,7 @@ namespace Gaming
                     case GameObjType.Character:
 
                         if ((!((Character)objBeingShot).IsGhost()) && bullet.Parent.IsGhost())
-                            if (((Character)objBeingShot).BeAttacked(bullet))
+                            if (((Student)objBeingShot).BeAttacked(bullet))
                             {
                                 BeAddictedToGame((Student)objBeingShot);
                             }

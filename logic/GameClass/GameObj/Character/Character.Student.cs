@@ -25,7 +25,7 @@ namespace GameClass.GameObj
                     if (HasShield)
                     {
                         if (bullet.HasSpear)
-                            _ = TrySubHp(bullet.AP);
+                            bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(TrySubHp(bullet.AP)));
                         else
                             return false;
                     }

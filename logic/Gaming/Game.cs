@@ -85,13 +85,14 @@ namespace Gaming
             )
             { IsBackground = true }.Start();
             #endregion
-            #region BGM更新
+            #region BGM,牵制得分更新
             new Thread
             (
                 () =>
                 {
                     while (!gameMap.Timer.IsGaming)
                         Thread.Sleep((int)GameData.checkInterval);
+                    int TimePinningDown = 0, ScoreAdded = 0;
                     new FrameRateTaskExecutor<int>(
                         loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
                         loopToDo: () =>
@@ -121,6 +122,13 @@ namespace Gaming
                                             {
                                                 if (XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
                                                     newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
+                                                if (XY.Distance(newPlayer.Position, person.Position) <= GameData.basicViewRange)
+                                                {
+                                                    TimePinningDown += (int)GameData.checkInterval;
+                                                    newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
+                                                    ScoreAdded = GameData.StudentScorePinDown(TimePinningDown);
+                                                }
+                                                else TimePinningDown = ScoreAdded = 0;
                                                 break;
                                             }
                                         }

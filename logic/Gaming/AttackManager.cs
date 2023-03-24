@@ -38,8 +38,9 @@ namespace Gaming
                 );
             }
 
-            private void BeAddictedToGame(Student player)
+            private void BeAddictedToGame(Student player, Ghost ghost)
             {
+                ghost.AddScore(GameData.TrickerScoreStudentBeAddicted);
                 new Thread
                     (() =>
                     {
@@ -57,6 +58,7 @@ namespace Gaming
                             {
                                 if (player.GamingAddiction == player.MaxGamingAddiction && gameMap.Timer.IsGaming)
                                 {
+                                    ghost.AddScore(GameData.TrickerScoreStudentDie);
                                     Die(player);
                                 }
                                 return 0;
@@ -141,9 +143,14 @@ namespace Gaming
                         if ((!((Character)objBeingShot).IsGhost()) && bullet.Parent.IsGhost())
                         {
                             Student oneBeAttacked = (Student)objBeingShot;
+                            if (oneBeAttacked.BeAttacked(bullet))
+                            {
+                                BeAddictedToGame(oneBeAttacked, (Ghost)bullet.Parent);
+                            }
                             if (oneBeAttacked.CanBeAwed())
                             {
                                 oneBeAttacked.PlayerState = PlayerStateType.Stunned;
+                                bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned);
                                 new Thread
                                 (
                                 () =>
@@ -156,10 +163,6 @@ namespace Gaming
                                 }
                                 )
                                 { IsBackground = true }.Start();
-                            }
-                            if (oneBeAttacked.BeAttacked(bullet))
-                            {
-                                BeAddictedToGame((Student)objBeingShot);
                             }
                         }
                         //       if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)

@@ -112,11 +112,18 @@ namespace Preparation.Utility
         {
             return degreeOfFix;
         }
+        public const int StudentScoreFixed = 25;
         public static int StudentScorePinDown(int timeOfPiningDown)
         {
             return 0;
         }
         public const int StudentScoreTrickerBeStunned = 25;
+        public const int StudentScoreRescue = 100;
+        public static int StudentScoreTreat(int degree)
+        {
+            return degree;
+        }
+        public const int StudentScoreEscape = 1000;
 
         public const int ScoreUseProp = 0;
         #endregion

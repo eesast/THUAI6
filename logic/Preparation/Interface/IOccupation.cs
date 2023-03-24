@@ -8,7 +8,6 @@ namespace Preparation.Interface
         public int MoveSpeed { get; }
         public int MaxHp { get; }
         public BulletType InitBullet { get; }
-        public int CD { get; }
         public int MaxBulletNum { get; }
         public List<ActiveSkillType> ListOfIActiveSkill { get; }
         public List<PassiveSkillType> ListOfIPassiveSkill { get; }
@@ -38,9 +37,6 @@ namespace Preparation.Interface
         private const int maxHp = GameData.basicHp;
         public int MaxHp => maxHp;
 
-        public const int cd = 0;
-        public int CD => cd;
-
         public const int maxBulletNum = 1;
         public int MaxBulletNum => maxBulletNum;
 
@@ -69,14 +65,11 @@ namespace Preparation.Interface
     }
     public class Teacher : IStudent
     {
-        private const int moveSpeed = GameData.basicMoveSpeed / 38 * 40;
+        private const int moveSpeed = GameData.basicMoveSpeed / 42 * 36;
         public int MoveSpeed => moveSpeed;
 
-        private const int maxHp = GameData.basicHp / 30 * 32;
+        private const int maxHp = GameData.basicHp * 10;
         public int MaxHp => maxHp;
-
-        public const int cd = 0;
-        public int CD => cd;
 
         public const int maxBulletNum = 0;
         public int MaxBulletNum => maxBulletNum;
@@ -117,9 +110,6 @@ namespace Preparation.Interface
 
         private const int maxHp = GameData.basicHp / 30 * 32;
         public int MaxHp => maxHp;
-
-        public const int cd = 0;
-        public int CD => cd;
 
         public const int maxBulletNum = 0;
         public int MaxBulletNum => maxBulletNum;

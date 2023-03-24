@@ -45,7 +45,10 @@ namespace GameClass.GameObj
             set
             {
                 lock (gameObjLock)
+                {
                     bulletOfPlayer = value;
+                    CD = BulletFactory.BulletCD(value);
+                }
             }
         }
 

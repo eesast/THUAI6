@@ -54,7 +54,7 @@ namespace Gaming
                 () =>
                 {
                     while (!gameMap.Timer.IsGaming)
-                        Thread.Sleep(newPlayer.CD);
+                        Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
                     long lastTime = Environment.TickCount64;
                     new FrameRateTaskExecutor<int>(
                         loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
@@ -63,7 +63,7 @@ namespace Gaming
                             long nowTime = Environment.TickCount64;
                             if (newPlayer.BulletNum == newPlayer.MaxBulletNum)
                                 lastTime = nowTime;
-                            if (nowTime - lastTime >= newPlayer.CD)
+                            else if (nowTime - lastTime >= newPlayer.CD)
                             {
                                 _ = newPlayer.TryAddBulletNum();
                                 lastTime = nowTime;
@@ -91,7 +91,7 @@ namespace Gaming
                 () =>
                 {
                     while (!gameMap.Timer.IsGaming)
-                        Thread.Sleep((int)GameData.checkInterval);
+                        Thread.Sleep(GameData.checkInterval);
                     int TimePinningDown = 0, ScoreAdded = 0;
                     new FrameRateTaskExecutor<int>(
                         loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
@@ -124,7 +124,7 @@ namespace Gaming
                                                     newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
                                                 if (XY.Distance(newPlayer.Position, person.Position) <= GameData.basicViewRange)
                                                 {
-                                                    TimePinningDown += (int)GameData.checkInterval;
+                                                    TimePinningDown += GameData.checkInterval;
                                                     newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
                                                     ScoreAdded = GameData.StudentScorePinDown(TimePinningDown);
                                                 }

@@ -125,7 +125,14 @@ namespace Preparation.Utility
         }
         public const int StudentScoreEscape = 1000;
 
-        public const int ScoreUseProp = 0;
+        public static int ScoreUseProp(PropType prop, bool IsGhost)
+        {
+            return 0;
+        }
+        public static int ScoreUseSkill(ActiveSkillType activeSkillType)
+        {
+            return 0;
+        }
         #endregion
         #region 攻击与子弹相关
         public const int basicApOfGhost = 1500000;                             // 捣蛋鬼攻击力

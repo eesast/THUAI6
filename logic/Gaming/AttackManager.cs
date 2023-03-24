@@ -48,10 +48,10 @@ namespace Gaming
                             player.GamingAddiction = GameData.MidGamingAddiction;
                         player.PlayerState = PlayerStateType.Addicted;
                         new FrameRateTaskExecutor<int>(
-                            () => player.PlayerState == PlayerStateType.Addicted && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
+                            () => (player.PlayerState == PlayerStateType.Addicted || player.PlayerState == PlayerStateType.Rescued) && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
                             () =>
                             {
-                                player.GamingAddiction += GameData.frameDuration;
+                                player.GamingAddiction += (player.PlayerState == PlayerStateType.Addicted) ? GameData.frameDuration : 0;
                             },
                             timeInterval: GameData.frameDuration,
                             () =>

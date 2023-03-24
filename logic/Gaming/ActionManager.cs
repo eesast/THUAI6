@@ -34,7 +34,7 @@ namespace Gaming
 
             public bool Fix(Student player)// 自动检查有无发电机可修
             {
-                if (player.IsGhost() || (!player.Commandable()) || player.PlayerState == PlayerStateType.Fixing)
+                if ((!player.Commandable()) || player.PlayerState == PlayerStateType.Fixing)
                     return false;
                 Generator? generatorForFix = (Generator?)gameMap.OneForInteract(player.Position, GameObjType.Generator);
 
@@ -97,22 +97,22 @@ namespace Gaming
                 return true;
             }
 
-            public bool OpenDoorWay(Student player)
+            public bool OpenDoorway(Student player)
             {
-                if (!(player.Commandable()) || player.PlayerState == PlayerStateType.OpeningTheDoorWay)
+                if (!(player.Commandable()) || player.PlayerState == PlayerStateType.OpeningTheDoorway)
                     return false;
                 Doorway? doorwayToOpen = (Doorway?)gameMap.OneForInteract(player.Position, GameObjType.Doorway);
                 if (doorwayToOpen == null || doorwayToOpen.IsOpening || !doorwayToOpen.PowerSupply)
                     return false;
 
-                player.PlayerState = PlayerStateType.OpeningTheDoorWay;
+                player.PlayerState = PlayerStateType.OpeningTheDoorway;
                 doorwayToOpen.IsOpening = true;
                 new Thread
           (
               () =>
               {
                   new FrameRateTaskExecutor<int>(
-                      loopCondition: () => player.PlayerState == PlayerStateType.OpeningTheDoorWay && gameMap.Timer.IsGaming && doorwayToOpen.OpenDegree < GameData.degreeOfOpenedDoorway,
+                      loopCondition: () => player.PlayerState == PlayerStateType.OpeningTheDoorway && gameMap.Timer.IsGaming && doorwayToOpen.OpenDegree < GameData.degreeOfOpenedDoorway,
                       loopToDo: () =>
                       {
                           doorwayToOpen.OpenDegree += GameData.frameDuration;
@@ -125,7 +125,7 @@ namespace Gaming
                   doorwayToOpen.IsOpening = false;
                   if (doorwayToOpen.OpenDegree >= GameData.degreeOfOpenedDoorway)
                   {
-                      if (player.PlayerState == PlayerStateType.OpeningTheDoorWay)
+                      if (player.PlayerState == PlayerStateType.OpeningTheDoorway)
                           player.PlayerState = PlayerStateType.Null;
                   }
               }

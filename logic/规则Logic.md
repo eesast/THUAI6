@@ -97,7 +97,7 @@
         OpeningTheChest = 14,
         ClimbingThroughWindows = 15,
         UsingSkill = 16,
-        OpeningTheDoorWay = 17,
+        OpeningTheDoorway = 17,
     }
   ~~~
 - 可执行指令的（不用给选手）

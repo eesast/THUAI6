@@ -96,7 +96,7 @@ namespace Server
                     return PlayerState.Attacking;
                 case Preparation.Utility.PlayerStateType.UsingSkill:
                     return PlayerState.UsingSpecialSkill;
-                case Preparation.Utility.PlayerStateType.OpeningTheDoorWay:
+                case Preparation.Utility.PlayerStateType.OpeningTheDoorway:
                     return PlayerState.OpeningAGate;
                 default:
                     return PlayerState.NullStatus;

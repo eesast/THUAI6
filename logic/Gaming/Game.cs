@@ -252,11 +252,8 @@ namespace Gaming
             if (!gameMap.Timer.IsGaming)
                 return false;
             ICharacter? player = gameMap.FindPlayer(playerID);
-            if (player != null)
-            {
-                if (!player.IsGhost())
-                    return actionManager.Fix((Student)player);
-            }
+            if (player != null && !player.IsGhost())
+                return actionManager.Fix((Student)player);
             return false;
         }
         public bool Escape(long playerID)
@@ -282,7 +279,50 @@ namespace Gaming
             }
             return false;
         }
-
+        public bool OpenDoorway(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null && !player.IsGhost())
+            {
+                return actionManager.OpenDoorway((Student)player);
+            }
+            return false;
+        }
+        public bool OpenChest(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                return actionManager.OpenChest(player);
+            }
+            return false;
+        }
+        public bool ClimbingThroughWindow(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                return actionManager.ClimbingThroughWindow(player);
+            }
+            return false;
+        }
+        public bool LockOrOpenDoor(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                return actionManager.LockOrOpenDoor(player);
+            }
+            return false;
+        }
         public void Attack(long playerID, double angle)
         {
             if (!gameMap.Timer.IsGaming)

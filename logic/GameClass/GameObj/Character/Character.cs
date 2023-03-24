@@ -523,7 +523,7 @@ namespace GameClass.GameObj
         {
             if (buffManager.TryActivatingLIFE())
             {
-                hp = MaxHp;
+                hp = GameData.RemainHpWhenAddLife;
             }
         }
 

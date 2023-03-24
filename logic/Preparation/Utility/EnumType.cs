@@ -65,7 +65,7 @@ namespace Preparation.Utility
     {
         Null = 0,
         AddSpeed = 1,
-        AddLIFE = 2,
+        AddLifeOrAp = 2,
         AddHpOrAp = 3,
         ShieldOrSpear = 4,
         Key3 = 5,

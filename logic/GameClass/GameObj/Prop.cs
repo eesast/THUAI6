@@ -52,13 +52,13 @@ namespace GameClass.GameObj
     /// <summary>
     /// 复活甲
     /// </summary>
-    public sealed class AddLIFE : Prop
+    public sealed class AddLifeOrAp : Prop
     {
-        public AddLIFE(XY initPos, PlaceType placeType) :
+        public AddLifeOrAp(XY initPos, PlaceType placeType) :
             base(initPos, placeType)
         {
         }
-        public override PropType GetPropType() => PropType.AddLIFE;
+        public override PropType GetPropType() => PropType.AddLifeOrAp;
     }
     public sealed class AddHpOrAp : Prop
     {
@@ -139,6 +139,10 @@ namespace GameClass.GameObj
         {
             switch (propType)
             {
+                case PropType.AddSpeed:
+                    return new AddSpeed(pos, place);
+                case PropType.AddLifeOrAp:
+                    return new AddLifeOrAp(pos, place);
                 case PropType.ShieldOrSpear:
                     return new ShieldOrSpear(pos, place);
                 case PropType.AddHpOrAp:

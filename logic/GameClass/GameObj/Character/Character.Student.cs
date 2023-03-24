@@ -22,7 +22,6 @@ namespace GameClass.GameObj
                     return false;  // 原来已经死了
                 if (bullet.Parent.TeamID != this.TeamID)
                 {
-                    if (CanBeAwed()) PlayerState = PlayerStateType.Stunned;
                     if (HasShield)
                     {
                         if (bullet.HasSpear)

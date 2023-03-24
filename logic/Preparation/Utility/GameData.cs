@@ -116,6 +116,9 @@ namespace Preparation.Utility
         {
             return 0;
         }
+        public const int StudentScoreTrickerBeStunned = 25;
+
+        public const int ScoreUseProp = 0;
         #endregion
         #region 攻击与子弹相关
         public const int basicApOfGhost = 1500000;                             // 捣蛋鬼攻击力
@@ -124,8 +127,9 @@ namespace Preparation.Utility
 
         public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicCastTime = 500;//基本前摇时间
-        public const int basicBackswing = 500;//基本后摇时间
+        public const int basicBackswing = 818;//基本后摇时间
         public const int basicRecoveryFromHit = 4300;//基本命中攻击恢复时长
+        public const int basicStunnedTimeOfStudent = 4130;
 
         public const int bulletRadius = 200;                         // 默认子弹半径
         public const int basicBulletNum = 3;                         // 基本初始子弹量

@@ -317,7 +317,6 @@ namespace Gaming
           (
               () =>
               {
-
                   new FrameRateTaskExecutor<int>(
                     loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,
                     loopToDo: () => { },

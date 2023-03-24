@@ -139,10 +139,29 @@ namespace Gaming
                     case GameObjType.Character:
 
                         if ((!((Character)objBeingShot).IsGhost()) && bullet.Parent.IsGhost())
-                            if (((Student)objBeingShot).BeAttacked(bullet))
+                        {
+                            Student oneBeAttacked = (Student)objBeingShot;
+                            if (oneBeAttacked.CanBeAwed())
+                            {
+                                oneBeAttacked.PlayerState = PlayerStateType.Stunned;
+                                new Thread
+                                (
+                                () =>
+                                {
+                                    Thread.Sleep(GameData.basicStunnedTimeOfStudent);
+                                    if (oneBeAttacked.PlayerState == PlayerStateType.Stunned)
+                                    {
+                                        oneBeAttacked.PlayerState = PlayerStateType.Null;
+                                    }
+                                }
+                                )
+                                { IsBackground = true }.Start();
+                            }
+                            if (oneBeAttacked.BeAttacked(bullet))
                             {
                                 BeAddictedToGame((Student)objBeingShot);
                             }
+                        }
                         //       if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)
                         //          BeStunned((Character)objBeingShot, bullet.AP);
                         break;

@@ -42,14 +42,14 @@ namespace GameClass.GameObj
         }
         public override double BulletBombRange => 0;
         public override double BulletAttackRange => GameData.basicRemoteAttackRange * 13;
-        public override int AP => GameData.basicApOfGhost / 5 * 4;
+        public override int AP => GameData.basicApOfGhost * 4 / 5;
         public override int Speed => GameData.basicBulletMoveSpeed * 2;
         public override bool IsToBomb => false;
 
         public override int CastTime => GameData.basicCastTime;
-        public override int Backswing => GameData.basicBackswing / 5 * 2;
-        public override int RecoveryFromHit => GameData.basicBackswing / 4 * 3;
-        public const int cd = GameData.basicBackswing / 5 * 2 + 100;
+        public override int Backswing => GameData.basicBackswing * 2 / 5;
+        public override int RecoveryFromHit => GameData.basicBackswing * 3 / 4;
+        public const int cd = GameData.basicBackswing * 2 / 5 + 100;
         public override int CD => cd;
 
         public override bool CanAttack(GameObj target)
@@ -72,10 +72,10 @@ namespace GameClass.GameObj
             base(player, radius, placeType, pos)
         {
         }
-        public override double BulletBombRange => GameData.basicBulletBombRange / 3 * 7;
-        public override double BulletAttackRange => GameData.basicAttackShortRange / 9 * 7;
-        public override int AP => GameData.basicApOfGhost / 3 * 7;
-        public override int Speed => GameData.basicBulletMoveSpeed / 3 * 2;
+        public override double BulletBombRange => GameData.basicBulletBombRange * 7 / 3;
+        public override double BulletAttackRange => GameData.basicAttackShortRange * 7 / 9;
+        public override int AP => GameData.basicApOfGhost * 7 / 3;
+        public override int Speed => GameData.basicBulletMoveSpeed * 2 / 3;
 
         public override int CastTime => GameData.basicCastTime;
         public override int Backswing => GameData.basicBackswing;
@@ -105,10 +105,10 @@ namespace GameClass.GameObj
             base(player, radius, placeType, pos)
         {
         }
-        public override double BulletBombRange => GameData.basicBulletBombRange / 6 * 5;
+        public override double BulletBombRange => GameData.basicBulletBombRange * 5 / 6;
         public override double BulletAttackRange => GameData.basicAttackShortRange / 2;
-        public override int AP => GameData.basicApOfGhost / 6 * 5;
-        public override int Speed => GameData.basicBulletMoveSpeed / 6 * 5;
+        public override int AP => GameData.basicApOfGhost * 5 / 6;
+        public override int Speed => GameData.basicBulletMoveSpeed * 5 / 6;
 
         public override int CastTime => GameData.basicCastTime;
         public override int Backswing => GameData.basicBackswing;
@@ -137,7 +137,7 @@ namespace GameClass.GameObj
             base(player, radius, placeType, pos)
         {
         }
-        public override double BulletBombRange => GameData.basicBulletBombRange / 4 * 2;
+        public override double BulletBombRange => GameData.basicBulletBombRange * 2 / 4;
         public override double BulletAttackRange => GameData.basicAttackShortRange;
         public override int AP => (int)(0.5 * GameData.basicApOfGhost);
         public override int Speed => 5 * GameData.basicBulletMoveSpeed / 3;
@@ -168,9 +168,9 @@ namespace GameClass.GameObj
             base(player, radius, placeType, pos)
         {
         }
-        public override double BulletBombRange => GameData.basicBulletBombRange / 3 * 4;
+        public override double BulletBombRange => GameData.basicBulletBombRange * 4 / 3;
         public override double BulletAttackRange => 0.1 * GameData.basicAttackShortRange;
-        public override int AP => GameData.basicApOfGhost / 3 * 2;
+        public override int AP => GameData.basicApOfGhost * 2 / 3;
         public override int Speed => GameData.basicBulletMoveSpeed / 3;
         public override int CastTime => GameData.basicCastTime;
         public override int Backswing => GameData.basicBackswing;

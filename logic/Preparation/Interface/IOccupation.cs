@@ -31,7 +31,7 @@ namespace Preparation.Interface
 
     public class Assassin : IGhost
     {
-        private const int moveSpeed = GameData.basicMoveSpeed / 380 * 473;
+        private const int moveSpeed = GameData.basicMoveSpeed * 473 / 380;
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp;
@@ -65,7 +65,7 @@ namespace Preparation.Interface
     }
     public class Teacher : IStudent
     {
-        private const int moveSpeed = GameData.basicMoveSpeed / 42 * 36;
+        private const int moveSpeed = GameData.basicMoveSpeed * 3 / 4;
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp * 10;
@@ -79,10 +79,10 @@ namespace Preparation.Interface
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.CanBeginToCharge });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
 
-        public const int fixSpeed = GameData.basicFixSpeed / 10 * 6;
+        public const int fixSpeed = GameData.basicFixSpeed * 6 / 10;
         public int FixSpeed => fixSpeed;
 
-        public const int treatSpeed = GameData.basicTreatSpeed / 10 * 8;
+        public const int treatSpeed = GameData.basicTreatSpeed * 8 / 10;
         public int TreatSpeed => treatSpeed;
 
         public const double concealment = GameData.basicConcealment * 0.9;
@@ -105,10 +105,10 @@ namespace Preparation.Interface
     }
     public class Athlete : IStudent
     {
-        private const int moveSpeed = GameData.basicMoveSpeed / 38 * 40;
+        private const int moveSpeed = GameData.basicMoveSpeed * 40 / 38;
         public int MoveSpeed => moveSpeed;
 
-        private const int maxHp = GameData.basicHp / 30 * 32;
+        private const int maxHp = GameData.basicHp * 32 / 30;
         public int MaxHp => maxHp;
 
         public const int maxBulletNum = 0;
@@ -119,10 +119,10 @@ namespace Preparation.Interface
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.CanBeginToCharge });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
 
-        public const int fixSpeed = GameData.basicFixSpeed / 10 * 6;
+        public const int fixSpeed = GameData.basicFixSpeed * 6 / 10;
         public int FixSpeed => fixSpeed;
 
-        public const int treatSpeed = GameData.basicTreatSpeed / 10 * 8;
+        public const int treatSpeed = GameData.basicTreatSpeed * 8 / 10;
         public int TreatSpeed => treatSpeed;
 
         public const double concealment = GameData.basicConcealment * 0.9;

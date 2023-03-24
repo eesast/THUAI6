@@ -10,8 +10,6 @@ namespace GameClass.GameObj
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
-
-        public bool IsBeingUsed { get; set; }
     }
     public class CanBeginToCharge : IActiveSkill
     {
@@ -20,8 +18,6 @@ namespace GameClass.GameObj
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
-
-        public bool IsBeingUsed { get; set; }
     }
 
     public class BecomeInvisible : IActiveSkill
@@ -31,8 +27,6 @@ namespace GameClass.GameObj
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
-
-        public bool IsBeingUsed { get; set; }
     }
 
     public class NuclearWeapon : IActiveSkill  // 核武器
@@ -41,8 +35,6 @@ namespace GameClass.GameObj
         public int DurationTime => GameData.commonSkillTime / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
-
-        public bool IsBeingUsed { get; set; }
     }
 
     public class UseKnife : IActiveSkill
@@ -51,8 +43,6 @@ namespace GameClass.GameObj
         public int DurationTime => GameData.commonSkillTime / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
-
-        public bool IsBeingUsed { get; set; }
     }
 
     public class SuperFast : IActiveSkill  // 3倍速
@@ -61,13 +51,19 @@ namespace GameClass.GameObj
         public int DurationTime => GameData.commonSkillTime / 10 * 4;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
+    }
 
-        public bool IsBeingUsed { get; set; }
+    public class NullSkill : IActiveSkill
+    {
+        public int SkillCD => GameData.commonSkillCD;
+        public int DurationTime => GameData.commonSkillTime;
+        private readonly object commonSkillLock = new object();
+        public object ActiveSkillLock => commonSkillLock;
     }
 
     public static class SkillFactory
     {
-        public static IActiveSkill? FindIActiveSkill(ActiveSkillType activeSkillType)
+        public static IActiveSkill FindIActiveSkill(ActiveSkillType activeSkillType)
         {
             switch (activeSkillType)
             {
@@ -76,7 +72,7 @@ namespace GameClass.GameObj
                 case ActiveSkillType.UseKnife:
                     return new UseKnife();
                 default:
-                    return null;
+                    return new NullSkill();
             }
         }
 

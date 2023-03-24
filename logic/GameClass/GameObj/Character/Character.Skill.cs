@@ -9,9 +9,8 @@ namespace GameClass.GameObj
     {
         private readonly CharacterType characterType;
         public CharacterType CharacterType => characterType;
-        private readonly IOccupation? occupation;
+        private readonly IOccupation occupation;
         public IOccupation Occupation => occupation;
-
 
         private Dictionary<ActiveSkillType, int> timeUntilActiveSkillAvailable = new();
         public Dictionary<ActiveSkillType, int> TimeUntilActiveSkillAvailable => timeUntilActiveSkillAvailable;
@@ -19,13 +18,13 @@ namespace GameClass.GameObj
         private Dictionary<ActiveSkillType, IActiveSkill> iActiveSkillDictionary = new();
         public Dictionary<ActiveSkillType, IActiveSkill> IActiveSkillDictionary => iActiveSkillDictionary;
 
-        public IActiveSkill? UseIActiveSkill(ActiveSkillType activeSkillType)
+        public IActiveSkill UseIActiveSkill(ActiveSkillType activeSkillType)
         {
             if (Occupation.ListOfIActiveSkill.Contains(activeSkillType))
             {
                 return IActiveSkillDictionary[activeSkillType];
             }
-            return null;
+            return new NullSkill();
         }
 
         public bool SetTimeUntilActiveSkillAvailable(ActiveSkillType activeSkillType, int timeUntilActiveSkillAvailable)
@@ -67,10 +66,8 @@ namespace GameClass.GameObj
                     this.occupation = new Assassin();
                     break;
                 case CharacterType.Athlete:
-                    this.occupation = new Athlete();
-                    break;
                 default:
-                    this.occupation = null;
+                    this.occupation = new Athlete();
                     break;
             }
             this.MaxHp = Occupation.MaxHp;

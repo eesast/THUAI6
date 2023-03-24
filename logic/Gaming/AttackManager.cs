@@ -38,8 +38,9 @@ namespace Gaming
                 );
             }
 
-            private void BeAddictedToGame(Student player)
+            private void BeAddictedToGame(Student player, Ghost ghost)
             {
+                ghost.AddScore(GameData.TrickerScoreStudentBeAddicted);
                 new Thread
                     (() =>
                     {
@@ -47,16 +48,17 @@ namespace Gaming
                             player.GamingAddiction = GameData.MidGamingAddiction;
                         player.PlayerState = PlayerStateType.Addicted;
                         new FrameRateTaskExecutor<int>(
-                            () => player.PlayerState == PlayerStateType.Addicted && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
+                            () => (player.PlayerState == PlayerStateType.Addicted || player.PlayerState == PlayerStateType.Rescued) && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
                             () =>
                             {
-                                player.GamingAddiction += GameData.frameDuration;
+                                player.GamingAddiction += (player.PlayerState == PlayerStateType.Addicted) ? GameData.frameDuration : 0;
                             },
                             timeInterval: GameData.frameDuration,
                             () =>
                             {
                                 if (player.GamingAddiction == player.MaxGamingAddiction && gameMap.Timer.IsGaming)
                                 {
+                                    ghost.AddScore(GameData.TrickerScoreStudentDie);
                                     Die(player);
                                 }
                                 return 0;
@@ -139,10 +141,30 @@ namespace Gaming
                     case GameObjType.Character:
 
                         if ((!((Character)objBeingShot).IsGhost()) && bullet.Parent.IsGhost())
-                            if (((Student)objBeingShot).BeAttacked(bullet))
+                        {
+                            Student oneBeAttacked = (Student)objBeingShot;
+                            if (oneBeAttacked.BeAttacked(bullet))
                             {
-                                BeAddictedToGame((Student)objBeingShot);
+                                BeAddictedToGame(oneBeAttacked, (Ghost)bullet.Parent);
                             }
+                            if (oneBeAttacked.CanBeAwed())
+                            {
+                                oneBeAttacked.PlayerState = PlayerStateType.Stunned;
+                                bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned);
+                                new Thread
+                                (
+                                () =>
+                                {
+                                    Thread.Sleep(GameData.basicStunnedTimeOfStudent);
+                                    if (oneBeAttacked.PlayerState == PlayerStateType.Stunned)
+                                    {
+                                        oneBeAttacked.PlayerState = PlayerStateType.Null;
+                                    }
+                                }
+                                )
+                                { IsBackground = true }.Start();
+                            }
+                        }
                         //       if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)
                         //          BeStunned((Character)objBeingShot, bullet.AP);
                         break;

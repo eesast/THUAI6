@@ -96,7 +96,7 @@ namespace Server
                     return PlayerState.Attacking;
                 case Preparation.Utility.PlayerStateType.UsingSkill:
                     return PlayerState.UsingSpecialSkill;
-                case Preparation.Utility.PlayerStateType.OpeningTheDoorWay:
+                case Preparation.Utility.PlayerStateType.OpeningTheDoorway:
                     return PlayerState.OpeningAGate;
                 default:
                     return PlayerState.NullStatus;
@@ -173,9 +173,16 @@ namespace Server
                     return PickedProp((PickedProp)gameObj);
                 case Preparation.Utility.GameObjType.Generator:
                     return Classroom((Generator)gameObj);
-                //   case Preparation.Utility.GameObjType.Chest:
+                case Preparation.Utility.GameObjType.Chest:
+                    return Chest((Chest)gameObj);
                 case Preparation.Utility.GameObjType.Doorway:
                     return Gate((Doorway)gameObj);
+                case Preparation.Utility.GameObjType.EmergencyExit:
+                    if (((EmergencyExit)gameObj).CanOpen)
+                        return HiddenGate((EmergencyExit)gameObj);
+                    else return null;
+                case Preparation.Utility.GameObjType.Door:
+                    return Door((Door)gameObj);
                 default: return null;
             }
         }
@@ -341,14 +348,34 @@ namespace Server
             msg.GateMessage.Progress = doorway.OpenDegree;
             return msg;
         }
-        /*     private static MessageOfObj Chest(Chest chest)
-             {
-                 MessageOfObj msg = new MessageOfObj();
-                 msg.ChestMessage = new();
-                 msg.ChestMessage.X=chest.Position.x;
-                 msg.ChestMessage.Y=chest.Position.y;
-              //   msg.ChestMessage.Progress=generator.DegreeOfRepair;
-                 return msg;
-             }*/
+        private static MessageOfObj HiddenGate(EmergencyExit Exit)
+        {
+            MessageOfObj msg = new MessageOfObj();
+            msg.HiddenGateMessage = new();
+            msg.HiddenGateMessage.X = Exit.Position.x;
+            msg.HiddenGateMessage.Y = Exit.Position.y;
+            msg.HiddenGateMessage.Opened = Exit.IsOpen;
+            return msg;
+        }
+
+        private static MessageOfObj Door(Door door)
+        {
+            MessageOfObj msg = new MessageOfObj();
+            msg.DoorMessage = new();
+            msg.DoorMessage.X = door.Position.x;
+            msg.DoorMessage.Y = door.Position.y;
+            msg.DoorMessage.Progress = door.OpenOrLockDegree;
+            msg.DoorMessage.IsOpen = door.IsOpen;
+            return msg;
+        }
+        private static MessageOfObj Chest(Chest chest)
+        {
+            MessageOfObj msg = new MessageOfObj();
+            msg.ChestMessage = new();
+            msg.ChestMessage.X = chest.Position.x;
+            msg.ChestMessage.Y = chest.Position.y;
+            msg.ChestMessage.Progress = chest.OpenDegree;
+            return msg;
+        }
     }
 }

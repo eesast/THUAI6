@@ -17,6 +17,7 @@ namespace GameClass.GameObj
         public abstract int CastTime { get; }
         public abstract int Backswing { get; }
         public abstract int RecoveryFromHit { get; }
+        public abstract int CD { get; }
 
         private readonly bool hasSpear;
         /// <summary>
@@ -56,25 +57,23 @@ namespace GameClass.GameObj
     {
         public static Bullet? GetBullet(Character character, PlaceType place, XY pos)
         {
-            Bullet? newBullet = null;
             switch (character.BulletOfPlayer)
             {
+                case BulletType.FlyingKnife:
+                    return new FlyingKnife(character, place, pos);
+                case BulletType.CommonAttackOfGhost:
+                    return new CommonAttackOfGhost(character, place, pos);
                 case BulletType.AtomBomb:
-                    newBullet = new AtomBomb(character, place, pos);
-                    break;
+                    return new AtomBomb(character, place, pos);
                 case BulletType.LineBullet:
-                    newBullet = new LineBullet(character, place, pos);
-                    break;
+                    return new LineBullet(character, place, pos);
                 case BulletType.FastBullet:
-                    newBullet = new FastBullet(character, place, pos);
-                    break;
+                    return new FastBullet(character, place, pos);
                 case BulletType.OrdinaryBullet:
-                    newBullet = new OrdinaryBullet(character, place, pos);
-                    break;
+                    return new OrdinaryBullet(character, place, pos);
                 default:
-                    break;
+                    return null;
             }
-            return newBullet;
         }
         public static int BulletRadius(BulletType bulletType)
         {
@@ -84,8 +83,25 @@ namespace GameClass.GameObj
                 case BulletType.LineBullet:
                 case BulletType.FastBullet:
                 case BulletType.OrdinaryBullet:
+                case BulletType.FlyingKnife:
                 default:
                     return GameData.bulletRadius;
+            }
+        }
+        public static int BulletCD(BulletType bulletType)
+        {
+            switch (bulletType)
+            {
+                case BulletType.CommonAttackOfGhost:
+                    return CommonAttackOfGhost.cd;
+                case BulletType.FlyingKnife:
+                    return FlyingKnife.cd;
+                case BulletType.AtomBomb:
+                case BulletType.LineBullet:
+                case BulletType.FastBullet:
+                case BulletType.OrdinaryBullet:
+                default:
+                    return GameData.basicCD;
             }
         }
     }

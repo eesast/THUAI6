@@ -122,8 +122,7 @@ message MessageOfDoor
     int32 x = 1;
     int32 y = 2;
     bool is_open = 3;
-    int32 number = 4;
-    int32 progress = 5;
+    int32 progress = 4;
 }
 
 message MessageOfChest

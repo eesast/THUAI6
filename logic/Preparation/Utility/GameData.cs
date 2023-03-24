@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.NetworkInformation;
 
 namespace Preparation.Utility
 {
@@ -7,6 +8,7 @@ namespace Preparation.Utility
         #region 基本常数
         public const int numOfStepPerSecond = 20;     // 每秒行走的步数
         public const int frameDuration = 50;         // 每帧时长
+        public const int checkInterval = 50;  // 检查位置标志、补充子弹的帧时长
 
         public const long gameDuration = 600000;      // 游戏时长600000ms = 10min
 
@@ -85,7 +87,6 @@ namespace Preparation.Utility
         public const int basicAlertnessRadius = 30700;
         public const int basicViewRange = 5 * numOfPosGridPerCell;
         public const int maxNumOfPropInPropInventory = 3;
-        public const int addScoreWhenKillOneLevelPlayer = 30;        // 击杀一级角色获得的加分
 
         public static XY PosWhoDie = new XY(1, 1);
 
@@ -98,6 +99,41 @@ namespace Preparation.Utility
             };
         }
         #endregion
+        #region 得分相关
+        public static int TrickerScoreAttackStudent(int damage)
+        {
+            return damage * 100 / basicApOfGhost;
+        }
+        public const int TrickerScoreStudentBeAddicted = 50;
+        public const int TrickerScoreStudentBeStunned = 25;
+        public const int TrickerScoreStudentDie = 1000;
+
+        public static int StudentScoreFix(int degreeOfFix)
+        {
+            return degreeOfFix;
+        }
+        public const int StudentScoreFixed = 25;
+        public static int StudentScorePinDown(int timeOfPiningDown)
+        {
+            return 0;
+        }
+        public const int StudentScoreTrickerBeStunned = 25;
+        public const int StudentScoreRescue = 100;
+        public static int StudentScoreTreat(int degree)
+        {
+            return degree;
+        }
+        public const int StudentScoreEscape = 1000;
+
+        public static int ScoreUseProp(PropType prop, bool IsGhost)
+        {
+            return 0;
+        }
+        public static int ScoreUseSkill(ActiveSkillType activeSkillType)
+        {
+            return 0;
+        }
+        #endregion
         #region 攻击与子弹相关
         public const int basicApOfGhost = 1500000;                             // 捣蛋鬼攻击力
         public const int MinAP = 0;                                  // 最小攻击力
@@ -105,8 +141,9 @@ namespace Preparation.Utility
 
         public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicCastTime = 500;//基本前摇时间
-        public const int basicBackswing = 500;//基本后摇时间
+        public const int basicBackswing = 818;//基本后摇时间
         public const int basicRecoveryFromHit = 4300;//基本命中攻击恢复时长
+        public const int basicStunnedTimeOfStudent = 4130;
 
         public const int bulletRadius = 200;                         // 默认子弹半径
         public const int basicBulletNum = 3;                         // 基本初始子弹量
@@ -146,9 +183,6 @@ namespace Preparation.Utility
         public const int maxNumOfPropInChest = 2;
         public const int numOfGeneratorRequiredForRepair = 7;
         public const int numOfGeneratorRequiredForEmergencyExit = 3;
-        #endregion
-        #region 游戏帧相关
-        public const long checkInterval = 50;  // 检查位置标志、补充子弹的帧时长
         #endregion
     }
 }

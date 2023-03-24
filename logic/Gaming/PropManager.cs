@@ -121,7 +121,7 @@ namespace Gaming
                     case 3:
                         return new Spear(Pos, gameMap.GetPlaceType(Pos));
                     default:
-                        return null;
+                        return new NullProp();
                 }
             }
 

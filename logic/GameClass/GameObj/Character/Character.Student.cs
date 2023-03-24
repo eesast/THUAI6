@@ -22,11 +22,10 @@ namespace GameClass.GameObj
                     return false;  // 原来已经死了
                 if (bullet.Parent.TeamID != this.TeamID)
                 {
-                    if (CanBeAwed()) PlayerState = PlayerStateType.Stunned;
                     if (HasShield)
                     {
                         if (bullet.HasSpear)
-                            _ = TrySubHp(bullet.AP);
+                            bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(TrySubHp(bullet.AP)));
                         else
                             return false;
                     }

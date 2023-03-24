@@ -47,7 +47,7 @@ namespace GameClass.GameObj
             base(initPos, placeType)
         {
         }
-        public override PropType GetPropType() => PropType.addSpeed;
+        public override PropType GetPropType() => PropType.AddSpeed;
     }
     /// <summary>
     /// 复活甲
@@ -58,7 +58,15 @@ namespace GameClass.GameObj
             base(initPos, placeType)
         {
         }
-        public override PropType GetPropType() => PropType.addLIFE;
+        public override PropType GetPropType() => PropType.AddLIFE;
+    }
+    public sealed class AddHp : Prop
+    {
+        public AddHp(XY initPos, PlaceType placeType) :
+            base(initPos, placeType)
+        {
+        }
+        public override PropType GetPropType() => PropType.AddHpOrAp;
     }
     /// <summary>
     /// 护盾

@@ -42,31 +42,36 @@ namespace GameClass.GameObj
 
             private void AddBuff(BuffValue bf, int buffTime, BuffType buffType, Action ReCalculateFunc)
             {
-                new Thread
-                    (
-                        () =>
-                        {
-                            LinkedListNode<BuffValue> buffNode;
-                            lock (buffListLock[(int)buffType])
+                LinkedListNode<BuffValue> buffNode;
+                lock (buffListLock[(int)buffType])
+                {
+                    buffNode = buffList[(int)buffType].AddLast(bf);
+                }
+                ReCalculateFunc();
+                if (buffTime != -1)
+                {
+                    new Thread
+                        (
+                            () =>
                             {
-                                buffNode = buffList[(int)buffType].AddLast(bf);
-                            }
-                            ReCalculateFunc();
-                            Thread.Sleep(buffTime);
-                            try
-                            {
-                                lock (buffListLock[(int)buffType])
+
+                                Thread.Sleep(buffTime);
+                                try
                                 {
-                                    buffList[(int)buffType].Remove(buffNode);
+                                    lock (buffListLock[(int)buffType])
+                                    {
+                                        buffList[(int)buffType].Remove(buffNode);
+                                    }
                                 }
+                                catch
+                                {
+                                }
+                                ReCalculateFunc();
+
                             }
-                            catch
-                            {
-                            }
-                            ReCalculateFunc();
-                        }
-                    )
-                { IsBackground = true }.Start();
+                        )
+                    { IsBackground = true }.Start();
+                }
             }
 
             public int ReCalculateFloatBuff(BuffType buffType, int orgVal, int maxVal, int minVal)
@@ -106,6 +111,29 @@ namespace GameClass.GameObj
                     }
                 }
             }
+            public void AddAp() => AddBuff(new BuffValue(), -1, BuffType.AddAp, () => { });
+            public bool HasAp
+            {
+                get
+                {
+                    lock (buffListLock[(int)BuffType.AddAp])
+                    {
+                        return buffList[(int)BuffType.AddAp].Count != 0;
+                    }
+                }
+            }
+            public bool TryAddAp()
+            {
+                if (HasAp)
+                {
+                    lock (buffListLock[(int)BuffType.AddAp])
+                    {
+                        buffList[(int)BuffType.AddAp].RemoveFirst();
+                    }
+                    return true;
+                }
+                return false;
+            }
 
             public void AddLIFE(int totelTime) => AddBuff(new BuffValue(), totelTime, BuffType.AddLIFE, () =>
                                                                                                         { });
@@ -125,7 +153,7 @@ namespace GameClass.GameObj
                 {
                     lock (buffListLock[(int)BuffType.AddLIFE])
                     {
-                        buffList[(int)BuffType.AddLIFE].Clear();
+                        buffList[(int)BuffType.AddLIFE].RemoveFirst();
                     }
                     return true;
                 }
@@ -144,6 +172,7 @@ namespace GameClass.GameObj
                     }
                 }
             }
+
             /// <summary>
             /// 清除所有buff
             /// </summary>

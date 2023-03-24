@@ -483,6 +483,9 @@ namespace GameClass.GameObj
         public void AddLIFE(int LIFETime) => buffManager.AddLIFE(LIFETime);
         public bool HasLIFE => buffManager.HasLIFE;
 
+        public void AddAp() => buffManager.AddAp();
+        public bool HasAp => buffManager.HasAp;
+
         public void AddSpear(int spearTime) => buffManager.AddSpear(spearTime);
         public bool HasSpear => buffManager.HasSpear;
 
@@ -522,6 +525,11 @@ namespace GameClass.GameObj
             {
                 hp = MaxHp;
             }
+        }
+
+        public bool TryAddAp()
+        {
+            return buffManager.TryAddAp();
         }
         #endregion
         /*     public override void Reset()  // 要加锁吗？

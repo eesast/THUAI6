@@ -64,13 +64,14 @@ namespace Preparation.Utility
     public enum PropType  // 道具类型
     {
         Null = 0,
-        addSpeed = 1,
-        addLIFE = 2,
+        AddSpeed = 1,
+        AddLIFE = 2,
         Shield = 3,
         Spear = 4,
         Key3 = 5,
         Key5 = 6,
         Key6 = 7,
+        AddHpOrAp = 8,//AddHp,AddAp
     }
     public enum CharacterType  // 职业
     {
@@ -108,7 +109,8 @@ namespace Preparation.Utility
         AddSpeed = 1,
         AddLIFE = 2,
         Shield = 3,
-        Spear = 4
+        Spear = 4,
+        AddAp = 5,
     }
 
     public enum PlaceType

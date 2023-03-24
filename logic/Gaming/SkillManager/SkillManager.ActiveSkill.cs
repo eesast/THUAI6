@@ -49,8 +49,9 @@ namespace Gaming
                             {
                                 if (character.IsGhost() != player.IsGhost() && XY.Distance(player.Position + new XY(player.FacingDirection, player.Radius), character.Position) <= character.Radius)
                                 {
-                                    attackManager.BeStunned(character, GameData.TimeOfGhostFainting);
-                                    attackManager.BeStunned(player, GameData.TimeOfStudentFainting);
+                                    AttackManager.BeStunned(character, GameData.TimeOfGhostFainting);
+                                    player.AddScore(GameData.StudentScoreTrickerBeStunned);
+                                    AttackManager.BeStunned(player, GameData.TimeOfStudentFainting);
                                     break;
                                 }
                             }

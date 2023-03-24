@@ -34,11 +34,16 @@ namespace Gaming
                     case PropType.Shield:
                         player.AddShield(GameData.PropDuration);
                         break;
-                    case PropType.addLIFE:
+                    case PropType.AddLIFE:
                         player.AddLIFE(GameData.PropDuration);
                         break;
-                    case PropType.addSpeed:
+                    case PropType.AddSpeed:
                         player.AddMoveSpeed(GameData.PropDuration);
+                        break;
+                    case PropType.AddHpOrAp:
+                        if (!player.IsGhost())
+                            player.HP += GameData.basicTreatmentDegree;
+                        else player.AddAp();
                         break;
                     default:
                         break;

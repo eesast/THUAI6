@@ -79,25 +79,25 @@ namespace Preparation.Interface
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.CanBeginToCharge });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
 
-        public const int fixSpeed = GameData.basicFixSpeed * 6 / 10;
+        public const int fixSpeed = 0;
         public int FixSpeed => fixSpeed;
 
-        public const int treatSpeed = GameData.basicTreatSpeed * 8 / 10;
+        public const int treatSpeed = GameData.basicTreatSpeed;
         public int TreatSpeed => treatSpeed;
 
-        public const double concealment = GameData.basicConcealment * 0.9;
+        public const double concealment = GameData.basicConcealment * 0.5;
         public double Concealment => concealment;
 
-        public const int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
+        public const int alertnessRadius = GameData.basicAlertnessRadius / 2;
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = (int)(GameData.basicViewRange * 1.1);
+        public int viewRange = GameData.basicViewRange * 9 / 10;
         public int ViewRange => viewRange;
 
-        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking * 12 / 10;
+        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
 
-        public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows * 12 / 10;
+        public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows * 9 / 10;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
         public int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
@@ -116,7 +116,7 @@ namespace Preparation.Interface
 
         public BulletType InitBullet => BulletType.Null;
 
-        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.CanBeginToCharge });
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
 
         public const int fixSpeed = GameData.basicFixSpeed * 6 / 10;

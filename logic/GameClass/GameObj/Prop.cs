@@ -60,33 +60,23 @@ namespace GameClass.GameObj
         }
         public override PropType GetPropType() => PropType.AddLIFE;
     }
-    public sealed class AddHp : Prop
+    public sealed class AddHpOrAp : Prop
     {
-        public AddHp(XY initPos, PlaceType placeType) :
+        public AddHpOrAp(XY initPos, PlaceType placeType) :
             base(initPos, placeType)
         {
         }
         public override PropType GetPropType() => PropType.AddHpOrAp;
     }
     /// <summary>
-    /// 护盾
+    /// 矛盾
     /// </summary>
-    public sealed class Shield : Prop
+    public sealed class ShieldOrSpear : Prop
     {
-        public Shield(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        public ShieldOrSpear(XY initPos, PlaceType placeType) : base(initPos, placeType)
         {
         }
-        public override PropType GetPropType() => PropType.Shield;
-    }
-    /// <summary>
-    /// 矛
-    /// </summary>
-    public sealed class Spear : Prop
-    {
-        public Spear(XY initPos, PlaceType placeType) : base(initPos, placeType)
-        {
-        }
-        public override PropType GetPropType() => PropType.Spear;
+        public override PropType GetPropType() => PropType.ShieldOrSpear;
     }
     public sealed class Key3 : Prop
     {
@@ -143,4 +133,25 @@ namespace GameClass.GameObj
     //     public override PropType GetPropType() => PropType.addCD;
     // }
     // #endregion
+    public static class PropFactory
+    {
+        public static Prop GetProp(PropType propType, XY pos, PlaceType place)
+        {
+            switch (propType)
+            {
+                case PropType.ShieldOrSpear:
+                    return new ShieldOrSpear(pos, place);
+                case PropType.AddHpOrAp:
+                    return new AddHpOrAp(pos, place);
+                case PropType.Key3:
+                    return new Key3(pos, place);
+                case PropType.Key5:
+                    return new Key5(pos, place);
+                case PropType.Key6:
+                    return new Key6(pos, place);
+                default:
+                    return new NullProp();
+            }
+        }
+    }
 }

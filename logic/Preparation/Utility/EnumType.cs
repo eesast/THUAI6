@@ -66,12 +66,11 @@ namespace Preparation.Utility
         Null = 0,
         AddSpeed = 1,
         AddLIFE = 2,
-        Shield = 3,
-        Spear = 4,
+        AddHpOrAp = 3,
+        ShieldOrSpear = 4,
         Key3 = 5,
         Key5 = 6,
         Key6 = 7,
-        AddHpOrAp = 8,//AddHp,AddAp
     }
     public enum CharacterType  // 职业
     {

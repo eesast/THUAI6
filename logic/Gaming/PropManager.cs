@@ -28,11 +28,10 @@ namespace Gaming
                 Prop prop = player.UseProp(indexing);
                 switch (prop.GetPropType())
                 {
-                    case PropType.Spear:
-                        player.AddSpear(GameData.PropDuration);
-                        break;
-                    case PropType.Shield:
-                        player.AddShield(GameData.PropDuration);
+                    case PropType.ShieldOrSpear:
+                        if (player.IsGhost())
+                            player.AddSpear(GameData.PropDuration);
+                        else player.AddShield(GameData.PropDuration);
                         break;
                     case PropType.AddLIFE:
                         player.AddLIFE(GameData.PropDuration);
@@ -43,7 +42,7 @@ namespace Gaming
                     case PropType.AddHpOrAp:
                         if (!player.IsGhost())
                             player.HP += GameData.basicTreatmentDegree;
-                        else player.AddAp();
+                        else player.AddAp(GameData.PropDuration);
                         break;
                     default:
                         break;
@@ -115,19 +114,7 @@ namespace Gaming
 
             private Prop ProduceOnePropNotKey(Random r, XY Pos)
             {
-                switch (r.Next(0, GameData.numOfPropTypeNotKey))
-                {
-                    case 0:
-                        return new AddLIFE(Pos, gameMap.GetPlaceType(Pos));
-                    case 1:
-                        return new AddSpeed(Pos, gameMap.GetPlaceType(Pos));
-                    case 2:
-                        return new Shield(Pos, gameMap.GetPlaceType(Pos));
-                    case 3:
-                        return new Spear(Pos, gameMap.GetPlaceType(Pos));
-                    default:
-                        return new NullProp();
-                }
+                return PropFactory.GetProp((PropType)r.Next(0, GameData.numOfPropTypeNotKey), Pos, gameMap.GetPlaceType(Pos));
             }
 
             private Chest GetChest(Random r)

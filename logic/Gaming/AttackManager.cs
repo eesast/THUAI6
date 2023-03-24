@@ -309,7 +309,7 @@ namespace Gaming
 
                 if (bullet != null)
                 {
-                    bullet.AP += player.TryAddAp() ? GameData.PropAddAp : 0;
+                    bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
                     bullet.CanMove = true;
                     gameMap.Add(bullet);
                     moveEngine.MoveObj(bullet, (int)((bullet.BulletAttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms

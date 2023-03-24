@@ -48,30 +48,28 @@ namespace GameClass.GameObj
                     buffNode = buffList[(int)buffType].AddLast(bf);
                 }
                 ReCalculateFunc();
-                if (buffTime != -1)
-                {
-                    new Thread
-                        (
-                            () =>
+
+                new Thread
+                    (
+                        () =>
+                        {
+
+                            Thread.Sleep(buffTime);
+                            try
                             {
-
-                                Thread.Sleep(buffTime);
-                                try
+                                lock (buffListLock[(int)buffType])
                                 {
-                                    lock (buffListLock[(int)buffType])
-                                    {
-                                        buffList[(int)buffType].Remove(buffNode);
-                                    }
+                                    buffList[(int)buffType].Remove(buffNode);
                                 }
-                                catch
-                                {
-                                }
-                                ReCalculateFunc();
-
                             }
-                        )
-                    { IsBackground = true }.Start();
-                }
+                            catch
+                            {
+                            }
+                            ReCalculateFunc();
+
+                        }
+                    )
+                { IsBackground = true }.Start();
             }
 
             public int ReCalculateFloatBuff(BuffType buffType, int orgVal, int maxVal, int minVal)
@@ -111,7 +109,20 @@ namespace GameClass.GameObj
                     }
                 }
             }
-            public void AddAp() => AddBuff(new BuffValue(), -1, BuffType.AddAp, () => { });
+            public bool TryUseShield()
+            {
+                if (HasShield)
+                {
+                    lock (buffListLock[(int)BuffType.Shield])
+                    {
+                        buffList[(int)BuffType.Shield].RemoveFirst();
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            public void AddAp(int time) => AddBuff(new BuffValue(), time, BuffType.AddAp, () => { });
             public bool HasAp
             {
                 get

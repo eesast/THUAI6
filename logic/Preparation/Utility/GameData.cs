@@ -171,7 +171,8 @@ namespace Preparation.Utility
         public const long PropProduceTime = 10000;
         public const int PropDuration = 10000;
 
-        public const int PropAddAp = basicApOfGhost * 12 / 10;
+        public const int ApPropAdd = basicApOfGhost * 12 / 10;
+        public const int ApSpearAdd = basicApOfGhost * 6 / 10;
 
         public const int numOfKeyEachArea = 2;
         public const int numOfPropTypeNotKey = 4;

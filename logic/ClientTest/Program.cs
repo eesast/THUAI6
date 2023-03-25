@@ -13,7 +13,7 @@ namespace ClientTest
             PlayerMsg playerInfo = new();
             playerInfo.PlayerId = 0;
             playerInfo.PlayerType = PlayerType.StudentPlayer;
-            playerInfo.StudentType = StudentType._1;
+            playerInfo.StudentType = StudentType.Athlete;
             var call = client.AddPlayer(playerInfo);
             MoveMsg moveMsg = new();
             moveMsg.PlayerId = 0;

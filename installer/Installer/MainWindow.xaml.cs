@@ -39,5 +39,10 @@ namespace Installer
 
             this.DataContext = new SettingsViewModel();
         }
+
+        private void BackBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

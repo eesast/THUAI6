@@ -150,6 +150,7 @@ namespace Gaming
                     if (doorwayForEscape.IsOpen())
                     {
                         player.AddScore(GameData.StudentScoreEscape);
+                        ++gameMap.NumOfEscapedStudent;
                         player.Die(PlayerStateType.Escaped);
                         return true;
                     }
@@ -169,8 +170,13 @@ namespace Gaming
                 }
             }
 
-            public bool Treat(Student player, Student playerTreated)
+            public bool Treat(Student player, Student? playerTreated = null)
             {
+                if (playerTreated == null)
+                {
+                    playerTreated = gameMap.StudentForInteract(player.Position);
+                    if (playerTreated == null) return false;
+                }
                 if ((!player.Commandable()) || player.PlayerState == PlayerStateType.Treating ||
                     (!playerTreated.Commandable()) ||
                     playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
@@ -226,8 +232,13 @@ namespace Gaming
                 { IsBackground = true }.Start();
                 return true;
             }
-            public bool Rescue(Student player, Student playerRescued)
+            public bool Rescue(Student player, Student? playerRescued = null)
             {
+                if (playerRescued == null)
+                {
+                    playerRescued = gameMap.StudentForInteract(player.Position);
+                    if (playerRescued == null) return false;
+                }
                 if ((!player.Commandable()) || playerRescued.PlayerState != PlayerStateType.Addicted || !GameData.ApproachToInteract(playerRescued.Position, player.Position))
                     return false;
                 player.PlayerState = PlayerStateType.Rescuing;

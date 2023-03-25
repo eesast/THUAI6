@@ -26,6 +26,7 @@ StudentDebugAPI::StudentDebugAPI(ILogic& logic, bool file, bool print, bool warn
     if (warnOnly)
         printLogger->set_level(spdlog::level::warn);
     logger = std::make_unique<spdlog::logger>("apiLogger", spdlog::sinks_init_list{fileLogger, printLogger});
+    logger->flush_on(spdlog::level::warn);
 }
 
 TrickerDebugAPI::TrickerDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID) :

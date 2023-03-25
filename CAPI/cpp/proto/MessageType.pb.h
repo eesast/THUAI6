@@ -155,16 +155,19 @@ namespace protobuf
     enum PropType : int
     {
         NULL_PROP_TYPE = 0,
-        KEY3 = 1,
-        KEY5 = 2,
-        KEY6 = 3,
-        PTYPE4 = 4,
+        ADD_SPEED = 1,
+        ADD_LIFE_OR_AP = 2,
+        ADD_HP_OR_AP = 3,
+        SHIELD_OR_SPEAR = 4,
+        KEY3 = 5,
+        KEY5 = 6,
+        KEY6 = 7,
         PropType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         PropType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool PropType_IsValid(int value);
     constexpr PropType PropType_MIN = NULL_PROP_TYPE;
-    constexpr PropType PropType_MAX = PTYPE4;
+    constexpr PropType PropType_MAX = KEY6;
     constexpr int PropType_ARRAYSIZE = PropType_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PropType_descriptor();

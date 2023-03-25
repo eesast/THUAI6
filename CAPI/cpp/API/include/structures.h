@@ -51,7 +51,10 @@ namespace THUAI6
         Key3 = 1,
         Key5 = 2,
         Key6 = 3,
-        PropType4 = 4,
+        AddSpeed = 4,
+        AddLifeOrAp = 5,
+        AddHpOrAp = 6,
+        ShieldOrSpear = 7,
     };
 
     enum class BulletType : unsigned char
@@ -323,6 +326,10 @@ namespace THUAI6
         {PropType::Key3, "Key3"},
         {PropType::Key5, "Key5"},
         {PropType::Key6, "Key6"},
+        {PropType::AddSpeed, "AddSpeed"},
+        {PropType::AddLifeOrAp, "AddLifeOrAp"},
+        {PropType::AddHpOrAp, "AddHpOrAp"},
+        {PropType::ShieldOrSpear, "ShieldOrSpear"},
 
     };
 

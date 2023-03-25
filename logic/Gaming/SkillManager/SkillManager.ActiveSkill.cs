@@ -49,9 +49,9 @@ namespace Gaming
                             {
                                 if (character.IsGhost() != player.IsGhost() && XY.Distance(player.Position + new XY(player.FacingDirection, player.Radius), character.Position) <= character.Radius)
                                 {
-                                    AttackManager.BeStunned(character, GameData.TimeOfGhostFainting);
-                                    player.AddScore(GameData.StudentScoreTrickerBeStunned);
-                                    AttackManager.BeStunned(player, GameData.TimeOfStudentFainting);
+                                    AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenCharge);
+                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenCharge));
+                                    AttackManager.BeStunned(player, GameData.TimeOfStudentFaintingWhenCharge);
                                     break;
                                 }
                             }
@@ -115,15 +115,31 @@ namespace Gaming
                                                       { player.BulletOfPlayer = player.OriBulletOfPlayer; });
             }
 
-            public bool Publish(Character player)
+            public bool Punish(Character player)
             {
-                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.Publish), player, () =>
+                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.Punish), player, () =>
                 {
-                    player.BulletOfPlayer = BulletType.FlyingKnife;
-                    Debugger.Output(player, "uses flyingknife!");
+                    gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+                    try
+                    {
+                        foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                        {
+                            if (player.IsGhost() && XY.Distance(player.Position, character.Position) <= player.ViewRange)
+                            {
+                                AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.TimeFactorOfGhostFainting);
+                                player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.TimeFactorOfGhostFainting));
+                                break;
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                    }
+                    Debugger.Output(player, "uses punishing!");
                 },
                                                       () =>
-                                                      { player.BulletOfPlayer = player.OriBulletOfPlayer; });
+                                                      { });
             }
 
             public bool SuperFast(Character player)

@@ -299,7 +299,7 @@ namespace Gaming
                 if (!player.Commandable())
                     return false;
 
-                XY res = new XY  // 子弹紧贴人物生成。
+                XY res = player.Position + new XY  // 子弹紧贴人物生成。
                     (
                         (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Cos(angle)),
                         (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))

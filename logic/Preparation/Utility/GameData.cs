@@ -128,11 +128,8 @@ namespace Preparation.Utility
         public const int ScorePropUseShield = 20;
         public const int ScorePropUseSpear = 20;
         public const int ScorePropAddAp = 10;
+        public const int ScorePropAddHp = 50;
 
-        public static int ScoreUseProp(PropType prop, bool IsGhost)
-        {
-            return 0;
-        }
         public static int ScoreUseSkill(ActiveSkillType activeSkillType)
         {
             return 0;

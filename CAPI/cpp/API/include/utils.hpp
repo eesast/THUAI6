@@ -87,7 +87,10 @@ namespace Proto2THUAI6
         {protobuf::PropType::KEY3, THUAI6::PropType::Key3},
         {protobuf::PropType::KEY5, THUAI6::PropType::Key5},
         {protobuf::PropType::KEY6, THUAI6::PropType::Key6},
-        {protobuf::PropType::PTYPE4, THUAI6::PropType::PropType4},
+        {protobuf::PropType::ADD_SPEED, THUAI6::PropType::AddSpeed},
+        {protobuf::PropType::ADD_HP_OR_AP, THUAI6::PropType::AddHpOrAp},
+        {protobuf::PropType::ADD_LIFE_OR_AP, THUAI6::PropType::AddLifeOrAp},
+        {protobuf::PropType::SHIELD_OR_SPEAR, THUAI6::PropType::ShieldOrSpear},
     };
 
     inline std::map<protobuf::PlayerType, THUAI6::PlayerType> playerTypeDict{
@@ -338,7 +341,10 @@ namespace THUAI62Proto
         {THUAI6::PropType::Key3, protobuf::PropType::KEY3},
         {THUAI6::PropType::Key5, protobuf::PropType::KEY5},
         {THUAI6::PropType::Key6, protobuf::PropType::KEY6},
-        {THUAI6::PropType::PropType4, protobuf::PropType::PTYPE4},
+        {THUAI6::PropType::AddHpOrAp, protobuf::PropType::ADD_HP_OR_AP},
+        {THUAI6::PropType::AddLifeOrAp, protobuf::PropType::ADD_LIFE_OR_AP},
+        {THUAI6::PropType::AddSpeed, protobuf::PropType::ADD_SPEED},
+        {THUAI6::PropType::ShieldOrSpear, protobuf::PropType::SHIELD_OR_SPEAR},
     };
 
     inline std::map<THUAI6::PlayerType, protobuf::PlayerType> playerTypeDict{

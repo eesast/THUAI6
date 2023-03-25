@@ -79,7 +79,7 @@ namespace Preparation.Utility
         Athlete = 2,
         RecoverAfterBattle = 3,
         SpeedUpWhenLeavingGrass = 4,
-        PSkill4 = 5,
+        Teacher = 5,
         PSkill5 = 6
     }
     public enum ActiveSkillType  // 主动技能
@@ -90,7 +90,8 @@ namespace Preparation.Utility
         NuclearWeapon = 3,
         SuperFast = 4,
         UseKnife = 5,
-        CanBeginToCharge = 6
+        CanBeginToCharge = 6,
+        Publish = 7,
     }
     public enum PassiveSkillType
     {

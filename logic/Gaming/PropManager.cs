@@ -21,11 +21,11 @@ namespace Gaming
 
             private readonly List<XY> availableCellForGenerateProp;
 
-            public void UseProp(Character player, int indexing)
+            public void UseProp(Character player, PropType propType)
             {
                 if (player.IsResetting)
                     return;
-                Prop prop = player.UseProp(indexing);
+                Prop prop = player.UseProp(propType);
                 switch (prop.GetPropType())
                 {
                     case PropType.ShieldOrSpear:
@@ -43,8 +43,12 @@ namespace Gaming
                         break;
                     case PropType.AddHpOrAp:
                         if (!player.IsGhost())
-                            player.HP += GameData.basicTreatmentDegree;
-                        else player.AddAp(GameData.PropDuration);
+                            if (player.HP < player.MaxHp)
+                            {
+                                player.HP += GameData.basicTreatmentDegree;
+                                player.AddScore(GameData.ScorePropAddHp);
+                            }
+                            else player.AddAp(GameData.PropDuration);
                         break;
                     default:
                         break;
@@ -102,11 +106,11 @@ namespace Gaming
                     return false;
             }
 
-            public void ThrowProp(Character player, int indexing)
+            public void ThrowProp(Character player, PropType propType)
             {
                 if (!gameMap.Timer.IsGaming || player.IsResetting)
                     return;
-                Prop prop = player.UseProp(indexing);
+                Prop prop = player.UseProp(propType);
                 if (prop.GetPropType() == PropType.Null)
                     return;
 

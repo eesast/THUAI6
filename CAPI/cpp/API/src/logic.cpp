@@ -324,7 +324,13 @@ void Logic::ProcessMessage()
                             }
                             bufferState->gameMap = std::move(map);
                             currentState->gameMap = bufferState->gameMap;
+                            logger->info("Map loaded!");
                         }
+                    if (currentState->gameMap.empty())
+                    {
+                        logger->error("Map not loaded!");
+                        throw std::runtime_error("Map not loaded!");
+                    }
                     LoadBuffer(clientMsg);
 
                     AILoop = true;
@@ -734,7 +740,6 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
     if (file)
     {
         fileLogger->set_level(spdlog::level::trace);
-        spdlog::flush_every(std::chrono::seconds(1));
     }
     else
         fileLogger->set_level(spdlog::level::off);
@@ -745,6 +750,7 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
     if (warnOnly)
         printLogger->set_level(spdlog::level::warn);
     logger = std::make_unique<spdlog::logger>("logicLogger", spdlog::sinks_init_list{fileLogger, printLogger});
+    logger->flush_on(spdlog::level::warn);
 
     // 打印当前的调试信息
     logger->info("*********Basic Info*********");

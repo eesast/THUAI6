@@ -81,7 +81,7 @@ namespace Gaming
             }
 
 
-            public bool BecomeInvisible(Character player)
+            public static bool BecomeInvisible(Character player)
             {
                 return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.BecomeInvisible), player, () =>
                 {
@@ -104,9 +104,20 @@ namespace Gaming
             }
 
 
-            public bool UseKnife(Character player)
+            public static bool UseKnife(Character player)
             {
                 return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.UseKnife), player, () =>
+                {
+                    player.BulletOfPlayer = BulletType.FlyingKnife;
+                    Debugger.Output(player, "uses flyingknife!");
+                },
+                                                      () =>
+                                                      { player.BulletOfPlayer = player.OriBulletOfPlayer; });
+            }
+
+            public bool Publish(Character player)
+            {
+                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.Publish), player, () =>
                 {
                     player.BulletOfPlayer = BulletType.FlyingKnife;
                     Debugger.Output(player, "uses flyingknife!");

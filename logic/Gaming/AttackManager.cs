@@ -98,8 +98,8 @@ namespace Gaming
                         gameMap.Add(prop);
                     }
                 }
-                --gameMap.NumOfSurvivingStudent;
-                if (gameMap.NumOfSurvivingStudent == 1)
+                ++gameMap.NumOfDeceasedStudent;
+                if (GameData.numOfStudent - gameMap.NumOfDeceasedStudent - gameMap.NumOfEscapedStudent == 1)
                 {
                     gameMap.GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
                     try

@@ -229,30 +229,47 @@ namespace Gaming
 
             }
         }
-        public bool Treat(long playerID, long playerTreatedID)
+        public bool Treat(long playerID, long playerTreatedID = -1)
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
             ICharacter? player = gameMap.FindPlayer(playerID);
-            ICharacter? playerTreated = gameMap.FindPlayer(playerTreatedID);
-            if (player != null && playerTreated != null)
+            if (playerTreatedID == -1)
             {
-                if (!playerTreated.IsGhost() && !player.IsGhost())
-                    return actionManager.Treat((Student)player, (Student)playerTreated);
+                if (player != null && !player.IsGhost())
+                    return actionManager.Treat((Student)player);
+            }
+            else
+            {
+                ICharacter? playerTreated = gameMap.FindPlayer(playerTreatedID);
+                if (player != null && playerTreated != null)
+                {
+                    if (!playerTreated.IsGhost() && !player.IsGhost())
+                        return actionManager.Treat((Student)player, (Student)playerTreated);
+                }
             }
             return false;
         }
-        public bool Rescue(long playerID, long playerRescuedID)
+        public bool Rescue(long playerID, long playerRescuedID = -1)
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
             ICharacter? player = gameMap.FindPlayer(playerID);
-            ICharacter? playerRescued = gameMap.FindPlayer(playerRescuedID);
-            if (player != null && playerRescued != null)
+            if (playerRescuedID == -1)
             {
-                if (!playerRescued.IsGhost() && !player.IsGhost())
-                    return actionManager.Treat((Student)player, (Student)playerRescued);
+                if (player != null && !player.IsGhost())
+                    return actionManager.Rescue((Student)player);
             }
+            else
+            {
+                ICharacter? playerRescued = gameMap.FindPlayer(playerRescuedID);
+                if (player != null && playerRescued != null)
+                {
+                    if (!playerRescued.IsGhost() && !player.IsGhost())
+                        return actionManager.Rescue((Student)player, (Student)playerRescued);
+                }
+            }
+
             return false;
         }
         public bool Fix(long playerID)

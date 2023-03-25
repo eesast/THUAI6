@@ -17,12 +17,11 @@ using System.Windows.Threading;
 using Grpc.Core;
 using Protobuf;
 using Playback;
+using CommandLine;
 
 // 目前MainWindow还未复现的功能：
-// 部分errordisplayer
 // private void ReactToCommandline()，
-// private void Playback(string fileName, double pbSpeed = 2.0)
-// 交互：private void ClickToSetMode(object sender, RoutedEventArgs e)
+// private void ClickToSetMode(object sender, RoutedEventArgs e)
 // private void Bonus()
 
 namespace Client
@@ -58,26 +57,16 @@ namespace Client
             listOfDoor = new List<MessageOfDoor>();
             listOfGate = new List<MessageOfGate>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            comInfo[0] = "127.0.0.1";
-            comInfo[1] = "8888";
-            comInfo[2] = "0";
-            comInfo[3] = "1";
-            comInfo[4] = "1";
-            ConnectToServer(comInfo);
-            OnReceive();
-            //DrawMap();
-            //ZoomMap();
-            //MessageOfStudent kurei = new MessageOfStudent();
-            //kurei.X = 10000;
-            //kurei.Y = 20000;
-            //kurei.Speed = 1000;
-            //kurei.PlayerId = 0;
-            //listOfHuman.Add(kurei);
-            //MessageOfAll all= new MessageOfAll();
-            //all.HiddenGateRefreshed = false;
-            //listOfAll.Add(all);
-            // ReactToCommandline();
+            //comInfo[0] = "127.0.0.1";
+            //comInfo[1] = "8888";
+            //comInfo[2] = "0";
+            //comInfo[3] = "1";
+            //comInfo[4] = "1";
+            //ConnectToServer(comInfo);
+            //OnReceive();
+            ReactToCommandline();
         }
+
 
         private void SetStatusBar()
         {
@@ -114,24 +103,63 @@ namespace Client
                 mapFlag = true;
             }
         }
-
-        //private void Playback(string fileName, double pbSpeed = 2.0)
-        //{
-        //    var pbClient = new PlaybackClient(fileName, pbSpeed);
-        //    int[,]? map;
-        //    if ((map = pbClient.ReadDataFromFile(dataDict, drawPicLock)) != null)
-        //    {
-        //        isClientStocked = false;
-        //        isPlaybackMode = true;
-        //        defaultMap = map;
-        //        mapFlag = true;
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Failed to read the playback file!");
-        //        isClientStocked = true;
-        //    }
-        //}
+        private void ReactToCommandline()
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length == 2)
+            {
+                Playback(args[1]);
+                return;
+            }
+            _ = Parser.Default.ParseArguments<ArgumentOptions>(args).WithParsed(o =>
+            { options = o; });
+            if (options == null || options.cl == false)
+            {
+               OnReceive();
+            }
+            else
+            {
+                if (options.PlaybackFile == DefaultArgumentOptions.FileName)
+                {
+                    try
+                    {
+                        OnReceive();
+                        string[] comInfo = new string[5];
+                        comInfo[0] = options.Ip;
+                        comInfo[1] = options.Port;
+                        comInfo[2] = options.PlayerID;
+                        comInfo[3] = options.PlayerType;
+                        comInfo[4] = options.Occupation;
+                        ConnectToServer(comInfo);
+                    }
+                    catch
+                    {
+                        OnReceive();
+                    }
+                }
+                else
+                {
+                    Playback(options.PlaybackFile, options.PlaybackSpeed);
+                }
+            }
+        }
+        private void Playback(string fileName, double pbSpeed = 2.0)
+        {
+            var pbClient = new PlaybackClient(fileName, pbSpeed);
+            int[,]? map;
+            if ((map = pbClient.ReadDataFromFile(listOfProp, listOfHuman, listOfButcher, listOfBullet,listOfBombedBullet, listOfAll, listOfChest,  listOfClassroom,listOfDoor, listOfGate, drawPicLock)) != null)
+            {
+                isClientStocked = false;
+                isPlaybackMode = true;
+                defaultMap = map;
+                mapFlag = true;
+            }
+            else
+            {
+                MessageBox.Show("Failed to read the playback file!");
+                isClientStocked = true;
+            }
+        }
 
         // 连接Server,comInfo[]的格式：0-ip 1- port 2-playerID 3-human/TrickerType 4-occupation
         private void ConnectToServer(string[] comInfo)
@@ -1398,5 +1426,6 @@ namespace Client
             { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 }};
 
         private string[] comInfo = new string[5];
+        ArgumentOptions? options = null;
     }
 }

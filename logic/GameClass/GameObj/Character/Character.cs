@@ -464,11 +464,20 @@ namespace GameClass.GameObj
         {
             lock (gameObjLock)
             {
-                foreach (Prop prop in propInventory)
+                if (propType == PropType.Null)
                 {
-                    if (prop.GetPropType() == propType)
-                        return prop;
+                    foreach (Prop prop in propInventory)
+                    {
+                        if (prop.GetPropType() != PropType.Null)
+                            return prop;
+                    }
                 }
+                else
+                    foreach (Prop prop in propInventory)
+                    {
+                        if (prop.GetPropType() == propType)
+                            return prop;
+                    }
                 return new NullProp();
             }
         }

@@ -12,7 +12,7 @@ namespace Server
 
     public class ArgumentOptions
     {
-        [Option("ip", Required = false, HelpText = "Server listening port")]
+        [Option("ip", Required = false, HelpText = "Server listening ip")]
         public string ServerIP { get; set; } = "0.0.0.0";
 
         [Option('p', "port", Required = true, HelpText = "Server listening port")]

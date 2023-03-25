@@ -468,7 +468,8 @@ namespace Server
 #endif 
             BoolRes boolRes = new();
             var gameID = communicationToGameID[request.PlayerId];
-            //boolRes.ActSuccess = game.Rescue(gameID);
+            var toGameID = communicationToGameID[request.ToPlayerId];
+            boolRes.ActSuccess = game.Rescue(gameID, toGameID);
             return Task.FromResult(boolRes);
         }
         public override Task<BoolRes> StartTreatMate(TreatAndRescueMsg request, ServerCallContext context)
@@ -478,7 +479,8 @@ namespace Server
 #endif     
             BoolRes boolRes = new();
             var gameID = communicationToGameID[request.PlayerId];
-            //boolRes.ActSuccess = game.Treat(gameID);
+            var toGameID = communicationToGameID[request.ToPlayerId];
+            boolRes.ActSuccess = game.Treat(gameID, toGameID);
             return Task.FromResult(boolRes);
         }
         public override Task<BoolRes> StartLearning(IDMsg request, ServerCallContext context)

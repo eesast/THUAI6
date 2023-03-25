@@ -16,12 +16,14 @@ namespace Client
         private readonly double playbackSpeed;
         private readonly int frameTimeInMilliseconds;
         public MessageReader? Reader;
+        private SemaphoreSlim sema;
+        public SemaphoreSlim Sema => sema;
         public PlaybackClient(string fileName, double playbackSpeed = 1.0, int frameTimeInMilliseconds = 50)
         {
             this.fileName = fileName;
             this.playbackSpeed = playbackSpeed;
             this.frameTimeInMilliseconds = frameTimeInMilliseconds;
-            //this.sema = new SemaphoreSlim(1, 1);
+            this.sema = new SemaphoreSlim(1, 1);
             try
             {
                 Reader = new MessageReader(this.fileName);
@@ -40,7 +42,7 @@ namespace Client
         {
             if (Reader == null)
                 return null;
-            //Sema.Wait();
+            Sema.Wait();
             bool endFile = false;
             bool mapFlag = false;  // 是否获取了地图
             int[,] map = new int[50, 50];
@@ -239,7 +241,7 @@ namespace Client
                 frame,
                 () =>
                 {
-                    //Sema.Release();
+                    Sema.Release();
                     //MessageBox.Show("Game Over!");
                     return 1;
                 }
@@ -248,7 +250,6 @@ namespace Client
             })
             { IsBackground = true }.Start();
             return map;
-
         }
     }
 }

@@ -17,12 +17,11 @@ using System.Windows.Threading;
 using Grpc.Core;
 using Protobuf;
 using Playback;
+using CommandLine;
 
 // 目前MainWindow还未复现的功能：
-// 部分errordisplayer
 // private void ReactToCommandline()，
-// private void Playback(string fileName, double pbSpeed = 2.0)
-// 交互：private void ClickToSetMode(object sender, RoutedEventArgs e)
+// private void ClickToSetMode(object sender, RoutedEventArgs e)
 // private void Bonus()
 
 namespace Client
@@ -58,26 +57,16 @@ namespace Client
             listOfDoor = new List<MessageOfDoor>();
             listOfGate = new List<MessageOfGate>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            comInfo[0] = "127.0.0.1";
-            comInfo[1] = "8888";
-            comInfo[2] = "0";
-            comInfo[3] = "1";
-            comInfo[4] = "1";
-            ConnectToServer(comInfo);
-            OnReceive();
-            //DrawMap();
-            //ZoomMap();
-            //MessageOfStudent kurei = new MessageOfStudent();
-            //kurei.X = 10000;
-            //kurei.Y = 20000;
-            //kurei.Speed = 1000;
-            //kurei.PlayerId = 0;
-            //listOfHuman.Add(kurei);
-            //MessageOfAll all= new MessageOfAll();
-            //all.HiddenGateRefreshed = false;
-            //listOfAll.Add(all);
-            // ReactToCommandline();
+            //comInfo[0] = "127.0.0.1";
+            //comInfo[1] = "8888";
+            //comInfo[2] = "0";
+            //comInfo[3] = "1";
+            //comInfo[4] = "1";
+            //ConnectToServer(comInfo);
+            //OnReceive();
+            ReactToCommandline();
         }
+
 
         private void SetStatusBar()
         {
@@ -114,24 +103,63 @@ namespace Client
                 mapFlag = true;
             }
         }
-
-        //private void Playback(string fileName, double pbSpeed = 2.0)
-        //{
-        //    var pbClient = new PlaybackClient(fileName, pbSpeed);
-        //    int[,]? map;
-        //    if ((map = pbClient.ReadDataFromFile(dataDict, drawPicLock)) != null)
-        //    {
-        //        isClientStocked = false;
-        //        isPlaybackMode = true;
-        //        defaultMap = map;
-        //        mapFlag = true;
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Failed to read the playback file!");
-        //        isClientStocked = true;
-        //    }
-        //}
+        private void ReactToCommandline()
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length == 2)
+            {
+                Playback(args[1]);
+                return;
+            }
+            _ = Parser.Default.ParseArguments<ArgumentOptions>(args).WithParsed(o =>
+            { options = o; });
+            if (options == null || options.cl == false)
+            {
+               OnReceive();
+            }
+            else
+            {
+                if (options.PlaybackFile == DefaultArgumentOptions.FileName)
+                {
+                    try
+                    {
+                        OnReceive();
+                        string[] comInfo = new string[5];
+                        comInfo[0] = options.Ip;
+                        comInfo[1] = options.Port;
+                        comInfo[2] = options.PlayerID;
+                        comInfo[3] = options.PlayerType;
+                        comInfo[4] = options.Occupation;
+                        ConnectToServer(comInfo);
+                    }
+                    catch
+                    {
+                        OnReceive();
+                    }
+                }
+                else
+                {
+                    Playback(options.PlaybackFile, options.PlaybackSpeed);
+                }
+            }
+        }
+        private void Playback(string fileName, double pbSpeed = 2.0)
+        {
+            var pbClient = new PlaybackClient(fileName, pbSpeed);
+            int[,]? map;
+            if ((map = pbClient.ReadDataFromFile(listOfProp, listOfHuman, listOfButcher, listOfBullet,listOfBombedBullet, listOfAll, listOfChest,  listOfClassroom,listOfDoor, listOfGate, drawPicLock)) != null)
+            {
+                isClientStocked = false;
+                isPlaybackMode = true;
+                defaultMap = map;
+                mapFlag = true;
+            }
+            else
+            {
+                MessageBox.Show("Failed to read the playback file!");
+                isClientStocked = true;
+            }
+        }
 
         // 连接Server,comInfo[]的格式：0-ip 1- port 2-playerID 3-human/TrickerType 4-occupation
         private void ConnectToServer(string[] comInfo)
@@ -890,86 +918,283 @@ namespace Client
         {
             if (!isPlaybackMode)
             {
-                switch (e.Key)
+                if(Keyboard.Modifiers == ModifierKeys.Control)
                 {
-                    case Key.W:
-                    case Key.NumPad8:
-                        MoveMsg msgW = new()
-                        {
-                            PlayerId = playerID,
-                            TimeInMilliseconds = 50,
-                            Angle = Math.PI
-                        };
-                        client.Move(msgW);
-                        break;
-                    case Key.NumPad2:
-                    case Key.S:
-                        MoveMsg msgS = new()
-                        {
-                            PlayerId = playerID,
-                            TimeInMilliseconds = 50,
-                            Angle = 0
-                        };
-                        client.Move(msgS);
-                        break;
-                    case Key.D:
-                    case Key.NumPad6:
-                        MoveMsg msgD = new()
-                        {
-                            PlayerId = playerID,
-                            TimeInMilliseconds = 50,
-                            Angle = Math.PI / 2
-                        };
-                        client.Move(msgD);
-                        break;
-                    case Key.A:
-                    case Key.NumPad4:
-                        MoveMsg msgA = new()
-                        {
-                            PlayerId = playerID,
-                            TimeInMilliseconds = 50,
-                            Angle = 3 * Math.PI / 2
-                        };
-                        client.Move(msgA);
-                        break;
-                    case Key.J:
-                        AttackMsg msgJ = new()
-                        {
-                            PlayerId = playerID,
-                            Angle = Math.PI
-                        };
-                        client.Attack(msgJ);
-                        break;
-                    case Key.F:
-                        PropMsg msgF = new()
-                        {
-                            PlayerId = playerID,
-                        };
-                        client.PickProp(msgF);
-                        break;
-                    case Key.E:
-                        PropMsg msgE = new()
-                        {
-                            PlayerId = playerID,
-                        };
-                        client.UseProp(msgE);
-                        break;
-                    case Key.Q:
-                        SkillMsg msgQ = new()
-                        {
-                            PlayerId = playerID,
-                        };
-                        client.UseSkill(msgQ);
-                        break;
-                    case Key.K:
-                        IDMsg msgK = new()
-                        {
-                            PlayerId = playerID,
-                        };
-                        client.StartLearning(msgK);
-                        break;
-                    default:
-                        break;
+                    switch (e.Key)
+                    {
+                        case Key.D0:
+                            PropMsg msgP0 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key3,
+                            };
+                            client.PickProp(msgP0);
+                            break;
+                        case Key.D1:
+                            PropMsg msgP1 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key5,
+                            };
+                            client.PickProp(msgP1);
+                            break;
+                        case Key.D2:
+                            PropMsg msgP2 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key6,
+                            };
+                            client.PickProp(msgP2);
+                            break;
+                        case Key.D3:
+                            PropMsg msgP3 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Ptype4,
+                            };
+                            client.PickProp(msgP3);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else if (Keyboard.Modifiers == ModifierKeys.Alt)
+                {
+                    switch (e.Key)
+                    {
+                        case Key.D0:
+                            PropMsg msgP0 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key3,
+                            };
+                            client.UseProp(msgP0);
+                            break;
+                        case Key.D1:
+                            PropMsg msgP1 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key5,
+                            };
+                            client.UseProp(msgP1);
+                            break;
+                        case Key.D2:
+                            PropMsg msgP2 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key6,
+                            };
+                            client.UseProp(msgP2);
+                            break;
+                        case Key.D3:
+                            PropMsg msgP3 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Ptype4,
+                            };
+                            client.UseProp(msgP3);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else if(Keyboard.Modifiers == ModifierKeys.Shift)
+                {
+                    switch (e.Key)
+                    {
+                        case Key.D0:
+                            PropMsg msgP0 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key3,
+                            };
+                            client.ThrowProp(msgP0);
+                            break;
+                        case Key.D1:
+                            PropMsg msgP1 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key5,
+                            };
+                            client.ThrowProp(msgP1);
+                            break;
+                        case Key.D2:
+                            PropMsg msgP2 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key6,
+                            };
+                            client.ThrowProp(msgP2);
+                            break;
+                        case Key.D3:
+                            PropMsg msgP3 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Ptype4,
+                            };
+                            client.ThrowProp(msgP3);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else if (Keyboard.Modifiers == ModifierKeys.Windows)
+                {
+                    switch (e.Key)
+                    {
+                        case Key.D0:
+                            SkillMsg msgS0 = new()
+                            {
+                                PlayerId = playerID,
+                                SkillId = 0,
+                            };
+                            client.UseSkill(msgS0);
+                            break;
+                        case Key.D1:
+                            SkillMsg msgS1 = new()
+                            {
+                                PlayerId = playerID,
+                                SkillId = 1,
+                            };
+                            client.UseSkill(msgS1);
+                            break;
+                        case Key.D2:
+                            SkillMsg msgS2 = new()
+                            {
+                                PlayerId = playerID,
+                                SkillId = 2,
+                            };
+                            client.UseSkill(msgS2);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (e.Key)
+                    {
+                        case Key.W:
+                        case Key.NumPad8:
+                            MoveMsg msgW = new()
+                            {
+                                PlayerId = playerID,
+                                TimeInMilliseconds = 50,
+                                Angle = Math.PI
+                            };
+                            client.Move(msgW);
+                            break;
+                        case Key.S:
+                        case Key.NumPad2:
+                            MoveMsg msgS = new()
+                            {
+                                PlayerId = playerID,
+                                TimeInMilliseconds = 50,
+                                Angle = 0
+                            };
+                            client.Move(msgS);
+                            break;
+                        case Key.D:
+                        case Key.NumPad6:
+                            MoveMsg msgD = new()
+                            {
+                                PlayerId = playerID,
+                                TimeInMilliseconds = 50,
+                                Angle = Math.PI / 2
+                            };
+                            client.Move(msgD);
+                            break;
+                        case Key.A:
+                        case Key.NumPad4:
+                            MoveMsg msgA = new()
+                            {
+                                PlayerId = playerID,
+                                TimeInMilliseconds = 50,
+                                Angle = 3 * Math.PI / 2
+                            };
+                            client.Move(msgA);
+                            break;
+                        case Key.J:
+                            AttackMsg msgJ = new()
+                            {
+                                PlayerId = playerID,
+                                Angle = Math.PI
+                            };
+                            client.Attack(msgJ);
+                            break;
+                        case Key.K:
+                            IDMsg msgK = new()
+                            {
+                                PlayerId = playerID,
+                            };
+                            client.StartLearning(msgK);
+                            break;
+                        case Key.R:
+                            IDMsg msgR = new()
+                            {
+                                PlayerId = playerID,
+                            };
+                            client.StartRescueMate(msgR);
+                            break;
+                        case Key.T:
+                            IDMsg msgT = new()
+                            {
+                                PlayerId = playerID,
+                            };
+                            client.StartTreatMate(msgT);
+                            break;
+                        case Key.G:
+                            IDMsg msgG = new()
+                            {
+                                PlayerId = playerID,
+                            };
+                            client.Graduate(msgG);
+                            break;
+                        case Key.H:
+                            IDMsg msgH = new()
+                            {
+                                PlayerId = playerID,
+                            };
+                            client.StartOpenGate(msgH);
+                            break;
+                        case Key.O:
+                            IDMsg msgO = new()
+                            {
+                                PlayerId = playerID,
+                            };
+                            client.OpenDoor(msgO);
+                            break;
+                        case Key.P:
+                            IDMsg msgP = new()
+                            {
+                                PlayerId = playerID,
+                            };
+                            client.CloseDoor(msgP);
+                            break;
+                        case Key.U:
+                            IDMsg msgU = new()
+                            {
+                                PlayerId = playerID,
+                            };
+                            client.SkipWindow(msgU);
+                            break;
+                        case Key.I:
+                            IDMsg msgI = new()
+                            {
+                                PlayerId = playerID,
+                            };
+                            client.StartOpenChest(msgI);
+                            break;
+                        case Key.E:
+                            IDMsg msgE = new()
+                            {
+                                PlayerId = playerID,
+                            };
+                            client.EndAllAction(msgE);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -1201,5 +1426,6 @@ namespace Client
             { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 }};
 
         private string[] comInfo = new string[5];
+        ArgumentOptions? options = null;
     }
 }

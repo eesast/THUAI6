@@ -31,7 +31,9 @@ namespace Client
         }
         public void SetFontSize(double fontsize)
         {
-            time.FontSize = scoresofstudents.FontSize = scoresoftrickers.FontSize = status.FontSize = prop.FontSize = fontsize;
+            status.FontSize = 13 * fontsize / 12;
+            time.FontSize = 13 * fontsize / 12;
+            scoresOfStudents.FontSize = scoresOfTrickers.FontSize = fontsize;
         }
 
         public void SetValue(MessageOfAll obj)
@@ -63,8 +65,8 @@ namespace Client
             }
             status.Text += Convert.ToString(obj.StudentGraduated)+ "\n⚰️: ";
             status.Text += Convert.ToString(obj.StudentQuited);
-            scoresofstudents.Text = "Scores of Survivors: " + Convert.ToString(obj.StudentScore);
-            scoresoftrickers.Text = "Scores of Hunters: " + Convert.ToString(obj.TrickerScore);
+            scoresOfStudents.Text = "Scores of Students：" + Convert.ToString(obj.StudentScore);
+            scoresOfTrickers.Text = "Scores of Tricker：" + Convert.ToString(obj.TrickerScore);
         }
     }
 }

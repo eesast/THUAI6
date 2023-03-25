@@ -300,6 +300,20 @@ namespace Client
                                 }
                             }
                             break;//emergency
+                        case 11:
+                            mapPatches[i, j].Fill = Brushes.Gray;
+                            mapPatches[i, j].Stroke = Brushes.Gray;
+                            break;//window
+                        case 12:
+                        case 13:
+                        case 14:
+                            mapPatches[i, j].Fill = Brushes.Khaki;
+                            mapPatches[i, j].Stroke = Brushes.Khaki;
+                            break;//door
+                        case 15:
+                            mapPatches[i, j].Fill = Brushes.Orange;
+                            mapPatches[i, j].Stroke = Brushes.Orange;
+                            break;//chest
                         default:
                             break;
                     }
@@ -767,7 +781,7 @@ namespace Client
                                         UpperLayerOfMap.Children.Add(icon);
                                         break;
                                     }
-                          /*      case BulletType.LineBullet:
+                                /*case BulletType.LineBullet:
                                     {
                                         double bombRange = data.BombRange / 1000;
                                         DrawLaser(new Point(data.Y * unitWidth / 1000.0, data.X * unitHeight / 1000.0), -data.FacingDirection + Math.PI / 2, bombRange * unitHeight, 0.5 * unitWidth);
@@ -848,11 +862,11 @@ namespace Client
                             };
                             if (data.IsOpen)
                             {
-                                icon.Text = Convert.ToString("1");
+                                icon.Text = Convert.ToString("开");
                             }
                             else
                             {
-                                icon.Text = Convert.ToString("0");
+                                icon.Text = Convert.ToString("闭");
                             }    
                             UpperLayerOfMap.Children.Add(icon);
                         }

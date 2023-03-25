@@ -81,9 +81,26 @@ bool Logic::IsDoorOpen(int32_t cellX, int32_t cellY) const
     logger->debug("Called IsDoorOpen");
     auto pos = std::make_pair(cellX, cellY);
     if (currentState->mapInfo->doorState.count(pos) == 0)
+    {
+        logger->warn("Door not found");
         return false;
+    }
     else
         return currentState->mapInfo->doorState[pos];
+}
+
+int32_t Logic::GetDoorProgress(int32_t cellX, int32_t cellY) const
+{
+    std::unique_lock<std::mutex> lock(mtxState);
+    logger->debug("Called GetDoorProgress");
+    auto pos = std::make_pair(cellX, cellY);
+    if (currentState->mapInfo->doorProgress.count(pos) == 0)
+    {
+        logger->warn("Door not found");
+        return -1;
+    }
+    else
+        return currentState->mapInfo->doorProgress[pos];
 }
 
 int32_t Logic::GetClassroomProgress(int32_t cellX, int32_t cellY) const
@@ -92,7 +109,10 @@ int32_t Logic::GetClassroomProgress(int32_t cellX, int32_t cellY) const
     logger->debug("Called GetClassroomProgress");
     auto pos = std::make_pair(cellX, cellY);
     if (currentState->mapInfo->classRoomState.count(pos) == 0)
-        return 0;
+    {
+        logger->warn("Classroom not found");
+        return -1;
+    }
     else
         return currentState->mapInfo->classRoomState[pos];
 }
@@ -103,7 +123,10 @@ int32_t Logic::GetChestProgress(int32_t cellX, int32_t cellY) const
     logger->debug("Called GetChestProgress");
     auto pos = std::make_pair(cellX, cellY);
     if (currentState->mapInfo->chestState.count(pos) == 0)
-        return 0;
+    {
+        logger->warn("Chest not found");
+        return -1;
+    }
     else
         return currentState->mapInfo->chestState[pos];
 }
@@ -114,9 +137,26 @@ int32_t Logic::GetGateProgress(int32_t cellX, int32_t cellY) const
     logger->debug("Called GetGateProgress");
     auto pos = std::make_pair(cellX, cellY);
     if (currentState->mapInfo->gateState.count(pos) == 0)
-        return 0;
+    {
+        logger->warn("Gate not found");
+        return -1;
+    }
     else
         return currentState->mapInfo->gateState[pos];
+}
+
+THUAI6::HiddenGateState Logic::GetHiddenGateState(int32_t cellX, int32_t cellY) const
+{
+    std::unique_lock<std::mutex> lock(mtxState);
+    logger->debug("Called GetHiddenGateState");
+    auto pos = std::make_pair(cellX, cellY);
+    if (currentState->mapInfo->hiddenGateState.count(pos) == 0)
+    {
+        logger->warn("HiddenGate not found");
+        return THUAI6::HiddenGateState::Null;
+    }
+    else
+        return currentState->mapInfo->hiddenGateState[pos];
 }
 
 std::shared_ptr<const THUAI6::GameInfo> Logic::GetGameInfo() const
@@ -415,13 +455,13 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                                 if (bufferState->mapInfo->doorState.count(pos) == 0)
                                 {
                                     bufferState->mapInfo->doorState.emplace(pos, item.door_message().is_open());
-                                    bufferState->mapInfo->doorNumber.emplace(pos, item.door_message().number());
+                                    bufferState->mapInfo->doorProgress.emplace(pos, item.door_message().progress());
                                     logger->debug("Add Door!");
                                 }
                                 else
                                 {
                                     bufferState->mapInfo->doorState[pos] = item.door_message().is_open();
-                                    bufferState->mapInfo->doorNumber[pos] = item.door_message().number();
+                                    bufferState->mapInfo->doorProgress[pos] = item.door_message().progress();
                                     logger->debug("Update Door!");
                                 }
                             }
@@ -434,12 +474,12 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                                 auto pos = std::make_pair(item.hidden_gate_message().x(), item.hidden_gate_message().y());
                                 if (bufferState->mapInfo->hiddenGateState.count(pos) == 0)
                                 {
-                                    bufferState->mapInfo->hiddenGateState.emplace(pos, item.hidden_gate_message().opened());
+                                    bufferState->mapInfo->hiddenGateState.emplace(pos, Proto2THUAI6::Bool2HiddenGateState(item.hidden_gate_message().opened()));
                                     logger->debug("Add HiddenGate!");
                                 }
                                 else
                                 {
-                                    bufferState->mapInfo->hiddenGateState[pos] = item.hidden_gate_message().opened();
+                                    bufferState->mapInfo->hiddenGateState[pos] = Proto2THUAI6::Bool2HiddenGateState(item.hidden_gate_message().opened());
                                     logger->debug("Update HiddenGate!");
                                 }
                             }
@@ -551,13 +591,13 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                                 if (bufferState->mapInfo->doorState.count(pos) == 0)
                                 {
                                     bufferState->mapInfo->doorState.emplace(pos, item.door_message().is_open());
-                                    bufferState->mapInfo->doorNumber.emplace(pos, item.door_message().number());
+                                    bufferState->mapInfo->doorProgress.emplace(pos, item.door_message().progress());
                                     logger->debug("Add Door!");
                                 }
                                 else
                                 {
                                     bufferState->mapInfo->doorState[pos] = item.door_message().is_open();
-                                    bufferState->mapInfo->doorNumber[pos] = item.door_message().number();
+                                    bufferState->mapInfo->doorProgress[pos] = item.door_message().progress();
                                     logger->debug("Update Door!");
                                 }
                             }
@@ -570,12 +610,12 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                                 auto pos = std::make_pair(item.hidden_gate_message().x(), item.hidden_gate_message().y());
                                 if (bufferState->mapInfo->hiddenGateState.count(pos) == 0)
                                 {
-                                    bufferState->mapInfo->hiddenGateState.emplace(pos, item.hidden_gate_message().opened());
+                                    bufferState->mapInfo->hiddenGateState.emplace(pos, Proto2THUAI6::Bool2HiddenGateState(item.hidden_gate_message().opened()));
                                     logger->debug("Add HiddenGate!");
                                 }
                                 else
                                 {
-                                    bufferState->mapInfo->hiddenGateState[pos] = item.hidden_gate_message().opened();
+                                    bufferState->mapInfo->hiddenGateState[pos] = Proto2THUAI6::Bool2HiddenGateState(item.hidden_gate_message().opened());
                                     logger->debug("Update HiddenGate!");
                                 }
                             }

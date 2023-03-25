@@ -30,8 +30,10 @@ namespace THUAI6
         Gate = 5,
         HiddenGate = 6,
         Window = 7,
-        Door = 8,
-        Chest = 9,
+        Door3 = 8,
+        Door5 = 9,
+        Door6 = 10,
+        Chest = 11,
     };
 
     // 形状标志
@@ -46,17 +48,17 @@ namespace THUAI6
     enum class PropType : unsigned char
     {
         NullPropType = 0,
-        PropType1 = 1,
-        PropType2 = 2,
-        PropType3 = 3,
+        Key3 = 1,
+        Key5 = 2,
+        Key6 = 3,
         PropType4 = 4,
     };
 
     enum class BulletType : unsigned char
     {
         NullBulletType = 0,
-        LineBullet = 1,
-        CommonBullet = 2,
+        FlyingKnife = 1,
+        CommonAttackOfTricker = 2,
         FastBullet = 3,
         OrdinaryBullet = 4,
         AtomBomb = 5,
@@ -74,7 +76,7 @@ namespace THUAI6
     enum class StudentType : unsigned char
     {
         NullStudentType = 0,
-        StudentType1 = 1,
+        Athlete = 1,
         StudentType2 = 2,
         StudentType3 = 3,
         StudentType4 = 4,
@@ -84,7 +86,7 @@ namespace THUAI6
     enum class TrickerType : unsigned char
     {
         NullTrickerType = 0,
-        TrickerType1 = 1,
+        Assassin = 1,
         TrickerType2 = 2,
         TrickerType3 = 3,
         TrickerType4 = 4,
@@ -128,6 +130,9 @@ namespace THUAI6
         Locking = 13,
         Rummaging = 14,
         Climbing = 15,
+        OpeningAChest = 16,
+        UsingSpecialSkill = 17,
+        OpeningAGate = 18,
     };
 
     enum class MessageOfObj : unsigned char
@@ -145,6 +150,13 @@ namespace THUAI6
         MapMessage = 10,
         NewsMessage = 11,
         HiddenGateMessage = 12,
+    };
+
+    enum class HiddenGateState : unsigned char
+    {
+        Null = 0,
+        Refreshed = 1,
+        Opened = 2,
     };
 
     // 玩家类
@@ -186,7 +198,6 @@ namespace THUAI6
 
     struct Tricker : public Player
     {
-        int32_t damage;
         double trickDesire;
         double classVolume;
         TrickerType trickerType;            // 捣蛋鬼类型
@@ -220,12 +231,10 @@ namespace THUAI6
     {
         int32_t x;
         int32_t y;
-        int32_t size;
         int64_t guid;
         PropType type;
         PlaceType place;
         double facingDirection;  // 朝向
-        bool isMoving;
     };
 
     struct GameMap
@@ -235,11 +244,12 @@ namespace THUAI6
         std::map<std::pair<int32_t, int32_t>, int32_t> gateState;
 
         std::map<std::pair<int32_t, int32_t>, bool> doorState;
-        std::map<std::pair<int32_t, int32_t>, int32_t> doorNumber;
+
+        std::map<std::pair<int32_t, int32_t>, int32_t> doorProgress;
 
         std::map<std::pair<int32_t, int32_t>, int32_t> chestState;
 
-        std::map<std::pair<int32_t, int32_t>, bool> hiddenGateState;
+        std::map<std::pair<int32_t, int32_t>, HiddenGateState> hiddenGateState;
     };
 
     struct GameInfo
@@ -282,6 +292,9 @@ namespace THUAI6
         {PlayerState::Locking, "Locking"},
         {PlayerState::Rummaging, "Rummaging"},
         {PlayerState::Climbing, "Climbing"},
+        {PlayerState::OpeningAChest, "OpeningAChest"},
+        {PlayerState::UsingSpecialSkill, "UsingSpecialSkill"},
+        {PlayerState::OpeningAGate, "OpeningAGate"},
     };
 
     inline std::map<PlayerType, std::string> playerTypeDict{
@@ -298,14 +311,28 @@ namespace THUAI6
         {PlaceType::ClassRoom, "ClassRoom"},
         {PlaceType::Gate, "Gate"},
         {PlaceType::HiddenGate, "HiddenGate"},
-        {PlaceType::Door, "Door"},
+        {PlaceType::Door3, "Door3"},
+        {PlaceType::Door5, "Door5"},
+        {PlaceType::Door6, "Door6"},
         {PlaceType::Window, "Window"},
         {PlaceType::Chest, "Chest"},
     };
 
     inline std::map<PropType, std::string> propTypeDict{
         {PropType::NullPropType, "NullPropType"},
+        {PropType::Key3, "Key3"},
+        {PropType::Key5, "Key5"},
+        {PropType::Key6, "Key6"},
 
+    };
+
+    inline std::map<BulletType, std::string> bulletTypeDict{
+        {BulletType::NullBulletType, "NullBulletType"},
+        {BulletType::FlyingKnife, "FlyingKnife"},
+        {BulletType::CommonAttackOfTricker, "CommonAttackOfTricker"},
+        {BulletType::FastBullet, "FastBullet"},
+        {BulletType::OrdinaryBullet, "OrdinaryBullet"},
+        {BulletType::AtomBomb, "AtomBomb"},
     };
 
     inline std::map<StudentBuffType, std::string> studentBuffDict{

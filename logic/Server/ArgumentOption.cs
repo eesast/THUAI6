@@ -12,20 +12,23 @@ namespace Server
 
     public class ArgumentOptions
     {
-        [Option("ip", Required = true, HelpText = "Server listening port")]
+        [Option("ip", Required = false, HelpText = "Server listening ip")]
         public string ServerIP { get; set; } = "0.0.0.0";
 
         [Option('p', "port", Required = true, HelpText = "Server listening port")]
         public ushort ServerPort { get; set; } = 8888;
 
-        [Option('n', "playerNum", Required = false, HelpText = "The number of players, 1 by defualt")]
-        public ushort playerNum { get; set; } = 1;
-
-        [Option('t', "teamCount", Required = false, HelpText = "The number of teams, 1 by defualt")]
+        [Option("teamCount", Required = false, HelpText = "The number of teams, 2 by defualt")]
         public ushort TeamCount { get; set; } = 2;
 
-        [Option('c', "playerCount", Required = false, HelpText = "The number of players per team, 4 by default")]
-        public ushort PlayerCountPerTeam { get; set; } = 4;
+        [Option('s', "studentCount", Required = false, HelpText = "The number of students, 4 by default")]
+        public ushort StudentCount { get; set; } = 4;
+
+        [Option('t', "trickerCount", Required = false, HelpText = "The number of trickers, 1 by default")]
+        public ushort TrickerCount { get; set; } = 1;
+
+        [Option("maxStudentCount", Required = false, HelpText = "The max number of students, 4 by default")]
+        public ushort MaxStudentCount { get; set; } = 4;
 
         [Option('g', "gameTimeInSecond", Required = false, HelpText = "The time of the game in second, 10 minutes by default")]
         public uint GameTimeInSecond { get; set; } = 10 * 60;

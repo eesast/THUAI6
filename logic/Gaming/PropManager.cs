@@ -21,7 +21,7 @@ namespace Gaming
 
             private readonly List<XY> availableCellForGenerateProp;
 
-            public void UseProp(Character player, PropType propType)
+            public static void UseProp(Character player, PropType propType)
             {
                 if (player.IsResetting)
                     return;

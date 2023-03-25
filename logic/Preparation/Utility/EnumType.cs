@@ -91,7 +91,7 @@ namespace Preparation.Utility
         SuperFast = 4,
         UseKnife = 5,
         CanBeginToCharge = 6,
-        Publish = 7,
+        Punish = 7,
     }
     public enum PassiveSkillType
     {

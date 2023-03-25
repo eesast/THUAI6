@@ -29,6 +29,15 @@ namespace GameClass.GameObj
         public object ActiveSkillLock => commonSkillLock;
     }
 
+    public class Punish : IActiveSkill
+    {
+        public int SkillCD => GameData.commonSkillCD;
+        public int DurationTime => GameData.commonSkillTime / 10 * 6;
+
+        private readonly object commonSkillLock = new object();
+        public object ActiveSkillLock => commonSkillLock;
+    }
+
     public class NuclearWeapon : IActiveSkill  // 核武器
     {
         public int SkillCD => GameData.commonSkillCD / 3 * 7;
@@ -86,6 +95,7 @@ namespace GameClass.GameObj
                     return ActiveSkillType.UseKnife;
                 case CanBeginToCharge:
                     return ActiveSkillType.CanBeginToCharge;
+                case Teacher:
                 default:
                     return ActiveSkillType.Null;
             }

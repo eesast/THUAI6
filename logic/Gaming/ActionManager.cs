@@ -18,6 +18,7 @@ namespace Gaming
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
                 if (!playerToMove.Commandable()) return false;
+                playerToMove.PlayerState = PlayerStateType.Moving;
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
                 return true;
             }

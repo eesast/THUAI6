@@ -466,17 +466,25 @@ namespace GameClass.GameObj
             {
                 if (propType == PropType.Null)
                 {
-                    foreach (Prop prop in propInventory)
+                    for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
                     {
-                        if (prop.GetPropType() != PropType.Null)
+                        if (PropInventory[indexing].GetPropType() != PropType.Null)
+                        {
+                            Prop prop = PropInventory[indexing];
+                            PropInventory[indexing] = new NullProp();
                             return prop;
+                        }
                     }
                 }
                 else
-                    foreach (Prop prop in propInventory)
+                    for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
                     {
-                        if (prop.GetPropType() == propType)
+                        if (PropInventory[indexing].GetPropType() == propType)
+                        {
+                            Prop prop = PropInventory[indexing];
+                            PropInventory[indexing] = new NullProp();
                             return prop;
+                        }
                     }
                 return new NullProp();
             }

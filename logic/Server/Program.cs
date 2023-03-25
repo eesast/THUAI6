@@ -23,10 +23,10 @@ namespace Server
             if (options == null)
             {
                 Console.WriteLine("Argument parsing failed!");
-                 return 1;
+                return 1;
             }
 
-             Console.WriteLine("Server begins to run: " + options.ServerPort.ToString());
+            Console.WriteLine("Server begins to run: " + options.ServerPort.ToString());
 
             try
             {

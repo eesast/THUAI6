@@ -89,12 +89,49 @@ class Logic(ILogic):
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         with self.__mtxState:
             self.__logger.debug("Called GetFullMap")
-            return self.__currentState.map
+            return self.__currentState.gameMap
 
     def GetPlaceType(self, x: int, y: int) -> THUAI6.PlaceType:
         with self.__mtxState:
             self.__logger.debug("Called GetPlaceType")
-            return self.__currentState.map[x][y]
+            return self.__currentState.gameMap[x][y]
+
+    def IsDoorOpen(self, x: int, y: int) -> bool:
+        with self.__mtxState:
+            self.__logger.debug("Called IsDoorOpen")
+            if (x, y) in self.__currentState.mapInfo.doorState:
+                return self.__currentState.mapInfo.doorState[(x, y)]
+            else:
+                return False
+
+    def GetClassroomProgess(self, x: int, y: int) -> int:
+        with self.__mtxState:
+            self.__logger.debug("Called GetClassroomProgess")
+            if (x, y) in self.__currentState.mapInfo.classroomState:
+                return self.__currentState.mapInfo.classroomState[(x, y)]
+            else:
+                return 0
+
+    def GetChestProgress(self, x: int, y: int) -> int:
+        with self.__mtxState:
+            self.__logger.debug("Called GetChestProgress")
+            if (x, y) in self.__currentState.mapInfo.chestState:
+                return self.__currentState.mapInfo.chestState[(x, y)]
+            else:
+                return 0
+
+    def GetGateProgress(self, x: int, y: int) -> int:
+        with self.__mtxState:
+            self.__logger.debug("Called GetGateProgress")
+            if (x, y) in self.__currentState.mapInfo.gateState:
+                return self.__currentState.mapInfo.gateState[(x, y)]
+            else:
+                return 0
+
+    def GetGameInfo(self) -> THUAI6.GameInfo:
+        with self.__mtxState:
+            self.__logger.debug("Called GetGameInfo")
+            return self.__currentState.gameInfo
 
     def Move(self, time: int, angle: float) -> bool:
         self.__logger.debug("Called Move")
@@ -146,35 +183,41 @@ class Logic(ILogic):
         self.__logger.debug("Called StartLearning")
         return self.__comm.StartLearning(self.__playerID)
 
-    def EndLearning(self) -> bool:
-        self.__logger.debug("Called EndLearning")
-        return self.__comm.EndLearning(self.__playerID)
+    def StartTreatMate(self) -> bool:
+        self.__logger.debug("Called StartTreatMate")
+        return self.__comm.StartTreatMate(self.__playerID)
 
-    def StartHelpMate(self) -> bool:
-        self.__logger.debug("Called StartHelpMate")
-        return self.__comm.StartHelpMate(self.__playerID)
+    def StartRescueMate(self) -> bool:
+        self.__logger.debug("Called StartRescueMate")
+        return self.__comm.StartRescueMate(self.__playerID)
 
-    def EndHelpMate(self) -> bool:
-        self.__logger.debug("Called EndHelpMate")
-        return self.__comm.EndHelpMate(self.__playerID)
-
-    # Tricker使用的接口
-
-    def Trick(self, angle: float) -> bool:
+    def Attack(self, angle: float) -> bool:
         self.__logger.debug("Called Trick")
-        return self.__comm.Trick(angle, self.__playerID)
+        return self.__comm.Attack(angle, self.__playerID)
 
-    def StartExam(self) -> bool:
-        self.__logger.debug("Called StartExam")
-        return self.__comm.StartExam(self.__playerID)
+    def CloseDoor(self) -> bool:
+        self.__logger.debug("Called CloseDoor")
+        return self.__comm.CloseDoor(self.__playerID)
 
-    def EndExam(self) -> bool:
-        self.__logger.debug("Called EndExam")
-        return self.__comm.EndExam(self.__playerID)
+    def OpenDoor(self) -> bool:
+        self.__logger.debug("Called OpenDoor")
+        return self.__comm.OpenDoor(self.__playerID)
 
-    def MakeFail(self) -> bool:
-        self.__logger.debug("Called MakeFail")
-        return self.__comm.MakeFail(self.__playerID)
+    def SkipWindow(self) -> bool:
+        self.__logger.debug("Called SkipWindow")
+        return self.__comm.SkipWindow(self.__playerID)
+
+    def StartOpenGate(self) -> bool:
+        self.__logger.debug("Called StartOpenGate")
+        return self.__comm.StartOpenGate(self.__playerID)
+
+    def StartOpenChest(self) -> bool:
+        self.__logger.debug("Called StartOpenChest")
+        return self.__comm.StartOpenChest(self.__playerID)
+
+    def EndAllAction(self) -> bool:
+        self.__logger.debug("Called EndAllAction")
+        return self.__comm.EndAllAction(self.__playerID)
 
     # Logic内部逻辑
     def __TryConnection(self) -> bool:

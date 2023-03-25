@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 
 class GameState(Enum):
@@ -15,9 +15,11 @@ class PlaceType(Enum):
     Wall = 2
     Grass = 3
     ClassRoom = 4
-    BlackRoom = 5
-    Gate = 6
-    HiddenGate = 7
+    Gate = 5
+    HiddenGate = 6
+    Window = 7
+    Door = 8
+    Chest = 9
 
 
 class ShapeType(Enum):
@@ -35,6 +37,15 @@ class PlayerType(Enum):
 class PropType(Enum):
     NullPropType = 0
     PropType1 = 1
+
+
+class BulletType(Enum):
+    NullBulletType = 0
+    LineBullet = 1
+    CommonBullet = 2
+    FastBullet = 3
+    OrdinaryBullet = 4
+    AtomBomb = 5
 
 
 class StudentType(Enum):
@@ -57,14 +68,35 @@ class TrickerBuffType(Enum):
     TrickerBuffType1 = 1
 
 
-class StudentState(Enum):
-    NullStudentState = 0
+class PlayerState(Enum):
+    NullState = 0
     Idle = 1
     Learning = 2
-    Fail = 3
-    Emotional = 4
-    Quit = 5
-    Graduated = 6
+    Addicted = 3
+    Quit = 4
+    Graduated = 5
+    Treated = 6
+    Rescued = 7
+    Stunned = 8
+    Treating = 9
+    Rescuing = 10
+    Swinging = 11
+    Attacking = 12
+    Locking = 13
+    Rummaging = 14
+    Climbing = 15
+
+
+class MessageOfObj(Enum):
+    NullMessageOfObj = 0
+    StudentMessage = 1
+    TrickerMessage = 2
+    PropMessage = 3
+    BulletMessage = 4
+    BombedBulletMessage = 5
+    ClassroomMessage = 6
+    GateMessage = 7
+    ChestMessage = 8
 
 
 class Player:
@@ -75,25 +107,22 @@ class Player:
     playerID: int
     guid: int
     radius: int
-    timeUntilSkillAvailable: float
+    damage: int
+    timeUntilSkillAvailable: List[float]
     playerType: PlayerType
-    prop: PropType
+    prop: List[PropType]
     place: PlaceType
+    playerState: PlayerState
 
 
 class Student(Player):
-    state: StudentState
     determination: int
-    failNum: int
-    failTime: float
-    emoTime: float
+    addiction: int
     studentType: StudentType
     buff: List[StudentBuffType]
 
 
 class Tricker(Player):
-    damage: int
-    movable: bool
     trickerType: TrickerType
     buff: List[TrickerBuffType]
 
@@ -107,3 +136,42 @@ class Prop:
     place: PlaceType
     facingDirection: float
     isMoving: bool
+
+
+class Bullet:
+    bulletType: BulletType
+    x: int
+    y: int
+    facingDirection: float
+    guid: int
+    team: PlayerType
+    place: PlaceType
+    bombRange: float
+
+
+class BombedBullet():
+    bulletType: BulletType
+    x: int
+    y: int
+    facingDirection: float
+    mappingID: int
+    bombRange: float
+
+
+class GameMap:
+    classroomState: Dict[tuple[int, int], int]
+    gateState: Dict[tuple[int, int], int]
+    chestState: Dict[tuple[int, int], bool]
+    doorState: Dict[tuple[int, int], bool]
+
+
+class GameInfo:
+    gameTime: int
+    subjectLeft: int
+    studentGraduated: int
+    studentQuited: int
+    studentScore: int
+    trickerScore: int
+    gateOpened: bool
+    hiddenGateRefreshed: bool
+    hiddenGateOpened: bool

@@ -319,6 +319,26 @@ int32_t TrickerAPI::GetGateProgress(int32_t cellX, int32_t cellY) const
     return logic.GetGateProgress(cellX, cellY);
 }
 
+int32_t StudentAPI::GetDoorProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetDoorProgress(cellX, cellY);
+}
+
+int32_t TrickerAPI::GetDoorProgress(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetDoorProgress(cellX, cellY);
+}
+
+THUAI6::HiddenGateState StudentAPI::GetHiddenGateState(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetHiddenGateState(cellX, cellY);
+}
+
+THUAI6::HiddenGateState TrickerAPI::GetHiddenGateState(int32_t cellX, int32_t cellY) const
+{
+    return logic.GetHiddenGateState(cellX, cellY);
+}
+
 std::shared_ptr<const THUAI6::GameInfo> StudentAPI::GetGameInfo() const
 {
     return logic.GetGameInfo();

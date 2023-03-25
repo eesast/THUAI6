@@ -119,68 +119,86 @@ class Communication:
         else:
             return learnResult.act_success
 
-    def EndLearning(self, playerID: int) -> bool:
+    def StartTreatMate(self, playerID: int) -> bool:
         try:
-            learnResult = self.__THUAI6Stub.EndLearning(
-                THUAI62Proto.THUAI62ProtobufID(playerID))
-        except grpc.RpcError as e:
-            return False
-        else:
-            return learnResult.act_success
-
-    def StartHelpMate(self, playerID: int) -> bool:
-        try:
-            helpResult = self.__THUAI6Stub.StartHelpMate(
+            helpResult = self.__THUAI6Stub.StartTreatMate(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
         else:
             return helpResult.act_success
 
-    def EndHelpMate(self, playerID: int) -> bool:
+    def StartRescueMate(self, playerID: int) -> bool:
         try:
-            helpResult = self.__THUAI6Stub.EndHelpMate(
+            helpResult = self.__THUAI6Stub.StartRescueMate(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
         else:
             return helpResult.act_success
 
-    def Trick(self, angle: float, playerID: int) -> bool:
+    def Attack(self, angle: float, playerID: int) -> bool:
         try:
-            trickResult = self.__THUAI6Stub.Trick(
+            attackResult = self.__THUAI6Stub.Attack(
                 THUAI62Proto.THUAI62ProtobufTrick(angle, playerID))
         except grpc.RpcError as e:
             return False
         else:
-            return trickResult.act_success
+            return attackResult.act_success
 
-    def StartExam(self, playerID: int) -> bool:
+    def OpenDoor(self, playerID: int) -> bool:
         try:
-            carryResult = self.__THUAI6Stub.StartExam(
+            openResult = self.__THUAI6Stub.OpenDoor(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
         else:
-            return carryResult.act_success
+            return openResult.act_success
 
-    def EndExam(self, playerID: int) -> bool:
+    def CloseDoor(self, playerID: int) -> bool:
         try:
-            releaseResult = self.__THUAI6Stub.EndExam(
+            closeResult = self.__THUAI6Stub.CloseDoor(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
         else:
-            return releaseResult.act_success
+            return closeResult.act_success
 
-    def MakeFail(self, playerID: int) -> bool:
+    def SkipWindow(self, playerID: int) -> bool:
         try:
-            hangResult = self.__THUAI6Stub.MakeFail(
+            skipResult = self.__THUAI6Stub.SkipWindow(
                 THUAI62Proto.THUAI62ProtobufID(playerID))
         except grpc.RpcError as e:
             return False
         else:
-            return hangResult.act_success
+            return skipResult.act_success
+
+    def StartOpenGate(self, playerID: int) -> bool:
+        try:
+            openResult = self.__THUAI6Stub.StartOpenGate(
+                THUAI62Proto.THUAI62ProtobufID(playerID))
+        except grpc.RpcError as e:
+            return False
+        else:
+            return openResult.act_success
+
+    def StartOpenChest(self, playerID: int) -> bool:
+        try:
+            openResult = self.__THUAI6Stub.StartOpenChest(
+                THUAI62Proto.THUAI62ProtobufID(playerID))
+        except grpc.RpcError as e:
+            return False
+        else:
+            return openResult.act_success
+
+    def EndAllAction(self, playerID: int) -> bool:
+        try:
+            endResult = self.__THUAI6Stub.EndAllAction(
+                THUAI62Proto.THUAI62ProtobufID(playerID))
+        except grpc.RpcError as e:
+            return False
+        else:
+            return endResult.act_success
 
     def TryConnection(self, playerID: int) -> bool:
         try:

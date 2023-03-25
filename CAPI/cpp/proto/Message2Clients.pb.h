@@ -321,19 +321,18 @@ namespace protobuf
             kPlaceFieldNumber = 7,
             kGuidFieldNumber = 10,
             kPlayerStateFieldNumber = 9,
-            kStateFieldNumber = 11,
             kBulletTypeFieldNumber = 12,
             kLearningSpeedFieldNumber = 13,
-            kPlayerIdFieldNumber = 15,
             kTreatSpeedFieldNumber = 14,
+            kPlayerIdFieldNumber = 15,
             kViewRangeFieldNumber = 16,
             kRadiusFieldNumber = 17,
-            kScoreFieldNumber = 20,
             kDangerAlertFieldNumber = 19,
+            kScoreFieldNumber = 20,
             kTreatProgressFieldNumber = 21,
             kRescueProgressFieldNumber = 22,
-            kFacingDirectionFieldNumber = 24,
             kStudentTypeFieldNumber = 23,
+            kFacingDirectionFieldNumber = 24,
         };
         // repeated double time_until_skill_available = 6;
         int time_until_skill_available_size() const;
@@ -483,16 +482,6 @@ namespace protobuf
         void _internal_set_player_state(::protobuf::PlayerState value);
 
     public:
-        // .protobuf.PlayerState state = 11;
-        void clear_state();
-        ::protobuf::PlayerState state() const;
-        void set_state(::protobuf::PlayerState value);
-
-    private:
-        ::protobuf::PlayerState _internal_state() const;
-        void _internal_set_state(::protobuf::PlayerState value);
-
-    public:
         // .protobuf.BulletType bullet_type = 12;
         void clear_bullet_type();
         ::protobuf::BulletType bullet_type() const;
@@ -513,16 +502,6 @@ namespace protobuf
         void _internal_set_learning_speed(int32_t value);
 
     public:
-        // int64 player_id = 15;
-        void clear_player_id();
-        int64_t player_id() const;
-        void set_player_id(int64_t value);
-
-    private:
-        int64_t _internal_player_id() const;
-        void _internal_set_player_id(int64_t value);
-
-    public:
         // int32 treat_speed = 14;
         void clear_treat_speed();
         int32_t treat_speed() const;
@@ -531,6 +510,16 @@ namespace protobuf
     private:
         int32_t _internal_treat_speed() const;
         void _internal_set_treat_speed(int32_t value);
+
+    public:
+        // int64 player_id = 15;
+        void clear_player_id();
+        int64_t player_id() const;
+        void set_player_id(int64_t value);
+
+    private:
+        int64_t _internal_player_id() const;
+        void _internal_set_player_id(int64_t value);
 
     public:
         // int32 view_range = 16;
@@ -553,16 +542,6 @@ namespace protobuf
         void _internal_set_radius(int32_t value);
 
     public:
-        // int32 score = 20;
-        void clear_score();
-        int32_t score() const;
-        void set_score(int32_t value);
-
-    private:
-        int32_t _internal_score() const;
-        void _internal_set_score(int32_t value);
-
-    public:
         // double danger_alert = 19;
         void clear_danger_alert();
         double danger_alert() const;
@@ -571,6 +550,16 @@ namespace protobuf
     private:
         double _internal_danger_alert() const;
         void _internal_set_danger_alert(double value);
+
+    public:
+        // int32 score = 20;
+        void clear_score();
+        int32_t score() const;
+        void set_score(int32_t value);
+
+    private:
+        int32_t _internal_score() const;
+        void _internal_set_score(int32_t value);
 
     public:
         // int32 treat_progress = 21;
@@ -593,16 +582,6 @@ namespace protobuf
         void _internal_set_rescue_progress(int32_t value);
 
     public:
-        // double facing_direction = 24;
-        void clear_facing_direction();
-        double facing_direction() const;
-        void set_facing_direction(double value);
-
-    private:
-        double _internal_facing_direction() const;
-        void _internal_set_facing_direction(double value);
-
-    public:
         // .protobuf.StudentType student_type = 23;
         void clear_student_type();
         ::protobuf::StudentType student_type() const;
@@ -611,6 +590,16 @@ namespace protobuf
     private:
         ::protobuf::StudentType _internal_student_type() const;
         void _internal_set_student_type(::protobuf::StudentType value);
+
+    public:
+        // double facing_direction = 24;
+        void clear_facing_direction();
+        double facing_direction() const;
+        void set_facing_direction(double value);
+
+    private:
+        double _internal_facing_direction() const;
+        void _internal_set_facing_direction(double value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfStudent)
@@ -637,19 +626,18 @@ namespace protobuf
             int place_;
             int64_t guid_;
             int player_state_;
-            int state_;
             int bullet_type_;
             int32_t learning_speed_;
-            int64_t player_id_;
             int32_t treat_speed_;
+            int64_t player_id_;
             int32_t view_range_;
             int32_t radius_;
-            int32_t score_;
             double danger_alert_;
+            int32_t score_;
             int32_t treat_progress_;
             int32_t rescue_progress_;
-            double facing_direction_;
             int student_type_;
+            double facing_direction_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -824,19 +812,18 @@ namespace protobuf
             kXFieldNumber = 1,
             kYFieldNumber = 2,
             kSpeedFieldNumber = 3,
-            kDamageFieldNumber = 4,
             kPlaceFieldNumber = 6,
-            kTrickerTypeFieldNumber = 8,
             kGuidFieldNumber = 9,
-            kPlayerIdFieldNumber = 11,
+            kTrickerTypeFieldNumber = 8,
             kScoreFieldNumber = 10,
+            kPlayerIdFieldNumber = 11,
             kViewRangeFieldNumber = 12,
             kRadiusFieldNumber = 13,
-            kPlayerStateFieldNumber = 14,
             kTrickDesireFieldNumber = 15,
             kClassVolumeFieldNumber = 16,
-            kFacingDirectionFieldNumber = 17,
+            kPlayerStateFieldNumber = 14,
             kBulletTypeFieldNumber = 18,
+            kFacingDirectionFieldNumber = 17,
         };
         // repeated double time_until_skill_available = 5;
         int time_until_skill_available_size() const;
@@ -936,16 +923,6 @@ namespace protobuf
         void _internal_set_speed(int32_t value);
 
     public:
-        // int32 damage = 4;
-        void clear_damage();
-        int32_t damage() const;
-        void set_damage(int32_t value);
-
-    private:
-        int32_t _internal_damage() const;
-        void _internal_set_damage(int32_t value);
-
-    public:
         // .protobuf.PlaceType place = 6;
         void clear_place();
         ::protobuf::PlaceType place() const;
@@ -954,16 +931,6 @@ namespace protobuf
     private:
         ::protobuf::PlaceType _internal_place() const;
         void _internal_set_place(::protobuf::PlaceType value);
-
-    public:
-        // .protobuf.TrickerType tricker_type = 8;
-        void clear_tricker_type();
-        ::protobuf::TrickerType tricker_type() const;
-        void set_tricker_type(::protobuf::TrickerType value);
-
-    private:
-        ::protobuf::TrickerType _internal_tricker_type() const;
-        void _internal_set_tricker_type(::protobuf::TrickerType value);
 
     public:
         // int64 guid = 9;
@@ -976,14 +943,14 @@ namespace protobuf
         void _internal_set_guid(int64_t value);
 
     public:
-        // int64 player_id = 11;
-        void clear_player_id();
-        int64_t player_id() const;
-        void set_player_id(int64_t value);
+        // .protobuf.TrickerType tricker_type = 8;
+        void clear_tricker_type();
+        ::protobuf::TrickerType tricker_type() const;
+        void set_tricker_type(::protobuf::TrickerType value);
 
     private:
-        int64_t _internal_player_id() const;
-        void _internal_set_player_id(int64_t value);
+        ::protobuf::TrickerType _internal_tricker_type() const;
+        void _internal_set_tricker_type(::protobuf::TrickerType value);
 
     public:
         // int32 score = 10;
@@ -994,6 +961,16 @@ namespace protobuf
     private:
         int32_t _internal_score() const;
         void _internal_set_score(int32_t value);
+
+    public:
+        // int64 player_id = 11;
+        void clear_player_id();
+        int64_t player_id() const;
+        void set_player_id(int64_t value);
+
+    private:
+        int64_t _internal_player_id() const;
+        void _internal_set_player_id(int64_t value);
 
     public:
         // int32 view_range = 12;
@@ -1016,16 +993,6 @@ namespace protobuf
         void _internal_set_radius(int32_t value);
 
     public:
-        // .protobuf.PlayerState player_state = 14;
-        void clear_player_state();
-        ::protobuf::PlayerState player_state() const;
-        void set_player_state(::protobuf::PlayerState value);
-
-    private:
-        ::protobuf::PlayerState _internal_player_state() const;
-        void _internal_set_player_state(::protobuf::PlayerState value);
-
-    public:
         // double trick_desire = 15;
         void clear_trick_desire();
         double trick_desire() const;
@@ -1046,14 +1013,14 @@ namespace protobuf
         void _internal_set_class_volume(double value);
 
     public:
-        // double facing_direction = 17;
-        void clear_facing_direction();
-        double facing_direction() const;
-        void set_facing_direction(double value);
+        // .protobuf.PlayerState player_state = 14;
+        void clear_player_state();
+        ::protobuf::PlayerState player_state() const;
+        void set_player_state(::protobuf::PlayerState value);
 
     private:
-        double _internal_facing_direction() const;
-        void _internal_set_facing_direction(double value);
+        ::protobuf::PlayerState _internal_player_state() const;
+        void _internal_set_player_state(::protobuf::PlayerState value);
 
     public:
         // .protobuf.BulletType bullet_type = 18;
@@ -1064,6 +1031,16 @@ namespace protobuf
     private:
         ::protobuf::BulletType _internal_bullet_type() const;
         void _internal_set_bullet_type(::protobuf::BulletType value);
+
+    public:
+        // double facing_direction = 17;
+        void clear_facing_direction();
+        double facing_direction() const;
+        void set_facing_direction(double value);
+
+    private:
+        double _internal_facing_direction() const;
+        void _internal_set_facing_direction(double value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfTricker)
@@ -1085,19 +1062,18 @@ namespace protobuf
             int32_t x_;
             int32_t y_;
             int32_t speed_;
-            int32_t damage_;
             int place_;
-            int tricker_type_;
             int64_t guid_;
-            int64_t player_id_;
+            int tricker_type_;
             int32_t score_;
+            int64_t player_id_;
             int32_t view_range_;
             int32_t radius_;
-            int player_state_;
             double trick_desire_;
             double class_volume_;
-            double facing_direction_;
+            int player_state_;
             int bullet_type_;
+            double facing_direction_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -1812,8 +1788,6 @@ namespace protobuf
             kYFieldNumber = 3,
             kPlaceFieldNumber = 6,
             kGuidFieldNumber = 5,
-            kSizeFieldNumber = 7,
-            kIsMovingFieldNumber = 8,
         };
         // .protobuf.PropType type = 1;
         void clear_type();
@@ -1875,26 +1849,6 @@ namespace protobuf
         void _internal_set_guid(int64_t value);
 
     public:
-        // int32 size = 7;
-        void clear_size();
-        int32_t size() const;
-        void set_size(int32_t value);
-
-    private:
-        int32_t _internal_size() const;
-        void _internal_set_size(int32_t value);
-
-    public:
-        // bool is_moving = 8;
-        void clear_is_moving();
-        bool is_moving() const;
-        void set_is_moving(bool value);
-
-    private:
-        bool _internal_is_moving() const;
-        void _internal_set_is_moving(bool value);
-
-    public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfProp)
 
     private:
@@ -1912,8 +1866,6 @@ namespace protobuf
             int32_t y_;
             int place_;
             int64_t guid_;
-            int32_t size_;
-            bool is_moving_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -2973,7 +2925,7 @@ namespace protobuf
             kXFieldNumber = 1,
             kYFieldNumber = 2,
             kIsOpenFieldNumber = 3,
-            kNumberFieldNumber = 4,
+            kProgressFieldNumber = 4,
         };
         // int32 x = 1;
         void clear_x();
@@ -3005,14 +2957,14 @@ namespace protobuf
         void _internal_set_is_open(bool value);
 
     public:
-        // int32 number = 4;
-        void clear_number();
-        int32_t number() const;
-        void set_number(int32_t value);
+        // int32 progress = 4;
+        void clear_progress();
+        int32_t progress() const;
+        void set_progress(int32_t value);
 
     private:
-        int32_t _internal_number() const;
-        void _internal_set_number(int32_t value);
+        int32_t _internal_progress() const;
+        void _internal_set_progress(int32_t value);
 
     public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfDoor)
@@ -3029,7 +2981,7 @@ namespace protobuf
             int32_t x_;
             int32_t y_;
             bool is_open_;
-            int32_t number_;
+            int32_t progress_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -5660,30 +5612,6 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfStudent.guid)
     }
 
-    // .protobuf.PlayerState state = 11;
-    inline void MessageOfStudent::clear_state()
-    {
-        _impl_.state_ = 0;
-    }
-    inline ::protobuf::PlayerState MessageOfStudent::_internal_state() const
-    {
-        return static_cast<::protobuf::PlayerState>(_impl_.state_);
-    }
-    inline ::protobuf::PlayerState MessageOfStudent::state() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfStudent.state)
-        return _internal_state();
-    }
-    inline void MessageOfStudent::_internal_set_state(::protobuf::PlayerState value)
-    {
-        _impl_.state_ = value;
-    }
-    inline void MessageOfStudent::set_state(::protobuf::PlayerState value)
-    {
-        _internal_set_state(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfStudent.state)
-    }
-
     // .protobuf.BulletType bullet_type = 12;
     inline void MessageOfStudent::clear_bullet_type()
     {
@@ -6100,30 +6028,6 @@ namespace protobuf
     {
         _internal_set_speed(value);
         // @@protoc_insertion_point(field_set:protobuf.MessageOfTricker.speed)
-    }
-
-    // int32 damage = 4;
-    inline void MessageOfTricker::clear_damage()
-    {
-        _impl_.damage_ = 0;
-    }
-    inline int32_t MessageOfTricker::_internal_damage() const
-    {
-        return _impl_.damage_;
-    }
-    inline int32_t MessageOfTricker::damage() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfTricker.damage)
-        return _internal_damage();
-    }
-    inline void MessageOfTricker::_internal_set_damage(int32_t value)
-    {
-        _impl_.damage_ = value;
-    }
-    inline void MessageOfTricker::set_damage(int32_t value)
-    {
-        _internal_set_damage(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfTricker.damage)
     }
 
     // repeated double time_until_skill_available = 5;
@@ -7097,54 +7001,6 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfProp.place)
     }
 
-    // int32 size = 7;
-    inline void MessageOfProp::clear_size()
-    {
-        _impl_.size_ = 0;
-    }
-    inline int32_t MessageOfProp::_internal_size() const
-    {
-        return _impl_.size_;
-    }
-    inline int32_t MessageOfProp::size() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfProp.size)
-        return _internal_size();
-    }
-    inline void MessageOfProp::_internal_set_size(int32_t value)
-    {
-        _impl_.size_ = value;
-    }
-    inline void MessageOfProp::set_size(int32_t value)
-    {
-        _internal_set_size(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfProp.size)
-    }
-
-    // bool is_moving = 8;
-    inline void MessageOfProp::clear_is_moving()
-    {
-        _impl_.is_moving_ = false;
-    }
-    inline bool MessageOfProp::_internal_is_moving() const
-    {
-        return _impl_.is_moving_;
-    }
-    inline bool MessageOfProp::is_moving() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfProp.is_moving)
-        return _internal_is_moving();
-    }
-    inline void MessageOfProp::_internal_set_is_moving(bool value)
-    {
-        _impl_.is_moving_ = value;
-    }
-    inline void MessageOfProp::set_is_moving(bool value)
-    {
-        _internal_set_is_moving(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfProp.is_moving)
-    }
-
     // -------------------------------------------------------------------
 
     // MessageOfPickedProp
@@ -7573,28 +7429,28 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfDoor.is_open)
     }
 
-    // int32 number = 4;
-    inline void MessageOfDoor::clear_number()
+    // int32 progress = 4;
+    inline void MessageOfDoor::clear_progress()
     {
-        _impl_.number_ = 0;
+        _impl_.progress_ = 0;
     }
-    inline int32_t MessageOfDoor::_internal_number() const
+    inline int32_t MessageOfDoor::_internal_progress() const
     {
-        return _impl_.number_;
+        return _impl_.progress_;
     }
-    inline int32_t MessageOfDoor::number() const
+    inline int32_t MessageOfDoor::progress() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfDoor.number)
-        return _internal_number();
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfDoor.progress)
+        return _internal_progress();
     }
-    inline void MessageOfDoor::_internal_set_number(int32_t value)
+    inline void MessageOfDoor::_internal_set_progress(int32_t value)
     {
-        _impl_.number_ = value;
+        _impl_.progress_ = value;
     }
-    inline void MessageOfDoor::set_number(int32_t value)
+    inline void MessageOfDoor::set_progress(int32_t value)
     {
-        _internal_set_number(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfDoor.number)
+        _internal_set_progress(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfDoor.progress)
     }
 
     // -------------------------------------------------------------------

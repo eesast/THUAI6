@@ -25,22 +25,34 @@ class AssistFunction(NoInstance):
         return grid // numOfGridPerCell
 
     @staticmethod
-    def HaveView(viewRange: int, x: int, y: int, newX: int, newY: int, map: List[List[THUAI6.PlaceType]]) -> bool:
+    def HaveView(viewRange: int, x: int, y: int, newX: int, newY: int, myPlace: THUAI6.PlaceType, newPlace: THUAI6.PlaceType, map: List[List[THUAI6.PlaceType]]) -> bool:
         deltaX: int = newX - x
         deltaY: int = newY - y
-        if deltaX * deltaX + deltaY * deltaY <= viewRange * viewRange:
+        distance: float = deltaX**2 + deltaY**2
+        if myPlace != THUAI6.PlaceType.Grass and newPlace == THUAI6.PlaceType.Grass:
+            return False
+        if distance <= viewRange * viewRange:
             divide: int = max(abs(deltaX), abs(deltaY)) // 100
             dx: float = deltaX / divide
             dy: float = deltaY / divide
             selfX: float = float(x)
             selfY: float = float(y)
-            for i in range(divide):
-                selfX += dx
-                selfY += dy
-                if map[AssistFunction.GridToCell(int(selfX))][AssistFunction.GridToCell(int(selfY))] != THUAI6.PlaceType.Land:
-                    return False
+            if newPlace == THUAI6.PlaceType.Grass and myPlace == THUAI6.PlaceType.Grass:
+                for i in range(divide):
+                    selfX += dx
+                    selfY += dy
+                    if map[AssistFunction.GridToCell(int(selfX))][AssistFunction.GridToCell(int(selfY))] != THUAI6.PlaceType.Grass:
+                        return False
+                else:
+                    return True
             else:
-                return True
+                for i in range(divide):
+                    selfX += dx
+                    selfY += dy
+                    if map[AssistFunction.GridToCell(int(selfX))][AssistFunction.GridToCell(int(selfY))] == THUAI6.PlaceType.Wall:
+                        return False
+                else:
+                    return True
         else:
             return False
 
@@ -52,9 +64,11 @@ class Proto2THUAI6(NoInstance):
         MessageType.LAND: THUAI6.PlaceType.Land,
         MessageType.GRASS: THUAI6.PlaceType.Grass,
         MessageType.CLASSROOM: THUAI6.PlaceType.ClassRoom,
-        MessageType.BLACKROOM: THUAI6.PlaceType.BlackRoom,
         MessageType.GATE: THUAI6.PlaceType.Gate,
-        MessageType.HIDDEN_GATE: THUAI6.PlaceType.HiddenGate}
+        MessageType.HIDDEN_GATE: THUAI6.PlaceType.HiddenGate,
+        MessageType.WINDOW: THUAI6.PlaceType.Window,
+        MessageType.DOOR: THUAI6.PlaceType.Door,
+    }
 
     shapeTypeDict: Final[dict] = {
         MessageType.NULL_SHAPE_TYPE: THUAI6.ShapeType.NullShapeType,
@@ -86,20 +100,32 @@ class Proto2THUAI6(NoInstance):
         MessageType.NULL_TBUFF_TYPE: THUAI6.TrickerBuffType.NullTrickerBuffType,
         MessageType.TBUFFTYPE1: THUAI6.TrickerBuffType.TrickerBuffType1, }
 
-    studentStateDict: Final[dict] = {
-        MessageType.NULL_STATUS: THUAI6.StudentState.NullStudentState,
-        MessageType.IDLE: THUAI6.StudentState.Idle,
-        MessageType.LEARNING: THUAI6.StudentState.Learning,
-        MessageType.FAIL: THUAI6.StudentState.Fail,
-        MessageType.EMOTIONAL: THUAI6.StudentState.Emotional,
-        MessageType.QUIT: THUAI6.StudentState.Quit,
-        MessageType.GRADUATED: THUAI6.StudentState.Graduated}
+    playerStateDict: Final[dict] = {
+        MessageType.NULL_STATUS: THUAI6.PlayerState.NullState,
+        MessageType.IDLE: THUAI6.PlayerState.Idle,
+        MessageType.LEARNING: THUAI6.PlayerState.Learning,
+        MessageType.ADDICTED: THUAI6.PlayerState.Addicted,
+        MessageType.QUIT: THUAI6.PlayerState.Quit,
+        MessageType.GRADUATED: THUAI6.PlayerState.Graduated,
+        MessageType.RESCUED: THUAI6.PlayerState.Rescued,
+        MessageType.TREATED: THUAI6.PlayerState.Treated,
+        MessageType.STUNNED: THUAI6.PlayerState.Stunned,
+        MessageType.RESCUING: THUAI6.PlayerState.Rescuing,
+        MessageType.TREATING: THUAI6.PlayerState.Treating, }
 
     gameStateDict: Final[dict] = {
         MessageType.NULL_GAME_STATE: THUAI6.GameState.NullGameState,
         MessageType.GAME_START: THUAI6.GameState.GameStart,
         MessageType.GAME_RUNNING: THUAI6.GameState.GameRunning,
         MessageType.GAME_END: THUAI6.GameState.GameEnd}
+
+    bulletTypeDict: Final[dict] = {
+        MessageType.NULL_BULLET_TYPE: THUAI6.BulletType.NullBulletType,
+        MessageType.COMMON_BULLET: THUAI6.BulletType.CommonBullet,
+        MessageType.FAST_BULLET: THUAI6.BulletType.FastBullet,
+        MessageType.LINE_BULLET: THUAI6.BulletType.LineBullet,
+        MessageType.ORDINARY_BULLET: THUAI6.BulletType.OrdinaryBullet,
+        MessageType.ATOM_BOMB: THUAI6.BulletType.AtomBomb, }
 
     # 用于将Proto的对象转为THUAI6的对象
     @staticmethod
@@ -109,12 +135,14 @@ class Proto2THUAI6(NoInstance):
         tricker.y = trickerMsg.y
         tricker.speed = trickerMsg.speed
         tricker.damage = trickerMsg.damage
-        tricker.timeUntilSkillAvailable = trickerMsg.time_until_skill_available
+        for time in trickerMsg.time_until_skill_available:
+            tricker.timeUntilSkillAvailable.append(time)
         tricker.place = Proto2THUAI6.placeTypeDict[trickerMsg.place]
-        tricker.prop = Proto2THUAI6.propTypeDict[trickerMsg.prop]
+        tricker.playerState = Proto2THUAI6.playerStateDict[trickerMsg.player_state]
+        for item in trickerMsg.prop:
+            tricker.prop.append(Proto2THUAI6.propTypeDict[item])
         tricker.trickerType = Proto2THUAI6.trickerTypeDict[trickerMsg.tricker_type]
         tricker.guid = trickerMsg.guid
-        tricker.movable = trickerMsg.movable
         tricker.playerID = trickerMsg.player_id
         tricker.viewRange = trickerMsg.view_range
         tricker.radius = trickerMsg.radius
@@ -130,19 +158,19 @@ class Proto2THUAI6(NoInstance):
         student.y = studentMsg.y
         student.speed = studentMsg.speed
         student.determination = studentMsg.determination
-        student.failNum = studentMsg.fail_num
-        student.failTime = studentMsg.fail_time
-        student.emoTime = studentMsg.emo_time
-        student.timeUntilSkillAvailable = studentMsg.time_until_skill_available
+        student.addiction = studentMsg.addiction
+        for time in studentMsg.time_until_skill_available:
+            student.timeUntilSkillAvailable.append(time)
+        student.damage = studentMsg.damage
         student.place = Proto2THUAI6.placeTypeDict[studentMsg.place]
-        student.prop = Proto2THUAI6.propTypeDict[studentMsg.prop]
+        for item in studentMsg.prop:
+            student.prop.append(Proto2THUAI6.propTypeDict[item])
         student.studentType = Proto2THUAI6.studentTypeDict[studentMsg.student_type]
         student.guid = studentMsg.guid
-        student.state = Proto2THUAI6.studentStateDict[studentMsg.state]
+        student.playerState = Proto2THUAI6.playerStateDict[studentMsg.player_state]
         student.playerID = studentMsg.player_id
         student.viewRange = studentMsg.view_range
         student.radius = studentMsg.radius
-        student.buff.clear()
         for buff in studentMsg.buff:
             student.buff.append(Proto2THUAI6.studentBuffTypeDict[buff])
         return student
@@ -158,6 +186,44 @@ class Proto2THUAI6(NoInstance):
         prop.facingDirection = propMsg.facing_direction
         prop.isMoving = propMsg.is_moving
         return prop
+
+    @staticmethod
+    def Protobuf2THUAI6GameInfo(allMsg: Message2Clients.MessageOfAll):
+        gameInfo = THUAI6.GameInfo()
+        gameInfo.gameTime = allMsg.game_time
+        gameInfo.subjectLeft = allMsg.subject_left
+        gameInfo.studentGraduated = allMsg.student_graduated
+        gameInfo.studentQuited = allMsg.student_quited
+        gameInfo.studentScore = allMsg.student_score
+        gameInfo.trickerScore = allMsg.tricker_score
+        gameInfo.gateOpened = allMsg.gate_opened
+        gameInfo.hiddenGateOpened = allMsg.hidden_gate_opened
+        gameInfo.hiddenGateRefreshed = allMsg.hidden_gate_refreshed
+        return gameInfo
+
+    @staticmethod
+    def Protobuf2THUAI6Bullet(bulletMsg: Message2Clients.MessageOfBullet) -> THUAI6.Bullet:
+        bullet = THUAI6.Bullet()
+        bullet.x = bulletMsg.x
+        bullet.y = bulletMsg.y
+        bullet.bulletType = Proto2THUAI6.bulletTypeDict[bulletMsg.type]
+        bullet.facingDirection = bulletMsg.facing_direction
+        bullet.guid = bulletMsg.guid
+        bullet.team = Proto2THUAI6.playerTypeDict[bulletMsg.team]
+        bullet.place = Proto2THUAI6.placeTypeDict[bulletMsg.place]
+        bullet.bombRange = bulletMsg.bomb_range
+        return bullet
+
+    @staticmethod
+    def Protobuf2THUAI6BombedBullet(bulletMsg: Message2Clients.MessageOfBombedBullet) -> THUAI6.BombedBullet:
+        bullet = THUAI6.BombedBullet()
+        bullet.x = bulletMsg.x
+        bullet.y = bulletMsg.y
+        bullet.bulletType = Proto2THUAI6.bulletTypeDict[bulletMsg.type]
+        bullet.facingDirection = bulletMsg.facing_direction
+        bullet.mappingID = bulletMsg.mapping_id
+        bullet.bombRange = bulletMsg.bomb_range
+        return bullet
 
     @staticmethod
     def Protobuf2THUAI6Map(mapMsg: Message2Clients.MessageOfMap) -> List[List[THUAI6.PlaceType]]:
@@ -177,18 +243,11 @@ class THUAI62Proto(NoInstance):
         THUAI6.PlaceType.Land: MessageType.LAND,
         THUAI6.PlaceType.Grass: MessageType.GRASS,
         THUAI6.PlaceType.ClassRoom: MessageType.CLASSROOM,
-        THUAI6.PlaceType.BlackRoom: MessageType.BLACKROOM,
         THUAI6.PlaceType.Gate: MessageType.GATE,
-        THUAI6.PlaceType.HiddenGate: MessageType.HIDDEN_GATE}
-
-    shapeTypeDict: Final[dict] = {
-        THUAI6.ShapeType.NullShapeType: MessageType.NULL_SHAPE_TYPE,
-        THUAI6.ShapeType.Square: MessageType.SQUARE,
-        THUAI6.ShapeType.Circle: MessageType.CIRCLE}
-
-    propTypeDict: Final[dict] = {
-        THUAI6.PropType.NullPropType: MessageType.NULL_PROP_TYPE,
-        THUAI6.PropType.PropType1: MessageType.PTYPE1, }
+        THUAI6.PlaceType.HiddenGate: MessageType.HIDDEN_GATE,
+        THUAI6.PlaceType.Door: MessageType.DOOR,
+        THUAI6.PlaceType.Chest: MessageType.CHEST,
+        THUAI6.PlaceType.Window: MessageType.WINDOW, }
 
     playerTypeDict: Final[dict] = {
         THUAI6.PlayerType.NullPlayerType: MessageType.NULL_PLAYER_TYPE,
@@ -203,30 +262,12 @@ class THUAI62Proto(NoInstance):
         THUAI6.TrickerType.NullTrickerType: MessageType.NULL_TRICKER_TYPE,
         THUAI6.TrickerType.TrickerType1: MessageType.TRICKERTYPE1, }
 
-    studentBuffTypeDict: Final[dict] = {
-        THUAI6.StudentBuffType.NullStudentBuffType: MessageType.NULL_SBUFF_TYPE,
-        THUAI6.StudentBuffType.StudentBuffType1: MessageType.SBUFFTYPE1, }
-
-    trickerBuffTypeDict: Final[dict] = {
-        THUAI6.TrickerBuffType.NullTrickerBuffType: MessageType.NULL_TBUFF_TYPE,
-        THUAI6.TrickerBuffType.TrickerBuffType1: MessageType.TBUFFTYPE1, }
-
-    studentStateDict: Final[dict] = {
-        THUAI6.StudentState.NullStudentState: MessageType.NULL_STATUS,
-        THUAI6.StudentState.Idle: MessageType.IDLE,
-        THUAI6.StudentState.Learning: MessageType.LEARNING,
-        THUAI6.StudentState.Fail: MessageType.FAIL,
-        THUAI6.StudentState.Emotional: MessageType.EMOTIONAL,
-        THUAI6.StudentState.Quit: MessageType.QUIT,
-        THUAI6.StudentState.Graduated: MessageType.GRADUATED, }
-
-    gameStateDict: Final[dict] = {
-        THUAI6.GameState.NullGameState: MessageType.NULL_GAME_STATE,
-        THUAI6.GameState.GameStart: MessageType.GAME_START,
-        THUAI6.GameState.GameRunning: MessageType.GAME_RUNNING,
-        THUAI6.GameState.GameEnd: MessageType.GAME_END}
+    propTypeDict: Final[dict] = {
+        THUAI6.PropType.NullPropType: MessageType.NULL_PROP_TYPE,
+        THUAI6.PropType.PropType1: MessageType.PTYPE1, }
 
     # 用于将THUAI6的对象转为Proto的对象
+
     @staticmethod
     def THUAI62ProtobufPlayer(playerID: int, playerType: THUAI6.PlayerType, studentType: THUAI6.StudentType, trickerType: THUAI6.TrickerType) -> Message2Server.PlayerMsg:
         return Message2Server.PlayerMsg(player_id=playerID, player_type=THUAI62Proto.playerTypeDict[playerType], student_type=THUAI62Proto.studentTypeDict[studentType], tricker_type=THUAI62Proto.trickerTypeDict[trickerType])
@@ -240,13 +281,13 @@ class THUAI62Proto(NoInstance):
         return Message2Server.MoveMsg(player_id=id, angle=angle, time_in_milliseconds=time)
 
     @staticmethod
-    def THUAI62ProtobufPick(prop: THUAI6.PropType, id: int) -> Message2Server.PickMsg:
-        return Message2Server.PickMsg(player_id=id, prop_type=THUAI62Proto.propTypeDict[prop])
+    def THUAI62ProtobufPick(prop: THUAI6.PropType, id: int) -> Message2Server.PropMsg:
+        return Message2Server.PropMsg(player_id=id, prop_type=THUAI62Proto.propTypeDict[prop])
 
     @staticmethod
     def THUAI62ProtobufSend(msg: str, toID: int, id: int) -> Message2Server.SendMsg:
         return Message2Server.SendMsg(player_id=id, to_player_id=toID, message=msg)
 
     @staticmethod
-    def THUAI62ProtobufTrick(angle: float, id: int) -> Message2Server.TrickMsg:
-        return Message2Server.TrickMsg(player_id=id, angle=angle)
+    def THUAI62ProtobufTrick(angle: float, id: int) -> Message2Server.AttackMsg:
+        return Message2Server.AttackMsg(player_id=id, angle=angle)

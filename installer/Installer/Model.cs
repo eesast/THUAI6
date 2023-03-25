@@ -41,6 +41,14 @@ namespace starter.viewmodel.settings
         private HttpClient client = new HttpClient();
         private WebConnect.Web web = new WebConnect.Web();
 
+        public SettingsModel()
+        {
+            Route = Data.FilePath;
+            Username = "";
+            Password = "";
+            updates = "";
+        }
+
         /// <summary>
         /// save settings
         /// </summary>
@@ -52,6 +60,7 @@ namespace starter.viewmodel.settings
                 // ask if abort install, with warning sign, defalut no;
                 if (repeatOption == MessageBoxResult.No)
                 {
+                    Route = Data.FilePath;
                     return false;  // 回到选择地址界面
                 }
                 else
@@ -69,7 +78,11 @@ namespace starter.viewmodel.settings
         }
         public int move()
         {
-            return Tencent_cos_download.MoveProgram(Route);
+            int state = Tencent_cos_download.MoveProgram(Route);
+            if (state != 0)
+                Route = Data.FilePath;
+            return state;
+
         }
         ///<summary>
         ///check for update
@@ -100,7 +113,7 @@ namespace starter.viewmodel.settings
             {
                 if (updateInfo.changedFileCount != 0 || updateInfo.newFileCount != 0)
                 {
-                    Updates = "发现新版本" + updateInfo.status;
+                    Updates = "发现新版本";
                 }
                 return Status.menu;
             }
@@ -137,14 +150,7 @@ namespace starter.viewmodel.settings
         /// </summary>
         public string Route
         {
-            get
-            {
-                return Data.FilePath;
-            }
-            set
-            {
-                Data.FilePath = value;
-            }
+            get; set;
         }
 
         public string Username
@@ -309,6 +315,14 @@ namespace Downloader
                     else
                     {
                         dict.Add("installpath", newPath);
+                    }
+                    if (dict == null || !dict.ContainsKey("download"))
+                    {
+                        dict?.Add("download", "true");
+                    }
+                    else
+                    {
+                        dict["download"] = "true";
                     }
                 }
                 using FileStream fs2 = new FileStream(path, FileMode.Open, FileAccess.ReadWrite);

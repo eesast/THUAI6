@@ -53,8 +53,8 @@ namespace protobuf
     enum BulletType : int
     {
         NULL_BULLET_TYPE = 0,
-        LINE_BULLET = 1,
-        COMMON_BULLET = 2,
+        FLYING_KNIFE = 1,
+        COMMON_ATTACK_OF_TRICKER = 2,
         FAST_BULLET = 3,
         ORDINARY_BULLET = 4,
         ATOM_BOMB = 5,
@@ -93,8 +93,10 @@ namespace protobuf
         GATE = 5,
         HIDDEN_GATE = 6,
         WINDOW = 7,
-        DOOR = 8,
-        CHEST = 9,
+        DOOR3 = 8,
+        DOOR5 = 9,
+        DOOR6 = 10,
+        CHEST = 11,
         PlaceType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         PlaceType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
@@ -153,9 +155,9 @@ namespace protobuf
     enum PropType : int
     {
         NULL_PROP_TYPE = 0,
-        PTYPE1 = 1,
-        PTYPE2 = 2,
-        PTYPE3 = 3,
+        KEY3 = 1,
+        KEY5 = 2,
+        KEY6 = 3,
         PTYPE4 = 4,
         PropType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         PropType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
@@ -232,12 +234,15 @@ namespace protobuf
         LOCKING = 13,
         RUMMAGING = 14,
         CLIMBING = 15,
+        OPENING_A_CHEST = 16,
+        USING_SPECIAL_SKILL = 17,
+        OPENING_A_GATE = 18,
         PlayerState_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         PlayerState_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool PlayerState_IsValid(int value);
     constexpr PlayerState PlayerState_MIN = NULL_STATUS;
-    constexpr PlayerState PlayerState_MAX = CLIMBING;
+    constexpr PlayerState PlayerState_MAX = OPENING_A_GATE;
     constexpr int PlayerState_ARRAYSIZE = PlayerState_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PlayerState_descriptor();
@@ -322,7 +327,7 @@ namespace protobuf
     enum StudentType : int
     {
         NULL_STUDENT_TYPE = 0,
-        STUDENTTYPE1 = 1,
+        ATHLETE = 1,
         STUDENTTYPE2 = 2,
         STUDENTTYPE3 = 3,
         STUDENTTYPE4 = 4,
@@ -354,7 +359,7 @@ namespace protobuf
     enum TrickerType : int
     {
         NULL_TRICKER_TYPE = 0,
-        TRICKERTYPE1 = 1,
+        ASSASSIN = 1,
         TRICKERTYPE2 = 2,
         TRICKERTYPE3 = 3,
         TRICKERTYPE4 = 4,

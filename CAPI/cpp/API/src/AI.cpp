@@ -9,9 +9,9 @@ extern const bool asynchronous = false;
 extern const THUAI6::PlayerType playerType = THUAI6::PlayerType::StudentPlayer;
 
 // 选手需要将两个都定义，本份代码中不选择的阵营任意定义即可
-extern const THUAI6::TrickerType trickerType = THUAI6::TrickerType::TrickerType1;
+extern const THUAI6::TrickerType trickerType = THUAI6::TrickerType::Assassin;
 
-extern const THUAI6::StudentType studentType = THUAI6::StudentType::StudentType1;
+extern const THUAI6::StudentType studentType = THUAI6::StudentType::Athlete;
 
 // 选手只需写一个即可，为了调试方便写了两个的话也不会有影响
 

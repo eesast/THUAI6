@@ -35,60 +35,103 @@ namespace Client
 
         private void SetStaticValue(MessageOfStudent obj)
         {
-            switch (obj.StudentType)  // 参数未设定
+            switch (obj.StudentType)  // coolTime参数未设定，
             {
                 case StudentType.Athlete:
-                    coolTime = 10000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业：StudentType1";
+                    coolTime0 = coolTime1 = coolTime2 = 10000;
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业：Athlete";
                     break;
                 case StudentType._2:
-                    coolTime = 20000;
+                    coolTime0 = coolTime1 = coolTime2 = 20000;
                     serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业：StudentType2";
                     break;
                 case StudentType._3:
-                    coolTime = 30000;
+                    coolTime0 = coolTime1 = coolTime2 = 30000;
                     serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业：StudentType3";
                     break;
                 case StudentType._4:
-                    coolTime = 40000;
+                    coolTime0 = coolTime1 = coolTime2 = 40000;
                     serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业：StudentType4";
                     break;
                 case StudentType.NullStudentType:
-                    coolTime = 10000;
+                    coolTime0 = coolTime1 = coolTime2 = -1;
                     serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业：NullStudentType";
                     break;
             }
+            activeSkill0.Text = "Skill0";
+            activeSkill1.Text = "Skill1";
+            activeSkill2.Text = "Skill2";
             initialized = true;
         }
         private void SetDynamicValue(MessageOfStudent obj)
         {
-            int life;
+            int life= obj.Determination,death=obj.Addiction;
             switch(obj.PlayerState)
             {
                 case PlayerState.Idle:
-                    life = obj.Determination;
-                    status.Text = "♥：" + Convert.ToString(life);
+                    status.Text = "♥：" + Convert.ToString(life)+"\nIdle";
+                    break;
+                case PlayerState.Learning:
+                    status.Text = "♥：" + Convert.ToString(life)+ "\nLearning";
                     break;
                 case PlayerState.Addicted:
-                    life = obj.Addiction;
-                    status.Text = "💀：" + Convert.ToString(life);
+                    status.Text = "💀：" + Convert.ToString(death)+ "\nAddicted";
                     break;
                 case PlayerState.Graduated:
-                    status.Text = "Graduated";
+                    status.Text = status.Text = "♥" + "\nGraduated";
                     break;
                 case PlayerState.Quit:
-                    status.Text = "Quit";
+                    status.Text = "💀"+"\nQuit";
+                    break;
+                case PlayerState.Treated:
+                    status.Text = "♥：" + Convert.ToString(life) + "\nTreated";
+                    break;
+                case PlayerState.Rescued:
+                    status.Text = "💀：" + Convert.ToString(death)+ "\nRescued";
+                    break;
+                case PlayerState.Stunned:
+                    status.Text = "♥：" + Convert.ToString(life) + "\nStunned";
+                    break;
+                case PlayerState.Treating:
+                    status.Text = "♥：" + Convert.ToString(life) + "\nTreating";
+                    break;
+                case PlayerState.Rescuing:
+                    status.Text = "♥：" + Convert.ToString(life) + "\nRescuing";
+                    break;
+                case PlayerState.Swinging:
+                    status.Text = "♥：" + Convert.ToString(life) + "\nSwinging";
+                    break;
+                case PlayerState.Attacking:
+                    status.Text = "♥：" + Convert.ToString(life) + "\nAttacking";
+                    break;
+                case PlayerState.Locking:
+                    status.Text = "♥：" + Convert.ToString(life) + "\nLocking";
+                    break;
+                case PlayerState.Rummaging:
+                    status.Text = "♥：" + Convert.ToString(life) + "\nRummaging";
+                    break;
+                case PlayerState.Climbing:
+                    status.Text = "♥：" + Convert.ToString(life) + "\nClimbing";
+                    break;
+                case PlayerState.OpeningAChest:
+                    status.Text = "♥：" + Convert.ToString(life) + "\nOpeningAChest";
+                    break;
+                case PlayerState.UsingSpecialSkill:
+                    status.Text = "♥：" + Convert.ToString(life) + "\nUsingSpecialSkill";
+                    break;
+                case PlayerState.OpeningAGate:
+                    status.Text = "♥：" + Convert.ToString(life) + "\nOpeningAGate";
                     break;
                 default:
                     break;
-            }//不完全
+            }
             scores.Text = "Scores:" + obj.Score;
             if (obj.TimeUntilSkillAvailable[0]>=0)
-                skillprogress0.Value = 100 - obj.TimeUntilSkillAvailable[0] / coolTime * 100;
+                skillprogress0.Value = 100 - obj.TimeUntilSkillAvailable[0] / coolTime0 * 100;
             if(obj.TimeUntilSkillAvailable[1] >= 0)
-                skillprogress1.Value = 100 - obj.TimeUntilSkillAvailable[1] / coolTime * 100;
+                skillprogress1.Value = 100 - obj.TimeUntilSkillAvailable[1] / coolTime1 * 100;
             if(obj.TimeUntilSkillAvailable[2] >= 0)
-                skillprogress2.Value = 100 - obj.TimeUntilSkillAvailable[2] / coolTime * 100;
+                skillprogress2.Value = 100 - obj.TimeUntilSkillAvailable[2] / coolTime2 * 100;
             if (obj.PlayerState == PlayerState.Quit)
             {
                 skillprogress0.Value = skillprogress1.Value = skillprogress2.Value = 0;
@@ -187,8 +230,7 @@ namespace Client
                         break;
                     default:
                         break;
-                }
-                
+                }  
             }
         }
         public void SetValue(MessageOfStudent obj)
@@ -197,7 +239,7 @@ namespace Client
                 SetStaticValue(obj);
             SetDynamicValue(obj);
         }
-        private int coolTime;
+        private int coolTime0, coolTime1, coolTime2;
         private bool initialized;
     }
 }

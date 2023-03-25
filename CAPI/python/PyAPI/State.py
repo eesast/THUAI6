@@ -11,6 +11,13 @@ class State:
 
     props: List[THUAI6.Prop]
 
-    map: List[List[THUAI6.PlaceType]]
+    gameMap: List[List[THUAI6.PlaceType]]
+
+    bullets: List[THUAI6.Bullet]
+    bombedBullets: List[THUAI6.BombedBullet]
+
+    mapInfo: THUAI6.GameMap
+
+    gameInfo: THUAI6.GameInfo
 
     guids: List[int]

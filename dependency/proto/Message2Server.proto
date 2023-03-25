@@ -46,6 +46,12 @@ message IDMsg
     int64 player_id = 1;
 }
 
+message TreatAndRescueMsg
+{
+    int64 player_id = 1;
+    int64 to_player_id = 2;
+}
+
 message SkillMsg
 {
     int64 player_id = 1;

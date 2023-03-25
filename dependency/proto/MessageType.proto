@@ -42,13 +42,13 @@ enum ShapeType // 形状类型
 enum PropType // 地图中的可拾取道具类型
 {
     NULL_PROP_TYPE = 0;
-   ADD_SPEED = 1;
-   ADD_LIFE_OR_AP = 2;
-   ADD_HP_OR_AP = 3;
-   SHIELD_OR_SPEAR = 4;
-   KEY3 = 5;
-   KEY5 = 6;
-   KEY6 = 7;
+    ADD_SPEED = 1;
+    ADD_LIFE_OR_AP = 2;
+    ADD_HP_OR_AP = 3;
+    SHIELD_OR_SPEAR = 4;
+    KEY3 = 5;
+    KEY5 = 6;
+    KEY6 = 7;
 }
 
 enum StudentBuffType // 人类可用的增益效果类型

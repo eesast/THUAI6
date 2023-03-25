@@ -27,7 +27,7 @@ namespace GameClass.GameObj
                         if (bullet.HasSpear)
                         {
                             int subHp = TrySubHp(bullet.AP);
-                            bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
+                            bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
                             bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                         }
                         else

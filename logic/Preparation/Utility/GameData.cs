@@ -124,6 +124,10 @@ namespace Preparation.Utility
             return degree;
         }
         public const int StudentScoreEscape = 1000;
+        public const int ScorePropRemainHp = 20;
+        public const int ScorePropUseShield = 20;
+        public const int ScorePropUseSpear = 20;
+        public const int ScorePropAddAp = 10;
 
         public static int ScoreUseProp(PropType prop, bool IsGhost)
         {

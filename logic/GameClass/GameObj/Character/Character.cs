@@ -523,17 +523,20 @@ namespace GameClass.GameObj
         {
             if (buffManager.TryActivatingLIFE())
             {
+                AddScore(GameData.ScorePropRemainHp);
                 hp = GameData.RemainHpWhenAddLife;
             }
         }
 
         public bool TryAddAp()
         {
+            AddScore(GameData.ScorePropAddAp);
             return buffManager.TryAddAp();
         }
 
         public bool TryUseShield()
         {
+            AddScore(GameData.ScorePropUseShield);
             return buffManager.TryUseShield();
         }
         #endregion

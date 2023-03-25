@@ -22,7 +22,7 @@ namespace Preparation.Utility
         public const int cols = 50;                   // 列数
 
         public const int numOfBirthPoint = 5;
-        //        public const int numOfGenerator = 9;
+        public const int numOfGenerator = 9;
         public const int numOfChest = 8;
 
         private const int numOfObjNotMap = 5;

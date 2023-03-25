@@ -15,6 +15,9 @@ namespace Server
         [Option('p', "port", Required = true, HelpText = "Server listening port")]
         public ushort ServerPort { get; set; } = 10086;
 
+        [Option('n', "playerNum", Required = false, HelpText = "The number of teams, 1 by defualt")]
+        public ushort playerNum { get; set; } = 1;
+
         [Option('t', "teamCount", Required = false, HelpText = "The number of teams, 1 by defualt")]
         public ushort TeamCount { get; set; } = 1;
 

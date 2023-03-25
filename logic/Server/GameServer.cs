@@ -20,14 +20,14 @@ namespace Server
         protected readonly ArgumentOptions options;
         private HttpSender? httpSender;
         private object gameLock = new();
-        private const int playerNum = 1;  // 注意修改
+        private int playerNum => options.playerNum;  // 注意修改
         private MessageToClient currentGameInfo = new();
         private MessageOfObj currentMapMsg = new();
         private object newsLock = new();
         private List<MessageOfNews> currentNews = new();
         private SemaphoreSlim endGameSem = new(0);
         protected readonly Game game;
-        private uint spectatorMinPlayerID = 2022;
+        private uint spectatorMinPlayerID = 2023;
         private List<uint> spectatorList = new List<uint>();
         public int TeamCount => options.TeamCount;
         protected long[] communicationToGameID;  // 通信用的ID映射到游戏内的ID，通信中0-3为Student，4为Tricker
@@ -115,7 +115,7 @@ namespace Server
             mwr?.Flush();
             if (options.ResultFileName != DefaultArgumentOptions.FileName)
                 SaveGameResult(options.ResultFileName + ".json");
-            //SendGameResult();
+            SendGameResult();
             this.endGameSem.Release();
         }
 
@@ -186,7 +186,7 @@ namespace Server
         private int PlayerIDToTeamID(long playerID)
         {
             if (0 <= playerID && playerID < options.PlayerCountPerTeam) return 0;
-            if (playerID == options.PlayerCountPerTeam) return 1;
+            if (playerID == 4) return 1;
             return -1;
         }
         private uint GetBirthPointIdx(long playerID)  // 获取出生点位置
@@ -198,6 +198,35 @@ namespace Server
             if (0 <= playerID && playerID < options.PlayerCountPerTeam + 1)
                 return true;
             return false;
+        }
+
+        private MessageOfAll GetMessageOfAll()
+        {
+            MessageOfAll msg = new MessageOfAll();
+            //msg.GameTime
+            msg.SubjectLeft = GameData.numOfGeneratorRequiredForRepair - (int)game.GameMap.NumOfRepairedGenerators;
+            //msg.StudentGraduated
+            //msg.StudentQuited
+            msg.StudentScore = 0;
+            msg.TrickerScore = 0;
+            game.GameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+            try
+            {
+                foreach (Character character in game.GameMap.GameObjDict[GameObjType.Character])
+                {
+                    if (!character.IsGhost()) msg.StudentScore += character.Score;
+                    else msg.TrickerScore += character.Score;
+                }
+
+            }
+            finally
+            {
+                game.GameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+            }
+            //msg.GateOpened = 
+            //msg.HiddenGateRefreshed = 
+            //msg.HiddenGateOpened
+            return msg;
         }
 
         private Protobuf.PlaceType IntToPlaceType(uint n)
@@ -234,7 +263,9 @@ namespace Server
         }
         public override Task<BoolRes> TryConnection(IDMsg request, ServerCallContext context)
         {
+#if DEBUG
             Console.WriteLine($"TryConnection ID: {request.PlayerId}");
+#endif 
             var onConnection = new BoolRes();
             lock (gameLock)
             {
@@ -326,6 +357,9 @@ namespace Server
 
         public override Task<BoolRes> Attack(AttackMsg request, ServerCallContext context)
         {
+#if DEBUG
+            Console.WriteLine($"Attack ID: {request.PlayerId}");
+#endif 
             var gameID = communicationToGameID[request.PlayerId];
             game.Attack(gameID, request.Angle);
             BoolRes boolRes = new();
@@ -347,17 +381,7 @@ namespace Server
             if (!game.GameMap.Timer.IsGaming) moveRes.ActSuccess = false;
             return Task.FromResult(moveRes);
         }
-
-        public override Task<BoolRes> PickProp(PropMsg request, ServerCallContext context)
-        {
-            BoolRes boolRes = new();
-            var gameID = communicationToGameID[request.PlayerId];
-            if (request.PropType == Protobuf.PropType.NullPropType)
-                boolRes.ActSuccess = game.PickProp(gameID, Preparation.Utility.PropType.Null);
-            // 待修改
-            return Task.FromResult(boolRes);
-        }
-
+        
         public override Task<BoolRes> SendMessage(SendMsg request, ServerCallContext context)
         {
             var boolRes = new BoolRes();
@@ -388,31 +412,81 @@ namespace Server
 #if DEBUG
                 Console.WriteLine(news.News);
 #endif
-                //teamCommunicatonMsg[request.ToPlayerId].Enqueue(msg);
             }
             boolRes.ActSuccess = true;
             return Task.FromResult(boolRes);
         }
+        public override Task<BoolRes> PickProp(PropMsg request, ServerCallContext context)
+        {
+#if DEBUG
+            Console.WriteLine($"PickProp ID: {request.PlayerId}");
+#endif 
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            boolRes.ActSuccess = game.PickProp(gameID, CopyInfo.ToPropType(request.PropType));
+            return Task.FromResult(boolRes);
+        }
+
         public override Task<BoolRes> UseProp(PropMsg request, ServerCallContext context)
         {
-            return base.UseProp(request, context);
+#if DEBUG
+            Console.WriteLine($"UseProp ID: {request.PlayerId}");
+#endif 
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            //boolRes.ActSuccess = game.UseProp(gameID, CopyInfo.ToPropType(request.PropType));
+            return Task.FromResult(boolRes);
+        }
+        public override Task<BoolRes> ThrowProp(PropMsg request, ServerCallContext context)
+        {
+#if DEBUG
+            Console.WriteLine($"ThrowProp ID: {request.PlayerId}");
+#endif 
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            //boolRes.ActSuccess = game.ThrowProp(gameID, CopyInfo.ToPropType(request.PropType));
+            return Task.FromResult(boolRes);
         }
         public override Task<BoolRes> UseSkill(SkillMsg request, ServerCallContext context)
         {
-            return base.UseSkill(request, context);
+#if DEBUG
+            Console.WriteLine($"UseSkill ID: {request.PlayerId}");
+#endif 
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            //boolRes.ActSuccess = game.UseActiveSkill(gameID, CopyInfo.ToPropType(request.PropType));
+            return Task.FromResult(boolRes);
         }
 
         public override Task<BoolRes> Graduate(IDMsg request, ServerCallContext context)
         {
-            return base.Graduate(request, context);
+#if DEBUG
+            Console.WriteLine($"Graduate ID: {request.PlayerId}");
+#endif 
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            boolRes.ActSuccess = game.Escape(gameID);
+            return Task.FromResult(boolRes);
         }
         public override Task<BoolRes> StartRescueMate(IDMsg request, ServerCallContext context)
         {
-            return base.StartRescueMate(request, context);
+#if DEBUG
+            Console.WriteLine($"StartRescueMate ID: {request.PlayerId}");
+#endif 
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            //boolRes.ActSuccess = game.Rescue(gameID);
+            return Task.FromResult(boolRes);
         }
         public override Task<BoolRes> StartTreatMate(IDMsg request, ServerCallContext context)
         {
-            return base.StartTreatMate(request, context);
+#if DEBUG
+            Console.WriteLine($"StartTreatMate ID: {request.PlayerId}");
+#endif     
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            //boolRes.ActSuccess = game.Treat(gameID);
+            return Task.FromResult(boolRes);
         }
         public override Task<BoolRes> StartLearning(IDMsg request, ServerCallContext context)
         {
@@ -422,6 +496,71 @@ namespace Server
             BoolRes boolRes = new();
             var gameID = communicationToGameID[request.PlayerId];
             boolRes.ActSuccess = game.Fix(gameID);
+            return Task.FromResult(boolRes);
+        }
+        public override Task<BoolRes> StartOpenChest(IDMsg request, ServerCallContext context)
+        {
+#if DEBUG
+            Console.WriteLine($"StartOpenChest ID: {request.PlayerId}");
+#endif     
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            boolRes.ActSuccess = game.OpenChest(gameID);
+            return Task.FromResult(boolRes);
+        }
+
+        public override Task<BoolRes> StartOpenGate(IDMsg request, ServerCallContext context)
+        {
+#if DEBUG
+            Console.WriteLine($"StartOpenGate ID: {request.PlayerId}");
+#endif     
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            boolRes.ActSuccess = game.OpenDoorway(gameID);
+            return Task.FromResult(boolRes);
+        }
+        public override Task<BoolRes> OpenDoor(IDMsg request, ServerCallContext context)
+        {
+#if DEBUG
+            Console.WriteLine($"OpenDoor ID: {request.PlayerId}");
+#endif     
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            boolRes.ActSuccess = game.LockOrOpenDoor(gameID);
+            return Task.FromResult(boolRes);
+        }
+
+        public override Task<BoolRes> CloseDoor(IDMsg request, ServerCallContext context)
+        {
+#if DEBUG
+            Console.WriteLine($"CloseDoor ID: {request.PlayerId}");
+#endif     
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            boolRes.ActSuccess = game.LockOrOpenDoor(gameID);
+            return Task.FromResult(boolRes);
+        }
+
+        public override Task<BoolRes> EndAllAction(IDMsg request, ServerCallContext context)
+        {
+#if DEBUG
+            Console.WriteLine($"EndAllAction ID: {request.PlayerId}");
+#endif     
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            boolRes.ActSuccess = game.Stop(gameID);
+            return Task.FromResult(boolRes);
+        }
+        
+
+        public override Task<BoolRes> SkipWindow(IDMsg request, ServerCallContext context)
+        {
+#if DEBUG
+            Console.WriteLine($"SkipWindow ID: {request.PlayerId}");
+#endif     
+            BoolRes boolRes = new();
+            var gameID = communicationToGameID[request.PlayerId];
+            boolRes.ActSuccess = game.ClimbingThroughWindow(gameID);
             return Task.FromResult(boolRes);
         }
 

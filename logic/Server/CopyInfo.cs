@@ -9,7 +9,7 @@ namespace Server
 
     public static class CopyInfo
     {
-        private static Protobuf.PlaceType ToPlaceType(Preparation.Utility.PlaceType place)
+        public static Protobuf.PlaceType ToPlaceType(Preparation.Utility.PlaceType place)
         {
             switch (place)
             {
@@ -44,7 +44,7 @@ namespace Server
                     return Protobuf.PlaceType.NullPlaceType;
             }
         }
-        private static Protobuf.PropType ToPropType(Preparation.Utility.PropType prop)
+        public static Protobuf.PropType ToPropType(Preparation.Utility.PropType prop)
         {
             switch (prop)
             {
@@ -67,7 +67,31 @@ namespace Server
             }
         }
 
-        private static Protobuf.PlayerState ToPlayerState(Preparation.Utility.PlayerStateType playerState)
+        public static Preparation.Utility.PropType ToPropType(Protobuf.PropType prop)
+        {
+            switch (prop)
+            {
+                case Protobuf.PropType.AddSpeed:
+                    return Preparation.Utility.PropType.AddSpeed;
+                case Protobuf.PropType.AddLifeOrAp:
+                    return Preparation.Utility.PropType.AddLifeOrAp;
+                case Protobuf.PropType.AddHpOrAp:
+                    return Preparation.Utility.PropType.AddHpOrAp;
+                case Protobuf.PropType.ShieldOrSpear:
+                    return Preparation.Utility.PropType.ShieldOrSpear;
+                case Protobuf.PropType.Key3:
+                    return Preparation.Utility.PropType.Key3;
+                case Protobuf.PropType.Key5:
+                    return Preparation.Utility.PropType.Key5;
+                case Protobuf.PropType.Key6:
+                    return Preparation.Utility.PropType.Key6;
+                default:
+                    return Preparation.Utility.PropType.Null;
+            }
+        }
+
+
+        public static Protobuf.PlayerState ToPlayerState(Preparation.Utility.PlayerStateType playerState)
         {
             switch (playerState)
             {
@@ -110,7 +134,7 @@ namespace Server
                     return PlayerState.NullStatus;
             }
         }
-        private static Protobuf.StudentBuffType ToStudentBuffType(Preparation.Utility.BuffType buffType)
+        public static Protobuf.StudentBuffType ToStudentBuffType(Preparation.Utility.BuffType buffType)
         {
             switch (buffType)
             {
@@ -119,7 +143,7 @@ namespace Server
                     return Protobuf.StudentBuffType.NullSbuffType;
             }
         }
-        private static Protobuf.TrickerBuffType ToTrickerBuffType(Preparation.Utility.BuffType buffType)
+        public static Protobuf.TrickerBuffType ToTrickerBuffType(Preparation.Utility.BuffType buffType)
         {
             switch (buffType)
             {
@@ -128,7 +152,7 @@ namespace Server
                     return Protobuf.TrickerBuffType.NullTbuffType;
             }
         }
-        private static Protobuf.BulletType ToBulletType(Preparation.Utility.BulletType bulletType)
+        public static Protobuf.BulletType ToBulletType(Preparation.Utility.BulletType bulletType)
         {
             switch (bulletType)
             {
@@ -141,7 +165,7 @@ namespace Server
             }
         }
 
-        private static Protobuf.StudentType ToStudentType(Preparation.Utility.CharacterType characterType)
+        public static Protobuf.StudentType ToStudentType(Preparation.Utility.CharacterType characterType)
         {
             switch (characterType)
             {
@@ -151,7 +175,7 @@ namespace Server
                     return Protobuf.StudentType.NullStudentType;
             }
         }
-        private static Protobuf.TrickerType ToTrickerType(Preparation.Utility.CharacterType characterType)
+        public static Protobuf.TrickerType ToTrickerType(Preparation.Utility.CharacterType characterType)
         {
             switch (characterType)
             {

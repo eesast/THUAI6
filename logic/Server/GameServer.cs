@@ -20,7 +20,8 @@ namespace Server
         protected readonly ArgumentOptions options;
         private HttpSender? httpSender;
         private object gameLock = new();
-        private int playerNum => options.playerNum;  // 注意修改
+        private int playerNum = 0;
+        private int PlayerNum => playerNum;  // 注意修改
         private MessageToClient currentGameInfo = new();
         private MessageOfObj currentMapMsg = new();
         private object newsLock = new();
@@ -560,6 +561,7 @@ namespace Server
         public GameServer(ArgumentOptions options)
         {
             this.options = options;
+            this.playerNum = options.playerNum;
             //if (options.mapResource == DefaultArgumentOptions.MapResource)
             //    this.game = new Game(MapInfo.defaultMap, options.TeamCount);
             //else

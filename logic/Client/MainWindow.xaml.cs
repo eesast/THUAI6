@@ -927,232 +927,230 @@ namespace Client
         {
             if (!isPlaybackMode)
             {
-                if(Keyboard.Modifiers == ModifierKeys.Control)
-                {
-                    switch (e.Key)
-                    {
-                        case Key.D1:
-                            PropMsg msgP1 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.AddSpeed,
-                            };
-                            client.PickProp(msgP1);
-                            break;
-                        case Key.D2:
-                            PropMsg msgP2 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.AddLifeOrAp,
-                            };
-                            client.PickProp(msgP2);
-                            break;
-                        case Key.D3:
-                            PropMsg msgP3 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.AddHpOrAp,
-                            };
-                            client.PickProp(msgP3);
-                            break;
-                        case Key.D4:
-                            PropMsg msgP4 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.ShieldOrSpear,
-                            };
-                            client.PickProp(msgP4);
-                            break;
-                        case Key.D5:
-                            PropMsg msgP5 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.Key3,
-                            };
-                            client.PickProp(msgP5);
-                            break;
-                        case Key.D6:
-                            PropMsg msgP6 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.Key5,
-                            };
-                            client.PickProp(msgP6);
-                            break;
-                        case Key.D7:
-                            PropMsg msgP7 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.Key6,
-                            };
-                            client.PickProp(msgP7);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else if (Keyboard.Modifiers == ModifierKeys.Alt)
-                {
-                    switch (e.Key)
-                    {
-                        case Key.D1:
-                            PropMsg msgP1 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.AddSpeed,
-                            };
-                            client.UseProp(msgP1);
-                            break;
-                        case Key.D2:
-                            PropMsg msgP2 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.AddLifeOrAp,
-                            };
-                            client.UseProp(msgP2);
-                            break;
-                        case Key.D3:
-                            PropMsg msgP3 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.AddHpOrAp,
-                            };
-                            client.UseProp(msgP3);
-                            break;
-                        case Key.D4:
-                            PropMsg msgP4 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.ShieldOrSpear,
-                            };
-                            client.UseProp(msgP4);
-                            break;
-                        case Key.D5:
-                            PropMsg msgP5 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.Key3,
-                            };
-                            client.UseProp(msgP5);
-                            break;
-                        case Key.D6:
-                            PropMsg msgP6 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.Key5,
-                            };
-                            client.UseProp(msgP6);
-                            break;
-                        case Key.D7:
-                            PropMsg msgP7 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.Key6,
-                            };
-                            client.UseProp(msgP7);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else if(Keyboard.Modifiers == ModifierKeys.Shift)
-                {
-                    switch (e.Key)
-                    {
-                        case Key.D1:
-                            PropMsg msgP1 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.AddSpeed,
-                            };
-                            client.ThrowProp(msgP1);
-                            break;
-                        case Key.D2:
-                            PropMsg msgP2 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.AddLifeOrAp,
-                            };
-                            client.ThrowProp(msgP2);
-                            break;
-                        case Key.D3:
-                            PropMsg msgP3 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.AddHpOrAp,
-                            };
-                            client.ThrowProp(msgP3);
-                            break;
-                        case Key.D4:
-                            PropMsg msgP4 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.ShieldOrSpear,
-                            };
-                            client.ThrowProp(msgP4);
-                            break;
-                        case Key.D5:
-                            PropMsg msgP5 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.Key3,
-                            };
-                            client.ThrowProp(msgP5);
-                            break;
-                        case Key.D6:
-                            PropMsg msgP6 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.Key5,
-                            };
-                            client.ThrowProp(msgP6);
-                            break;
-                        case Key.D7:
-                            PropMsg msgP7 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.Key6,
-                            };
-                            client.ThrowProp(msgP7);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else if (Keyboard.Modifiers == ModifierKeys.Windows)
-                {
-                    switch (e.Key)
-                    {
-                        case Key.D0:
-                            SkillMsg msgS0 = new()
-                            {
-                                PlayerId = playerID,
-                                SkillId = 0,
-                            };
-                            client.UseSkill(msgS0);
-                            break;
-                        case Key.D1:
-                            SkillMsg msgS1 = new()
-                            {
-                                PlayerId = playerID,
-                                SkillId = 1,
-                            };
-                            client.UseSkill(msgS1);
-                            break;
-                        case Key.D2:
-                            SkillMsg msgS2 = new()
-                            {
-                                PlayerId = playerID,
-                                SkillId = 2,
-                            };
-                            client.UseSkill(msgS2);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else
-                {
+                //if(Keyboard.Modifiers == ModifierKeys.Control)
+                //{
+                //    switch (e.Key)
+                //    {
+                //        case Key.D1:
+                //            PropMsg msgP1 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.AddSpeed,
+                //            };
+                //            client.PickProp(msgP1);
+                //            break;
+                //        case Key.D2:
+                //            PropMsg msgP2 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.AddLifeOrAp,
+                //            };
+                //            client.PickProp(msgP2);
+                //            break;
+                //        case Key.D3:
+                //            PropMsg msgP3 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.AddHpOrAp,
+                //            };
+                //            client.PickProp(msgP3);
+                //            break;
+                //        case Key.D4:
+                //            PropMsg msgP4 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.ShieldOrSpear,
+                //            };
+                //            client.PickProp(msgP4);
+                //            break;
+                //        case Key.D5:
+                //            PropMsg msgP5 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.Key3,
+                //            };
+                //            client.PickProp(msgP5);
+                //            break;
+                //        case Key.D6:
+                //            PropMsg msgP6 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.Key5,
+                //            };
+                //            client.PickProp(msgP6);
+                //            break;
+                //        case Key.D7:
+                //            PropMsg msgP7 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.Key6,
+                //            };
+                //            client.PickProp(msgP7);
+                //            break;
+                //        default:
+                //            break;
+                //    }
+                //}
+                //else if (Keyboard.Modifiers == ModifierKeys.Alt)
+                //{
+                //    switch (e.Key)
+                //    {
+                //        case Key.D1:
+                //            PropMsg msgP1 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.AddSpeed,
+                //            };
+                //            client.UseProp(msgP1);
+                //            break;
+                //        case Key.D2:
+                //            PropMsg msgP2 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.AddLifeOrAp,
+                //            };
+                //            client.UseProp(msgP2);
+                //            break;
+                //        case Key.D3:
+                //            PropMsg msgP3 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.AddHpOrAp,
+                //            };
+                //            client.UseProp(msgP3);
+                //            break;
+                //        case Key.D4:
+                //            PropMsg msgP4 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.ShieldOrSpear,
+                //            };
+                //            client.UseProp(msgP4);
+                //            break;
+                //        case Key.D5:
+                //            PropMsg msgP5 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.Key3,
+                //            };
+                //            client.UseProp(msgP5);
+                //            break;
+                //        case Key.D6:
+                //            PropMsg msgP6 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.Key5,
+                //            };
+                //            client.UseProp(msgP6);
+                //            break;
+                //        case Key.D7:
+                //            PropMsg msgP7 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.Key6,
+                //            };
+                //            client.UseProp(msgP7);
+                //            break;
+                //        default:
+                //            break;
+                //    }
+                //}
+                //else if(Keyboard.Modifiers == ModifierKeys.Shift)
+                //{
+                //    switch (e.Key)
+                //    {
+                //        case Key.D1:
+                //            PropMsg msgP1 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.AddSpeed,
+                //            };
+                //            client.ThrowProp(msgP1);
+                //            break;
+                //        case Key.D2:
+                //            PropMsg msgP2 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.AddLifeOrAp,
+                //            };
+                //            client.ThrowProp(msgP2);
+                //            break;
+                //        case Key.D3:
+                //            PropMsg msgP3 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.AddHpOrAp,
+                //            };
+                //            client.ThrowProp(msgP3);
+                //            break;
+                //        case Key.D4:
+                //            PropMsg msgP4 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.ShieldOrSpear,
+                //            };
+                //            client.ThrowProp(msgP4);
+                //            break;
+                //        case Key.D5:
+                //            PropMsg msgP5 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.Key3,
+                //            };
+                //            client.ThrowProp(msgP5);
+                //            break;
+                //        case Key.D6:
+                //            PropMsg msgP6 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.Key5,
+                //            };
+                //            client.ThrowProp(msgP6);
+                //            break;
+                //        case Key.D7:
+                //            PropMsg msgP7 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                PropType = PropType.Key6,
+                //            };
+                //            client.ThrowProp(msgP7);
+                //            break;
+                //        default:
+                //            break;
+                //    }
+                //}
+                //else if (Keyboard.Modifiers == ModifierKeys.Windows)
+                //{
+                //    switch (e.Key)
+                //    {
+                //        case Key.D0:
+                //            SkillMsg msgS0 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                SkillId = 0,
+                //            };
+                //            client.UseSkill(msgS0);
+                //            break;
+                //        case Key.D1:
+                //            SkillMsg msgS1 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                SkillId = 1,
+                //            };
+                //            client.UseSkill(msgS1);
+                //            break;
+                //        case Key.D2:
+                //            SkillMsg msgS2 = new()
+                //            {
+                //                PlayerId = playerID,
+                //                SkillId = 2,
+                //            };
+                //            client.UseSkill(msgS2);
+                //            break;
+                //        default:
+                //            break;
+                //    }
+                //}
                     switch (e.Key)
                     {
                         case Key.W:
@@ -1273,9 +1271,56 @@ namespace Client
                             };
                             client.EndAllAction(msgE);
                             break;
+                        case Key.F:
+                            PropMsg msgF = new()
+                            {
+                                PlayerId = playerID,
+                                PropType= PropType.NullPropType,
+                            };
+                            client.PickProp(msgF);
+                            break;
+                        case Key.C:
+                            PropMsg msgC = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.NullPropType,
+                            };
+                            client.ThrowProp(msgC);
+                            break;
+                        case Key.V:
+                            PropMsg msgV = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.NullPropType,
+                            };
+                            client.UseProp(msgV);
+                            break;
+                        case Key.B:
+                            SkillMsg msgB = new()
+                            {
+                                PlayerId = playerID,
+                                SkillId = 0,
+                            };
+                            client.UseSkill(msgB);
+                            break;
+                        case Key.N:
+                            SkillMsg msgN = new()
+                            {
+                                PlayerId = playerID,
+                                SkillId = 1,
+                            };
+                            client.UseSkill(msgN);
+                            break;
+                        case Key.M:
+                            SkillMsg msgM = new()
+                            {
+                                PlayerId = playerID,
+                                SkillId = 2,
+                            };
+                            client.UseSkill(msgM);
+                            break;
                         default:
                             break;
-                    }
                 }
             }
         }

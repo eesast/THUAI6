@@ -24,14 +24,24 @@ namespace GameClass.GameObj
                     numOfRepairedGenerators = value;
             }
         }
-        private uint numOfSurvivingStudent = GameData.numOfStudent;
-        public uint NumOfSurvivingStudent
+        private uint numOfDeceasedStudent = 0;
+        public uint NumOfDeceasedStudent
         {
-            get => numOfSurvivingStudent;
+            get => numOfDeceasedStudent;
             set
             {
                 lock (lockForNum)
-                    numOfSurvivingStudent = value;
+                    numOfDeceasedStudent = value;
+            }
+        }
+        private uint numOfEscapedStudent = 0;
+        public uint NumOfEscapedStudent
+        {
+            get => numOfEscapedStudent;
+            set
+            {
+                lock (lockForNum)
+                    numOfEscapedStudent = value;
             }
         }
 
@@ -159,6 +169,27 @@ namespace GameClass.GameObj
             finally
             {
                 GameObjLockDict[gameObjType].ExitReadLock();
+            }
+            return GameObjForInteract;
+        }
+        public Student? StudentForInteract(XY Pos)
+        {
+            Student? GameObjForInteract = null;
+            GameObjLockDict[GameObjType.Character].EnterReadLock();
+            try
+            {
+                foreach (Character character in GameObjDict[GameObjType.Character])
+                {
+                    if (!character.IsGhost() && GameData.ApproachToInteract(character.Position, Pos))
+                    {
+                        GameObjForInteract = (Student)character;
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                GameObjLockDict[GameObjType.Character].ExitReadLock();
             }
             return GameObjForInteract;
         }

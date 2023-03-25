@@ -76,7 +76,7 @@ namespace Preparation.Interface
 
         public BulletType InitBullet => BulletType.Null;
 
-        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.CanBeginToCharge });
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
 
         public const int fixSpeed = 0;

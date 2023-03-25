@@ -79,7 +79,7 @@ namespace Preparation.Utility
         public const int basicTreatmentDegree = 1500000;
         public const int basicTimeOfRescue = 1000;
 
-        public const int basicMoveSpeed = 1270;                      // 基本移动速度，单位：s-1
+        public const int basicMoveSpeed = 3000;//DEBUG //1270;TRUE                      // 基本移动速度，单位：s-1
         public const int characterMaxSpeed = 12000;                  // 最大速度
 
         public const double basicConcealment = 1.0;

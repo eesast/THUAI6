@@ -15,18 +15,26 @@ namespace GameClass.GameObj
         /// <returns>人物在受到攻击后死了吗</returns>
         public bool BeAttacked(Bullet bullet)
         {
-
+#if DEBUG
+            Debugger.Output(this, "is being shot!");
+#endif
             lock (beAttackedLock)
             {
                 if (hp <= 0 || NoHp())
                     return false;  // 原来已经死了
-                if (bullet.Parent.TeamID != this.TeamID)
+                if (bullet.Parent.IsGhost() != this.IsGhost())
                 {
+#if DEBUG
+                    Debugger.Output(bullet, bullet.AP.ToString());
+#endif
                     if (TryUseShield())
                     {
                         if (bullet.HasSpear)
                         {
                             int subHp = TrySubHp(bullet.AP);
+#if DEBUG
+                            Debugger.Output(this, "is being shot! Now his hp is" + HP.ToString());
+#endif
                             bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
                             bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                         }
@@ -36,12 +44,13 @@ namespace GameClass.GameObj
                     else
                     {
                         int subHp = (bullet.HasSpear) ? TrySubHp(bullet.AP + GameData.ApSpearAdd) : TrySubHp(bullet.AP);
+#if DEBUG
+                        Debugger.Output(this, "is being shot with spear! Now his hp is" + HP.ToString());
+#endif
                         bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
                         bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                     }
-#if DEBUG
-                    Console.WriteLine($"PlayerID:{ID} is being shot! Now his hp is {hp}.");
-#endif
+
                     if (hp <= 0)
                         TryActivatingLIFE();  // 如果有复活甲
                 }

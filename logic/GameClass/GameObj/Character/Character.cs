@@ -340,8 +340,8 @@ namespace GameClass.GameObj
             }
         }
 
-        public bool NoHp() => (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
-                                                            && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued);
+        public bool NoHp() => (playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
+                                                            || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued);
         public bool Commandable() => (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
                                                             && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
                                                              && playerState != PlayerStateType.Swinging && playerState != PlayerStateType.TryingToAttack

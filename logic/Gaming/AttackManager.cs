@@ -132,7 +132,7 @@ namespace Gaming
                 {
                     case GameObjType.Character:
 
-                        if ((!((Character)objBeingShot).IsGhost()) && bullet.Parent.IsGhost())
+                        if ((!(((Character)objBeingShot).IsGhost())) && bullet.Parent.IsGhost())
                         {
                             Student oneBeAttacked = (Student)objBeingShot;
                             if (oneBeAttacked.BeAttacked(bullet))
@@ -157,7 +157,7 @@ namespace Gaming
             {
 #if DEBUG
                 if (objBeingShot != null)
-                    Debugger.Output(bullet, "bombed!" + objBeingShot.ToString());
+                    Debugger.Output(bullet, "bombed with" + objBeingShot.ToString());
                 else
                     Debugger.Output(bullet, "bombed without objBeingShot");
 #endif

@@ -22,6 +22,9 @@ using System.Windows;
 using System.Windows.Shapes;
 //using System.Windows.Forms;
 
+using MessageBox = System.Windows.MessageBox;
+using Downloader;
+
 namespace starter.viewmodel.settings
 {
     /// <summary>
@@ -32,26 +35,24 @@ namespace starter.viewmodel.settings
         /// <summary>
         /// downloader function
         /// </summary>
-        private Downloader.Program.Data configData = new Downloader.Program.Data("");
-        private Downloader.Program.Tencent_cos_download cloud = new Downloader.Program.Tencent_cos_download();
+        private Data configData = new Data("");
+        private Tencent_cos_download cloud = new Tencent_cos_download();
+
+        private HttpClient client = new HttpClient();
+        private WebConnect.Web web = new WebConnect.Web();
 
         /// <summary>
         /// save settings
         /// </summary>
         public bool install()
         {
-            if (Downloader.Program.Tencent_cos_download.CheckAlreadyDownload())
+            if (Tencent_cos_download.CheckAlreadyDownload())
             {
-                MessageBoxResult repeatOption = MessageBox.Show($"文件已存在于{Downloader.Program.Data.FilePath},是否移动到新位置？", "重复安装", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+                MessageBoxResult repeatOption = MessageBox.Show($"文件已存在于{Downloader.Program.Data.FilePath},是否移动到新位置？", "重复安装", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
                 // ask if abort install, with warning sign, defalut no;
-                if (repeatOption == MessageBoxResult.Cancel)
+                if (repeatOption == MessageBoxResult.No)
                 {
                     return false;  // 回到选择地址界面
-                }
-                else if (repeatOption == MessageBoxResult.No)
-                {
-                    System.Environment.Exit(0);
-                    return false;
                 }
                 else
                 {
@@ -61,9 +62,74 @@ namespace starter.viewmodel.settings
             }
             else
             {
-                Downloader.Program.Data.ResetFilepath(Route);
-                Downloader.Program.Tencent_cos_download.DownloadAll();
+                Data.ResetFilepath(Route);
+                Tencent_cos_download.DownloadAll();
                 return true;
+            }
+        }
+        public int move()
+        {
+            return Tencent_cos_download.MoveProgram(Route);
+        }
+        ///<summary>
+        ///check for update
+        /// </summary>
+        static bool ProfileAvailable
+        {
+            get; set;
+        }
+        /// <summary>
+        /// 检查更新
+        /// </summary>
+        /// <returns></returns>
+        public Status checkUpdate()
+        {
+            UpdateInfo updateInfo = Tencent_cos_download.Check();
+            if (updateInfo.newFileCount == -1)
+            {
+                if (updateInfo.changedFileCount == -1)
+                {
+                    return Status.error;
+                }
+                else
+                {
+                    return Status.disconnected;
+                }
+            }
+            else
+            {
+                if (updateInfo.changedFileCount != 0 || updateInfo.newFileCount != 0)
+                {
+                    Updates = "发现新版本" + updateInfo.status;
+                }
+                return Status.menu;
+            }
+        }
+
+        public void Login()
+        {
+            _ = web.LoginToEEsast(client, Username, Password);
+        }
+        public bool Update()
+        {
+            return Tencent_cos_download.Update();
+        }
+        public int Uninst()
+        {
+            return Tencent_cos_download.DeleteAll();
+        }
+
+        public bool Launch()
+        {
+            if (Tencent_cos_download.CheckAlreadyDownload())
+            {
+                Process.Start(System.IO.Path.Combine(Data.FilePath, startName));
+                return true;
+            }
+            else
+            {
+                MessageBox.Show($"文件还不存在，请安装主体文件", "文件不存在", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                return false;
             }
         }
         /// <summary>
@@ -73,24 +139,69 @@ namespace starter.viewmodel.settings
         {
             get
             {
-                return Downloader.Program.Data.FilePath;
+                return Data.FilePath;
             }
             set
             {
-                Downloader.Program.Data.FilePath = value;
+                Data.FilePath = value;
             }
         }
-        /// <summary>
-        /// if the route was set or is under editing
-        /// </summary>
-        public bool EditingRoute
+
+        public string Username
         {
             get; set;
         }
-        ///< summary>
-        /// if already installed
-        ///  </summary>
-        public bool installed
+        public string Password
+        {
+            get; set;
+        }
+        /// <summary>
+        /// 关于更新的屏幕显示信息
+        /// </summary>
+        private string updates;
+        public string Updates
+        {
+            get
+            {
+                return updates;
+            }
+            set
+            {
+                updates = value;
+            }
+        }
+        /// <summary>
+        /// 关于介绍的屏幕显示信息
+        /// </summary>
+        public enum Status { newUser, menu, move, working, disconnected, error, successful, login, web };
+        public Status status
+        {
+            get; set;
+        }
+        public bool Working
+        {
+            get; set;
+        }
+        /// <summary>
+        /// if an update is planned
+        /// </summary>
+        public bool UpdatePlanned
+        {
+            get
+            {
+                return Program.UpdatePlanned;
+            }
+        }
+
+        public bool CombatCompleted
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool LoginFailed
         {
             get; set;
         }
@@ -102,9 +213,21 @@ namespace Downloader
     {
         static List<string> newFileName = new List<string>();     // 新文件名
         static List<string> updateFileName = new List<string>();  // 更新文件名
-        static string ProgramName = "THUAI6";                     // 要运行或下载的程序名称
-        static string playerFolder = "player";                    // 选手代码保存文件夹路径
-        static string startName = "maintest.exe";                 // 启动的程序名
+        public static string ProgramName = "THUAI6";                     // 要运行或下载的程序名称
+        public static string playerFolder = "player";                    // 选手代码保存文件夹路径
+        public static string startName = "maintest.exe";          // 启动的程序名
+
+        public struct UpdateInfo                                         // 更新信息，包括新版本版本号、更改文件数和新文件数
+        {
+            public string status;
+            public int changedFileCount;
+            public int newFileCount;
+        }
+        public static bool UpdatePlanned
+        {
+            get; set;
+        }
+
         static int filenum = 0;                                   // 总文件个数
 
         public class Data
@@ -283,13 +406,14 @@ namespace Downloader
                 }
             }
 
-            private static void Check()
+            public static UpdateInfo Check()
             {
                 string json, MD5, jsonName;
                 int newFile = 0, updateFile = 0;
                 newFileName.Clear();
                 updateFileName.Clear();
                 jsonName = "hash.json";
+                UpdateInfo updateInfo;
 
                 Tencent_cos_download Downloader = new Tencent_cos_download();
                 try
@@ -308,14 +432,18 @@ namespace Downloader
                 catch (CosClientException clientEx)
                 {
                     // 请求失败
-                    Console.WriteLine("CosClientException: " + clientEx.ToString() + Environment.NewLine);
-                    return;
+                    updateInfo.status = "ClientEx: " + clientEx.ToString();
+                    updateInfo.newFileCount = -1;
+                    updateInfo.changedFileCount = 0;
+                    return updateInfo;
                 }
                 catch (CosServerException serverEx)
                 {
                     // 请求失败
-                    Console.WriteLine("CosClientException: " + serverEx.ToString() + Environment.NewLine);
-                    return;
+                    updateInfo.status = "ServerEx: " + serverEx.ToString();
+                    updateInfo.newFileCount = -1;
+                    updateInfo.changedFileCount = 0;
+                    return updateInfo;
                 }
 
                 using (StreamReader r = new StreamReader(System.IO.Path.Combine(Data.FilePath, jsonName)))
@@ -334,22 +462,29 @@ namespace Downloader
                 newFile = newFileName.Count;
                 updateFile = updateFileName.Count;
                 filenum = newFile + updateFile;
-                Console.WriteLine("----------------------" + Environment.NewLine);
+                //Console.WriteLine("----------------------" + Environment.NewLine);
 
                 if (newFile + updateFile == 0)
                 {
-                    Console.WriteLine("当前平台已是最新版本！" + Environment.NewLine);
+                    updateInfo.status = "latest";
+                    updateInfo.newFileCount = 0;
+                    updateInfo.changedFileCount = 0;
                     newFileName.Clear();
                     updateFileName.Clear();
                 }
                 else
                 {
-                    Console.WriteLine($"发现{newFile}个新文件" + Environment.NewLine);
+                    updateInfo.status = "old";
+                    //TODO:获取版本号
+                    updateInfo.newFileCount = newFile;
+                    /*
                     foreach (string filename in newFileName)
                     {
                         Console.WriteLine(filename);
                     }
-                    Console.WriteLine(Environment.NewLine + $"发现{updateFile}个文件更新" + Environment.NewLine);
+                    */
+                    updateInfo.changedFileCount = updateFile;
+                    /*
                     foreach (string filename in updateFileName)
                     {
                         Console.WriteLine(filename);
@@ -359,8 +494,23 @@ namespace Downloader
                         Console.WriteLine("下载取消!");
                     else
                         Download();
+                    */
+                    UpdatePlanned = true;
                 }
+                return updateInfo;
             }
+
+            public static bool Update()
+            {
+                if (UpdatePlanned)
+                {
+                    Download();
+                    UpdatePlanned = false;
+                    return true;
+                }
+                return false;
+            }
+
             private static void Download()
             {
                 Tencent_cos_download Downloader = new Tencent_cos_download();
@@ -592,7 +742,7 @@ namespace Downloader
                 }
             }
 
-            public static void DeleteAll()
+            public static int DeleteAll()
             {
                 DirectoryInfo di = new DirectoryInfo(Data.FilePath);
                 DirectoryInfo player = new DirectoryInfo(System.IO.Path.GetFullPath(System.IO.Path.Combine(Data.FilePath, playerFolder)));
@@ -619,17 +769,17 @@ namespace Downloader
                 catch (UnauthorizedAccessException)
                 {
                     Console.WriteLine("权限不足，无法删除！");
-                    return;
+                    return -2;
                 }
                 catch (DirectoryNotFoundException)
                 {
                     Console.WriteLine("文件夹没有找到，请检查是否已经手动更改路径");
-                    return;
+                    return -3;
                 }
                 catch (IOException)
                 {
                     Console.WriteLine("文件已经打开，请关闭后再删除");
-                    return;
+                    return -1;
                 }
 
                 string json2;
@@ -665,19 +815,20 @@ namespace Downloader
                 catch (UnauthorizedAccessException)
                 {
                     Console.WriteLine("权限不足，无法删除！");
-                    return;
+                    return -2;
                 }
                 catch (DirectoryNotFoundException)
                 {
                     Console.WriteLine("文件夹没有找到，请检查是否已经手动更改路径");
-                    return;
+                    return -3;
                 }
                 catch (IOException)
                 {
                     Console.WriteLine("文件已经打开，请关闭后再删除");
-                    return;
+                    return -1;
                 }
                 Console.WriteLine($"删除成功！player文件夹中的文件已经放在{ProgramName}的根目录下");
+                return 0;
             }
 
             public static void OverwriteHash(Dictionary<string, string> jsonDict)
@@ -687,7 +838,7 @@ namespace Downloader
                 File.WriteAllText(@System.IO.Path.Combine(Data.FilePath, "hash.json"), Contentjson);
             }
 
-            public static void MoveProgram(string newPath)
+            public static int MoveProgram(string newPath)
             {
                 DirectoryInfo newdi = new DirectoryInfo(newPath);
                 DirectoryInfo olddi = new DirectoryInfo(Data.FilePath);
@@ -714,6 +865,7 @@ namespace Downloader
                         file.MoveTo(System.IO.Path.Combine(Data.FilePath, file.Name));
                     }
                     Console.WriteLine("移动失败！");
+                    return -2;
                 }
                 catch (IOException)
                 {
@@ -727,9 +879,11 @@ namespace Downloader
                         file.MoveTo(System.IO.Path.Combine(Data.FilePath, file.Name));
                     }
                     Console.WriteLine("移动失败！");
+                    return -1;
                 }
                 Data.ResetFilepath(newPath);
                 Console.WriteLine("更改路径成功!");
+                return 0;
             }
             public static async Task main(string[] args)
             {

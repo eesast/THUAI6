@@ -148,19 +148,28 @@ namespace Client
                         switch (icon)
                         {
                             case PropType.Key3:
-                                prop0.Text = "🔧";
+                                prop0.Text = "🔑";
                                 break;
                             case PropType.Key5:
-                                prop0.Text = "🛡";
+                                prop0.Text = "🔑";
                                 break;
                             case PropType.Key6:
-                                prop0.Text = "♥";
+                                prop0.Text = "🔑";
                                 break;
-                            case PropType.Ptype4:
+                            case PropType.AddSpeed:
                                 prop0.Text = "⛸";
                                 break;
+                            case PropType.AddLifeOrAp:
+                                prop0.Text = "🏅";
+                                break;
+                            case PropType.AddHpOrAp:
+                                prop0.Text = "♥";
+                                break;
+                            case PropType.ShieldOrSpear:
+                                prop0.Text = "🛡";
+                                break;
                             default:
-                                prop0.Text = "  ";
+                                prop0.Text = "";
                                 break;
                         }
                         cnt++;
@@ -169,19 +178,28 @@ namespace Client
                         switch (icon)
                         {
                             case PropType.Key3:
-                                prop1.Text = "🔧";
+                                prop1.Text = "🔑";
                                 break;
                             case PropType.Key5:
-                                prop1.Text = "🛡";
+                                prop1.Text = "🔑";
                                 break;
                             case PropType.Key6:
-                                prop1.Text = "♥";
+                                prop1.Text = "🔑";
                                 break;
-                            case PropType.Ptype4:
+                            case PropType.AddSpeed:
                                 prop1.Text = "⛸";
                                 break;
+                            case PropType.AddLifeOrAp:
+                                prop1.Text = "🏅";
+                                break;
+                            case PropType.AddHpOrAp:
+                                prop1.Text = "♥";
+                                break;
+                            case PropType.ShieldOrSpear:
+                                prop1.Text = "🛡";
+                                break;
                             default:
-                                prop1.Text = "  ";
+                                prop1.Text = "";
                                 break;
                         }
                         cnt++;
@@ -190,19 +208,28 @@ namespace Client
                         switch (icon)
                         {
                             case PropType.Key3:
-                                prop2.Text = "🔧";
+                                prop2.Text = "🔑";
                                 break;
                             case PropType.Key5:
-                                prop2.Text = "🛡";
+                                prop2.Text = "🔑";
                                 break;
                             case PropType.Key6:
-                                prop2.Text = "♥";
+                                prop2.Text = "🔑";
                                 break;
-                            case PropType.Ptype4:
+                            case PropType.AddSpeed:
                                 prop2.Text = "⛸";
                                 break;
+                            case PropType.AddLifeOrAp:
+                                prop2.Text = "🏅";
+                                break;
+                            case PropType.AddHpOrAp:
+                                prop2.Text = "♥";
+                                break;
+                            case PropType.ShieldOrSpear:
+                                prop2.Text = "🛡";
+                                break;
                             default:
-                                prop2.Text = "  ";
+                                prop2.Text = "";
                                 break;
                         }
                         cnt++;
@@ -211,19 +238,28 @@ namespace Client
                         switch (icon)
                         {
                             case PropType.Key3:
-                                prop3.Text = "🔧";
+                                prop3.Text = "🔑";
                                 break;
                             case PropType.Key5:
-                                prop3.Text = "🛡";
+                                prop3.Text = "🔑";
                                 break;
                             case PropType.Key6:
-                                prop3.Text = "♥";
+                                prop3.Text = "🔑";
                                 break;
-                            case PropType.Ptype4:
+                            case PropType.AddSpeed:
                                 prop3.Text = "⛸";
                                 break;
+                            case PropType.AddLifeOrAp:
+                                prop3.Text = "🏅";
+                                break;
+                            case PropType.AddHpOrAp:
+                                prop3.Text = "♥";
+                                break;
+                            case PropType.ShieldOrSpear:
+                                prop3.Text = "🛡";
+                                break;
                             default:
-                                prop3.Text = "  ";
+                                prop3.Text = "";
                                 break;
                         }
                         cnt++;

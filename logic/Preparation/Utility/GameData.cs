@@ -124,6 +124,10 @@ namespace Preparation.Utility
             return degree;
         }
         public const int StudentScoreEscape = 1000;
+        public const int ScorePropRemainHp = 20;
+        public const int ScorePropUseShield = 20;
+        public const int ScorePropUseSpear = 20;
+        public const int ScorePropAddAp = 10;
 
         public static int ScoreUseProp(PropType prop, bool IsGhost)
         {
@@ -170,6 +174,10 @@ namespace Preparation.Utility
         public const int PropMaxMoveDistance = 15 * numOfPosGridPerCell;
         public const long PropProduceTime = 10000;
         public const int PropDuration = 10000;
+
+        public const int ApPropAdd = basicApOfGhost * 12 / 10;
+        public const int ApSpearAdd = basicApOfGhost * 6 / 10;
+        public const int RemainHpWhenAddLife = 100;
 
         public const int numOfKeyEachArea = 2;
         public const int numOfPropTypeNotKey = 4;

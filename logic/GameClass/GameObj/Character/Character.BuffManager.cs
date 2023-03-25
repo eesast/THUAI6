@@ -42,16 +42,18 @@ namespace GameClass.GameObj
 
             private void AddBuff(BuffValue bf, int buffTime, BuffType buffType, Action ReCalculateFunc)
             {
+                LinkedListNode<BuffValue> buffNode;
+                lock (buffListLock[(int)buffType])
+                {
+                    buffNode = buffList[(int)buffType].AddLast(bf);
+                }
+                ReCalculateFunc();
+
                 new Thread
                     (
                         () =>
                         {
-                            LinkedListNode<BuffValue> buffNode;
-                            lock (buffListLock[(int)buffType])
-                            {
-                                buffNode = buffList[(int)buffType].AddLast(bf);
-                            }
-                            ReCalculateFunc();
+
                             Thread.Sleep(buffTime);
                             try
                             {
@@ -64,6 +66,7 @@ namespace GameClass.GameObj
                             {
                             }
                             ReCalculateFunc();
+
                         }
                     )
                 { IsBackground = true }.Start();
@@ -106,6 +109,42 @@ namespace GameClass.GameObj
                     }
                 }
             }
+            public bool TryUseShield()
+            {
+                if (HasShield)
+                {
+                    lock (buffListLock[(int)BuffType.Shield])
+                    {
+                        buffList[(int)BuffType.Shield].RemoveFirst();
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            public void AddAp(int time) => AddBuff(new BuffValue(), time, BuffType.AddAp, () => { });
+            public bool HasAp
+            {
+                get
+                {
+                    lock (buffListLock[(int)BuffType.AddAp])
+                    {
+                        return buffList[(int)BuffType.AddAp].Count != 0;
+                    }
+                }
+            }
+            public bool TryAddAp()
+            {
+                if (HasAp)
+                {
+                    lock (buffListLock[(int)BuffType.AddAp])
+                    {
+                        buffList[(int)BuffType.AddAp].RemoveFirst();
+                    }
+                    return true;
+                }
+                return false;
+            }
 
             public void AddLIFE(int totelTime) => AddBuff(new BuffValue(), totelTime, BuffType.AddLIFE, () =>
                                                                                                         { });
@@ -125,7 +164,7 @@ namespace GameClass.GameObj
                 {
                     lock (buffListLock[(int)BuffType.AddLIFE])
                     {
-                        buffList[(int)BuffType.AddLIFE].Clear();
+                        buffList[(int)BuffType.AddLIFE].RemoveFirst();
                     }
                     return true;
                 }
@@ -144,6 +183,7 @@ namespace GameClass.GameObj
                     }
                 }
             }
+
             /// <summary>
             /// 清除所有buff
             /// </summary>

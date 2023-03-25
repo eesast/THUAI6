@@ -11,7 +11,7 @@ namespace GameClass.GameObj
         /// </summary>
         public abstract double BulletBombRange { get; }
         public abstract double BulletAttackRange { get; }
-        public abstract int AP { get; }
+        public abstract int AP { get; set; }
         public abstract int Speed { get; }
         public abstract bool IsToBomb { get; }
         public abstract int CastTime { get; }
@@ -63,14 +63,6 @@ namespace GameClass.GameObj
                     return new FlyingKnife(character, place, pos);
                 case BulletType.CommonAttackOfGhost:
                     return new CommonAttackOfGhost(character, place, pos);
-                case BulletType.AtomBomb:
-                    return new AtomBomb(character, place, pos);
-                case BulletType.LineBullet:
-                    return new LineBullet(character, place, pos);
-                case BulletType.FastBullet:
-                    return new FastBullet(character, place, pos);
-                case BulletType.OrdinaryBullet:
-                    return new OrdinaryBullet(character, place, pos);
                 default:
                     return null;
             }

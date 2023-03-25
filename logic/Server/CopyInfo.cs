@@ -48,6 +48,14 @@ namespace Server
         {
             switch (prop)
             {
+                case Preparation.Utility.PropType.AddSpeed:
+                    return Protobuf.PropType.AddSpeed;
+                case Preparation.Utility.PropType.AddLifeOrAp:
+                    return Protobuf.PropType.AddLifeOrAp;
+                case Preparation.Utility.PropType.AddHpOrAp:
+                    return Protobuf.PropType.AddHpOrAp;
+                case Preparation.Utility.PropType.ShieldOrSpear:
+                    return Protobuf.PropType.ShieldOrSpear;
                 case Preparation.Utility.PropType.Key3:
                     return Protobuf.PropType.Key3;
                 case Preparation.Utility.PropType.Key5:

@@ -22,16 +22,22 @@ namespace GameClass.GameObj
                     return false;  // 原来已经死了
                 if (bullet.Parent.TeamID != this.TeamID)
                 {
-                    if (HasShield)
+                    if (TryUseShield())
                     {
                         if (bullet.HasSpear)
-                            bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(TrySubHp(bullet.AP)));
+                        {
+                            int subHp = TrySubHp(bullet.AP);
+                            bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
+                            bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
+                        }
                         else
                             return false;
                     }
                     else
                     {
-                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * TrySubHp(bullet.AP)));
+                        int subHp = TrySubHp(bullet.AP + GameData.ApSpearAdd);
+                        bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
+                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                     }
 #if DEBUG
                     Console.WriteLine($"PlayerID:{ID} is being shot! Now his hp is {hp}.");

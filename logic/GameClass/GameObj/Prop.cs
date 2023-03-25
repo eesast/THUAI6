@@ -47,38 +47,36 @@ namespace GameClass.GameObj
             base(initPos, placeType)
         {
         }
-        public override PropType GetPropType() => PropType.addSpeed;
+        public override PropType GetPropType() => PropType.AddSpeed;
     }
     /// <summary>
     /// 复活甲
     /// </summary>
-    public sealed class AddLIFE : Prop
+    public sealed class AddLifeOrAp : Prop
     {
-        public AddLIFE(XY initPos, PlaceType placeType) :
+        public AddLifeOrAp(XY initPos, PlaceType placeType) :
             base(initPos, placeType)
         {
         }
-        public override PropType GetPropType() => PropType.addLIFE;
+        public override PropType GetPropType() => PropType.AddLifeOrAp;
     }
-    /// <summary>
-    /// 护盾
-    /// </summary>
-    public sealed class Shield : Prop
+    public sealed class AddHpOrAp : Prop
     {
-        public Shield(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        public AddHpOrAp(XY initPos, PlaceType placeType) :
+            base(initPos, placeType)
         {
         }
-        public override PropType GetPropType() => PropType.Shield;
+        public override PropType GetPropType() => PropType.AddHpOrAp;
     }
     /// <summary>
-    /// 矛
+    /// 矛盾
     /// </summary>
-    public sealed class Spear : Prop
+    public sealed class ShieldOrSpear : Prop
     {
-        public Spear(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        public ShieldOrSpear(XY initPos, PlaceType placeType) : base(initPos, placeType)
         {
         }
-        public override PropType GetPropType() => PropType.Spear;
+        public override PropType GetPropType() => PropType.ShieldOrSpear;
     }
     public sealed class Key3 : Prop
     {
@@ -135,4 +133,29 @@ namespace GameClass.GameObj
     //     public override PropType GetPropType() => PropType.addCD;
     // }
     // #endregion
+    public static class PropFactory
+    {
+        public static Prop GetProp(PropType propType, XY pos, PlaceType place)
+        {
+            switch (propType)
+            {
+                case PropType.AddSpeed:
+                    return new AddSpeed(pos, place);
+                case PropType.AddLifeOrAp:
+                    return new AddLifeOrAp(pos, place);
+                case PropType.ShieldOrSpear:
+                    return new ShieldOrSpear(pos, place);
+                case PropType.AddHpOrAp:
+                    return new AddHpOrAp(pos, place);
+                case PropType.Key3:
+                    return new Key3(pos, place);
+                case PropType.Key5:
+                    return new Key5(pos, place);
+                case PropType.Key6:
+                    return new Key6(pos, place);
+                default:
+                    return new NullProp();
+            }
+        }
+    }
 }

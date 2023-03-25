@@ -30,15 +30,12 @@ namespace Gaming
 
                 if ((!player.Commandable())) return false;
                 IActiveSkill skill = player.UseIActiveSkill(ActiveSkillType.CanBeginToCharge);
-                return ActiveSkillEffect(skill, player, () =>
-                {
-                    player.AddMoveSpeed(skill.DurationTime, 3.0);
-                    //player.BulletOfPlayer = BulletType.Ram;
-                    new Thread
+                Debugger.Output(player, "can begin to charge!");
+                new Thread
           (
               () =>
               {
-                  new FrameRateTaskExecutor<int>(
+                                new FrameRateTaskExecutor<int>(
                     loopCondition: () => player.Commandable() && gameMap.Timer.IsGaming,
                     loopToDo: () =>
                     {
@@ -70,8 +67,11 @@ namespace Gaming
               }
 
           )
-                    { IsBackground = true }.Start();
-                    Debugger.Output(player, "can begin to charge!");
+                { IsBackground = true }.Start();
+
+                return ActiveSkillEffect(skill, player, () =>
+                {
+                    player.AddMoveSpeed(skill.DurationTime, 3.0);
                 },
                                                       () =>
                                                       {
@@ -161,7 +161,6 @@ namespace Gaming
                     ActiveSkillType activeSkillType = SkillFactory.FindActiveSkillType(activeSkill);
                     if (player.TimeUntilActiveSkillAvailable[activeSkillType] == 0)
                     {
-
                         player.SetTimeUntilActiveSkillAvailable(activeSkillType, activeSkill.SkillCD);
                         new Thread
                         (() =>

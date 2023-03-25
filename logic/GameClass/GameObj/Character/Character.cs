@@ -368,7 +368,7 @@ namespace GameClass.GameObj
             lock (gameObjLock)
             {
                 score += add;
-                Debugger.Output(this, " 's score has been added to: " + score.ToString());
+              //  Debugger.Output(this, " 's score has been added to: " + score.ToString());
             }
         }
         /// <summary>

@@ -96,7 +96,7 @@ namespace GameClass.GameObj
                 case CanBeginToCharge:
                     return ActiveSkillType.CanBeginToCharge;
                 case Punish:
-                    return ActiveSkillType.Publish;
+                    return ActiveSkillType.Punish;
                 default:
                     return ActiveSkillType.Null;
             }

@@ -20,8 +20,12 @@ namespace Server
         protected readonly ArgumentOptions options;
         private HttpSender? httpSender;
         private object gameLock = new();
+<<<<<<< HEAD
         private int playerNum = 0;
         private int PlayerNum => playerNum;  // 注意修改
+=======
+        public int PlayerNum => options.playerNum;  // 注意修改
+>>>>>>> 9497283ae5076d61510347911d4d9ac16841cef3
         private MessageToClient currentGameInfo = new();
         private MessageOfObj currentMapMsg = new();
         private object newsLock = new();
@@ -203,7 +207,7 @@ namespace Server
         }
         private bool ValidPlayerID(long playerID)
         {
-            if (0 <= playerID && playerID < options.PlayerCountPerTeam + 1)
+            if ((0 <= playerID && playerID < options.PlayerCountPerTeam) || playerID == 4)
                 return true;
             return false;
         }
@@ -277,7 +281,7 @@ namespace Server
             var onConnection = new BoolRes();
             lock (gameLock)
             {
-                if (0 <= request.PlayerId && request.PlayerId < playerNum)  // 注意修改
+                if (0 <= request.PlayerId && request.PlayerId < PlayerNum)  // 注意修改
                 {
                     onConnection.ActSuccess = true;
                     Console.WriteLine(onConnection.ActSuccess);
@@ -332,7 +336,7 @@ namespace Server
                 lock (semaDict)
                 {
                     semaDict.Add(request.PlayerId, temp);
-                    start = semaDict.Count == playerNum;
+                    start = semaDict.Count == PlayerNum;
                 }
                 if (start) StartGame();
             }
@@ -428,7 +432,8 @@ namespace Server
 #endif 
             BoolRes boolRes = new();
             var gameID = communicationToGameID[request.PlayerId];
-            //boolRes.ActSuccess = game.UseProp(gameID, CopyInfo.ToPropType(request.PropType));
+            game.UseProp(gameID, CopyInfo.ToPropType(request.PropType));
+            boolRes.ActSuccess = true;
             return Task.FromResult(boolRes);
         }
         public override Task<BoolRes> ThrowProp(PropMsg request, ServerCallContext context)
@@ -438,7 +443,8 @@ namespace Server
 #endif 
             BoolRes boolRes = new();
             var gameID = communicationToGameID[request.PlayerId];
-            //boolRes.ActSuccess = game.ThrowProp(gameID, CopyInfo.ToPropType(request.PropType));
+            game.ThrowProp(gameID, CopyInfo.ToPropType(request.PropType));
+            boolRes.ActSuccess = true;
             return Task.FromResult(boolRes);
         }
         public override Task<BoolRes> UseSkill(SkillMsg request, ServerCallContext context)
@@ -448,7 +454,7 @@ namespace Server
 #endif 
             BoolRes boolRes = new();
             var gameID = communicationToGameID[request.PlayerId];
-            //boolRes.ActSuccess = game.UseActiveSkill(gameID, CopyInfo.ToPropType(request.PropType));
+            boolRes.ActSuccess = game.UseActiveSkill(gameID, request.SkillId);
             return Task.FromResult(boolRes);
         }
 
@@ -469,7 +475,8 @@ namespace Server
 #endif 
             BoolRes boolRes = new();
             var gameID = communicationToGameID[request.PlayerId];
-            //boolRes.ActSuccess = game.Rescue(gameID);
+            var toGameID = communicationToGameID[request.ToPlayerId];
+            boolRes.ActSuccess = game.Rescue(gameID, toGameID);
             return Task.FromResult(boolRes);
         }
         public override Task<BoolRes> StartTreatMate(TreatAndRescueMsg request, ServerCallContext context)
@@ -479,7 +486,8 @@ namespace Server
 #endif     
             BoolRes boolRes = new();
             var gameID = communicationToGameID[request.PlayerId];
-            //boolRes.ActSuccess = game.Treat(gameID);
+            var toGameID = communicationToGameID[request.ToPlayerId];
+            boolRes.ActSuccess = game.Treat(gameID, toGameID);
             return Task.FromResult(boolRes);
         }
         public override Task<BoolRes> StartLearning(IDMsg request, ServerCallContext context)
@@ -629,7 +637,7 @@ namespace Server
 
             if (options.Url != DefaultArgumentOptions.Url && options.Token != DefaultArgumentOptions.Token)
             {
-                //this.httpSender = new HttpSender(options.Url, options.Token, "PUT");
+                this.httpSender = new HttpSender(options.Url, options.Token, "PUT");
             }
         }
     }

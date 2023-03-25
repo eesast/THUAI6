@@ -117,7 +117,10 @@ namespace Preparation.Utility
         {
             return 0;
         }
-        public const int StudentScoreTrickerBeStunned = 25;
+        public static int StudentScoreTrickerBeStunned(int time)
+        {
+            return time;
+        }
         public const int StudentScoreRescue = 100;
         public static int StudentScoreTreat(int degree)
         {
@@ -159,9 +162,14 @@ namespace Preparation.Utility
         /// <summary>
         /// BeginToCharge
         /// </summary>
-        public const int TimeOfGhostFainting = 7220;//=AP of Ram
-        public const int TimeOfStudentFainting = 2090;
+        public const int TimeOfGhostFaintingWhenCharge = 7220;
+        public const int TimeOfStudentFaintingWhenCharge = 2090;
 
+        /// <summary>
+        /// Punish
+        /// </summary>
+        public const int TimeOfGhostFaintingWhenPunish = 3070;
+        public const int TimeFactorOfGhostFainting = 1000;
         #endregion
         #region 道具相关
         public const int MinPropTypeNum = 1;

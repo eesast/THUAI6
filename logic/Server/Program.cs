@@ -23,10 +23,10 @@ namespace Server
             if (options == null)
             {
                 Console.WriteLine("Argument parsing failed!");
-                // return 1;
+                return 1;
             }
 
-            // Console.WriteLine("Server begins to run: " + options.ServerPort.ToString());
+            Console.WriteLine("Server begins to run: " + options.ServerPort.ToString());
 
             try
             {
@@ -34,7 +34,7 @@ namespace Server
                 Grpc.Core.Server server = new Grpc.Core.Server(new[] { new ChannelOption(ChannelOptions.SoReuseport, 0) })
                 {
                     Services = { AvailableService.BindService(gameServer) },
-                    Ports = { new ServerPort("0.0.0.0", 8888, ServerCredentials.Insecure) }
+                    Ports = { new ServerPort(options.ServerIP, options.ServerPort, ServerCredentials.Insecure) }
                 };
                 server.Start();
 

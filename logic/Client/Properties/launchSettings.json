@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Client": {
+      "commandName": "Project",
+      "commandLineArgs": "--cl --playbackFile=D:\\2_autumn\\thuai6\\playback.thuaipb --characterID=4 --type=2 --occupation=1"
+    }
+  }
+}

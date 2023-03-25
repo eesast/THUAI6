@@ -119,11 +119,10 @@ namespace Client
             }
             else
             {
-                if (options.PlaybackFile == DefaultArgumentOptions.FileName)
-                {
+                //if (options.PlaybackFile == DefaultArgumentOptions.FileName)
+                //{
                     try
                     {
-                        OnReceive();
                         string[] comInfo = new string[5];
                         comInfo[0] = options.Ip;
                         comInfo[1] = options.Port;
@@ -131,16 +130,17 @@ namespace Client
                         comInfo[3] = options.PlayerType;
                         comInfo[4] = options.Occupation;
                         ConnectToServer(comInfo);
+                        OnReceive();
                     }
                     catch
                     {
                         OnReceive();
                     }
-                }
-                else
-                {
-                    Playback(options.PlaybackFile, options.PlaybackSpeed);
-                }
+                //}
+                //else
+                //{
+                //  Playback(options.PlaybackFile, options.PlaybackSpeed);
+                //}
             }
         }
         private void Playback(string fileName, double pbSpeed = 2.0)
@@ -317,7 +317,7 @@ namespace Client
                         case 9:
                             mapPatches[i, j].Fill = Brushes.LightSkyBlue;
                             mapPatches[i, j].Stroke = Brushes.LightSkyBlue;
-                            break;//door
+                            break;//gate
                         case 10:
                             foreach (var obj in listOfAll)
                             {
@@ -733,16 +733,25 @@ namespace Client
                                 switch (data.Type)
                                 {
                                     case PropType.Key3:
-                                        DrawProp(data, "🔧");
+                                        DrawProp(data, "🔑");
                                         break;
                                     case PropType.Key5:
-                                        DrawProp(data, "🛡");
+                                        DrawProp(data, "🔑");
                                         break;
                                     case PropType.Key6:
+                                        DrawProp(data, "🔑");
+                                        break;
+                                    case PropType.AddSpeed:
+                                        DrawProp(data, "⛸");
+                                        break;
+                                    case PropType.AddHpOrAp:
                                         DrawProp(data, "♥");
                                         break;
-                                    case PropType.Ptype4:
-                                        DrawProp(data, "⛸");
+                                    case PropType.AddLifeOrAp:
+                                        DrawProp(data, "🏅");
+                                        break;
+                                    case PropType.ShieldOrSpear:
+                                        DrawProp(data, "🛡");
                                         break;
                                     default:
                                         DrawProp(data, "");
@@ -922,19 +931,11 @@ namespace Client
                 {
                     switch (e.Key)
                     {
-                        case Key.D0:
-                            PropMsg msgP0 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.Key3,
-                            };
-                            client.PickProp(msgP0);
-                            break;
                         case Key.D1:
                             PropMsg msgP1 = new()
                             {
                                 PlayerId = playerID,
-                                PropType = PropType.Key5,
+                                PropType = PropType.AddSpeed,
                             };
                             client.PickProp(msgP1);
                             break;
@@ -942,7 +943,7 @@ namespace Client
                             PropMsg msgP2 = new()
                             {
                                 PlayerId = playerID,
-                                PropType = PropType.Key6,
+                                PropType = PropType.AddLifeOrAp,
                             };
                             client.PickProp(msgP2);
                             break;
@@ -950,9 +951,41 @@ namespace Client
                             PropMsg msgP3 = new()
                             {
                                 PlayerId = playerID,
-                                PropType = PropType.Ptype4,
+                                PropType = PropType.AddHpOrAp,
                             };
                             client.PickProp(msgP3);
+                            break;
+                        case Key.D4:
+                            PropMsg msgP4 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.ShieldOrSpear,
+                            };
+                            client.PickProp(msgP4);
+                            break;
+                        case Key.D5:
+                            PropMsg msgP5 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key3,
+                            };
+                            client.PickProp(msgP5);
+                            break;
+                        case Key.D6:
+                            PropMsg msgP6 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key5,
+                            };
+                            client.PickProp(msgP6);
+                            break;
+                        case Key.D7:
+                            PropMsg msgP7 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key6,
+                            };
+                            client.PickProp(msgP7);
                             break;
                         default:
                             break;
@@ -962,19 +995,11 @@ namespace Client
                 {
                     switch (e.Key)
                     {
-                        case Key.D0:
-                            PropMsg msgP0 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.Key3,
-                            };
-                            client.UseProp(msgP0);
-                            break;
                         case Key.D1:
                             PropMsg msgP1 = new()
                             {
                                 PlayerId = playerID,
-                                PropType = PropType.Key5,
+                                PropType = PropType.AddSpeed,
                             };
                             client.UseProp(msgP1);
                             break;
@@ -982,7 +1007,7 @@ namespace Client
                             PropMsg msgP2 = new()
                             {
                                 PlayerId = playerID,
-                                PropType = PropType.Key6,
+                                PropType = PropType.AddLifeOrAp,
                             };
                             client.UseProp(msgP2);
                             break;
@@ -990,9 +1015,41 @@ namespace Client
                             PropMsg msgP3 = new()
                             {
                                 PlayerId = playerID,
-                                PropType = PropType.Ptype4,
+                                PropType = PropType.AddHpOrAp,
                             };
                             client.UseProp(msgP3);
+                            break;
+                        case Key.D4:
+                            PropMsg msgP4 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.ShieldOrSpear,
+                            };
+                            client.UseProp(msgP4);
+                            break;
+                        case Key.D5:
+                            PropMsg msgP5 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key3,
+                            };
+                            client.UseProp(msgP5);
+                            break;
+                        case Key.D6:
+                            PropMsg msgP6 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key5,
+                            };
+                            client.UseProp(msgP6);
+                            break;
+                        case Key.D7:
+                            PropMsg msgP7 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key6,
+                            };
+                            client.UseProp(msgP7);
                             break;
                         default:
                             break;
@@ -1002,19 +1059,11 @@ namespace Client
                 {
                     switch (e.Key)
                     {
-                        case Key.D0:
-                            PropMsg msgP0 = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.Key3,
-                            };
-                            client.ThrowProp(msgP0);
-                            break;
                         case Key.D1:
                             PropMsg msgP1 = new()
                             {
                                 PlayerId = playerID,
-                                PropType = PropType.Key5,
+                                PropType = PropType.AddSpeed,
                             };
                             client.ThrowProp(msgP1);
                             break;
@@ -1022,7 +1071,7 @@ namespace Client
                             PropMsg msgP2 = new()
                             {
                                 PlayerId = playerID,
-                                PropType = PropType.Key6,
+                                PropType = PropType.AddLifeOrAp,
                             };
                             client.ThrowProp(msgP2);
                             break;
@@ -1030,9 +1079,41 @@ namespace Client
                             PropMsg msgP3 = new()
                             {
                                 PlayerId = playerID,
-                                PropType = PropType.Ptype4,
+                                PropType = PropType.AddHpOrAp,
                             };
                             client.ThrowProp(msgP3);
+                            break;
+                        case Key.D4:
+                            PropMsg msgP4 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.ShieldOrSpear,
+                            };
+                            client.ThrowProp(msgP4);
+                            break;
+                        case Key.D5:
+                            PropMsg msgP5 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key3,
+                            };
+                            client.ThrowProp(msgP5);
+                            break;
+                        case Key.D6:
+                            PropMsg msgP6 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key5,
+                            };
+                            client.ThrowProp(msgP6);
+                            break;
+                        case Key.D7:
+                            PropMsg msgP7 = new()
+                            {
+                                PlayerId = playerID,
+                                PropType = PropType.Key6,
+                            };
+                            client.ThrowProp(msgP7);
                             break;
                         default:
                             break;
@@ -1130,14 +1211,14 @@ namespace Client
                             client.StartLearning(msgK);
                             break;
                         case Key.R:
-                            IDMsg msgR = new()
-                            {
+                             TreatAndRescueMsg msgR = new()
+                             {
                                 PlayerId = playerID,
-                            };
+                             };
                             client.StartRescueMate(msgR);
                             break;
                         case Key.T:
-                            IDMsg msgT = new()
+                            TreatAndRescueMsg msgT = new()
                             {
                                 PlayerId = playerID,
                             };

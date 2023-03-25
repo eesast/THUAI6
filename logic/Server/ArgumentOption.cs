@@ -24,7 +24,7 @@ namespace Server
         [Option('t', "teamCount", Required = false, HelpText = "The number of teams, 1 by defualt")]
         public ushort TeamCount { get; set; } = 2;
 
-        [Option('c', "playerCount", Required = false, HelpText = "The number of students, 1 by default")]
+        [Option('c', "playerCount", Required = false, HelpText = "The number of players per team, 4 by default")]
         public ushort PlayerCountPerTeam { get; set; } = 4;
 
         [Option('g', "gameTimeInSecond", Required = false, HelpText = "The time of the game in second, 10 minutes by default")]

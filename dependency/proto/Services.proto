@@ -20,8 +20,8 @@ service AvailableService
     rpc SendMessage (SendMsg) returns (BoolRes);
     // rpc GetMessage (IDMsg) returns (stream MsgRes);
     rpc StartLearning (IDMsg) returns (BoolRes); // 开始修理机器
-    rpc StartRescueMate (IDMsg) returns (BoolRes); // 开始救人
-    rpc StartTreatMate (IDMsg) returns (BoolRes); // 开始治疗
+    rpc StartRescueMate (TreatAndRescueMsg) returns (BoolRes); // 开始救人
+    rpc StartTreatMate (TreatAndRescueMsg) returns (BoolRes); // 开始治疗
     rpc Attack (AttackMsg) returns (BoolRes); // 攻击
     rpc Graduate (IDMsg) returns (BoolRes); // 相当于逃跑
     rpc OpenDoor (IDMsg) returns (BoolRes); // 开门

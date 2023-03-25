@@ -461,7 +461,7 @@ namespace Server
             boolRes.ActSuccess = game.Escape(gameID);
             return Task.FromResult(boolRes);
         }
-        public override Task<BoolRes> StartRescueMate(IDMsg request, ServerCallContext context)
+        public override Task<BoolRes> StartRescueMate(TreatAndRescueMsg request, ServerCallContext context)
         {
 #if DEBUG
             Console.WriteLine($"StartRescueMate ID: {request.PlayerId}");
@@ -471,7 +471,7 @@ namespace Server
             //boolRes.ActSuccess = game.Rescue(gameID);
             return Task.FromResult(boolRes);
         }
-        public override Task<BoolRes> StartTreatMate(IDMsg request, ServerCallContext context)
+        public override Task<BoolRes> StartTreatMate(TreatAndRescueMsg request, ServerCallContext context)
         {
 #if DEBUG
             Console.WriteLine($"StartTreatMate ID: {request.PlayerId}");

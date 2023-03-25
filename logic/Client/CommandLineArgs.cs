@@ -18,7 +18,7 @@ namespace Client
         public string Ip { get; set; } = "127.0.0.1";
 
         [Option('p', "port", Required = false, HelpText = "Client listening port")]
-        public string Port { get; set; } = "7777";
+        public string Port { get; set; } = "8888";
 
         [Option('t', "teamID", Required = false, HelpText = "Client teamID")]
         public string TeamID { get; set; } = "0";

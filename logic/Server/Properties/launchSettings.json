@@ -2,7 +2,7 @@
   "profiles": {
     "Server": {
       "commandName": "Project",
-      "commandLineArgs": "-p 8888\r\n-f playback\r\n-g 600\r\n-b true\r\n-c 4\r\n-t 2\r\n-n 1"
+      "commandLineArgs": "--ip 0.0.0.0\r\n-p 8888\r\n-f playback\r\n-g 600\r\n-b true\r\n-c 4\r\n-t 2\r\n-n 1"
     }
   }
 }

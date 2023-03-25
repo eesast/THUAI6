@@ -259,11 +259,11 @@ namespace Server
             foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
             for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count(); ++i)
-                msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
+                msg.TrickerMessage.TimeUntilSkillAvailable.Add(-1);
 
             msg.TrickerMessage.Place = ToPlaceType(player.Place);
             foreach (var value in player.PropInventory)
-                msg.StudentMessage.Prop.Add(ToPropType(value.GetPropType()));
+                msg.TrickerMessage.Prop.Add(ToPropType(value.GetPropType()));
 
             msg.TrickerMessage.TrickerType = ToTrickerType(player.CharacterType);
             msg.TrickerMessage.Guid = player.ID;

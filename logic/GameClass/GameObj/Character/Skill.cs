@@ -95,7 +95,8 @@ namespace GameClass.GameObj
                     return ActiveSkillType.UseKnife;
                 case CanBeginToCharge:
                     return ActiveSkillType.CanBeginToCharge;
-                case Teacher:
+                case Punish:
+                    return ActiveSkillType.Publish;
                 default:
                     return ActiveSkillType.Null;
             }

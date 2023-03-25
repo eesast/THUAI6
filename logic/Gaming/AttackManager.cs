@@ -24,7 +24,7 @@ namespace Gaming
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>
                     {
-                        //BulletBomb((Bullet)obj, (GameObj)collisionObj);
+                        BulletBomb((Bullet)obj, (GameObj)collisionObj);
                         return MoveEngine.AfterCollision.Destroyed;
                     },
                     EndMove: obj =>
@@ -33,7 +33,8 @@ namespace Gaming
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
 
 #endif
-                        BulletBomb((Bullet)obj, null);
+                        if (obj.CanMove)
+                            BulletBomb((Bullet)obj, null);
                     }
                 );
             }
@@ -124,6 +125,9 @@ namespace Gaming
 
             private void BombObj(Bullet bullet, GameObj objBeingShot)
             {
+#if DEBUG
+                Debugger.Output(bullet, "bombed " + objBeingShot.ToString());
+#endif
                 switch (objBeingShot.Type)
                 {
                     case GameObjType.Character:
@@ -152,7 +156,10 @@ namespace Gaming
             private void BulletBomb(Bullet bullet, GameObj? objBeingShot)
             {
 #if DEBUG
-                Debugger.Output(bullet, "bombed!");
+                if (objBeingShot != null)
+                    Debugger.Output(bullet, "bombed!" + objBeingShot.ToString());
+                else
+                    Debugger.Output(bullet, "bombed without objBeingShot");
 #endif
                 bullet.CanMove = false;
 

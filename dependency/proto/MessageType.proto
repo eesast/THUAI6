@@ -105,7 +105,7 @@ enum StudentType
 {
     NULL_STUDENT_TYPE = 0;
     ATHLETE  = 1;
-    STUDENTTYPE2 = 2;
+    STUDENTTYPE2 = 2;//Teacher
     STUDENTTYPE3 = 3;
     STUDENTTYPE4 = 4;
 }

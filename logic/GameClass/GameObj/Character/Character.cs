@@ -368,7 +368,7 @@ namespace GameClass.GameObj
             lock (gameObjLock)
             {
                 score += add;
-                Debugger.Output(this, " 's score has been added to: " + score.ToString());
+                //Debugger.Output(this, " 's score has been added to: " + score.ToString());
             }
         }
         /// <summary>
@@ -552,14 +552,22 @@ namespace GameClass.GameObj
 
         public bool TryAddAp()
         {
-            AddScore(GameData.ScorePropAddAp);
-            return buffManager.TryAddAp();
+            if (buffManager.TryAddAp())
+            {
+                AddScore(GameData.ScorePropAddAp);
+                return true;
+            }
+            return false;
         }
 
         public bool TryUseShield()
         {
-            AddScore(GameData.ScorePropUseShield);
-            return buffManager.TryUseShield();
+            if (buffManager.TryUseShield())
+            {
+                AddScore(GameData.ScorePropUseShield);
+                return true;
+            }
+            return false;
         }
         #endregion
         /*     public override void Reset()  // 要加锁吗？

@@ -81,7 +81,6 @@ namespace Preparation.Utility
 
         public const int basicMoveSpeed = 1270;                      // 基本移动速度，单位：s-1
         public const int characterMaxSpeed = 12000;                  // 最大速度
-        public const int basicBulletMoveSpeed = 2700;                // 基本子弹移动速度，单位：s-1
 
         public const double basicConcealment = 1.0;
         public const int basicAlertnessRadius = 30700;
@@ -142,6 +141,7 @@ namespace Preparation.Utility
         public const int basicApOfGhost = 1500000;                             // 捣蛋鬼攻击力
         public const int MinAP = 0;                                  // 最小攻击力
         public const int MaxAP = int.MaxValue;                       // 最大攻击力
+        public const int basicBulletMoveSpeed = 2700;                // 基本子弹移动速度，单位：s-1
 
         public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicCastTime = 500;//基本前摇时间

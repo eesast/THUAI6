@@ -354,6 +354,42 @@
 |   Key5   |                             能开启5教的门                           |不得分|      能开启3教的门                            |不得分| 
 |   Key6   |                             能开启6教的门                            |不得分|      能开启3教的门                            |不得分| 
 
+## 职业与技能
+
+### 捣蛋鬼
+#### 刺客
+  ~~~csharp
+    public class Assassin : IGhost
+    {
+        private const int moveSpeed = GameData.basicMoveSpeed * 473 / 380;
+        private const int maxHp = GameData.basicHp;
+        public const int maxBulletNum = 1;
+
+        public BulletType InitBullet => BulletType.CommonAttackOfGhost;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.BecomeInvisible, ActiveSkillType.UseKnife });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public double concealment = GameData.basicConcealment * 1.5;
+        public int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.3);
+        public int viewRange = (int)(GameData.basicViewRange * 1.3);
+        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int speedOfClimbingThroughWindows = GameData.basicGhostSpeedOfClimbingThroughWindows;
+        public int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
+    }
+  ~~~
+- 主动技能
+  - 隐身
+  - 使用飞刀
+
+### 学生（&老师）
+
+#### 运动员
+
+#### 教师
+- 主动技能
+  - 惩罚
+
 ## 游戏数据
 
 ### 基本常数
@@ -393,18 +429,6 @@
         public static XY PosGridToCellXY(XY pos)  // 求坐标所在的格子的y坐标
         {
             return new XY(pos.x / numOfPosGridPerCell, pos.y / numOfPosGridPerCell);
-        }
-        public static bool IsInTheSameCell(XY pos1, XY pos2)
-        {
-            return PosGridToCellX(pos1) == PosGridToCellX(pos2) && PosGridToCellY(pos1) == PosGridToCellY(pos2);
-        }
-        public static bool ApproachToInteract(XY pos1, XY pos2)
-        {
-            return Math.Abs(PosGridToCellX(pos1) - PosGridToCellX(pos2)) <= 1 && Math.Abs(PosGridToCellY(pos1) - PosGridToCellY(pos2)) <= 1;
-        }
-        public static bool ApproachToInteractInACross(XY pos1, XY pos2)
-        {
-            return (Math.Abs(PosGridToCellX(pos1) - PosGridToCellX(pos2)) + Math.Abs(PosGridToCellY(pos1) - PosGridToCellY(pos2))) <= 1;
         }
   ~~~
 

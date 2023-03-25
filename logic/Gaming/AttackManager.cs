@@ -38,8 +38,9 @@ namespace Gaming
                 );
             }
 
-            private void BeAddictedToGame(Student player)
+            private void BeAddictedToGame(Student player, Ghost ghost)
             {
+                ghost.AddScore(GameData.TrickerScoreStudentBeAddicted);
                 new Thread
                     (() =>
                     {
@@ -47,16 +48,17 @@ namespace Gaming
                             player.GamingAddiction = GameData.MidGamingAddiction;
                         player.PlayerState = PlayerStateType.Addicted;
                         new FrameRateTaskExecutor<int>(
-                            () => player.PlayerState == PlayerStateType.Addicted && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
+                            () => (player.PlayerState == PlayerStateType.Addicted || player.PlayerState == PlayerStateType.Rescued) && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
                             () =>
                             {
-                                player.GamingAddiction += GameData.frameDuration;
+                                player.GamingAddiction += (player.PlayerState == PlayerStateType.Addicted) ? GameData.frameDuration : 0;
                             },
                             timeInterval: GameData.frameDuration,
                             () =>
                             {
                                 if (player.GamingAddiction == player.MaxGamingAddiction && gameMap.Timer.IsGaming)
                                 {
+                                    ghost.AddScore(GameData.TrickerScoreStudentDie);
                                     Die(player);
                                 }
                                 return 0;
@@ -98,15 +100,6 @@ namespace Gaming
             {
 
                 player.Die(PlayerStateType.Deceased);
-                // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
-                // try
-                //{
-                //     gameMap.GameObjDict[GameObjType.Character].Remove(playerBeingShot);
-                // }
-                // finally
-                //{
-                //     gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
-                // }
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {
@@ -117,34 +110,28 @@ namespace Gaming
                         gameMap.Add(prop);
                     }
                 }
+                --gameMap.NumOfSurvivingStudent;
+                if (gameMap.NumOfSurvivingStudent == 1)
+                {
+                    gameMap.GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
+                    try
+                    {
+                        foreach (EmergencyExit emergencyExit in gameMap.GameObjDict[GameObjType.EmergencyExit])
+                            if (emergencyExit.CanOpen)
+                            {
+                                emergencyExit.IsOpen = true;
+                                break;
+                            }
+                    }
+                    finally
+                    {
+                        gameMap.GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
+                    }
+                }
 
                 //  player.Reset();
                 //    ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  // 给击杀者加分
 
-                /*    new Thread
-                        (() =>
-                        {
-
-                            Thread.Sleep(GameData.reviveTime);
-
-                            playerBeingShot.AddShield(GameData.shieldTimeAtBirth);  // 复活加个盾
-
-                            // gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
-                            // try
-                            //{
-                            //     gameMap.GameObjDict[GameObjType.Character].Add(playerBeingShot);
-                            // }
-                            // finally { gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock(); }
-
-                            if (gameMap.Timer.IsGaming)
-                            {
-                                playerBeingShot.CanMove = true;
-                            }
-                            playerBeingShot.Deceased = false;
-                        }
-                        )
-                    { IsBackground = true }.Start();
-                */
             }
 
             private void BombObj(Bullet bullet, GameObj objBeingShot)
@@ -154,10 +141,30 @@ namespace Gaming
                     case GameObjType.Character:
 
                         if ((!((Character)objBeingShot).IsGhost()) && bullet.Parent.IsGhost())
-                            if (((Character)objBeingShot).BeAttacked(bullet))
+                        {
+                            Student oneBeAttacked = (Student)objBeingShot;
+                            if (oneBeAttacked.BeAttacked(bullet))
                             {
-                                BeAddictedToGame((Student)objBeingShot);
+                                BeAddictedToGame(oneBeAttacked, (Ghost)bullet.Parent);
                             }
+                            if (oneBeAttacked.CanBeAwed())
+                            {
+                                oneBeAttacked.PlayerState = PlayerStateType.Stunned;
+                                bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned);
+                                new Thread
+                                (
+                                () =>
+                                {
+                                    Thread.Sleep(GameData.basicStunnedTimeOfStudent);
+                                    if (oneBeAttacked.PlayerState == PlayerStateType.Stunned)
+                                    {
+                                        oneBeAttacked.PlayerState = PlayerStateType.Null;
+                                    }
+                                }
+                                )
+                                { IsBackground = true }.Start();
+                            }
+                        }
                         //       if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)
                         //          BeStunned((Character)objBeingShot, bullet.AP);
                         break;

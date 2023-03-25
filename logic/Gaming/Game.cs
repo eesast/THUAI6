@@ -54,7 +54,7 @@ namespace Gaming
                 () =>
                 {
                     while (!gameMap.Timer.IsGaming)
-                        Thread.Sleep(newPlayer.CD);
+                        Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
                     long lastTime = Environment.TickCount64;
                     new FrameRateTaskExecutor<int>(
                         loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
@@ -63,7 +63,7 @@ namespace Gaming
                             long nowTime = Environment.TickCount64;
                             if (newPlayer.BulletNum == newPlayer.MaxBulletNum)
                                 lastTime = nowTime;
-                            if (nowTime - lastTime >= newPlayer.CD)
+                            else if (nowTime - lastTime >= newPlayer.CD)
                             {
                                 _ = newPlayer.TryAddBulletNum();
                                 lastTime = nowTime;
@@ -85,13 +85,14 @@ namespace Gaming
             )
             { IsBackground = true }.Start();
             #endregion
-            #region BGM更新
+            #region BGM,牵制得分更新
             new Thread
             (
                 () =>
                 {
                     while (!gameMap.Timer.IsGaming)
-                        Thread.Sleep((int)GameData.checkInterval);
+                        Thread.Sleep(GameData.checkInterval);
+                    int TimePinningDown = 0, ScoreAdded = 0;
                     new FrameRateTaskExecutor<int>(
                         loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
                         loopToDo: () =>
@@ -121,6 +122,13 @@ namespace Gaming
                                             {
                                                 if (XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
                                                     newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
+                                                if (XY.Distance(newPlayer.Position, person.Position) <= GameData.basicViewRange)
+                                                {
+                                                    TimePinningDown += GameData.checkInterval;
+                                                    newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
+                                                    ScoreAdded = GameData.StudentScorePinDown(TimePinningDown);
+                                                }
+                                                else TimePinningDown = ScoreAdded = 0;
                                                 break;
                                             }
                                         }
@@ -252,11 +260,8 @@ namespace Gaming
             if (!gameMap.Timer.IsGaming)
                 return false;
             ICharacter? player = gameMap.FindPlayer(playerID);
-            if (player != null)
-            {
-                if (!player.IsGhost())
-                    return actionManager.Fix((Student)player);
-            }
+            if (player != null && !player.IsGhost())
+                return actionManager.Fix((Student)player);
             return false;
         }
         public bool Escape(long playerID)
@@ -282,7 +287,50 @@ namespace Gaming
             }
             return false;
         }
-
+        public bool OpenDoorway(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null && !player.IsGhost())
+            {
+                return actionManager.OpenDoorway((Student)player);
+            }
+            return false;
+        }
+        public bool OpenChest(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                return actionManager.OpenChest(player);
+            }
+            return false;
+        }
+        public bool ClimbingThroughWindow(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                return actionManager.ClimbingThroughWindow(player);
+            }
+            return false;
+        }
+        public bool LockOrOpenDoor(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                return actionManager.LockOrOpenDoor(player);
+            }
+            return false;
+        }
         public void Attack(long playerID, double angle)
         {
             if (!gameMap.Timer.IsGaming)

@@ -7,6 +7,8 @@ namespace Preparation.Interface
     {
         public long TeamID { get; }
         public int HP { get; set; }
+        public int Score { get; }
+        public void AddScore(int add);
         public double Vampire { get; }
         public PlayerStateType PlayerState { get; set; }
         public bool IsGhost();

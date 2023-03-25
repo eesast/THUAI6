@@ -14,12 +14,8 @@ namespace GameClass.GameObj
             this.place = placeType;
             this.CanMove = false;
         }
-        public override bool IsRigid => true;
+        public override bool IsRigid => !isOpen;
         public override ShapeType Shape => ShapeType.Square;
-        protected override bool IgnoreCollideExecutor(IGameObj targetObj)
-        {
-            return isOpen;
-        }
 
         private bool isOpen = false;
         public bool IsOpen
@@ -38,8 +34,12 @@ namespace GameClass.GameObj
             get => openOrLockDegree;
             set
             {
-                lock (gameObjLock)
-                    openOrLockDegree = (value > 0) ? value : 0;
+                if (value > 0)
+                    lock (gameObjLock)
+                        openOrLockDegree = (value > GameData.degreeOfLockingOrOpeningTheDoor) ? GameData.degreeOfLockingOrOpeningTheDoor : value;
+                else
+                    lock (gameObjLock)
+                        openOrLockDegree = 0;
             }
         }
     }

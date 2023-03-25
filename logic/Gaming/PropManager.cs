@@ -62,21 +62,7 @@ namespace Gaming
                 Prop pickProp = new NullProp();
                 if (propType == PropType.Null)  // 自动检查有无道具可捡
                 {
-                    gameMap.GameObjLockDict[GameObjType.Prop].EnterReadLock();
-                    try
-                    {
-                        foreach (Prop prop in gameMap.GameObjDict[GameObjType.Prop])
-                        {
-                            if (GameData.IsInTheSameCell(prop.Position, player.Position))
-                            {
-                                player.PropInventory[indexing] = prop;
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Prop].ExitReadLock();
-                    }
+                    pickProp = player.PropInventory[indexing] = ((Prop?)gameMap.OneInTheSameCell(player.Position, GameObjType.Prop)) ?? new NullProp();
                 }
                 else
                 {
@@ -89,7 +75,7 @@ namespace Gaming
                             {
                                 if (GameData.IsInTheSameCell(prop.Position, player.Position) && prop.CanMove == false)
                                 {
-                                    player.PropInventory[indexing] = prop;
+                                    pickProp = player.PropInventory[indexing] = prop;
                                 }
                             }
                         }
@@ -135,7 +121,7 @@ namespace Gaming
                     case 3:
                         return new Spear(Pos, gameMap.GetPlaceType(Pos));
                     default:
-                        return null;
+                        return new NullProp();
                 }
             }
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Installer"
         mc:Ignorable="d"
-        Title="Installer" Height="200" Window.SizeToContent="Width">
+        Title="Installer" Window.SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="40" />
@@ -37,16 +37,18 @@
         <Button Grid.Row="3" Grid.Column="6" Name="GetRouteBtn" Content="Browse..." Command="{Binding ClickBrowseCommand}" Visibility="{Binding RouteBoxVis}" />
         <Button Grid.Row="3" Grid.Column="7" Name="SetBtm" Content="Confirm" Command="{Binding ClickConfirmCommand}" Visibility="{Binding RouteBoxVis}"/>
         <Button Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Name="UpdateBtn" Content="{Binding UpdateBtnCont}" Command="{Binding ClickUpdateCommand}" Visibility="{Binding MenuVis}" />
+        <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding UpdateInfo}" Visibility="{Binding MenuVis}" />
 
         <Button Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Name="MoveBtn" Content="Move" Command="{Binding ClickMoveCommand}" Visibility="{Binding MenuVis}" />
 
-        <Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Name="UninstBtn" Content="UnInstall" Command="{Binding ClickUninstCommand}" Visibility="{Binding MenuVis}" />
+        <Button Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" Name="UninstBtn" Content="UnInstall" Command="{Binding ClickUninstCommand}" Visibility="{Binding MenuVis}" />
+        <Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Name="MenuBackBtn" Content="回到登陆界面" Command="{Binding ClickBackCommand}" Visibility="{Binding MenuVis}" />
 
         <TextBlock Grid.Row="3" Grid.Column="4" Text="Processing" Grid.ColumnSpan="2" Visibility="{Binding ProgressVis}"/>
         <ProgressBar Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="6" Minimum="0" Maximum="100" Name="Progress" Visibility="{Binding ProgressVis}" IsIndeterminate="True"/>
 
-        <TextBlock Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="4" Text="操作完成！你可以继续操作或退出" Visibility="{Binding CompleteVis}"/>
-        <Button Grid.Row="6" Grid.Column="2" Name="BackBtn" Content="返回" Command="{Binding ClickBackCommand}" Visibility="{Binding CompleteVis}"/>
+        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4" Text="操作完成！你可以继续操作或退出" Visibility="{Binding CompleteVis}"/>
+        <Button Grid.Row="6" Grid.Column="1" Name="BackBtn" Content="返回" Command="{Binding ClickBackCommand}" Visibility="{Binding CompleteVis}" Click="BackBtn_Click"/>
         <Button Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="2" Name="ExitBtn" Content="退出" Command="{Binding ClickExitCommand}" Visibility="{Binding CompleteVis}"/>
 
         <TextBlock Grid.Row="3" Grid.Column="1" Text="账号：" Visibility="{Binding LoginVis}" />
@@ -64,7 +66,7 @@
         <Button Grid.Row="7" Grid.Column="1" Name="Replay" Content="打开回放" Command="{Binding ClickReplayCommand}" Visibility="{Binding WebVis}" />
         <Button Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Content="申请对战" Command="{Binding ClickRequestCommand}" Visibility="{Binding WebVis}" />
         <TextBox Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Text="{Binding Enemy}" Visibility="{Binding WebVis}" />
-        <Button Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Content="退出登录" Command="{Binding ClickLogoutCommand}" Visibility="{Binding WebVis}" />
+        <Button Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Content="退出登录" Command="{Binding ClickBackCommand}" Visibility="{Binding WebVis}" />
 
     </Grid>
 </Window>

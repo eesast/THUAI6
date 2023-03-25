@@ -87,7 +87,10 @@ namespace starter.viewmodel.settings
                 this.RaisePropertyChanged("MenuVis");
                 this.RaisePropertyChanged("RouteBoxVis");
                 this.RaisePropertyChanged("ProgressVis");
+                //TODO: Thread will be taken by process working and window will not refresh.
                 this.RaisePropertyChanged("CompleteVis");
+                this.RaisePropertyChanged("WindowWidth");
+                this.RaisePropertyChanged("WebVis");
             }
         }
         public string Intro
@@ -277,15 +280,17 @@ namespace starter.viewmodel.settings
                         if (Status == SettingsModel.Status.newUser)
                         {
                             Status = SettingsModel.Status.working;
+                            this.RaisePropertyChanged("ProgressVis");
                             if (obj.install())
                             {
-                                Status = SettingsModel.Status.menu;
+                                Status = SettingsModel.Status.successful;
                             }
 
                         }
                         else if (Status == SettingsModel.Status.move)
                         {
                             Status = SettingsModel.Status.working;
+                            this.RaisePropertyChanged("ProgressVis");
                             switch (obj.move())
                             {
                                 case -1:
@@ -295,6 +300,7 @@ namespace starter.viewmodel.settings
                                     Status = SettingsModel.Status.error;
                                     break;
                             }
+                            Status = SettingsModel.Status.successful;
                         }
                     }));
                 }
@@ -313,11 +319,13 @@ namespace starter.viewmodel.settings
                         if (obj.UpdatePlanned)
                         {
                             Status = SettingsModel.Status.working;
+                            this.RaisePropertyChanged("ProgressVis");
                             if (obj.Update())
                             {
 
                                 Status = SettingsModel.Status.successful;
-                                this.RaisePropertyChanged("UpdateButtonCont");
+                                this.RaisePropertyChanged("UpdateBtnCont");
+                                this.RaisePropertyChanged("UpdateInfo");
 
                             }
                             else
@@ -326,8 +334,10 @@ namespace starter.viewmodel.settings
                         else
                         {
                             Status = SettingsModel.Status.working;
+                            this.RaisePropertyChanged("ProgressVis");
                             Status = obj.checkUpdate();
-                            this.RaisePropertyChanged("UpdateButtonCont");
+                            this.RaisePropertyChanged("UpdateBtnCont");
+                            this.RaisePropertyChanged("UpdateInfo");
                         }
                     }));
                 }
@@ -359,6 +369,7 @@ namespace starter.viewmodel.settings
                     clickUninstCommand = new BaseCommand(new Action<object>(o =>
                     {
                         Status = SettingsModel.Status.working;
+                        this.RaisePropertyChanged("ProgressVis");
                         switch (obj.Uninst())
                         {
                             case -1:
@@ -405,7 +416,21 @@ namespace starter.viewmodel.settings
                 {
                     clickLaunchCommand = new BaseCommand(new Action<object>(o =>
                     {
-                        if (!obj.Launch())
+                        if (obj.UpdatePlanned)
+                        {
+                            Status = SettingsModel.Status.working;
+                            this.RaisePropertyChanged("ProgressVis");
+                            if (obj.Update())
+                            {
+                                this.RaisePropertyChanged("UpdateBtnCont");
+                                this.RaisePropertyChanged("LaunchBtnCont");
+                                Status = SettingsModel.Status.login;
+                                this.RaisePropertyChanged("UpdateInfo");
+                            }
+                            else
+                                Status = SettingsModel.Status.error;
+                        }
+                        else if (!obj.Launch())
                         {
                             Status = SettingsModel.Status.menu;
                         }
@@ -429,19 +454,19 @@ namespace starter.viewmodel.settings
                 return clickEditCommand;
             }
         }
-        private BaseCommand clickLogoutCommand;
-        public BaseCommand ClickLogoutCommand
+        private BaseCommand clickBackCommand;
+        public BaseCommand ClickBackCommand
         {
             get
             {
-                if (clickLogoutCommand == null)
+                if (clickBackCommand == null)
                 {
-                    clickLogoutCommand = new BaseCommand(new Action<object>(o =>
+                    clickBackCommand = new BaseCommand(new Action<object>(o =>
                     {
                         Status = SettingsModel.Status.login;
                     }));
                 }
-                return clickLogoutCommand;
+                return clickBackCommand;
             }
         }
     }

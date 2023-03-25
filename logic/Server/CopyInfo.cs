@@ -175,6 +175,17 @@ namespace Server
                     return Protobuf.StudentType.NullStudentType;
             }
         }
+
+        public static Preparation.Utility.CharacterType ToStudentType(Protobuf.StudentType characterType)
+        {
+            switch (characterType)
+            {
+                case Protobuf.StudentType.Athlete:
+                    return Preparation.Utility.CharacterType.Athlete;
+                default:
+                    return Preparation.Utility.CharacterType.Null;
+            }
+        }
         public static Protobuf.TrickerType ToTrickerType(Preparation.Utility.CharacterType characterType)
         {
             switch (characterType)
@@ -183,6 +194,17 @@ namespace Server
                     return Protobuf.TrickerType.Assassin;
                 default:
                     return Protobuf.TrickerType.NullTrickerType;
+            }
+        }
+
+        public static Preparation.Utility.CharacterType ToTrickerType(Protobuf.TrickerType characterType)
+        {
+            switch (characterType)
+            {
+                case Protobuf.TrickerType.Assassin:
+                    return Preparation.Utility.CharacterType.Assassin;
+                default:
+                    return Preparation.Utility.CharacterType.Null;
             }
         }
 

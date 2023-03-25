@@ -142,7 +142,7 @@ namespace Server
                             currentNews.Clear();
                         }
                         currentGameInfo.GameState = gameState;
-                        currentGameInfo.AllMessage = new(); // 还没写
+                        currentGameInfo.AllMessage = GetMessageOfAll();
                         mwr?.WriteOne(currentGameInfo);
                         break;
                     case GameState.GameStart:
@@ -160,7 +160,7 @@ namespace Server
                             currentNews.Clear();
                         }
                         currentGameInfo.GameState = gameState;
-                        currentGameInfo.AllMessage = new(); // 还没写
+                        currentGameInfo.AllMessage = GetMessageOfAll(); // 还没写
                         mwr?.WriteOne(currentGameInfo);
                         break;
                     default:
@@ -187,6 +187,13 @@ namespace Server
         {
             if (0 <= playerID && playerID < options.PlayerCountPerTeam) return 0;
             if (playerID == 4) return 1;
+            return -1;
+        }
+
+        private int PlayerTypeToTeamID(Protobuf.PlayerType playerType)
+        {
+            if (playerType == PlayerType.StudentPlayer) return 0;
+            if (playerType == PlayerType.TrickerPlayer) return 1;
             return -1;
         }
         private uint GetBirthPointIdx(long playerID)  // 获取出生点位置
@@ -304,29 +311,15 @@ namespace Server
             if (communicationToGameID[request.PlayerId] != GameObj.invalidID)  //是否已经添加了该玩家
                 return;
 
-            Preparation.Utility.CharacterType characterType = Preparation.Utility.CharacterType.Null; // 待修改
+            Preparation.Utility.CharacterType characterType = Preparation.Utility.CharacterType.Null;
             if (request.PlayerType == PlayerType.StudentPlayer)
-            {
-                switch (request.StudentType)
-                {
-                    default:
-                        characterType = Preparation.Utility.CharacterType.Athlete;
-                        break;
-                }
-            }
+                characterType = CopyInfo.ToStudentType(request.StudentType);
             else if (request.PlayerType == PlayerType.TrickerPlayer)
-            {
-                switch (request.TrickerType)
-                {
-                    default:
-                        characterType = Preparation.Utility.CharacterType.Assassin;
-                        break;
-                }
-            }
+                characterType = CopyInfo.ToTrickerType(request.TrickerType);
 
             lock (addPlayerLock)
             {
-                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(request.PlayerId), PlayerIDToTeamID(request.PlayerId), request.PlayerId, characterType);
+                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(request.PlayerId), PlayerTypeToTeamID(request.PlayerType), request.PlayerId, characterType);
                 long newPlayerID = game.AddPlayer(playerInitInfo);
                 if (newPlayerID == GameObj.invalidID)
                     return;
@@ -381,7 +374,7 @@ namespace Server
             if (!game.GameMap.Timer.IsGaming) moveRes.ActSuccess = false;
             return Task.FromResult(moveRes);
         }
-        
+
         public override Task<BoolRes> SendMessage(SendMsg request, ServerCallContext context)
         {
             var boolRes = new BoolRes();
@@ -551,7 +544,7 @@ namespace Server
             boolRes.ActSuccess = game.Stop(gameID);
             return Task.FromResult(boolRes);
         }
-        
+
 
         public override Task<BoolRes> SkipWindow(IDMsg request, ServerCallContext context)
         {

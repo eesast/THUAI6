@@ -341,24 +341,24 @@ namespace Gaming
                 _ = attackManager.Attack(player, angle);
             }
         }
-        public void UseProp(long playerID, int indexing)
+        public void UseProp(long playerID, PropType propType)
         {
             if (!gameMap.Timer.IsGaming)
                 return;
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                propManager.UseProp(player, indexing);
+                propManager.UseProp(player, propType);
             }
         }
-        public void ThrowProp(long playerID, int indexing)
+        public void ThrowProp(long playerID, PropType propType)
         {
             if (!gameMap.Timer.IsGaming)
                 return;
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                propManager.ThrowProp(player, indexing);
+                propManager.ThrowProp(player, propType);
             }
         }
         public bool PickProp(long playerID, PropType propType = PropType.Null)
@@ -373,14 +373,14 @@ namespace Gaming
             return false;
         }
 
-        public bool UseActiveSkill(long playerID, ActiveSkillType activeSkillType)
+        public bool UseActiveSkill(long playerID, int skillNum)
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                return skillManager.UseActiveSkill(player, activeSkillType);
+                return skillManager.UseActiveSkill(player, player.Occupation.ListOfIActiveSkill[skillNum]);
             }
             else
                 return false;

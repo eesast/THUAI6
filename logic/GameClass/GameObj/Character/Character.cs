@@ -460,6 +460,19 @@ namespace GameClass.GameObj
             }
         }
 
+        public Prop UseProp(PropType propType)
+        {
+            lock (gameObjLock)
+            {
+                foreach (Prop prop in propInventory)
+                {
+                    if (prop.GetPropType() == propType)
+                        return prop;
+                }
+                return new NullProp();
+            }
+        }
+
         /// <summary>
         /// 如果indexing==GameData.maxNumOfPropInPropInventory表明道具栏为满
         /// </summary>

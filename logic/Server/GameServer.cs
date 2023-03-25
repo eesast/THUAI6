@@ -406,11 +406,11 @@ namespace Server
         {
             return base.Graduate(request, context);
         }
-        public override Task<BoolRes> StartRescueMate(IDMsg request, ServerCallContext context)
+        public override Task<BoolRes> StartRescueMate(TreatAndRescueMsg request, ServerCallContext context)
         {
             return base.StartRescueMate(request, context);
         }
-        public override Task<BoolRes> StartTreatMate(IDMsg request, ServerCallContext context)
+        public override Task<BoolRes> StartTreatMate(TreatAndRescueMsg request, ServerCallContext context)
         {
             return base.StartTreatMate(request, context);
         }

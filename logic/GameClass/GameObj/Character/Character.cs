@@ -281,7 +281,7 @@ namespace GameClass.GameObj
         {
             int previousHp = hp;
             lock (gameObjLock)
-                hp = hp >= sub ? 0 : hp - sub;
+                hp = hp <= sub ? 0 : hp - sub;
             Debugger.Output(this, " hp has subed to: " + hp.ToString());
             return previousHp - hp;
         }

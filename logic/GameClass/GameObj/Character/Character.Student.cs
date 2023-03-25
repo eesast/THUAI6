@@ -25,7 +25,7 @@ namespace GameClass.GameObj
                 if (bullet.Parent.IsGhost() != this.IsGhost())
                 {
 #if DEBUG
-                    Debugger.Output(bullet, bullet.AP.ToString());
+                    Debugger.Output(bullet, " 's AP is " + bullet.AP.ToString());
 #endif
                     if (TryUseShield())
                     {
@@ -43,10 +43,21 @@ namespace GameClass.GameObj
                     }
                     else
                     {
-                        int subHp = (bullet.HasSpear) ? TrySubHp(bullet.AP + GameData.ApSpearAdd) : TrySubHp(bullet.AP);
+                        int subHp;
+                        if (bullet.HasSpear)
+                        {
+                            subHp = TrySubHp(bullet.AP + GameData.ApSpearAdd);
 #if DEBUG
-                        Debugger.Output(this, "is being shot with spear! Now his hp is" + HP.ToString());
+                            Debugger.Output(this, "is being shot with Spear! Now his hp is" + HP.ToString());
 #endif
+                        }
+                        else
+                        {
+                            subHp = TrySubHp(bullet.AP);
+#if DEBUG
+                            Debugger.Output(this, "is being shot! Now his hp is" + HP.ToString());
+#endif
+                        }
                         bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
                         bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                     }

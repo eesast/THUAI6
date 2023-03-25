@@ -1,6 +1,6 @@
 @echo off
 
-start cmd /k ..\Server\bin\Debug\net6.0\Server.exe --port 8888 --teamCount 2 --playerNum 2 --gameTimeInSecond 600 --fileName test 
+start cmd /k ..\Server\bin\Debug\net6.0\Server.exe --port 8888 -s 2 -t 0 --gameTimeInSecond 600 --fileName test 
 
 ping -n 2 127.0.0.1 > NUL
 

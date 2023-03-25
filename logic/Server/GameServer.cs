@@ -186,7 +186,7 @@ namespace Server
         private int PlayerIDToTeamID(long playerID)
         {
             if (0 <= playerID && playerID < options.StudentCount) return 0;
-            if (playerID == 4) return 1;
+            if (options.MaxStudentCount <= playerID && playerID < options.MaxStudentCount + options.TrickerCount) return 1;
             return -1;
         }
 
@@ -202,7 +202,7 @@ namespace Server
         }
         private bool ValidPlayerID(long playerID)
         {
-            if ((0 <= playerID && playerID < options.StudentCount) || (options.MaxStudentCount <= playerID && playerID < options.MaxStudentCount + 1))
+            if ((0 <= playerID && playerID < options.StudentCount) || (options.MaxStudentCount <= playerID && playerID < options.MaxStudentCount + options.TrickerCount))
                 return true;
             return false;
         }

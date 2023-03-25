@@ -18,8 +18,10 @@ extern const THUAI6::StudentType studentType = THUAI6::StudentType::Athlete;
 void AI::play(IStudentAPI& api)
 {
     api.Move(100, 1);
+    api.PrintSelfInfo();
 }
 
 void AI::play(ITrickerAPI& api)
 {
+    api.Move(100, 1);
 }

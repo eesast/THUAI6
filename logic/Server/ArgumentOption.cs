@@ -18,14 +18,14 @@ namespace Server
         [Option('p', "port", Required = true, HelpText = "Server listening port")]
         public ushort ServerPort { get; set; } = 8888;
 
-        [Option('n', "playerNum", Required = false, HelpText = "The number of teams, 1 by defualt")]
+        [Option('n', "playerNum", Required = false, HelpText = "The number of players, 1 by defualt")]
         public ushort playerNum { get; set; } = 1;
 
         [Option('t', "teamCount", Required = false, HelpText = "The number of teams, 1 by defualt")]
-        public ushort TeamCount { get; set; } = 1;
+        public ushort TeamCount { get; set; } = 2;
 
-        [Option('c', "playerCount", Required = false, HelpText = "The number of players per team, 1 by default")]
-        public ushort PlayerCountPerTeam { get; set; } = 1;
+        [Option('c', "playerCount", Required = false, HelpText = "The number of students, 1 by default")]
+        public ushort PlayerCountPerTeam { get; set; } = 4;
 
         [Option('g', "gameTimeInSecond", Required = false, HelpText = "The time of the game in second, 10 minutes by default")]
         public uint GameTimeInSecond { get; set; } = 10 * 60;

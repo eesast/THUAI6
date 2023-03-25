@@ -70,7 +70,9 @@ namespace Proto2THUAI6
         {protobuf::PlaceType::GATE, THUAI6::PlaceType::Gate},
         {protobuf::PlaceType::HIDDEN_GATE, THUAI6::PlaceType::HiddenGate},
         {protobuf::PlaceType::WINDOW, THUAI6::PlaceType::Window},
-        {protobuf::PlaceType::DOOR, THUAI6::PlaceType::Door},
+        {protobuf::PlaceType::DOOR3, THUAI6::PlaceType::Door3},
+        {protobuf::PlaceType::DOOR5, THUAI6::PlaceType::Door5},
+        {protobuf::PlaceType::DOOR6, THUAI6::PlaceType::Door6},
         {protobuf::PlaceType::CHEST, THUAI6::PlaceType::Chest},
     };
 
@@ -82,9 +84,9 @@ namespace Proto2THUAI6
 
     inline std::map<protobuf::PropType, THUAI6::PropType> propTypeDict{
         {protobuf::PropType::NULL_PROP_TYPE, THUAI6::PropType::NullPropType},
-        {protobuf::PropType::PTYPE1, THUAI6::PropType::PropType1},
-        {protobuf::PropType::PTYPE2, THUAI6::PropType::PropType2},
-        {protobuf::PropType::PTYPE3, THUAI6::PropType::PropType3},
+        {protobuf::PropType::KEY3, THUAI6::PropType::Key3},
+        {protobuf::PropType::KEY5, THUAI6::PropType::Key5},
+        {protobuf::PropType::KEY6, THUAI6::PropType::Key6},
         {protobuf::PropType::PTYPE4, THUAI6::PropType::PropType4},
     };
 
@@ -96,7 +98,7 @@ namespace Proto2THUAI6
 
     inline std::map<protobuf::StudentType, THUAI6::StudentType> studentTypeDict{
         {protobuf::StudentType::NULL_STUDENT_TYPE, THUAI6::StudentType::NullStudentType},
-        {protobuf::StudentType::STUDENTTYPE1, THUAI6::StudentType::StudentType1},
+        {protobuf::StudentType::ATHLETE, THUAI6::StudentType::Athlete},
         {protobuf::StudentType::STUDENTTYPE2, THUAI6::StudentType::StudentType2},
         {protobuf::StudentType::STUDENTTYPE3, THUAI6::StudentType::StudentType3},
         {protobuf::StudentType::STUDENTTYPE4, THUAI6::StudentType::StudentType4},
@@ -104,7 +106,7 @@ namespace Proto2THUAI6
 
     inline std::map<protobuf::TrickerType, THUAI6::TrickerType> trickerTypeDict{
         {protobuf::TrickerType::NULL_TRICKER_TYPE, THUAI6::TrickerType::NullTrickerType},
-        {protobuf::TrickerType::TRICKERTYPE1, THUAI6::TrickerType::TrickerType1},
+        {protobuf::TrickerType::ASSASSIN, THUAI6::TrickerType::Assassin},
         {protobuf::TrickerType::TRICKERTYPE2, THUAI6::TrickerType::TrickerType2},
         {protobuf::TrickerType::TRICKERTYPE3, THUAI6::TrickerType::TrickerType3},
         {protobuf::TrickerType::TRICKERTYPE4, THUAI6::TrickerType::TrickerType4},
@@ -138,6 +140,14 @@ namespace Proto2THUAI6
         {protobuf::PlayerState::STUNNED, THUAI6::PlayerState::Stunned},
         {protobuf::PlayerState::RESCUING, THUAI6::PlayerState::Rescuing},
         {protobuf::PlayerState::TREATING, THUAI6::PlayerState::Treating},
+        {protobuf::PlayerState::SWINGING, THUAI6::PlayerState::Swinging},
+        {protobuf::PlayerState::ATTACKING, THUAI6::PlayerState::Attacking},
+        {protobuf::PlayerState::LOCKING, THUAI6::PlayerState::Locking},
+        {protobuf::PlayerState::RUMMAGING, THUAI6::PlayerState::Rummaging},
+        {protobuf::PlayerState::CLIMBING, THUAI6::PlayerState::Climbing},
+        {protobuf::PlayerState::OPENING_A_CHEST, THUAI6::PlayerState::OpeningAChest},
+        {protobuf::PlayerState::USING_SPECIAL_SKILL, THUAI6::PlayerState::UsingSpecialSkill},
+        {protobuf::PlayerState::OPENING_A_GATE, THUAI6::PlayerState::OpeningAGate},
     };
 
     inline std::map<protobuf::GameState, THUAI6::GameState> gameStateDict{
@@ -149,9 +159,9 @@ namespace Proto2THUAI6
 
     inline std::map<protobuf::BulletType, THUAI6::BulletType> bulletTypeDict{
         {protobuf::BulletType::NULL_BULLET_TYPE, THUAI6::BulletType::NullBulletType},
-        {protobuf::BulletType::COMMON_BULLET, THUAI6::BulletType::CommonBullet},
+        {protobuf::BulletType::FLYING_KNIFE, THUAI6::BulletType::FlyingKnife},
+        {protobuf::BulletType::COMMON_ATTACK_OF_TRICKER, THUAI6::BulletType::CommonAttackOfTricker},
         {protobuf::BulletType::FAST_BULLET, THUAI6::BulletType::FastBullet},
-        {protobuf::BulletType::LINE_BULLET, THUAI6::BulletType::LineBullet},
         {protobuf::BulletType::ORDINARY_BULLET, THUAI6::BulletType::OrdinaryBullet},
         {protobuf::BulletType::ATOM_BOMB, THUAI6::BulletType::AtomBomb},
     };
@@ -185,7 +195,6 @@ namespace Proto2THUAI6
         tricker->bulletType = bulletTypeDict[trickerMsg.bullet_type()];
         tricker->trickDesire = trickerMsg.trick_desire();
         tricker->classVolume = trickerMsg.class_volume();
-        tricker->damage = trickerMsg.damage();
         for (int i = 0; i < trickerMsg.time_until_skill_available().size(); i++)
             tricker->timeUntilSkillAvailable.push_back(trickerMsg.time_until_skill_available(i));
         tricker->place = placeTypeDict[trickerMsg.place()];
@@ -227,7 +236,7 @@ namespace Proto2THUAI6
         for (int i = 0; i < studentMsg.prop().size(); i++)
             student->props.push_back(propTypeDict[studentMsg.prop(i)]);
         student->place = placeTypeDict[studentMsg.place()];
-        student->playerState = playerStateDict[studentMsg.state()];
+        student->playerState = playerStateDict[studentMsg.player_state()];
         student->determination = studentMsg.determination();
         student->addiction = studentMsg.addiction();
         student->studentType = studentTypeDict[studentMsg.student_type()];
@@ -245,9 +254,7 @@ namespace Proto2THUAI6
         prop->type = propTypeDict[propMsg.type()];
         prop->place = placeTypeDict[propMsg.place()];
         prop->guid = propMsg.guid();
-        prop->size = propMsg.size();
         prop->facingDirection = propMsg.facing_direction();
-        prop->isMoving = propMsg.is_moving();
         return prop;
     }
 
@@ -293,6 +300,14 @@ namespace Proto2THUAI6
         return bombedBullet;
     }
 
+    inline THUAI6::HiddenGateState Bool2HiddenGateState(bool gateMsg)
+    {
+        if (gateMsg)
+            return THUAI6::HiddenGateState::Opened;
+        else
+            return THUAI6::HiddenGateState::Refreshed;
+    }
+
 }  // namespace Proto2THUAI6
 
 namespace THUAI62Proto
@@ -306,7 +321,9 @@ namespace THUAI62Proto
         {THUAI6::PlaceType::ClassRoom, protobuf::PlaceType::CLASSROOM},
         {THUAI6::PlaceType::Gate, protobuf::PlaceType::GATE},
         {THUAI6::PlaceType::HiddenGate, protobuf::PlaceType::HIDDEN_GATE},
-        {THUAI6::PlaceType::Door, protobuf::PlaceType::DOOR},
+        {THUAI6::PlaceType::Door3, protobuf::PlaceType::DOOR3},
+        {THUAI6::PlaceType::Door5, protobuf::PlaceType::DOOR5},
+        {THUAI6::PlaceType::Door6, protobuf::PlaceType::DOOR6},
         {THUAI6::PlaceType::Window, protobuf::PlaceType::WINDOW},
     };
 
@@ -318,9 +335,9 @@ namespace THUAI62Proto
 
     inline std::map<THUAI6::PropType, protobuf::PropType> propTypeDict{
         {THUAI6::PropType::NullPropType, protobuf::PropType::NULL_PROP_TYPE},
-        {THUAI6::PropType::PropType1, protobuf::PropType::PTYPE1},
-        {THUAI6::PropType::PropType2, protobuf::PropType::PTYPE2},
-        {THUAI6::PropType::PropType3, protobuf::PropType::PTYPE3},
+        {THUAI6::PropType::Key3, protobuf::PropType::KEY3},
+        {THUAI6::PropType::Key5, protobuf::PropType::KEY5},
+        {THUAI6::PropType::Key6, protobuf::PropType::KEY6},
         {THUAI6::PropType::PropType4, protobuf::PropType::PTYPE4},
     };
 
@@ -332,7 +349,7 @@ namespace THUAI62Proto
 
     inline std::map<THUAI6::StudentType, protobuf::StudentType> studentTypeDict{
         {THUAI6::StudentType::NullStudentType, protobuf::StudentType::NULL_STUDENT_TYPE},
-        {THUAI6::StudentType::StudentType1, protobuf::StudentType::STUDENTTYPE1},
+        {THUAI6::StudentType::Athlete, protobuf::StudentType::ATHLETE},
         {THUAI6::StudentType::StudentType2, protobuf::StudentType::STUDENTTYPE2},
         {THUAI6::StudentType::StudentType3, protobuf::StudentType::STUDENTTYPE3},
         {THUAI6::StudentType::StudentType4, protobuf::StudentType::STUDENTTYPE4},
@@ -348,7 +365,7 @@ namespace THUAI62Proto
 
     inline std::map<THUAI6::TrickerType, protobuf::TrickerType> trickerTypeDict{
         {THUAI6::TrickerType::NullTrickerType, protobuf::TrickerType::NULL_TRICKER_TYPE},
-        {THUAI6::TrickerType::TrickerType1, protobuf::TrickerType::TRICKERTYPE1},
+        {THUAI6::TrickerType::Assassin, protobuf::TrickerType::ASSASSIN},
         {THUAI6::TrickerType::TrickerType2, protobuf::TrickerType::TRICKERTYPE2},
         {THUAI6::TrickerType::TrickerType3, protobuf::TrickerType::TRICKERTYPE3},
         {THUAI6::TrickerType::TrickerType4, protobuf::TrickerType::TRICKERTYPE4},

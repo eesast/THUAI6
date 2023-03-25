@@ -45,6 +45,8 @@ public:
     [[nodiscard]] virtual int32_t GetChestProgress(int32_t cellX, int32_t cellY) const = 0;
     [[nodiscard]] virtual int32_t GetGateProgress(int32_t cellX, int32_t cellY) const = 0;
     [[nodiscard]] virtual bool IsDoorOpen(int32_t cellX, int32_t cellY) const = 0;
+    [[nodiscard]] virtual THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const = 0;
+    [[nodiscard]] virtual int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const = 0;
 
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const = 0;
 
@@ -130,6 +132,8 @@ public:
     [[nodiscard]] virtual int32_t GetChestProgress(int32_t cellX, int32_t cellY) const = 0;
     [[nodiscard]] virtual int32_t GetGateProgress(int32_t cellX, int32_t cellY) const = 0;
     [[nodiscard]] virtual int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const = 0;
+    [[nodiscard]] virtual THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const = 0;
+    [[nodiscard]] virtual int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const = 0;
 
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const = 0;
 
@@ -245,6 +249,8 @@ public:
     [[nodiscard]] int32_t GetChestProgress(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetGateProgress(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const override;
+    [[nodiscard]] THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const override;
+    [[nodiscard]] int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const override;
 
     [[nodiscard]] std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const override;
 
@@ -325,6 +331,8 @@ public:
     [[nodiscard]] int32_t GetChestProgress(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetGateProgress(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const override;
+    [[nodiscard]] int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const override;
+    [[nodiscard]] THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const override;
 
     [[nodiscard]] std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const override;
 
@@ -397,6 +405,8 @@ public:
     [[nodiscard]] int32_t GetChestProgress(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetGateProgress(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const override;
+    [[nodiscard]] int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const override;
+    [[nodiscard]] THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const override;
 
     [[nodiscard]] std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const override;
 
@@ -464,6 +474,8 @@ public:
     [[nodiscard]] int32_t GetChestProgress(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetGateProgress(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const override;
+    [[nodiscard]] int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const override;
+    [[nodiscard]] THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const override;
 
     [[nodiscard]] std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const override;
 

@@ -96,11 +96,13 @@ private:
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Student> StudentGetSelfInfo() const override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> TrickerGetSelfInfo() const override;
+    [[nodiscard]] THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const override;
 
     [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
     [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const override;
 
     [[nodiscard]] bool IsDoorOpen(int32_t cellX, int32_t cellY) const override;
+    [[nodiscard]] int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetChestProgress(int32_t cellX, int32_t cellY) const override;
     [[nodiscard]] int32_t GetGateProgress(int32_t cellX, int32_t cellY) const override;

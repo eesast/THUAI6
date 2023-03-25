@@ -20,7 +20,6 @@ namespace Server
         protected readonly ArgumentOptions options;
         private HttpSender? httpSender;
         private object gameLock = new();
-        public int PlayerNum => options.playerNum;  // 注意修改
         private MessageToClient currentGameInfo = new();
         private MessageOfObj currentMapMsg = new();
         private object newsLock = new();
@@ -29,6 +28,7 @@ namespace Server
         protected readonly Game game;
         private uint spectatorMinPlayerID = 2023;
         private List<uint> spectatorList = new List<uint>();
+        public int playerNum;
         public int TeamCount => options.TeamCount;
         protected long[] communicationToGameID;  // 通信用的ID映射到游戏内的ID，通信中0-3为Student，4为Tricker
         private readonly object messageToAllClientsLock = new();
@@ -185,8 +185,8 @@ namespace Server
 
         private int PlayerIDToTeamID(long playerID)
         {
-            if (0 <= playerID && playerID < options.PlayerCountPerTeam) return 0;
-            if (playerID == 4) return 1;
+            if (0 <= playerID && playerID < options.StudentCount) return 0;
+            if (options.MaxStudentCount <= playerID && playerID < options.MaxStudentCount + options.TrickerCount) return 1;
             return -1;
         }
 
@@ -202,7 +202,7 @@ namespace Server
         }
         private bool ValidPlayerID(long playerID)
         {
-            if ((0 <= playerID && playerID < options.PlayerCountPerTeam) || playerID == 4)
+            if ((0 <= playerID && playerID < options.StudentCount) || (options.MaxStudentCount <= playerID && playerID < options.MaxStudentCount + options.TrickerCount))
                 return true;
             return false;
         }
@@ -276,7 +276,7 @@ namespace Server
             var onConnection = new BoolRes();
             lock (gameLock)
             {
-                if (0 <= request.PlayerId && request.PlayerId < PlayerNum)  // 注意修改
+                if (0 <= request.PlayerId && request.PlayerId < playerNum)  // 注意修改
                 {
                     onConnection.ActSuccess = true;
                     Console.WriteLine(onConnection.ActSuccess);
@@ -331,7 +331,7 @@ namespace Server
                 lock (semaDict)
                 {
                     semaDict.Add(request.PlayerId, temp);
-                    start = semaDict.Count == PlayerNum;
+                    start = semaDict.Count == playerNum;
                 }
                 if (start) StartGame();
             }
@@ -564,9 +564,9 @@ namespace Server
         public GameServer(ArgumentOptions options)
         {
             this.options = options;
-            //if (options.mapResource == DefaultArgumentOptions.MapResource)
-            //    this.game = new Game(MapInfo.defaultMap, options.TeamCount);
-            //else
+            if (options.mapResource == DefaultArgumentOptions.MapResource)
+                this.game = new Game(MapInfo.defaultMap, options.TeamCount);
+            else
             {
                 uint[,] map = new uint[GameData.rows, GameData.cols];
                 try
@@ -609,8 +609,9 @@ namespace Server
                 }
                 finally { this.game = new Game(map, options.TeamCount); }
             }
+            playerNum = options.StudentCount + options.TrickerCount;
             currentMapMsg = MapMsg(game.GameMap.ProtoGameMap);
-            communicationToGameID = new long[options.PlayerCountPerTeam + 1];
+            communicationToGameID = new long[options.MaxStudentCount + options.TrickerCount];
             //创建server时先设定待加入人物都是invalid
             for (int i = 0; i < communicationToGameID.GetLength(0); i++)
             {
@@ -621,7 +622,7 @@ namespace Server
             {
                 try
                 {
-                    mwr = new MessageWriter(options.FileName, options.TeamCount, options.PlayerCountPerTeam);
+                    mwr = new MessageWriter(options.FileName, options.TeamCount, options.StudentCount);
                 }
                 catch
                 {

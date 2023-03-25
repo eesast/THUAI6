@@ -358,17 +358,17 @@ namespace Gaming
                 _ = attackManager.Attack(player, angle);
             }
         }
-        public void UseProp(long playerID, PropType propType)
+        public void UseProp(long playerID, PropType propType = PropType.Null)
         {
             if (!gameMap.Timer.IsGaming)
                 return;
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
-                propManager.UseProp(player, propType);
+                PropManager.UseProp(player, propType);
             }
         }
-        public void ThrowProp(long playerID, PropType propType)
+        public void ThrowProp(long playerID, PropType propType = PropType.Null)
         {
             if (!gameMap.Timer.IsGaming)
                 return;

@@ -821,7 +821,8 @@ namespace Downloader
                 using StreamWriter sw = new StreamWriter(fs2);
                 fs2.SetLength(0);
                 sw.Write(JsonConvert.SerializeObject(dict));
-
+                sw.Close();
+                fs2.Close();
                 try
                 {
                     File.Delete(Data.path);

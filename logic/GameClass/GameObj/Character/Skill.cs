@@ -5,7 +5,7 @@ namespace GameClass.GameObj
 {
     public class BecomeVampire : IActiveSkill  // 化身吸血鬼
     {
-        public int SkillCD => GameData.commonSkillCD / 3 * 4;
+        public int SkillCD => GameData.commonSkillCD * 4 / 3;
         public int DurationTime => GameData.commonSkillTime;
 
         private readonly object commonSkillLock = new object();
@@ -14,7 +14,7 @@ namespace GameClass.GameObj
     public class CanBeginToCharge : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD / 5;
-        public int DurationTime => GameData.commonSkillTime / 10 * 6;
+        public int DurationTime => GameData.commonSkillTime * 6 / 10;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
@@ -23,7 +23,7 @@ namespace GameClass.GameObj
     public class BecomeInvisible : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => GameData.commonSkillTime / 10 * 6;
+        public int DurationTime => GameData.commonSkillTime * 6 / 10;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
@@ -32,7 +32,7 @@ namespace GameClass.GameObj
     public class Punish : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => GameData.commonSkillTime / 10 * 6;
+        public int DurationTime => 0;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
@@ -40,7 +40,7 @@ namespace GameClass.GameObj
 
     public class NuclearWeapon : IActiveSkill  // 核武器
     {
-        public int SkillCD => GameData.commonSkillCD / 3 * 7;
+        public int SkillCD => GameData.commonSkillCD * 7 / 3;
         public int DurationTime => GameData.commonSkillTime / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
@@ -48,7 +48,7 @@ namespace GameClass.GameObj
 
     public class UseKnife : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD / 3 * 2;
+        public int SkillCD => GameData.commonSkillCD * 2 / 3;
         public int DurationTime => GameData.commonSkillTime / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
@@ -57,7 +57,7 @@ namespace GameClass.GameObj
     public class SuperFast : IActiveSkill  // 3倍速
     {
         public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => GameData.commonSkillTime / 10 * 4;
+        public int DurationTime => GameData.commonSkillTime * 4 / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
     }

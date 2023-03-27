@@ -7,9 +7,11 @@ namespace Preparation.Utility
     {
         #region 基本常数
         public const int numOfStepPerSecond = 20;     // 每秒行走的步数
+
+        public const int tolerancesLength = 10;
+
         public const int frameDuration = 50;         // 每帧时长
         public const int checkInterval = 50;  // 检查位置标志、补充子弹的帧时长
-
         public const long gameDuration = 600000;      // 游戏时长600000ms = 10min
 
         public const int MinSpeed = 1;             // 最小速度
@@ -63,7 +65,7 @@ namespace Preparation.Utility
         #endregion
         #region 角色相关
         public const int numOfStudent = 4;
-        public const int characterRadius = numOfPosGridPerCell / 2 / 5 * 4;  // 人物半径
+        public const int characterRadius = numOfPosGridPerCell * 4 / 10;  // 人物半径
 
         public const int basicTreatSpeed = 100;
         public const int basicFixSpeed = 100;
@@ -79,7 +81,12 @@ namespace Preparation.Utility
         public const int basicTreatmentDegree = 1500000;
         public const int basicTimeOfRescue = 1000;
 
-        public const int basicMoveSpeed = 9000;//DEBUG //1270;TRUE                      // 基本移动速度，单位：s-1
+#if DEBUG
+        public const int basicMoveSpeed = 9000;// 基本移动速度，单位：s-1
+#else
+        public const int basicMoveSpeed = 1270;
+#endif
+
         public const int characterMaxSpeed = 12000;                  // 最大速度
 
         public const double basicConcealment = 1.0;
@@ -177,7 +184,7 @@ namespace Preparation.Utility
         public const int PropRadius = numOfPosGridPerCell / 2;
         public const int PropMoveSpeed = 3000;
         public const int PropMaxMoveDistance = 15 * numOfPosGridPerCell;
-        public const long PropProduceTime = 10000;
+        public const long PropProduceTime = 20000;
         public const int PropDuration = 10000;
 
         public const int ApPropAdd = basicApOfGhost * 12 / 10;

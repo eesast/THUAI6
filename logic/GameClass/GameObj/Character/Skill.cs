@@ -80,7 +80,7 @@ namespace GameClass.GameObj
                     return new BecomeInvisible();
                 case ActiveSkillType.UseKnife:
                     return new UseKnife();
-                case ActiveSkillType.CanBeginToCharge: 
+                case ActiveSkillType.CanBeginToCharge:
                     return new CanBeginToCharge();
                 case ActiveSkillType.Punish:
                     return new Punish();

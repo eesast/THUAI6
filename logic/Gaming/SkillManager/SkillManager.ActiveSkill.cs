@@ -31,47 +31,48 @@ namespace Gaming
                 if ((!player.Commandable())) return false;
                 IActiveSkill skill = player.UseIActiveSkill(ActiveSkillType.CanBeginToCharge);
                 Debugger.Output(player, "can begin to charge!");
-                new Thread
-          (
-              () =>
-              {
-                                new FrameRateTaskExecutor<int>(
-                    loopCondition: () => player.Commandable() && gameMap.Timer.IsGaming,
-                    loopToDo: () =>
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                        try
-                        {
-                            foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
-                            {
-                                if (character.IsGhost() != player.IsGhost() && XY.Distance(player.Position + new XY(player.FacingDirection, player.Radius), character.Position) <= character.Radius)
-                                {
-                                    AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenCharge);
-                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenCharge));
-                                    AttackManager.BeStunned(player, GameData.TimeOfStudentFaintingWhenCharge);
-                                    break;
-                                }
-                            }
-                        }
-                        finally
-                        {
-                            gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
-                        }
-                    },
-                     timeInterval: GameData.frameDuration,
-                     finallyReturn: () => 0,
-                     maxTotalDuration: skill.DurationTime
-                      )
 
-    .Start();
-              }
-
-          )
-                { IsBackground = true }.Start();
 
                 return ActiveSkillEffect(skill, player, () =>
                 {
                     player.AddMoveSpeed(skill.DurationTime, 3.0);
+                    new Thread
+        (
+                () =>
+                {
+                    new FrameRateTaskExecutor<int>(
+          loopCondition: () => player.Commandable() && gameMap.Timer.IsGaming,
+          loopToDo: () =>
+                      {
+                          gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+                          try
+                          {
+                              foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                              {
+                                  if (character.IsGhost() != player.IsGhost() && Math.Max(XY.Distance(player.Position, character.Position), XY.Distance(player.Position + new XY(player.FacingDirection, player.Radius), character.Position)) <= character.Radius + player.Radius + GameData.tolerancesLength)
+                                  {
+                                      AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenCharge);
+                                      player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenCharge));
+                                      AttackManager.BeStunned(player, GameData.TimeOfStudentFaintingWhenCharge);
+                                      break;
+                                  }
+                              }
+                          }
+                          finally
+                          {
+                              gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                          }
+                      },
+           timeInterval: GameData.frameDuration,
+           finallyReturn: () => 0,
+           maxTotalDuration: skill.DurationTime
+            )
+
+    .Start();
+                }
+
+            )
+                    { IsBackground = true }.Start();
                 },
                                                       () =>
                                                       {

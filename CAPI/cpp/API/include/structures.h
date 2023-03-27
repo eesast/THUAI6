@@ -263,9 +263,6 @@ namespace THUAI6
         int32_t studentQuited;
         int32_t studentScore;
         int32_t trickerScore;
-        bool gateOpened;
-        bool hiddenGateRefreshed;
-        bool hiddenGateOpened;
     };
 
     // 仅供DEBUG使用，名称可改动

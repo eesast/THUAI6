@@ -17,8 +17,6 @@ namespace Gaming
         {
             private readonly Map gameMap;
 
-            //private MoveEngine moveEngine;
-
             private readonly List<XY> availableCellForGenerateProp;
 
             public static void UseProp(Character player, PropType propType)

@@ -281,7 +281,7 @@ namespace GameClass.GameObj
         {
             int previousHp = hp;
             lock (gameObjLock)
-                hp = hp >= sub ? 0 : hp - sub;
+                hp = hp <= sub ? 0 : hp - sub;
             Debugger.Output(this, " hp has subed to: " + hp.ToString());
             return previousHp - hp;
         }
@@ -340,8 +340,8 @@ namespace GameClass.GameObj
             }
         }
 
-        public bool NoHp() => (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
-                                                            && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued);
+        public bool NoHp() => (playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
+                                                            || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued);
         public bool Commandable() => (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
                                                             && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
                                                              && playerState != PlayerStateType.Swinging && playerState != PlayerStateType.TryingToAttack
@@ -368,7 +368,7 @@ namespace GameClass.GameObj
             lock (gameObjLock)
             {
                 score += add;
-                Debugger.Output(this, " 's score has been added to: " + score.ToString());
+                //Debugger.Output(this, " 's score has been added to: " + score.ToString());
             }
         }
         /// <summary>
@@ -466,17 +466,25 @@ namespace GameClass.GameObj
             {
                 if (propType == PropType.Null)
                 {
-                    foreach (Prop prop in propInventory)
+                    for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
                     {
-                        if (prop.GetPropType() != PropType.Null)
+                        if (PropInventory[indexing].GetPropType() != PropType.Null)
+                        {
+                            Prop prop = PropInventory[indexing];
+                            PropInventory[indexing] = new NullProp();
                             return prop;
+                        }
                     }
                 }
                 else
-                    foreach (Prop prop in propInventory)
+                    for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
                     {
-                        if (prop.GetPropType() == propType)
+                        if (PropInventory[indexing].GetPropType() == propType)
+                        {
+                            Prop prop = PropInventory[indexing];
+                            PropInventory[indexing] = new NullProp();
                             return prop;
+                        }
                     }
                 return new NullProp();
             }
@@ -552,14 +560,22 @@ namespace GameClass.GameObj
 
         public bool TryAddAp()
         {
-            AddScore(GameData.ScorePropAddAp);
-            return buffManager.TryAddAp();
+            if (buffManager.TryAddAp())
+            {
+                AddScore(GameData.ScorePropAddAp);
+                return true;
+            }
+            return false;
         }
 
         public bool TryUseShield()
         {
-            AddScore(GameData.ScorePropUseShield);
-            return buffManager.TryUseShield();
+            if (buffManager.TryUseShield())
+            {
+                AddScore(GameData.ScorePropUseShield);
+                return true;
+            }
+            return false;
         }
         #endregion
         /*     public override void Reset()  // 要加锁吗？

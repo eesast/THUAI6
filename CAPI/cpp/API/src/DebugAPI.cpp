@@ -209,74 +209,122 @@ std::future<bool> TrickerDebugAPI::UseSkill(int32_t skillID)
 
 std::future<bool> StudentDebugAPI::OpenDoor()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.OpenDoor(); });
+    logger->info("OpenDoor: called at {}ms", Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [this]()
+                      { auto result = logic.OpenDoor();
+                        if (!result)
+                            logger->warn("OpenDoor: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
 }
 
 std::future<bool> TrickerDebugAPI::OpenDoor()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.OpenDoor(); });
+    logger->info("OpenDoor: called at {}ms", Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [this]()
+                      { auto result = logic.OpenDoor();
+                        if (!result)
+                            logger->warn("OpenDoor: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
 }
 
 std::future<bool> StudentDebugAPI::CloseDoor()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.CloseDoor(); });
+    logger->info("CloseDoor: called at {}ms", Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [this]()
+                      { auto result = logic.CloseDoor();
+                        if (!result)
+                            logger->warn("CloseDoor: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
 }
 
 std::future<bool> TrickerDebugAPI::CloseDoor()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.CloseDoor(); });
+    logger->info("CloseDoor: called at {}ms", Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [this]()
+                      { auto result = logic.CloseDoor();
+                        if (!result)
+                            logger->warn("CloseDoor: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
 }
 
 std::future<bool> StudentDebugAPI::SkipWindow()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.SkipWindow(); });
+    logger->info("SkipWindow: called at {}ms", Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [this]()
+                      { auto result = logic.SkipWindow();
+                        if (!result)
+                            logger->warn("SkipWindow: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
 }
 
 std::future<bool> TrickerDebugAPI::SkipWindow()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.SkipWindow(); });
+    logger->info("SkipWindow: called at {}ms", Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [this]()
+                      { auto result = logic.SkipWindow();
+                        if (!result)
+                            logger->warn("SkipWindow: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
 }
 
 std::future<bool> StudentDebugAPI::StartOpenGate()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.StartOpenGate(); });
+    logger->info("StartOpenGate: called at {}ms", Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [this]()
+                      { auto result = logic.StartOpenGate();
+                        if (!result)
+                            logger->warn("StartOpenGate: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
 }
 
 std::future<bool> TrickerDebugAPI::StartOpenGate()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.StartOpenGate(); });
+    logger->info("StartOpenGate: called at {}ms", Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [this]()
+                      { auto result = logic.StartOpenGate();
+                        if (!result)
+                            logger->warn("StartOpenGate: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
 }
 
 std::future<bool> StudentDebugAPI::StartOpenChest()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.StartOpenChest(); });
+    logger->info("StartOpenChest: called at {}ms", Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [this]()
+                      { auto result = logic.StartOpenChest();
+                        if (!result)
+                            logger->warn("StartOpenChest: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
 }
 
 std::future<bool> TrickerDebugAPI::StartOpenChest()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.StartOpenChest(); });
+    logger->info("StartOpenChest: called at {}ms", Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [this]()
+                      { auto result = logic.StartOpenChest();
+                        if (!result)
+                            logger->warn("StartOpenChest: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
 }
 
 std::future<bool> StudentDebugAPI::EndAllAction()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.EndAllAction(); });
+    logger->info("EndAllAction: called at {}ms", Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [this]()
+                      { auto result = logic.EndAllAction();
+                        if (!result)
+                            logger->warn("EndAllAction: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
 }
 
 std::future<bool> TrickerDebugAPI::EndAllAction()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.EndAllAction(); });
+    logger->info("EndAllAction: called at {}ms", Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [this]()
+                      { auto result = logic.EndAllAction();
+                        if (!result)
+                            logger->warn("EndAllAction: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
 }
 
 std::future<bool> StudentDebugAPI::SendMessage(int64_t toID, std::string message)
@@ -501,21 +549,21 @@ std::future<bool> StudentDebugAPI::StartLearning()
                         return result; });
 }
 
-std::future<bool> StudentDebugAPI::StartRescueMate()
+std::future<bool> StudentDebugAPI::StartRescueMate(int64_t mateID)
 {
-    logger->info("StartRescueMate: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.StartRescueMate();
+    logger->info("StartRescueMate: mate id={}, called at {}ms", mateID, Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [=]()
+                      { auto result = logic.StartRescueMate(mateID);
                         if (!result)
                             logger->warn("StartRescueMate: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 
-std::future<bool> StudentDebugAPI::StartTreatMate()
+std::future<bool> StudentDebugAPI::StartTreatMate(int64_t mateID)
 {
-    logger->info("StartTreatMate: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.StartTreatMate();
+    logger->info("StartTreatMate: mate id={}, called at {}ms", mateID, Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [=]()
+                      { auto result = logic.StartTreatMate(mateID);
                         if (!result)
                             logger->warn("StartTreatMate: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });

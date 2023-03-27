@@ -319,27 +319,27 @@ namespace protobuf
         return result;
     }
 
-    ::grpc::Status AvailableService::Stub::StartRescueMate(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
+    ::grpc::Status AvailableService::Stub::StartRescueMate(::grpc::ClientContext* context, const ::protobuf::TreatAndRescueMsg& request, ::protobuf::BoolRes* response)
     {
-        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_StartRescueMate_, context, request, response);
+        return ::grpc::internal::BlockingUnaryCall<::protobuf::TreatAndRescueMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_StartRescueMate_, context, request, response);
     }
 
-    void AvailableService::Stub::async::StartRescueMate(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
+    void AvailableService::Stub::async::StartRescueMate(::grpc::ClientContext* context, const ::protobuf::TreatAndRescueMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
     {
-        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartRescueMate_, context, request, response, std::move(f));
+        ::grpc::internal::CallbackUnaryCall<::protobuf::TreatAndRescueMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartRescueMate_, context, request, response, std::move(f));
     }
 
-    void AvailableService::Stub::async::StartRescueMate(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
+    void AvailableService::Stub::async::StartRescueMate(::grpc::ClientContext* context, const ::protobuf::TreatAndRescueMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
     {
         ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartRescueMate_, context, request, response, reactor);
     }
 
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncStartRescueMateRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncStartRescueMateRaw(::grpc::ClientContext* context, const ::protobuf::TreatAndRescueMsg& request, ::grpc::CompletionQueue* cq)
     {
-        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_StartRescueMate_, context, request);
+        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::TreatAndRescueMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_StartRescueMate_, context, request);
     }
 
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncStartRescueMateRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncStartRescueMateRaw(::grpc::ClientContext* context, const ::protobuf::TreatAndRescueMsg& request, ::grpc::CompletionQueue* cq)
     {
         auto* result =
             this->PrepareAsyncStartRescueMateRaw(context, request, cq);
@@ -347,27 +347,27 @@ namespace protobuf
         return result;
     }
 
-    ::grpc::Status AvailableService::Stub::StartTreatMate(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::protobuf::BoolRes* response)
+    ::grpc::Status AvailableService::Stub::StartTreatMate(::grpc::ClientContext* context, const ::protobuf::TreatAndRescueMsg& request, ::protobuf::BoolRes* response)
     {
-        return ::grpc::internal::BlockingUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_StartTreatMate_, context, request, response);
+        return ::grpc::internal::BlockingUnaryCall<::protobuf::TreatAndRescueMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_StartTreatMate_, context, request, response);
     }
 
-    void AvailableService::Stub::async::StartTreatMate(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
+    void AvailableService::Stub::async::StartTreatMate(::grpc::ClientContext* context, const ::protobuf::TreatAndRescueMsg* request, ::protobuf::BoolRes* response, std::function<void(::grpc::Status)> f)
     {
-        ::grpc::internal::CallbackUnaryCall<::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartTreatMate_, context, request, response, std::move(f));
+        ::grpc::internal::CallbackUnaryCall<::protobuf::TreatAndRescueMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartTreatMate_, context, request, response, std::move(f));
     }
 
-    void AvailableService::Stub::async::StartTreatMate(::grpc::ClientContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
+    void AvailableService::Stub::async::StartTreatMate(::grpc::ClientContext* context, const ::protobuf::TreatAndRescueMsg* request, ::protobuf::BoolRes* response, ::grpc::ClientUnaryReactor* reactor)
     {
         ::grpc::internal::ClientCallbackUnaryFactory::Create<::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_StartTreatMate_, context, request, response, reactor);
     }
 
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncStartTreatMateRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::PrepareAsyncStartTreatMateRaw(::grpc::ClientContext* context, const ::protobuf::TreatAndRescueMsg& request, ::grpc::CompletionQueue* cq)
     {
-        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::IDMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_StartTreatMate_, context, request);
+        return ::grpc::internal::ClientAsyncResponseReaderHelper::Create<::protobuf::BoolRes, ::protobuf::TreatAndRescueMsg, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_StartTreatMate_, context, request);
     }
 
-    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncStartTreatMateRaw(::grpc::ClientContext* context, const ::protobuf::IDMsg& request, ::grpc::CompletionQueue* cq)
+    ::grpc::ClientAsyncResponseReader<::protobuf::BoolRes>* AvailableService::Stub::AsyncStartTreatMateRaw(::grpc::ClientContext* context, const ::protobuf::TreatAndRescueMsg& request, ::grpc::CompletionQueue* cq)
     {
         auto* result =
             this->PrepareAsyncStartTreatMateRaw(context, request, cq);
@@ -730,10 +730,10 @@ namespace protobuf
         AddMethod(new ::grpc::internal::RpcServiceMethod(
             AvailableService_method_names[9],
             ::grpc::internal::RpcMethod::NORMAL_RPC,
-            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::TreatAndRescueMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
                 [](AvailableService::Service* service,
                    ::grpc::ServerContext* ctx,
-                   const ::protobuf::IDMsg* req,
+                   const ::protobuf::TreatAndRescueMsg* req,
                    ::protobuf::BoolRes* resp)
                 {
                     return service->StartRescueMate(ctx, req, resp);
@@ -744,10 +744,10 @@ namespace protobuf
         AddMethod(new ::grpc::internal::RpcServiceMethod(
             AvailableService_method_names[10],
             ::grpc::internal::RpcMethod::NORMAL_RPC,
-            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::IDMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+            new ::grpc::internal::RpcMethodHandler<AvailableService::Service, ::protobuf::TreatAndRescueMsg, ::protobuf::BoolRes, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
                 [](AvailableService::Service* service,
                    ::grpc::ServerContext* ctx,
-                   const ::protobuf::IDMsg* req,
+                   const ::protobuf::TreatAndRescueMsg* req,
                    ::protobuf::BoolRes* resp)
                 {
                     return service->StartTreatMate(ctx, req, resp);
@@ -945,7 +945,7 @@ namespace protobuf
         return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
 
-    ::grpc::Status AvailableService::Service::StartRescueMate(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+    ::grpc::Status AvailableService::Service::StartRescueMate(::grpc::ServerContext* context, const ::protobuf::TreatAndRescueMsg* request, ::protobuf::BoolRes* response)
     {
         (void)context;
         (void)request;
@@ -953,7 +953,7 @@ namespace protobuf
         return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
 
-    ::grpc::Status AvailableService::Service::StartTreatMate(::grpc::ServerContext* context, const ::protobuf::IDMsg* request, ::protobuf::BoolRes* response)
+    ::grpc::Status AvailableService::Service::StartTreatMate(::grpc::ServerContext* context, const ::protobuf::TreatAndRescueMsg* request, ::protobuf::BoolRes* response)
     {
         (void)context;
         (void)request;

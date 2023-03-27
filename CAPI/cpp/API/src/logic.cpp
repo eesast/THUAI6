@@ -220,16 +220,16 @@ bool Logic::StartLearning()
     return pComm->StartLearning(playerID);
 }
 
-bool Logic::StartTreatMate()
+bool Logic::StartTreatMate(int64_t mateID)
 {
     logger->debug("Called StartTreatMate");
-    return pComm->StartTreatMate(playerID);
+    return pComm->StartTreatMate(playerID, mateID);
 }
 
-bool Logic::StartRescueMate()
+bool Logic::StartRescueMate(int64_t mateID)
 {
     logger->debug("Called StartRescueMate");
-    return pComm->StartRescueMate(playerID);
+    return pComm->StartRescueMate(playerID, mateID);
 }
 
 bool Logic::Attack(double angle)
@@ -282,7 +282,7 @@ bool Logic::WaitThread()
 
 void Logic::ProcessMessage()
 {
-    auto messageThread = [&]()
+    auto messageThread = [this]()
     {
         logger->info("Message thread start!");
         pComm->AddPlayer(playerID, playerType, studentType, trickerType);
@@ -682,7 +682,7 @@ void Logic::Update() noexcept
         std::unique_lock<std::mutex> lock(mtxBuffer);
 
         // 缓冲区被更新之后才可以使用
-        cvBuffer.wait(lock, [&]()
+        cvBuffer.wait(lock, [this]()
                       { return bufferUpdated; });
 
         std::swap(currentState, bufferState);
@@ -697,7 +697,7 @@ void Logic::Wait() noexcept
     freshed = false;
     {
         std::unique_lock<std::mutex> lock(mtxBuffer);
-        cvBuffer.wait(lock, [&]()
+        cvBuffer.wait(lock, [this]()
                       { return freshed.load(); });
     }
 }

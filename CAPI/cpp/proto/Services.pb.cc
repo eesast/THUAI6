@@ -31,7 +31,7 @@ static constexpr ::_pb::Message* const* file_default_instances = nullptr;
 
 const char descriptor_table_protodef_Services_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
     "\n\016Services.proto\022\010protobuf\032\025Message2Clie"
-    "nts.proto\032\024Message2Server.proto2\350\007\n\020Avai"
+    "nts.proto\032\024Message2Server.proto2\200\010\n\020Avai"
     "lableService\0223\n\rTryConnection\022\017.protobuf"
     ".IDMsg\032\021.protobuf.BoolRes\022=\n\tAddPlayer\022\023"
     ".protobuf.PlayerMsg\032\031.protobuf.MessageTo"
@@ -44,20 +44,20 @@ const char descriptor_table_protodef_Services_2eproto[] PROTOBUF_SECTION_VARIABL
     "rotobuf.BoolRes\0223\n\013SendMessage\022\021.protobu"
     "f.SendMsg\032\021.protobuf.BoolRes\0223\n\rStartLea"
     "rning\022\017.protobuf.IDMsg\032\021.protobuf.BoolRe"
-    "s\0225\n\017StartRescueMate\022\017.protobuf.IDMsg\032\021."
-    "protobuf.BoolRes\0224\n\016StartTreatMate\022\017.pro"
-    "tobuf.IDMsg\032\021.protobuf.BoolRes\0220\n\006Attack"
-    "\022\023.protobuf.AttackMsg\032\021.protobuf.BoolRes"
-    "\022.\n\010Graduate\022\017.protobuf.IDMsg\032\021.protobuf"
-    ".BoolRes\022.\n\010OpenDoor\022\017.protobuf.IDMsg\032\021."
-    "protobuf.BoolRes\022/\n\tCloseDoor\022\017.protobuf"
-    ".IDMsg\032\021.protobuf.BoolRes\0220\n\nSkipWindow\022"
-    "\017.protobuf.IDMsg\032\021.protobuf.BoolRes\0223\n\rS"
-    "tartOpenGate\022\017.protobuf.IDMsg\032\021.protobuf"
-    ".BoolRes\0224\n\016StartOpenChest\022\017.protobuf.ID"
-    "Msg\032\021.protobuf.BoolRes\0222\n\014EndAllAction\022\017"
-    ".protobuf.IDMsg\032\021.protobuf.BoolResb\006prot"
-    "o3";
+    "s\022A\n\017StartRescueMate\022\033.protobuf.TreatAnd"
+    "RescueMsg\032\021.protobuf.BoolRes\022@\n\016StartTre"
+    "atMate\022\033.protobuf.TreatAndRescueMsg\032\021.pr"
+    "otobuf.BoolRes\0220\n\006Attack\022\023.protobuf.Atta"
+    "ckMsg\032\021.protobuf.BoolRes\022.\n\010Graduate\022\017.p"
+    "rotobuf.IDMsg\032\021.protobuf.BoolRes\022.\n\010Open"
+    "Door\022\017.protobuf.IDMsg\032\021.protobuf.BoolRes"
+    "\022/\n\tCloseDoor\022\017.protobuf.IDMsg\032\021.protobu"
+    "f.BoolRes\0220\n\nSkipWindow\022\017.protobuf.IDMsg"
+    "\032\021.protobuf.BoolRes\0223\n\rStartOpenGate\022\017.p"
+    "rotobuf.IDMsg\032\021.protobuf.BoolRes\0224\n\016Star"
+    "tOpenChest\022\017.protobuf.IDMsg\032\021.protobuf.B"
+    "oolRes\0222\n\014EndAllAction\022\017.protobuf.IDMsg\032"
+    "\021.protobuf.BoolResb\006proto3";
 static const ::_pbi::DescriptorTable* const descriptor_table_Services_2eproto_deps[2] = {
     &::descriptor_table_Message2Clients_2eproto,
     &::descriptor_table_Message2Server_2eproto,
@@ -66,7 +66,7 @@ static ::_pbi::once_flag descriptor_table_Services_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Services_2eproto = {
     false,
     false,
-    1082,
+    1106,
     descriptor_table_protodef_Services_2eproto,
     "Services.proto",
     &descriptor_table_Services_2eproto_once,

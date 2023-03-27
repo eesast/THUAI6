@@ -70,6 +70,9 @@ namespace protobuf
     class SkillMsg;
     struct SkillMsgDefaultTypeInternal;
     extern SkillMsgDefaultTypeInternal _SkillMsg_default_instance_;
+    class TreatAndRescueMsg;
+    struct TreatAndRescueMsgDefaultTypeInternal;
+    extern TreatAndRescueMsgDefaultTypeInternal _TreatAndRescueMsg_default_instance_;
 }  // namespace protobuf
 PROTOBUF_NAMESPACE_OPEN
 template<>
@@ -86,6 +89,8 @@ template<>
 ::protobuf::SendMsg* Arena::CreateMaybeMessage<::protobuf::SendMsg>(Arena*);
 template<>
 ::protobuf::SkillMsg* Arena::CreateMaybeMessage<::protobuf::SkillMsg>(Arena*);
+template<>
+::protobuf::TreatAndRescueMsg* Arena::CreateMaybeMessage<::protobuf::TreatAndRescueMsg>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace protobuf
 {
@@ -1392,6 +1397,210 @@ namespace protobuf
     };
     // -------------------------------------------------------------------
 
+    class TreatAndRescueMsg final :
+        public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.TreatAndRescueMsg) */
+    {
+    public:
+        inline TreatAndRescueMsg() :
+            TreatAndRescueMsg(nullptr)
+        {
+        }
+        ~TreatAndRescueMsg() override;
+        explicit PROTOBUF_CONSTEXPR TreatAndRescueMsg(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+        TreatAndRescueMsg(const TreatAndRescueMsg& from);
+        TreatAndRescueMsg(TreatAndRescueMsg&& from) noexcept
+            :
+            TreatAndRescueMsg()
+        {
+            *this = ::std::move(from);
+        }
+
+        inline TreatAndRescueMsg& operator=(const TreatAndRescueMsg& from)
+        {
+            CopyFrom(from);
+            return *this;
+        }
+        inline TreatAndRescueMsg& operator=(TreatAndRescueMsg&& from) noexcept
+        {
+            if (this == &from)
+                return *this;
+            if (GetOwningArena() == from.GetOwningArena()
+#ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+                && GetOwningArena() != nullptr
+#endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+            )
+            {
+                InternalSwap(&from);
+            }
+            else
+            {
+                CopyFrom(from);
+            }
+            return *this;
+        }
+
+        static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor()
+        {
+            return GetDescriptor();
+        }
+        static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor()
+        {
+            return default_instance().GetMetadata().descriptor;
+        }
+        static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection()
+        {
+            return default_instance().GetMetadata().reflection;
+        }
+        static const TreatAndRescueMsg& default_instance()
+        {
+            return *internal_default_instance();
+        }
+        static inline const TreatAndRescueMsg* internal_default_instance()
+        {
+            return reinterpret_cast<const TreatAndRescueMsg*>(
+                &_TreatAndRescueMsg_default_instance_
+            );
+        }
+        static constexpr int kIndexInFileMessages =
+            6;
+
+        friend void swap(TreatAndRescueMsg& a, TreatAndRescueMsg& b)
+        {
+            a.Swap(&b);
+        }
+        inline void Swap(TreatAndRescueMsg* other)
+        {
+            if (other == this)
+                return;
+#ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+            if (GetOwningArena() != nullptr &&
+                GetOwningArena() == other->GetOwningArena())
+            {
+#else   // PROTOBUF_FORCE_COPY_IN_SWAP
+            if (GetOwningArena() == other->GetOwningArena())
+            {
+#endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+                InternalSwap(other);
+            }
+            else
+            {
+                ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+            }
+        }
+        void UnsafeArenaSwap(TreatAndRescueMsg* other)
+        {
+            if (other == this)
+                return;
+            GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+            InternalSwap(other);
+        }
+
+        // implements Message ----------------------------------------------
+
+        TreatAndRescueMsg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final
+        {
+            return CreateMaybeMessage<TreatAndRescueMsg>(arena);
+        }
+        using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+        void CopyFrom(const TreatAndRescueMsg& from);
+        using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+        void MergeFrom(const TreatAndRescueMsg& from)
+        {
+            TreatAndRescueMsg::MergeImpl(*this, from);
+        }
+
+    private:
+        static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+
+    public:
+        PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+        bool IsInitialized() const final;
+
+        size_t ByteSizeLong() const final;
+        const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+        uint8_t* _InternalSerialize(
+            uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream
+        ) const final;
+        int GetCachedSize() const final
+        {
+            return _impl_._cached_size_.Get();
+        }
+
+    private:
+        void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+        void SharedDtor();
+        void SetCachedSize(int size) const final;
+        void InternalSwap(TreatAndRescueMsg* other);
+
+    private:
+        friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+        static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName()
+        {
+            return "protobuf.TreatAndRescueMsg";
+        }
+
+    protected:
+        explicit TreatAndRescueMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned = false);
+
+    public:
+        static const ClassData _class_data_;
+        const ::PROTOBUF_NAMESPACE_ID::Message::ClassData* GetClassData() const final;
+
+        ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+        // nested types ----------------------------------------------------
+
+        // accessors -------------------------------------------------------
+
+        enum : int
+        {
+            kPlayerIdFieldNumber = 1,
+            kToPlayerIdFieldNumber = 2,
+        };
+        // int64 player_id = 1;
+        void clear_player_id();
+        int64_t player_id() const;
+        void set_player_id(int64_t value);
+
+    private:
+        int64_t _internal_player_id() const;
+        void _internal_set_player_id(int64_t value);
+
+    public:
+        // int64 to_player_id = 2;
+        void clear_to_player_id();
+        int64_t to_player_id() const;
+        void set_to_player_id(int64_t value);
+
+    private:
+        int64_t _internal_to_player_id() const;
+        void _internal_set_to_player_id(int64_t value);
+
+    public:
+        // @@protoc_insertion_point(class_scope:protobuf.TreatAndRescueMsg)
+
+    private:
+        class _Internal;
+
+        template<typename T>
+        friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+        typedef void InternalArenaConstructable_;
+        typedef void DestructorSkippable_;
+        struct Impl_
+        {
+            int64_t player_id_;
+            int64_t to_player_id_;
+            mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+        };
+        union
+        {
+            Impl_ _impl_;
+        };
+        friend struct ::TableStruct_Message2Server_2eproto;
+    };
+    // -------------------------------------------------------------------
+
     class SkillMsg final :
         public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:protobuf.SkillMsg) */
     {
@@ -1458,7 +1667,7 @@ namespace protobuf
             );
         }
         static constexpr int kIndexInFileMessages =
-            6;
+            7;
 
         friend void swap(SkillMsg& a, SkillMsg& b)
         {
@@ -2081,6 +2290,58 @@ namespace protobuf
 
     // -------------------------------------------------------------------
 
+    // TreatAndRescueMsg
+
+    // int64 player_id = 1;
+    inline void TreatAndRescueMsg::clear_player_id()
+    {
+        _impl_.player_id_ = int64_t{0};
+    }
+    inline int64_t TreatAndRescueMsg::_internal_player_id() const
+    {
+        return _impl_.player_id_;
+    }
+    inline int64_t TreatAndRescueMsg::player_id() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.TreatAndRescueMsg.player_id)
+        return _internal_player_id();
+    }
+    inline void TreatAndRescueMsg::_internal_set_player_id(int64_t value)
+    {
+        _impl_.player_id_ = value;
+    }
+    inline void TreatAndRescueMsg::set_player_id(int64_t value)
+    {
+        _internal_set_player_id(value);
+        // @@protoc_insertion_point(field_set:protobuf.TreatAndRescueMsg.player_id)
+    }
+
+    // int64 to_player_id = 2;
+    inline void TreatAndRescueMsg::clear_to_player_id()
+    {
+        _impl_.to_player_id_ = int64_t{0};
+    }
+    inline int64_t TreatAndRescueMsg::_internal_to_player_id() const
+    {
+        return _impl_.to_player_id_;
+    }
+    inline int64_t TreatAndRescueMsg::to_player_id() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.TreatAndRescueMsg.to_player_id)
+        return _internal_to_player_id();
+    }
+    inline void TreatAndRescueMsg::_internal_set_to_player_id(int64_t value)
+    {
+        _impl_.to_player_id_ = value;
+    }
+    inline void TreatAndRescueMsg::set_to_player_id(int64_t value)
+    {
+        _internal_set_to_player_id(value);
+        // @@protoc_insertion_point(field_set:protobuf.TreatAndRescueMsg.to_player_id)
+    }
+
+    // -------------------------------------------------------------------
+
     // SkillMsg
 
     // int64 player_id = 1;
@@ -2134,6 +2395,8 @@ namespace protobuf
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif  // __GNUC__
+    // -------------------------------------------------------------------
+
     // -------------------------------------------------------------------
 
     // -------------------------------------------------------------------

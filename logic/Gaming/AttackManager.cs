@@ -48,6 +48,9 @@ namespace Gaming
                         if (player.GamingAddiction > GameData.BeginGamingAddiction && player.GamingAddiction < GameData.MidGamingAddiction)
                             player.GamingAddiction = GameData.MidGamingAddiction;
                         player.PlayerState = PlayerStateType.Addicted;
+#if DEBUG
+                        Debugger.Output(player, " is addicted ");
+#endif
                         new FrameRateTaskExecutor<int>(
                             () => (player.PlayerState == PlayerStateType.Addicted || player.PlayerState == PlayerStateType.Rescued) && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
                             () =>
@@ -89,7 +92,9 @@ namespace Gaming
 
             private void Die(Character player)
             {
-
+#if DEBUG
+                Debugger.Output(player, "die.");
+#endif
                 player.Die(PlayerStateType.Deceased);
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)

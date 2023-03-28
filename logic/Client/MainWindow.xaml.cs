@@ -842,7 +842,7 @@ namespace Client
                             {
                                 icon.Text = "🅰";
                             }
-                                UpperLayerOfMap.Children.Add(icon);
+                            UpperLayerOfMap.Children.Add(icon);
                         }
                         foreach (var data in listOfChest)
                         {
@@ -860,7 +860,7 @@ namespace Client
                                 BorderBrush = Brushes.Transparent,
                                 IsReadOnly = true
                             };
-                            if(deg==100)
+                            if (deg == 100)
                             {
                                 icon.Text = "😄";
                             }

@@ -21,7 +21,9 @@ namespace GameClass.GameObj
             set
             {
                 lock (lockForNum)
+                {
                     numOfRepairedGenerators = value;
+                }
             }
         }
         private uint numOfDeceasedStudent = 0;
@@ -31,7 +33,13 @@ namespace GameClass.GameObj
             set
             {
                 lock (lockForNum)
+                {
                     numOfDeceasedStudent = value;
+                    if (numOfDeceasedStudent + numOfEscapedStudent == GameData.numOfStudent)
+                    {
+                        Timer.IsGaming = false;
+                    }
+                }
             }
         }
         private uint numOfEscapedStudent = 0;
@@ -41,7 +49,13 @@ namespace GameClass.GameObj
             set
             {
                 lock (lockForNum)
+                {
                     numOfEscapedStudent = value;
+                    if (numOfDeceasedStudent + numOfEscapedStudent == GameData.numOfStudent)
+                    {
+                        Timer.IsGaming = false;
+                    }
+                }
             }
         }
 
@@ -234,6 +248,50 @@ namespace GameClass.GameObj
                 GameObjLockDict[gameObjType].ExitReadLock();
             }
             return GameObjForInteract;
+        }
+        public bool CanSee(XY pos1, XY pos2, int viewRange)
+        {
+            XY del = pos1 - pos2;
+            if (del * del > viewRange * viewRange) return false;
+            if (del.x > del.y)
+            {
+                if (GetPlaceType(pos1) == PlaceType.Grass && GetPlaceType(pos2) == PlaceType.Grass)
+                {
+                    for (int x = GameData.PosGridToCellX(pos1) + GameData.numOfPosGridPerCell; x < GameData.PosGridToCellX(pos2); x += GameData.numOfPosGridPerCell)
+                    {
+                        if (GetPlaceType(pos1 + del * (x / del.x)) != PlaceType.Grass)
+                            return false;
+                    }
+                }
+                else
+                {
+                    for (int x = GameData.PosGridToCellX(pos1) + GameData.numOfPosGridPerCell; x < GameData.PosGridToCellX(pos2); x += GameData.numOfPosGridPerCell)
+                    {
+                        if (GetPlaceType(pos1 + del * (x / del.x)) == PlaceType.Wall)
+                            return false;
+                    }
+                }
+            }
+            else
+            {
+                if (GetPlaceType(pos1) == PlaceType.Grass && GetPlaceType(pos2) == PlaceType.Grass)
+                {
+                    for (int y = GameData.PosGridToCellY(pos1) + GameData.numOfPosGridPerCell; y < GameData.PosGridToCellY(pos2); y += GameData.numOfPosGridPerCell)
+                    {
+                        if (GetPlaceType(pos1 + del * (y / del.y)) != PlaceType.Grass)
+                            return false;
+                    }
+                }
+                else
+                {
+                    for (int y = GameData.PosGridToCellY(pos1) + GameData.numOfPosGridPerCell; y < GameData.PosGridToCellY(pos2); y += GameData.numOfPosGridPerCell)
+                    {
+                        if (GetPlaceType(pos1 + del * (y / del.y)) == PlaceType.Wall)
+                            return false;
+                    }
+                }
+            }
+            return true;
         }
         public Map(uint[,] mapResource)
         {

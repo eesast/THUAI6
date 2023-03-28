@@ -71,8 +71,9 @@ namespace Gaming
                 { IsBackground = true }.Start();
             }
 
-            public static void BeStunned(Character player, int time)
+            public static bool BeStunned(Character player, int time)
             {
+                if (player.PlayerState == PlayerStateType.Stunned || player.NoHp()) return false;
                 new Thread
                     (() =>
                     {
@@ -83,6 +84,7 @@ namespace Gaming
                     }
                     )
                 { IsBackground = true }.Start();
+                return true;
             }
 
             private void Die(Character player)
@@ -141,8 +143,8 @@ namespace Gaming
                             }
                             if (whoBeAttacked.CanBeAwed())
                             {
-                                bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned);
-                                BeStunned(whoBeAttacked, GameData.basicStunnedTimeOfStudent);
+                                if (BeStunned(whoBeAttacked, GameData.basicStunnedTimeOfStudent))
+                                    bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned);
                             }
                         }
                         //       if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)

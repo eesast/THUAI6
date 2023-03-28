@@ -45,7 +45,7 @@ namespace GameClass.GameObj
             this.place = placeType;
             this.CanMove = true;
             this.moveSpeed = this.Speed;
-            this.hasSpear = player.HasSpear;
+            this.hasSpear = player.TryUseSpear();
             this.Parent = player;
         }
         public override bool IsRigid => true;                 // 默认为true

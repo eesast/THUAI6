@@ -111,6 +111,8 @@ namespace Preparation.Utility
         Shield = 3,
         Spear = 4,
         AddAp = 5,
+        Clairaudience = 6,
+        Invisible = 7,
     }
 
     public enum PlaceType

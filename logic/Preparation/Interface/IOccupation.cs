@@ -64,6 +64,40 @@ namespace Preparation.Interface
         public int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
         public int TimeOfOpenChest => timeOfOpenChest;
     }
+    public class HoD : IGhost
+    {
+        private const int moveSpeed = GameData.basicMoveSpeed * 473 / 380;
+        public int MoveSpeed => moveSpeed;
+
+        private const int maxHp = GameData.basicHp;
+        public int MaxHp => maxHp;
+
+        public const int maxBulletNum = 1;
+        public int MaxBulletNum => maxBulletNum;
+
+        public BulletType InitBullet => BulletType.CommonAttackOfGhost;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.BecomeInvisible, ActiveSkillType.UseKnife });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public double concealment = GameData.basicConcealment * 1.5;
+        public double Concealment => concealment;
+
+        public int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.3);
+        public int AlertnessRadius => alertnessRadius;
+
+        public int viewRange = (int)(GameData.basicViewRange * 1.3);
+        public int ViewRange => viewRange;
+
+        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+
+        public int speedOfClimbingThroughWindows = GameData.basicGhostSpeedOfClimbingThroughWindows;
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
+
+        public int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
+        public int TimeOfOpenChest => timeOfOpenChest;
+    }
     public class Teacher : IStudent
     {
         private const int moveSpeed = GameData.basicMoveSpeed * 3 / 4;

@@ -45,13 +45,14 @@ namespace Gaming
 
             public static bool BecomeInvisible(Character player)
             {
-                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.BecomeInvisible), player, () =>
+                IActiveSkill activeSkill = player.UseIActiveSkill(ActiveSkillType.BecomeInvisible);
+                return ActiveSkillEffect(activeSkill, player, () =>
                 {
-                    player.IsInvisible = true;
+                    player.AddInvisible(activeSkill.DurationTime);
                     Debugger.Output(player, "become invisible!");
                 },
                                                       () =>
-                                                      { player.IsInvisible = false; });
+                                                      { });
             }
 
             public bool NuclearWeapon(Character player)

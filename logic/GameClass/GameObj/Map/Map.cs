@@ -251,7 +251,7 @@ namespace GameClass.GameObj
         }
         public bool CanSee(Character player, GameObj gameObj)
         {
-            if ((gameObj.Type == GameObjType.Character) && !((Character)gameObj).IsInvisible) return false;
+            if ((gameObj.Type == GameObjType.Character) && !((Character)gameObj).HasInvisible) return false;
             XY pos1 = player.Position;
             XY pos2 = gameObj.Position;
             XY del = pos1 - pos2;

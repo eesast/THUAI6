@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Preparation.Utility;
@@ -180,6 +181,44 @@ namespace GameClass.GameObj
                     lock (buffListLock[(int)BuffType.Spear])
                     {
                         return buffList[(int)BuffType.Spear].Count != 0;
+                    }
+                }
+            }
+            public bool TryUseSpear()
+            {
+                if (HasSpear)
+                {
+                    lock (buffListLock[(int)BuffType.Spear])
+                    {
+                        buffList[(int)BuffType.Spear].RemoveFirst();
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            public void AddClairaudience(int shieldTime) => AddBuff(new BuffValue(), shieldTime, BuffType.Clairaudience, () =>
+            { });
+            public bool HasClairaudience
+            {
+                get
+                {
+                    lock (buffListLock[(int)BuffType.Clairaudience])
+                    {
+                        return buffList[(int)BuffType.Clairaudience].Count != 0;
+                    }
+                }
+            }
+
+            public void AddInvisible(int shieldTime) => AddBuff(new BuffValue(), shieldTime, BuffType.Invisible, () =>
+            { });
+            public bool HasInvisible
+            {
+                get
+                {
+                    lock (buffListLock[(int)BuffType.Invisible])
+                    {
+                        return buffList[(int)BuffType.Invisible].Count != 0;
                     }
                 }
             }

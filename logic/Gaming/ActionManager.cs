@@ -188,7 +188,7 @@ namespace Gaming
                     playerTreated = gameMap.StudentForInteract(player.Position);
                     if (playerTreated == null) return false;
                 }
-                if ((!player.Commandable()) || player.PlayerState == PlayerStateType.Treating ||
+                if (player == playerTreated || (!player.Commandable()) || player.PlayerState == PlayerStateType.Treating ||
                     (!playerTreated.Commandable()) ||
                     playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
                     return false;
@@ -254,11 +254,12 @@ namespace Gaming
                     playerRescued = gameMap.StudentForInteract(player.Position);
                     if (playerRescued == null) return false;
                 }
-                if ((!player.Commandable()) || playerRescued.PlayerState != PlayerStateType.Addicted || !GameData.ApproachToInteract(playerRescued.Position, player.Position))
+                if ((!player.Commandable()) || playerRescued.PlayerState != PlayerStateType.Addicted || player == playerRescued
+                    || !GameData.ApproachToInteract(playerRescued.Position, player.Position) || playerRescued.TimeOfRescue > 0)
                     return false;
                 player.PlayerState = PlayerStateType.Rescuing;
                 playerRescued.PlayerState = PlayerStateType.Rescued;
-                player.TimeOfRescue = 0;
+
                 new Thread
            (
                () =>
@@ -267,7 +268,7 @@ namespace Gaming
                        loopCondition: () => playerRescued.PlayerState == PlayerStateType.Rescued && player.PlayerState == PlayerStateType.Rescuing && gameMap.Timer.IsGaming && GameData.ApproachToInteract(playerRescued.Position, player.Position),
                        loopToDo: () =>
                        {
-                           player.TimeOfRescue += GameData.frameDuration;
+                           playerRescued.TimeOfRescue += GameData.frameDuration;
                        },
                        timeInterval: GameData.frameDuration,
                        finallyReturn: () => 0,
@@ -277,7 +278,7 @@ namespace Gaming
 
                    if (playerRescued.PlayerState == PlayerStateType.Rescued)
                    {
-                       if (player.TimeOfRescue >= GameData.basicTimeOfRescue)
+                       if (playerRescued.TimeOfRescue >= GameData.basicTimeOfRescue)
                        {
                            playerRescued.PlayerState = PlayerStateType.Null;
                            player.AddScore(GameData.StudentScoreRescue);
@@ -286,7 +287,7 @@ namespace Gaming
                            playerRescued.PlayerState = PlayerStateType.Addicted;
                    }
                    if (player.PlayerState == PlayerStateType.Rescuing) player.PlayerState = PlayerStateType.Null;
-                   player.TimeOfRescue = 0;
+                   playerRescued.TimeOfRescue = 0;
                }
            )
                 { IsBackground = true }.Start();

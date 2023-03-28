@@ -110,7 +110,7 @@ namespace GameClass.GameObj
             get => gamingAddiction;
             set
             {
-                if (gamingAddiction > 0)
+                if (value > 0)
                     lock (gameObjLock)
                         gamingAddiction = value <= MaxGamingAddiction ? value : MaxGamingAddiction;
                 else
@@ -164,6 +164,7 @@ namespace GameClass.GameObj
         {
             this.OrgFixSpeed = this.fixSpeed = ((IStudent)Occupation).FixSpeed;
             this.TreatSpeed = this.OrgTreatSpeed = ((IStudent)Occupation).TreatSpeed;
+            this.MaxGamingAddiction = ((IStudent)Occupation).MaxGamingAddiction;
         }
     }
 }

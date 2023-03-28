@@ -86,7 +86,10 @@ namespace Gaming
                     {
                         foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            if (player.IsGhost() && gameMap.CanSee(player.Position, character.Position, player.ViewRange))
+                            if (player.IsGhost() &&
+                                (player.PlayerState == PlayerStateType.TryingToAttack || player.PlayerState == PlayerStateType.Swinging
+                                || player.PlayerState == PlayerStateType.UsingSkill || player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || player.PlayerState == PlayerStateType.OpeningTheChest)
+                                && gameMap.CanSee(player, character))
                             {
                                 if (AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.TimeFactorOfGhostFainting))
                                     player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.TimeFactorOfGhostFainting));

@@ -240,7 +240,13 @@ namespace Server
         {
             switch (n)
             {
-                case 0: return Protobuf.PlaceType.Land;
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    return Protobuf.PlaceType.Land;
                 case 6: return Protobuf.PlaceType.Wall;
                 case 7: return Protobuf.PlaceType.Grass;
                 case 8: return Protobuf.PlaceType.Classroom;

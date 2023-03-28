@@ -824,48 +824,10 @@ namespace Client
                         }
                         foreach (var data in listOfClassroom)
                         {
+                            int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfFixedGenerator);
                             TextBox icon = new()
                             {
-                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
-                                Width = unitWidth,
-                                Height = unitHeight,
-                                Text = Convert.ToString((int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfFixedGenerator)),
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Top,
-                                Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                Background = Brushes.Transparent,
-                                BorderBrush = Brushes.Transparent,
-                                IsReadOnly = true
-                            };
-                            UpperLayerOfMap.Children.Add(icon);
-                        }
-                        foreach (var data in listOfChest)
-                        {
-                            TextBox icon = new()
-                            {
-                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
-                                Width = unitWidth,
-                                Height = unitHeight,
-                                Text = Convert.ToString((int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedChest)),
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Top,
-                                Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                Background = Brushes.Transparent,
-                                BorderBrush = Brushes.Transparent,
-                                IsReadOnly = true
-                            };
-                            UpperLayerOfMap.Children.Add(icon);
-                        }
-                        foreach (var data in listOfGate)
-                        {
-                            int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedDoorway);
-                            if (deg == 100)
-                            {
-                                gateOpened = true;
-                            }
-                            TextBox icon = new()
-                            {
-                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 Text = Convert.ToString(deg),
@@ -876,13 +838,62 @@ namespace Client
                                 BorderBrush = Brushes.Transparent,
                                 IsReadOnly = true
                             };
+                            if (deg == 100)
+                            {
+                                icon.Text = "🅰";
+                            }
+                            UpperLayerOfMap.Children.Add(icon);
+                        }
+                        foreach (var data in listOfChest)
+                        {
+                            int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedChest);
+                            TextBox icon = new()
+                            {
+                                FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
+                                Width = unitWidth,
+                                Height = unitHeight,
+                                Text = Convert.ToString(deg),
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Top,
+                                Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                Background = Brushes.Transparent,
+                                BorderBrush = Brushes.Transparent,
+                                IsReadOnly = true
+                            };
+                            if (deg == 100)
+                            {
+                                icon.Text = "😄";
+                            }
+                            UpperLayerOfMap.Children.Add(icon);
+                        }
+                        foreach (var data in listOfGate)
+                        {
+                            int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedDoorway);
+                            TextBox icon = new()
+                            {
+                                FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
+                                Width = unitWidth,
+                                Height = unitHeight,
+                                Text = Convert.ToString(deg),
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Top,
+                                Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                Background = Brushes.Transparent,
+                                BorderBrush = Brushes.Transparent,
+                                IsReadOnly = true
+                            };
+                            if (deg == 100)
+                            {
+                                gateOpened = true;
+                                icon.Text = "😄";
+                            }
                             UpperLayerOfMap.Children.Add(icon);
                         }
                         foreach (var data in listOfDoor)
                         {
                             TextBox icon = new()
                             {
-                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 HorizontalAlignment = HorizontalAlignment.Left,

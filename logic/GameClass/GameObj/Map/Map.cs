@@ -249,10 +249,13 @@ namespace GameClass.GameObj
             }
             return GameObjForInteract;
         }
-        public bool CanSee(XY pos1, XY pos2, int viewRange)
+        public bool CanSee(Character player, GameObj gameObj)
         {
+            if ((gameObj.Type == GameObjType.Character) && !((Character)gameObj).IsInvisible) return false;
+            XY pos1 = player.Position;
+            XY pos2 = gameObj.Position;
             XY del = pos1 - pos2;
-            if (del * del > viewRange * viewRange) return false;
+            if (del * del > player.ViewRange * player.ViewRange) return false;
             if (del.x > del.y)
             {
                 if (GetPlaceType(pos1) == PlaceType.Grass && GetPlaceType(pos2) == PlaceType.Grass)

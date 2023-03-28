@@ -36,8 +36,8 @@ namespace Client
             }
         }
 
-        public int[,]? ReadDataFromFile(List<MessageOfProp> listOfProp,List<MessageOfStudent> listOfHuman,List<MessageOfTricker> listOfButcher,List<MessageOfBullet> listOfBullet,
-        List<MessageOfBombedBullet> listOfBombedBullet,List<MessageOfAll> listOfAll,List<MessageOfChest> listOfChest,List<MessageOfClassroom> listOfClassroom,
+        public int[,]? ReadDataFromFile(List<MessageOfProp> listOfProp, List<MessageOfStudent> listOfHuman, List<MessageOfTricker> listOfButcher, List<MessageOfBullet> listOfBullet,
+        List<MessageOfBombedBullet> listOfBombedBullet, List<MessageOfAll> listOfAll, List<MessageOfChest> listOfChest, List<MessageOfClassroom> listOfClassroom,
         List<MessageOfDoor> listOfDoor, List<MessageOfGate> listOfGate, object dataLock)
         {
             if (Reader == null)

@@ -36,11 +36,12 @@ namespace Client
             scoresOfStudents.FontSize = scoresOfTrickers.FontSize = fontsize;
         }
 
-        public void SetValue(MessageOfAll obj)
+        public void SetValue(MessageOfAll obj, bool gateOpened)
         {
+            bool hiddenGateRefreshed = false, hiddenGateOpened = false;
             time.Text = "Time⏳: " + Convert.ToString(obj.GameTime);
-            status.Text = "📱: " + Convert.ToString(obj.SubjectLeft) + "\n🚪: ";
-            if(obj.GateOpened)
+            status.Text = "📱: " + Convert.ToString(obj.SubjectFinished) + "\n🚪: ";
+            if (gateOpened)
             {
                 status.Text += "Open\n🆘: ";
             }
@@ -48,9 +49,17 @@ namespace Client
             {
                 status.Text += "Close\n🆘: ";
             }
-            if(obj.HiddenGateRefreshed)
+            if (obj.SubjectFinished >= Preparation.Utility.GameData.numOfGeneratorRequiredForEmergencyExit)
             {
-                if(obj.HiddenGateOpened)
+                hiddenGateRefreshed = true;
+            }
+            if (Preparation.Utility.GameData.numOfStudent == 1 + obj.StudentQuited + obj.StudentGraduated)
+            {
+                hiddenGateOpened = true;
+            }
+            if (hiddenGateRefreshed)
+            {
+                if (hiddenGateOpened)
                 {
                     status.Text += "Open\n🏃: ";
                 }
@@ -63,10 +72,10 @@ namespace Client
             {
                 status.Text += "Unrefreshed\n🏃: ";
             }
-            status.Text += Convert.ToString(obj.StudentGraduated)+ "\n⚰️: ";
+            status.Text += Convert.ToString(obj.StudentGraduated) + "\n⚰️: ";
             status.Text += Convert.ToString(obj.StudentQuited);
-            scoresOfStudents.Text = "Scores of Students：" + Convert.ToString(obj.StudentScore);
-            scoresOfTrickers.Text = "Scores of Tricker：" + Convert.ToString(obj.TrickerScore);
+            scoresOfStudents.Text = "Scores of Students: " + Convert.ToString(obj.StudentScore);
+            scoresOfTrickers.Text = "Scores of Tricker: " + Convert.ToString(obj.TrickerScore);
         }
     }
 }

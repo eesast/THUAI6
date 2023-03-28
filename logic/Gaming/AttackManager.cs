@@ -71,8 +71,9 @@ namespace Gaming
                 { IsBackground = true }.Start();
             }
 
-            public static void BeStunned(Character player, int time)
+            public static bool BeStunned(Character player, int time)
             {
+                if (player.PlayerState == PlayerStateType.Stunned || player.NoHp()) return false;
                 new Thread
                     (() =>
                     {
@@ -83,6 +84,7 @@ namespace Gaming
                     }
                     )
                 { IsBackground = true }.Start();
+                return true;
             }
 
             private void Die(Character player)
@@ -134,19 +136,23 @@ namespace Gaming
 
                         if ((!(((Character)objBeingShot).IsGhost())) && bullet.Parent.IsGhost())
                         {
-                            Student oneBeAttacked = (Student)objBeingShot;
-                            if (oneBeAttacked.BeAttacked(bullet))
+                            Student whoBeAttacked = (Student)objBeingShot;
+                            if (whoBeAttacked.BeAttacked(bullet))
                             {
-                                BeAddictedToGame(oneBeAttacked, (Ghost)bullet.Parent);
+                                BeAddictedToGame(whoBeAttacked, (Ghost)bullet.Parent);
                             }
-                            if (oneBeAttacked.CanBeAwed())
+                            if (whoBeAttacked.CanBeAwed())
                             {
-                                bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned);
-                                BeStunned(oneBeAttacked, GameData.basicStunnedTimeOfStudent);
+                                if (BeStunned(whoBeAttacked, GameData.basicStunnedTimeOfStudent))
+                                    bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned);
                             }
                         }
                         //       if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)
                         //          BeStunned((Character)objBeingShot, bullet.AP);
+                        break;
+                    case GameObjType.Generator:
+                        if (bullet.CanBeBombed(GameObjType.Generator))
+                            ((Generator)objBeingShot).DegreeOfRepair -= bullet.AP * GameData.factorDamageGenerator;
                         break;
                     default:
                         break;

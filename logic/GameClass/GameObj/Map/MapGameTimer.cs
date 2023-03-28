@@ -11,7 +11,15 @@ namespace GameClass.GameObj
         public class GameTimer : ITimer
         {
             private bool isGaming = false;
-            public bool IsGaming => isGaming;
+            public bool IsGaming
+            {
+                get => isGaming;
+                set
+                {
+                    lock (isGamingLock)
+                        isGaming = value;
+                }
+            }
 
             readonly object isGamingLock = new();
 

@@ -363,7 +363,6 @@
     {
         private const int moveSpeed = GameData.basicMoveSpeed * 473 / 380;
         private const int maxHp = GameData.basicHp;
-        public const int maxBulletNum = 1;
 
         public BulletType InitBullet => BulletType.CommonAttackOfGhost;
 
@@ -378,17 +377,124 @@
         public int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
     }
   ~~~
+- 普通攻击为 CommonAttackOfGhost
+  ~~~csharp
+        public CommonAttackOfGhost...
+      {
+        public override double BulletBombRange => 0;
+        public override double BulletAttackRange => GameData.basicAttackShortRange;
+        public int ap = GameData.basicApOfGhost;
+        public override int Speed => GameData.basicBulletMoveSpeed;
+        public override bool IsToBomb => false;
+
+        public override int CastTime => GameData.basicCastTime;
+        public override int Backswing => GameData.basicBackswing;
+        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
+        public const int cd = GameData.basicBackswing;
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            switch (gameObjType) 
+            {
+                case GameObjType.Character:
+                case GameObjType.Generator:
+                    return true;
+                default: 
+                    return false;
+            }
+        }
+      }
+  ~~~
 - 主动技能
   - 隐身
+    ~~~csharp
+        public int SkillCD => GameData.commonSkillCD;
+        public int DurationTime => GameData.commonSkillTime / 10 * 6;
+    ~~~
+    在DurationTime时间内玩家隐身
   - 使用飞刀
+    ~~~csharp
+        public int SkillCD => GameData.commonSkillCD* 2 / 3 ;
+        public int DurationTime => GameData.commonSkillTime / 10;
+    ~~~
+    在DurationTime时间内，攻击类型变为飞刀
+    ~~~csharp
+    internal sealed class FlyingKnife : Bullet
+    {
+        public override double BulletBombRange => 0;
+        public override double BulletAttackRange => GameData.basicRemoteAttackRange * 13;
+        public int ap = GameData.basicApOfGhost * 4 / 5;
+        public override int Speed => GameData.basicBulletMoveSpeed * 2;
+        public override bool IsToBomb => false;
+
+        public override int CastTime => GameData.basicCastTime;
+        public override int Backswing => GameData.basicBackswing * 2 / 5;
+        public override int RecoveryFromHit => GameData.basicBackswing * 3 / 4;
+        public const int cd = GameData.basicBackswing * 2 / 5 + 100;
+
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            if (gameObjType == GameObjType.Character) return true;
+            return false;
+        }
+    }
+    ~~~
 
 ### 学生（&老师）
 
 #### 运动员
+    ~~~csharp
+        private const int moveSpeed = GameData.basicMoveSpeed * 40 / 38;
+        private const int maxHp = GameData.basicHp * 32 / 30;
+        public const int maxBulletNum = 0;
+        public BulletType InitBullet => BulletType.Null;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.CanBeginToCharge });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public const int fixSpeed = GameData.basicFixSpeed * 6 / 10;
+        int treatSpeed = GameData.basicTreatSpeed * 8 / 10;
+
+        public const double concealment = GameData.basicConcealment * 0.9;
+        int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
+        int viewRange = (int)(GameData.basicViewRange * 1.1);
+        int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking * 12 / 10;
+        int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows * 12 / 10;
+        int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
+    ~~~
+  - 主动技能 
+    - 冲撞
+    ~~~csharp
+        public int SkillCD => GameData.commonSkillCD / 5;
+        public int DurationTime => GameData.commonSkillTime * 6 / 10;
+    ~~~
+    在DurationTime内，速度变为三倍，期间撞到捣蛋鬼，会导致捣蛋鬼眩晕7.22s,学生眩晕2.09s
 
 #### 教师
+    ~~~csharp
+        private const int moveSpeed = GameData.basicMoveSpeed * 3 / 4;
+        int maxHp = GameData.basicHp * 10;
+        int maxBulletNum = 0;
+        BulletType InitBullet => BulletType.Null;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.Punish });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public const int fixSpeed = 0;
+        int treatSpeed = GameData.basicTreatSpeed;
+        double concealment = GameData.basicConcealment * 0.5;
+        int alertnessRadius = GameData.basicAlertnessRadius / 2;
+        int viewRange = GameData.basicViewRange * 9 / 10;
+        int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows /2;
+        int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
+    ~~~
 - 主动技能
   - 惩罚
+    ~~~csharp
+        public int SkillCD => GameData.commonSkillCD;
+        public int DurationTime => 0;
+    ~~~
+  使用瞬间，在视野范围内的捣蛋鬼会被眩晕（3070+ 玩家损失的血量 / 1000）ms，
 
 ## 游戏数据
 
@@ -426,7 +532,7 @@
         {
             return pos.y / numOfPosGridPerCell;
         }
-        public static XY PosGridToCellXY(XY pos)  // 求坐标所在的格子的y坐标
+        public static XY PosGridToCellXY(XY pos)  // 求坐标所在的格子的Xy坐标
         {
             return new XY(pos.x / numOfPosGridPerCell, pos.y / numOfPosGridPerCell);
         }
@@ -456,7 +562,7 @@
         public const int basicBulletMoveSpeed = 2700;                // 基本子弹移动速度，单位：s-1
 
         public const double basicConcealment = 1.0;
-        public const int basicAlertnessRadius = 30700;
+        public const int basicAlertnessRadius = 10700;
         public const int basicViewRange = 5 * numOfPosGridPerCell;
         public const int maxNumOfPropInPropInventory = 3;
 ~~~
@@ -500,14 +606,17 @@
         public const int MinAP = 0;                                  // 最小攻击力
         public const int MaxAP = int.MaxValue;                       // 最大攻击力
 
+        public const int factorDamageGenerator = 2;//子弹对电机的破坏=factorDamageGenerator*AP;
+        public const int bulletRadius = 200;                         // 默认子弹半径
+        public const int basicBulletNum = 3;                         // 基本初始子弹量
+
         public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicCastTime = 500;//基本前摇时间
         public const int basicBackswing = 818;//基本后摇时间
         public const int basicRecoveryFromHit = 4300;//基本命中攻击恢复时长
         public const int basicStunnedTimeOfStudent = 4130;
 
-        public const int bulletRadius = 200;                         // 默认子弹半径
-        public const int basicBulletNum = 3;                         // 基本初始子弹量
+        public const int basicBulletMoveSpeed = 2700;                // 基本子弹移动速度，单位：s-1
         public const double basicRemoteAttackRange = 9000;  // 基本远程攻击范围
         public const double basicAttackShortRange = 2700;                 // 基本近程攻击范围
         public const double basicBulletBombRange = 3000;             // 基本子弹爆炸范围
@@ -526,7 +635,7 @@
         public const int PropRadius = numOfPosGridPerCell / 2;
         public const int PropMoveSpeed = 3000;
         public const int PropMaxMoveDistance = 15 * numOfPosGridPerCell;
-        public const long PropProduceTime = 10000;
+        public const long PropProduceTime = 20000;
         public const int PropDuration = 10000;
 
         public const int ApPropAdd = basicApOfGhost * 12 / 10;

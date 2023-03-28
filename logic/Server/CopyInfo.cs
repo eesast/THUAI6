@@ -184,6 +184,8 @@ namespace Server
             {
                 case Protobuf.StudentType.Athlete:
                     return Preparation.Utility.CharacterType.Athlete;
+                case StudentType._2:
+                    return Preparation.Utility.CharacterType.Teacher;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }

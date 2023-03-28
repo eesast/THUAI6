@@ -15,6 +15,15 @@ namespace Gaming
         {
 
             // 人物移动
+            private void SkillWhenMove(Character player, IGameObj collisionObj)
+            {
+                if (player.UseIActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
+                {
+                    if (AttackManager.BeStunned((Character)collisionObj, GameData.TimeOfGhostFaintingWhenCharge))
+                        player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenCharge));
+                    AttackManager.BeStunned(player, GameData.TimeOfStudentFaintingWhenCharge);
+                }
+            }
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
                 if (!playerToMove.Commandable()) return false;
@@ -479,6 +488,7 @@ namespace Gaming
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>
                     {
+                        SkillWhenMove((Character)obj, collisionObj);
                         //if (collisionObj is Mine)
                         //{
                         //    ActivateMine((Character)obj, (Mine)collisionObj);

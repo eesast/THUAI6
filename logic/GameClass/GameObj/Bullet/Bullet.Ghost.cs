@@ -37,8 +37,14 @@ namespace GameClass.GameObj
         }
         public override bool CanBeBombed(GameObjType gameObjType)
         {
-            if (gameObjType == GameObjType.Character) return true;
-            return false;
+            switch (gameObjType)
+            {
+                case GameObjType.Character:
+                case GameObjType.Generator:
+                    return true;
+                default:
+                    return false;
+            }
         }
         public override BulletType TypeOfBullet => BulletType.CommonAttackOfGhost;
 
@@ -76,8 +82,13 @@ namespace GameClass.GameObj
         }
         public override bool CanBeBombed(GameObjType gameObjType)
         {
-            if (gameObjType == GameObjType.Character) return true;
-            return false;
+            switch (gameObjType)
+            {
+                case GameObjType.Character:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         public override BulletType TypeOfBullet => BulletType.FlyingKnife;

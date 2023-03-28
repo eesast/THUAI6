@@ -97,7 +97,7 @@ namespace Preparation.Interface
         public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
 
-        public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows * 9 / 10;
+        public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows / 2;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
         public int timeOfOpenChest = GameData.basicSpeedOfOpenChest;

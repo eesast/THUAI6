@@ -10,7 +10,7 @@
 int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
 {
     int pID = 0;
-    std::string sIP = "183.172.169.99";
+    std::string sIP = "172.22.32.1";
     std::string sPort = "8888";
     bool file = false;
     bool print = false;
@@ -18,13 +18,13 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     extern const THUAI6::PlayerType playerType;
     extern const THUAI6::TrickerType trickerType;
     extern const THUAI6::StudentType studentType;
-    // {
-    //     file = true;
-    //     print = true;
-    //     Logic logic(playerType, pID, trickerType, studentType);
-    //     logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);
-    //     return 0;
-    // }
+    {
+        file = true;
+        print = true;
+        Logic logic(playerType, pID, trickerType, studentType);
+        logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);
+        return 0;
+    }
 
     // 使用cmdline的正式版本
     try

@@ -90,7 +90,6 @@ namespace Server
             }
         }
 
-
         public static Protobuf.PlayerState ToPlayerState(Preparation.Utility.PlayerStateType playerState)
         {
             switch (playerState)
@@ -238,10 +237,10 @@ namespace Server
                 case Preparation.Utility.GameObjType.EmergencyExit:
                     if (((EmergencyExit)gameObj).CanOpen)
                         return HiddenGate((EmergencyExit)gameObj);
-                    else return null;
+                    else return new MessageOfObj();
                 case Preparation.Utility.GameObjType.Door:
                     return Door((Door)gameObj);
-                default: return null;
+                default: return new MessageOfObj();
             }
         }
         public static MessageOfObj? Auto(MessageOfNews news)

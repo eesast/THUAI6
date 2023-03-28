@@ -25,6 +25,9 @@ namespace Gaming
                         case ActiveSkillType.CanBeginToCharge:
                             CanBeginToCharge(character);
                             break;
+                        case ActiveSkillType.Punish:
+                            Punish(character);
+                            break;
                         default:
                             return false;
                     }

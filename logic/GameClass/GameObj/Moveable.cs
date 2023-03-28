@@ -50,12 +50,13 @@ namespace GameClass.GameObj
         // 移动，改变坐标
         public long MovingSetPos(XY moveVec, PlaceType place)
         {
-            lock (gameObjLock)
-            {
-                FacingDirection = moveVec;
-                this.Position += moveVec;
-                this.place = place;
-            }
+            if (moveVec.x != 0 || moveVec.y != 0)
+                lock (gameObjLock)
+                {
+                    FacingDirection = moveVec;
+                    this.Position += moveVec;
+                    this.place = place;
+                }
             return moveVec * moveVec;
         }
 

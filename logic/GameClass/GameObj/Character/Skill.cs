@@ -5,61 +5,103 @@ namespace GameClass.GameObj
 {
     public class BecomeVampire : IActiveSkill  // 化身吸血鬼
     {
-        public int SkillCD => GameData.commonSkillCD / 3 * 4;
+        public int SkillCD => GameData.commonSkillCD * 4 / 3;
         public int DurationTime => GameData.commonSkillTime;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
     }
     public class CanBeginToCharge : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD / 5;
-        public int DurationTime => GameData.commonSkillTime / 10 * 6;
+        public int DurationTime => GameData.commonSkillTime * 6 / 10;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
     }
 
     public class BecomeInvisible : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => GameData.commonSkillTime / 10 * 6;
+        public int DurationTime => GameData.commonSkillTime * 6 / 10;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
     }
 
     public class Punish : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => GameData.commonSkillTime / 10 * 6;
+        public int DurationTime => 0;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
     }
 
     public class NuclearWeapon : IActiveSkill  // 核武器
     {
-        public int SkillCD => GameData.commonSkillCD / 3 * 7;
+        public int SkillCD => GameData.commonSkillCD * 7 / 3;
         public int DurationTime => GameData.commonSkillTime / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
     }
 
     public class UseKnife : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD / 3 * 2;
+        public int SkillCD => GameData.commonSkillCD * 2 / 3;
         public int DurationTime => GameData.commonSkillTime / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
     }
 
     public class SuperFast : IActiveSkill  // 3倍速
     {
         public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => GameData.commonSkillTime / 10 * 4;
+        public int DurationTime => GameData.commonSkillTime * 4 / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
     }
 
     public class NullSkill : IActiveSkill
@@ -68,6 +110,12 @@ namespace GameClass.GameObj
         public int DurationTime => GameData.commonSkillTime;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = false;
+        }
     }
 
     public static class SkillFactory
@@ -80,6 +128,10 @@ namespace GameClass.GameObj
                     return new BecomeInvisible();
                 case ActiveSkillType.UseKnife:
                     return new UseKnife();
+                case ActiveSkillType.CanBeginToCharge:
+                    return new CanBeginToCharge();
+                case ActiveSkillType.Punish:
+                    return new Punish();
                 default:
                     return new NullSkill();
             }

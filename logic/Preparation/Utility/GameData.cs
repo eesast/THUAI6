@@ -7,9 +7,11 @@ namespace Preparation.Utility
     {
         #region 基本常数
         public const int numOfStepPerSecond = 20;     // 每秒行走的步数
+
+        public const int tolerancesLength = 10;
+
         public const int frameDuration = 50;         // 每帧时长
         public const int checkInterval = 50;  // 检查位置标志、补充子弹的帧时长
-
         public const long gameDuration = 600000;      // 游戏时长600000ms = 10min
 
         public const int MinSpeed = 1;             // 最小速度
@@ -44,7 +46,7 @@ namespace Preparation.Utility
         {
             return pos.y / numOfPosGridPerCell;
         }
-        public static XY PosGridToCellXY(XY pos)  // 求坐标所在的格子的y坐标
+        public static XY PosGridToCellXY(XY pos)  // 求坐标所在的格子的xy坐标
         {
             return new XY(pos.x / numOfPosGridPerCell, pos.y / numOfPosGridPerCell);
         }
@@ -63,7 +65,7 @@ namespace Preparation.Utility
         #endregion
         #region 角色相关
         public const int numOfStudent = 4;
-        public const int characterRadius = numOfPosGridPerCell / 2 / 5 * 4;  // 人物半径
+        public const int characterRadius = numOfPosGridPerCell * 4 / 10;  // 人物半径
 
         public const int basicTreatSpeed = 100;
         public const int basicFixSpeed = 100;
@@ -79,12 +81,16 @@ namespace Preparation.Utility
         public const int basicTreatmentDegree = 1500000;
         public const int basicTimeOfRescue = 1000;
 
-        public const int basicMoveSpeed = 1270;                      // 基本移动速度，单位：s-1
+#if DEBUG
+        public const int basicMoveSpeed = 9000;// 基本移动速度，单位：s-1
+#else
+        public const int basicMoveSpeed = 1270;
+#endif
+
         public const int characterMaxSpeed = 12000;                  // 最大速度
-        public const int basicBulletMoveSpeed = 2700;                // 基本子弹移动速度，单位：s-1
 
         public const double basicConcealment = 1.0;
-        public const int basicAlertnessRadius = 30700;
+        public const int basicAlertnessRadius = 10700;
         public const int basicViewRange = 5 * numOfPosGridPerCell;
         public const int maxNumOfPropInPropInventory = 3;
 
@@ -143,14 +149,17 @@ namespace Preparation.Utility
         public const int MinAP = 0;                                  // 最小攻击力
         public const int MaxAP = int.MaxValue;                       // 最大攻击力
 
+        public const int factorDamageGenerator = 2;//子弹对电机的破坏=factorDamageGenerator*AP;
+        public const int bulletRadius = 200;                         // 默认子弹半径
+        public const int basicBulletNum = 3;                         // 基本初始子弹量
+
         public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicCastTime = 500;//基本前摇时间
         public const int basicBackswing = 818;//基本后摇时间
         public const int basicRecoveryFromHit = 4300;//基本命中攻击恢复时长
         public const int basicStunnedTimeOfStudent = 4130;
 
-        public const int bulletRadius = 200;                         // 默认子弹半径
-        public const int basicBulletNum = 3;                         // 基本初始子弹量
+        public const int basicBulletMoveSpeed = 2700;                // 基本子弹移动速度，单位：s-1
         public const double basicRemoteAttackRange = 9000;  // 基本远程攻击范围
         public const double basicAttackShortRange = 2700;                 // 基本近程攻击范围
         public const double basicBulletBombRange = 3000;             // 基本子弹爆炸范围
@@ -177,7 +186,7 @@ namespace Preparation.Utility
         public const int PropRadius = numOfPosGridPerCell / 2;
         public const int PropMoveSpeed = 3000;
         public const int PropMaxMoveDistance = 15 * numOfPosGridPerCell;
-        public const long PropProduceTime = 10000;
+        public const long PropProduceTime = 20000;
         public const int PropDuration = 10000;
 
         public const int ApPropAdd = basicApOfGhost * 12 / 10;

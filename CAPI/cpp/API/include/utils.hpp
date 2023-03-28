@@ -270,9 +270,6 @@ namespace Proto2THUAI6
         gameInfo->studentQuited = allMsg.student_quited();
         gameInfo->studentScore = allMsg.student_score();
         gameInfo->trickerScore = allMsg.tricker_score();
-        gameInfo->gateOpened = allMsg.gate_opened();
-        gameInfo->hiddenGateOpened = allMsg.hidden_gate_opened();
-        gameInfo->hiddenGateRefreshed = allMsg.hidden_gate_refreshed();
         return gameInfo;
     }
 
@@ -407,6 +404,14 @@ namespace THUAI62Proto
         protobuf::IDMsg idMsg;
         idMsg.set_player_id(playerID);
         return idMsg;
+    }
+
+    inline protobuf::TreatAndRescueMsg THUAI62ProtobufTreatAndRescue(int64_t playerID, int64_t mateID)
+    {
+        protobuf::TreatAndRescueMsg treatAndRescueMsg;
+        treatAndRescueMsg.set_player_id(playerID);
+        treatAndRescueMsg.set_to_player_id(mateID);
+        return treatAndRescueMsg;
     }
 
     inline protobuf::MoveMsg THUAI62ProtobufMove(int64_t time, double angle, int64_t id)

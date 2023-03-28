@@ -30,54 +30,16 @@ namespace Gaming
 
                 if ((!player.Commandable())) return false;
                 IActiveSkill skill = player.UseIActiveSkill(ActiveSkillType.CanBeginToCharge);
+                Debugger.Output(player, "can begin to charge!");
+
+
                 return ActiveSkillEffect(skill, player, () =>
                 {
                     player.AddMoveSpeed(skill.DurationTime, 3.0);
-                    //player.BulletOfPlayer = BulletType.Ram;
-                    new Thread
-          (
-              () =>
-              {
-                  new FrameRateTaskExecutor<int>(
-                    loopCondition: () => player.Commandable() && gameMap.Timer.IsGaming,
-                    loopToDo: () =>
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                        try
-                        {
-                            foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
-                            {
-                                if (character.IsGhost() != player.IsGhost() && XY.Distance(player.Position + new XY(player.FacingDirection, player.Radius), character.Position) <= character.Radius)
-                                {
-                                    AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenCharge);
-                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenCharge));
-                                    AttackManager.BeStunned(player, GameData.TimeOfStudentFaintingWhenCharge);
-                                    break;
-                                }
-                            }
-                        }
-                        finally
-                        {
-                            gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
-                        }
-                    },
-                     timeInterval: GameData.frameDuration,
-                     finallyReturn: () => 0,
-                     maxTotalDuration: skill.DurationTime
-                      )
-
-    .Start();
-              }
-
-          )
-                    { IsBackground = true }.Start();
-                    Debugger.Output(player, "can begin to charge!");
+                    //See SkillWhenMove in ActionManager
                 },
                                                       () =>
-                                                      {
-                                                          double tempVam = player.Vampire - 0.5;
-                                                          player.Vampire = tempVam < player.OriVampire ? player.OriVampire : tempVam;
-                                                      });
+                                                      { });
             }
 
 
@@ -124,10 +86,10 @@ namespace Gaming
                     {
                         foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            if (player.IsGhost() && XY.Distance(player.Position, character.Position) <= player.ViewRange)
+                            if (player.IsGhost() && gameMap.CanSee(player.Position, character.Position, player.ViewRange))
                             {
-                                AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.TimeFactorOfGhostFainting);
-                                player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.TimeFactorOfGhostFainting));
+                                if (AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.TimeFactorOfGhostFainting))
+                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.TimeFactorOfGhostFainting));
                                 break;
                             }
                         }
@@ -161,12 +123,12 @@ namespace Gaming
                     ActiveSkillType activeSkillType = SkillFactory.FindActiveSkillType(activeSkill);
                     if (player.TimeUntilActiveSkillAvailable[activeSkillType] == 0)
                     {
-
                         player.SetTimeUntilActiveSkillAvailable(activeSkillType, activeSkill.SkillCD);
                         new Thread
                         (() =>
                         {
                             startSkill();
+                            activeSkill.IsBeingUsed = true;
                             new FrameRateTaskExecutor<int>(
                                 () => !player.IsResetting,
                                 () =>
@@ -184,6 +146,7 @@ namespace Gaming
                                 .Start();
 
                             endSkill();
+                            activeSkill.IsBeingUsed = false;
                             Debugger.Output(player, "return to normal.");
 
                             new FrameRateTaskExecutor<int>(

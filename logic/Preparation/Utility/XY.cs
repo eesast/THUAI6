@@ -19,8 +19,16 @@ namespace Preparation.Utility
         }
         public XY(XY Direction, double length)
         {
-            this.x = (int)(length * Math.Cos(Direction.Angle()));
-            this.y = (int)(length * Math.Sin(Direction.Angle()));
+            if (Direction.x == 0 && Direction.y == 0)
+            {
+                this.x = 0;
+                this.y = 0;
+            }
+            else
+            {
+                this.x = (int)(length * Math.Cos(Direction.Angle()));
+                this.y = (int)(length * Math.Sin(Direction.Angle()));
+            }
         }
         public override string ToString()
         {

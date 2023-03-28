@@ -175,9 +175,6 @@ message MessageOfAll
     int32 student_quited = 4; // 已经退学的学生数
     int32 student_score = 5;
     int32 tricker_score = 6;
-    bool gate_opened = 7;
-    bool hidden_gate_refreshed = 8;
-    bool hidden_gate_opened = 9;
 }
 
 message MessageToClient

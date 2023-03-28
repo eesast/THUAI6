@@ -36,7 +36,7 @@ namespace Client
         }
         public void SetFontSize(double fontsize)
         {
-            serial.FontSize = scores.FontSize = state.FontSize = status.FontSize=activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = prop3.FontSize = fontsize; 
+            serial.FontSize = scores.FontSize = state.FontSize = status.FontSize = activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = prop3.FontSize = fontsize;
         }
 
         private void SetStaticValue(MessageOfTricker obj)
@@ -45,23 +45,23 @@ namespace Client
             {
                 case TrickerType.Assassin:
                     coolTime0 = coolTime1 = coolTime2 = 10000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：Assassin";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业: Assassin";
                     break;
                 case TrickerType._2:
                     coolTime0 = coolTime1 = coolTime2 = 20000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：TrickerType2";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业: TrickerType2";
                     break;
                 case TrickerType._3:
                     coolTime0 = coolTime1 = coolTime2 = 30000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：TrickerType3";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业: TrickerType3";
                     break;
                 case TrickerType._4:
                     coolTime0 = coolTime1 = coolTime2 = 40000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：TrickerType4";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业: TrickerType4";
                     break;
                 case TrickerType.NullTrickerType:
                     coolTime0 = coolTime1 = coolTime2 = -1;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：NullTrickerType";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业: NullTrickerType";
                     break;
             }
             activeSkill0.Text = "Skill0";
@@ -71,7 +71,7 @@ namespace Client
         }
         private void SetDynamicValue(MessageOfTricker obj)
         {
-            status.Text = "🏃🏿‍："+Convert.ToString(obj.Speed);
+            status.Text = "🏃🏿‍: " + Convert.ToString(obj.Speed);
             switch (obj.PlayerState)
             {
                 case PlayerState.Idle:
@@ -114,10 +114,10 @@ namespace Client
                     state.Text = "Locking";
                     break;
                 case PlayerState.Rummaging:
-                    state.Text ="Rummaging";
+                    state.Text = "Rummaging";
                     break;
                 case PlayerState.Climbing:
-                    state.Text ="Climbing";
+                    state.Text = "Climbing";
                     break;
                 case PlayerState.OpeningAChest:
                     state.Text = "OpeningAChest";
@@ -131,7 +131,7 @@ namespace Client
                 default:
                     break;
             }
-            scores.Text = "Scores:" + Convert.ToString(obj.Score);
+            scores.Text = "Scores: " + Convert.ToString(obj.Score);
             if (obj.TimeUntilSkillAvailable[0] >= 0)
                 skillprogress0.Value = 100 - obj.TimeUntilSkillAvailable[0] / coolTime0 * 100;
             if (obj.TimeUntilSkillAvailable[1] >= 0)
@@ -153,25 +153,25 @@ namespace Client
                     case 0:
                         switch (icon)
                         {
-                            case PropType.Key3:
+                            case Protobuf.PropType.Key3:
                                 prop0.Text = "🔑";
                                 break;
-                            case PropType.Key5:
+                            case Protobuf.PropType.Key5:
                                 prop0.Text = "🔑";
                                 break;
-                            case PropType.Key6:
+                            case Protobuf.PropType.Key6:
                                 prop0.Text = "🔑";
                                 break;
-                            case PropType.AddSpeed:
+                            case Protobuf.PropType.AddSpeed:
                                 prop0.Text = "⛸";
                                 break;
-                            case PropType.AddLifeOrAp:
+                            case Protobuf.PropType.AddLifeOrAp:
                                 prop0.Text = "🏅";
                                 break;
-                            case PropType.AddHpOrAp:
+                            case Protobuf.PropType.AddHpOrAp:
                                 prop0.Text = "♥";
                                 break;
-                            case PropType.ShieldOrSpear:
+                            case Protobuf.PropType.ShieldOrSpear:
                                 prop0.Text = "🛡";
                                 break;
                             default:
@@ -183,25 +183,25 @@ namespace Client
                     case 1:
                         switch (icon)
                         {
-                            case PropType.Key3:
+                            case Protobuf.PropType.Key3:
                                 prop1.Text = "🔑";
                                 break;
-                            case PropType.Key5:
+                            case Protobuf.PropType.Key5:
                                 prop1.Text = "🔑";
                                 break;
-                            case PropType.Key6:
+                            case Protobuf.PropType.Key6:
                                 prop1.Text = "🔑";
                                 break;
-                            case PropType.AddSpeed:
+                            case Protobuf.PropType.AddSpeed:
                                 prop1.Text = "⛸";
                                 break;
-                            case PropType.AddLifeOrAp:
+                            case Protobuf.PropType.AddLifeOrAp:
                                 prop1.Text = "🏅";
                                 break;
-                            case PropType.AddHpOrAp:
+                            case Protobuf.PropType.AddHpOrAp:
                                 prop1.Text = "♥";
                                 break;
-                            case PropType.ShieldOrSpear:
+                            case Protobuf.PropType.ShieldOrSpear:
                                 prop1.Text = "🛡";
                                 break;
                             default:
@@ -213,25 +213,25 @@ namespace Client
                     case 2:
                         switch (icon)
                         {
-                            case PropType.Key3:
+                            case Protobuf.PropType.Key3:
                                 prop2.Text = "🔑";
                                 break;
-                            case PropType.Key5:
+                            case Protobuf.PropType.Key5:
                                 prop2.Text = "🔑";
                                 break;
-                            case PropType.Key6:
+                            case Protobuf.PropType.Key6:
                                 prop2.Text = "🔑";
                                 break;
-                            case PropType.AddSpeed:
+                            case Protobuf.PropType.AddSpeed:
                                 prop2.Text = "⛸";
                                 break;
-                            case PropType.AddLifeOrAp:
+                            case Protobuf.PropType.AddLifeOrAp:
                                 prop2.Text = "🏅";
                                 break;
-                            case PropType.AddHpOrAp:
+                            case Protobuf.PropType.AddHpOrAp:
                                 prop2.Text = "♥";
                                 break;
-                            case PropType.ShieldOrSpear:
+                            case Protobuf.PropType.ShieldOrSpear:
                                 prop2.Text = "🛡";
                                 break;
                             default:
@@ -243,25 +243,25 @@ namespace Client
                     case 3:
                         switch (icon)
                         {
-                            case PropType.Key3:
+                            case Protobuf.PropType.Key3:
                                 prop3.Text = "🔑";
                                 break;
-                            case PropType.Key5:
+                            case Protobuf.PropType.Key5:
                                 prop3.Text = "🔑";
                                 break;
-                            case PropType.Key6:
+                            case Protobuf.PropType.Key6:
                                 prop3.Text = "🔑";
                                 break;
-                            case PropType.AddSpeed:
+                            case Protobuf.PropType.AddSpeed:
                                 prop3.Text = "⛸";
                                 break;
-                            case PropType.AddLifeOrAp:
+                            case Protobuf.PropType.AddLifeOrAp:
                                 prop3.Text = "🏅";
                                 break;
-                            case PropType.AddHpOrAp:
+                            case Protobuf.PropType.AddHpOrAp:
                                 prop3.Text = "♥";
                                 break;
-                            case PropType.ShieldOrSpear:
+                            case Protobuf.PropType.ShieldOrSpear:
                                 prop3.Text = "🛡";
                                 break;
                             default:

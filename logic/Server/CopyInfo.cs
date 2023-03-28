@@ -270,10 +270,10 @@ namespace Server
             foreach (var value in player.PropInventory)
                 msg.StudentMessage.Prop.Add(ToPropType(value.GetPropType()));
 
-            msg.StudentMessage.Place = ToPlaceType(player.Place);
+            msg.StudentMessage.Place = ToPlaceType((Preparation.Utility.PlaceType)player.Place);
             msg.StudentMessage.Guid = player.ID;
 
-            msg.StudentMessage.PlayerState = ToPlayerState(player.PlayerState);
+            msg.StudentMessage.PlayerState = ToPlayerState((PlayerStateType)player.PlayerState);
             msg.StudentMessage.PlayerId = player.PlayerID;
             msg.StudentMessage.ViewRange = player.ViewRange;
             msg.StudentMessage.Radius = player.Radius;
@@ -288,7 +288,7 @@ namespace Server
                     msg.StudentMessage.Buff.Add(ToStudentBuffType(kvp.Key));
             }
 
-            msg.StudentMessage.BulletType = ToBulletType(player.BulletOfPlayer);
+            msg.StudentMessage.BulletType = ToBulletType((Preparation.Utility.BulletType)player.BulletOfPlayer);
             msg.StudentMessage.LearningSpeed = player.FixSpeed;
             msg.StudentMessage.TreatSpeed = player.TreatSpeed;
             msg.StudentMessage.FacingDirection = player.FacingDirection.Angle();
@@ -310,7 +310,7 @@ namespace Server
             for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count(); ++i)
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(-1);
 
-            msg.TrickerMessage.Place = ToPlaceType(player.Place);
+            msg.TrickerMessage.Place = ToPlaceType((Preparation.Utility.PlaceType)player.Place);
             foreach (var value in player.PropInventory)
                 msg.TrickerMessage.Prop.Add(ToPropType(value.GetPropType()));
 
@@ -320,11 +320,11 @@ namespace Server
             msg.TrickerMessage.PlayerId = player.PlayerID;
             msg.TrickerMessage.ViewRange = player.ViewRange;
             msg.TrickerMessage.Radius = player.Radius;
-            msg.TrickerMessage.PlayerState = ToPlayerState(player.PlayerState);
+            msg.TrickerMessage.PlayerState = ToPlayerState((PlayerStateType)player.PlayerState);
             msg.TrickerMessage.TrickDesire = (player.BgmDictionary.ContainsKey(BgmType.StudentIsApproaching)) ? player.BgmDictionary[BgmType.StudentIsApproaching] : 0;
             msg.TrickerMessage.ClassVolume = (player.BgmDictionary.ContainsKey(BgmType.GeneratorIsBeingFixed)) ? player.BgmDictionary[BgmType.GeneratorIsBeingFixed] : 0;
             msg.TrickerMessage.FacingDirection = player.FacingDirection.Angle();
-            msg.TrickerMessage.BulletType = ToBulletType(player.BulletOfPlayer);
+            msg.TrickerMessage.BulletType = ToBulletType((Preparation.Utility.BulletType)player.BulletOfPlayer);
             foreach (KeyValuePair<Preparation.Utility.BuffType, bool> kvp in player.Buff)
             {
                 if (kvp.Value)
@@ -344,7 +344,7 @@ namespace Server
             msg.BulletMessage.FacingDirection = bullet.FacingDirection.Angle();
             msg.BulletMessage.Guid = bullet.ID;
             msg.BulletMessage.Team = (bullet.Parent.IsGhost()) ? PlayerType.TrickerPlayer : PlayerType.StudentPlayer;
-            msg.BulletMessage.Place = ToPlaceType(bullet.Place);
+            msg.BulletMessage.Place = ToPlaceType((Preparation.Utility.PlaceType)bullet.Place);
             msg.BulletMessage.BombRange = bullet.BulletBombRange;
             msg.BulletMessage.Speed = bullet.Speed;
             return msg;
@@ -359,7 +359,7 @@ namespace Server
             msg.PropMessage.Y = prop.Position.y;
             msg.PropMessage.FacingDirection = prop.FacingDirection.Angle();
             msg.PropMessage.Guid = prop.ID;
-            msg.PropMessage.Place = ToPlaceType(prop.Place);
+            msg.PropMessage.Place = ToPlaceType((Preparation.Utility.PlaceType)prop.Place);
             return msg;
         }
 

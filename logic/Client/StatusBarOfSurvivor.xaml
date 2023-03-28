@@ -23,9 +23,9 @@
             <ColumnDefinition Width="10*"/>
             <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
-        <TextBox Name="serial" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="👥null🧓null&#xD;&#xA;职业："  Grid.Row="0" Grid.ColumnSpan="4" FontSize="12"/>
-        <TextBox Name="status" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="♥：" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="4"/>
-        <TextBox Name="scores" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="Scores：" Grid.Row="3" Grid.ColumnSpan="4"/>
+        <TextBox Name="serial" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="👥null🧓null&#xD;&#xA;职业:  "  Grid.Row="0" Grid.ColumnSpan="4" FontSize="12"/>
+        <TextBox Name="status" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="♥: " Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="4"/>
+        <TextBox Name="scores" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="Scores: " Grid.Row="3" Grid.ColumnSpan="4"/>
         <TextBox Name="activeSkill0" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="" Grid.Row="4" Grid.ColumnSpan="2"/>
         <ProgressBar Name="skillprogress0" Background="White" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2"/>
         <TextBox Name="activeSkill1" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="" Grid.Row="5" Grid.ColumnSpan="2"/>

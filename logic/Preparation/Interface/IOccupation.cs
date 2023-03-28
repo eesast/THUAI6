@@ -27,6 +27,7 @@ namespace Preparation.Interface
     {
         public int FixSpeed { get; }
         public int TreatSpeed { get; }
+        public int MaxGamingAddiction { get; }
     }
 
     public class Assassin : IGhost
@@ -71,6 +72,9 @@ namespace Preparation.Interface
         private const int maxHp = GameData.basicHp * 10;
         public int MaxHp => maxHp;
 
+        private const int maxGamingAddiction = GameData.basicMaxGamingAddiction * 10;
+        public int MaxGamingAddiction => maxGamingAddiction;
+
         public const int maxBulletNum = 0;
         public int MaxBulletNum => maxBulletNum;
 
@@ -110,6 +114,9 @@ namespace Preparation.Interface
 
         private const int maxHp = GameData.basicHp * 32 / 30;
         public int MaxHp => maxHp;
+
+        private const int maxGamingAddiction = GameData.basicMaxGamingAddiction * 9 / 10;
+        public int MaxGamingAddiction => maxGamingAddiction;
 
         public const int maxBulletNum = 0;
         public int MaxBulletNum => maxBulletNum;

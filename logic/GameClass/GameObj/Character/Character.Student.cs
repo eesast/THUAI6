@@ -163,6 +163,7 @@ namespace GameClass.GameObj
         public Student(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
             this.OrgFixSpeed = this.fixSpeed = ((IStudent)Occupation).FixSpeed;
+            this.TreatSpeed = this.OrgTreatSpeed = ((IStudent)Occupation).TreatSpeed;
         }
     }
 }

@@ -474,7 +474,7 @@ namespace Gaming
             var gameObjList = new List<IGameObj>();
             foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                if (!GameData.IsMap(keyValuePair.Key))
+                if (GameData.NeedCopy(keyValuePair.Key))
                 {
                     gameMap.GameObjLockDict[keyValuePair.Key].EnterReadLock();
                     try

@@ -27,10 +27,13 @@ namespace Preparation.Utility
         public const int numOfGenerator = 9;
         public const int numOfChest = 8;
 
-        private const int numOfObjNotMap = 5;
         public static bool IsMap(GameObjType gameObjType)
         {
-            return (uint)gameObjType > numOfObjNotMap;
+            return (uint)gameObjType > 5;
+        }
+        public static bool NeedCopy(GameObjType gameObjType)
+        {
+            return gameObjType != GameObjType.Null && gameObjType != GameObjType.Grass && gameObjType != GameObjType.OutOfBoundBlock && gameObjType != GameObjType.Window && gameObjType != GameObjType.Wall;
         }
 
         public static XY GetCellCenterPos(int x, int y)  // 求格子的中心坐标

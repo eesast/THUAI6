@@ -171,11 +171,11 @@ bool Communication::StartLearning(int64_t playerID)
         return false;
 }
 
-bool Communication::StartRescueMate(int64_t playerID)
+bool Communication::StartRescueMate(int64_t playerID, int64_t mateID)
 {
     protobuf::BoolRes saveStudentResult;
     ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto request = THUAI62Proto::THUAI62ProtobufTreatAndRescue(playerID, mateID);
     auto status = THUAI6Stub->StartRescueMate(&context, request, &saveStudentResult);
     if (status.ok())
         return saveStudentResult.act_success();
@@ -183,11 +183,11 @@ bool Communication::StartRescueMate(int64_t playerID)
         return false;
 }
 
-bool Communication::StartTreatMate(int64_t playerID)
+bool Communication::StartTreatMate(int64_t playerID, int64_t mateID)
 {
     protobuf::BoolRes healStudentResult;
     ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
+    auto request = THUAI62Proto::THUAI62ProtobufTreatAndRescue(playerID, mateID);
     auto status = THUAI6Stub->StartTreatMate(&context, request, &healStudentResult);
     if (status.ok())
         return healStudentResult.act_success();

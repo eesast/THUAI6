@@ -38,8 +38,8 @@ public:
     bool Graduate(int64_t playerID);
 
     bool StartLearning(int64_t playerID);
-    bool StartTreatMate(int64_t playerID);
-    bool StartRescueMate(int64_t playerID);
+    bool StartTreatMate(int64_t playerID, int64_t mateID);
+    bool StartRescueMate(int64_t playerID, int64_t mateID);
 
     bool Attack(double angle, int64_t playerID);
 

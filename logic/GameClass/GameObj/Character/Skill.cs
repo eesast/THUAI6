@@ -104,6 +104,33 @@ namespace GameClass.GameObj
         }
     }
 
+    public class WriteAnswers : IActiveSkill
+    {
+        public int SkillCD => GameData.commonSkillCD;
+        public int DurationTime => 0;
+        private readonly object commonSkillLock = new object();
+        public object ActiveSkillLock => commonSkillLock;
+
+        private int degreeOfMeditation = 0;
+        public int DegreeOfMeditation
+        {
+            get => degreeOfMeditation;
+            set
+            {
+                lock (commonSkillLock)
+                {
+                    degreeOfMeditation = value;
+                }
+            }
+        }
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
+    }
+
     public class NullSkill : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD;
@@ -134,6 +161,8 @@ namespace GameClass.GameObj
                     return new Punish();
                 case ActiveSkillType.JumpyBomb:
                     return new JumpyBomb();
+                case ActiveSkillType.WriteAnswers:
+                    return new WriteAnswers();
                 default:
                     return new NullSkill();
             }
@@ -153,6 +182,8 @@ namespace GameClass.GameObj
                     return ActiveSkillType.Punish;
                 case JumpyBomb:
                     return ActiveSkillType.JumpyBomb;
+                case WriteAnswers:
+                    return ActiveSkillType.WriteAnswers;
                 default:
                     return ActiveSkillType.Null;
             }

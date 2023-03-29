@@ -110,7 +110,7 @@ namespace GameClass.GameObj
                 case BulletType.JumpyDumpty:
                     return JumpyDumpty.maxBulletNum;
                 default:
-                    return GameData.basicCD;
+                    return 1;
             }
         }
     }

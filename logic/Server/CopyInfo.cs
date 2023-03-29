@@ -176,6 +176,8 @@ namespace Server
                     return Protobuf.StudentType.Athlete;
                 case Preparation.Utility.CharacterType.Teacher:
                     return StudentType._2;
+                case CharacterType.StraightAStudent:
+                    return StudentType._3;
                 default:
                     return Protobuf.StudentType.NullStudentType;
             }
@@ -189,6 +191,8 @@ namespace Server
                     return Preparation.Utility.CharacterType.Athlete;
                 case StudentType._2:
                     return Preparation.Utility.CharacterType.Teacher;
+                case StudentType._3:
+                    return CharacterType.StraightAStudent;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }

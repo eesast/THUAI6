@@ -138,6 +138,10 @@ namespace Gaming
                         if ((!(((Character)objBeingShot).IsGhost())) && bullet.Parent.IsGhost())
                         {
                             Student whoBeAttacked = (Student)objBeingShot;
+                            if (whoBeAttacked.CharacterType == CharacterType.StraightAStudent)
+                            {
+                                ((WriteAnswers)whoBeAttacked.FindIActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
+                            }
                             if (whoBeAttacked.BeAttacked(bullet))
                             {
                                 BeAddictedToGame(whoBeAttacked, (Ghost)bullet.Parent);

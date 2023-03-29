@@ -386,7 +386,7 @@
         public int ap = GameData.basicApOfGhost;
         public override int Speed => GameData.basicBulletMoveSpeed;
         public override bool IsToBomb => false;
-
+  
         public override int CastTime => GameData.basicCastTime;
         public override int Backswing => GameData.basicBackswing;
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
@@ -425,12 +425,12 @@
         public int ap = GameData.basicApOfGhost * 4 / 5;
         public override int Speed => GameData.basicBulletMoveSpeed * 2;
         public override bool IsToBomb => false;
-
+    
         public override int CastTime => GameData.basicCastTime;
         public override int Backswing => GameData.basicBackswing * 2 / 5;
         public override int RecoveryFromHit => GameData.basicBackswing * 3 / 4;
         public const int cd = GameData.basicBackswing * 2 / 5 + 100;
-
+    
         public override bool CanBeBombed(GameObjType gameObjType)
         {
             if (gameObjType == GameObjType.Character) return true;
@@ -447,13 +447,13 @@
         private const int maxHp = GameData.basicHp * 32 / 30;
         public const int maxBulletNum = 0;
         public BulletType InitBullet => BulletType.Null;
-
+    
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.CanBeginToCharge });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
-
+    
         public const int fixSpeed = GameData.basicFixSpeed * 6 / 10;
         int treatSpeed = GameData.basicTreatSpeed * 8 / 10;
-
+    
         public const double concealment = GameData.basicConcealment * 0.9;
         int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
         int viewRange = (int)(GameData.basicViewRange * 1.1);
@@ -475,10 +475,10 @@
         int maxHp = GameData.basicHp * 10;
         int maxBulletNum = 0;
         BulletType InitBullet => BulletType.Null;
-
+    
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.Punish });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
-
+    
         public const int fixSpeed = 0;
         int treatSpeed = GameData.basicTreatSpeed;
         double concealment = GameData.basicConcealment * 0.5;
@@ -494,7 +494,7 @@
         public int SkillCD => GameData.commonSkillCD;
         public int DurationTime => 0;
     ~~~
-  使用瞬间，在视野范围内的捣蛋鬼会被眩晕（3070+ 玩家损失的血量 / 1000）ms，
+    使用瞬间，在视野范围内的捣蛋鬼会被眩晕（3070+ 玩家损失的血量 / 1000）ms，
 
 ## 游戏数据
 
@@ -565,7 +565,7 @@
         public const int basicAlertnessRadius = 10700;
         public const int basicViewRange = 5 * numOfPosGridPerCell;
         public const int maxNumOfPropInPropInventory = 3;
-~~~
+  ~~~
 
 ### 得分相关
   ~~~csharp
@@ -620,7 +620,7 @@
         public const double basicRemoteAttackRange = 9000;  // 基本远程攻击范围
         public const double basicAttackShortRange = 2700;                 // 基本近程攻击范围
         public const double basicBulletBombRange = 3000;             // 基本子弹爆炸范围
-~~~
+  ~~~
 
 ### 技能相关
   ~~~csharp
@@ -656,3 +656,33 @@
         public const int numOfGeneratorRequiredForRepair = 7;
         public const int numOfGeneratorRequiredForEmergencyExit = 3;
   ~~~
+
+## 键鼠控制
+
+| 键位         | 效果                                           |
+| ------------ | ---------------------------------------------- |
+| W/NumPad8    | （Both）向上移动                               |
+| S/NumPad2    | （Both）向下移动                               |
+| D/NumPad6    | （Both）向右移动                               |
+| A/NumPad4    | （Both）向左移动                               |
+| J            | （Tri）攻击，方向向上                          |
+| 鼠标双击某点 | （Tri）攻击，方向与从Tricker指向该点的向量相同 |
+| K            | （Stu）开始学习                                |
+| R            | （Stu）开始营救（陷入沉迷状态的同伴）          |
+| T            | （Stu）开始治疗（学习毅力下降的同伴）          |
+| G            | （Stu）发出毕业请求                            |
+| H            | （Stu）申请毕业（或称为开大门）                |
+| O            | （Both）开（教学楼）门                         |
+| P            | （Both）关（教学楼）门                         |
+| U            | （Both）翻窗                                   |
+| I            | （Both）翻箱子                                 |
+| E            | （Both）结束当前行动，回到Idle状态             |
+| F            | （Both）随机捡起一个在周围的道具               |
+| C            | （Both）随机扔下一个已经持有的道具             |
+| V            | （Both）随机使用一个已经持有的道具             |
+| B            | （Both）使用0号技能                            |
+| N            | （Both）使用1号技能                            |
+| M            | （Both）使用2号技能                            |
+
+
+

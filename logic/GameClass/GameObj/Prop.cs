@@ -68,6 +68,14 @@ namespace GameClass.GameObj
         }
         public override PropType GetPropType() => PropType.AddHpOrAp;
     }
+    public sealed class RecoveryFromDizziness : Prop
+    {
+        public RecoveryFromDizziness(XY initPos, PlaceType placeType) :
+            base(initPos, placeType)
+        {
+        }
+        public override PropType GetPropType() => PropType.RecoveryFromDizziness;
+    }
     /// <summary>
     /// 矛盾
     /// </summary>
@@ -147,6 +155,8 @@ namespace GameClass.GameObj
                     return new ShieldOrSpear(pos, place);
                 case PropType.AddHpOrAp:
                     return new AddHpOrAp(pos, place);
+                case PropType.RecoveryFromDizziness:
+                    return new RecoveryFromDizziness(pos, place);
                 case PropType.Key3:
                     return new Key3(pos, place);
                 case PropType.Key5:

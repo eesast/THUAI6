@@ -56,6 +56,8 @@ namespace Server
                     return Protobuf.PropType.AddHpOrAp;
                 case Preparation.Utility.PropType.ShieldOrSpear:
                     return Protobuf.PropType.ShieldOrSpear;
+                case Preparation.Utility.PropType.RecoveryFromDizziness:
+                    return Protobuf.PropType.RecoveryFromDizziness;
                 case Preparation.Utility.PropType.Key3:
                     return Protobuf.PropType.Key3;
                 case Preparation.Utility.PropType.Key5:
@@ -79,6 +81,8 @@ namespace Server
                     return Preparation.Utility.PropType.AddHpOrAp;
                 case Protobuf.PropType.ShieldOrSpear:
                     return Preparation.Utility.PropType.ShieldOrSpear;
+                case Protobuf.PropType.RecoveryFromDizziness:
+                    return Preparation.Utility.PropType.RecoveryFromDizziness;
                 case Protobuf.PropType.Key3:
                     return Preparation.Utility.PropType.Key3;
                 case Protobuf.PropType.Key5:

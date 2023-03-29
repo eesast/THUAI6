@@ -151,7 +151,10 @@ namespace Preparation.Utility
         public const int ScorePropUseShield = 20;
         public const int ScorePropUseSpear = 20;
         public const int ScorePropAddAp = 10;
-        public const int ScorePropAddHp = 50;
+        public const int ScorePropAddSpeed = 10;
+        public const int ScorePropClairaudience = 10;
+        public const int ScorePropAddHp = 20;
+        public const int ScorePropRecoverFromDizziness = 20;
 
         public static int ScoreUseSkill(ActiveSkillType activeSkillType)
         {

@@ -49,6 +49,7 @@ enum PropType // 地图中的可拾取道具类型
     KEY3 = 5;
     KEY5 = 6;
     KEY6 = 7;
+    RECOVERY_FROM_DIZZINESS = 8;
 }
 
 enum StudentBuffType // 人类可用的增益效果类型
@@ -57,7 +58,7 @@ enum StudentBuffType // 人类可用的增益效果类型
     SBUFFTYPE1 = 1;//AddSpeed
     SBUFFTYPE2 = 2;//AddLIFE
     SBUFFTYPE3 = 3;//Shield
-    SBUFFTYPE4 = 4;
+    SBUFFTYPE4 = 4;//INVISIBLE
 }
 
 enum PlayerState

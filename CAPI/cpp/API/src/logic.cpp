@@ -206,10 +206,17 @@ bool Logic::HaveMessage()
     return !messageQueue.empty();
 }
 
-std::optional<std::pair<int64_t, std::string>> Logic::GetMessage()
+std::pair<int64_t, std::string> Logic::GetMessage()
 {
     logger->debug("Called GetMessage");
-    return messageQueue.tryPop();
+    auto msg = messageQueue.tryPop();
+    if (msg.has_value())
+        return msg.value();
+    else
+    {
+        logger->warn("No message");
+        return std::make_pair(-1, "");
+    }
 }
 
 bool Logic::Graduate()
@@ -350,12 +357,6 @@ void Logic::ProcessMessage()
                     for (const auto& obj : clientMsg.obj_message())
                         if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::StudentMessage)
                             playerGUIDs.push_back(obj.student_message().guid());
-                        else if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::NewsMessage)
-                        {
-                            auto news = obj.news_message();
-                            if (news.to_id() == playerID)
-                                messageQueue.emplace(std::make_pair(news.from_id(), news.news()));
-                        }
                     for (const auto& obj : clientMsg.obj_message())
                         if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::TrickerMessage)
                             playerGUIDs.push_back(obj.tricker_message().guid());
@@ -391,6 +392,8 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         bufferState->students.clear();
         bufferState->trickers.clear();
         bufferState->props.clear();
+        bufferState->bullets.clear();
+        bufferState->bombedBullets.clear();
 
         logger->debug("Buffer cleared!");
         // 读取新的信息
@@ -403,8 +406,10 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                     if (item.student_message().player_id() == playerID)
                     {
                         bufferState->studentSelf = Proto2THUAI6::Protobuf2THUAI6Student(item.student_message());
+                        bufferState->students.push_back(bufferState->studentSelf);
                     }
-                    bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item.student_message()));
+                    else
+                        bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item.student_message()));
                     logger->debug("Add Student!");
                 }
             for (const auto& item : message.obj_message())
@@ -523,6 +528,14 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                                 bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message()));
                                 logger->debug("Add Tricker!");
                             }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::NewsMessage:
+                        {
+                            auto news = item.news_message();
+                            if (news.to_id() == playerID)
+                                messageQueue.emplace(std::make_pair(news.from_id(), news.news()));
+                            break;
                         }
                     case THUAI6::MessageOfObj::NullMessageOfObj:
                     default:
@@ -538,8 +551,10 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                     if (item.tricker_message().player_id() == playerID)
                     {
                         bufferState->trickerSelf = Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message());
+                        bufferState->trickers.push_back(bufferState->trickerSelf);
                     }
-                    bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message()));
+                    else
+                        bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message()));
                     logger->debug("Add Tricker!");
                 }
             }
@@ -659,6 +674,14 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                                 bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item.student_message()));
                                 logger->debug("Add Student!");
                             }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::NewsMessage:
+                        {
+                            auto news = item.news_message();
+                            if (news.to_id() == playerID)
+                                messageQueue.emplace(std::make_pair(news.from_id(), news.news()));
+                            break;
                         }
                     case THUAI6::MessageOfObj::NullMessageOfObj:
                     default:

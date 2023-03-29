@@ -17,7 +17,12 @@ extern const THUAI6::StudentType studentType = THUAI6::StudentType::Athlete;
 
 void AI::play(IStudentAPI& api)
 {
-    api.StartOpenChest();
+    api.SendMessage(1, "Hello, I'm player 0 using C++ interface!");
+    if (api.HaveMessage())
+    {
+        auto msg = api.GetMessage();
+        api.Print("Player " + std::to_string(msg.first) + " says: " + msg.second);
+    }
 }
 
 void AI::play(ITrickerAPI& api)

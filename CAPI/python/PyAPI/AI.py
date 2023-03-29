@@ -42,20 +42,17 @@ class AssistFunction:
 class AI(IAI):
     # 选手在这里实现自己的逻辑，要求和上面选择的阵营保持一致
     def StudentPlay(self, api: IStudentAPI) -> None:
-        # studentSelf = api.GetSelfInfo()
-        # api.PrintSelfInfo()
-        # if AssistFunction.GridToCell(studentSelf.y) < 8:
-        #     api.MoveRight(50)
-        #     return
-        # if studentSelf.x < 3600:
-        #     api.MoveDown(50)
-        #     return
-        # if studentSelf.playerState == THUAI6.PlayerState.Idle:
-        #     if api.GetClassroomProgress(5, 8) < 114514:
-        #         api.StartLearning()
-        #         return
-        api.PrintTricker()
+        studentSelfInfo = api.GetSelfInfo()
 
+        if studentSelfInfo.playerID == 0:
+            api.SendMessage(1, "Hello, I'm player 0 using python interface!")
+        if studentSelfInfo.playerID == 1:
+            api.SendMessage(0, "Hello, I'm player 1 using python interface!")
+
+        if api.HaveMessage():
+            message = api.GetMessage()
+            api.Print(
+                f"Recieved Message from player {message[0]}: {message[1]}")
         return
 
     def TrickerPlay(self, api: ITrickerAPI) -> None:

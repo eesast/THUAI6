@@ -216,31 +216,23 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
         return self.__pool.submit(logSend)
 
-    def HaveMessage(self) -> Future[bool]:
+    def HaveMessage(self) -> bool:
         self.__logger.info(
             f"HaveMessage: called at {self.__GetTime()}ms")
+        result = self.__logic.HaveMessage()
+        if not result:
+            self.__logger.warning(
+                f"HaveMessage: failed at {self.__GetTime()}ms")
+        return result
 
-        def logHave() -> bool:
-            result = self.__logic.HaveMessage()
-            if not result:
-                self.__logger.warning(
-                    f"HaveMessage: failed at {self.__GetTime()}ms")
-            return result
-
-        return self.__pool.submit(logHave)
-
-    def GetMessage(self) -> Future[tuple[int, str]]:
+    def GetMessage(self) -> tuple[int, str]:
         self.__logger.info(
             f"GetMessage: called at {self.__GetTime()}ms")
-
-        def logGet() -> tuple[int, str]:
-            result = self.__logic.GetMessage()
-            if result[0] == -1:
-                self.__logger.warning(
-                    f"GetMessage: failed at {self.__GetTime()}ms")
-            return result
-
-        return self.__pool.submit(logGet)
+        result = self.__logic.GetMessage()
+        if result[0] == -1:
+            self.__logger.warning(
+                f"GetMessage: failed at {self.__GetTime()}ms")
+        return result
 
     # 等待下一帧
 
@@ -297,6 +289,9 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
         return self.__logic.GetGameInfo()
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
+
+    def Print(self, cont: str) -> None:
+        self.__logger.info(cont)
 
     def PrintStudent(self) -> None:
         for student in self.__logic.GetStudents():
@@ -638,31 +633,23 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
         return self.__pool.submit(logSend)
 
-    def HaveMessage(self) -> Future[bool]:
+    def HaveMessage(self) -> bool:
         self.__logger.info(
             f"HaveMessage: called at {self.__GetTime()}ms")
+        result = self.__logic.HaveMessage()
+        if not result:
+            self.__logger.warning(
+                f"HaveMessage: failed at {self.__GetTime()}ms")
+        return result
 
-        def logHave() -> bool:
-            result = self.__logic.HaveMessage()
-            if not result:
-                self.__logger.warning(
-                    f"HaveMessage: failed at {self.__GetTime()}ms")
-            return result
-
-        return self.__pool.submit(logHave)
-
-    def GetMessage(self) -> Future[tuple[int, str]]:
+    def GetMessage(self) -> tuple[int, str]:
         self.__logger.info(
             f"GetMessage: called at {self.__GetTime()}ms")
-
-        def logGet() -> tuple[int, str]:
-            result = self.__logic.GetMessage()
-            if result[0] == -1:
-                self.__logger.warning(
-                    f"GetMessage: failed at {self.__GetTime()}ms")
-            return result
-
-        return self.__pool.submit(logGet)
+        result = self.__logic.GetMessage()
+        if result[0] == -1:
+            self.__logger.warning(
+                f"GetMessage: failed at {self.__GetTime()}ms")
+        return result
 
     # 等待下一帧
 
@@ -719,6 +706,9 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
         return self.__logic.GetGameInfo()
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
+
+    def Print(self, cont: str) -> None:
+        self.__logger.info(cont)
 
     def PrintStudent(self) -> None:
         for student in self.__logic.GetStudents():
@@ -781,8 +771,8 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
     # Timer用
 
-    def __GetTime(self) -> int:
-        return int((datetime.datetime.now() - self.__startPoint).total_seconds() * 1000)
+    def __GetTime(self) -> float:
+        return (datetime.datetime.now() - self.__startPoint).total_seconds() * 1000
 
     def StartTimer(self) -> None:
         self.__startPoint = datetime.datetime.now()

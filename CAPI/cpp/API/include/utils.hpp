@@ -202,10 +202,12 @@ namespace Proto2THUAI6
         tricker->bulletType = bulletTypeDict[trickerMsg.bullet_type()];
         tricker->trickDesire = trickerMsg.trick_desire();
         tricker->classVolume = trickerMsg.class_volume();
+        tricker->timeUntilSkillAvailable.clear();
         for (int i = 0; i < trickerMsg.time_until_skill_available().size(); i++)
             tricker->timeUntilSkillAvailable.push_back(trickerMsg.time_until_skill_available(i));
         tricker->place = placeTypeDict[trickerMsg.place()];
         tricker->playerState = playerStateDict[trickerMsg.player_state()];
+        tricker->props.clear();
         for (int i = 0; i < trickerMsg.prop().size(); i++)
             tricker->props.push_back(propTypeDict[trickerMsg.prop(i)]);
         tricker->trickerType = trickerTypeDict[trickerMsg.tricker_type()];
@@ -238,9 +240,11 @@ namespace Proto2THUAI6
         student->treatProgress = studentMsg.treat_progress();
         student->rescueProgress = studentMsg.rescue_progress();
         student->dangerAlert = studentMsg.danger_alert();
+        student->timeUntilSkillAvailable.clear();
         for (int i = 0; i < studentMsg.time_until_skill_available().size(); i++)
             student->timeUntilSkillAvailable.push_back(studentMsg.time_until_skill_available(i));
         student->playerType = THUAI6::PlayerType::StudentPlayer;
+        student->props.clear();
         for (int i = 0; i < studentMsg.prop().size(); i++)
             student->props.push_back(propTypeDict[studentMsg.prop(i)]);
         student->place = placeTypeDict[studentMsg.place()];

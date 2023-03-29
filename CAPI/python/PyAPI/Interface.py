@@ -223,11 +223,11 @@ class IAPI(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def HaveMessage(self) -> Future[bool]:
+    def HaveMessage(self) -> bool:
         pass
 
     @abstractmethod
-    def GetMessage(self) -> Future[tuple[int, str]]:
+    def GetMessage(self) -> tuple[int, str]:
         pass
 
     # 等待下一帧
@@ -299,6 +299,10 @@ class IAPI(metaclass=ABCMeta):
         pass
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
+
+    @abstractmethod
+    def Print(self, cont: str) -> None:
+        pass
 
     @abstractmethod
     def PrintStudent(self) -> None:

@@ -180,11 +180,15 @@ class Logic(ILogic):
 
     def HaveMessage(self) -> bool:
         self.__logger.debug("Called HaveMessage")
-        return self.__messageQueue.empty()
+        return not self.__messageQueue.empty()
 
     def GetMessage(self) -> tuple[int, str]:
         self.__logger.debug("Called GetMessage")
-        return self.__messageQueue.get()
+        if self.__messageQueue.empty():
+            self.__logger.warning("Message queue is empty!")
+            return -1, ""
+        else:
+            return self.__messageQueue.get()
 
     def WaitThread(self) -> bool:
         self.__Update()
@@ -334,8 +338,11 @@ class Logic(ILogic):
                         if item.student_message.player_id == self.__playerID:
                             self.__bufferState.self = Proto2THUAI6.Protobuf2THUAI6Student(
                                 item.student_message)
-                        self.__bufferState.students.append(
-                            Proto2THUAI6.Protobuf2THUAI6Student(item.student_message))
+                            self.__bufferState.students.append(
+                                self.__bufferState.self)
+                        else:
+                            self.__bufferState.students.append(
+                                Proto2THUAI6.Protobuf2THUAI6Student(item.student_message))
                         self.__logger.debug("Add Student!")
                 for item in message.obj_message:
                     if item.WhichOneof("message_of_obj") == "tricker_message":
@@ -357,7 +364,7 @@ class Logic(ILogic):
                         if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.classroom_message.x, item.classroom_message.y, self.__bufferState.gameMap):
                             pos = (AssistFunction.GridToCell(
                                 item.classroom_message.x), AssistFunction.GridToCell(item.classroom_message.y))
-                            if pos in self.__bufferState.mapInfo.classroomState:
+                            if pos not in self.__bufferState.mapInfo.classroomState:
                                 self.__bufferState.mapInfo.classroomState[pos] = item.classroom_message.progress
                                 self.__logger.debug("Add Classroom!")
                             else:
@@ -367,17 +374,19 @@ class Logic(ILogic):
                         if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.chest_message.x, item.chest_message.y, self.__bufferState.gameMap):
                             pos = (AssistFunction.GridToCell(
                                 item.chest_message.x), AssistFunction.GridToCell(item.chest_message.y))
-                            if pos in self.__bufferState.mapInfo.chestState:
+                            if pos not in self.__bufferState.mapInfo.chestState:
                                 self.__bufferState.mapInfo.chestState[pos] = item.chest_message.progress
-                                self.__logger.debug("Add Chest!")
+                                self.__logger.debug(
+                                    f"Add Chest at {pos[0]}, {pos[1]}")
                             else:
                                 self.__bufferState.mapInfo.chestState[pos] = item.chest_message.progress
-                                self.__logger.debug("Update Chest!")
+                                self.__logger.debug(
+                                    f"Update Chest at {pos[0]}, {pos[1]}")
                     elif item.WhichOneof("message_of_obj") == "door_message":
                         if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.door_message.x, item.door_message.y, self.__bufferState.gameMap):
                             pos = (AssistFunction.GridToCell(
                                 item.door_message.x), AssistFunction.GridToCell(item.door_message.y))
-                            if pos in self.__bufferState.mapInfo.doorState:
+                            if pos not in self.__bufferState.mapInfo.doorState:
                                 self.__bufferState.mapInfo.doorState[pos] = item.door_message.is_open
                                 self.__bufferState.mapInfo.doorProgress[pos] = item.door_message.progress
                                 self.__logger.debug("Add Door!")
@@ -389,7 +398,7 @@ class Logic(ILogic):
                         if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.hidden_gate_message.x, item.hidden_gate_message.y, self.__bufferState.gameMap):
                             pos = (AssistFunction.GridToCell(
                                 item.hidden_gate_message.x), AssistFunction.GridToCell(item.hidden_gate_message.y))
-                            if pos in self.__bufferState.mapInfo.hiddenGateState:
+                            if pos not in self.__bufferState.mapInfo.hiddenGateState:
                                 self.__bufferState.mapInfo.hiddenGateState[pos] = Proto2THUAI6.Bool2HiddenGateState(
                                     item.hidden_gate_message.opened)
                                 self.__logger.debug("Add HiddenGate!")
@@ -401,22 +410,31 @@ class Logic(ILogic):
                         if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.gate_message.x, item.gate_message.y, self.__bufferState.gameMap):
                             pos = (AssistFunction.GridToCell(
                                 item.gate_message.x), AssistFunction.GridToCell(item.gate_message.y))
-                            if pos in self.__bufferState.mapInfo.gateState:
+                            if pos not in self.__bufferState.mapInfo.gateState:
                                 self.__bufferState.mapInfo.gateState[pos] = item.gate_message.progress
                                 self.__logger.debug("Add Gate!")
                             else:
                                 self.__bufferState.mapInfo.gateState[pos] = item.gate_message.progress
                                 self.__logger.debug("Update Gate!")
+                    elif item.WhichOneof("message_of_obj") == "news_message":
+                        if item.news_message.to_id == self.__playerID:
+                            self.__messageQueue.put(
+                                (item.news_message.from_id, item.news_message.news))
+                            self.__logger.debug("Add News!")
                     else:
-                        self.__logger.debug("Unknown Message!")
+                        self.__logger.debug(
+                            "Unknown Message!")
             else:
                 for item in message.obj_message:
                     if item.WhichOneof("message_of_obj") == "tricker_message":
                         if item.tricker_message.player_id == self.__playerID:
                             self.__bufferState.self = Proto2THUAI6.Protobuf2THUAI6Tricker(
                                 item.tricker_message)
-                        self.__bufferState.trickers.append(
-                            Proto2THUAI6.Protobuf2THUAI6Tricker(item.tricker_message))
+                            self.__bufferState.trickers.append(
+                                self.__bufferState.self)
+                        else:
+                            self.__bufferState.trickers.append(
+                                Proto2THUAI6.Protobuf2THUAI6Tricker(item.tricker_message))
                         self.__logger.debug("Add Tricker!")
                 for item in message.obj_message:
                     if item.WhichOneof("message_of_obj") == "student_message":
@@ -438,7 +456,7 @@ class Logic(ILogic):
                         if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.classroom_message.x, item.classroom_message.y, self.__bufferState.gameMap):
                             pos = (AssistFunction.GridToCell(
                                 item.classroom_message.x), AssistFunction.GridToCell(item.classroom_message.y))
-                            if pos in self.__bufferState.mapInfo.classroomState:
+                            if pos not in self.__bufferState.mapInfo.classroomState:
                                 self.__bufferState.mapInfo.classroomState[pos] = item.classroom_message.progress
                                 self.__logger.debug("Add Classroom!")
                             else:
@@ -448,17 +466,19 @@ class Logic(ILogic):
                         if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.chest_message.x, item.chest_message.y, self.__bufferState.gameMap):
                             pos = (AssistFunction.GridToCell(
                                 item.chest_message.x), AssistFunction.GridToCell(item.chest_message.y))
-                            if pos in self.__bufferState.mapInfo.chestState:
+                            if pos not in self.__bufferState.mapInfo.chestState:
                                 self.__bufferState.mapInfo.chestState[pos] = item.chest_message.progress
-                                self.__logger.debug("Add Chest!")
+                                self.__logger.debug(
+                                    f"Add Chest at {pos[0]}, {pos[1]}")
                             else:
                                 self.__bufferState.mapInfo.chestState[pos] = item.chest_message.progress
-                                self.__logger.debug("Update Chest!")
+                                self.__logger.debug(
+                                    f"Update Chest at {pos[0]}, {pos[1]}")
                     elif item.WhichOneof("message_of_obj") == "door_message":
                         if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.door_message.x, item.door_message.y, self.__bufferState.gameMap):
                             pos = (AssistFunction.GridToCell(
                                 item.door_message.x), AssistFunction.GridToCell(item.door_message.y))
-                            if pos in self.__bufferState.mapInfo.doorState:
+                            if pos not in self.__bufferState.mapInfo.doorState:
                                 self.__bufferState.mapInfo.doorState[pos] = item.door_message.is_open
                                 self.__bufferState.mapInfo.doorProgress[pos] = item.door_message.progress
                                 self.__logger.debug("Add Door!")
@@ -470,7 +490,7 @@ class Logic(ILogic):
                         if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.hidden_gate_message.x, item.hidden_gate_message.y, self.__bufferState.gameMap):
                             pos = (AssistFunction.GridToCell(
                                 item.hidden_gate_message.x), AssistFunction.GridToCell(item.hidden_gate_message.y))
-                            if pos in self.__bufferState.mapInfo.hiddenGateState:
+                            if pos not in self.__bufferState.mapInfo.hiddenGateState:
                                 self.__bufferState.mapInfo.hiddenGateState[pos] = Proto2THUAI6.Bool2HiddenGateState(
                                     item.hidden_gate_message.opened)
                                 self.__logger.debug("Add HiddenGate!")
@@ -482,7 +502,7 @@ class Logic(ILogic):
                         if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.gate_message.x, item.gate_message.y, self.__bufferState.gameMap):
                             pos = (AssistFunction.GridToCell(
                                 item.gate_message.x), AssistFunction.GridToCell(item.gate_message.y))
-                            if pos in self.__bufferState.mapInfo.gateState:
+                            if pos not in self.__bufferState.mapInfo.gateState:
                                 self.__bufferState.mapInfo.gateState[pos] = item.gate_message.progress
                                 self.__logger.debug("Add Gate!")
                             else:
@@ -531,7 +551,7 @@ class Logic(ILogic):
                 os.path.realpath(__file__))) + "/logs")
 
         fileHandler = logging.FileHandler(os.path.dirname(
-            os.path.dirname(os.path.realpath(__file__))) + "/logs/logic-log.txt", "w+", encoding="utf-8")
+            os.path.dirname(os.path.realpath(__file__))) + "/logs/logic" + str(self.__playerID) + "-log.txt", "w+", encoding="utf-8")
         screenHandler = logging.StreamHandler()
         if file:
             fileHandler.setLevel(logging.DEBUG)

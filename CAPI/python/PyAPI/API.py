@@ -68,11 +68,11 @@ class StudentAPI(IStudentAPI, IGameTimer):
     def SendMessage(self, toID: int, message: str) -> Future[bool]:
         return self.__pool.submit(self.__logic.SendMessage, toID, message)
 
-    def HaveMessage(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.HaveMessage)
+    def HaveMessage(self) -> bool:
+        return self.__logic.HaveMessage()
 
-    def GetMessage(self) -> Future[tuple[int, str]]:
-        return self.__pool.submit(self.__logic.GetMessage)
+    def GetMessage(self) -> tuple[int, str]:
+        return self.__logic.GetMessage()
 
     # 等待下一帧
 
@@ -127,6 +127,9 @@ class StudentAPI(IStudentAPI, IGameTimer):
         return self.__logic.GetGameInfo()
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
+
+    def Print(self, cont: str) -> None:
+        pass
 
     def PrintStudent(self) -> None:
         pass
@@ -232,11 +235,11 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
     def SendMessage(self, toID: int, message: str) -> Future[bool]:
         return self.__pool.submit(self.__logic.SendMessage, toID, message)
 
-    def HaveMessage(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.HaveMessage)
+    def HaveMessage(self) -> bool:
+        return self.__logic.HaveMessage()
 
-    def GetMessage(self) -> Future[tuple[int, str]]:
-        return self.__pool.submit(self.__logic.GetMessage)
+    def GetMessage(self) -> tuple[int, str]:
+        return self.__logic.GetMessage()
 
     # 等待下一帧
 
@@ -291,6 +294,9 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
         return self.__logic.GetGameInfo()
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
+
+    def Print(self, cont: str) -> None:
+        pass
 
     def PrintStudent(self) -> None:
         pass

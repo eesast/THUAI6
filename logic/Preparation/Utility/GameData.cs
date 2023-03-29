@@ -195,8 +195,6 @@ namespace Preparation.Utility
         public const int timeFactorOfGhostFainting = 250;
         #endregion
         #region 道具相关
-        public const int MinPropTypeNum = 1;
-        public const int MaxPropTypeNum = 10;
         public const int PropRadius = numOfPosGridPerCell / 2;
         public const int PropMoveSpeed = 3000;
         public const int PropMaxMoveDistance = 15 * numOfPosGridPerCell;
@@ -207,6 +205,7 @@ namespace Preparation.Utility
         public const int ApSpearAdd = basicApOfGhost * 6 / 10;
         public const int RemainHpWhenAddLife = 100;
 
+        public const int numOfPropSpecies = 8;
         public const int numOfKeyEachArea = 2;
         public const int numOfPropTypeNotKey = 4;
         public const int numOfTeachingBuilding = 3;

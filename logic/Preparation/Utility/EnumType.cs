@@ -60,7 +60,7 @@ namespace Preparation.Utility
         // Ram = 7,
     }
     public enum PropType  // 道具类型
-    {
+    {//numOfPropSpecies 见Gamedata
         Null = 0,
         Key3 = 1,
         Key5 = 2,
@@ -113,7 +113,6 @@ namespace Preparation.Utility
         Clairaudience = 6,
         Invisible = 7,
     }
-
     public enum PlaceType
     {
         Null = 0,

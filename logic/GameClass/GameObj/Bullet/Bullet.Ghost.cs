@@ -30,6 +30,8 @@ namespace GameClass.GameObj
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public const int cd = GameData.basicBackswing;
         public override int CD => cd;
+        public const int maxBulletNum = 1;
+        public override int MaxBulletNum => maxBulletNum;
 
         public override bool CanAttack(GameObj target)
         {
@@ -75,6 +77,8 @@ namespace GameClass.GameObj
         public override int RecoveryFromHit => 0;
         public const int cd = GameData.basicBackswing * 2 / 5 + 100;
         public override int CD => cd;
+        public const int maxBulletNum = 1;
+        public override int MaxBulletNum => maxBulletNum;
 
         public override bool CanAttack(GameObj target)
         {
@@ -117,10 +121,12 @@ namespace GameClass.GameObj
         public override bool IsRemoteAttack => false;
 
         public override int CastTime => (int)BulletAttackRange / Speed;
-        public override int Backswing => GameData.basicBackswing;
-        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
+        public override int Backswing => 0;
+        public override int RecoveryFromHit => 0;
         public const int cd = GameData.basicCD;
         public override int CD => cd;
+        public const int maxBulletNum = 1;
+        public override int MaxBulletNum => maxBulletNum;
 
         public override bool CanAttack(GameObj target)
         {
@@ -166,6 +172,8 @@ namespace GameClass.GameObj
         public override int RecoveryFromHit => 0;
         public const int cd = 0;
         public override int CD => cd;
+        public const int maxBulletNum = 4;
+        public override int MaxBulletNum => maxBulletNum;
 
         public override bool CanAttack(GameObj target)
         {

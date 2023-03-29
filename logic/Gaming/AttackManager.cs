@@ -197,14 +197,8 @@ namespace Gaming
                         return;
                     }
 
-                    if (bullet.TypeOfBullet == BulletType.BombBomb)
-                    {
-                        bullet.Parent.BulletOfPlayer = BulletType.JumpyDumpty;
-                        Attack((Character)bullet.Parent, 0.0);
-                        Attack((Character)bullet.Parent, Math.PI);
-                        Attack((Character)bullet.Parent, Math.PI / 2.0);
-                        Attack((Character)bullet.Parent, Math.PI * 3.0 / 2.0);
-                    }
+                    Debugger.Output(bullet, bullet.TypeOfBullet.ToString());
+
                     BombObj(bullet, objBeingShot);
                     if (bullet.RecoveryFromHit > 0)
                     {
@@ -213,7 +207,6 @@ namespace Gaming
                         new Thread
                                 (() =>
                                 {
-
                                     Thread.Sleep(bullet.RecoveryFromHit);
 
                                     if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
@@ -236,6 +229,17 @@ namespace Gaming
                 }*/
 
                 // 子弹爆炸会发生的事↓↓↓
+
+                if (bullet.TypeOfBullet == BulletType.BombBomb && objBeingShot != null)
+                {
+                    bullet.Parent.BulletOfPlayer = BulletType.JumpyDumpty;
+                    Debugger.Output(bullet, "JumpyDumpty!");
+                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle());
+                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI);
+                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI / 2.0);
+                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI * 3.0 / 2.0);
+                }
+
                 var beAttackedList = new List<IGameObj>();
 
                 foreach (var kvp in gameMap.GameObjDict)
@@ -311,9 +315,6 @@ namespace Gaming
             {                                                    // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
                 if (player == null)
                 {
-#if DEBUG
-                    Console.WriteLine("the player who will attack is NULL!");
-#endif
                     return false;
                 }
 
@@ -330,6 +331,7 @@ namespace Gaming
 
                 if (bullet != null)
                 {
+                    Debugger.Output(player, "Attack in" + bullet.ToString());
                     bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
                     bullet.CanMove = true;
                     gameMap.Add(bullet);

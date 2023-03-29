@@ -49,6 +49,7 @@ namespace GameClass.GameObj
                     bulletOfPlayer = value;
                     OrgCD = (BulletFactory.BulletCD(value));
                     CD = 0;
+                    maxBulletNum = bulletNum = (BulletFactory.BulletNum(value));
                 }
             }
         }

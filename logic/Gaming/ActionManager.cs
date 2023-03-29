@@ -17,14 +17,15 @@ namespace Gaming
         {
 
             // 人物移动
-            private static void SkillWhenColliding(Character player, IGameObj collisionObj)
+            private void SkillWhenColliding(Character player, IGameObj collisionObj)
             {
                 if (collisionObj.Type == GameObjType.Bullet)
                 {
                     if (((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
                     {
-                        if (AttackManager.BeStunned((Character)collisionObj, ((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting))
+                        if (AttackManager.BeStunned((Character)player, ((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting))
                             player.AddScore(GameData.StudentScoreTrickerBeStunned(((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting));
+                        gameMap.Remove((GameObj)collisionObj);
                     }
                 }
                 if (player.UseIActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())

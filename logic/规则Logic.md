@@ -440,6 +440,97 @@
     }
     ~~~
 
+#### Klee
+  - 普通攻击为 CommonAttackOfGhost
+  ~~~csharp
+      int moveSpeed = (int)(GameData.basicMoveSpeed * 155 / 127);
+      int maxHp = GameData.basicHp;
+      int maxBulletNum = 1;
+      BulletType InitBullet => BulletType.CommonAttackOfGhost;
+      List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.JumpyBomb });
+      List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+      double concealment = GameData.basicConcealment;
+      int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.069);
+      int viewRange = (int)(GameData.basicViewRange * 1.1);
+      int timeOfOpeningOrLocking = (int)(GameData.basicSpeedOfOpeningOrLocking / 1.1);
+      int speedOfClimbingThroughWindows = (int)(GameData.basicGhostSpeedOfClimbingThroughWindows / 1.1);
+      int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest * 1.1);
+  ~~~
+  - 主动技能
+    - 蹦蹦炸弹
+      ~~~csharp
+        public int SkillCD => GameData.commonSkillCD / 30 * 5;
+        public int DurationTime => GameData.commonSkillTime / 2;
+      ~~~
+    - 在DurationTime内，攻击类型变为蹦蹦炸弹
+      ~~~csharp
+        internal sealed class BombBomb : Bullet
+        {
+        public override double BulletBombRange => GameData.basicBulletBombRange;
+        public override double BulletAttackRange => GameData.basicAttackShortRange;
+        public int ap = (int)(GameData.basicApOfGhost * 6.0 / 5);
+        public override int Speed => (int)(GameData.basicBulletMoveSpeed * 0.8);
+        public override bool IsRemoteAttack => false;
+
+        public override int CastTime => (int)BulletAttackRange / Speed;
+        public override int Backswing => 0;
+        public override int RecoveryFromHit => 0;
+        public const int cd = GameData.basicCD;
+
+        public override bool CanAttack(GameObj target)
+        {
+            return XY.Distance(this.Position, target.Position) <= BulletBombRange;
+        }
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            switch (gameObjType)
+            {
+                case GameObjType.Character:
+                case GameObjType.Generator:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+      }
+      ~~~
+    - 当蹦蹦炸弹因为碰撞而爆炸，向子弹方向上加上0°，90°，180°，270° 发出四个小炸弹
+    - 四个小炸弹只会因为碰撞爆炸，停止运动后学生碰撞会造成眩晕（AP / GameData.timeFactorOfGhostFainting）ms
+    ~~~csharp
+    internal sealed class JumpyDumpty : Bullet
+    {
+        public override double BulletBombRange => GameData.basicBulletBombRange / 2;
+        public override double BulletAttackRange => GameData.basicAttackShortRange * 2;
+        public int ap = (int)(GameData.basicApOfGhost * 0.6);
+
+        public override int Speed => (int)(GameData.basicBulletMoveSpeed * 1.2);
+        public override bool IsRemoteAttack => false;
+
+        public override int CastTime => 0;
+        public override int Backswing => 0;
+        public override int RecoveryFromHit => 0;
+        public const int cd = 0;
+        public override int CD => cd;
+
+        public override bool CanAttack(GameObj target)
+        {
+            return XY.Distance(this.Position, target.Position) <= BulletBombRange;
+        }
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            switch (gameObjType)
+            {
+                case GameObjType.Character:
+                case GameObjType.Generator:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+    ~~~
+
 ### 学生（&老师）
 
 #### 运动员

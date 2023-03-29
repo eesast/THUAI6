@@ -18,6 +18,7 @@ namespace GameClass.GameObj
         public abstract int Backswing { get; }
         public abstract int RecoveryFromHit { get; }
         public abstract int CD { get; }
+        public abstract int MaxBulletNum { get; }
 
         private readonly bool hasSpear;
         /// <summary>
@@ -92,6 +93,22 @@ namespace GameClass.GameObj
                     return BombBomb.cd;
                 case BulletType.JumpyDumpty:
                     return JumpyDumpty.cd;
+                default:
+                    return GameData.basicCD;
+            }
+        }
+        public static int BulletNum(BulletType bulletType)
+        {
+            switch (bulletType)
+            {
+                case BulletType.CommonAttackOfGhost:
+                    return CommonAttackOfGhost.maxBulletNum;
+                case BulletType.FlyingKnife:
+                    return FlyingKnife.maxBulletNum;
+                case BulletType.BombBomb:
+                    return BombBomb.maxBulletNum;
+                case BulletType.JumpyDumpty:
+                    return JumpyDumpty.maxBulletNum;
                 default:
                     return GameData.basicCD;
             }

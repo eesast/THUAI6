@@ -289,6 +289,7 @@ namespace Gaming
                        if (playerRescued.TimeOfRescue >= GameData.basicTimeOfRescue)
                        {
                            playerRescued.PlayerState = PlayerStateType.Null;
+                           playerRescued.HP = GameData.RemainHpWhenAddLife;
                            player.AddScore(GameData.StudentScoreRescue);
                        }
                        else

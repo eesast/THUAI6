@@ -118,7 +118,7 @@ namespace Gaming
 
             private Prop ProduceOnePropNotKey(Random r, XY Pos)
             {
-                return PropFactory.GetProp((PropType)r.Next(GameData.numOfTeachingBuilding+1, GameData.numOfPropSpecies+1), Pos, gameMap.GetPlaceType(Pos));
+                return PropFactory.GetProp((PropType)r.Next(GameData.numOfTeachingBuilding + 1, GameData.numOfPropSpecies + 1), Pos, gameMap.GetPlaceType(Pos));
             }
 
             private Chest GetChest(Random r)

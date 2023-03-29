@@ -335,7 +335,7 @@ namespace GameClass.GameObj
         public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
         public bool CanBeAwed() => !(playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
                                                             || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued
-                                                            || playerState == PlayerStateType.Treated || playerState != PlayerStateType.Stunned
+                                                            || playerState == PlayerStateType.Treated || playerState == PlayerStateType.Stunned
                                                             || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
 
         private int score = 0;

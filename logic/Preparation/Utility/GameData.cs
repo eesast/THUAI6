@@ -114,7 +114,7 @@ namespace Preparation.Utility
             return characterType switch
             {
                 CharacterType.Assassin => true,
-                CharacterType.Klee=> true,
+                CharacterType.Klee => true,
                 _ => false,
             };
         }

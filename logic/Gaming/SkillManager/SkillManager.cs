@@ -28,6 +28,9 @@ namespace Gaming
                         case ActiveSkillType.Punish:
                             Punish(character);
                             break;
+                        case ActiveSkillType.JumpyBomb:
+                            JumpyBomb(character);
+                            break;
                         default:
                             return false;
                     }

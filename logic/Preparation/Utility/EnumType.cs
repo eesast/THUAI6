@@ -53,31 +53,30 @@ namespace Preparation.Utility
     public enum BulletType  // 子弹类型
     {
         Null = 0,
-        OrdinaryBullet = 1,  // 普通子弹
-        AtomBomb = 2,        // 原子弹
-        FastBullet = 3,      // 快速子弹
-        LineBullet = 4,      // 直线子弹
-        FlyingKnife = 5,     //飞刀
-        CommonAttackOfGhost = 6,
+        FlyingKnife = 1,     //飞刀
+        CommonAttackOfGhost = 2,
+        JumpyDumpty = 3,
+        BombBomb = 4,
         // Ram = 7,
     }
     public enum PropType  // 道具类型
     {
         Null = 0,
-        AddSpeed = 1,
-        AddLifeOrAp = 2,
-        AddHpOrAp = 3,
-        ShieldOrSpear = 4,
-        Key3 = 5,
-        Key5 = 6,
-        Key6 = 7,
+        Key3 = 1,
+        Key5 = 2,
+        Key6 = 3,
+        AddSpeed = 4,
+        AddLifeOrClairaudience = 5,
+        AddHpOrAp = 6,
+        ShieldOrSpear = 7,
+        RecoveryFromDizziness = 8,
     }
     public enum CharacterType  // 职业
     {
         Null = 0,
         Assassin = 1,
         Athlete = 2,
-        RecoverAfterBattle = 3,
+        Klee = 3,
         SpeedUpWhenLeavingGrass = 4,
         Teacher = 5,
         PSkill5 = 6
@@ -87,7 +86,7 @@ namespace Preparation.Utility
         Null = 0,
         BecomeInvisible = 1,
         BecomeVampire = 2,
-        NuclearWeapon = 3,
+        JumpyBomb = 3,
         SuperFast = 4,
         UseKnife = 5,
         CanBeginToCharge = 6,

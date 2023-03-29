@@ -62,10 +62,10 @@ namespace GameClass.GameObj
         }
     }
 
-    public class NuclearWeapon : IActiveSkill  // 核武器
+    public class JumpyBomb : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 7 / 3;
-        public int DurationTime => GameData.commonSkillTime / 10;
+        public int SkillCD => GameData.commonSkillCD / 30 * 5;
+        public int DurationTime => GameData.commonSkillTime / 2;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
 
@@ -132,6 +132,8 @@ namespace GameClass.GameObj
                     return new CanBeginToCharge();
                 case ActiveSkillType.Punish:
                     return new Punish();
+                case ActiveSkillType.JumpyBomb:
+                    return new JumpyBomb();
                 default:
                     return new NullSkill();
             }
@@ -149,6 +151,8 @@ namespace GameClass.GameObj
                     return ActiveSkillType.CanBeginToCharge;
                 case Punish:
                     return ActiveSkillType.Punish;
+                case JumpyBomb:
+                    return ActiveSkillType.JumpyBomb;
                 default:
                     return ActiveSkillType.Null;
             }

@@ -17,8 +17,16 @@ namespace Gaming
         {
 
             // 人物移动
-            private void SkillWhenMove(Character player, IGameObj collisionObj)
+            private static void SkillWhenColliding(Character player, IGameObj collisionObj)
             {
+                if (collisionObj.Type == GameObjType.Bullet)
+                {
+                    if (((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
+                    {
+                        if (AttackManager.BeStunned((Character)collisionObj, ((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting))
+                            player.AddScore(GameData.StudentScoreTrickerBeStunned(((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting));
+                    }
+                }
                 if (player.UseIActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
                 {
                     if (AttackManager.BeStunned((Character)collisionObj, GameData.TimeOfGhostFaintingWhenCharge))
@@ -495,7 +503,7 @@ namespace Gaming
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>
                     {
-                        SkillWhenMove((Character)obj, collisionObj);
+                        SkillWhenColliding((Character)obj, collisionObj);
                         //if (collisionObj is Mine)
                         //{
                         //    ActivateMine((Character)obj, (Mine)collisionObj);

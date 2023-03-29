@@ -12,7 +12,7 @@ namespace GameClass.GameObj
             public override double BulletAttackRange => 0;
             public override int AP => 7220;
             public override int Speed => 0;
-            public override bool IsToBomb => false;
+            public override bool IsRemoteAttack => false;
             public override int CastTime => 0;
             public override int Backswing => 0;
             public override int RecoveryFromHit => 0;

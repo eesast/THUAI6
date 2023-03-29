@@ -47,7 +47,8 @@ namespace GameClass.GameObj
                 lock (gameObjLock)
                 {
                     bulletOfPlayer = value;
-                    CD = BulletFactory.BulletCD(value);
+                    OrgCD = (BulletFactory.BulletCD(value));
+                    CD = 0;
                 }
             }
         }

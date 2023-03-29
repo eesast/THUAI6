@@ -31,10 +31,10 @@ namespace Gaming
                             player.AddSpear(GameData.PropDuration);
                         else player.AddShield(GameData.PropDuration);
                         break;
-                    case PropType.AddLifeOrAp:
+                    case PropType.AddLifeOrClairaudience:
                         if (!player.IsGhost())
                             player.AddLIFE(GameData.PropDuration);
-                        else player.AddAp(GameData.PropDuration);
+                        else player.AddClairaudience(GameData.PropDuration);
                         break;
                     case PropType.AddSpeed:
                         player.AddMoveSpeed(GameData.PropDuration);

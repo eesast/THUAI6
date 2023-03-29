@@ -35,6 +35,14 @@ namespace Preparation.Utility
         {
             return gameObjType != GameObjType.Null && gameObjType != GameObjType.Grass && gameObjType != GameObjType.OutOfBoundBlock && gameObjType != GameObjType.Window && gameObjType != GameObjType.Wall;
         }
+        /*        public static bool Collide(GameObjType gameObjType)
+                {
+                    return gameObjType != GameObjType.Null && gameObjType != GameObjType.Grass 
+                        && gameObjType != GameObjType.OutOfBoundBlock && gameObjType != GameObjType.Window 
+                        && gameObjType != GameObjType.Bullet&&gameObjType != GameObjType.Prop
+                        &&gameObjType != GameObjType.PickedProp&&gameObjType != GameObjType.BombedBullet
+                        &&gameObjType != GameObjType.EmergencyExit&&gameObjType != GameObjType.Doorway;
+                }*/
 
         public static XY GetCellCenterPos(int x, int y)  // 求格子的中心坐标
         {
@@ -106,6 +114,7 @@ namespace Preparation.Utility
             return characterType switch
             {
                 CharacterType.Assassin => true,
+                CharacterType.Klee=> true,
                 _ => false,
             };
         }
@@ -161,13 +170,13 @@ namespace Preparation.Utility
         public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicCastTime = 500;//基本前摇时间
         public const int basicBackswing = 818;//基本后摇时间
-        public const int basicRecoveryFromHit = 4300;//基本命中攻击恢复时长
+        public const int basicRecoveryFromHit = 3700;//基本命中攻击恢复时长
         public const int basicStunnedTimeOfStudent = 4130;
 
-        public const int basicBulletMoveSpeed = 2700;                // 基本子弹移动速度，单位：s-1
-        public const double basicRemoteAttackRange = 9000;  // 基本远程攻击范围
-        public const double basicAttackShortRange = 2700;                 // 基本近程攻击范围
-        public const double basicBulletBombRange = 3000;             // 基本子弹爆炸范围
+        public const int basicBulletMoveSpeed = 1800;                // 基本子弹移动速度，单位：s-1
+        public const double basicRemoteAttackRange = 3000;  // 基本远程攻击范围
+        public const double basicAttackShortRange = 900;                 // 基本近程攻击范围
+        public const double basicBulletBombRange = 1000;             // 基本子弹爆炸范围
         #endregion
         #region 技能相关
         public const int maxNumOfSkill = 3;
@@ -183,7 +192,7 @@ namespace Preparation.Utility
         /// Punish
         /// </summary>
         public const int TimeOfGhostFaintingWhenPunish = 3070;
-        public const int TimeFactorOfGhostFainting = 1000;
+        public const int timeFactorOfGhostFainting = 250;
         #endregion
         #region 道具相关
         public const int MinPropTypeNum = 1;

@@ -18,6 +18,10 @@ Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::TrickerType tricker, T
 {
     currentState = &state[0];
     bufferState = &state[1];
+    currentState->gameInfo = std::make_shared<THUAI6::GameInfo>();
+    currentState->mapInfo = std::make_shared<THUAI6::GameMap>();
+    bufferState->gameInfo = std::make_shared<THUAI6::GameInfo>();
+    bufferState->mapInfo = std::make_shared<THUAI6::GameMap>();
 }
 
 std::vector<std::shared_ptr<const THUAI6::Tricker>> Logic::GetTrickers() const
@@ -318,6 +322,8 @@ void Logic::ProcessMessage()
                                 std::vector<THUAI6::PlaceType> row;
                                 for (int j = 0; j < mapResult.row(i).col_size(); j++)
                                 {
+                                    if (Proto2THUAI6::placeTypeDict.count(mapResult.row(i).col(j)) == 0)
+                                        logger->error("Unknown place type!");
                                     row.push_back(Proto2THUAI6::placeTypeDict[mapResult.row(i).col(j)]);
                                 }
                                 map.push_back(std::move(row));

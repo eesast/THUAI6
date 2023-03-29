@@ -2,7 +2,7 @@ import PyAPI.structures as THUAI6
 from PyAPI.Interface import ILogic, IStudentAPI, ITrickerAPI, IGameTimer, IAI
 from math import pi
 from concurrent.futures import ThreadPoolExecutor, Future
-from typing import List, Union
+from typing import List, cast
 
 
 class StudentAPI(IStudentAPI, IGameTimer):
@@ -25,21 +25,43 @@ class StudentAPI(IStudentAPI, IGameTimer):
         return self.Move(timeInMilliseconds, pi * 1.5)
 
     def MoveUp(self, timeInMilliseconds: int) -> Future[bool]:
-        return self.Move(timeInMilliseconds, 0)
+        return self.Move(timeInMilliseconds, pi)
 
     def MoveDown(self, timeInMilliseconds: int) -> Future[bool]:
-        return self.Move(timeInMilliseconds, pi)
+        return self.Move(timeInMilliseconds, 0)
+
+    def Attack(self, angle: float) -> Future[bool]:
+        return self.__pool.submit(self.__logic.Attack, angle)
 
     # 道具和技能相关
 
     def PickProp(self, propType: THUAI6.PropType) -> Future[bool]:
         return self.__pool.submit(self.__logic.PickProp, propType)
 
-    def UseProp(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.UseProp)
+    def UseProp(self, propType: THUAI6.PropType) -> Future[bool]:
+        return self.__pool.submit(self.__logic.UseProp, propType)
 
-    def UseSkill(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.UseSkill)
+    def UseSkill(self, skillID: int) -> Future[bool]:
+        return self.__pool.submit(self.__logic.UseSkill, skillID)
+
+    # 与地图交互相关
+    def OpenDoor(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.OpenDoor)
+
+    def CloseDoor(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.CloseDoor)
+
+    def SkipWindow(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.SkipWindow)
+
+    def StartOpenGate(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartOpenGate)
+
+    def StartOpenChest(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartOpenChest)
+
+    def EndAllAction(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.EndAllAction)
 
     # 消息相关，接收消息时无消息则返回(-1, '')
 
@@ -77,14 +99,32 @@ class StudentAPI(IStudentAPI, IGameTimer):
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
 
-    def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
-        return self.__logic.GetSelfInfo()
-
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         return self.__logic.GetFullMap()
 
     def GetPlaceType(self, cellX: int, cellY: int) -> THUAI6.PlaceType:
         return self.__logic.GetPlaceType(cellX, cellY)
+
+    def IsDoorOpen(self, cellX: int, cellY: int) -> bool:
+        return self.__logic.IsDoorOpen(cellX, cellY)
+
+    def GetChestProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetChestProgress(cellX, cellY)
+
+    def GetGateProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetGateProgress(cellX, cellY)
+
+    def GetClassroomProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetClassroomProgress(cellX, cellY)
+
+    def GetDoorProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetDoorProgress(cellX, cellY)
+
+    def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState:
+        return self.__logic.GetHiddenGateState(cellX, cellY)
+
+    def GetGameInfo(self) -> THUAI6.GameInfo:
+        return self.__logic.GetGameInfo()
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
@@ -108,14 +148,14 @@ class StudentAPI(IStudentAPI, IGameTimer):
     def StartLearning(self) -> Future[bool]:
         return self.__pool.submit(self.__logic.StartLearning)
 
-    def EndLearning(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.EndLearning)
+    def StartTreatMate(self, mateID: int) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartTreatMate, mateID)
 
-    def StartHelpMate(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.StartHelpMate)
+    def StartRescueMate(self, mateID: int) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartRescueMate, mateID)
 
-    def EndHelpMate(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.EndHelpMate)
+    def GetSelfInfo(self) -> THUAI6.Student:
+        return cast(THUAI6.Student, self.__logic.GetSelfInfo())
 
     # Timer用
 
@@ -126,7 +166,7 @@ class StudentAPI(IStudentAPI, IGameTimer):
         pass
 
     def Play(self, ai: IAI) -> None:
-        pass
+        ai.StudentPlay(self)
 
 
 class TrickerAPI(ITrickerAPI, IGameTimer):
@@ -149,21 +189,43 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
         return self.Move(timeInMilliseconds, pi * 1.5)
 
     def MoveUp(self, timeInMilliseconds: int) -> Future[bool]:
-        return self.Move(timeInMilliseconds, 0)
+        return self.Move(timeInMilliseconds, pi)
 
     def MoveDown(self, timeInMilliseconds: int) -> Future[bool]:
-        return self.Move(timeInMilliseconds, pi)
+        return self.Move(timeInMilliseconds, 0)
+
+    def Attack(self, angle: float) -> Future[bool]:
+        return self.__pool.submit(self.__logic.Attack, angle)
 
     # 道具和技能相关
 
     def PickProp(self, propType: THUAI6.PropType) -> Future[bool]:
         return self.__pool.submit(self.__logic.PickProp, propType)
 
-    def UseProp(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.UseProp)
+    def UseProp(self, propType: THUAI6.PropType) -> Future[bool]:
+        return self.__pool.submit(self.__logic.UseProp, propType)
 
-    def UseSkill(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.UseSkill)
+    def UseSkill(self, skillID: int) -> Future[bool]:
+        return self.__pool.submit(self.__logic.UseSkill, skillID)
+
+    # 与地图交互相关
+    def OpenDoor(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.OpenDoor)
+
+    def CloseDoor(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.CloseDoor)
+
+    def SkipWindow(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.SkipWindow)
+
+    def StartOpenGate(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartOpenGate)
+
+    def StartOpenChest(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartOpenChest)
+
+    def EndAllAction(self) -> Future[bool]:
+        return self.__pool.submit(self.__logic.EndAllAction)
 
     # 消息相关，接收消息时无消息则返回(-1, '')
 
@@ -201,14 +263,32 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
 
-    def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
-        return self.__logic.GetSelfInfo()
-
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         return self.__logic.GetFullMap()
 
     def GetPlaceType(self, cellX: int, cellY: int) -> THUAI6.PlaceType:
         return self.__logic.GetPlaceType(cellX, cellY)
+
+    def IsDoorOpen(self, cellX: int, cellY: int) -> bool:
+        return self.__logic.IsDoorOpen(cellX, cellY)
+
+    def GetChestProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetChestProgress(cellX, cellY)
+
+    def GetGateProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetGateProgress(cellX, cellY)
+
+    def GetClassroomProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetClassroomProgress(cellX, cellY)
+
+    def GetDoorProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetDoorProgress(cellX, cellY)
+
+    def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState:
+        return self.__logic.GetHiddenGateState(cellX, cellY)
+
+    def GetGameInfo(self) -> THUAI6.GameInfo:
+        return self.__logic.GetGameInfo()
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
@@ -226,17 +306,8 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
 
     # 屠夫阵营的特殊函数
 
-    def Trick(self, angle: float) -> Future[bool]:
-        return self.__pool.submit(self.__logic.Trick, angle)
-
-    def StartExam(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.StartExam)
-
-    def EndExam(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.EndExam)
-
-    def MakeFail(self) -> Future[bool]:
-        return self.__pool.submit(self.__logic.MakeFail)
+    def GetSelfInfo(self) -> THUAI6.Tricker:
+        return cast(THUAI6.Tricker, self.__logic.GetSelfInfo())
 
     # Timer用
 
@@ -247,4 +318,4 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
         pass
 
     def Play(self, ai: IAI) -> None:
-        pass
+        ai.TrickerPlay(self)

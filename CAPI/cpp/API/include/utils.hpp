@@ -13,7 +13,7 @@
 namespace AssistFunction
 {
 
-    constexpr int numOfGridPerCell = 100;
+    constexpr int numOfGridPerCell = 1000;
 
     [[nodiscard]] constexpr inline int GridToCell(int grid) noexcept
     {

@@ -6,7 +6,6 @@ import proto.Services_pb2_grpc as Services
 import proto.Message2Clients_pb2 as Message2Clients
 import threading
 import grpc
-from queue import Queue
 
 
 # 使用gRPC的异步来减少通信对于选手而言损失的时间，而gRPC的return值有result()方法，故若连接错误时也应当返回一个具有result()方法的对象，使用此处的ErrorHandler类来实现
@@ -21,7 +20,6 @@ class Communication:
     __THUAI6Stub: Services.AvailableServiceStub
     __haveNewMessage: bool
     __message2Client: Message2Clients.MessageToClient
-    __messageQueue: Queue  # Python的Queue是线程安全的，故无须自己实现Queue
     __mtxMessage: threading.Lock
     __cvMessage: threading.Condition
 
@@ -30,7 +28,6 @@ class Communication:
         channel = grpc.insecure_channel(aim)
         self.__THUAI6Stub = Services.AvailableServiceStub(channel)
         self.__haveNewMessage = False
-        self.__messageQueue = Queue()
         self.__cvMessage = threading.Condition()
 
     def Move(self, time: int, angle: float, playerID: int) -> bool:
@@ -45,25 +42,25 @@ class Communication:
     def PickProp(self, propType: THUAI6.PropType, playerID: int) -> bool:
         try:
             pickResult = self.__THUAI6Stub.PickProp(
-                THUAI62Proto.THUAI62ProtobufPick(propType, playerID))
+                THUAI62Proto.THUAI62ProtobufProp(propType, playerID))
         except grpc.RpcError as e:
             return False
         else:
             return pickResult.act_success
 
-    def UseProp(self, playerID: int):
+    def UseProp(self, propType: THUAI6.PropType, playerID: int):
         try:
             useResult = self.__THUAI6Stub.UseProp(
-                THUAI62Proto.THUAI62ProtobufID(playerID))
+                THUAI62Proto.THUAI62ProtobufProp(propType, playerID))
         except grpc.RpcError as e:
             return False
         else:
             return useResult.act_success
 
-    def UseSkill(self, playerID: int) -> bool:
+    def UseSkill(self, skillID: int, playerID: int) -> bool:
         try:
             useResult = self.__THUAI6Stub.UseSkill(
-                THUAI62Proto.THUAI62ProtobufID(playerID))
+                THUAI62Proto.THUAI62ProtobufSkill(skillID, playerID))
         except grpc.RpcError as e:
             return False
         else:
@@ -77,29 +74,6 @@ class Communication:
             return False
         else:
             return sendResult.act_success
-
-    def HaveMessage(self) -> bool:
-        return not self.__messageQueue.empty()
-
-    def GetMessage(self) -> tuple[int, str]:
-        try:
-            message = self.__messageQueue.get_nowait()
-        except Exception as e:
-            return -1, ''
-        else:
-            return message
-
-    def ReadMessage(self, playerID: int) -> None:
-        def tRead():
-            try:
-                for msg in self.__THUAI6Stub.GetMessage(
-                        THUAI62Proto.THUAI62ProtobufID(playerID)):
-                    self.__messageQueue.put(
-                        (msg.from_player_id, msg.message_received))
-            except grpc.RpcError as e:
-                return
-
-        threading.Thread(target=tRead).start()
 
     def Graduate(self, playerID: int) -> bool:
         try:
@@ -119,19 +93,19 @@ class Communication:
         else:
             return learnResult.act_success
 
-    def StartTreatMate(self, playerID: int) -> bool:
+    def StartTreatMate(self, playerID: int, mateID: int) -> bool:
         try:
             helpResult = self.__THUAI6Stub.StartTreatMate(
-                THUAI62Proto.THUAI62ProtobufID(playerID))
+                THUAI62Proto.THUAI62ProtobufTreatAndRescue(playerID, mateID))
         except grpc.RpcError as e:
             return False
         else:
             return helpResult.act_success
 
-    def StartRescueMate(self, playerID: int) -> bool:
+    def StartRescueMate(self, playerID: int, mateID: int) -> bool:
         try:
             helpResult = self.__THUAI6Stub.StartRescueMate(
-                THUAI62Proto.THUAI62ProtobufID(playerID))
+                THUAI62Proto.THUAI62ProtobufTreatAndRescue(playerID, mateID))
         except grpc.RpcError as e:
             return False
         else:
@@ -140,7 +114,7 @@ class Communication:
     def Attack(self, angle: float, playerID: int) -> bool:
         try:
             attackResult = self.__THUAI6Stub.Attack(
-                THUAI62Proto.THUAI62ProtobufTrick(angle, playerID))
+                THUAI62Proto.THUAI62ProtobufAttack(angle, playerID))
         except grpc.RpcError as e:
             return False
         else:

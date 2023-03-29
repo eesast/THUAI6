@@ -1,6 +1,6 @@
 from math import pi
 from concurrent.futures import ThreadPoolExecutor, Future
-from typing import List, Union
+from typing import List, cast
 import logging
 import os
 import datetime
@@ -25,7 +25,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
                 os.path.realpath(__file__))) + "/logs")
 
         fileHandler = logging.FileHandler(os.path.dirname(
-            os.path.dirname(os.path.realpath(__file__))) + "/logs/api-" + str(playerID) + "-log.txt")
+            os.path.dirname(os.path.realpath(__file__))) + "/logs/api-" + str(playerID) + "-log.txt", mode="w+", encoding="utf-8")
         screenHandler = logging.StreamHandler()
         if file:
             fileHandler.setLevel(logging.DEBUG)
@@ -63,10 +63,23 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
         return self.Move(timeInMilliseconds, pi * 1.5)
 
     def MoveUp(self, timeInMilliseconds: int) -> Future[bool]:
-        return self.Move(timeInMilliseconds, 0)
+        return self.Move(timeInMilliseconds, pi)
 
     def MoveDown(self, timeInMilliseconds: int) -> Future[bool]:
-        return self.Move(timeInMilliseconds, pi)
+        return self.Move(timeInMilliseconds, 0)
+
+    def Attack(self, angle: float) -> Future[bool]:
+        self.__logger.info(
+            f"Attack: angle = {angle}, called at {self.__GetTime()}ms")
+
+        def logAttack() -> bool:
+            result = self.__logic.Attack(angle)
+            if not result:
+                self.__logger.warning(
+                    f"Attack: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logAttack)
 
     # 道具和技能相关
 
@@ -83,12 +96,12 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
         return self.__pool.submit(logPick)
 
-    def UseProp(self) -> Future[bool]:
+    def UseProp(self, propType: THUAI6.PropType) -> Future[bool]:
         self.__logger.info(
-            f"UseProp: called at {self.__GetTime()}ms")
+            f"UseProp: prop = {propType.name}, called at {self.__GetTime()}ms")
 
         def logUse() -> bool:
-            result = self.__logic.UseProp()
+            result = self.__logic.UseProp(propType)
             if not result:
                 self.__logger.warning(
                     f"UseProp: failed at {self.__GetTime()}ms")
@@ -96,18 +109,97 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
         return self.__pool.submit(logUse)
 
-    def UseSkill(self) -> Future[bool]:
+    def UseSkill(self, skillID: int) -> Future[bool]:
         self.__logger.info(
-            f"UseSkill: called at {self.__GetTime()}ms")
+            f"UseSkill: skillID = {skillID}, called at {self.__GetTime()}ms")
 
         def logUse() -> bool:
-            result = self.__logic.UseSkill()
+            result = self.__logic.UseSkill(skillID)
             if not result:
                 self.__logger.warning(
                     f"UseSkill: failed at {self.__GetTime()}ms")
             return result
 
         return self.__pool.submit(logUse)
+
+    # 与地图交互相关
+    def OpenDoor(self) -> Future[bool]:
+        self.__logger.info(
+            f"OpenDoor: called at {self.__GetTime()}ms")
+
+        def logOpen() -> bool:
+            result = self.__logic.OpenDoor()
+            if not result:
+                self.__logger.warning(
+                    f"OpenDoor: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logOpen)
+
+    def CloseDoor(self) -> Future[bool]:
+        self.__logger.info(
+            f"CloseDoor: called at {self.__GetTime()}ms")
+
+        def logClose() -> bool:
+            result = self.__logic.CloseDoor()
+            if not result:
+                self.__logger.warning(
+                    f"CloseDoor: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logClose)
+
+    def SkipWindow(self) -> Future[bool]:
+        self.__logger.info(
+            f"SkipWindow: called at {self.__GetTime()}ms")
+
+        def logSkip() -> bool:
+            result = self.__logic.SkipWindow()
+            if not result:
+                self.__logger.warning(
+                    f"SkipWindow: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logSkip)
+
+    def StartOpenGate(self) -> Future[bool]:
+        self.__logger.info(
+            f"StartOpenGate: called at {self.__GetTime()}ms")
+
+        def logStart() -> bool:
+            result = self.__logic.StartOpenGate()
+            if not result:
+                self.__logger.warning(
+                    f"StartOpenGate: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logStart)
+
+    def StartOpenChest(self) -> Future[bool]:
+        self.__logger.info(
+            f"StartOpenChest: called at {self.__GetTime()}ms")
+
+        def logStart() -> bool:
+            result = self.__logic.StartOpenChest()
+            if not result:
+                self.__logger.warning(
+                    f"StartOpenChest: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logStart)
+
+    def EndAllAction(self) -> Future[bool]:
+        self.__logger.info(
+            f"EndAllAction: called at {self.__GetTime()}ms")
+
+        def logEnd() -> bool:
+            result = self.__logic.EndAllAction()
+            if not result:
+                self.__logger.warning(
+                    f"EndAllAction: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logEnd)
 
     # 消息相关，接收消息时无消息则返回(-1, '')
 
@@ -177,14 +269,32 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
 
-    def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
-        return self.__logic.GetSelfInfo()
-
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         return self.__logic.GetFullMap()
 
     def GetPlaceType(self, cellX: int, cellY: int) -> THUAI6.PlaceType:
         return self.__logic.GetPlaceType(cellX, cellY)
+
+    def IsDoorOpen(self, cellX: int, cellY: int) -> bool:
+        return self.__logic.IsDoorOpen(cellX, cellY)
+
+    def GetChestProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetChestProgress(cellX, cellY)
+
+    def GetGateProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetGateProgress(cellX, cellY)
+
+    def GetClassroomProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetClassroomProgress(cellX, cellY)
+
+    def GetDoorProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetDoorProgress(cellX, cellY)
+
+    def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState:
+        return self.__logic.GetHiddenGateState(cellX, cellY)
+
+    def GetGameInfo(self) -> THUAI6.GameInfo:
+        return self.__logic.GetGameInfo()
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
@@ -194,14 +304,15 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
             self.__logger.info(
                 f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
             self.__logger.info(
-                f"speed={student.speed}, view range={student.viewRange}, skill time={student.timeUntilSkillAvailable}, prop={student.prop.name}, place={student.place.name}")
-            self.__logger.info(
-                f"state={student.state.name}, determination={student.determination}, fail time={student.failTime}")
-            self.__logger.info("buff=")
-            studentBuff = ""
+                f"speed={student.speed}, view range={student.viewRange}, skill time={student.timeUntilSkillAvailable},place={student.place.name}")
+            studentBuff = "buff="
             for buff in student.buff:
                 studentBuff += buff.name + ", "
             self.__logger.info(studentBuff)
+            studentProp = "prop="
+            for prop in student.prop:
+                studentProp += prop.name + ", "
+            self.__logger.info(studentProp)
             self.__logger.info("**********************")
 
     def PrintTricker(self) -> None:
@@ -210,9 +321,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
             self.__logger.info(
                 f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
             self.__logger.info(
-                f"speed={tricker.speed}, view range={tricker.viewRange}, skill time={tricker.timeUntilSkillAvailable}, prop={tricker.prop.name}, place={tricker.place.name}")
-            self.__logger.info(
-                f"damage={tricker.damage}, movable={tricker.movable}")
+                f"speed={tricker.speed}, view range={tricker.viewRange}, skill time={tricker.timeUntilSkillAvailable},  place={tricker.place.name}")
             self.__logger.info("buff=")
             trickerBuff = ""
             for buff in tricker.buff:
@@ -224,7 +333,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
         for prop in self.__logic.GetProps():
             self.__logger.info("******Prop Info******")
             self.__logger.info(
-                f"GUID={prop.guid}, x={prop.x}, y={prop.y}, place={prop.place.name}, is moving={prop.isMoving}")
+                f"GUID={prop.guid}, x={prop.x}, y={prop.y}, place={prop.place.name}, ")
             self.__logger.info("*********************")
 
     def PrintSelfInfo(self) -> None:
@@ -233,18 +342,18 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
         self.__logger.info(
             f"playerID={mySelf.playerID}, GUID={mySelf.guid}, x={mySelf.x}, y={mySelf.y}")
         self.__logger.info(
-            f"speed={mySelf.speed}, view range={mySelf.viewRange}, skill time={mySelf.timeUntilSkillAvailable}, prop={mySelf.prop.name}, place={mySelf.place.name}")
+            f"speed={mySelf.speed}, view range={mySelf.viewRange}, skill time={mySelf.timeUntilSkillAvailable}, place={mySelf.place.name}")
         if isinstance(mySelf, THUAI6.Student):
             self.__logger.info(
-                f"state={mySelf.state.name}, determination={mySelf.determination},fail num={mySelf.failNum}, fail time={mySelf.failTime}, emo time={mySelf.emoTime}")
-        else:
-            self.__logger.info(
-                f"damage={mySelf.damage}, movable={mySelf.movable}")
-        self.__logger.info("buff=")
-        mySelfBuff = ""
+                f"state={mySelf.playerState.name}, determination={mySelf.determination},")
+        mySelfBuff = "buff="
         for buff in mySelf.buff:
             mySelfBuff += buff.name + ", "
         self.__logger.info(mySelfBuff)
+        studentProp = "prop="
+        for prop in mySelf.prop:
+            studentProp += prop.name + ", "
+        self.__logger.info(studentProp)
         self.__logger.info("*********************")
 
     # 人类阵营的特殊函数
@@ -275,44 +384,34 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
         return self.__pool.submit(logStart)
 
-    def EndLearning(self) -> Future[bool]:
+    def StartTreatMate(self, mateID: int) -> Future[bool]:
         self.__logger.info(
-            f"EndLearning: called at {self.__GetTime()}ms")
+            f"StartTreatMate: called at {self.__GetTime()}ms")
 
-        def logEnd() -> bool:
-            result = self.__logic.EndLearning()
+        def logStartTreatMate() -> bool:
+            result = self.__logic.StartTreatMate(mateID)
             if not result:
                 self.__logger.warning(
-                    f"EndLearning: failed at {self.__GetTime()}ms")
+                    f"StartTreatMate: failed at {self.__GetTime()}ms")
             return result
 
-        return self.__pool.submit(logEnd)
+        return self.__pool.submit(logStartTreatMate)
 
-    def StartHelpMate(self) -> Future[bool]:
+    def StartRescueMate(self, mateID: int) -> Future[bool]:
         self.__logger.info(
-            f"StartHelpMate: called at {self.__GetTime()}ms")
+            f"StartRescueMate: called at {self.__GetTime()}ms")
 
-        def logStart() -> bool:
-            result = self.__logic.StartHelpMate()
+        def logStartRescueMate() -> bool:
+            result = self.__logic.StartRescueMate(mateID)
             if not result:
                 self.__logger.warning(
-                    f"StartHelpMate: failed at {self.__GetTime()}ms")
+                    f"StartRescueMate: failed at {self.__GetTime()}ms")
             return result
 
-        return self.__pool.submit(logStart)
+        return self.__pool.submit(logStartRescueMate)
 
-    def EndHelpMate(self) -> Future[bool]:
-        self.__logger.info(
-            f"EndHelpMate: called at {self.__GetTime()}ms")
-
-        def logEnd() -> bool:
-            result = self.__logic.EndHelpMate()
-            if not result:
-                self.__logger.warning(
-                    f"EndHelpMate: failed at {self.__GetTime()}ms")
-            return result
-
-        return self.__pool.submit(logEnd)
+    def GetSelfInfo(self) -> THUAI6.Student:
+        return cast(THUAI6.Student, self.__logic.GetSelfInfo())
 
     # Timer用
 
@@ -328,7 +427,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
         self.__logger.info(f"Time elapsed: {self.__GetTime()}ms")
 
     def Play(self, ai: IAI) -> None:
-        ai.play(self)
+        ai.StudentPlay(self)
 
 
 class TrickerDebugAPI(ITrickerAPI, IGameTimer):
@@ -346,7 +445,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
                 os.path.realpath(__file__))) + "/logs")
 
         fileHandler = logging.FileHandler(os.path.dirname(
-            os.path.dirname(os.path.realpath(__file__))) + "/logs/api-" + str(playerID) + "-log.txt")
+            os.path.dirname(os.path.realpath(__file__))) + "/logs/api-" + str(playerID) + "-log.txt", mode="w+", encoding="utf-8")
         screenHandler = logging.StreamHandler()
         if file:
             fileHandler.setLevel(logging.DEBUG)
@@ -384,10 +483,25 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
         return self.Move(timeInMilliseconds, pi * 1.5)
 
     def MoveUp(self, timeInMilliseconds: int) -> Future[bool]:
-        return self.Move(timeInMilliseconds, 0)
+        return self.Move(timeInMilliseconds, pi)
 
     def MoveDown(self, timeInMilliseconds: int) -> Future[bool]:
-        return self.Move(timeInMilliseconds, pi)
+        return self.Move(timeInMilliseconds, 0)
+
+    # 道具和技能相关
+
+    def Attack(self, angle: float) -> Future[bool]:
+        self.__logger.info(
+            f"Attack: angle = {angle}, called at {self.__GetTime()}ms")
+
+        def logAttack() -> bool:
+            result = self.__logic.Attack(angle)
+            if not result:
+                self.__logger.warning(
+                    f"Attack: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logAttack)
 
     # 道具和技能相关
 
@@ -404,12 +518,12 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
         return self.__pool.submit(logPick)
 
-    def UseProp(self) -> Future[bool]:
+    def UseProp(self, propType: THUAI6.PropType) -> Future[bool]:
         self.__logger.info(
-            f"UseProp: called at {self.__GetTime()}ms")
+            f"UseProp: prop = {propType.name}, called at {self.__GetTime()}ms")
 
         def logUse() -> bool:
-            result = self.__logic.UseProp()
+            result = self.__logic.UseProp(propType)
             if not result:
                 self.__logger.warning(
                     f"UseProp: failed at {self.__GetTime()}ms")
@@ -417,18 +531,97 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
         return self.__pool.submit(logUse)
 
-    def UseSkill(self) -> Future[bool]:
+    def UseSkill(self, skillID: int) -> Future[bool]:
         self.__logger.info(
-            f"UseSkill: called at {self.__GetTime()}ms")
+            f"UseSkill: skillID = {skillID}, called at {self.__GetTime()}ms")
 
         def logUse() -> bool:
-            result = self.__logic.UseSkill()
+            result = self.__logic.UseSkill(skillID)
             if not result:
                 self.__logger.warning(
                     f"UseSkill: failed at {self.__GetTime()}ms")
             return result
 
         return self.__pool.submit(logUse)
+
+    # 与地图交互相关
+    def OpenDoor(self) -> Future[bool]:
+        self.__logger.info(
+            f"OpenDoor: called at {self.__GetTime()}ms")
+
+        def logOpen() -> bool:
+            result = self.__logic.OpenDoor()
+            if not result:
+                self.__logger.warning(
+                    f"OpenDoor: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logOpen)
+
+    def CloseDoor(self) -> Future[bool]:
+        self.__logger.info(
+            f"CloseDoor: called at {self.__GetTime()}ms")
+
+        def logClose() -> bool:
+            result = self.__logic.CloseDoor()
+            if not result:
+                self.__logger.warning(
+                    f"CloseDoor: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logClose)
+
+    def SkipWindow(self) -> Future[bool]:
+        self.__logger.info(
+            f"SkipWindow: called at {self.__GetTime()}ms")
+
+        def logSkip() -> bool:
+            result = self.__logic.SkipWindow()
+            if not result:
+                self.__logger.warning(
+                    f"SkipWindow: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logSkip)
+
+    def StartOpenGate(self) -> Future[bool]:
+        self.__logger.info(
+            f"StartOpenGate: called at {self.__GetTime()}ms")
+
+        def logStart() -> bool:
+            result = self.__logic.StartOpenGate()
+            if not result:
+                self.__logger.warning(
+                    f"StartOpenGate: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logStart)
+
+    def StartOpenChest(self) -> Future[bool]:
+        self.__logger.info(
+            f"StartOpenChest: called at {self.__GetTime()}ms")
+
+        def logStart() -> bool:
+            result = self.__logic.StartOpenChest()
+            if not result:
+                self.__logger.warning(
+                    f"StartOpenChest: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logStart)
+
+    def EndAllAction(self) -> Future[bool]:
+        self.__logger.info(
+            f"EndAllAction: called at {self.__GetTime()}ms")
+
+        def logEnd() -> bool:
+            result = self.__logic.EndAllAction()
+            if not result:
+                self.__logger.warning(
+                    f"EndAllAction: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logEnd)
 
     # 消息相关，接收消息时无消息则返回(-1, '')
 
@@ -498,14 +691,32 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
 
-    def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
-        return self.__logic.GetSelfInfo()
-
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         return self.__logic.GetFullMap()
 
     def GetPlaceType(self, cellX: int, cellY: int) -> THUAI6.PlaceType:
         return self.__logic.GetPlaceType(cellX, cellY)
+
+    def IsDoorOpen(self, cellX: int, cellY: int) -> bool:
+        return self.__logic.IsDoorOpen(cellX, cellY)
+
+    def GetChestProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetChestProgress(cellX, cellY)
+
+    def GetGateProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetGateProgress(cellX, cellY)
+
+    def GetClassroomProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetClassroomProgress(cellX, cellY)
+
+    def GetDoorProgress(self, cellX: int, cellY: int) -> int:
+        return self.__logic.GetDoorProgress(cellX, cellY)
+
+    def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState:
+        return self.__logic.GetHiddenGateState(cellX, cellY)
+
+    def GetGameInfo(self) -> THUAI6.GameInfo:
+        return self.__logic.GetGameInfo()
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
@@ -515,9 +726,9 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
             self.__logger.info(
                 f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
             self.__logger.info(
-                f"speed={student.speed}, view range={student.viewRange}, skill time={student.timeUntilSkillAvailable}, prop={student.prop.name}, place={student.place.name}")
+                f"speed={student.speed}, view range={student.viewRange}, skill time={student.timeUntilSkillAvailable}, place={student.place.name}")
             self.__logger.info(
-                f"state={student.state.name}, determination={student.determination}, fail num={student.failNum}, fail time={student.failTime}, emo time={student.emoTime}")
+                f"state={student.playerState.name}, determination={student.determination}")
             self.__logger.info("buff=")
             studentBuff = ""
             for buff in student.buff:
@@ -531,9 +742,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
             self.__logger.info(
                 f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
             self.__logger.info(
-                f"speed={tricker.speed}, view range={tricker.viewRange}, skill time={tricker.timeUntilSkillAvailable}, prop={tricker.prop.name}, place={tricker.place.name}")
-            self.__logger.info(
-                f"damage={tricker.damage}, movable={tricker.movable}")
+                f"speed={tricker.speed}, view range={tricker.viewRange}, skill time={tricker.timeUntilSkillAvailable}, place={tricker.place.name}")
             self.__logger.info("buff=")
             trickerBuff = ""
             for buff in tricker.buff:
@@ -545,7 +754,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
         for prop in self.__logic.GetProps():
             self.__logger.info("******Prop Info******")
             self.__logger.info(
-                f"GUID={prop.guid}, x={prop.x}, y={prop.y}, place={prop.place.name}, is moving={prop.isMoving}")
+                f"GUID={prop.guid}, x={prop.x}, y={prop.y}, place={prop.place.name}")
             self.__logger.info("*********************")
 
     def PrintSelfInfo(self) -> None:
@@ -554,13 +763,10 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
         self.__logger.info(
             f"playerID={mySelf.playerID}, GUID={mySelf.guid}, x={mySelf.x}, y={mySelf.y}")
         self.__logger.info(
-            f"speed={mySelf.speed}, view range={mySelf.viewRange}, skill time={mySelf.timeUntilSkillAvailable}, prop={mySelf.prop.name}, place={mySelf.place.name}")
+            f"speed={mySelf.speed}, view range={mySelf.viewRange}, skill time={mySelf.timeUntilSkillAvailable}, place={mySelf.place.name}")
         if isinstance(mySelf, THUAI6.Student):
             self.__logger.info(
-                f"state={mySelf.state.name}, determination={mySelf.determination}, fail time={mySelf.failTime}")
-        else:
-            self.__logger.info(
-                f"damage={mySelf.damage}, movable={mySelf.movable}")
+                f"state={mySelf.playerState.name}, determination={mySelf.determination}")
         self.__logger.info("buff=")
         mySelfBuff = ""
         for buff in mySelf.buff:
@@ -570,57 +776,8 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
     # 屠夫阵营的特殊函数
 
-    def Trick(self, angle: float) -> Future[bool]:
-        self.__logger.info(
-            f"Trick: angle = {angle}, called at {self.__GetTime()}ms")
-
-        def logTrick() -> bool:
-            result = self.__logic.Trick(angle)
-            if not result:
-                self.__logger.warning(
-                    f"Trick: failed at {self.__GetTime()}ms")
-            return result
-
-        return self.__pool.submit(logTrick)
-
-    def StartExam(self) -> Future[bool]:
-        self.__logger.info(
-            f"StartExam: called at {self.__GetTime()}ms")
-
-        def logCarry() -> bool:
-            result = self.__logic.StartExam()
-            if not result:
-                self.__logger.warning(
-                    f"StartExam: failed at {self.__GetTime()}ms")
-            return result
-
-        return self.__pool.submit(logCarry)
-
-    def EndExam(self) -> Future[bool]:
-        self.__logger.info(
-            f"EndExam: called at {self.__GetTime()}ms")
-
-        def logRelease() -> bool:
-            result = self.__logic.EndExam()
-            if not result:
-                self.__logger.warning(
-                    f"EndExam: failed at {self.__GetTime()}ms")
-            return result
-
-        return self.__pool.submit(logRelease)
-
-    def MakeFail(self) -> Future[bool]:
-        self.__logger.info(
-            f"MakeFail: called at {self.__GetTime()}ms")
-
-        def logHang() -> bool:
-            result = self.__logic.MakeFail()
-            if not result:
-                self.__logger.warning(
-                    f"MakeFail: failed at {self.__GetTime()}ms")
-            return result
-
-        return self.__pool.submit(logHang)
+    def GetSelfInfo(self) -> THUAI6.Tricker:
+        return cast(THUAI6.Tricker, self.__logic.GetSelfInfo())
 
     # Timer用
 
@@ -636,4 +793,4 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
         self.__logger.info(f"Time elapsed: {self.__GetTime()}ms")
 
     def Play(self, ai: IAI) -> None:
-        ai.play(self)
+        ai.TrickerPlay(self)

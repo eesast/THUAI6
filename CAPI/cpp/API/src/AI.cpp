@@ -17,31 +17,7 @@ extern const THUAI6::StudentType studentType = THUAI6::StudentType::Athlete;
 
 void AI::play(IStudentAPI& api)
 {
-    int placei = 0, placej = 0;
-    auto self = api.GetSelfInfo();
-    auto map = api.GetFullMap();
-    for (int i = 0; i < map.size(); i++)
-        for (int j = 0; j < map[i].size(); j++)
-            if (map[i][j] == THUAI6::PlaceType::ClassRoom)
-            {
-                placei = i;
-                placej = j;
-                break;
-            }
-    if (placei < api.GridToCell(self->x))
-        api.MoveLeft(100);
-    else if (placei > api.GridToCell(self->x))
-        api.MoveRight(100);
-    else if (placej < api.GridToCell(self->y))
-        api.MoveUp(100);
-    else if (placej > api.GridToCell(self->y))
-        api.MoveDown(100);
-    else
-        api.Move(100, 1);
-
-    api.PrintSelfInfo();
-    api.PrintTricker();
-    api.PrintStudent();
+    api.StartOpenChest();
 }
 
 void AI::play(ITrickerAPI& api)

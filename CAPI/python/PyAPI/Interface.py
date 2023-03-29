@@ -33,6 +33,34 @@ class ILogic(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def GetClassroomProgress(self, x: int, y: int) -> int:
+        pass
+
+    @abstractmethod
+    def GetChestProgress(self, x: int, y: int) -> int:
+        pass
+
+    @abstractmethod
+    def GetGateProgress(self, x: int, y: int) -> int:
+        pass
+
+    @abstractmethod
+    def IsDoorOpen(self, x: int, y: int) -> bool:
+        pass
+
+    @abstractmethod
+    def GetHiddenGateState(self, x: int, y: int) -> THUAI6.HiddenGateState:
+        pass
+
+    @abstractmethod
+    def GetDoorProgress(self, x: int, y: int) -> int:
+        pass
+
+    @abstractmethod
+    def GetGameInfo(self) -> THUAI6.GameInfo:
+        pass
+
+    @abstractmethod
     def Move(self, time: int, angle: float) -> bool:
         pass
 
@@ -41,11 +69,11 @@ class ILogic(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def UseProp(self) -> bool:
+    def UseProp(self, propType: THUAI6.PropType) -> bool:
         pass
 
     @abstractmethod
-    def UseSkill(self) -> bool:
+    def UseSkill(self, skillID: int) -> bool:
         pass
 
     @abstractmethod
@@ -72,6 +100,34 @@ class ILogic(metaclass=ABCMeta):
     def GetPlayerGUIDs(self) -> List[int]:
         pass
 
+    @abstractmethod
+    def Attack(self, angle: float) -> bool:
+        pass
+
+    @abstractmethod
+    def OpenDoor(self) -> bool:
+        pass
+
+    @abstractmethod
+    def CloseDoor(self) -> bool:
+        pass
+
+    @abstractmethod
+    def SkipWindow(self) -> bool:
+        pass
+
+    @abstractmethod
+    def StartOpenGate(self) -> bool:
+        pass
+
+    @abstractmethod
+    def StartOpenChest(self) -> bool:
+        pass
+
+    @abstractmethod
+    def EndAllAction(self) -> bool:
+        pass
+
     # IStudentAPI使用的接口
 
     @abstractmethod
@@ -83,33 +139,11 @@ class ILogic(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def EndLearning(self) -> bool:
+    def StartTreatMate(self, mateID: int) -> bool:
         pass
 
     @abstractmethod
-    def StartHelpMate(self) -> bool:
-        pass
-
-    @abstractmethod
-    def EndHelpMate(self) -> bool:
-        pass
-
-    # Tricker使用的接口
-
-    @abstractmethod
-    def Trick(self, angle: float) -> bool:
-        pass
-
-    @abstractmethod
-    def StartExam(self) -> bool:
-        pass
-
-    @abstractmethod
-    def EndExam(self) -> bool:
-        pass
-
-    @abstractmethod
-    def MakeFail(self) -> bool:
+    def StartRescueMate(self, mateID: int) -> bool:
         pass
 
 
@@ -147,11 +181,39 @@ class IAPI(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def UseProp(self) -> Future[bool]:
+    def UseProp(self, propType: THUAI6.PropType) -> Future[bool]:
         pass
 
     @abstractmethod
-    def UseSkill(self) -> Future[bool]:
+    def UseSkill(self, skillID: int) -> Future[bool]:
+        pass
+
+    @abstractmethod
+    def Attack(self, angle: float) -> Future[bool]:
+        pass
+
+    @abstractmethod
+    def OpenDoor(self) -> Future[bool]:
+        pass
+
+    @abstractmethod
+    def CloseDoor(self) -> Future[bool]:
+        pass
+
+    @abstractmethod
+    def SkipWindow(self) -> Future[bool]:
+        pass
+
+    @abstractmethod
+    def StartOpenGate(self) -> Future[bool]:
+        pass
+
+    @abstractmethod
+    def StartOpenChest(self) -> Future[bool]:
+        pass
+
+    @abstractmethod
+    def EndAllAction(self) -> Future[bool]:
         pass
 
     # 消息相关，接收消息时无消息则返回(-1, '')
@@ -208,6 +270,34 @@ class IAPI(metaclass=ABCMeta):
     def GetPlaceType(self, cellX: int, cellY: int) -> THUAI6.PlaceType:
         pass
 
+    @abstractmethod
+    def IsDoorOpen(self, cellX: int, cellY: int) -> bool:
+        pass
+
+    @abstractmethod
+    def GetChestProgress(self, cellX: int, cellY: int) -> int:
+        pass
+
+    @abstractmethod
+    def GetGateProgress(self, cellX: int, cellY: int) -> int:
+        pass
+
+    @abstractmethod
+    def GetClassroomProgress(self, cellX: int, cellY: int) -> int:
+        pass
+
+    @abstractmethod
+    def GetDoorProgress(self, cellX: int, cellY: int) -> int:
+        pass
+
+    @abstractmethod
+    def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState:
+        pass
+
+    @abstractmethod
+    def GetGameInfo(self) -> THUAI6.GameInfo:
+        pass
+
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
     @abstractmethod
@@ -240,15 +330,15 @@ class IStudentAPI(IAPI, metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def EndLearning(self) -> Future[bool]:
+    def StartTreatMate(self, mateID: int) -> Future[bool]:
         pass
 
     @abstractmethod
-    def StartHelpMate(self) -> Future[bool]:
+    def StartRescueMate(self, mateID: int) -> Future[bool]:
         pass
 
     @abstractmethod
-    def EndHelpMate(self) -> Future[bool]:
+    def GetSelfInfo(self) -> THUAI6.Student:
         pass
 
 
@@ -257,25 +347,17 @@ class ITrickerAPI(IAPI, metaclass=ABCMeta):
     # 屠夫阵营的特殊函数
 
     @abstractmethod
-    def Trick(self, angle: float) -> Future[bool]:
-        pass
-
-    @abstractmethod
-    def StartExam(self) -> Future[bool]:
-        pass
-
-    @abstractmethod
-    def EndExam(self) -> Future[bool]:
-        pass
-
-    @abstractmethod
-    def MakeFail(self) -> Future[bool]:
+    def GetSelfInfo(self) -> THUAI6.Tricker:
         pass
 
 
 class IAI(metaclass=ABCMeta):
     @abstractmethod
-    def play(self, api: Union[IStudentAPI, ITrickerAPI]) -> None:
+    def StudentPlay(self, api: IStudentAPI) -> None:
+        pass
+
+    @abstractmethod
+    def TrickerPlay(self, api: ITrickerAPI) -> None:
         pass
 
 

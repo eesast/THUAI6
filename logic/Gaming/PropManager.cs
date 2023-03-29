@@ -31,10 +31,10 @@ namespace Gaming
                             player.AddSpear(GameData.PropDuration);
                         else player.AddShield(GameData.PropDuration);
                         break;
-                    case PropType.AddLifeOrAp:
+                    case PropType.AddLifeOrClairaudience:
                         if (!player.IsGhost())
                             player.AddLIFE(GameData.PropDuration);
-                        else player.AddAp(GameData.PropDuration);
+                        else player.AddClairaudience(GameData.PropDuration);
                         break;
                     case PropType.AddSpeed:
                         player.AddMoveSpeed(GameData.PropDuration);
@@ -118,7 +118,7 @@ namespace Gaming
 
             private Prop ProduceOnePropNotKey(Random r, XY Pos)
             {
-                return PropFactory.GetProp((PropType)r.Next(0, GameData.numOfPropTypeNotKey), Pos, gameMap.GetPlaceType(Pos));
+                return PropFactory.GetProp((PropType)r.Next(GameData.numOfTeachingBuilding + 1, GameData.numOfPropSpecies + 1), Pos, gameMap.GetPlaceType(Pos));
             }
 
             private Chest GetChest(Random r)

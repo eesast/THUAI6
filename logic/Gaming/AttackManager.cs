@@ -33,7 +33,7 @@ namespace Gaming
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
 
 #endif
-                        if (obj.CanMove)
+                        if (obj.CanMove && ((Bullet)obj).TypeOfBullet != BulletType.JumpyDumpty)
                             BulletBomb((Bullet)obj, null);
                     }
                 );
@@ -124,10 +124,6 @@ namespace Gaming
                         gameMap.GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
                     }
                 }
-
-                //  player.Reset();
-                //    ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  // 给击杀者加分
-
             }
 
             private void BombObj(Bullet bullet, GameObj objBeingShot)
@@ -174,10 +170,10 @@ namespace Gaming
 #endif
                 bullet.CanMove = false;
 
-                if (gameMap.Remove(bullet) && bullet.IsToBomb)
+                if (gameMap.Remove(bullet) && bullet.BulletBombRange > 0)
                     gameMap.Add(new BombedBullet(bullet));
 
-                if (!bullet.IsToBomb)
+                if (bullet.BulletBombRange == 0)
                 {
                     if (objBeingShot == null)
                     {
@@ -201,7 +197,14 @@ namespace Gaming
                         return;
                     }
 
-
+                    if (bullet.TypeOfBullet == BulletType.BombBomb)
+                    {
+                        bullet.Parent.BulletOfPlayer = BulletType.JumpyDumpty;
+                        Attack((Character)bullet.Parent, 0.0);
+                        Attack((Character)bullet.Parent, Math.PI);
+                        Attack((Character)bullet.Parent, Math.PI / 2.0);
+                        Attack((Character)bullet.Parent, Math.PI * 3.0 / 2.0);
+                    }
                     BombObj(bullet, objBeingShot);
                     if (bullet.RecoveryFromHit > 0)
                     {
@@ -304,7 +307,7 @@ namespace Gaming
                 beAttackedList.Clear();
             }
 
-            public bool Attack(Character? player, double angle)  // 射出去的子弹泼出去的水（狗头）
+            public bool Attack(Character? player, double angle)
             {                                                    // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
                 if (player == null)
                 {

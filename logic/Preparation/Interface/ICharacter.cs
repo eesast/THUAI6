@@ -11,6 +11,8 @@ namespace Preparation.Interface
         public void AddScore(int add);
         public double Vampire { get; }
         public PlayerStateType PlayerState { get; set; }
+        public BulletType BulletOfPlayer { get; set; }
+
         public bool IsGhost();
     }
 }

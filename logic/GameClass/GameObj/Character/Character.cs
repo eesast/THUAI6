@@ -47,7 +47,8 @@ namespace GameClass.GameObj
                 lock (gameObjLock)
                 {
                     bulletOfPlayer = value;
-                    CD = BulletFactory.BulletCD(value);
+                    OrgCD = (BulletFactory.BulletCD(value));
+                    CD = 0;
                 }
             }
         }
@@ -123,22 +124,6 @@ namespace GameClass.GameObj
         }*/
         #endregion
         #region 感知相关的基本属性及方法
-        /// <summary>
-        /// 是否在隐身
-        /// </summary>
-        private bool isInvisible = false;
-        public bool IsInvisible
-        {
-            get => isInvisible;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    isInvisible = value;
-                }
-            }
-        }
-
         private Dictionary<BgmType, double> bgmDictionary = new();
         public Dictionary<BgmType, double> BgmDictionary
         {
@@ -350,7 +335,7 @@ namespace GameClass.GameObj
         public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
         public bool CanBeAwed() => !(playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
                                                             || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued
-                                                            || playerState == PlayerStateType.Treated || playerState != PlayerStateType.Stunned
+                                                            || playerState == PlayerStateType.Treated || playerState == PlayerStateType.Stunned
                                                             || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
 
         private int score = 0;
@@ -519,6 +504,12 @@ namespace GameClass.GameObj
         public void AddSpear(int spearTime) => buffManager.AddSpear(spearTime);
         public bool HasSpear => buffManager.HasSpear;
 
+        public void AddClairaudience(int time) => buffManager.AddClairaudience(time);
+        public bool HasClairaudience => buffManager.HasClairaudience;
+
+        public void AddInvisible(int time) => buffManager.AddInvisible(time);
+        public bool HasInvisible => buffManager.HasInvisible;
+
         private Array buffTypeArray = Enum.GetValues(typeof(BuffType));
         public Dictionary<BuffType, bool> Buff
         {
@@ -566,6 +557,11 @@ namespace GameClass.GameObj
                 return true;
             }
             return false;
+        }
+
+        public bool TryUseSpear()
+        {
+            return buffManager.TryUseSpear();
         }
 
         public bool TryUseShield()

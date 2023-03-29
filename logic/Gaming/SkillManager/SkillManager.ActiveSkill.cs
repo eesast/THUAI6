@@ -36,7 +36,7 @@ namespace Gaming
                 return ActiveSkillEffect(skill, player, () =>
                 {
                     player.AddMoveSpeed(skill.DurationTime, 3.0);
-                    //See SkillWhenMove in ActionManager
+                    //See SkillWhenColliding in ActionManager
                 },
                                                       () =>
                                                       { });
@@ -45,21 +45,22 @@ namespace Gaming
 
             public static bool BecomeInvisible(Character player)
             {
-                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.BecomeInvisible), player, () =>
+                IActiveSkill activeSkill = player.UseIActiveSkill(ActiveSkillType.BecomeInvisible);
+                return ActiveSkillEffect(activeSkill, player, () =>
                 {
-                    player.IsInvisible = true;
+                    player.AddInvisible(activeSkill.DurationTime);
                     Debugger.Output(player, "become invisible!");
                 },
                                                       () =>
-                                                      { player.IsInvisible = false; });
+                                                      { });
             }
 
-            public bool NuclearWeapon(Character player)
+            public bool JumpyBomb(Character player)
             {
-                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.NuclearWeapon), player, () =>
+                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.JumpyBomb), player, () =>
                 {
-                    player.BulletOfPlayer = BulletType.AtomBomb;
-                    Debugger.Output(player, "uses atombomb!");
+                    player.BulletOfPlayer = BulletType.BombBomb;
+                    Debugger.Output(player, "uses jumpybomb!");
                 },
                                                       () =>
                                                       { player.BulletOfPlayer = player.OriBulletOfPlayer; });
@@ -91,8 +92,8 @@ namespace Gaming
                                 || player.PlayerState == PlayerStateType.UsingSkill || player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || player.PlayerState == PlayerStateType.OpeningTheChest)
                                 && gameMap.CanSee(player, character))
                             {
-                                if (AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.TimeFactorOfGhostFainting))
-                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.TimeFactorOfGhostFainting));
+                                if (AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.timeFactorOfGhostFainting))
+                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.timeFactorOfGhostFainting));
                                 break;
                             }
                         }

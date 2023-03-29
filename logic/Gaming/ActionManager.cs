@@ -17,8 +17,16 @@ namespace Gaming
         {
 
             // 人物移动
-            private void SkillWhenMove(Character player, IGameObj collisionObj)
+            private static void SkillWhenColliding(Character player, IGameObj collisionObj)
             {
+                if (collisionObj.Type == GameObjType.Bullet)
+                {
+                    if (((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
+                    {
+                        if (AttackManager.BeStunned((Character)collisionObj, ((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting))
+                            player.AddScore(GameData.StudentScoreTrickerBeStunned(((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting));
+                    }
+                }
                 if (player.UseIActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
                 {
                     if (AttackManager.BeStunned((Character)collisionObj, GameData.TimeOfGhostFaintingWhenCharge))
@@ -188,7 +196,7 @@ namespace Gaming
                     playerTreated = gameMap.StudentForInteract(player.Position);
                     if (playerTreated == null) return false;
                 }
-                if ((!player.Commandable()) || player.PlayerState == PlayerStateType.Treating ||
+                if (player == playerTreated || (!player.Commandable()) || player.PlayerState == PlayerStateType.Treating ||
                     (!playerTreated.Commandable()) ||
                     playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
                     return false;
@@ -254,11 +262,12 @@ namespace Gaming
                     playerRescued = gameMap.StudentForInteract(player.Position);
                     if (playerRescued == null) return false;
                 }
-                if ((!player.Commandable()) || playerRescued.PlayerState != PlayerStateType.Addicted || !GameData.ApproachToInteract(playerRescued.Position, player.Position))
+                if ((!player.Commandable()) || playerRescued.PlayerState != PlayerStateType.Addicted || player == playerRescued
+                    || !GameData.ApproachToInteract(playerRescued.Position, player.Position) || playerRescued.TimeOfRescue > 0)
                     return false;
                 player.PlayerState = PlayerStateType.Rescuing;
                 playerRescued.PlayerState = PlayerStateType.Rescued;
-                player.TimeOfRescue = 0;
+
                 new Thread
            (
                () =>
@@ -267,7 +276,7 @@ namespace Gaming
                        loopCondition: () => playerRescued.PlayerState == PlayerStateType.Rescued && player.PlayerState == PlayerStateType.Rescuing && gameMap.Timer.IsGaming && GameData.ApproachToInteract(playerRescued.Position, player.Position),
                        loopToDo: () =>
                        {
-                           player.TimeOfRescue += GameData.frameDuration;
+                           playerRescued.TimeOfRescue += GameData.frameDuration;
                        },
                        timeInterval: GameData.frameDuration,
                        finallyReturn: () => 0,
@@ -277,16 +286,17 @@ namespace Gaming
 
                    if (playerRescued.PlayerState == PlayerStateType.Rescued)
                    {
-                       if (player.TimeOfRescue >= GameData.basicTimeOfRescue)
+                       if (playerRescued.TimeOfRescue >= GameData.basicTimeOfRescue)
                        {
                            playerRescued.PlayerState = PlayerStateType.Null;
+                           playerRescued.HP = GameData.RemainHpWhenAddLife;
                            player.AddScore(GameData.StudentScoreRescue);
                        }
                        else
                            playerRescued.PlayerState = PlayerStateType.Addicted;
                    }
                    if (player.PlayerState == PlayerStateType.Rescuing) player.PlayerState = PlayerStateType.Null;
-                   player.TimeOfRescue = 0;
+                   playerRescued.TimeOfRescue = 0;
                }
            )
                 { IsBackground = true }.Start();
@@ -494,7 +504,7 @@ namespace Gaming
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>
                     {
-                        SkillWhenMove((Character)obj, collisionObj);
+                        SkillWhenColliding((Character)obj, collisionObj);
                         //if (collisionObj is Mine)
                         //{
                         //    ActivateMine((Character)obj, (Mine)collisionObj);

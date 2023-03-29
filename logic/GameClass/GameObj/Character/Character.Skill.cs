@@ -66,6 +66,12 @@ namespace GameClass.GameObj
                 case CharacterType.Assassin:
                     this.occupation = new Assassin();
                     break;
+                case CharacterType.Teacher:
+                    this.occupation = new Teacher();
+                    break;
+                case CharacterType.Klee:
+                    this.occupation = new Klee();
+                    break;
                 case CharacterType.Athlete:
                 default:
                     this.occupation = new Athlete();
@@ -82,7 +88,7 @@ namespace GameClass.GameObj
             this.characterType = characterType;
             this.SpeedOfOpeningOrLocking = Occupation.TimeOfOpeningOrLocking;
             this.SpeedOfClimbingThroughWindows = Occupation.SpeedOfClimbingThroughWindows;
-            this.SpeedOfOpenChest = Occupation.TimeOfOpenChest;
+            this.SpeedOfOpenChest = Occupation.SpeedOfOpenChest;
 
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)
             {

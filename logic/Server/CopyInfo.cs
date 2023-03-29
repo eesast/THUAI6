@@ -50,7 +50,7 @@ namespace Server
             {
                 case Preparation.Utility.PropType.AddSpeed:
                     return Protobuf.PropType.AddSpeed;
-                case Preparation.Utility.PropType.AddLifeOrAp:
+                case Preparation.Utility.PropType.AddLifeOrClairaudience:
                     return Protobuf.PropType.AddLifeOrAp;
                 case Preparation.Utility.PropType.AddHpOrAp:
                     return Protobuf.PropType.AddHpOrAp;
@@ -74,7 +74,7 @@ namespace Server
                 case Protobuf.PropType.AddSpeed:
                     return Preparation.Utility.PropType.AddSpeed;
                 case Protobuf.PropType.AddLifeOrAp:
-                    return Preparation.Utility.PropType.AddLifeOrAp;
+                    return Preparation.Utility.PropType.AddLifeOrClairaudience;
                 case Protobuf.PropType.AddHpOrAp:
                     return Preparation.Utility.PropType.AddHpOrAp;
                 case Protobuf.PropType.ShieldOrSpear:
@@ -195,6 +195,8 @@ namespace Server
             {
                 case Preparation.Utility.CharacterType.Assassin:
                     return Protobuf.TrickerType.Assassin;
+                case Preparation.Utility.CharacterType.Klee:
+                    return Protobuf.TrickerType._2;
                 default:
                     return Protobuf.TrickerType.NullTrickerType;
             }
@@ -206,6 +208,8 @@ namespace Server
             {
                 case Protobuf.TrickerType.Assassin:
                     return Preparation.Utility.CharacterType.Assassin;
+                case Protobuf.TrickerType._2:
+                    return Preparation.Utility.CharacterType.Klee;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }

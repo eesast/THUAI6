@@ -16,7 +16,7 @@ namespace Preparation.Interface
         public int ViewRange { get; }
         public int TimeOfOpeningOrLocking { get; }
         public int SpeedOfClimbingThroughWindows { get; }
-        public int TimeOfOpenChest { get; }
+        public int SpeedOfOpenChest { get; }
     }
 
     public interface IGhost : IOccupation
@@ -32,7 +32,7 @@ namespace Preparation.Interface
 
     public class Assassin : IGhost
     {
-        private const int moveSpeed = GameData.basicMoveSpeed * 473 / 380;
+        private const int moveSpeed = (int)(GameData.basicMoveSpeed * 473.0 / 380);
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp;
@@ -61,8 +61,42 @@ namespace Preparation.Interface
         public int speedOfClimbingThroughWindows = GameData.basicGhostSpeedOfClimbingThroughWindows;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
-        public int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
-        public int TimeOfOpenChest => timeOfOpenChest;
+        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
+        public int SpeedOfOpenChest => speedOfOpenChest;
+    }
+    public class Klee : IGhost
+    {
+        private const int moveSpeed = (int)(GameData.basicMoveSpeed * 155 / 127);
+        public int MoveSpeed => moveSpeed;
+
+        private const int maxHp = GameData.basicHp;
+        public int MaxHp => maxHp;
+
+        public const int maxBulletNum = 1;
+        public int MaxBulletNum => maxBulletNum;
+
+        public BulletType InitBullet => BulletType.CommonAttackOfGhost;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.JumpyBomb });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public double concealment = GameData.basicConcealment;
+        public double Concealment => concealment;
+
+        public int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.069);
+        public int AlertnessRadius => alertnessRadius;
+
+        public int viewRange = (int)(GameData.basicViewRange * 1.1);
+        public int ViewRange => viewRange;
+
+        public int timeOfOpeningOrLocking = (int)(GameData.basicSpeedOfOpeningOrLocking / 1.1);
+        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+
+        public int speedOfClimbingThroughWindows = (int)(GameData.basicGhostSpeedOfClimbingThroughWindows / 1.1);
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
+
+        public int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest * 1.1);
+        public int SpeedOfOpenChest => speedOfOpenChest;
     }
     public class Teacher : IStudent
     {
@@ -104,8 +138,8 @@ namespace Preparation.Interface
         public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows / 2;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
-        public int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
-        public int TimeOfOpenChest => timeOfOpenChest;
+        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
+        public int SpeedOfOpenChest => speedOfOpenChest;
     }
     public class Athlete : IStudent
     {
@@ -147,7 +181,7 @@ namespace Preparation.Interface
         public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows * 12 / 10;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
-        public int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
-        public int TimeOfOpenChest => timeOfOpenChest;
+        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
+        public int SpeedOfOpenChest => speedOfOpenChest;
     }
 }

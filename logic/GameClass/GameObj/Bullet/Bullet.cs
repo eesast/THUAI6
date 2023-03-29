@@ -13,7 +13,7 @@ namespace GameClass.GameObj
         public abstract double BulletAttackRange { get; }
         public abstract int AP { get; set; }
         public abstract int Speed { get; }
-        public abstract bool IsToBomb { get; }
+        public abstract bool IsRemoteAttack { get; }
         public abstract int CastTime { get; }
         public abstract int Backswing { get; }
         public abstract int RecoveryFromHit { get; }
@@ -45,7 +45,7 @@ namespace GameClass.GameObj
             this.place = placeType;
             this.CanMove = true;
             this.moveSpeed = this.Speed;
-            this.hasSpear = player.HasSpear;
+            this.hasSpear = player.TryUseSpear();
             this.Parent = player;
         }
         public override bool IsRigid => true;                 // 默认为true
@@ -63,6 +63,10 @@ namespace GameClass.GameObj
                     return new FlyingKnife(character, place, pos);
                 case BulletType.CommonAttackOfGhost:
                     return new CommonAttackOfGhost(character, place, pos);
+                case BulletType.JumpyDumpty:
+                    return new JumpyDumpty(character, place, pos);
+                case BulletType.BombBomb:
+                    return new BombBomb(character, place, pos);
                 default:
                     return null;
             }
@@ -71,10 +75,6 @@ namespace GameClass.GameObj
         {
             switch (bulletType)
             {
-                case BulletType.AtomBomb:
-                case BulletType.LineBullet:
-                case BulletType.FastBullet:
-                case BulletType.OrdinaryBullet:
                 case BulletType.FlyingKnife:
                 default:
                     return GameData.bulletRadius;
@@ -88,10 +88,10 @@ namespace GameClass.GameObj
                     return CommonAttackOfGhost.cd;
                 case BulletType.FlyingKnife:
                     return FlyingKnife.cd;
-                case BulletType.AtomBomb:
-                case BulletType.LineBullet:
-                case BulletType.FastBullet:
-                case BulletType.OrdinaryBullet:
+                case BulletType.BombBomb:
+                    return BombBomb.cd;
+                case BulletType.JumpyDumpty:
+                    return JumpyDumpty.cd;
                 default:
                     return GameData.basicCD;
             }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Net.NetworkInformation;
 using System.Threading;
 using GameClass.GameObj;
 using GameEngine;
@@ -191,6 +193,8 @@ namespace Gaming
                     playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
                     return false;
 
+                Preparation.Utility.Debugger.Output(player, "treat " + playerTreated.ToString());
+
                 if (playerTreated.HP + playerTreated.DegreeOfTreatment >= playerTreated.MaxHp)
                 {
                     playerTreated.HP = playerTreated.MaxHp;
@@ -208,6 +212,8 @@ namespace Gaming
            (
                () =>
                {
+                   playerTreated.PlayerState = PlayerStateType.Treated;
+                   player.PlayerState = PlayerStateType.Treating;
                    new FrameRateTaskExecutor<int>(
                        loopCondition: () => playerTreated.PlayerState == PlayerStateType.Treated && player.PlayerState == PlayerStateType.Treating && gameMap.Timer.IsGaming && playerTreated.HP + playerTreated.DegreeOfTreatment < playerTreated.MaxHp && playerTreated.DegreeOfTreatment < GameData.basicTreatmentDegree && GameData.ApproachToInteract(playerTreated.Position, player.Position),
                        loopToDo: () =>

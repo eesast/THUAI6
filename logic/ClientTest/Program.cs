@@ -5,7 +5,7 @@ namespace ClientTest
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static Task Main(string[] args)
         {
             Thread.Sleep(3000);
             Channel channel = new Channel("127.0.0.1:8888", ChannelCredentials.Insecure);
@@ -36,17 +36,7 @@ namespace ClientTest
                 Console.WriteLine("Move!");
             }
 
-            /*while (await call.ResponseStream.MoveNext())
-            {
-                //Console.WriteLine("hi");
-                var currentGameInfo = call.ResponseStream.Current;
-                for (int i = 0; i < currentGameInfo.ObjMessage.Count; i++)
-                {
-                    if (currentGameInfo.ObjMessage[i].MessageOfObjCase == MessageOfObj.MessageOfObjOneofCase.StudentMessage)
-                        Console.WriteLine($"Human is at ({currentGameInfo.ObjMessage[i].StudentMessage.X}, {currentGameInfo.ObjMessage[i].StudentMessage.Y})");
-                }
-            }*/
-
+            return Task.CompletedTask;
         }
     }
 }

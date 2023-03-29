@@ -28,12 +28,12 @@ namespace GameClass.GameObj
             {
                 if (value > 0)
                     lock (gameObjLock)
-                        openDegree = (value > GameData.degreeOfOpeningChest) ? GameData.degreeOfOpeningChest : value;
+                        openDegree = (value > GameData.degreeOfOpenedChest) ? GameData.degreeOfOpenedChest : value;
                 else
                     lock (gameObjLock)
                         openDegree = 0;
             }
         }
-        public bool IsOpen() => (OpenDegree == GameData.degreeOfOpeningChest);
+        public bool IsOpen() => (OpenDegree == GameData.degreeOfOpenedChest);
     }
 }

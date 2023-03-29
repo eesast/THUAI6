@@ -170,7 +170,7 @@ message MessageOfObj
 message MessageOfAll
 {
     int32 game_time = 1;
-    int32 subject_left = 2; // 剩余的科目数
+    int32 subject_finished = 2; // 完成的科目数
     int32 student_graduated = 3; // 已经毕业的学生数
     int32 student_quited = 4; // 已经退学的学生数
     int32 student_score = 5;

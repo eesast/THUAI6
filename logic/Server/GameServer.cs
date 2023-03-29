@@ -211,7 +211,7 @@ namespace Server
         {
             MessageOfAll msg = new MessageOfAll();
             //msg.GameTime
-            msg.SubjectLeft = GameData.numOfGeneratorRequiredForRepair - (int)game.GameMap.NumOfRepairedGenerators;
+            msg.SubjectFinished = (int)game.GameMap.NumOfRepairedGenerators;
             //msg.StudentGraduated
             //msg.StudentQuited
             msg.StudentScore = 0;

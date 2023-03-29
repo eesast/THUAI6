@@ -203,7 +203,7 @@ namespace Preparation.Utility
         #region 物体相关
         public const int degreeOfFixedGenerator = 10300000;
         public const int degreeOfLockingOrOpeningTheDoor = 10000;
-        public const int degreeOfOpeningChest = 10000;
+        public const int degreeOfOpenedChest = 10000;
         public const int degreeOfOpenedDoorway = 18000;
         public const int maxNumOfPropInChest = 2;
         public const int numOfGeneratorRequiredForRepair = 7;

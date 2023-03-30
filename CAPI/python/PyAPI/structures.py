@@ -18,8 +18,10 @@ class PlaceType(Enum):
     Gate = 5
     HiddenGate = 6
     Window = 7
-    Door = 8
-    Chest = 9
+    Door3 = 8
+    Door5 = 9
+    Door6 = 10
+    Chest = 11
 
 
 class ShapeType(Enum):
@@ -36,13 +38,19 @@ class PlayerType(Enum):
 
 class PropType(Enum):
     NullPropType = 0
-    PropType1 = 1
+    Key3 = 1
+    Key5 = 2
+    Key6 = 3
+    AddSpeed = 4
+    AddLifeOrAp = 5
+    AddHpOrAp = 6
+    ShieldOrSpear = 7
 
 
 class BulletType(Enum):
     NullBulletType = 0
-    LineBullet = 1
-    CommonBullet = 2
+    FlyingKnife = 1
+    CommonAttackOfTricker = 2
     FastBullet = 3
     OrdinaryBullet = 4
     AtomBomb = 5
@@ -50,12 +58,12 @@ class BulletType(Enum):
 
 class StudentType(Enum):
     NullStudentType = 0
-    StudentType1 = 1
+    Athlete = 1
 
 
 class TrickerType(Enum):
     NullTrickerType = 0
-    TrickerType1 = 1
+    Assassin = 1
 
 
 class StudentBuffType(Enum):
@@ -85,6 +93,9 @@ class PlayerState(Enum):
     Locking = 13
     Rummaging = 14
     Climbing = 15
+    OpeningAChest = 16
+    UsingSpecialSkill = 17
+    OpeningAGate = 18
 
 
 class MessageOfObj(Enum):
@@ -97,6 +108,16 @@ class MessageOfObj(Enum):
     ClassroomMessage = 6
     GateMessage = 7
     ChestMessage = 8
+    DoorMessage = 9
+    MapMessage = 10
+    NewsMessage = 11
+    HiddenGateMessage = 12
+
+
+class HiddenGateState(Enum):
+    Null = 0
+    Refreshed = 1
+    Opened = 2
 
 
 class Player:
@@ -107,35 +128,42 @@ class Player:
     playerID: int
     guid: int
     radius: int
-    damage: int
-    timeUntilSkillAvailable: List[float]
+    score: int
+    facingDirection: float
+    timeUntilSkillAvailable: List[float] = []
     playerType: PlayerType
-    prop: List[PropType]
+    prop: List[PropType] = []
     place: PlaceType
+    bulletType: BulletType
     playerState: PlayerState
 
 
 class Student(Player):
+    studentType: StudentType
     determination: int
     addiction: int
-    studentType: StudentType
-    buff: List[StudentBuffType]
+    treatProgress: int
+    rescueProgress: int
+    learningSpeed: int
+    treatSpeed: int
+    dangerAlert: float
+    buff: List[StudentBuffType] = []
 
 
 class Tricker(Player):
     trickerType: TrickerType
-    buff: List[TrickerBuffType]
+    trickDesire: float
+    classVolume: float
+    buff: List[TrickerBuffType] = []
 
 
 class Prop:
     x: int
     y: int
-    size: int
     guid: int
     type: PropType
     place: PlaceType
     facingDirection: float
-    isMoving: bool
 
 
 class Bullet:
@@ -147,9 +175,10 @@ class Bullet:
     team: PlayerType
     place: PlaceType
     bombRange: float
+    speed: int
 
 
-class BombedBullet():
+class BombedBullet:
     bulletType: BulletType
     x: int
     y: int
@@ -159,10 +188,12 @@ class BombedBullet():
 
 
 class GameMap:
-    classroomState: Dict[tuple[int, int], int]
-    gateState: Dict[tuple[int, int], int]
-    chestState: Dict[tuple[int, int], bool]
-    doorState: Dict[tuple[int, int], bool]
+    classroomState: Dict[tuple[int, int], int] = {}
+    gateState: Dict[tuple[int, int], int] = {}
+    chestState: Dict[tuple[int, int], int] = {}
+    doorState: Dict[tuple[int, int], bool] = {}
+    doorProgress: Dict[tuple[int, int], int] = {}
+    hiddenGateState: Dict[tuple[int, int], HiddenGateState] = {}
 
 
 class GameInfo:
@@ -172,6 +203,3 @@ class GameInfo:
     studentQuited: int
     studentScore: int
     trickerScore: int
-    gateOpened: bool
-    hiddenGateRefreshed: bool
-    hiddenGateOpened: bool

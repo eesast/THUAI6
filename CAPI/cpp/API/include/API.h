@@ -57,7 +57,7 @@ public:
     virtual bool UseSkill(int32_t skillID) = 0;
     virtual bool SendMessage(int64_t toID, std::string message) = 0;
     virtual bool HaveMessage() = 0;
-    virtual std::optional<std::pair<int64_t, std::string>> GetMessage() = 0;
+    virtual std::pair<int64_t, std::string> GetMessage() = 0;
 
     virtual bool WaitThread() = 0;
 
@@ -111,8 +111,8 @@ public:
 
     // 发送信息、接受信息，注意收消息时无消息则返回nullopt
     virtual std::future<bool> SendMessage(int64_t, std::string) = 0;
-    [[nodiscard]] virtual std::future<bool> HaveMessage() = 0;
-    [[nodiscard]] virtual std::future<std::optional<std::pair<int64_t, std::string>>> GetMessage() = 0;
+    [[nodiscard]] virtual bool HaveMessage() = 0;
+    [[nodiscard]] virtual std::pair<int64_t, std::string> GetMessage() = 0;
 
     // 等待下一帧
     virtual std::future<bool> Wait() = 0;
@@ -159,6 +159,7 @@ public:
 
     // 用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
 
+    virtual void Print(std::string str) const = 0;
     virtual void PrintStudent() const = 0;
     virtual void PrintTricker() const = 0;
     virtual void PrintProp() const = 0;
@@ -232,8 +233,8 @@ public:
     std::future<bool> EndAllAction() override;
 
     std::future<bool> SendMessage(int64_t, std::string) override;
-    [[nodiscard]] std::future<bool> HaveMessage() override;
-    [[nodiscard]] std::future<std::optional<std::pair<int64_t, std::string>>> GetMessage() override;
+    [[nodiscard]] bool HaveMessage() override;
+    [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
     std::future<bool> Wait() override;
 
@@ -262,6 +263,9 @@ public:
     std::future<bool> Graduate() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
+    void Print(std::string str) const override
+    {
+    }
     void PrintStudent() const override
     {
     }
@@ -314,8 +318,8 @@ public:
     std::future<bool> EndAllAction() override;
 
     std::future<bool> SendMessage(int64_t, std::string) override;
-    [[nodiscard]] std::future<bool> HaveMessage() override;
-    [[nodiscard]] std::future<std::optional<std::pair<int64_t, std::string>>> GetMessage() override;
+    [[nodiscard]] bool HaveMessage() override;
+    [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
     std::future<bool> Wait() override;
 
@@ -341,6 +345,9 @@ public:
     std::future<bool> Attack(double angleInRadian) override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
 
+    void Print(std::string str) const override
+    {
+    }
     void PrintStudent() const override
     {
     }
@@ -388,8 +395,8 @@ public:
     std::future<bool> EndAllAction() override;
 
     std::future<bool> SendMessage(int64_t, std::string) override;
-    [[nodiscard]] std::future<bool> HaveMessage() override;
-    [[nodiscard]] std::future<std::optional<std::pair<int64_t, std::string>>> GetMessage() override;
+    [[nodiscard]] bool HaveMessage() override;
+    [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
     std::future<bool> Wait() override;
 
@@ -418,6 +425,7 @@ public:
     std::future<bool> Graduate() override;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
+    void Print(std::string str) const override;
     void PrintStudent() const override;
     void PrintTricker() const override;
     void PrintProp() const override;
@@ -457,8 +465,8 @@ public:
     std::future<bool> EndAllAction() override;
 
     std::future<bool> SendMessage(int64_t, std::string) override;
-    [[nodiscard]] std::future<bool> HaveMessage() override;
-    [[nodiscard]] std::future<std::optional<std::pair<int64_t, std::string>>> GetMessage() override;
+    [[nodiscard]] bool HaveMessage() override;
+    [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
     std::future<bool> Wait() override;
 
@@ -484,6 +492,7 @@ public:
     std::future<bool> Attack(double angleInRadian) override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
 
+    void Print(std::string str) const override;
     void PrintStudent() const override;
     void PrintTricker() const override;
     void PrintProp() const override;

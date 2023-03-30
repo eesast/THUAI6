@@ -185,28 +185,24 @@ std::future<bool> TrickerAPI::SendMessage(int64_t toID, std::string message)
                       { return logic.SendMessage(toID, message); });
 }
 
-std::future<bool> StudentAPI::HaveMessage()
+bool StudentAPI::HaveMessage()
 {
-    return std::async(std::launch::async, [this]()
-                      { return logic.HaveMessage(); });
+    return logic.HaveMessage();
 }
 
-std::future<bool> TrickerAPI::HaveMessage()
+bool TrickerAPI::HaveMessage()
 {
-    return std::async(std::launch::async, [this]()
-                      { return logic.HaveMessage(); });
+    return logic.HaveMessage();
 }
 
-std::future<std::optional<std::pair<int64_t, std::string>>> StudentAPI::GetMessage()
+std::pair<int64_t, std::string> StudentAPI::GetMessage()
 {
-    return std::async(std::launch::async, [this]()
-                      { return logic.GetMessage(); });
+    return logic.GetMessage();
 }
 
-std::future<std::optional<std::pair<int64_t, std::string>>> TrickerAPI::GetMessage()
+std::pair<int64_t, std::string> TrickerAPI::GetMessage()
 {
-    return std::async(std::launch::async, [this]()
-                      { return logic.GetMessage(); });
+    return logic.GetMessage();
 }
 
 std::future<bool> StudentAPI::Wait()

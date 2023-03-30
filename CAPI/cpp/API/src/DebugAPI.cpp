@@ -347,44 +347,40 @@ std::future<bool> TrickerDebugAPI::SendMessage(int64_t toID, std::string message
                         return result; });
 }
 
-std::future<bool> StudentDebugAPI::HaveMessage()
+bool StudentDebugAPI::HaveMessage()
 {
     logger->info("HaveMessage: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.HaveMessage();
-                        if (!result)
-                            logger->warn("HaveMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
-                        return result; });
+    auto result = logic.HaveMessage();
+    if (!result)
+        logger->warn("HaveMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
+    return result;
 }
 
-std::future<bool> TrickerDebugAPI::HaveMessage()
+bool TrickerDebugAPI::HaveMessage()
 {
     logger->info("HaveMessage: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.HaveMessage();
-                        if (!result)
-                            logger->warn("HaveMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
-                        return result; });
+    auto result = logic.HaveMessage();
+    if (!result)
+        logger->warn("HaveMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
+    return result;
 }
 
-std::future<std::optional<std::pair<int64_t, std::string>>> StudentDebugAPI::GetMessage()
+std::pair<int64_t, std::string> StudentDebugAPI::GetMessage()
 {
     logger->info("GetMessage: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.GetMessage();
-                        if (result == std::nullopt)
-                            logger->warn("GetMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
-                        return result; });
+    auto result = logic.GetMessage();
+    if (result.first == -1)
+        logger->warn("GetMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
+    return result;
 }
 
-std::future<std::optional<std::pair<int64_t, std::string>>> TrickerDebugAPI::GetMessage()
+std::pair<int64_t, std::string> TrickerDebugAPI::GetMessage()
 {
     logger->info("GetMessage: called at {}ms", Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [this]()
-                      { auto result = logic.GetMessage();
-                        if (result == std::nullopt)
-                            logger->warn("GetMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
-                        return result; });
+    auto result = logic.GetMessage();
+    if (result.first == -1)
+        logger->warn("GetMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
+    return result;
 }
 
 std::future<bool> StudentDebugAPI::Wait()
@@ -607,6 +603,16 @@ std::future<bool> StudentDebugAPI::Attack(double angleInRadian)
 std::shared_ptr<const THUAI6::Tricker> TrickerDebugAPI::GetSelfInfo() const
 {
     return logic.TrickerGetSelfInfo();
+}
+
+void StudentDebugAPI::Print(std::string str) const
+{
+    logger->info(str);
+}
+
+void TrickerDebugAPI::Print(std::string str) const
+{
+    logger->info(str);
 }
 
 void StudentDebugAPI::PrintStudent() const

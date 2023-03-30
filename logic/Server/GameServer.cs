@@ -57,6 +57,7 @@ namespace Server
                         if (flag == true)
                         {
                             ReportGame(GameState.GameStart);
+                            game.AllPlayerUsePassiveSkill();
                             flag = false;
                         }
                         else ReportGame(GameState.GameRunning);

@@ -241,10 +241,10 @@ namespace Server
                 case Preparation.Utility.GameObjType.EmergencyExit:
                     if (((EmergencyExit)gameObj).CanOpen)
                         return HiddenGate((EmergencyExit)gameObj);
-                    else return new MessageOfObj();
+                    else return null;
                 case Preparation.Utility.GameObjType.Door:
                     return Door((Door)gameObj);
-                default: return new MessageOfObj();
+                default: return null;
             }
         }
         public static MessageOfObj? Auto(MessageOfNews news)

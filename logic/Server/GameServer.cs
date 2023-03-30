@@ -10,6 +10,7 @@ using Preparation.Utility;
 using Playback;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Preparation.Interface;
 
 
 namespace Server
@@ -118,7 +119,6 @@ namespace Server
             SendGameResult();
             this.endGameSem.Release();
         }
-
         public void ReportGame(GameState gameState, bool requiredGaming = true)
         {
             var gameObjList = game.GetGameObj();
@@ -129,38 +129,24 @@ namespace Server
                 {
                     case GameState.GameRunning:
                     case GameState.GameEnd:
+                    case GameState.GameStart:
+                        currentGameInfo.ObjMessage.Add(currentMapMsg);
                         foreach (GameObj gameObj in gameObjList)
                         {
-                            currentGameInfo.ObjMessage.Add(CopyInfo.Auto(gameObj));
+                            MessageOfObj? msg = CopyInfo.Auto(gameObj);
+                            if (msg != null) currentGameInfo.ObjMessage.Add(CopyInfo.Auto(gameObj));
                         }
                         lock (newsLock)
                         {
                             foreach (var news in currentNews)
                             {
-                                currentGameInfo.ObjMessage.Add(CopyInfo.Auto(news));
+                                MessageOfObj? msg = CopyInfo.Auto(news);
+                                if (msg != null) currentGameInfo.ObjMessage.Add(CopyInfo.Auto(news));
                             }
                             currentNews.Clear();
                         }
                         currentGameInfo.GameState = gameState;
                         currentGameInfo.AllMessage = GetMessageOfAll();
-                        mwr?.WriteOne(currentGameInfo);
-                        break;
-                    case GameState.GameStart:
-                        currentGameInfo.ObjMessage.Add(currentMapMsg);
-                        foreach (GameObj gameObj in gameObjList)
-                        {
-                            currentGameInfo.ObjMessage.Add(CopyInfo.Auto(gameObj));
-                        }
-                        lock (newsLock)
-                        {
-                            foreach (var news in currentNews)
-                            {
-                                currentGameInfo.ObjMessage.Add(CopyInfo.Auto(news));
-                            }
-                            currentNews.Clear();
-                        }
-                        currentGameInfo.GameState = gameState;
-                        currentGameInfo.AllMessage = GetMessageOfAll(); // 还没写
                         mwr?.WriteOne(currentGameInfo);
                         break;
                     default:
@@ -230,8 +216,8 @@ namespace Server
             {
                 game.GameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
             }
-            //msg.GateOpened = 
-            //msg.HiddenGateRefreshed = 
+            //msg.GateOpened
+            //msg.HiddenGateRefreshed
             //msg.HiddenGateOpened
             return msg;
         }

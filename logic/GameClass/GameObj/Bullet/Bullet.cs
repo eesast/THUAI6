@@ -110,7 +110,7 @@ namespace GameClass.GameObj
                 case BulletType.JumpyDumpty:
                     return JumpyDumpty.maxBulletNum;
                 default:
-                    return 1;
+                    return 0;
             }
         }
     }

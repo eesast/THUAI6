@@ -169,7 +169,7 @@ namespace Gaming
                     return false;
                 }
 
-                if (!player.Commandable())
+                if (player.BulletOfPlayer == BulletType.Null || !player.Commandable())
                     return false;
 
                 XY res = player.Position + new XY  // 子弹紧贴人物生成。

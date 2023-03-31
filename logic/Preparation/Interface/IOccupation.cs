@@ -8,7 +8,6 @@ namespace Preparation.Interface
         public int MoveSpeed { get; }
         public int MaxHp { get; }
         public BulletType InitBullet { get; }
-        public int MaxBulletNum { get; }
         public List<ActiveSkillType> ListOfIActiveSkill { get; }
         public List<PassiveSkillType> ListOfIPassiveSkill { get; }
         public double Concealment { get; }
@@ -37,9 +36,6 @@ namespace Preparation.Interface
 
         private const int maxHp = GameData.basicHp;
         public int MaxHp => maxHp;
-
-        public const int maxBulletNum = 1;
-        public int MaxBulletNum => maxBulletNum;
 
         public BulletType InitBullet => BulletType.CommonAttackOfGhost;
 
@@ -72,9 +68,6 @@ namespace Preparation.Interface
         private const int maxHp = GameData.basicHp;
         public int MaxHp => maxHp;
 
-        public const int maxBulletNum = 1;
-        public int MaxBulletNum => maxBulletNum;
-
         public BulletType InitBullet => BulletType.CommonAttackOfGhost;
 
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.JumpyBomb });
@@ -105,9 +98,6 @@ namespace Preparation.Interface
 
         private const int maxHp = GameData.basicHp * 12 / 10;
         public int MaxHp => maxHp;
-
-        public const int maxBulletNum = 1;
-        public int MaxBulletNum => maxBulletNum;
 
         public BulletType InitBullet => BulletType.CommonAttackOfGhost;
 
@@ -142,9 +132,6 @@ namespace Preparation.Interface
 
         private const int maxGamingAddiction = GameData.basicMaxGamingAddiction * 10;
         public int MaxGamingAddiction => maxGamingAddiction;
-
-        public const int maxBulletNum = 0;
-        public int MaxBulletNum => maxBulletNum;
 
         public BulletType InitBullet => BulletType.Null;
 
@@ -186,9 +173,6 @@ namespace Preparation.Interface
         private const int maxGamingAddiction = GameData.basicMaxGamingAddiction * 9 / 10;
         public int MaxGamingAddiction => maxGamingAddiction;
 
-        public const int maxBulletNum = 0;
-        public int MaxBulletNum => maxBulletNum;
-
         public BulletType InitBullet => BulletType.Null;
 
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.CanBeginToCharge });
@@ -228,9 +212,6 @@ namespace Preparation.Interface
 
         private const int maxGamingAddiction = (int)(GameData.basicMaxGamingAddiction * 1.5);
         public int MaxGamingAddiction => maxGamingAddiction;
-
-        public const int maxBulletNum = 0;
-        public int MaxBulletNum => maxBulletNum;
 
         public BulletType InitBullet => BulletType.Null;
 
@@ -272,9 +253,6 @@ namespace Preparation.Interface
         private const int maxGamingAddiction = 0;
         public int MaxGamingAddiction => maxGamingAddiction;
 
-        public const int maxBulletNum = 0;
-        public int MaxBulletNum => maxBulletNum;
-
         public BulletType InitBullet => BulletType.Null;
 
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { });
@@ -314,9 +292,6 @@ namespace Preparation.Interface
 
         private const int maxGamingAddiction = (int)(GameData.basicMaxGamingAddiction * 1.1);
         public int MaxGamingAddiction => maxGamingAddiction;
-
-        public const int maxBulletNum = 0;
-        public int MaxBulletNum => maxBulletNum;
 
         public BulletType InitBullet => BulletType.Null;
 

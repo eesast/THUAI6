@@ -312,7 +312,7 @@ namespace Server
 
             lock (addPlayerLock)
             {
-                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(request.PlayerId), PlayerTypeToTeamID(request.PlayerType), request.PlayerId, characterType);
+                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(request.PlayerId), PlayerTypeToTeamID(request.PlayerType), (int)request.PlayerId, characterType);
                 long newPlayerID = game.AddPlayer(playerInitInfo);
                 if (newPlayerID == GameObj.invalidID)
                     return;

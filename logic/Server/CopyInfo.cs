@@ -182,6 +182,10 @@ namespace Server
                     return StudentType._2;
                 case CharacterType.StraightAStudent:
                     return StudentType._3;
+                case CharacterType.Robot:
+                    return StudentType._4;
+                case CharacterType.TechOtaku:
+                    return StudentType.TechOtaku;
                 default:
                     return Protobuf.StudentType.NullStudentType;
             }
@@ -197,6 +201,10 @@ namespace Server
                     return Preparation.Utility.CharacterType.Teacher;
                 case StudentType._3:
                     return CharacterType.StraightAStudent;
+                case StudentType._4:
+                    return CharacterType.Robot;
+                case StudentType.TechOtaku:
+                    return CharacterType.TechOtaku;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }

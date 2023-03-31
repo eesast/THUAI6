@@ -66,6 +66,9 @@ namespace GameClass.GameObj
                 case CharacterType.Assassin:
                     this.occupation = new Assassin();
                     break;
+                case CharacterType.Robot:
+                    this.occupation = new Robot();
+                    break;
                 case CharacterType.Teacher:
                     this.occupation = new Teacher();
                     break;
@@ -77,6 +80,9 @@ namespace GameClass.GameObj
                     break;
                 case CharacterType.ANoisyPerson:
                     this.occupation = new ANoisyPerson();
+                    break;
+                case CharacterType.TechOtaku:
+                    this.occupation = new TechOtaku();
                     break;
                 case CharacterType.Athlete:
                 default:

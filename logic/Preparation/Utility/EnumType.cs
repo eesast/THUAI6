@@ -77,10 +77,11 @@ namespace Preparation.Utility
         Assassin = 1,
         Athlete = 2,
         Klee = 3,
-        SpeedUpWhenLeavingGrass = 4,
+        TechOtaku = 4,
         Teacher = 5,
         StraightAStudent = 6,
         ANoisyPerson = 7,
+        Robot = 8,
     }
     public enum ActiveSkillType  // 主动技能
     {

@@ -23,16 +23,16 @@ namespace Gaming
                 {
                     if (((Bullet)collisionObj).Parent != player && ((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
                     {
-                        if (AttackManager.BeStunned((Character)player, ((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting))
+                        if (CharacterManager.BeStunned((Character)player, ((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting))
                             player.AddScore(GameData.TrickerScoreStudentBeStunned(((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting));
                         gameMap.Remove((GameObj)collisionObj);
                     }
                 }
                 if (player.FindIActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
                 {
-                    if (AttackManager.BeStunned((Character)collisionObj, GameData.TimeOfGhostFaintingWhenCharge))
+                    if (CharacterManager.BeStunned((Character)collisionObj, GameData.TimeOfGhostFaintingWhenCharge))
                         player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenCharge));
-                    AttackManager.BeStunned(player, GameData.TimeOfStudentFaintingWhenCharge);
+                    CharacterManager.BeStunned(player, GameData.TimeOfStudentFaintingWhenCharge);
                 }
             }
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)

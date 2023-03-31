@@ -3,20 +3,6 @@ using Preparation.Utility;
 
 namespace GameClass.GameObj
 {
-    public class BecomeVampire : IActiveSkill  // 化身吸血鬼
-    {
-        public int SkillCD => GameData.commonSkillCD * 4 / 3;
-        public int DurationTime => GameData.commonSkillTime;
-
-        private readonly object commonSkillLock = new object();
-        public object ActiveSkillLock => commonSkillLock;
-
-        public bool isBeingUsed = false;
-        public bool IsBeingUsed
-        {
-            get => isBeingUsed; set => isBeingUsed = value;
-        }
-    }
     public class CanBeginToCharge : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD / 5;
@@ -79,7 +65,7 @@ namespace GameClass.GameObj
 
     public class JumpyBomb : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD / 30 * 5;
+        public int SkillCD => GameData.commonSkillCD / 25 * 5;
         public int DurationTime => GameData.commonSkillTime / 2;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
@@ -95,20 +81,6 @@ namespace GameClass.GameObj
     {
         public int SkillCD => GameData.commonSkillCD * 2 / 3;
         public int DurationTime => GameData.commonSkillTime / 10;
-        private readonly object commonSkillLock = new object();
-        public object ActiveSkillLock => commonSkillLock;
-
-        public bool isBeingUsed = false;
-        public bool IsBeingUsed
-        {
-            get => isBeingUsed; set => isBeingUsed = value;
-        }
-    }
-
-    public class SuperFast : IActiveSkill  // 3倍速
-    {
-        public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => GameData.commonSkillTime * 4 / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
 

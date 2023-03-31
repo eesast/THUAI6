@@ -14,10 +14,10 @@ namespace Gaming
         public struct PlayerInitInfo
         {
             public uint birthPointIndex;
-            public long teamID;
-            public long playerID;
+            public int teamID;
+            public int playerID;
             public CharacterType characterType;
-            public PlayerInitInfo(uint birthPointIndex, long teamID, long playerID, CharacterType characterType)
+            public PlayerInitInfo(uint birthPointIndex, int teamID, int playerID, CharacterType characterType)
             {
                 this.birthPointIndex = birthPointIndex;
                 this.teamID = teamID;
@@ -39,171 +39,12 @@ namespace Gaming
                 return GameObj.invalidID;
 
             XY pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex];
+            Character? newPlayer = characterManager.AddPlayer(pos, playerInitInfo.teamID, playerInitInfo.playerID, playerInitInfo.characterType);
+            if (newPlayer == null) return GameObj.invalidID;
             // Console.WriteLine($"x,y: {pos.x},{pos.y}");
-
-            Character newPlayer = (GameData.IsGhost(playerInitInfo.characterType)) ? new Ghost(pos, GameData.characterRadius, playerInitInfo.characterType) : new Student(pos, GameData.characterRadius, playerInitInfo.characterType);
-            gameMap.Add(newPlayer);
 
             // Console.WriteLine($"GameObjDict[GameObjType.Character] length:{gameMap.GameObjDict[GameObjType.Character].Count}");
             teamList[(int)playerInitInfo.teamID].AddPlayer(newPlayer);
-            newPlayer.TeamID = playerInitInfo.teamID;
-            newPlayer.PlayerID = playerInitInfo.playerID;
-            #region 人物装弹
-            new Thread
-            (
-                () =>
-                {
-                    while (!gameMap.Timer.IsGaming)
-                        Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
-                    long lastTime = Environment.TickCount64;
-                    new FrameRateTaskExecutor<int>(
-                        loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
-                        loopToDo: () =>
-                        {
-                            long nowTime = Environment.TickCount64;
-                            if (newPlayer.BulletNum == newPlayer.MaxBulletNum)
-                                lastTime = nowTime;
-                            else if (nowTime - lastTime >= newPlayer.CD)
-                            {
-                                _ = newPlayer.TryAddBulletNum();
-                                lastTime = nowTime;
-                            }
-                        },
-                        timeInterval: GameData.checkInterval,
-                        finallyReturn: () => 0
-                    )
-                    {
-                        AllowTimeExceed = true/*,
-                        MaxTolerantTimeExceedCount = 5,
-                        TimeExceedAction = exceedTooMuch =>
-                        {
-                            if (exceedTooMuch) Console.WriteLine("The computer runs too slow that it cannot check the color below the player in time!");
-                        }*/
-                    }
-                        .Start();
-                }
-            )
-            { IsBackground = true }.Start();
-            #endregion
-            #region BGM,牵制得分更新
-            new Thread
-            (
-                () =>
-                {
-                    while (!gameMap.Timer.IsGaming)
-                        Thread.Sleep(GameData.checkInterval);
-                    int TimePinningDown = 0, ScoreAdded = 0;
-
-                    bool noise = false;
-                    if (!newPlayer.IsGhost())
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                        try
-                        {
-                            foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
-                            {
-                                if (person.IsGhost())
-                                {
-                                    if (person.CharacterType == CharacterType.ANoisyPerson)
-                                    {
-                                        noise = true;
-                                        newPlayer.AddBgm(BgmType.GhostIsComing, 1411180);
-                                        newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, 154991);
-                                    }
-                                }
-                            }
-                        }
-                        finally
-                        {
-                            gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
-                        }
-                    }
-                    new FrameRateTaskExecutor<int>(
-                    loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
-                    loopToDo: () =>
-                        {
-                            gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                            try
-                            {
-                                if (newPlayer.IsGhost())
-                                {
-                                    double bgmVolume = 0;
-                                    foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
-                                    {
-                                        if (!person.IsGhost() && XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                        {
-                                            if ((double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position) > bgmVolume)
-                                                bgmVolume = newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position);
-                                        }
-                                    }
-                                    if (bgmVolume > 0)
-                                        newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
-                                }
-                                else
-                                {
-                                    foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
-                                    {
-                                        if (person.IsGhost())
-                                        {
-                                            if (!noise && XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                                newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
-                                            if (XY.Distance(newPlayer.Position, person.Position) <= GameData.basicViewRange)
-                                            {
-                                                TimePinningDown += GameData.checkInterval;
-                                                newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
-                                                ScoreAdded = GameData.StudentScorePinDown(TimePinningDown);
-                                            }
-                                            else TimePinningDown = ScoreAdded = 0;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            finally
-                            {
-                                gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
-                            }
-
-                            if (!noise)
-                            {
-                                gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
-                                try
-                                {
-                                    double bgmVolume = 0;
-                                    foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
-                                    {
-                                        if (XY.Distance(newPlayer.Position, generator.Position) <= newPlayer.AlertnessRadius)
-                                        {
-                                            if ((double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position) > bgmVolume)
-                                                bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position);
-                                        }
-                                    }
-                                    if (bgmVolume > 0)
-                                        newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, bgmVolume);
-                                }
-                                finally
-                                {
-                                    gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
-                                }
-                            }
-                        },
-                    timeInterval: GameData.checkInterval,
-                    finallyReturn: () => 0
-                )
-                    {
-                        AllowTimeExceed = true/*,
-                        MaxTolerantTimeExceedCount = 5,
-                        TimeExceedAction = exceedTooMuch =>
-                        {
-                            if (exceedTooMuch) Console.WriteLine("The computer runs too slow that it cannot check the color below the player in time!");
-                        }*/
-                    }
-                    .Start();
-                }
-            )
-            { IsBackground = true }.Start();
-            #endregion
-
             return newPlayer.ID;
         }
         public bool StartGame(int milliSeconds)
@@ -529,10 +370,11 @@ namespace Gaming
                 teamList.Add(new Team());
             }
 
-            attackManager = new AttackManager(gameMap);
+            characterManager = new CharacterManager(gameMap);
+            attackManager = new AttackManager(gameMap, characterManager);
             actionManager = new ActionManager(gameMap);
             propManager = new PropManager(gameMap);
-            skillManager = new SkillManager(gameMap, actionManager, attackManager, propManager);
+            skillManager = new SkillManager(gameMap, actionManager, attackManager, propManager, characterManager);
         }
     }
 }

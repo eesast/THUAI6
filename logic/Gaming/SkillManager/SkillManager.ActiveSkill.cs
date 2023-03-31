@@ -106,7 +106,7 @@ namespace Gaming
                         {
                             if (!character.IsGhost() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
                             {
-                                if (AttackManager.BeStunned(character, GameData.TimeOfStudentFaintingWhenHowl))
+                                if (CharacterManager.BeStunned(character, GameData.TimeOfStudentFaintingWhenHowl))
                                     player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStudentFaintingWhenHowl));
                                 break;
                             }
@@ -116,7 +116,7 @@ namespace Gaming
                     {
                         gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
-                    AttackManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl);
+                    CharacterManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl);
                     Debugger.Output(player, "howled!");
                 },
                                                       () =>
@@ -137,7 +137,7 @@ namespace Gaming
                                 || character.PlayerState == PlayerStateType.UsingSkill || character.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || character.PlayerState == PlayerStateType.OpeningTheChest)
                                 && gameMap.CanSee(player, character))
                             {
-                                if (AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.timeFactorOfGhostFainting))
+                                if (CharacterManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.timeFactorOfGhostFainting))
                                     player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.timeFactorOfGhostFainting));
                                 break;
                             }

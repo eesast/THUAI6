@@ -8,7 +8,6 @@ namespace Preparation.Interface
         public int MoveSpeed { get; }
         public int MaxHp { get; }
         public BulletType InitBullet { get; }
-        public int MaxBulletNum { get; }
         public List<ActiveSkillType> ListOfIActiveSkill { get; }
         public List<PassiveSkillType> ListOfIPassiveSkill { get; }
         public double Concealment { get; }
@@ -37,9 +36,6 @@ namespace Preparation.Interface
 
         private const int maxHp = GameData.basicHp;
         public int MaxHp => maxHp;
-
-        public const int maxBulletNum = 1;
-        public int MaxBulletNum => maxBulletNum;
 
         public BulletType InitBullet => BulletType.CommonAttackOfGhost;
 
@@ -72,9 +68,6 @@ namespace Preparation.Interface
         private const int maxHp = GameData.basicHp;
         public int MaxHp => maxHp;
 
-        public const int maxBulletNum = 1;
-        public int MaxBulletNum => maxBulletNum;
-
         public BulletType InitBullet => BulletType.CommonAttackOfGhost;
 
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.JumpyBomb });
@@ -98,7 +91,6 @@ namespace Preparation.Interface
         public int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest * 1.1);
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
-
     public class ANoisyPerson : IGhost
     {
         private const int moveSpeed = (int)(GameData.basicMoveSpeed * 1.1);
@@ -106,9 +98,6 @@ namespace Preparation.Interface
 
         private const int maxHp = GameData.basicHp * 12 / 10;
         public int MaxHp => maxHp;
-
-        public const int maxBulletNum = 1;
-        public int MaxBulletNum => maxBulletNum;
 
         public BulletType InitBullet => BulletType.CommonAttackOfGhost;
 
@@ -143,9 +132,6 @@ namespace Preparation.Interface
 
         private const int maxGamingAddiction = GameData.basicMaxGamingAddiction * 10;
         public int MaxGamingAddiction => maxGamingAddiction;
-
-        public const int maxBulletNum = 0;
-        public int MaxBulletNum => maxBulletNum;
 
         public BulletType InitBullet => BulletType.Null;
 
@@ -187,9 +173,6 @@ namespace Preparation.Interface
         private const int maxGamingAddiction = GameData.basicMaxGamingAddiction * 9 / 10;
         public int MaxGamingAddiction => maxGamingAddiction;
 
-        public const int maxBulletNum = 0;
-        public int MaxBulletNum => maxBulletNum;
-
         public BulletType InitBullet => BulletType.Null;
 
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.CanBeginToCharge });
@@ -230,9 +213,6 @@ namespace Preparation.Interface
         private const int maxGamingAddiction = (int)(GameData.basicMaxGamingAddiction * 1.5);
         public int MaxGamingAddiction => maxGamingAddiction;
 
-        public const int maxBulletNum = 0;
-        public int MaxBulletNum => maxBulletNum;
-
         public BulletType InitBullet => BulletType.Null;
 
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.WriteAnswers });
@@ -250,13 +230,93 @@ namespace Preparation.Interface
         public const int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = GameData.basicViewRange;
+        public int viewRange = (int)(GameData.basicViewRange * 0.9);
         public int ViewRange => viewRange;
 
         public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = (int)(GameData.basicStudentSpeedOfClimbingThroughWindows * 10 / 12.0);
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
+
+        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
+        public int SpeedOfOpenChest => speedOfOpenChest;
+    }
+    public class Robot : IStudent
+    {
+        private const int moveSpeed = (int)(GameData.basicMoveSpeed);
+        public int MoveSpeed => moveSpeed;
+
+        private const int maxHp = (int)(GameData.basicHp / 2.5);
+        public int MaxHp => maxHp;
+
+        private const int maxGamingAddiction = 0;
+        public int MaxGamingAddiction => maxGamingAddiction;
+
+        public BulletType InitBullet => BulletType.Null;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public const int fixSpeed = GameData.basicFixSpeed;
+        public int FixSpeed => fixSpeed;
+
+        public const int treatSpeed = GameData.basicTreatSpeed * 8 / 10;
+        public int TreatSpeed => treatSpeed;
+
+        public const double concealment = GameData.basicConcealment;
+        public double Concealment => concealment;
+
+        public const int alertnessRadius = (int)(GameData.basicAlertnessRadius);
+        public int AlertnessRadius => alertnessRadius;
+
+        public int viewRange = GameData.basicViewRange;
+        public int ViewRange => viewRange;
+
+        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+
+        public int speedOfClimbingThroughWindows = 1;
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
+
+        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
+        public int SpeedOfOpenChest => speedOfOpenChest;
+    }
+    public class TechOtaku : IStudent
+    {
+        private const int moveSpeed = (int)(GameData.basicMoveSpeed * 0.75);
+        public int MoveSpeed => moveSpeed;
+
+        private const int maxHp = (int)(GameData.basicHp * 0.9);
+        public int MaxHp => maxHp;
+
+        private const int maxGamingAddiction = (int)(GameData.basicMaxGamingAddiction * 1.1);
+        public int MaxGamingAddiction => maxGamingAddiction;
+
+        public BulletType InitBullet => BulletType.Null;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public const int fixSpeed = (int)(GameData.basicFixSpeed * 1.1);
+        public int FixSpeed => fixSpeed;
+
+        public const int treatSpeed = GameData.basicTreatSpeed * 9 / 10;
+        public int TreatSpeed => treatSpeed;
+
+        public const double concealment = GameData.basicConcealment;
+        public double Concealment => concealment;
+
+        public const int alertnessRadius = (int)(GameData.basicAlertnessRadius);
+        public int AlertnessRadius => alertnessRadius;
+
+        public int viewRange = (int)(GameData.basicViewRange * 0.9);
+        public int ViewRange => viewRange;
+
+        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+
+        public int speedOfClimbingThroughWindows = (int)(GameData.basicStudentSpeedOfClimbingThroughWindows * 3 / 4);
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
         public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;

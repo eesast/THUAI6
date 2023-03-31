@@ -109,7 +109,8 @@ enum StudentType
     ATHLETE  = 1;
     STUDENTTYPE2 = 2;//Teacher
     STUDENTTYPE3 = 3;//StraightAStudent
-    STUDENTTYPE4 = 4;
+    STUDENTTYPE4 = 4;//Robot
+    TECH_OTAKU =5;
 }
 
 enum TrickerType

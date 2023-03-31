@@ -167,4 +167,23 @@ namespace GameClass.GameObj
             this.MaxGamingAddiction = ((IStudent)Occupation).MaxGamingAddiction;
         }
     }
+    public class Golem : Student
+    {
+        private Character? parent;  // 主人
+        public Character? Parent
+        {
+            get => parent;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    parent = value;
+                }
+            }
+        }
+        public Golem(XY initPos, int initRadius, Character? parent) : base(initPos, initRadius, CharacterType.Robot)
+        {
+            this.parent = parent;
+        }
+    }
 }

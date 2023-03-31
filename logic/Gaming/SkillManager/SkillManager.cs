@@ -69,15 +69,17 @@ namespace Gaming
             }
 
             private readonly Map gameMap;
+            private readonly CharacterManager characterManager;
             private readonly ActionManager actionManager;
             private readonly AttackManager attackManager;
             private readonly PropManager propManager;
-            public SkillManager(Map gameMap, ActionManager action, AttackManager attack, PropManager prop)
+            public SkillManager(Map gameMap, ActionManager action, AttackManager attack, PropManager prop, CharacterManager characterManager)
             {
                 this.gameMap = gameMap;
                 this.actionManager = action;
                 this.propManager = prop;
                 this.attackManager = attack;
+                this.characterManager = characterManager;
             }
         }
     }

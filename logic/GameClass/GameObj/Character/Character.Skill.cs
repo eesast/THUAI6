@@ -66,6 +66,9 @@ namespace GameClass.GameObj
                 case CharacterType.Assassin:
                     this.occupation = new Assassin();
                     break;
+                case CharacterType.Robot:
+                    this.occupation = new Robot();
+                    break;
                 case CharacterType.Teacher:
                     this.occupation = new Teacher();
                     break;
@@ -78,6 +81,9 @@ namespace GameClass.GameObj
                 case CharacterType.ANoisyPerson:
                     this.occupation = new ANoisyPerson();
                     break;
+                case CharacterType.TechOtaku:
+                    this.occupation = new TechOtaku();
+                    break;
                 case CharacterType.Athlete:
                 default:
                     this.occupation = new Athlete();
@@ -85,9 +91,7 @@ namespace GameClass.GameObj
             }
             this.MaxHp = this.hp = Occupation.MaxHp;
             this.OrgMoveSpeed = this.moveSpeed = Occupation.MoveSpeed;
-            this.OrgCD = this.cd = BulletFactory.BulletCD(Occupation.InitBullet);
-            this.bulletNum = this.maxBulletNum = Occupation.MaxBulletNum;
-            this.bulletOfPlayer = this.OriBulletOfPlayer = Occupation.InitBullet;
+            this.BulletOfPlayer = this.OriBulletOfPlayer = Occupation.InitBullet;
             this.concealment = Occupation.Concealment;
             this.alertnessRadius = Occupation.AlertnessRadius;
             this.ViewRange = Occupation.ViewRange;

@@ -17,7 +17,9 @@ namespace Gaming
         {
             readonly Map gameMap;
             readonly MoveEngine moveEngine;
-            public AttackManager(Map gameMap)
+            readonly CharacterManager characterManager;
+
+            public AttackManager(Map gameMap, CharacterManager characterManager)
             {
                 this.gameMap = gameMap;
                 this.moveEngine = new MoveEngine(
@@ -29,121 +31,12 @@ namespace Gaming
                     },
                     EndMove: obj =>
                     {
-#if DEBUG
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
-
-#endif
                         if (obj.CanMove && ((Bullet)obj).TypeOfBullet != BulletType.JumpyDumpty)
                             BulletBomb((Bullet)obj, null);
                     }
                 );
-            }
-
-            private void BeAddictedToGame(Student player, Ghost ghost)
-            {
-                ghost.AddScore(GameData.TrickerScoreStudentBeAddicted);
-                new Thread
-                    (() =>
-                    {
-                        if (player.GamingAddiction > GameData.BeginGamingAddiction && player.GamingAddiction < GameData.MidGamingAddiction)
-                            player.GamingAddiction = GameData.MidGamingAddiction;
-                        player.PlayerState = PlayerStateType.Addicted;
-#if DEBUG
-                        Debugger.Output(player, " is addicted ");
-#endif
-                        new FrameRateTaskExecutor<int>(
-                            () => (player.PlayerState == PlayerStateType.Addicted || player.PlayerState == PlayerStateType.Rescued) && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
-                            () =>
-                            {
-                                player.GamingAddiction += (player.PlayerState == PlayerStateType.Addicted) ? GameData.frameDuration : 0;
-                            },
-                            timeInterval: GameData.frameDuration,
-                            () =>
-                            {
-                                if (player.GamingAddiction == player.MaxGamingAddiction && gameMap.Timer.IsGaming)
-                                {
-                                    ghost.AddScore(GameData.TrickerScoreStudentDie);
-                                    Die(player);
-                                }
-                                return 0;
-                            }
-                        )
-                            .Start();
-                    }
-                    )
-                { IsBackground = true }.Start();
-            }
-
-            public static bool BeStunned(Character player, int time)
-            {
-                if (player.PlayerState == PlayerStateType.Stunned || player.NoHp()) return false;
-                new Thread
-                    (() =>
-                    {
-                        player.PlayerState = PlayerStateType.Stunned;
-                        Thread.Sleep(time);
-                        if (player.PlayerState == PlayerStateType.Stunned)
-                            player.PlayerState = PlayerStateType.Null;
-                    }
-                    )
-                { IsBackground = true }.Start();
-                return true;
-            }
-            public static bool BackSwing(Character? player, int time)
-            {
-                if (player == null && time <= 0) return false;
-                if (player.PlayerState == PlayerStateType.Swinging || (!player.Commandable() && player.PlayerState != PlayerStateType.TryingToAttack)) return false;
-                player.PlayerState = PlayerStateType.Swinging;
-
-                new Thread
-                        (() =>
-                        {
-                            Thread.Sleep(time);
-
-                            if (player.PlayerState == PlayerStateType.Swinging)
-                            {
-                                player.PlayerState = PlayerStateType.Null;
-                            }
-                        }
-                        )
-                { IsBackground = true }.Start();
-                return true;
-            }
-
-            private void Die(Character player)
-            {
-#if DEBUG
-                Debugger.Output(player, "die.");
-#endif
-                player.Die(PlayerStateType.Deceased);
-
-                for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
-                {
-                    Prop? prop = player.UseProp(i);
-                    if (prop != null)
-                    {
-                        prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
-                        gameMap.Add(prop);
-                    }
-                }
-                ++gameMap.NumOfDeceasedStudent;
-                if (GameData.numOfStudent - gameMap.NumOfDeceasedStudent - gameMap.NumOfEscapedStudent == 1)
-                {
-                    gameMap.GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
-                    try
-                    {
-                        foreach (EmergencyExit emergencyExit in gameMap.GameObjDict[GameObjType.EmergencyExit])
-                            if (emergencyExit.CanOpen)
-                            {
-                                emergencyExit.IsOpen = true;
-                                break;
-                            }
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
-                    }
-                }
+                this.characterManager = characterManager;
             }
 
             private void BombObj(Bullet bullet, GameObj objBeingShot)
@@ -164,11 +57,11 @@ namespace Gaming
                             }
                             if (whoBeAttacked.BeAttacked(bullet))
                             {
-                                BeAddictedToGame(whoBeAttacked, (Ghost)bullet.Parent);
+                                characterManager.BeAddictedToGame(whoBeAttacked, (Ghost)bullet.Parent);
                             }
                             if (whoBeAttacked.CanBeAwed())
                             {
-                                if (BeStunned(whoBeAttacked, GameData.basicStunnedTimeOfStudent))
+                                if (CharacterManager.BeStunned(whoBeAttacked, GameData.basicStunnedTimeOfStudent))
                                     bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.basicStunnedTimeOfStudent));
                             }
                         }
@@ -201,14 +94,14 @@ namespace Gaming
                 {
                     if (objBeingShot == null)
                     {
-                        BackSwing((Character?)bullet.Parent, bullet.Backswing);
+                        CharacterManager.BackSwing((Character?)bullet.Parent, bullet.Backswing);
                         return;
                     }
 
                     Debugger.Output(bullet, bullet.TypeOfBullet.ToString());
 
                     BombObj(bullet, objBeingShot);
-                    BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
+                    CharacterManager.BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
                     return;
                 }
 
@@ -259,48 +152,14 @@ namespace Gaming
                 {
                     BombObj(bullet, beAttackedObj);
                 }
+                beAttackedList.Clear();
+
                 if (objBeingShot == null)
                 {
-                    if (bullet.Backswing > 0)
-                    {
-                        bullet.Parent.PlayerState = PlayerStateType.Swinging;
-
-                        new Thread
-                                (() =>
-                                {
-                                    Thread.Sleep(bullet.Backswing);
-
-                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
-                                    {
-                                        bullet.Parent.PlayerState = PlayerStateType.Null;
-                                    }
-                                }
-                                )
-                        { IsBackground = true }.Start();
-                    }
+                    CharacterManager.BackSwing((Character?)bullet.Parent, bullet.Backswing);
                 }
                 else
-                {
-                    if (bullet.RecoveryFromHit > 0)
-                    {
-                        bullet.Parent.PlayerState = PlayerStateType.Swinging;
-
-                        new Thread
-                                (() =>
-                                {
-
-                                    Thread.Sleep(bullet.RecoveryFromHit);
-
-                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
-                                    {
-                                        bullet.Parent.PlayerState = PlayerStateType.Null;
-                                    }
-                                }
-                                )
-                        { IsBackground = true }.Start();
-                    }
-                }
-                beAttackedList.Clear();
+                    CharacterManager.BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
             }
 
             public bool Attack(Character? player, double angle)
@@ -310,7 +169,7 @@ namespace Gaming
                     return false;
                 }
 
-                if (!player.Commandable())
+                if (player.BulletOfPlayer == BulletType.Null || !player.Commandable())
                     return false;
 
                 XY res = player.Position + new XY  // 子弹紧贴人物生成。

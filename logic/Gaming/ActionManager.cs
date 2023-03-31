@@ -162,7 +162,7 @@ namespace Gaming
 
             public bool Escape(Student player)
             {
-                if (!(player.Commandable()))
+                if (!(player.Commandable()) || player.CharacterType == CharacterType.Robot)
                     return false;
                 Doorway? doorwayForEscape = (Doorway?)gameMap.OneInTheSameCell(player.Position, GameObjType.Doorway);
                 if (doorwayForEscape != null)

@@ -196,6 +196,12 @@ namespace Gaming
 
             public void BeAddictedToGame(Student player, Ghost ghost)
             {
+                if (player.CharacterType == CharacterType.Robot)
+                {
+                    ghost.AddScore(GameData.TrickerScoreDestroyRobot);
+                    Die(player);
+                    return;
+                }
                 ghost.AddScore(GameData.TrickerScoreStudentBeAddicted);
                 new Thread
                     (() =>
@@ -231,7 +237,7 @@ namespace Gaming
 
             public static bool BeStunned(Character player, int time)
             {
-                if (player.PlayerState == PlayerStateType.Stunned || player.NoHp()) return false;
+                if (player.PlayerState == PlayerStateType.Stunned || player.NoHp() || player.CharacterType == CharacterType.Robot) return false;
                 new Thread
                     (() =>
                     {
@@ -281,6 +287,7 @@ namespace Gaming
                         gameMap.Add(prop);
                     }
                 }
+                if (player.CharacterType == CharacterType.Robot) return;
                 ++gameMap.NumOfDeceasedStudent;
                 if (GameData.numOfStudent - gameMap.NumOfDeceasedStudent - gameMap.NumOfEscapedStudent == 1)
                 {

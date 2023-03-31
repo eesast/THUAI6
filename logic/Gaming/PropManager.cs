@@ -21,7 +21,7 @@ namespace Gaming
 
             public static void UseProp(Character player, PropType propType)
             {
-                if (player.IsResetting)
+                if (player.IsResetting || player.CharacterType == CharacterType.Robot)
                     return;
                 Prop prop = player.UseProp(propType);
                 switch (prop.GetPropType())

@@ -91,7 +91,7 @@ namespace GameClass.GameObj
             }
             this.MaxHp = this.hp = Occupation.MaxHp;
             this.OrgMoveSpeed = this.moveSpeed = Occupation.MoveSpeed;
-            this.bulletOfPlayer = this.OriBulletOfPlayer = Occupation.InitBullet;
+            this.BulletOfPlayer = this.OriBulletOfPlayer = Occupation.InitBullet;
             this.concealment = Occupation.Concealment;
             this.alertnessRadius = Occupation.AlertnessRadius;
             this.ViewRange = Occupation.ViewRange;

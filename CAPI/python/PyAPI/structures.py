@@ -45,35 +45,47 @@ class PropType(Enum):
     AddLifeOrAp = 5
     AddHpOrAp = 6
     ShieldOrSpear = 7
+    RecoveryFromDizziness = 8
 
 
 class BulletType(Enum):
     NullBulletType = 0
     FlyingKnife = 1
     CommonAttackOfTricker = 2
-    FastBullet = 3
-    OrdinaryBullet = 4
+    BombBomb = 3
+    JumpyDumpty = 4
     AtomBomb = 5
 
 
 class StudentType(Enum):
     NullStudentType = 0
     Athlete = 1
+    Teacher = 2
+    StraightAStudent = 3
 
 
 class TrickerType(Enum):
     NullTrickerType = 0
     Assassin = 1
+    Klee = 2
+    ANoisyPerson = 3
 
 
 class StudentBuffType(Enum):
     NullStudentBuffType = 0
-    StudentBuffType1 = 1
+    AddSpeed = 1
+    AddLife = 2
+    Shield = 3
+    Invisible = 4
 
 
 class TrickerBuffType(Enum):
     NullTrickerBuffType = 0
-    TrickerBuffType1 = 1
+    AddSpeed = 1
+    Spear = 2
+    AddAp = 3
+    Clairaudience = 4
+    Invisible = 5
 
 
 class PlayerState(Enum):
@@ -198,7 +210,7 @@ class GameMap:
 
 class GameInfo:
     gameTime: int
-    subjectLeft: int
+    subjectFinished: int
     studentGraduated: int
     studentQuited: int
     studentScore: int

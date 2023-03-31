@@ -55,6 +55,7 @@ namespace THUAI6
         AddLifeOrAp = 5,
         AddHpOrAp = 6,
         ShieldOrSpear = 7,
+        RecoveryFromDizziness = 8,
     };
 
     enum class BulletType : unsigned char
@@ -62,8 +63,8 @@ namespace THUAI6
         NullBulletType = 0,
         FlyingKnife = 1,
         CommonAttackOfTricker = 2,
-        FastBullet = 3,
-        OrdinaryBullet = 4,
+        BombBomb = 3,
+        JumpyDumpty = 4,
         AtomBomb = 5,
     };
 
@@ -80,8 +81,8 @@ namespace THUAI6
     {
         NullStudentType = 0,
         Athlete = 1,
-        StudentType2 = 2,
-        StudentType3 = 3,
+        Teacher = 2,
+        StraightAStudent = 3,
         StudentType4 = 4,
     };
 
@@ -90,8 +91,8 @@ namespace THUAI6
     {
         NullTrickerType = 0,
         Assassin = 1,
-        TrickerType2 = 2,
-        TrickerType3 = 3,
+        Klee = 2,
+        ANoisyPerson = 3,
         TrickerType4 = 4,
     };
 
@@ -99,19 +100,20 @@ namespace THUAI6
     enum class StudentBuffType : unsigned char
     {
         NullStudentBuffType = 0,
-        StudentBuffType1 = 1,
-        StudentBuffType2 = 2,
-        StudentBuffType3 = 3,
-        StudentBuffType4 = 4,
+        AddSpeed = 1,
+        AddLife = 2,
+        Shield = 3,
+        Invisible = 4,
     };
 
     enum class TrickerBuffType : unsigned char
     {
         NullTrickerBuffType = 0,
-        TrickerBuffType1 = 1,
-        TrickerBuffType2 = 2,
-        TrickerBuffType3 = 3,
-        TrickerBuffType4 = 4,
+        AddSpeed = 1,
+        Spear = 2,
+        AddAp = 3,
+        Clairaudience = 4,
+        Invisible = 5,
     };
 
     // 学生状态枚举
@@ -258,7 +260,7 @@ namespace THUAI6
     struct GameInfo
     {
         int32_t gameTime;
-        int32_t subjectLeft;
+        int32_t subjectFinished;
         int32_t studentGraduated;
         int32_t studentQuited;
         int32_t studentScore;
@@ -273,6 +275,19 @@ namespace THUAI6
         {GameState::GameStart, "GameStart"},
         {GameState::GameRunning, "GameRunning"},
         {GameState::GameEnd, "GameEnd"},
+    };
+
+    inline std::map<StudentType, std::string> studentTypeDict{
+        {StudentType::NullStudentType, "NullStudentType"},
+        {StudentType::Athlete, "Athlete"},
+        {StudentType::Teacher, "Teacher"},
+        {StudentType::StraightAStudent, "StraightAStudent"},
+    };
+
+    inline std::map<TrickerType, std::string> trickerTypeDict{
+        {TrickerType::NullTrickerType, "NullTrickerType"},
+        {TrickerType::Assassin, "Assassin"},
+        {TrickerType::Klee, "Klee"},
     };
 
     inline std::map<PlayerState, std::string> playerStateDict{
@@ -327,6 +342,7 @@ namespace THUAI6
         {PropType::AddLifeOrAp, "AddLifeOrAp"},
         {PropType::AddHpOrAp, "AddHpOrAp"},
         {PropType::ShieldOrSpear, "ShieldOrSpear"},
+        {PropType::RecoveryFromDizziness, "RecoveryFromDizziness"},
 
     };
 
@@ -334,18 +350,27 @@ namespace THUAI6
         {BulletType::NullBulletType, "NullBulletType"},
         {BulletType::FlyingKnife, "FlyingKnife"},
         {BulletType::CommonAttackOfTricker, "CommonAttackOfTricker"},
-        {BulletType::FastBullet, "FastBullet"},
-        {BulletType::OrdinaryBullet, "OrdinaryBullet"},
+        {BulletType::BombBomb, "BombBomb"},
+        {BulletType::JumpyDumpty, "JumpyDumpty"},
         {BulletType::AtomBomb, "AtomBomb"},
     };
 
     inline std::map<StudentBuffType, std::string> studentBuffDict{
         {StudentBuffType::NullStudentBuffType, "NullStudentBuffType"},
+        {StudentBuffType::AddSpeed, "AddSpeed"},
+        {StudentBuffType::AddLife, "AddLife"},
+        {StudentBuffType::Shield, "Shield"},
+        {StudentBuffType::Invisible, "Invisible"},
 
     };
 
     inline std::map<TrickerBuffType, std::string> trickerBuffDict{
         {TrickerBuffType::NullTrickerBuffType, "NullTrickerBuffType"},
+        {TrickerBuffType::AddSpeed, "AddSpeed"},
+        {TrickerBuffType::Spear, "Spear"},
+        {TrickerBuffType::Clairaudience, "Clairaudience"},
+        {TrickerBuffType::AddAp, "AddAp"},
+        {TrickerBuffType::Invisible, "Invisible"},
 
     };
 

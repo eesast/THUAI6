@@ -162,12 +162,13 @@ namespace protobuf
         KEY3 = 5,
         KEY5 = 6,
         KEY6 = 7,
+        RECOVERY_FROM_DIZZINESS = 8,
         PropType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         PropType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool PropType_IsValid(int value);
     constexpr PropType PropType_MIN = NULL_PROP_TYPE;
-    constexpr PropType PropType_MAX = KEY6;
+    constexpr PropType PropType_MAX = RECOVERY_FROM_DIZZINESS;
     constexpr int PropType_ARRAYSIZE = PropType_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PropType_descriptor();
@@ -272,12 +273,13 @@ namespace protobuf
         TBUFFTYPE2 = 2,
         TBUFFTYPE3 = 3,
         TBUFFTYPE4 = 4,
+        INVISIBLE = 5,
         TrickerBuffType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         TrickerBuffType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool TrickerBuffType_IsValid(int value);
     constexpr TrickerBuffType TrickerBuffType_MIN = NULL_TBUFF_TYPE;
-    constexpr TrickerBuffType TrickerBuffType_MAX = TBUFFTYPE4;
+    constexpr TrickerBuffType TrickerBuffType_MAX = INVISIBLE;
     constexpr int TrickerBuffType_ARRAYSIZE = TrickerBuffType_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TrickerBuffType_descriptor();

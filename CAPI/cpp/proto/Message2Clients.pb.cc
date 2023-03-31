@@ -356,7 +356,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.game_time_)*/ 0, /*decltype(_impl_.subject_left_)*/ 0, /*decltype(_impl_.student_graduated_)*/ 0, /*decltype(_impl_.student_quited_)*/ 0, /*decltype(_impl_.student_score_)*/ 0, /*decltype(_impl_.tricker_score_)*/ 0, /*decltype(_impl_.gate_opened_)*/ false, /*decltype(_impl_.hidden_gate_refreshed_)*/ false, /*decltype(_impl_.hidden_gate_opened_)*/ false, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.game_time_)*/ 0, /*decltype(_impl_.subject_finished_)*/ 0, /*decltype(_impl_.student_graduated_)*/ 0, /*decltype(_impl_.student_quited_)*/ 0, /*decltype(_impl_.student_score_)*/ 0, /*decltype(_impl_.tricker_score_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
     struct MessageOfAllDefaultTypeInternal
@@ -644,14 +644,11 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     ~0u,  // no _weak_field_map_
     ~0u,  // no _inlined_string_donated_
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.game_time_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.subject_left_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.subject_finished_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.student_graduated_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.student_quited_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.student_score_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.tricker_score_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.gate_opened_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.hidden_gate_refreshed_),
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfAll, _impl_.hidden_gate_opened_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageToClient, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -695,9 +692,9 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
     {163, -1, -1, sizeof(::protobuf::MessageOfNews)},
     {172, -1, -1, sizeof(::protobuf::MessageOfObj)},
     {191, -1, -1, sizeof(::protobuf::MessageOfAll)},
-    {206, -1, -1, sizeof(::protobuf::MessageToClient)},
-    {215, -1, -1, sizeof(::protobuf::MoveRes)},
-    {224, -1, -1, sizeof(::protobuf::BoolRes)},
+    {203, -1, -1, sizeof(::protobuf::MessageToClient)},
+    {212, -1, -1, sizeof(::protobuf::MoveRes)},
+    {221, -1, -1, sizeof(::protobuf::BoolRes)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -796,20 +793,18 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     "\n \001(\0132\035.protobuf.MessageOfHiddenGateH\000\022/"
     "\n\014news_message\030\013 \001(\0132\027.protobuf.MessageO"
     "fNewsH\000\022-\n\013map_message\030\014 \001(\0132\026.protobuf."
-    "MessageOfMapH\000B\020\n\016message_of_obj\"\350\001\n\014Mes"
-    "sageOfAll\022\021\n\tgame_time\030\001 \001(\005\022\024\n\014subject_"
-    "left\030\002 \001(\005\022\031\n\021student_graduated\030\003 \001(\005\022\026\n"
-    "\016student_quited\030\004 \001(\005\022\025\n\rstudent_score\030\005"
-    " \001(\005\022\025\n\rtricker_score\030\006 \001(\005\022\023\n\013gate_open"
-    "ed\030\007 \001(\010\022\035\n\025hidden_gate_refreshed\030\010 \001(\010\022"
-    "\032\n\022hidden_gate_opened\030\t \001(\010\"\224\001\n\017MessageT"
-    "oClient\022+\n\013obj_message\030\001 \003(\0132\026.protobuf."
-    "MessageOfObj\022\'\n\ngame_state\030\002 \001(\0162\023.proto"
-    "buf.GameState\022+\n\013all_message\030\003 \001(\0132\026.pro"
-    "tobuf.MessageOfAll\"J\n\007MoveRes\022\024\n\014actual_"
-    "speed\030\001 \001(\003\022\024\n\014actual_angle\030\002 \001(\001\022\023\n\013act"
-    "_success\030\003 \001(\010\"\036\n\007BoolRes\022\023\n\013act_success"
-    "\030\001 \001(\010b\006proto3";
+    "MessageOfMapH\000B\020\n\016message_of_obj\"\234\001\n\014Mes"
+    "sageOfAll\022\021\n\tgame_time\030\001 \001(\005\022\030\n\020subject_"
+    "finished\030\002 \001(\005\022\031\n\021student_graduated\030\003 \001("
+    "\005\022\026\n\016student_quited\030\004 \001(\005\022\025\n\rstudent_sco"
+    "re\030\005 \001(\005\022\025\n\rtricker_score\030\006 \001(\005\"\224\001\n\017Mess"
+    "ageToClient\022+\n\013obj_message\030\001 \003(\0132\026.proto"
+    "buf.MessageOfObj\022\'\n\ngame_state\030\002 \001(\0162\023.p"
+    "rotobuf.GameState\022+\n\013all_message\030\003 \001(\0132\026"
+    ".protobuf.MessageOfAll\"J\n\007MoveRes\022\024\n\014act"
+    "ual_speed\030\001 \001(\003\022\024\n\014actual_angle\030\002 \001(\001\022\023\n"
+    "\013act_success\030\003 \001(\010\"\036\n\007BoolRes\022\023\n\013act_suc"
+    "cess\030\001 \001(\010b\006proto3";
 static const ::_pbi::DescriptorTable* const descriptor_table_Message2Clients_2eproto_deps[1] = {
     &::descriptor_table_MessageType_2eproto,
 };
@@ -817,7 +812,7 @@ static ::_pbi::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Message2Clients_2eproto = {
     false,
     false,
-    3454,
+    3378,
     descriptor_table_protodef_Message2Clients_2eproto,
     "Message2Clients.proto",
     &descriptor_table_Message2Clients_2eproto_once,
@@ -7327,10 +7322,10 @@ namespace protobuf
         MessageOfAll* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.game_time_){}, decltype(_impl_.subject_left_){}, decltype(_impl_.student_graduated_){}, decltype(_impl_.student_quited_){}, decltype(_impl_.student_score_){}, decltype(_impl_.tricker_score_){}, decltype(_impl_.gate_opened_){}, decltype(_impl_.hidden_gate_refreshed_){}, decltype(_impl_.hidden_gate_opened_){}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.game_time_){}, decltype(_impl_.subject_finished_){}, decltype(_impl_.student_graduated_){}, decltype(_impl_.student_quited_){}, decltype(_impl_.student_score_){}, decltype(_impl_.tricker_score_){}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-        ::memcpy(&_impl_.game_time_, &from._impl_.game_time_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.hidden_gate_opened_) - reinterpret_cast<char*>(&_impl_.game_time_)) + sizeof(_impl_.hidden_gate_opened_));
+        ::memcpy(&_impl_.game_time_, &from._impl_.game_time_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.tricker_score_) - reinterpret_cast<char*>(&_impl_.game_time_)) + sizeof(_impl_.tricker_score_));
         // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfAll)
     }
 
@@ -7341,7 +7336,7 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.game_time_){0}, decltype(_impl_.subject_left_){0}, decltype(_impl_.student_graduated_){0}, decltype(_impl_.student_quited_){0}, decltype(_impl_.student_score_){0}, decltype(_impl_.tricker_score_){0}, decltype(_impl_.gate_opened_){false}, decltype(_impl_.hidden_gate_refreshed_){false}, decltype(_impl_.hidden_gate_opened_){false}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.game_time_){0}, decltype(_impl_.subject_finished_){0}, decltype(_impl_.student_graduated_){0}, decltype(_impl_.student_quited_){0}, decltype(_impl_.student_score_){0}, decltype(_impl_.tricker_score_){0}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
     MessageOfAll::~MessageOfAll()
@@ -7372,7 +7367,7 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        ::memset(&_impl_.game_time_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.hidden_gate_opened_) - reinterpret_cast<char*>(&_impl_.game_time_)) + sizeof(_impl_.hidden_gate_opened_));
+        ::memset(&_impl_.game_time_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.tricker_score_) - reinterpret_cast<char*>(&_impl_.game_time_)) + sizeof(_impl_.tricker_score_));
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -7397,11 +7392,11 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // int32 subject_left = 2;
+                // int32 subject_finished = 2;
                 case 2:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16))
                     {
-                        _impl_.subject_left_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        _impl_.subject_finished_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
                         CHK_(ptr);
                     }
                     else
@@ -7442,36 +7437,6 @@ namespace protobuf
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48))
                     {
                         _impl_.tricker_score_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-                        CHK_(ptr);
-                    }
-                    else
-                        goto handle_unusual;
-                    continue;
-                // bool gate_opened = 7;
-                case 7:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56))
-                    {
-                        _impl_.gate_opened_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-                        CHK_(ptr);
-                    }
-                    else
-                        goto handle_unusual;
-                    continue;
-                // bool hidden_gate_refreshed = 8;
-                case 8:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64))
-                    {
-                        _impl_.hidden_gate_refreshed_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-                        CHK_(ptr);
-                    }
-                    else
-                        goto handle_unusual;
-                    continue;
-                // bool hidden_gate_opened = 9;
-                case 9:
-                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 72))
-                    {
-                        _impl_.hidden_gate_opened_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
                         CHK_(ptr);
                     }
                     else
@@ -7518,11 +7483,11 @@ namespace protobuf
             target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_game_time(), target);
         }
 
-        // int32 subject_left = 2;
-        if (this->_internal_subject_left() != 0)
+        // int32 subject_finished = 2;
+        if (this->_internal_subject_finished() != 0)
         {
             target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_subject_left(), target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_subject_finished(), target);
         }
 
         // int32 student_graduated = 3;
@@ -7553,27 +7518,6 @@ namespace protobuf
             target = ::_pbi::WireFormatLite::WriteInt32ToArray(6, this->_internal_tricker_score(), target);
         }
 
-        // bool gate_opened = 7;
-        if (this->_internal_gate_opened() != 0)
-        {
-            target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteBoolToArray(7, this->_internal_gate_opened(), target);
-        }
-
-        // bool hidden_gate_refreshed = 8;
-        if (this->_internal_hidden_gate_refreshed() != 0)
-        {
-            target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteBoolToArray(8, this->_internal_hidden_gate_refreshed(), target);
-        }
-
-        // bool hidden_gate_opened = 9;
-        if (this->_internal_hidden_gate_opened() != 0)
-        {
-            target = stream->EnsureSpace(target);
-            target = ::_pbi::WireFormatLite::WriteBoolToArray(9, this->_internal_hidden_gate_opened(), target);
-        }
-
         if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
         {
             target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -7599,10 +7543,10 @@ namespace protobuf
             total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_game_time());
         }
 
-        // int32 subject_left = 2;
-        if (this->_internal_subject_left() != 0)
+        // int32 subject_finished = 2;
+        if (this->_internal_subject_finished() != 0)
         {
-            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_subject_left());
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_subject_finished());
         }
 
         // int32 student_graduated = 3;
@@ -7629,24 +7573,6 @@ namespace protobuf
             total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_tricker_score());
         }
 
-        // bool gate_opened = 7;
-        if (this->_internal_gate_opened() != 0)
-        {
-            total_size += 1 + 1;
-        }
-
-        // bool hidden_gate_refreshed = 8;
-        if (this->_internal_hidden_gate_refreshed() != 0)
-        {
-            total_size += 1 + 1;
-        }
-
-        // bool hidden_gate_opened = 9;
-        if (this->_internal_hidden_gate_opened() != 0)
-        {
-            total_size += 1 + 1;
-        }
-
         return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
     }
 
@@ -7671,9 +7597,9 @@ namespace protobuf
         {
             _this->_internal_set_game_time(from._internal_game_time());
         }
-        if (from._internal_subject_left() != 0)
+        if (from._internal_subject_finished() != 0)
         {
-            _this->_internal_set_subject_left(from._internal_subject_left());
+            _this->_internal_set_subject_finished(from._internal_subject_finished());
         }
         if (from._internal_student_graduated() != 0)
         {
@@ -7690,18 +7616,6 @@ namespace protobuf
         if (from._internal_tricker_score() != 0)
         {
             _this->_internal_set_tricker_score(from._internal_tricker_score());
-        }
-        if (from._internal_gate_opened() != 0)
-        {
-            _this->_internal_set_gate_opened(from._internal_gate_opened());
-        }
-        if (from._internal_hidden_gate_refreshed() != 0)
-        {
-            _this->_internal_set_hidden_gate_refreshed(from._internal_hidden_gate_refreshed());
-        }
-        if (from._internal_hidden_gate_opened() != 0)
-        {
-            _this->_internal_set_hidden_gate_opened(from._internal_hidden_gate_opened());
         }
         _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
@@ -7725,7 +7639,7 @@ namespace protobuf
         using std::swap;
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-            PROTOBUF_FIELD_OFFSET(MessageOfAll, _impl_.hidden_gate_opened_) + sizeof(MessageOfAll::_impl_.hidden_gate_opened_) - PROTOBUF_FIELD_OFFSET(MessageOfAll, _impl_.game_time_)>(
+            PROTOBUF_FIELD_OFFSET(MessageOfAll, _impl_.tricker_score_) + sizeof(MessageOfAll::_impl_.tricker_score_) - PROTOBUF_FIELD_OFFSET(MessageOfAll, _impl_.game_time_)>(
             reinterpret_cast<char*>(&_impl_.game_time_),
             reinterpret_cast<char*>(&other->_impl_.game_time_)
         );

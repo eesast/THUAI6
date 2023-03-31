@@ -95,6 +95,34 @@ namespace Gaming
                                                       { player.BulletOfPlayer = player.OriBulletOfPlayer; });
             }
 
+            public bool Howl(Character player)
+            {
+                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Howl), player, () =>
+                {
+                    gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+                    try
+                    {
+                        foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                        {
+                            if (!player.IsGhost() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
+                            {
+                                if (AttackManager.BeStunned(character, GameData.TimeOfStudentFaintingWhenHowl))
+                                    player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStudentFaintingWhenHowl));
+                                break;
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                    }
+                    AttackManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl, true);
+                    Debugger.Output(player, "howled!");
+                },
+                                                      () =>
+                                                      { });
+            }
+
             public bool Punish(Character player)
             {
                 return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Punish), player, () =>

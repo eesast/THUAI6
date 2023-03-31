@@ -75,6 +75,9 @@ namespace GameClass.GameObj
                 case CharacterType.StraightAStudent:
                     this.occupation = new StraightAStudent();
                     break;
+                case CharacterType.ANoisyPerson:
+                    this.occupation = new ANoisyPerson();
+                    break;
                 case CharacterType.Athlete:
                 default:
                     this.occupation = new Athlete();

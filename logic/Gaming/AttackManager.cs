@@ -89,6 +89,27 @@ namespace Gaming
                 { IsBackground = true }.Start();
                 return true;
             }
+            public static bool BackSwing(Character? player, int time, bool special)
+            {
+                if (player == null && time <= 0) return false;
+                if (!special && player.PlayerState != PlayerStateType.TryingToAttack) return false;
+                if (special && (player.PlayerState == PlayerStateType.Swinging || (!player.Commandable() && player.PlayerState != PlayerStateType.TryingToAttack))) return false;
+                player.PlayerState = PlayerStateType.Swinging;
+
+                new Thread
+                        (() =>
+                        {
+                            Thread.Sleep(time);
+
+                            if (player.PlayerState == PlayerStateType.Swinging)
+                            {
+                                player.PlayerState = PlayerStateType.Null;
+                            }
+                        }
+                        )
+                { IsBackground = true }.Start();
+                return true;
+            }
 
             private void Die(Character player)
             {
@@ -149,7 +170,7 @@ namespace Gaming
                             if (whoBeAttacked.CanBeAwed())
                             {
                                 if (BeStunned(whoBeAttacked, GameData.basicStunnedTimeOfStudent))
-                                    bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned);
+                                    bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.basicStunnedTimeOfStudent));
                             }
                         }
                         //       if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)
@@ -181,46 +202,14 @@ namespace Gaming
                 {
                     if (objBeingShot == null)
                     {
-                        if (bullet.Backswing > 0)
-                        {
-                            bullet.Parent.PlayerState = PlayerStateType.Swinging;
-
-                            new Thread
-                                    (() =>
-                                    {
-                                        Thread.Sleep(bullet.Backswing);
-
-                                        if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
-                                        {
-                                            bullet.Parent.PlayerState = PlayerStateType.Null;
-                                        }
-                                    }
-                                    )
-                            { IsBackground = true }.Start();
-                        }
+                        BackSwing((Character?)bullet.Parent, bullet.Backswing, false);
                         return;
                     }
 
                     Debugger.Output(bullet, bullet.TypeOfBullet.ToString());
 
                     BombObj(bullet, objBeingShot);
-                    if (bullet.RecoveryFromHit > 0)
-                    {
-                        bullet.Parent.PlayerState = PlayerStateType.Swinging;
-
-                        new Thread
-                                (() =>
-                                {
-                                    Thread.Sleep(bullet.RecoveryFromHit);
-
-                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
-                                    {
-                                        bullet.Parent.PlayerState = PlayerStateType.Null;
-                                    }
-                                }
-                                )
-                        { IsBackground = true }.Start();
-                    }
+                    BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit, false);
                     return;
                 }
 

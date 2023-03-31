@@ -22,6 +22,9 @@ namespace Gaming
                         case ActiveSkillType.UseKnife:
                             UseKnife(character);
                             break;
+                        case ActiveSkillType.Howl:
+                            Howl(character);
+                            break;
                         case ActiveSkillType.CanBeginToCharge:
                             CanBeginToCharge(character);
                             break;

@@ -24,7 +24,7 @@ namespace Gaming
                     if (((Bullet)collisionObj).Parent != player && ((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
                     {
                         if (AttackManager.BeStunned((Character)player, ((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting))
-                            player.AddScore(GameData.StudentScoreTrickerBeStunned(((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting));
+                            player.AddScore(GameData.TrickerScoreStudentBeStunned(((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting));
                         gameMap.Remove((GameObj)collisionObj);
                     }
                 }

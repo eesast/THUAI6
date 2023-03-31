@@ -62,6 +62,21 @@ namespace GameClass.GameObj
         }
     }
 
+    public class Howl : IActiveSkill
+    {
+        public int SkillCD => GameData.commonSkillCD * 3 / 4;
+        public int DurationTime => 0;
+
+        private readonly object commonSkillLock = new object();
+        public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
+    }
+
     public class JumpyBomb : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD / 30 * 5;
@@ -155,6 +170,8 @@ namespace GameClass.GameObj
                     return new BecomeInvisible();
                 case ActiveSkillType.UseKnife:
                     return new UseKnife();
+                case ActiveSkillType.Howl:
+                    return new Howl();
                 case ActiveSkillType.CanBeginToCharge:
                     return new CanBeginToCharge();
                 case ActiveSkillType.Punish:
@@ -174,6 +191,8 @@ namespace GameClass.GameObj
             {
                 case BecomeInvisible:
                     return ActiveSkillType.BecomeInvisible;
+                case Howl:
+                    return ActiveSkillType.Howl;
                 case UseKnife:
                     return ActiveSkillType.UseKnife;
                 case CanBeginToCharge:

@@ -79,7 +79,8 @@ namespace Preparation.Utility
         Klee = 3,
         SpeedUpWhenLeavingGrass = 4,
         Teacher = 5,
-        StraightAStudent = 6
+        StraightAStudent = 6,
+        ANoisyPerson = 7,
     }
     public enum ActiveSkillType  // 主动技能
     {
@@ -92,6 +93,7 @@ namespace Preparation.Utility
         CanBeginToCharge = 6,
         Punish = 7,
         WriteAnswers = 8,
+        Howl = 9,
     }
     public enum PassiveSkillType
     {
@@ -101,7 +103,6 @@ namespace Preparation.Utility
         NuclearWeapon = 3,
         SuperFast = 4,
         Meditate = 5,
-        ASkill5 = 6
     }
     public enum BuffType  // buff
     {

@@ -163,6 +163,10 @@ namespace Server
                     return Protobuf.BulletType.FlyingKnife;
                 case Preparation.Utility.BulletType.CommonAttackOfGhost:
                     return Protobuf.BulletType.CommonAttackOfTricker;
+                case Preparation.Utility.BulletType.BombBomb:
+                    return Protobuf.BulletType.FastBullet;
+                case Preparation.Utility.BulletType.JumpyDumpty:
+                    return Protobuf.BulletType.OrdinaryBullet;
                 default:
                     return Protobuf.BulletType.NullBulletType;
             }
@@ -205,6 +209,8 @@ namespace Server
                     return Protobuf.TrickerType.Assassin;
                 case Preparation.Utility.CharacterType.Klee:
                     return Protobuf.TrickerType._2;
+                case CharacterType.ANoisyPerson:
+                    return Protobuf.TrickerType._3;
                 default:
                     return Protobuf.TrickerType.NullTrickerType;
             }
@@ -218,6 +224,8 @@ namespace Server
                     return Preparation.Utility.CharacterType.Assassin;
                 case Protobuf.TrickerType._2:
                     return Preparation.Utility.CharacterType.Klee;
+                case Protobuf.TrickerType._3:
+                    return CharacterType.ANoisyPerson;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }

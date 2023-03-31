@@ -93,52 +93,79 @@ namespace Gaming
                     while (!gameMap.Timer.IsGaming)
                         Thread.Sleep(GameData.checkInterval);
                     int TimePinningDown = 0, ScoreAdded = 0;
-                    new FrameRateTaskExecutor<int>(
-                        loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
-                        loopToDo: () =>
-                            {
-                                gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                                try
-                                {
-                                    if (newPlayer.IsGhost())
-                                    {
-                                        double bgmVolume = 0;
-                                        foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
-                                        {
-                                            if (!person.IsGhost() && XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                            {
-                                                if ((double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position) > bgmVolume)
-                                                    bgmVolume = newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position);
-                                            }
-                                        }
-                                        if (bgmVolume > 0)
-                                            newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
-                                    }
-                                    else
-                                    {
-                                        foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
-                                        {
-                                            if (person.IsGhost())
-                                            {
-                                                if (XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                                    newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
-                                                if (XY.Distance(newPlayer.Position, person.Position) <= GameData.basicViewRange)
-                                                {
-                                                    TimePinningDown += GameData.checkInterval;
-                                                    newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
-                                                    ScoreAdded = GameData.StudentScorePinDown(TimePinningDown);
-                                                }
-                                                else TimePinningDown = ScoreAdded = 0;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                                finally
-                                {
-                                    gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
-                                }
 
+                    bool noise = false;
+                    if (!newPlayer.IsGhost())
+                    {
+                        gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+                        try
+                        {
+                            foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
+                            {
+                                if (person.IsGhost())
+                                {
+                                    if (person.CharacterType == CharacterType.ANoisyPerson)
+                                    {
+                                        noise = true;
+                                        newPlayer.AddBgm(BgmType.GhostIsComing, 1411180);
+                                        newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, 154991);
+                                    }
+                                }
+                            }
+                        }
+                        finally
+                        {
+                            gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                        }
+                    }
+                    new FrameRateTaskExecutor<int>(
+                    loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
+                    loopToDo: () =>
+                        {
+                            gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+                            try
+                            {
+                                if (newPlayer.IsGhost())
+                                {
+                                    double bgmVolume = 0;
+                                    foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
+                                    {
+                                        if (!person.IsGhost() && XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
+                                        {
+                                            if ((double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position) > bgmVolume)
+                                                bgmVolume = newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position);
+                                        }
+                                    }
+                                    if (bgmVolume > 0)
+                                        newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
+                                }
+                                else
+                                {
+                                    foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
+                                    {
+                                        if (person.IsGhost())
+                                        {
+                                            if (!noise && XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
+                                                newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
+                                            if (XY.Distance(newPlayer.Position, person.Position) <= GameData.basicViewRange)
+                                            {
+                                                TimePinningDown += GameData.checkInterval;
+                                                newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
+                                                ScoreAdded = GameData.StudentScorePinDown(TimePinningDown);
+                                            }
+                                            else TimePinningDown = ScoreAdded = 0;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            finally
+                            {
+                                gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                            }
+
+                            if (!noise)
+                            {
                                 gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
                                 try
                                 {
@@ -152,18 +179,17 @@ namespace Gaming
                                         }
                                     }
                                     if (bgmVolume > 0)
-                                        newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
+                                        newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, bgmVolume);
                                 }
-
-
                                 finally
                                 {
                                     gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
                                 }
-                            },
-                        timeInterval: GameData.checkInterval,
-                        finallyReturn: () => 0
-                    )
+                            }
+                        },
+                    timeInterval: GameData.checkInterval,
+                    finallyReturn: () => 0
+                )
                     {
                         AllowTimeExceed = true/*,
                         MaxTolerantTimeExceedCount = 5,
@@ -172,7 +198,7 @@ namespace Gaming
                             if (exceedTooMuch) Console.WriteLine("The computer runs too slow that it cannot check the color below the player in time!");
                         }*/
                     }
-                        .Start();
+                    .Start();
                 }
             )
             { IsBackground = true }.Start();
@@ -421,7 +447,7 @@ namespace Gaming
             }
         }
 
-        public void ClearLists(GameObjType[] objIdxes)
+        /*public void ClearLists(GameObjType[] objIdxes)
         {
             foreach (var idx in objIdxes)
             {
@@ -438,12 +464,12 @@ namespace Gaming
                     }
                 }
             }
-        }
+        }*/
         public void ClearAllLists()
         {
             foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                if (!GameData.IsMap(keyValuePair.Key))
+                if (!GameData.NeedCopy(keyValuePair.Key))
                 {
                     gameMap.GameObjLockDict[keyValuePair.Key].EnterWriteLock();
                     try

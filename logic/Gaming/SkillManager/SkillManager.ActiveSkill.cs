@@ -104,7 +104,7 @@ namespace Gaming
                     {
                         foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            if (!player.IsGhost() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
+                            if (!character.IsGhost() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
                             {
                                 if (AttackManager.BeStunned(character, GameData.TimeOfStudentFaintingWhenHowl))
                                     player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStudentFaintingWhenHowl));
@@ -116,7 +116,7 @@ namespace Gaming
                     {
                         gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
-                    AttackManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl, true);
+                    AttackManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl);
                     Debugger.Output(player, "howled!");
                 },
                                                       () =>
@@ -132,9 +132,9 @@ namespace Gaming
                     {
                         foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            if (player.IsGhost() &&
-                                (player.PlayerState == PlayerStateType.TryingToAttack || player.PlayerState == PlayerStateType.Swinging
-                                || player.PlayerState == PlayerStateType.UsingSkill || player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || player.PlayerState == PlayerStateType.OpeningTheChest)
+                            if (character.IsGhost() &&
+                                (character.PlayerState == PlayerStateType.TryingToAttack || character.PlayerState == PlayerStateType.Swinging
+                                || character.PlayerState == PlayerStateType.UsingSkill || character.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || character.PlayerState == PlayerStateType.OpeningTheChest)
                                 && gameMap.CanSee(player, character))
                             {
                                 if (AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.timeFactorOfGhostFainting))

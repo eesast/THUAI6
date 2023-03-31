@@ -7,8 +7,8 @@ enum BulletType
     NULL_BULLET_TYPE = 0;
     FLYING_KNIFE = 1;
     COMMON_ATTACK_OF_TRICKER = 2;
-    FAST_BULLET = 3;
-    ORDINARY_BULLET = 4;
+    FAST_BULLET = 3;//BombBomb
+    ORDINARY_BULLET = 4;// JumpyDumpty
     ATOM_BOMB = 5;
 }
 
@@ -117,7 +117,7 @@ enum TrickerType
     NULL_TRICKER_TYPE = 0;
     ASSASSIN = 1;
     TRICKERTYPE2 = 2;//KLEE
-    TRICKERTYPE3 = 3;
+    TRICKERTYPE3 = 3;// ANoisyPerson
     TRICKERTYPE4 = 4;
 }
 

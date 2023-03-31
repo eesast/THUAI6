@@ -89,11 +89,10 @@ namespace Gaming
                 { IsBackground = true }.Start();
                 return true;
             }
-            public static bool BackSwing(Character? player, int time, bool special)
+            public static bool BackSwing(Character? player, int time)
             {
                 if (player == null && time <= 0) return false;
-                if (!special && player.PlayerState != PlayerStateType.TryingToAttack) return false;
-                if (special && (player.PlayerState == PlayerStateType.Swinging || (!player.Commandable() && player.PlayerState != PlayerStateType.TryingToAttack))) return false;
+                if (player.PlayerState == PlayerStateType.Swinging || (!player.Commandable() && player.PlayerState != PlayerStateType.TryingToAttack)) return false;
                 player.PlayerState = PlayerStateType.Swinging;
 
                 new Thread
@@ -202,14 +201,14 @@ namespace Gaming
                 {
                     if (objBeingShot == null)
                     {
-                        BackSwing((Character?)bullet.Parent, bullet.Backswing, false);
+                        BackSwing((Character?)bullet.Parent, bullet.Backswing);
                         return;
                     }
 
                     Debugger.Output(bullet, bullet.TypeOfBullet.ToString());
 
                     BombObj(bullet, objBeingShot);
-                    BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit, false);
+                    BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
                     return;
                 }
 

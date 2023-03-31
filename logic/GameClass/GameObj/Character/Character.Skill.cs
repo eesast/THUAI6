@@ -19,7 +19,7 @@ namespace GameClass.GameObj
         private Dictionary<ActiveSkillType, IActiveSkill> iActiveSkillDictionary = new();
         public Dictionary<ActiveSkillType, IActiveSkill> IActiveSkillDictionary => iActiveSkillDictionary;
 
-        public IActiveSkill UseIActiveSkill(ActiveSkillType activeSkillType)
+        public IActiveSkill FindIActiveSkill(ActiveSkillType activeSkillType)
         {
             if (Occupation.ListOfIActiveSkill.Contains(activeSkillType))
             {
@@ -71,6 +71,12 @@ namespace GameClass.GameObj
                     break;
                 case CharacterType.Klee:
                     this.occupation = new Klee();
+                    break;
+                case CharacterType.StraightAStudent:
+                    this.occupation = new StraightAStudent();
+                    break;
+                case CharacterType.ANoisyPerson:
+                    this.occupation = new ANoisyPerson();
                     break;
                 case CharacterType.Athlete:
                 default:

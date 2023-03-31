@@ -56,6 +56,8 @@ namespace Server
                     return Protobuf.PropType.AddHpOrAp;
                 case Preparation.Utility.PropType.ShieldOrSpear:
                     return Protobuf.PropType.ShieldOrSpear;
+                case Preparation.Utility.PropType.RecoveryFromDizziness:
+                    return Protobuf.PropType.RecoveryFromDizziness;
                 case Preparation.Utility.PropType.Key3:
                     return Protobuf.PropType.Key3;
                 case Preparation.Utility.PropType.Key5:
@@ -79,6 +81,8 @@ namespace Server
                     return Preparation.Utility.PropType.AddHpOrAp;
                 case Protobuf.PropType.ShieldOrSpear:
                     return Preparation.Utility.PropType.ShieldOrSpear;
+                case Protobuf.PropType.RecoveryFromDizziness:
+                    return Preparation.Utility.PropType.RecoveryFromDizziness;
                 case Protobuf.PropType.Key3:
                     return Preparation.Utility.PropType.Key3;
                 case Protobuf.PropType.Key5:
@@ -159,6 +163,10 @@ namespace Server
                     return Protobuf.BulletType.FlyingKnife;
                 case Preparation.Utility.BulletType.CommonAttackOfGhost:
                     return Protobuf.BulletType.CommonAttackOfTricker;
+                case Preparation.Utility.BulletType.BombBomb:
+                    return Protobuf.BulletType.FastBullet;
+                case Preparation.Utility.BulletType.JumpyDumpty:
+                    return Protobuf.BulletType.OrdinaryBullet;
                 default:
                     return Protobuf.BulletType.NullBulletType;
             }
@@ -172,6 +180,8 @@ namespace Server
                     return Protobuf.StudentType.Athlete;
                 case Preparation.Utility.CharacterType.Teacher:
                     return StudentType._2;
+                case CharacterType.StraightAStudent:
+                    return StudentType._3;
                 default:
                     return Protobuf.StudentType.NullStudentType;
             }
@@ -185,6 +195,8 @@ namespace Server
                     return Preparation.Utility.CharacterType.Athlete;
                 case StudentType._2:
                     return Preparation.Utility.CharacterType.Teacher;
+                case StudentType._3:
+                    return CharacterType.StraightAStudent;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }
@@ -197,6 +209,8 @@ namespace Server
                     return Protobuf.TrickerType.Assassin;
                 case Preparation.Utility.CharacterType.Klee:
                     return Protobuf.TrickerType._2;
+                case CharacterType.ANoisyPerson:
+                    return Protobuf.TrickerType._3;
                 default:
                     return Protobuf.TrickerType.NullTrickerType;
             }
@@ -210,6 +224,8 @@ namespace Server
                     return Preparation.Utility.CharacterType.Assassin;
                 case Protobuf.TrickerType._2:
                     return Preparation.Utility.CharacterType.Klee;
+                case Protobuf.TrickerType._3:
+                    return CharacterType.ANoisyPerson;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }

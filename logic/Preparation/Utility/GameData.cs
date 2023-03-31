@@ -115,6 +115,7 @@ namespace Preparation.Utility
             {
                 CharacterType.Assassin => true,
                 CharacterType.Klee => true,
+                CharacterType.ANoisyPerson => true,
                 _ => false,
             };
         }
@@ -125,8 +126,11 @@ namespace Preparation.Utility
             return damage * 100 / basicApOfGhost;
         }
         public const int TrickerScoreStudentBeAddicted = 50;
-        public const int TrickerScoreStudentBeStunned = 25;
         public const int TrickerScoreStudentDie = 1000;
+        public static int TrickerScoreStudentBeStunned(int time)
+        {
+            return time;
+        }
 
         public static int StudentScoreFix(int degreeOfFix)
         {
@@ -147,16 +151,15 @@ namespace Preparation.Utility
             return degree;
         }
         public const int StudentScoreEscape = 1000;
+
         public const int ScorePropRemainHp = 20;
         public const int ScorePropUseShield = 20;
         public const int ScorePropUseSpear = 20;
         public const int ScorePropAddAp = 10;
-        public const int ScorePropAddHp = 50;
-
-        public static int ScoreUseSkill(ActiveSkillType activeSkillType)
-        {
-            return 0;
-        }
+        public const int ScorePropAddSpeed = 10;
+        public const int ScorePropClairaudience = 10;
+        public const int ScorePropAddHp = 20;
+        public const int ScorePropRecoverFromDizziness = 20;
         #endregion
         #region 攻击与子弹相关
         public const int basicApOfGhost = 1500000;                             // 捣蛋鬼攻击力
@@ -193,6 +196,12 @@ namespace Preparation.Utility
         /// </summary>
         public const int TimeOfGhostFaintingWhenPunish = 3070;
         public const int timeFactorOfGhostFainting = 250;
+
+        /// <summary>
+        /// Howl
+        /// </summary>
+        public const int TimeOfGhostSwingingAfterHowl = 3070;
+        public const int TimeOfStudentFaintingWhenHowl = 6110;
         #endregion
         #region 道具相关
         public const int PropRadius = numOfPosGridPerCell / 2;

@@ -13,7 +13,7 @@ namespace Gaming
         {
             public bool BecomeVampire(Character player)
             {
-                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.BecomeVampire), player, () =>
+                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.BecomeVampire), player, () =>
                 {
                     player.Vampire += 0.5;
                     Debugger.Output(player, "becomes vampire!");
@@ -29,7 +29,7 @@ namespace Gaming
             {
 
                 if ((!player.Commandable())) return false;
-                IActiveSkill skill = player.UseIActiveSkill(ActiveSkillType.CanBeginToCharge);
+                IActiveSkill skill = player.FindIActiveSkill(ActiveSkillType.CanBeginToCharge);
                 Debugger.Output(player, "can begin to charge!");
 
 
@@ -45,7 +45,7 @@ namespace Gaming
 
             public static bool BecomeInvisible(Character player)
             {
-                IActiveSkill activeSkill = player.UseIActiveSkill(ActiveSkillType.BecomeInvisible);
+                IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.BecomeInvisible);
                 return ActiveSkillEffect(activeSkill, player, () =>
                 {
                     player.AddInvisible(activeSkill.DurationTime);
@@ -57,7 +57,7 @@ namespace Gaming
 
             public bool JumpyBomb(Character player)
             {
-                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.JumpyBomb), player, () =>
+                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.JumpyBomb), player, () =>
                 {
                     player.BulletOfPlayer = BulletType.BombBomb;
                     Debugger.Output(player, "uses jumpybomb!");
@@ -66,10 +66,27 @@ namespace Gaming
                                                       { player.BulletOfPlayer = player.OriBulletOfPlayer; });
             }
 
+            public bool WriteAnswers(Character player)
+            {
+                IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.WriteAnswers);
+                return ActiveSkillEffect(activeSkill, player, () =>
+                {
+                    Generator? generator = (Generator?)gameMap.OneForInteract(player.Position, GameObjType.Generator);
+                    if (generator != null)
+                    {
+                        generator.Repair(((WriteAnswers)activeSkill).DegreeOfMeditation);
+                        Debugger.Output(player, "uses WriteAnswers in" + generator.ToString() + "with " + (((WriteAnswers)activeSkill).DegreeOfMeditation).ToString());
+                        ((WriteAnswers)activeSkill).DegreeOfMeditation = 0;
+                    }
+                },
+                                                      () =>
+                                                      { });
+            }
+
 
             public static bool UseKnife(Character player)
             {
-                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.UseKnife), player, () =>
+                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.UseKnife), player, () =>
                 {
                     player.BulletOfPlayer = BulletType.FlyingKnife;
                     Debugger.Output(player, "uses flyingknife!");
@@ -78,18 +95,46 @@ namespace Gaming
                                                       { player.BulletOfPlayer = player.OriBulletOfPlayer; });
             }
 
-            public bool Punish(Character player)
+            public bool Howl(Character player)
             {
-                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.Punish), player, () =>
+                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Howl), player, () =>
                 {
                     gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
                     try
                     {
                         foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            if (player.IsGhost() &&
-                                (player.PlayerState == PlayerStateType.TryingToAttack || player.PlayerState == PlayerStateType.Swinging
-                                || player.PlayerState == PlayerStateType.UsingSkill || player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || player.PlayerState == PlayerStateType.OpeningTheChest)
+                            if (!character.IsGhost() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
+                            {
+                                if (AttackManager.BeStunned(character, GameData.TimeOfStudentFaintingWhenHowl))
+                                    player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStudentFaintingWhenHowl));
+                                break;
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                    }
+                    AttackManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl);
+                    Debugger.Output(player, "howled!");
+                },
+                                                      () =>
+                                                      { });
+            }
+
+            public bool Punish(Character player)
+            {
+                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Punish), player, () =>
+                {
+                    gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+                    try
+                    {
+                        foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                        {
+                            if (character.IsGhost() &&
+                                (character.PlayerState == PlayerStateType.TryingToAttack || character.PlayerState == PlayerStateType.Swinging
+                                || character.PlayerState == PlayerStateType.UsingSkill || character.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || character.PlayerState == PlayerStateType.OpeningTheChest)
                                 && gameMap.CanSee(player, character))
                             {
                                 if (AttackManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.timeFactorOfGhostFainting))
@@ -110,9 +155,9 @@ namespace Gaming
 
             public bool SuperFast(Character player)
             {
-                return ActiveSkillEffect(player.UseIActiveSkill(ActiveSkillType.SuperFast), player, () =>
+                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.SuperFast), player, () =>
                 {
-                    player.AddMoveSpeed(player.UseIActiveSkill(ActiveSkillType.SuperFast).DurationTime, 3.0);
+                    player.AddMoveSpeed(player.FindIActiveSkill(ActiveSkillType.SuperFast).DurationTime, 3.0);
                     Debugger.Output(player, "moves very fast!");
                 },
                                                       () =>

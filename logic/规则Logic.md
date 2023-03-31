@@ -346,13 +346,14 @@
 
 |   道具       |           对学生增益            |       [学生得分条件]               |                对搞蛋鬼增益        |       [搞蛋鬼得分条件]               |
 | :-------- | :-------------------------------------- | :-----------------| :-------------------------------------- |:-----------------|
-|   AddSpeed   |  提高移动速度，持续10s                            |不得分|  提高移动速度，持续10s                            |不得分|
-|   AddLifeOrClairaudience   |若在10s内Hp归零，该增益消失以使Hp保留100|在10s内Hp归零，得分？      |10秒内下一次攻击增伤1800000|10秒内有一次攻击，得分？ |     
-|   AddHpOrAp   |回血1500000   | 回血成功 |   10秒内下一次攻击增伤1800000|10秒内有一次攻击，得分？ |
-|   ShieldOrSpear   | 10秒内能抵挡一次伤害  |   10秒内成功抵挡一次伤害       |10秒内下一次攻击能破盾，如果对方无盾，则增伤900000|   10秒内攻击中学生| 
 |   Key3   |                            能开启3教的门                            |不得分|      能开启3教的门                            |不得分| 
 |   Key5   |                             能开启5教的门                           |不得分|      能开启3教的门                            |不得分| 
 |   Key6   |                             能开启6教的门                            |不得分|      能开启3教的门                            |不得分| 
+|   AddSpeed   |  提高移动速度，持续10s                            |得分？|  提高移动速度，持续10s                            |得分？|
+|   AddLifeOrClairaudience   |若在10s内Hp归零，该增益消失以使Hp保留100|在10s内Hp归零，得分？      |10秒内下一次攻击增伤1800000|10秒内有一次攻击，得分？ |     
+|   AddHpOrAp   |回血1500000   | 回血成功 |   10秒内下一次攻击增伤1800000|10秒内有一次攻击，得分？ |
+|   ShieldOrSpear   | 10秒内能抵挡一次伤害  |   10秒内成功抵挡一次伤害       |10秒内下一次攻击能破盾，如果对方无盾，则增伤900000|   10秒内攻击中学生| 
+|   RecoveryFromDizziness   | 使用瞬间从眩晕状态中恢复  |    成功从眩晕状态中恢复，得分？|使用瞬间从眩晕状态中恢复  |    成功从眩晕状态中恢复，得分？| 
 
 ## 职业与技能
 
@@ -435,6 +436,97 @@
         {
             if (gameObjType == GameObjType.Character) return true;
             return false;
+        }
+    }
+    ~~~
+
+#### Klee
+  - 普通攻击为 CommonAttackOfGhost
+  ~~~csharp
+      int moveSpeed = (int)(GameData.basicMoveSpeed * 155 / 127);
+      int maxHp = GameData.basicHp;
+      int maxBulletNum = 1;
+      BulletType InitBullet => BulletType.CommonAttackOfGhost;
+      List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.JumpyBomb });
+      List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+      double concealment = GameData.basicConcealment;
+      int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.069);
+      int viewRange = (int)(GameData.basicViewRange * 1.1);
+      int timeOfOpeningOrLocking = (int)(GameData.basicSpeedOfOpeningOrLocking / 1.1);
+      int speedOfClimbingThroughWindows = (int)(GameData.basicGhostSpeedOfClimbingThroughWindows / 1.1);
+      int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest * 1.1);
+  ~~~
+  - 主动技能
+    - 蹦蹦炸弹
+      ~~~csharp
+        public int SkillCD => GameData.commonSkillCD / 30 * 5;
+        public int DurationTime => GameData.commonSkillTime / 2;
+      ~~~
+    - 在DurationTime内，攻击类型变为蹦蹦炸弹
+      ~~~csharp
+        internal sealed class BombBomb : Bullet
+        {
+        public override double BulletBombRange => GameData.basicBulletBombRange;
+        public override double BulletAttackRange => GameData.basicAttackShortRange;
+        public int ap = (int)(GameData.basicApOfGhost * 6.0 / 5);
+        public override int Speed => (int)(GameData.basicBulletMoveSpeed * 0.8);
+        public override bool IsRemoteAttack => false;
+
+        public override int CastTime => (int)BulletAttackRange / Speed;
+        public override int Backswing => 0;
+        public override int RecoveryFromHit => 0;
+        public const int cd = GameData.basicCD;
+
+        public override bool CanAttack(GameObj target)
+        {
+            return XY.Distance(this.Position, target.Position) <= BulletBombRange;
+        }
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            switch (gameObjType)
+            {
+                case GameObjType.Character:
+                case GameObjType.Generator:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+      }
+      ~~~
+    - 当蹦蹦炸弹因为碰撞而爆炸，向子弹方向上加上0°，90°，180°，270° 发出四个小炸弹
+    - 四个小炸弹只会因为碰撞爆炸，停止运动后学生碰撞会造成眩晕（AP / GameData.timeFactorOfGhostFainting）ms
+    ~~~csharp
+    internal sealed class JumpyDumpty : Bullet
+    {
+        public override double BulletBombRange => GameData.basicBulletBombRange / 2;
+        public override double BulletAttackRange => GameData.basicAttackShortRange * 2;
+        public int ap = (int)(GameData.basicApOfGhost * 0.6);
+
+        public override int Speed => (int)(GameData.basicBulletMoveSpeed * 1.2);
+        public override bool IsRemoteAttack => false;
+
+        public override int CastTime => 0;
+        public override int Backswing => 0;
+        public override int RecoveryFromHit => 0;
+        public const int cd = 0;
+        public override int CD => cd;
+
+        public override bool CanAttack(GameObj target)
+        {
+            return XY.Distance(this.Position, target.Position) <= BulletBombRange;
+        }
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            switch (gameObjType)
+            {
+                case GameObjType.Character:
+                case GameObjType.Generator:
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
     ~~~
@@ -528,7 +620,3 @@
 | B            | （Both）使用0号技能                            |
 | N            | （Both）使用1号技能                            |
 | M            | （Both）使用2号技能                            |
-
-
-
->>>>>>> 4219415cba0600879a5b134a4067e729c868e84b

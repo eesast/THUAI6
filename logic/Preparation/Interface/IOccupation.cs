@@ -98,6 +98,41 @@ namespace Preparation.Interface
         public int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest * 1.1);
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
+
+    public class ANoisyPerson : IGhost
+    {
+        private const int moveSpeed = (int)(GameData.basicMoveSpeed * 1.1);
+        public int MoveSpeed => moveSpeed;
+
+        private const int maxHp = GameData.basicHp * 12 / 10;
+        public int MaxHp => maxHp;
+
+        public const int maxBulletNum = 1;
+        public int MaxBulletNum => maxBulletNum;
+
+        public BulletType InitBullet => BulletType.CommonAttackOfGhost;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.Howl });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public double concealment = GameData.basicConcealment * 0.8;
+        public double Concealment => concealment;
+
+        public int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
+        public int AlertnessRadius => alertnessRadius;
+
+        public int viewRange = (int)(GameData.basicViewRange);
+        public int ViewRange => viewRange;
+
+        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+
+        public int speedOfClimbingThroughWindows = (int)(GameData.basicGhostSpeedOfClimbingThroughWindows * 1.1);
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
+
+        public int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest);
+        public int SpeedOfOpenChest => speedOfOpenChest;
+    }
     public class Teacher : IStudent
     {
         private const int moveSpeed = GameData.basicMoveSpeed * 3 / 4;
@@ -179,6 +214,49 @@ namespace Preparation.Interface
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows * 12 / 10;
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
+
+        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
+        public int SpeedOfOpenChest => speedOfOpenChest;
+    }
+    public class StraightAStudent : IStudent
+    {
+        private const int moveSpeed = (int)(GameData.basicMoveSpeed * 0.8);
+        public int MoveSpeed => moveSpeed;
+
+        private const int maxHp = (int)(GameData.basicHp * 1.1);
+        public int MaxHp => maxHp;
+
+        private const int maxGamingAddiction = (int)(GameData.basicMaxGamingAddiction * 1.5);
+        public int MaxGamingAddiction => maxGamingAddiction;
+
+        public const int maxBulletNum = 0;
+        public int MaxBulletNum => maxBulletNum;
+
+        public BulletType InitBullet => BulletType.Null;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.WriteAnswers });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { PassiveSkillType.Meditate });
+
+        public const int fixSpeed = GameData.basicFixSpeed * 13 / 10;
+        public int FixSpeed => fixSpeed;
+
+        public const int treatSpeed = GameData.basicTreatSpeed * 8 / 10;
+        public int TreatSpeed => treatSpeed;
+
+        public const double concealment = GameData.basicConcealment * 0.9;
+        public double Concealment => concealment;
+
+        public const int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
+        public int AlertnessRadius => alertnessRadius;
+
+        public int viewRange = GameData.basicViewRange;
+        public int ViewRange => viewRange;
+
+        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+
+        public int speedOfClimbingThroughWindows = (int)(GameData.basicStudentSpeedOfClimbingThroughWindows * 10 / 12.0);
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
         public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;

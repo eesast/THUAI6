@@ -89,6 +89,26 @@ namespace Gaming
                 { IsBackground = true }.Start();
                 return true;
             }
+            public static bool BackSwing(Character? player, int time)
+            {
+                if (player == null && time <= 0) return false;
+                if (player.PlayerState == PlayerStateType.Swinging || (!player.Commandable() && player.PlayerState != PlayerStateType.TryingToAttack)) return false;
+                player.PlayerState = PlayerStateType.Swinging;
+
+                new Thread
+                        (() =>
+                        {
+                            Thread.Sleep(time);
+
+                            if (player.PlayerState == PlayerStateType.Swinging)
+                            {
+                                player.PlayerState = PlayerStateType.Null;
+                            }
+                        }
+                        )
+                { IsBackground = true }.Start();
+                return true;
+            }
 
             private void Die(Character player)
             {
@@ -138,6 +158,10 @@ namespace Gaming
                         if ((!(((Character)objBeingShot).IsGhost())) && bullet.Parent.IsGhost())
                         {
                             Student whoBeAttacked = (Student)objBeingShot;
+                            if (whoBeAttacked.CharacterType == CharacterType.StraightAStudent)
+                            {
+                                ((WriteAnswers)whoBeAttacked.FindIActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
+                            }
                             if (whoBeAttacked.BeAttacked(bullet))
                             {
                                 BeAddictedToGame(whoBeAttacked, (Ghost)bullet.Parent);
@@ -145,7 +169,7 @@ namespace Gaming
                             if (whoBeAttacked.CanBeAwed())
                             {
                                 if (BeStunned(whoBeAttacked, GameData.basicStunnedTimeOfStudent))
-                                    bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned);
+                                    bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.basicStunnedTimeOfStudent));
                             }
                         }
                         //       if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)
@@ -177,53 +201,14 @@ namespace Gaming
                 {
                     if (objBeingShot == null)
                     {
-                        if (bullet.Backswing > 0)
-                        {
-                            bullet.Parent.PlayerState = PlayerStateType.Swinging;
-
-                            new Thread
-                                    (() =>
-                                    {
-                                        Thread.Sleep(bullet.Backswing);
-
-                                        if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
-                                        {
-                                            bullet.Parent.PlayerState = PlayerStateType.Null;
-                                        }
-                                    }
-                                    )
-                            { IsBackground = true }.Start();
-                        }
+                        BackSwing((Character?)bullet.Parent, bullet.Backswing);
                         return;
                     }
 
-                    if (bullet.TypeOfBullet == BulletType.BombBomb)
-                    {
-                        bullet.Parent.BulletOfPlayer = BulletType.JumpyDumpty;
-                        Attack((Character)bullet.Parent, 0.0);
-                        Attack((Character)bullet.Parent, Math.PI);
-                        Attack((Character)bullet.Parent, Math.PI / 2.0);
-                        Attack((Character)bullet.Parent, Math.PI * 3.0 / 2.0);
-                    }
+                    Debugger.Output(bullet, bullet.TypeOfBullet.ToString());
+
                     BombObj(bullet, objBeingShot);
-                    if (bullet.RecoveryFromHit > 0)
-                    {
-                        bullet.Parent.PlayerState = PlayerStateType.Swinging;
-
-                        new Thread
-                                (() =>
-                                {
-
-                                    Thread.Sleep(bullet.RecoveryFromHit);
-
-                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
-                                    {
-                                        bullet.Parent.PlayerState = PlayerStateType.Null;
-                                    }
-                                }
-                                )
-                        { IsBackground = true }.Start();
-                    }
+                    BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
                     return;
                 }
 
@@ -236,6 +221,17 @@ namespace Gaming
                 }*/
 
                 // 子弹爆炸会发生的事↓↓↓
+
+                if (bullet.TypeOfBullet == BulletType.BombBomb && objBeingShot != null)
+                {
+                    bullet.Parent.BulletOfPlayer = BulletType.JumpyDumpty;
+                    Debugger.Output(bullet, "JumpyDumpty!");
+                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle());
+                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI);
+                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI / 2.0);
+                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI * 3.0 / 2.0);
+                }
+
                 var beAttackedList = new List<IGameObj>();
 
                 foreach (var kvp in gameMap.GameObjDict)
@@ -311,9 +307,6 @@ namespace Gaming
             {                                                    // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
                 if (player == null)
                 {
-#if DEBUG
-                    Console.WriteLine("the player who will attack is NULL!");
-#endif
                     return false;
                 }
 
@@ -330,6 +323,7 @@ namespace Gaming
 
                 if (bullet != null)
                 {
+                    Debugger.Output(player, "Attack in" + bullet.ToString());
                     bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
                     bullet.CanMove = true;
                     gameMap.Add(bullet);

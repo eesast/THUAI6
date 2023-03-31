@@ -34,9 +34,14 @@ namespace Gaming
                     case PropType.AddLifeOrClairaudience:
                         if (!player.IsGhost())
                             player.AddLIFE(GameData.PropDuration);
-                        else player.AddClairaudience(GameData.PropDuration);
+                        else
+                        {
+                            player.AddScore(GameData.ScorePropClairaudience);
+                            player.AddClairaudience(GameData.PropDuration);
+                        }
                         break;
                     case PropType.AddSpeed:
+                        player.AddScore(GameData.ScorePropAddSpeed);
                         player.AddMoveSpeed(GameData.PropDuration);
                         break;
                     case PropType.AddHpOrAp:
@@ -47,6 +52,13 @@ namespace Gaming
                                 player.AddScore(GameData.ScorePropAddHp);
                             }
                             else player.AddAp(GameData.PropDuration);
+                        break;
+                    case PropType.RecoveryFromDizziness:
+                        if (player.PlayerState == PlayerStateType.Stunned)
+                        {
+                            player.AddScore(GameData.ScorePropRecoverFromDizziness);
+                            player.PlayerState = PlayerStateType.Null;
+                        }
                         break;
                     default:
                         break;

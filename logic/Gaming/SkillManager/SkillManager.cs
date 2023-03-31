@@ -22,6 +22,9 @@ namespace Gaming
                         case ActiveSkillType.UseKnife:
                             UseKnife(character);
                             break;
+                        case ActiveSkillType.Howl:
+                            Howl(character);
+                            break;
                         case ActiveSkillType.CanBeginToCharge:
                             CanBeginToCharge(character);
                             break;
@@ -30,6 +33,9 @@ namespace Gaming
                             break;
                         case ActiveSkillType.JumpyBomb:
                             JumpyBomb(character);
+                            break;
+                        case ActiveSkillType.WriteAnswers:
+                            WriteAnswers(character);
                             break;
                         default:
                             return false;
@@ -41,6 +47,9 @@ namespace Gaming
                 if (character.Occupation.ListOfIPassiveSkill.Contains(passiveSkillType))
                     switch (passiveSkillType)
                     {
+                        case PassiveSkillType.Meditate:
+                            Meditate(character);
+                            break;
                         default:
                             return;
                     }
@@ -51,6 +60,9 @@ namespace Gaming
                 foreach (var passiveSkill in character.Occupation.ListOfIPassiveSkill)
                     switch (passiveSkill)
                     {
+                        case PassiveSkillType.Meditate:
+                            Meditate(character);
+                            break;
                         default:
                             return;
                     }

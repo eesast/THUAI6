@@ -295,61 +295,80 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
     def PrintStudent(self) -> None:
         for student in self.__logic.GetStudents():
-            self.__logger.info("******Student Info******")
+            self.__logger.info("\n******Student Info******")
             self.__logger.info(
                 f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
             self.__logger.info(
-                f"speed={student.speed}, view range={student.viewRange}, skill time={student.timeUntilSkillAvailable},place={student.place.name}")
-            studentBuff = "buff="
-            for buff in student.buff:
-                studentBuff += buff.name + ", "
-            self.__logger.info(studentBuff)
-            studentProp = "prop="
+                f"speed={student.speed}, view range={student.viewRange}, place={student.place.name}, radius={student.radius}")
+            self.__logger.info(
+                f"score={student.score}, facing direction={student.facingDirection}, skill time={student.timeUntilSkillAvailable}")
+            studentProp = ""
             for prop in student.prop:
                 studentProp += prop.name + ", "
-            self.__logger.info(studentProp)
-            self.__logger.info("**********************")
+            self.__logger.info(
+                f"state={student.playerState.name}, bullet={student.bulletType.name}, prop={studentProp}")
+            self.__logger.info(
+                f"type={student.studentType.name}, determination={student.determination}, addiction={student.addiction}, danger alert={student.dangerAlert}")
+            self.__logger.info(
+                f"learning speed={student.learningSpeed}, treat speed={student.treatSpeed}, treat progress={student.treatProgress}, rescue progress={student.rescueProgress}")
+            studentBuff = ""
+            for buff in student.buff:
+                studentBuff += buff.name + ", "
+            self.__logger.info(f"buff={studentBuff}")
+            self.__logger.info("************************\n")
 
     def PrintTricker(self) -> None:
         for tricker in self.__logic.GetTrickers():
-            self.__logger.info("******Tricker Info******")
+            self.__logger.info("\n******Tricker Info******")
             self.__logger.info(
                 f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
             self.__logger.info(
-                f"speed={tricker.speed}, view range={tricker.viewRange}, skill time={tricker.timeUntilSkillAvailable},  place={tricker.place.name}")
-            self.__logger.info("buff=")
+                f"speed={tricker.speed}, view range={tricker.viewRange}, place={tricker.place.name}, radius={tricker.radius}")
+            self.__logger.info(
+                f"score={tricker.score}, facing direction={tricker.facingDirection}, skill time={tricker.timeUntilSkillAvailable}")
+            trickerProp = ""
+            for prop in tricker.prop:
+                trickerProp += prop.name + ", "
+            self.__logger.info(
+                f"state={tricker.playerState.name}, bullet={tricker.bulletType.name}, prop={trickerProp}")
+            self.__logger.info(
+                f"type={tricker.trickerType.name}, trick desire={tricker.trickDesire}, class volume={tricker.classVolume}")
             trickerBuff = ""
             for buff in tricker.buff:
                 trickerBuff += buff.name + ", "
-            self.__logger.info(trickerBuff)
-            self.__logger.info("************************")
+            self.__logger.info(f"buff={trickerBuff}")
+            self.__logger.info("************************\n")
 
     def PrintProp(self) -> None:
         for prop in self.__logic.GetProps():
             self.__logger.info("******Prop Info******")
             self.__logger.info(
-                f"GUID={prop.guid}, x={prop.x}, y={prop.y}, place={prop.place.name}, ")
+                f"GUID={prop.guid}, x={prop.x}, y={prop.y}, place={prop.place.name}, facing direction={prop.facingDirection}")
             self.__logger.info("*********************")
 
     def PrintSelfInfo(self) -> None:
-        mySelf = self.__logic.GetSelfInfo()
-        self.__logger.info("******Self Info******")
+        student = cast(THUAI6.Student, self.__logic.GetSelfInfo())
+        self.__logger.info("\n******Student Info******")
         self.__logger.info(
-            f"playerID={mySelf.playerID}, GUID={mySelf.guid}, x={mySelf.x}, y={mySelf.y}")
+            f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
         self.__logger.info(
-            f"speed={mySelf.speed}, view range={mySelf.viewRange}, skill time={mySelf.timeUntilSkillAvailable}, place={mySelf.place.name}")
-        if isinstance(mySelf, THUAI6.Student):
-            self.__logger.info(
-                f"state={mySelf.playerState.name}, determination={mySelf.determination},")
-        mySelfBuff = "buff="
-        for buff in mySelf.buff:
-            mySelfBuff += buff.name + ", "
-        self.__logger.info(mySelfBuff)
-        studentProp = "prop="
-        for prop in mySelf.prop:
+            f"speed={student.speed}, view range={student.viewRange}, place={student.place.name}, radius={student.radius}")
+        self.__logger.info(
+            f"score={student.score}, facing direction={student.facingDirection}, skill time={student.timeUntilSkillAvailable}")
+        studentProp = ""
+        for prop in student.prop:
             studentProp += prop.name + ", "
-        self.__logger.info(studentProp)
-        self.__logger.info("*********************")
+        self.__logger.info(
+            f"state={student.playerState.name}, bullet={student.bulletType.name}, prop={studentProp}")
+        self.__logger.info(
+            f"type={student.studentType.name}, determination={student.determination}, addiction={student.addiction}, danger alert={student.dangerAlert}")
+        self.__logger.info(
+            f"learning speed={student.learningSpeed}, treat speed={student.treatSpeed}, treat progress={student.treatProgress}, rescue progress={student.rescueProgress}")
+        studentBuff = ""
+        for buff in student.buff:
+            studentBuff += buff.name + ", "
+        self.__logger.info(f"buff={studentBuff}")
+        self.__logger.info("************************\n")
 
     # 人类阵营的特殊函数
 
@@ -410,8 +429,8 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
     # Timer用
 
-    def __GetTime(self) -> int:
-        return int((datetime.datetime.now() - self.__startPoint).total_seconds() * 1000)
+    def __GetTime(self) -> float:
+        return (datetime.datetime.now() - self.__startPoint) / datetime.timedelta(milliseconds=1)
 
     def StartTimer(self) -> None:
         self.__startPoint = datetime.datetime.now()
@@ -712,57 +731,78 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
     def PrintStudent(self) -> None:
         for student in self.__logic.GetStudents():
-            self.__logger.info("******Student Info******")
+            self.__logger.info("\n******Student Info******")
             self.__logger.info(
                 f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
             self.__logger.info(
-                f"speed={student.speed}, view range={student.viewRange}, skill time={student.timeUntilSkillAvailable}, place={student.place.name}")
+                f"speed={student.speed}, view range={student.viewRange}, place={student.place.name}, radius={student.radius}")
             self.__logger.info(
-                f"state={student.playerState.name}, determination={student.determination}")
-            self.__logger.info("buff=")
+                f"score={student.score}, facing direction={student.facingDirection}, skill time={student.timeUntilSkillAvailable}")
+            studentProp = ""
+            for prop in student.prop:
+                studentProp += prop.name + ", "
+            self.__logger.info(
+                f"state={student.playerState.name}, bullet={student.bulletType.name}, prop={studentProp}")
+            self.__logger.info(
+                f"type={student.studentType.name}, determination={student.determination}, addiction={student.addiction}, danger alert={student.dangerAlert}")
+            self.__logger.info(
+                f"learning speed={student.learningSpeed}, treat speed={student.treatSpeed}, treat progress={student.treatProgress}, rescue progress={student.rescueProgress}")
             studentBuff = ""
             for buff in student.buff:
                 studentBuff += buff.name + ", "
-            self.__logger.info(studentBuff)
-            self.__logger.info("**********************")
+            self.__logger.info(f"buff={studentBuff}")
+            self.__logger.info("************************\n")
 
     def PrintTricker(self) -> None:
         for tricker in self.__logic.GetTrickers():
-            self.__logger.info("******Tricker Info******")
+            self.__logger.info("\n******Tricker Info******")
             self.__logger.info(
                 f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
             self.__logger.info(
-                f"speed={tricker.speed}, view range={tricker.viewRange}, skill time={tricker.timeUntilSkillAvailable}, place={tricker.place.name}")
-            self.__logger.info("buff=")
+                f"speed={tricker.speed}, view range={tricker.viewRange}, place={tricker.place.name}, radius={tricker.radius}")
+            self.__logger.info(
+                f"score={tricker.score}, facing direction={tricker.facingDirection}, skill time={tricker.timeUntilSkillAvailable}")
+            trickerProp = ""
+            for prop in tricker.prop:
+                trickerProp += prop.name + ", "
+            self.__logger.info(
+                f"state={tricker.playerState.name}, bullet={tricker.bulletType.name}, prop={trickerProp}")
+            self.__logger.info(
+                f"type={tricker.trickerType.name}, trick desire={tricker.trickDesire}, class volume={tricker.classVolume}")
             trickerBuff = ""
             for buff in tricker.buff:
                 trickerBuff += buff.name + ", "
-            self.__logger.info(trickerBuff)
-            self.__logger.info("************************")
+            self.__logger.info(f"buff={trickerBuff}")
+            self.__logger.info("************************\n")
 
     def PrintProp(self) -> None:
         for prop in self.__logic.GetProps():
             self.__logger.info("******Prop Info******")
             self.__logger.info(
-                f"GUID={prop.guid}, x={prop.x}, y={prop.y}, place={prop.place.name}")
+                f"GUID={prop.guid}, x={prop.x}, y={prop.y}, place={prop.place.name}, facing direction={prop.facingDirection}")
             self.__logger.info("*********************")
 
     def PrintSelfInfo(self) -> None:
-        mySelf = self.__logic.GetSelfInfo()
-        self.__logger.info("******Self Info******")
+        tricker = cast(THUAI6.Tricker, self.__logic.GetSelfInfo())
+        self.__logger.info("\n******Tricker Info******")
         self.__logger.info(
-            f"playerID={mySelf.playerID}, GUID={mySelf.guid}, x={mySelf.x}, y={mySelf.y}")
+            f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
         self.__logger.info(
-            f"speed={mySelf.speed}, view range={mySelf.viewRange}, skill time={mySelf.timeUntilSkillAvailable}, place={mySelf.place.name}")
-        if isinstance(mySelf, THUAI6.Student):
-            self.__logger.info(
-                f"state={mySelf.playerState.name}, determination={mySelf.determination}")
-        self.__logger.info("buff=")
-        mySelfBuff = ""
-        for buff in mySelf.buff:
-            mySelfBuff += buff.name + ", "
-        self.__logger.info(mySelfBuff)
-        self.__logger.info("*********************")
+            f"speed={tricker.speed}, view range={tricker.viewRange}, place={tricker.place.name}, radius={tricker.radius}")
+        self.__logger.info(
+            f"score={tricker.score}, facing direction={tricker.facingDirection}, skill time={tricker.timeUntilSkillAvailable}")
+        trickerProp = ""
+        for prop in tricker.prop:
+            trickerProp += prop.name + ", "
+        self.__logger.info(
+            f"state={tricker.playerState.name}, bullet={tricker.bulletType.name}, prop={trickerProp}")
+        self.__logger.info(
+            f"type={tricker.trickerType.name}, trick desire={tricker.trickDesire}, class volume={tricker.classVolume}")
+        trickerBuff = ""
+        for buff in tricker.buff:
+            trickerBuff += buff.name + ", "
+        self.__logger.info(f"buff={trickerBuff}")
+        self.__logger.info("************************\n")
 
     # 屠夫阵营的特殊函数
 
@@ -772,7 +812,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
     # Timer用
 
     def __GetTime(self) -> float:
-        return (datetime.datetime.now() - self.__startPoint).total_seconds() * 1000
+        return (datetime.datetime.now() - self.__startPoint) / datetime.timedelta(milliseconds=1)
 
     def StartTimer(self) -> None:
         self.__startPoint = datetime.datetime.now()

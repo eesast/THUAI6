@@ -91,7 +91,8 @@ class Proto2THUAI6(NoInstance):
         MessageType.ADD_SPEED: THUAI6.PropType.AddSpeed,
         MessageType.ADD_HP_OR_AP: THUAI6.PropType.AddHpOrAp,
         MessageType.ADD_LIFE_OR_AP: THUAI6.PropType.AddLifeOrAp,
-        MessageType.SHIELD_OR_SPEAR: THUAI6.PropType.ShieldOrSpear, }
+        MessageType.SHIELD_OR_SPEAR: THUAI6.PropType.ShieldOrSpear,
+        MessageType.RECOVERY_FROM_DIZZINESS: THUAI6.PropType.RecoveryFromDizziness, }
 
     playerTypeDict: Final[dict] = {
         MessageType.NULL_PLAYER_TYPE: THUAI6.PlayerType.NullPlayerType,
@@ -100,19 +101,30 @@ class Proto2THUAI6(NoInstance):
 
     studentTypeDict: Final[dict] = {
         MessageType.NULL_STUDENT_TYPE: THUAI6.StudentType.NullStudentType,
-        MessageType.ATHLETE: THUAI6.StudentType.Athlete, }
+        MessageType.ATHLETE: THUAI6.StudentType.Athlete,
+        MessageType.STUDENTTYPE2: THUAI6.StudentType.Teacher,
+        MessageType.STUDENTTYPE3: THUAI6.StudentType.StraightAStudent, }
 
     trickerTypeDict: Final[dict] = {
         MessageType.NULL_TRICKER_TYPE: THUAI6.TrickerType.NullTrickerType,
-        MessageType.ASSASSIN: THUAI6.TrickerType.Assassin, }
+        MessageType.ASSASSIN: THUAI6.TrickerType.Assassin,
+        MessageType.TRICKERTYPE2: THUAI6.TrickerType.Klee,
+        MessageType.TRICKERTYPE3: THUAI6.TrickerType.ANoisyPerson, }
 
     studentBuffTypeDict: Final[dict] = {
         MessageType.NULL_SBUFF_TYPE: THUAI6.StudentBuffType.NullStudentBuffType,
-        MessageType.SBUFFTYPE1: THUAI6.StudentBuffType.StudentBuffType1, }
+        MessageType.SBUFFTYPE1: THUAI6.StudentBuffType.AddSpeed,
+        MessageType.SBUFFTYPE2: THUAI6.StudentBuffType.AddLife,
+        MessageType.SBUFFTYPE3: THUAI6.StudentBuffType.Shield,
+        MessageType.SBUFFTYPE4: THUAI6.StudentBuffType.Invisible, }
 
     trickerBuffTypeDict: Final[dict] = {
         MessageType.NULL_TBUFF_TYPE: THUAI6.TrickerBuffType.NullTrickerBuffType,
-        MessageType.TBUFFTYPE1: THUAI6.TrickerBuffType.TrickerBuffType1, }
+        MessageType.TBUFFTYPE1: THUAI6.TrickerBuffType.AddSpeed,
+        MessageType.TBUFFTYPE2: THUAI6.TrickerBuffType.Spear,
+        MessageType.TBUFFTYPE3: THUAI6.TrickerBuffType.AddAp,
+        MessageType.TBUFFTYPE4: THUAI6.TrickerBuffType.Clairaudience,
+        MessageType.INVISIBLE: THUAI6.TrickerBuffType.Invisible, }
 
     playerStateDict: Final[dict] = {
         MessageType.NULL_STATUS: THUAI6.PlayerState.NullState,
@@ -144,9 +156,9 @@ class Proto2THUAI6(NoInstance):
     bulletTypeDict: Final[dict] = {
         MessageType.NULL_BULLET_TYPE: THUAI6.BulletType.NullBulletType,
         MessageType.FLYING_KNIFE: THUAI6.BulletType.FlyingKnife,
-        MessageType.FAST_BULLET: THUAI6.BulletType.FastBullet,
+        MessageType.FAST_BULLET: THUAI6.BulletType.BombBomb,
         MessageType.COMMON_ATTACK_OF_TRICKER: THUAI6.BulletType.CommonAttackOfTricker,
-        MessageType.ORDINARY_BULLET: THUAI6.BulletType.OrdinaryBullet,
+        MessageType.ORDINARY_BULLET: THUAI6.BulletType.JumpyDumpty,
         MessageType.ATOM_BOMB: THUAI6.BulletType.AtomBomb, }
 
     # 用于将Proto的对象转为THUAI6的对象
@@ -229,7 +241,7 @@ class Proto2THUAI6(NoInstance):
     def Protobuf2THUAI6GameInfo(allMsg: Message2Clients.MessageOfAll):
         gameInfo = THUAI6.GameInfo()
         gameInfo.gameTime = allMsg.game_time
-        gameInfo.subjectLeft = allMsg.subject_left
+        gameInfo.subjectFinished = allMsg.subject_finished
         gameInfo.studentGraduated = allMsg.student_graduated
         gameInfo.studentQuited = allMsg.student_quited
         gameInfo.studentScore = allMsg.student_score
@@ -290,11 +302,15 @@ class THUAI62Proto(NoInstance):
 
     studentTypeDict: Final[dict] = {
         THUAI6.StudentType.NullStudentType: MessageType.NULL_STUDENT_TYPE,
-        THUAI6.StudentType.Athlete: MessageType.ATHLETE, }
+        THUAI6.StudentType.Athlete: MessageType.ATHLETE,
+        THUAI6.StudentType.Teacher: MessageType.STUDENTTYPE2,
+        THUAI6.StudentType.StraightAStudent: MessageType.STUDENTTYPE3, }
 
     trickerTypeDict: Final[dict] = {
         THUAI6.TrickerType.NullTrickerType: MessageType.NULL_TRICKER_TYPE,
-        THUAI6.TrickerType.Assassin: MessageType.ASSASSIN, }
+        THUAI6.TrickerType.Assassin: MessageType.ASSASSIN,
+        THUAI6.TrickerType.Klee: MessageType.TRICKERTYPE2,
+        THUAI6.TrickerType.ANoisyPerson: MessageType.TRICKERTYPE3, }
 
     propTypeDict: Final[dict] = {
         THUAI6.PropType.NullPropType: MessageType.NULL_PROP_TYPE,

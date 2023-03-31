@@ -4521,14 +4521,11 @@ namespace protobuf
         enum : int
         {
             kGameTimeFieldNumber = 1,
-            kSubjectLeftFieldNumber = 2,
+            kSubjectFinishedFieldNumber = 2,
             kStudentGraduatedFieldNumber = 3,
             kStudentQuitedFieldNumber = 4,
             kStudentScoreFieldNumber = 5,
             kTrickerScoreFieldNumber = 6,
-            kGateOpenedFieldNumber = 7,
-            kHiddenGateRefreshedFieldNumber = 8,
-            kHiddenGateOpenedFieldNumber = 9,
         };
         // int32 game_time = 1;
         void clear_game_time();
@@ -4540,14 +4537,14 @@ namespace protobuf
         void _internal_set_game_time(int32_t value);
 
     public:
-        // int32 subject_left = 2;
-        void clear_subject_left();
-        int32_t subject_left() const;
-        void set_subject_left(int32_t value);
+        // int32 subject_finished = 2;
+        void clear_subject_finished();
+        int32_t subject_finished() const;
+        void set_subject_finished(int32_t value);
 
     private:
-        int32_t _internal_subject_left() const;
-        void _internal_set_subject_left(int32_t value);
+        int32_t _internal_subject_finished() const;
+        void _internal_set_subject_finished(int32_t value);
 
     public:
         // int32 student_graduated = 3;
@@ -4590,36 +4587,6 @@ namespace protobuf
         void _internal_set_tricker_score(int32_t value);
 
     public:
-        // bool gate_opened = 7;
-        void clear_gate_opened();
-        bool gate_opened() const;
-        void set_gate_opened(bool value);
-
-    private:
-        bool _internal_gate_opened() const;
-        void _internal_set_gate_opened(bool value);
-
-    public:
-        // bool hidden_gate_refreshed = 8;
-        void clear_hidden_gate_refreshed();
-        bool hidden_gate_refreshed() const;
-        void set_hidden_gate_refreshed(bool value);
-
-    private:
-        bool _internal_hidden_gate_refreshed() const;
-        void _internal_set_hidden_gate_refreshed(bool value);
-
-    public:
-        // bool hidden_gate_opened = 9;
-        void clear_hidden_gate_opened();
-        bool hidden_gate_opened() const;
-        void set_hidden_gate_opened(bool value);
-
-    private:
-        bool _internal_hidden_gate_opened() const;
-        void _internal_set_hidden_gate_opened(bool value);
-
-    public:
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfAll)
 
     private:
@@ -4632,14 +4599,11 @@ namespace protobuf
         struct Impl_
         {
             int32_t game_time_;
-            int32_t subject_left_;
+            int32_t subject_finished_;
             int32_t student_graduated_;
             int32_t student_quited_;
             int32_t student_score_;
             int32_t tricker_score_;
-            bool gate_opened_;
-            bool hidden_gate_refreshed_;
-            bool hidden_gate_opened_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -8922,28 +8886,28 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfAll.game_time)
     }
 
-    // int32 subject_left = 2;
-    inline void MessageOfAll::clear_subject_left()
+    // int32 subject_finished = 2;
+    inline void MessageOfAll::clear_subject_finished()
     {
-        _impl_.subject_left_ = 0;
+        _impl_.subject_finished_ = 0;
     }
-    inline int32_t MessageOfAll::_internal_subject_left() const
+    inline int32_t MessageOfAll::_internal_subject_finished() const
     {
-        return _impl_.subject_left_;
+        return _impl_.subject_finished_;
     }
-    inline int32_t MessageOfAll::subject_left() const
+    inline int32_t MessageOfAll::subject_finished() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfAll.subject_left)
-        return _internal_subject_left();
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfAll.subject_finished)
+        return _internal_subject_finished();
     }
-    inline void MessageOfAll::_internal_set_subject_left(int32_t value)
+    inline void MessageOfAll::_internal_set_subject_finished(int32_t value)
     {
-        _impl_.subject_left_ = value;
+        _impl_.subject_finished_ = value;
     }
-    inline void MessageOfAll::set_subject_left(int32_t value)
+    inline void MessageOfAll::set_subject_finished(int32_t value)
     {
-        _internal_set_subject_left(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfAll.subject_left)
+        _internal_set_subject_finished(value);
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfAll.subject_finished)
     }
 
     // int32 student_graduated = 3;
@@ -9040,78 +9004,6 @@ namespace protobuf
     {
         _internal_set_tricker_score(value);
         // @@protoc_insertion_point(field_set:protobuf.MessageOfAll.tricker_score)
-    }
-
-    // bool gate_opened = 7;
-    inline void MessageOfAll::clear_gate_opened()
-    {
-        _impl_.gate_opened_ = false;
-    }
-    inline bool MessageOfAll::_internal_gate_opened() const
-    {
-        return _impl_.gate_opened_;
-    }
-    inline bool MessageOfAll::gate_opened() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfAll.gate_opened)
-        return _internal_gate_opened();
-    }
-    inline void MessageOfAll::_internal_set_gate_opened(bool value)
-    {
-        _impl_.gate_opened_ = value;
-    }
-    inline void MessageOfAll::set_gate_opened(bool value)
-    {
-        _internal_set_gate_opened(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfAll.gate_opened)
-    }
-
-    // bool hidden_gate_refreshed = 8;
-    inline void MessageOfAll::clear_hidden_gate_refreshed()
-    {
-        _impl_.hidden_gate_refreshed_ = false;
-    }
-    inline bool MessageOfAll::_internal_hidden_gate_refreshed() const
-    {
-        return _impl_.hidden_gate_refreshed_;
-    }
-    inline bool MessageOfAll::hidden_gate_refreshed() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfAll.hidden_gate_refreshed)
-        return _internal_hidden_gate_refreshed();
-    }
-    inline void MessageOfAll::_internal_set_hidden_gate_refreshed(bool value)
-    {
-        _impl_.hidden_gate_refreshed_ = value;
-    }
-    inline void MessageOfAll::set_hidden_gate_refreshed(bool value)
-    {
-        _internal_set_hidden_gate_refreshed(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfAll.hidden_gate_refreshed)
-    }
-
-    // bool hidden_gate_opened = 9;
-    inline void MessageOfAll::clear_hidden_gate_opened()
-    {
-        _impl_.hidden_gate_opened_ = false;
-    }
-    inline bool MessageOfAll::_internal_hidden_gate_opened() const
-    {
-        return _impl_.hidden_gate_opened_;
-    }
-    inline bool MessageOfAll::hidden_gate_opened() const
-    {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfAll.hidden_gate_opened)
-        return _internal_hidden_gate_opened();
-    }
-    inline void MessageOfAll::_internal_set_hidden_gate_opened(bool value)
-    {
-        _impl_.hidden_gate_opened_ = value;
-    }
-    inline void MessageOfAll::set_hidden_gate_opened(bool value)
-    {
-        _internal_set_hidden_gate_opened(value);
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfAll.hidden_gate_opened)
     }
 
     // -------------------------------------------------------------------

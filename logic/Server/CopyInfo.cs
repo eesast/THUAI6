@@ -142,13 +142,13 @@ namespace Server
             switch (buffType)
             {
                 case Preparation.Utility.BuffType.AddSpeed:
-                    return Protobuf.StudentBuffType.AddSpeed;
+                    return Protobuf.StudentBuffType.StudentAddSpeed;
                 case Preparation.Utility.BuffType.AddLife:
                     return Protobuf.StudentBuffType.AddLife;
                 case Preparation.Utility.BuffType.Shield:
                     return Protobuf.StudentBuffType.Shield;
                 case Preparation.Utility.BuffType.Invisible:
-                    return Protobuf.StudentBuffType.Invisible;
+                    return Protobuf.StudentBuffType.StudentInvisible;
                 default:
                     return Protobuf.StudentBuffType.NullSbuffType;
             }
@@ -158,7 +158,7 @@ namespace Server
             switch (buffType)
             {
                 case Preparation.Utility.BuffType.AddSpeed:
-                    return Protobuf.TrickerBuffType.AddSpeed;
+                    return Protobuf.TrickerBuffType.TrickerAddSpeed;
                 case Preparation.Utility.BuffType.Spear:
                     return Protobuf.TrickerBuffType.Spear;
                 case Preparation.Utility.BuffType.AddAp:
@@ -166,7 +166,7 @@ namespace Server
                 case Preparation.Utility.BuffType.Clairaudience:
                     return Protobuf.TrickerBuffType.Clairaudience;
                 case Preparation.Utility.BuffType.Invisible:
-                    return Protobuf.TrickerBuffType.Invisible;
+                    return Protobuf.TrickerBuffType.TrickerInvisible;
                 default:
                     return Protobuf.TrickerBuffType.NullTbuffType;
             }

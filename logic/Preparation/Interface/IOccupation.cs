@@ -322,7 +322,7 @@ namespace Preparation.Interface
         public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
-    public class Sunshine: IStudent
+    public class Sunshine : IStudent
     {
         private const int moveSpeed = GameData.basicMoveSpeed;
         public int MoveSpeed => moveSpeed;

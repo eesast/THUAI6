@@ -82,7 +82,7 @@ namespace Preparation.Utility
         StraightAStudent = 6,
         ANoisyPerson = 7,
         Robot = 8,
-        Sunshine =9,
+        Sunshine = 9,
     }
     public enum ActiveSkillType  // 主动技能
     {
@@ -97,7 +97,7 @@ namespace Preparation.Utility
         WriteAnswers = 8,
         Howl = 9,
         UseRobot = 10,
-        Rouse=11,
+        Rouse = 11,
     }
     public enum PassiveSkillType
     {

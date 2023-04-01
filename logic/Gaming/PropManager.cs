@@ -33,7 +33,7 @@ namespace Gaming
                         break;
                     case PropType.AddLifeOrClairaudience:
                         if (!player.IsGhost())
-                            player.AddLIFE(GameData.PropDuration);
+                            player.AddLife(GameData.PropDuration);
                         else
                         {
                             player.AddScore(GameData.ScorePropClairaudience);

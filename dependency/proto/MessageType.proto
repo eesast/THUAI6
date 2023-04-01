@@ -7,7 +7,7 @@ enum BulletType
     NULL_BULLET_TYPE = 0;
     FLYING_KNIFE = 1;
     COMMON_ATTACK_OF_TRICKER = 2;
-    BOMBBOMB = 3;
+    BOMB_BOMB = 3;
     JUMPY_DUMPTY = 4;
     ATOM_BOMB = 5;
 }
@@ -54,10 +54,10 @@ enum PropType // 地图中的可拾取道具类型
 enum StudentBuffType // 人类可用的增益效果类型
 {
     NULL_SBUFF_TYPE = 0;
-    ADD_SPEED = 1;
+    STUDENT_ADD_SPEED = 1;
     ADD_LIFE = 2;
     SHIELD = 3;
-    INVISIBLE = 4;
+    STUDENT_INVISIBLE = 4;
 }
 
 enum PlayerState
@@ -86,11 +86,11 @@ enum PlayerState
 enum TrickerBuffType // 屠夫可用的增益效果类型
 {
     NULL_TBUFF_TYPE = 0;
-    ADD_SPEED = 1;
+    TRICKER_ADD_SPEED = 1;
     SPEAR = 2;
     ADD_AP = 3;
     CLAIRAUDIENCE = 4;
-    INVISIBLE = 5;
+    TRICKER_INVISIBLE = 5;
 }
 
 // 特别说明：由于Student阵营和Tricker阵营有显著的隔离，且暂定职业、主动技能和被动效果相互绑定，故不按照THUAI5的方式区分ActiveSkillType和CharacterType，而是选择了按照阵营来给不同阵营赋予不同的职业（及技能）。

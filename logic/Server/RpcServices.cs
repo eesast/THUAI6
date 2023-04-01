@@ -54,6 +54,22 @@ namespace Server
                         semaDict.Add(request.PlayerId, temp);
                     }
                 }
+                do
+                {
+                    semaDict[request.PlayerId].Item1.Wait();
+                    try
+                    {
+                        if (currentGameInfo != null)
+                        {
+                            await responseStream.WriteAsync(currentGameInfo);
+                            //Console.WriteLine("Send!");
+                        }
+                    }
+                    finally
+                    {
+                        semaDict[request.PlayerId].Item2.Release();
+                    }
+                } while (game.GameMap.Timer.IsGaming);
                 return;
             }
 
@@ -112,9 +128,19 @@ namespace Server
 #if DEBUG
             Console.WriteLine($"Attack ID: {request.PlayerId}");
 #endif 
+            BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
+            if (request.Angle == double.NaN)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             game.Attack(gameID, request.Angle);
-            BoolRes boolRes = new();
             boolRes.ActSuccess = true;
             return Task.FromResult(boolRes);
         }
@@ -125,8 +151,18 @@ namespace Server
 #if DEBUG
             Console.WriteLine($"Move ID: {request.PlayerId}, TimeInMilliseconds: {request.TimeInMilliseconds}");
 #endif            
-            var gameID = communicationToGameID[request.PlayerId];
             MoveRes moveRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                moveRes.ActSuccess = false;
+                return Task.FromResult(moveRes);
+            }
+            if (request.Angle == double.NaN)
+            {
+                moveRes.ActSuccess = false;
+                return Task.FromResult(moveRes);
+            }
+            var gameID = communicationToGameID[request.PlayerId];
             game.MovePlayer(gameID, (int)request.TimeInMilliseconds, request.Angle);
             // 之后game.MovePlayer可能改为bool类
             moveRes.ActSuccess = true;
@@ -137,6 +173,11 @@ namespace Server
         public override Task<BoolRes> SendMessage(SendMsg request, ServerCallContext context)
         {
             var boolRes = new BoolRes();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             if (!ValidPlayerID(request.PlayerId) || !ValidPlayerID(request.ToPlayerId)
                 || PlayerIDToTeamID(request.PlayerId) != PlayerIDToTeamID(request.ToPlayerId) || request.PlayerId == request.ToPlayerId)
             {
@@ -174,6 +215,11 @@ namespace Server
             Console.WriteLine($"PickProp ID: {request.PlayerId}");
 #endif 
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             boolRes.ActSuccess = game.PickProp(gameID, CopyInfo.ToPropType(request.PropType));
             return Task.FromResult(boolRes);
@@ -185,6 +231,11 @@ namespace Server
             Console.WriteLine($"UseProp ID: {request.PlayerId}");
 #endif 
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             game.UseProp(gameID, CopyInfo.ToPropType(request.PropType));
             boolRes.ActSuccess = true;
@@ -196,6 +247,11 @@ namespace Server
             Console.WriteLine($"ThrowProp ID: {request.PlayerId}");
 #endif 
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             game.ThrowProp(gameID, CopyInfo.ToPropType(request.PropType));
             boolRes.ActSuccess = true;
@@ -207,6 +263,11 @@ namespace Server
             Console.WriteLine($"UseSkill ID: {request.PlayerId}");
 #endif 
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             boolRes.ActSuccess = game.UseActiveSkill(gameID, request.SkillId);
             return Task.FromResult(boolRes);
@@ -218,6 +279,11 @@ namespace Server
             Console.WriteLine($"Graduate ID: {request.PlayerId}");
 #endif 
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             boolRes.ActSuccess = game.Escape(gameID);
             return Task.FromResult(boolRes);
@@ -228,9 +294,22 @@ namespace Server
             Console.WriteLine($"StartRescueMate ID: {request.PlayerId}");
 #endif 
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
-            var toGameID = communicationToGameID[request.ToPlayerId];
-            boolRes.ActSuccess = game.Rescue(gameID, toGameID);
+            if (request.ToPlayerId >= 0 && request.ToPlayerId < options.MaxStudentCount)
+            {
+                var toGameID = communicationToGameID[request.ToPlayerId];
+                boolRes.ActSuccess = game.Rescue(gameID, toGameID);
+            }
+            else
+            {
+                boolRes.ActSuccess = game.Rescue(gameID);
+            }
+
             return Task.FromResult(boolRes);
         }
         public override Task<BoolRes> StartTreatMate(TreatAndRescueMsg request, ServerCallContext context)
@@ -239,9 +318,22 @@ namespace Server
             Console.WriteLine($"StartTreatMate ID: {request.PlayerId}");
 #endif     
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
-            var toGameID = communicationToGameID[request.ToPlayerId];
-            boolRes.ActSuccess = game.Treat(gameID, toGameID);
+            if (request.ToPlayerId >= 0 && request.ToPlayerId < options.MaxStudentCount)
+            {
+                var toGameID = communicationToGameID[request.ToPlayerId];
+                boolRes.ActSuccess = game.Treat(gameID, toGameID);
+            }
+            else
+            {
+                boolRes.ActSuccess = game.Treat(gameID);
+            }
+
             return Task.FromResult(boolRes);
         }
         public override Task<BoolRes> StartLearning(IDMsg request, ServerCallContext context)
@@ -250,6 +342,11 @@ namespace Server
             Console.WriteLine($"StartLearning ID: {request.PlayerId}");
 #endif     
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             boolRes.ActSuccess = game.Fix(gameID);
             return Task.FromResult(boolRes);
@@ -260,6 +357,11 @@ namespace Server
             Console.WriteLine($"StartOpenChest ID: {request.PlayerId}");
 #endif     
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             boolRes.ActSuccess = game.OpenChest(gameID);
             return Task.FromResult(boolRes);
@@ -271,6 +373,11 @@ namespace Server
             Console.WriteLine($"StartOpenGate ID: {request.PlayerId}");
 #endif     
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             boolRes.ActSuccess = game.OpenDoorway(gameID);
             return Task.FromResult(boolRes);
@@ -281,6 +388,11 @@ namespace Server
             Console.WriteLine($"OpenDoor ID: {request.PlayerId}");
 #endif     
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             boolRes.ActSuccess = game.LockOrOpenDoor(gameID);
             return Task.FromResult(boolRes);
@@ -292,6 +404,11 @@ namespace Server
             Console.WriteLine($"CloseDoor ID: {request.PlayerId}");
 #endif     
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             boolRes.ActSuccess = game.LockOrOpenDoor(gameID);
             return Task.FromResult(boolRes);
@@ -303,6 +420,11 @@ namespace Server
             Console.WriteLine($"EndAllAction ID: {request.PlayerId}");
 #endif     
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             boolRes.ActSuccess = game.Stop(gameID);
             return Task.FromResult(boolRes);
@@ -315,6 +437,11 @@ namespace Server
             Console.WriteLine($"SkipWindow ID: {request.PlayerId}");
 #endif     
             BoolRes boolRes = new();
+            if (request.PlayerId >= spectatorMinPlayerID)
+            {
+                boolRes.ActSuccess = false;
+                return Task.FromResult(boolRes);
+            }
             var gameID = communicationToGameID[request.PlayerId];
             boolRes.ActSuccess = game.ClimbingThroughWindow(gameID);
             return Task.FromResult(boolRes);

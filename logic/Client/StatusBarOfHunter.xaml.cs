@@ -36,42 +36,40 @@ namespace Client
         }
         public void SetFontSize(double fontsize)
         {
-            serial.FontSize = scores.FontSize = state.FontSize = status.FontSize=activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = prop3.FontSize = fontsize; 
+            serial.FontSize = scores.FontSize = state.FontSize = status.FontSize = activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = prop3.FontSize = fontsize;
         }
 
-        private void SetStaticValue(MessageOfTricker obj)
+        private void SetStaticValue(MessageOfTricker obj, double time0, double time1, double time2)
         {
             switch (obj.TrickerType)  // 参数未设定
             {
                 case TrickerType.Assassin:
-                    coolTime0 = coolTime1 = coolTime2 = 10000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：Assassin";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nAssassin";
                     break;
-                case TrickerType._2:
-                    coolTime0 = coolTime1 = coolTime2 = 20000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：TrickerType2";
+                case TrickerType.Klee:
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nKlee";
                     break;
-                case TrickerType._3:
-                    coolTime0 = coolTime1 = coolTime2 = 30000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：TrickerType3";
+                case TrickerType.ANoisyPerson:
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nANoisyPerson";
                     break;
                 case TrickerType._4:
-                    coolTime0 = coolTime1 = coolTime2 = 40000;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：TrickerType4";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nTrickerType4";
                     break;
                 case TrickerType.NullTrickerType:
-                    coolTime0 = coolTime1 = coolTime2 = -1;
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\n职业：NullTrickerType";
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nNullTrickerType";
                     break;
             }
             activeSkill0.Text = "Skill0";
             activeSkill1.Text = "Skill1";
             activeSkill2.Text = "Skill2";
+            coolTime0 = time0;
+            coolTime1 = time1;
+            coolTime2 = time2;
             initialized = true;
         }
         private void SetDynamicValue(MessageOfTricker obj)
         {
-            status.Text = "🏃🏿‍："+Convert.ToString(obj.Speed);
+            status.Text = "🏃🏿‍: " + Convert.ToString(obj.Speed);
             switch (obj.PlayerState)
             {
                 case PlayerState.Idle:
@@ -114,10 +112,10 @@ namespace Client
                     state.Text = "Locking";
                     break;
                 case PlayerState.Rummaging:
-                    state.Text ="Rummaging";
+                    state.Text = "Rummaging";
                     break;
                 case PlayerState.Climbing:
-                    state.Text ="Climbing";
+                    state.Text = "Climbing";
                     break;
                 case PlayerState.OpeningAChest:
                     state.Text = "OpeningAChest";
@@ -131,7 +129,7 @@ namespace Client
                 default:
                     break;
             }
-            scores.Text = "Scores:" + Convert.ToString(obj.Score);
+            scores.Text = "Scores: " + Convert.ToString(obj.Score);
             if (obj.TimeUntilSkillAvailable[0] >= 0)
                 skillprogress0.Value = 100 - obj.TimeUntilSkillAvailable[0] / coolTime0 * 100;
             if (obj.TimeUntilSkillAvailable[1] >= 0)
@@ -153,26 +151,29 @@ namespace Client
                     case 0:
                         switch (icon)
                         {
-                            case PropType.Key3:
-                                prop0.Text = "🔑";
+                            case Protobuf.PropType.Key3:
+                                prop0.Text = "🔑3";
                                 break;
-                            case PropType.Key5:
-                                prop0.Text = "🔑";
+                            case Protobuf.PropType.Key5:
+                                prop0.Text = "🔑5";
                                 break;
-                            case PropType.Key6:
-                                prop0.Text = "🔑";
+                            case Protobuf.PropType.Key6:
+                                prop0.Text = "🔑6";
                                 break;
-                            case PropType.AddSpeed:
+                            case Protobuf.PropType.AddSpeed:
                                 prop0.Text = "⛸";
                                 break;
-                            case PropType.AddLifeOrAp:
+                            case Protobuf.PropType.AddLifeOrClairaudience:
                                 prop0.Text = "🏅";
                                 break;
-                            case PropType.AddHpOrAp:
+                            case Protobuf.PropType.AddHpOrAp:
                                 prop0.Text = "♥";
                                 break;
-                            case PropType.ShieldOrSpear:
+                            case Protobuf.PropType.ShieldOrSpear:
                                 prop0.Text = "🛡";
+                                break;
+                            case Protobuf.PropType.RecoveryFromDizziness:
+                                prop0.Text = "🕶";
                                 break;
                             default:
                                 prop0.Text = "";
@@ -183,26 +184,29 @@ namespace Client
                     case 1:
                         switch (icon)
                         {
-                            case PropType.Key3:
-                                prop1.Text = "🔑";
+                            case Protobuf.PropType.Key3:
+                                prop1.Text = "🔑3";
                                 break;
-                            case PropType.Key5:
-                                prop1.Text = "🔑";
+                            case Protobuf.PropType.Key5:
+                                prop1.Text = "🔑5";
                                 break;
-                            case PropType.Key6:
-                                prop1.Text = "🔑";
+                            case Protobuf.PropType.Key6:
+                                prop1.Text = "🔑6";
                                 break;
-                            case PropType.AddSpeed:
+                            case Protobuf.PropType.AddSpeed:
                                 prop1.Text = "⛸";
                                 break;
-                            case PropType.AddLifeOrAp:
+                            case Protobuf.PropType.AddLifeOrClairaudience:
                                 prop1.Text = "🏅";
                                 break;
-                            case PropType.AddHpOrAp:
+                            case Protobuf.PropType.AddHpOrAp:
                                 prop1.Text = "♥";
                                 break;
-                            case PropType.ShieldOrSpear:
+                            case Protobuf.PropType.ShieldOrSpear:
                                 prop1.Text = "🛡";
+                                break;
+                            case Protobuf.PropType.RecoveryFromDizziness:
+                                prop1.Text = "🕶";
                                 break;
                             default:
                                 prop1.Text = "";
@@ -213,26 +217,29 @@ namespace Client
                     case 2:
                         switch (icon)
                         {
-                            case PropType.Key3:
-                                prop2.Text = "🔑";
+                            case Protobuf.PropType.Key3:
+                                prop2.Text = "🔑3";
                                 break;
-                            case PropType.Key5:
-                                prop2.Text = "🔑";
+                            case Protobuf.PropType.Key5:
+                                prop2.Text = "🔑5";
                                 break;
-                            case PropType.Key6:
-                                prop2.Text = "🔑";
+                            case Protobuf.PropType.Key6:
+                                prop2.Text = "🔑6";
                                 break;
-                            case PropType.AddSpeed:
+                            case Protobuf.PropType.AddSpeed:
                                 prop2.Text = "⛸";
                                 break;
-                            case PropType.AddLifeOrAp:
+                            case Protobuf.PropType.AddLifeOrClairaudience:
                                 prop2.Text = "🏅";
                                 break;
-                            case PropType.AddHpOrAp:
+                            case Protobuf.PropType.AddHpOrAp:
                                 prop2.Text = "♥";
                                 break;
-                            case PropType.ShieldOrSpear:
+                            case Protobuf.PropType.ShieldOrSpear:
                                 prop2.Text = "🛡";
+                                break;
+                            case Protobuf.PropType.RecoveryFromDizziness:
+                                prop2.Text = "🕶";
                                 break;
                             default:
                                 prop2.Text = "";
@@ -243,26 +250,29 @@ namespace Client
                     case 3:
                         switch (icon)
                         {
-                            case PropType.Key3:
-                                prop3.Text = "🔑";
+                            case Protobuf.PropType.Key3:
+                                prop3.Text = "🔑3";
                                 break;
-                            case PropType.Key5:
-                                prop3.Text = "🔑";
+                            case Protobuf.PropType.Key5:
+                                prop3.Text = "🔑5";
                                 break;
-                            case PropType.Key6:
-                                prop3.Text = "🔑";
+                            case Protobuf.PropType.Key6:
+                                prop3.Text = "🔑6";
                                 break;
-                            case PropType.AddSpeed:
+                            case Protobuf.PropType.AddSpeed:
                                 prop3.Text = "⛸";
                                 break;
-                            case PropType.AddLifeOrAp:
+                            case Protobuf.PropType.AddLifeOrClairaudience:
                                 prop3.Text = "🏅";
                                 break;
-                            case PropType.AddHpOrAp:
+                            case Protobuf.PropType.AddHpOrAp:
                                 prop3.Text = "♥";
                                 break;
-                            case PropType.ShieldOrSpear:
+                            case Protobuf.PropType.ShieldOrSpear:
                                 prop3.Text = "🛡";
+                                break;
+                            case Protobuf.PropType.RecoveryFromDizziness:
+                                prop3.Text = "🕶";
                                 break;
                             default:
                                 prop3.Text = "";
@@ -275,13 +285,14 @@ namespace Client
                 }
             }
         }
-        public void SetValue(MessageOfTricker obj)
+
+        public void SetValue(MessageOfTricker obj, double time0, double time1, double time2)
         {
             if (!initialized)
-                SetStaticValue(obj);
+                SetStaticValue(obj, time0, time1, time2);
             SetDynamicValue(obj);
         }
-        private int coolTime0, coolTime1, coolTime2;
+        private double coolTime0, coolTime1, coolTime2;
         private bool initialized;
     }
 }

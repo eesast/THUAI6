@@ -2,6 +2,7 @@
 using Preparation.Interface;
 using System.Collections.Generic;
 using System;
+using System.Numerics;
 
 namespace GameClass.GameObj
 {
@@ -18,7 +19,7 @@ namespace GameClass.GameObj
         private Dictionary<ActiveSkillType, IActiveSkill> iActiveSkillDictionary = new();
         public Dictionary<ActiveSkillType, IActiveSkill> IActiveSkillDictionary => iActiveSkillDictionary;
 
-        public IActiveSkill UseIActiveSkill(ActiveSkillType activeSkillType)
+        public IActiveSkill FindIActiveSkill(ActiveSkillType activeSkillType)
         {
             if (Occupation.ListOfIActiveSkill.Contains(activeSkillType))
             {
@@ -65,32 +66,44 @@ namespace GameClass.GameObj
                 case CharacterType.Assassin:
                     this.occupation = new Assassin();
                     break;
+                case CharacterType.Robot:
+                    this.occupation = new Robot();
+                    break;
+                case CharacterType.Teacher:
+                    this.occupation = new Teacher();
+                    break;
+                case CharacterType.Klee:
+                    this.occupation = new Klee();
+                    break;
+                case CharacterType.StraightAStudent:
+                    this.occupation = new StraightAStudent();
+                    break;
+                case CharacterType.ANoisyPerson:
+                    this.occupation = new ANoisyPerson();
+                    break;
+                case CharacterType.TechOtaku:
+                    this.occupation = new TechOtaku();
+                    break;
                 case CharacterType.Athlete:
                 default:
                     this.occupation = new Athlete();
                     break;
             }
-            this.MaxHp = Occupation.MaxHp;
-            this.hp = Occupation.MaxHp;
-            this.OrgMoveSpeed = Occupation.MoveSpeed;
-            this.moveSpeed = Occupation.MoveSpeed;
-            this.OrgCD = this.cd = BulletFactory.BulletCD(Occupation.InitBullet);
-            this.maxBulletNum = Occupation.MaxBulletNum;
-            this.bulletNum = maxBulletNum;
-            this.bulletOfPlayer = Occupation.InitBullet;
-            this.OriBulletOfPlayer = Occupation.InitBullet;
+            this.MaxHp = this.hp = Occupation.MaxHp;
+            this.OrgMoveSpeed = this.moveSpeed = Occupation.MoveSpeed;
+            this.BulletOfPlayer = this.OriBulletOfPlayer = Occupation.InitBullet;
             this.concealment = Occupation.Concealment;
             this.alertnessRadius = Occupation.AlertnessRadius;
             this.ViewRange = Occupation.ViewRange;
             this.characterType = characterType;
             this.SpeedOfOpeningOrLocking = Occupation.TimeOfOpeningOrLocking;
             this.SpeedOfClimbingThroughWindows = Occupation.SpeedOfClimbingThroughWindows;
-            this.SpeedOfOpenChest = Occupation.TimeOfOpenChest;
+            this.SpeedOfOpenChest = Occupation.SpeedOfOpenChest;
 
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)
             {
-                this.TimeUntilActiveSkillAvailable.Add(activeSkill, 0);
                 this.IActiveSkillDictionary.Add(activeSkill, SkillFactory.FindIActiveSkill(activeSkill));
+                this.TimeUntilActiveSkillAvailable.Add(activeSkill, IActiveSkillDictionary[activeSkill].SkillCD);
             }
 
             // UsePassiveSkill();  //创建player时开始被动技能，这一过程也可以放到gamestart时进行

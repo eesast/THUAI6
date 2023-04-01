@@ -47,7 +47,9 @@ namespace GameClass.GameObj
                 lock (gameObjLock)
                 {
                     bulletOfPlayer = value;
-                    CD = BulletFactory.BulletCD(value);
+                    OrgCD = (BulletFactory.BulletCD(value));
+                    CD = 0;
+                    maxBulletNum = bulletNum = (BulletFactory.BulletNum(value));
                 }
             }
         }
@@ -123,22 +125,6 @@ namespace GameClass.GameObj
         }*/
         #endregion
         #region 感知相关的基本属性及方法
-        /// <summary>
-        /// 是否在隐身
-        /// </summary>
-        private bool isInvisible = false;
-        public bool IsInvisible
-        {
-            get => isInvisible;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    isInvisible = value;
-                }
-            }
-        }
-
         private Dictionary<BgmType, double> bgmDictionary = new();
         public Dictionary<BgmType, double> BgmDictionary
         {
@@ -281,7 +267,7 @@ namespace GameClass.GameObj
         {
             int previousHp = hp;
             lock (gameObjLock)
-                hp = hp >= sub ? 0 : hp - sub;
+                hp = hp <= sub ? 0 : hp - sub;
             Debugger.Output(this, " hp has subed to: " + hp.ToString());
             return previousHp - hp;
         }
@@ -340,8 +326,8 @@ namespace GameClass.GameObj
             }
         }
 
-        public bool NoHp() => (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
-                                                            && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued);
+        public bool NoHp() => (playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
+                                                            || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued);
         public bool Commandable() => (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
                                                             && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
                                                              && playerState != PlayerStateType.Swinging && playerState != PlayerStateType.TryingToAttack
@@ -350,7 +336,7 @@ namespace GameClass.GameObj
         public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
         public bool CanBeAwed() => !(playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
                                                             || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued
-                                                            || playerState == PlayerStateType.Treated || playerState != PlayerStateType.Stunned
+                                                            || playerState == PlayerStateType.Treated || playerState == PlayerStateType.Stunned
                                                             || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
 
         private int score = 0;
@@ -368,7 +354,7 @@ namespace GameClass.GameObj
             lock (gameObjLock)
             {
                 score += add;
-                Debugger.Output(this, " 's score has been added to: " + score.ToString());
+                //Debugger.Output(this, " 's score has been added to: " + score.ToString());
             }
         }
         /// <summary>
@@ -387,8 +373,8 @@ namespace GameClass.GameObj
         /// <summary>
         /// 角色所属队伍ID
         /// </summary>
-        private long teamID = long.MaxValue;
-        public long TeamID
+        private int teamID = int.MaxValue;
+        public int TeamID
         {
             get => teamID;
             set
@@ -400,8 +386,8 @@ namespace GameClass.GameObj
                 }
             }
         }
-        private long playerID = long.MaxValue;
-        public long PlayerID
+        private int playerID = int.MaxValue;
+        public int PlayerID
         {
             get => playerID;
             set
@@ -466,17 +452,25 @@ namespace GameClass.GameObj
             {
                 if (propType == PropType.Null)
                 {
-                    foreach (Prop prop in propInventory)
+                    for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
                     {
-                        if (prop.GetPropType() != PropType.Null)
+                        if (PropInventory[indexing].GetPropType() != PropType.Null)
+                        {
+                            Prop prop = PropInventory[indexing];
+                            PropInventory[indexing] = new NullProp();
                             return prop;
+                        }
                     }
                 }
                 else
-                    foreach (Prop prop in propInventory)
+                    for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
                     {
-                        if (prop.GetPropType() == propType)
+                        if (PropInventory[indexing].GetPropType() == propType)
+                        {
+                            Prop prop = PropInventory[indexing];
+                            PropInventory[indexing] = new NullProp();
                             return prop;
+                        }
                     }
                 return new NullProp();
             }
@@ -502,7 +496,7 @@ namespace GameClass.GameObj
         public void AddShield(int shieldTime) => buffManager.AddShield(shieldTime);
         public bool HasShield => buffManager.HasShield;
 
-        public void AddLIFE(int LIFETime) => buffManager.AddLIFE(LIFETime);
+        public void AddLife(int LIFETime) => buffManager.AddLife(LIFETime);
         public bool HasLIFE => buffManager.HasLIFE;
 
         public void AddAp(int time) => buffManager.AddAp(time);
@@ -510,6 +504,12 @@ namespace GameClass.GameObj
 
         public void AddSpear(int spearTime) => buffManager.AddSpear(spearTime);
         public bool HasSpear => buffManager.HasSpear;
+
+        public void AddClairaudience(int time) => buffManager.AddClairaudience(time);
+        public bool HasClairaudience => buffManager.HasClairaudience;
+
+        public void AddInvisible(int time) => buffManager.AddInvisible(time);
+        public bool HasInvisible => buffManager.HasInvisible;
 
         private Array buffTypeArray = Enum.GetValues(typeof(BuffType));
         public Dictionary<BuffType, bool> Buff
@@ -535,7 +535,7 @@ namespace GameClass.GameObj
                     return this.HasFasterSpeed;
                 case BuffType.Shield:
                     return this.HasShield;
-                case BuffType.AddLIFE:
+                case BuffType.AddLife:
                     return this.HasLIFE;
                 default:
                     return false;
@@ -552,14 +552,27 @@ namespace GameClass.GameObj
 
         public bool TryAddAp()
         {
-            AddScore(GameData.ScorePropAddAp);
-            return buffManager.TryAddAp();
+            if (buffManager.TryAddAp())
+            {
+                AddScore(GameData.ScorePropAddAp);
+                return true;
+            }
+            return false;
+        }
+
+        public bool TryUseSpear()
+        {
+            return buffManager.TryUseSpear();
         }
 
         public bool TryUseShield()
         {
-            AddScore(GameData.ScorePropUseShield);
-            return buffManager.TryUseShield();
+            if (buffManager.TryUseShield())
+            {
+                AddScore(GameData.ScorePropUseShield);
+                return true;
+            }
+            return false;
         }
         #endregion
         /*     public override void Reset()  // 要加锁吗？

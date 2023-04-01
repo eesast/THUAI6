@@ -52,13 +52,13 @@ namespace GameClass.GameObj
     /// <summary>
     /// 复活甲
     /// </summary>
-    public sealed class AddLifeOrAp : Prop
+    public sealed class AddLifeOrClairaudience : Prop
     {
-        public AddLifeOrAp(XY initPos, PlaceType placeType) :
+        public AddLifeOrClairaudience(XY initPos, PlaceType placeType) :
             base(initPos, placeType)
         {
         }
-        public override PropType GetPropType() => PropType.AddLifeOrAp;
+        public override PropType GetPropType() => PropType.AddLifeOrClairaudience;
     }
     public sealed class AddHpOrAp : Prop
     {
@@ -67,6 +67,14 @@ namespace GameClass.GameObj
         {
         }
         public override PropType GetPropType() => PropType.AddHpOrAp;
+    }
+    public sealed class RecoveryFromDizziness : Prop
+    {
+        public RecoveryFromDizziness(XY initPos, PlaceType placeType) :
+            base(initPos, placeType)
+        {
+        }
+        public override PropType GetPropType() => PropType.RecoveryFromDizziness;
     }
     /// <summary>
     /// 矛盾
@@ -141,12 +149,14 @@ namespace GameClass.GameObj
             {
                 case PropType.AddSpeed:
                     return new AddSpeed(pos, place);
-                case PropType.AddLifeOrAp:
-                    return new AddLifeOrAp(pos, place);
+                case PropType.AddLifeOrClairaudience:
+                    return new AddLifeOrClairaudience(pos, place);
                 case PropType.ShieldOrSpear:
                     return new ShieldOrSpear(pos, place);
                 case PropType.AddHpOrAp:
                     return new AddHpOrAp(pos, place);
+                case PropType.RecoveryFromDizziness:
+                    return new RecoveryFromDizziness(pos, place);
                 case PropType.Key3:
                     return new Key3(pos, place);
                 case PropType.Key5:

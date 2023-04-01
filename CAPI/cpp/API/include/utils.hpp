@@ -13,23 +13,27 @@
 namespace AssistFunction
 {
 
-    constexpr int numOfGridPerCell = 100;
+    constexpr int numOfGridPerCell = 1000;
 
     [[nodiscard]] constexpr inline int GridToCell(int grid) noexcept
     {
         return grid / numOfGridPerCell;
     }
 
-    inline bool HaveView(int viewRange, int x, int y, int newX, int newY, THUAI6::PlaceType myPlace, THUAI6::PlaceType newPlace, std::vector<std::vector<THUAI6::PlaceType>>& map)
+    inline bool HaveView(int viewRange, int x, int y, int newX, int newY, std::vector<std::vector<THUAI6::PlaceType>>& map)
     {
         int deltaX = newX - x;
         int deltaY = newY - y;
         double distance = deltaX * deltaX + deltaY * deltaY;
+        THUAI6::PlaceType myPlace = map[GridToCell(x)][GridToCell(y)];
+        THUAI6::PlaceType newPlace = map[GridToCell(newX)][GridToCell(newY)];
         if (newPlace == THUAI6::PlaceType::Grass && myPlace != THUAI6::PlaceType::Grass)  // 草丛外必不可能看到草丛内
             return false;
         if (distance < viewRange * viewRange)
         {
             int divide = std::max(std::abs(deltaX), std::abs(deltaY)) / 100;
+            if (divide == 0)
+                return true;
             double dx = deltaX / divide;
             double dy = deltaY / divide;
             double myX = double(x);
@@ -91,6 +95,7 @@ namespace Proto2THUAI6
         {protobuf::PropType::ADD_HP_OR_AP, THUAI6::PropType::AddHpOrAp},
         {protobuf::PropType::ADD_LIFE_OR_AP, THUAI6::PropType::AddLifeOrAp},
         {protobuf::PropType::SHIELD_OR_SPEAR, THUAI6::PropType::ShieldOrSpear},
+        {protobuf::PropType::RECOVERY_FROM_DIZZINESS, THUAI6::PropType::RecoveryFromDizziness},
     };
 
     inline std::map<protobuf::PlayerType, THUAI6::PlayerType> playerTypeDict{
@@ -102,33 +107,34 @@ namespace Proto2THUAI6
     inline std::map<protobuf::StudentType, THUAI6::StudentType> studentTypeDict{
         {protobuf::StudentType::NULL_STUDENT_TYPE, THUAI6::StudentType::NullStudentType},
         {protobuf::StudentType::ATHLETE, THUAI6::StudentType::Athlete},
-        {protobuf::StudentType::STUDENTTYPE2, THUAI6::StudentType::StudentType2},
-        {protobuf::StudentType::STUDENTTYPE3, THUAI6::StudentType::StudentType3},
+        {protobuf::StudentType::STUDENTTYPE2, THUAI6::StudentType::Teacher},
+        {protobuf::StudentType::STUDENTTYPE3, THUAI6::StudentType::StraightAStudent},
         {protobuf::StudentType::STUDENTTYPE4, THUAI6::StudentType::StudentType4},
     };
 
     inline std::map<protobuf::TrickerType, THUAI6::TrickerType> trickerTypeDict{
         {protobuf::TrickerType::NULL_TRICKER_TYPE, THUAI6::TrickerType::NullTrickerType},
         {protobuf::TrickerType::ASSASSIN, THUAI6::TrickerType::Assassin},
-        {protobuf::TrickerType::TRICKERTYPE2, THUAI6::TrickerType::TrickerType2},
-        {protobuf::TrickerType::TRICKERTYPE3, THUAI6::TrickerType::TrickerType3},
+        {protobuf::TrickerType::TRICKERTYPE2, THUAI6::TrickerType::Klee},
+        {protobuf::TrickerType::TRICKERTYPE3, THUAI6::TrickerType::ANoisyPerson},
         {protobuf::TrickerType::TRICKERTYPE4, THUAI6::TrickerType::TrickerType4},
     };
 
     inline std::map<protobuf::StudentBuffType, THUAI6::StudentBuffType> studentBuffTypeDict{
         {protobuf::StudentBuffType::NULL_SBUFF_TYPE, THUAI6::StudentBuffType::NullStudentBuffType},
-        {protobuf::StudentBuffType::SBUFFTYPE1, THUAI6::StudentBuffType::StudentBuffType1},
-        {protobuf::StudentBuffType::SBUFFTYPE2, THUAI6::StudentBuffType::StudentBuffType2},
-        {protobuf::StudentBuffType::SBUFFTYPE3, THUAI6::StudentBuffType::StudentBuffType3},
-        {protobuf::StudentBuffType::SBUFFTYPE4, THUAI6::StudentBuffType::StudentBuffType4},
+        {protobuf::StudentBuffType::SBUFFTYPE1, THUAI6::StudentBuffType::AddSpeed},
+        {protobuf::StudentBuffType::SBUFFTYPE2, THUAI6::StudentBuffType::AddLife},
+        {protobuf::StudentBuffType::SBUFFTYPE3, THUAI6::StudentBuffType::Shield},
+        {protobuf::StudentBuffType::SBUFFTYPE4, THUAI6::StudentBuffType::Invisible},
     };
 
     inline std::map<protobuf::TrickerBuffType, THUAI6::TrickerBuffType> trickerBuffTypeDict{
         {protobuf::TrickerBuffType::NULL_TBUFF_TYPE, THUAI6::TrickerBuffType::NullTrickerBuffType},
-        {protobuf::TrickerBuffType::TBUFFTYPE1, THUAI6::TrickerBuffType::TrickerBuffType1},
-        {protobuf::TrickerBuffType::TBUFFTYPE2, THUAI6::TrickerBuffType::TrickerBuffType2},
-        {protobuf::TrickerBuffType::TBUFFTYPE3, THUAI6::TrickerBuffType::TrickerBuffType3},
-        {protobuf::TrickerBuffType::TBUFFTYPE4, THUAI6::TrickerBuffType::TrickerBuffType4},
+        {protobuf::TrickerBuffType::TBUFFTYPE1, THUAI6::TrickerBuffType::AddSpeed},
+        {protobuf::TrickerBuffType::TBUFFTYPE2, THUAI6::TrickerBuffType::Spear},
+        {protobuf::TrickerBuffType::TBUFFTYPE3, THUAI6::TrickerBuffType::AddAp},
+        {protobuf::TrickerBuffType::TBUFFTYPE4, THUAI6::TrickerBuffType::Clairaudience},
+        {protobuf::TrickerBuffType::INVISIBLE, THUAI6::TrickerBuffType::Invisible},
     };
 
     inline std::map<protobuf::PlayerState, THUAI6::PlayerState> playerStateDict{
@@ -164,8 +170,8 @@ namespace Proto2THUAI6
         {protobuf::BulletType::NULL_BULLET_TYPE, THUAI6::BulletType::NullBulletType},
         {protobuf::BulletType::FLYING_KNIFE, THUAI6::BulletType::FlyingKnife},
         {protobuf::BulletType::COMMON_ATTACK_OF_TRICKER, THUAI6::BulletType::CommonAttackOfTricker},
-        {protobuf::BulletType::FAST_BULLET, THUAI6::BulletType::FastBullet},
-        {protobuf::BulletType::ORDINARY_BULLET, THUAI6::BulletType::OrdinaryBullet},
+        {protobuf::BulletType::FAST_BULLET, THUAI6::BulletType::BombBomb},
+        {protobuf::BulletType::ORDINARY_BULLET, THUAI6::BulletType::JumpyDumpty},
         {protobuf::BulletType::ATOM_BOMB, THUAI6::BulletType::AtomBomb},
     };
 
@@ -198,10 +204,12 @@ namespace Proto2THUAI6
         tricker->bulletType = bulletTypeDict[trickerMsg.bullet_type()];
         tricker->trickDesire = trickerMsg.trick_desire();
         tricker->classVolume = trickerMsg.class_volume();
+        tricker->timeUntilSkillAvailable.clear();
         for (int i = 0; i < trickerMsg.time_until_skill_available().size(); i++)
             tricker->timeUntilSkillAvailable.push_back(trickerMsg.time_until_skill_available(i));
         tricker->place = placeTypeDict[trickerMsg.place()];
         tricker->playerState = playerStateDict[trickerMsg.player_state()];
+        tricker->props.clear();
         for (int i = 0; i < trickerMsg.prop().size(); i++)
             tricker->props.push_back(propTypeDict[trickerMsg.prop(i)]);
         tricker->trickerType = trickerTypeDict[trickerMsg.tricker_type()];
@@ -209,6 +217,7 @@ namespace Proto2THUAI6
         tricker->playerID = trickerMsg.player_id();
         tricker->viewRange = trickerMsg.view_range();
         tricker->radius = trickerMsg.radius();
+        tricker->playerType = THUAI6::PlayerType::TrickerPlayer;
         tricker->buff.clear();
         for (int i = 0; i < trickerMsg.buff().size(); i++)
             tricker->buff.push_back(trickerBuffTypeDict[trickerMsg.buff(i)]);
@@ -233,9 +242,11 @@ namespace Proto2THUAI6
         student->treatProgress = studentMsg.treat_progress();
         student->rescueProgress = studentMsg.rescue_progress();
         student->dangerAlert = studentMsg.danger_alert();
+        student->timeUntilSkillAvailable.clear();
         for (int i = 0; i < studentMsg.time_until_skill_available().size(); i++)
             student->timeUntilSkillAvailable.push_back(studentMsg.time_until_skill_available(i));
         student->playerType = THUAI6::PlayerType::StudentPlayer;
+        student->props.clear();
         for (int i = 0; i < studentMsg.prop().size(); i++)
             student->props.push_back(propTypeDict[studentMsg.prop(i)]);
         student->place = placeTypeDict[studentMsg.place()];
@@ -265,14 +276,11 @@ namespace Proto2THUAI6
     {
         auto gameInfo = std::make_shared<THUAI6::GameInfo>();
         gameInfo->gameTime = allMsg.game_time();
-        gameInfo->subjectLeft = allMsg.subject_left();
+        gameInfo->subjectFinished = allMsg.subject_finished();
         gameInfo->studentGraduated = allMsg.student_graduated();
         gameInfo->studentQuited = allMsg.student_quited();
         gameInfo->studentScore = allMsg.student_score();
         gameInfo->trickerScore = allMsg.tricker_score();
-        gameInfo->gateOpened = allMsg.gate_opened();
-        gameInfo->hiddenGateOpened = allMsg.hidden_gate_opened();
-        gameInfo->hiddenGateRefreshed = allMsg.hidden_gate_refreshed();
         return gameInfo;
     }
 
@@ -356,34 +364,34 @@ namespace THUAI62Proto
     inline std::map<THUAI6::StudentType, protobuf::StudentType> studentTypeDict{
         {THUAI6::StudentType::NullStudentType, protobuf::StudentType::NULL_STUDENT_TYPE},
         {THUAI6::StudentType::Athlete, protobuf::StudentType::ATHLETE},
-        {THUAI6::StudentType::StudentType2, protobuf::StudentType::STUDENTTYPE2},
-        {THUAI6::StudentType::StudentType3, protobuf::StudentType::STUDENTTYPE3},
+        {THUAI6::StudentType::Teacher, protobuf::StudentType::STUDENTTYPE2},
+        {THUAI6::StudentType::StraightAStudent, protobuf::StudentType::STUDENTTYPE3},
         {THUAI6::StudentType::StudentType4, protobuf::StudentType::STUDENTTYPE4},
     };
 
-    inline std::map<THUAI6::StudentBuffType, protobuf::StudentBuffType> studentBuffTypeDict{
-        {THUAI6::StudentBuffType::NullStudentBuffType, protobuf::StudentBuffType::NULL_SBUFF_TYPE},
-        {THUAI6::StudentBuffType::StudentBuffType1, protobuf::StudentBuffType::SBUFFTYPE1},
-        {THUAI6::StudentBuffType::StudentBuffType2, protobuf::StudentBuffType::SBUFFTYPE2},
-        {THUAI6::StudentBuffType::StudentBuffType3, protobuf::StudentBuffType::SBUFFTYPE3},
-        {THUAI6::StudentBuffType::StudentBuffType4, protobuf::StudentBuffType::SBUFFTYPE4},
-    };
+    // inline std::map<THUAI6::StudentBuffType, protobuf::StudentBuffType> studentBuffTypeDict{
+    //     {THUAI6::StudentBuffType::NullStudentBuffType, protobuf::StudentBuffType::NULL_SBUFF_TYPE},
+    //     {THUAI6::StudentBuffType::StudentBuffType1, protobuf::StudentBuffType::SBUFFTYPE1},
+    //     {THUAI6::StudentBuffType::StudentBuffType2, protobuf::StudentBuffType::SBUFFTYPE2},
+    //     {THUAI6::StudentBuffType::StudentBuffType3, protobuf::StudentBuffType::SBUFFTYPE3},
+    //     {THUAI6::StudentBuffType::StudentBuffType4, protobuf::StudentBuffType::SBUFFTYPE4},
+    // };
 
     inline std::map<THUAI6::TrickerType, protobuf::TrickerType> trickerTypeDict{
         {THUAI6::TrickerType::NullTrickerType, protobuf::TrickerType::NULL_TRICKER_TYPE},
         {THUAI6::TrickerType::Assassin, protobuf::TrickerType::ASSASSIN},
-        {THUAI6::TrickerType::TrickerType2, protobuf::TrickerType::TRICKERTYPE2},
-        {THUAI6::TrickerType::TrickerType3, protobuf::TrickerType::TRICKERTYPE3},
+        {THUAI6::TrickerType::Klee, protobuf::TrickerType::TRICKERTYPE2},
+        {THUAI6::TrickerType::ANoisyPerson, protobuf::TrickerType::TRICKERTYPE3},
         {THUAI6::TrickerType::TrickerType4, protobuf::TrickerType::TRICKERTYPE4},
     };
 
-    inline std::map<THUAI6::TrickerBuffType, protobuf::TrickerBuffType> trickerBuffTypeDict{
-        {THUAI6::TrickerBuffType::NullTrickerBuffType, protobuf::TrickerBuffType::NULL_TBUFF_TYPE},
-        {THUAI6::TrickerBuffType::TrickerBuffType1, protobuf::TrickerBuffType::TBUFFTYPE1},
-        {THUAI6::TrickerBuffType::TrickerBuffType2, protobuf::TrickerBuffType::TBUFFTYPE2},
-        {THUAI6::TrickerBuffType::TrickerBuffType3, protobuf::TrickerBuffType::TBUFFTYPE3},
-        {THUAI6::TrickerBuffType::TrickerBuffType4, protobuf::TrickerBuffType::TBUFFTYPE4},
-    };
+    // inline std::map<THUAI6::TrickerBuffType, protobuf::TrickerBuffType> trickerBuffTypeDict{
+    //     {THUAI6::TrickerBuffType::NullTrickerBuffType, protobuf::TrickerBuffType::NULL_TBUFF_TYPE},
+    //     {THUAI6::TrickerBuffType::TrickerBuffType1, protobuf::TrickerBuffType::TBUFFTYPE1},
+    //     {THUAI6::TrickerBuffType::TrickerBuffType2, protobuf::TrickerBuffType::TBUFFTYPE2},
+    //     {THUAI6::TrickerBuffType::TrickerBuffType3, protobuf::TrickerBuffType::TBUFFTYPE3},
+    //     {THUAI6::TrickerBuffType::TrickerBuffType4, protobuf::TrickerBuffType::TBUFFTYPE4},
+    // };
 
     // 用于将THUAI6的类转换为Protobuf的消息
     inline protobuf::PlayerMsg THUAI62ProtobufPlayer(int64_t playerID, THUAI6::PlayerType playerType, THUAI6::StudentType studentType, THUAI6::TrickerType trickerType)
@@ -393,10 +401,12 @@ namespace THUAI62Proto
         playerMsg.set_player_type(playerTypeDict[playerType]);
         if (playerType == THUAI6::PlayerType::StudentPlayer)
         {
+            playerMsg.set_player_type(protobuf::PlayerType::STUDENT_PLAYER);
             playerMsg.set_student_type(studentTypeDict[studentType]);
         }
         else if (playerType == THUAI6::PlayerType::TrickerPlayer)
         {
+            playerMsg.set_player_type(protobuf::PlayerType::TRICKER_PLAYER);
             playerMsg.set_tricker_type(trickerTypeDict[trickerType]);
         }
         return playerMsg;
@@ -407,6 +417,14 @@ namespace THUAI62Proto
         protobuf::IDMsg idMsg;
         idMsg.set_player_id(playerID);
         return idMsg;
+    }
+
+    inline protobuf::TreatAndRescueMsg THUAI62ProtobufTreatAndRescue(int64_t playerID, int64_t mateID)
+    {
+        protobuf::TreatAndRescueMsg treatAndRescueMsg;
+        treatAndRescueMsg.set_player_id(playerID);
+        treatAndRescueMsg.set_to_player_id(mateID);
+        return treatAndRescueMsg;
     }
 
     inline protobuf::MoveMsg THUAI62ProtobufMove(int64_t time, double angle, int64_t id)

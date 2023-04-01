@@ -50,12 +50,14 @@ namespace Server
             {
                 case Preparation.Utility.PropType.AddSpeed:
                     return Protobuf.PropType.AddSpeed;
-                case Preparation.Utility.PropType.AddLifeOrAp:
-                    return Protobuf.PropType.AddLifeOrAp;
+                case Preparation.Utility.PropType.AddLifeOrClairaudience:
+                    return Protobuf.PropType.AddLifeOrClairaudience;
                 case Preparation.Utility.PropType.AddHpOrAp:
                     return Protobuf.PropType.AddHpOrAp;
                 case Preparation.Utility.PropType.ShieldOrSpear:
                     return Protobuf.PropType.ShieldOrSpear;
+                case Preparation.Utility.PropType.RecoveryFromDizziness:
+                    return Protobuf.PropType.RecoveryFromDizziness;
                 case Preparation.Utility.PropType.Key3:
                     return Protobuf.PropType.Key3;
                 case Preparation.Utility.PropType.Key5:
@@ -73,12 +75,14 @@ namespace Server
             {
                 case Protobuf.PropType.AddSpeed:
                     return Preparation.Utility.PropType.AddSpeed;
-                case Protobuf.PropType.AddLifeOrAp:
-                    return Preparation.Utility.PropType.AddLifeOrAp;
+                case Protobuf.PropType.AddLifeOrClairaudience:
+                    return Preparation.Utility.PropType.AddLifeOrClairaudience;
                 case Protobuf.PropType.AddHpOrAp:
                     return Preparation.Utility.PropType.AddHpOrAp;
                 case Protobuf.PropType.ShieldOrSpear:
                     return Preparation.Utility.PropType.ShieldOrSpear;
+                case Protobuf.PropType.RecoveryFromDizziness:
+                    return Preparation.Utility.PropType.RecoveryFromDizziness;
                 case Protobuf.PropType.Key3:
                     return Preparation.Utility.PropType.Key3;
                 case Protobuf.PropType.Key5:
@@ -89,7 +93,6 @@ namespace Server
                     return Preparation.Utility.PropType.Null;
             }
         }
-
 
         public static Protobuf.PlayerState ToPlayerState(Preparation.Utility.PlayerStateType playerState)
         {
@@ -138,7 +141,14 @@ namespace Server
         {
             switch (buffType)
             {
-                case Preparation.Utility.BuffType.Null:
+                case Preparation.Utility.BuffType.AddSpeed:
+                    return Protobuf.StudentBuffType.StudentAddSpeed;
+                case Preparation.Utility.BuffType.AddLife:
+                    return Protobuf.StudentBuffType.AddLife;
+                case Preparation.Utility.BuffType.Shield:
+                    return Protobuf.StudentBuffType.Shield;
+                case Preparation.Utility.BuffType.Invisible:
+                    return Protobuf.StudentBuffType.StudentInvisible;
                 default:
                     return Protobuf.StudentBuffType.NullSbuffType;
             }
@@ -147,7 +157,16 @@ namespace Server
         {
             switch (buffType)
             {
-                case Preparation.Utility.BuffType.Null:
+                case Preparation.Utility.BuffType.AddSpeed:
+                    return Protobuf.TrickerBuffType.TrickerAddSpeed;
+                case Preparation.Utility.BuffType.Spear:
+                    return Protobuf.TrickerBuffType.Spear;
+                case Preparation.Utility.BuffType.AddAp:
+                    return Protobuf.TrickerBuffType.AddAp;
+                case Preparation.Utility.BuffType.Clairaudience:
+                    return Protobuf.TrickerBuffType.Clairaudience;
+                case Preparation.Utility.BuffType.Invisible:
+                    return Protobuf.TrickerBuffType.TrickerInvisible;
                 default:
                     return Protobuf.TrickerBuffType.NullTbuffType;
             }
@@ -160,6 +179,10 @@ namespace Server
                     return Protobuf.BulletType.FlyingKnife;
                 case Preparation.Utility.BulletType.CommonAttackOfGhost:
                     return Protobuf.BulletType.CommonAttackOfTricker;
+                case Preparation.Utility.BulletType.BombBomb:
+                    return Protobuf.BulletType.BombBomb;
+                case Preparation.Utility.BulletType.JumpyDumpty:
+                    return Protobuf.BulletType.JumpyDumpty;
                 default:
                     return Protobuf.BulletType.NullBulletType;
             }
@@ -171,6 +194,14 @@ namespace Server
             {
                 case Preparation.Utility.CharacterType.Athlete:
                     return Protobuf.StudentType.Athlete;
+                case Preparation.Utility.CharacterType.Teacher:
+                    return Protobuf.StudentType.Teacher;
+                case Preparation.Utility.CharacterType.StraightAStudent:
+                    return Protobuf.StudentType.StraightAStudent;
+                case Preparation.Utility.CharacterType.Robot:
+                    return Protobuf.StudentType.Robot;
+                case Preparation.Utility.CharacterType.TechOtaku:
+                    return Protobuf.StudentType.TechOtaku;
                 default:
                     return Protobuf.StudentType.NullStudentType;
             }
@@ -182,6 +213,14 @@ namespace Server
             {
                 case Protobuf.StudentType.Athlete:
                     return Preparation.Utility.CharacterType.Athlete;
+                case Protobuf.StudentType.Teacher:
+                    return Preparation.Utility.CharacterType.Teacher;
+                case Protobuf.StudentType.StraightAStudent:
+                    return Preparation.Utility.CharacterType.StraightAStudent;
+                case Protobuf.StudentType.Robot:
+                    return Preparation.Utility.CharacterType.Robot;
+                case Protobuf.StudentType.TechOtaku:
+                    return Preparation.Utility.CharacterType.TechOtaku;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }
@@ -192,6 +231,10 @@ namespace Server
             {
                 case Preparation.Utility.CharacterType.Assassin:
                     return Protobuf.TrickerType.Assassin;
+                case Preparation.Utility.CharacterType.Klee:
+                    return Protobuf.TrickerType.Klee;
+                case Preparation.Utility.CharacterType.ANoisyPerson:
+                    return Protobuf.TrickerType.ANoisyPerson;
                 default:
                     return Protobuf.TrickerType.NullTrickerType;
             }
@@ -203,6 +246,10 @@ namespace Server
             {
                 case Protobuf.TrickerType.Assassin:
                     return Preparation.Utility.CharacterType.Assassin;
+                case Protobuf.TrickerType.Klee:
+                    return Preparation.Utility.CharacterType.Klee;
+                case Protobuf.TrickerType.ANoisyPerson:
+                    return Preparation.Utility.CharacterType.ANoisyPerson;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }
@@ -267,10 +314,10 @@ namespace Server
             foreach (var value in player.PropInventory)
                 msg.StudentMessage.Prop.Add(ToPropType(value.GetPropType()));
 
-            msg.StudentMessage.Place = ToPlaceType(player.Place);
+            msg.StudentMessage.Place = ToPlaceType((Preparation.Utility.PlaceType)player.Place);
             msg.StudentMessage.Guid = player.ID;
 
-            msg.StudentMessage.PlayerState = ToPlayerState(player.PlayerState);
+            msg.StudentMessage.PlayerState = ToPlayerState((PlayerStateType)player.PlayerState);
             msg.StudentMessage.PlayerId = player.PlayerID;
             msg.StudentMessage.ViewRange = player.ViewRange;
             msg.StudentMessage.Radius = player.Radius;
@@ -285,7 +332,7 @@ namespace Server
                     msg.StudentMessage.Buff.Add(ToStudentBuffType(kvp.Key));
             }
 
-            msg.StudentMessage.BulletType = ToBulletType(player.BulletOfPlayer);
+            msg.StudentMessage.BulletType = ToBulletType((Preparation.Utility.BulletType)player.BulletOfPlayer);
             msg.StudentMessage.LearningSpeed = player.FixSpeed;
             msg.StudentMessage.TreatSpeed = player.TreatSpeed;
             msg.StudentMessage.FacingDirection = player.FacingDirection.Angle();
@@ -307,7 +354,7 @@ namespace Server
             for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count(); ++i)
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(-1);
 
-            msg.TrickerMessage.Place = ToPlaceType(player.Place);
+            msg.TrickerMessage.Place = ToPlaceType((Preparation.Utility.PlaceType)player.Place);
             foreach (var value in player.PropInventory)
                 msg.TrickerMessage.Prop.Add(ToPropType(value.GetPropType()));
 
@@ -317,11 +364,11 @@ namespace Server
             msg.TrickerMessage.PlayerId = player.PlayerID;
             msg.TrickerMessage.ViewRange = player.ViewRange;
             msg.TrickerMessage.Radius = player.Radius;
-            msg.TrickerMessage.PlayerState = ToPlayerState(player.PlayerState);
+            msg.TrickerMessage.PlayerState = ToPlayerState((PlayerStateType)player.PlayerState);
             msg.TrickerMessage.TrickDesire = (player.BgmDictionary.ContainsKey(BgmType.StudentIsApproaching)) ? player.BgmDictionary[BgmType.StudentIsApproaching] : 0;
             msg.TrickerMessage.ClassVolume = (player.BgmDictionary.ContainsKey(BgmType.GeneratorIsBeingFixed)) ? player.BgmDictionary[BgmType.GeneratorIsBeingFixed] : 0;
             msg.TrickerMessage.FacingDirection = player.FacingDirection.Angle();
-            msg.TrickerMessage.BulletType = ToBulletType(player.BulletOfPlayer);
+            msg.TrickerMessage.BulletType = ToBulletType((Preparation.Utility.BulletType)player.BulletOfPlayer);
             foreach (KeyValuePair<Preparation.Utility.BuffType, bool> kvp in player.Buff)
             {
                 if (kvp.Value)
@@ -341,7 +388,7 @@ namespace Server
             msg.BulletMessage.FacingDirection = bullet.FacingDirection.Angle();
             msg.BulletMessage.Guid = bullet.ID;
             msg.BulletMessage.Team = (bullet.Parent.IsGhost()) ? PlayerType.TrickerPlayer : PlayerType.StudentPlayer;
-            msg.BulletMessage.Place = ToPlaceType(bullet.Place);
+            msg.BulletMessage.Place = ToPlaceType((Preparation.Utility.PlaceType)bullet.Place);
             msg.BulletMessage.BombRange = bullet.BulletBombRange;
             msg.BulletMessage.Speed = bullet.Speed;
             return msg;
@@ -356,7 +403,7 @@ namespace Server
             msg.PropMessage.Y = prop.Position.y;
             msg.PropMessage.FacingDirection = prop.FacingDirection.Angle();
             msg.PropMessage.Guid = prop.ID;
-            msg.PropMessage.Place = ToPlaceType(prop.Place);
+            msg.PropMessage.Place = ToPlaceType((Preparation.Utility.PlaceType)prop.Place);
             return msg;
         }
 

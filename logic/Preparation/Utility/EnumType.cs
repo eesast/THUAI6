@@ -53,45 +53,51 @@ namespace Preparation.Utility
     public enum BulletType  // 子弹类型
     {
         Null = 0,
-        OrdinaryBullet = 1,  // 普通子弹
-        AtomBomb = 2,        // 原子弹
-        FastBullet = 3,      // 快速子弹
-        LineBullet = 4,      // 直线子弹
-        FlyingKnife = 5,     //飞刀
-        CommonAttackOfGhost = 6,
+        FlyingKnife = 1,     //飞刀
+        CommonAttackOfGhost = 2,
+        JumpyDumpty = 3,
+        BombBomb = 4,
         // Ram = 7,
     }
     public enum PropType  // 道具类型
-    {
+    {//numOfPropSpecies 见Gamedata
         Null = 0,
-        AddSpeed = 1,
-        AddLifeOrAp = 2,
-        AddHpOrAp = 3,
-        ShieldOrSpear = 4,
-        Key3 = 5,
-        Key5 = 6,
-        Key6 = 7,
+        Key3 = 1,
+        Key5 = 2,
+        Key6 = 3,
+        AddSpeed = 4,
+        AddLifeOrClairaudience = 5,
+        AddHpOrAp = 6,
+        ShieldOrSpear = 7,
+        RecoveryFromDizziness = 8,
     }
     public enum CharacterType  // 职业
     {
         Null = 0,
         Assassin = 1,
         Athlete = 2,
-        RecoverAfterBattle = 3,
-        SpeedUpWhenLeavingGrass = 4,
+        Klee = 3,
+        TechOtaku = 4,
         Teacher = 5,
-        PSkill5 = 6
+        StraightAStudent = 6,
+        ANoisyPerson = 7,
+        Robot = 8,
+        Sunshine = 9,
     }
     public enum ActiveSkillType  // 主动技能
     {
         Null = 0,
         BecomeInvisible = 1,
         BecomeVampire = 2,
-        NuclearWeapon = 3,
-        SuperFast = 4,
+        JumpyBomb = 3,
+        SummonGolem = 4,
         UseKnife = 5,
         CanBeginToCharge = 6,
         Punish = 7,
+        WriteAnswers = 8,
+        Howl = 9,
+        UseRobot = 10,
+        Rouse = 11,
     }
     public enum PassiveSkillType
     {
@@ -100,19 +106,19 @@ namespace Preparation.Utility
         BecomeVampire = 2,
         NuclearWeapon = 3,
         SuperFast = 4,
-        ASkill4 = 5,
-        ASkill5 = 6
+        Meditate = 5,
     }
     public enum BuffType  // buff
     {
         Null = 0,
         AddSpeed = 1,
-        AddLIFE = 2,
+        AddLife = 2,
         Shield = 3,
         Spear = 4,
         AddAp = 5,
+        Clairaudience = 6,
+        Invisible = 7,
     }
-
     public enum PlaceType
     {
         Null = 0,

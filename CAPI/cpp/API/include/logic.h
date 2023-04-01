@@ -117,14 +117,14 @@ private:
 
     bool SendMessage(int64_t toID, std::string message) override;
     bool HaveMessage() override;
-    std::optional<std::pair<int64_t, std::string>> GetMessage() override;
+    std::pair<int64_t, std::string> GetMessage() override;
 
     bool Graduate() override;
 
     bool StartLearning() override;
 
-    bool StartTreatMate() override;
-    bool StartRescueMate() override;
+    bool StartTreatMate(int64_t mateID) override;
+    bool StartRescueMate(int64_t mateID) override;
 
     bool Attack(double angle) override;
 

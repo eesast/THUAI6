@@ -17,132 +17,60 @@ namespace Gaming
         {
             readonly Map gameMap;
             readonly MoveEngine moveEngine;
-            public AttackManager(Map gameMap)
+            readonly CharacterManager characterManager;
+
+            public AttackManager(Map gameMap, CharacterManager characterManager)
             {
                 this.gameMap = gameMap;
                 this.moveEngine = new MoveEngine(
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>
                     {
-                        //BulletBomb((Bullet)obj, (GameObj)collisionObj);
+                        BulletBomb((Bullet)obj, (GameObj)collisionObj);
                         return MoveEngine.AfterCollision.Destroyed;
                     },
                     EndMove: obj =>
                     {
-#if DEBUG
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
-
-#endif
-                        BulletBomb((Bullet)obj, null);
+                        if (obj.CanMove && ((Bullet)obj).TypeOfBullet != BulletType.JumpyDumpty)
+                            BulletBomb((Bullet)obj, null);
                     }
                 );
-            }
-
-            private void BeAddictedToGame(Student player, Ghost ghost)
-            {
-                ghost.AddScore(GameData.TrickerScoreStudentBeAddicted);
-                new Thread
-                    (() =>
-                    {
-                        if (player.GamingAddiction > GameData.BeginGamingAddiction && player.GamingAddiction < GameData.MidGamingAddiction)
-                            player.GamingAddiction = GameData.MidGamingAddiction;
-                        player.PlayerState = PlayerStateType.Addicted;
-                        new FrameRateTaskExecutor<int>(
-                            () => (player.PlayerState == PlayerStateType.Addicted || player.PlayerState == PlayerStateType.Rescued) && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
-                            () =>
-                            {
-                                player.GamingAddiction += (player.PlayerState == PlayerStateType.Addicted) ? GameData.frameDuration : 0;
-                            },
-                            timeInterval: GameData.frameDuration,
-                            () =>
-                            {
-                                if (player.GamingAddiction == player.MaxGamingAddiction && gameMap.Timer.IsGaming)
-                                {
-                                    ghost.AddScore(GameData.TrickerScoreStudentDie);
-                                    Die(player);
-                                }
-                                return 0;
-                            }
-                        )
-                            .Start();
-                    }
-                    )
-                { IsBackground = true }.Start();
-            }
-
-            public static void BeStunned(Character player, int time)
-            {
-                new Thread
-                    (() =>
-                    {
-                        player.PlayerState = PlayerStateType.Stunned;
-                        Thread.Sleep(time);
-                        if (player.PlayerState == PlayerStateType.Stunned)
-                            player.PlayerState = PlayerStateType.Null;
-                    }
-                    )
-                { IsBackground = true }.Start();
-            }
-
-            private void Die(Character player)
-            {
-
-                player.Die(PlayerStateType.Deceased);
-
-                for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
-                {
-                    Prop? prop = player.UseProp(i);
-                    if (prop != null)
-                    {
-                        prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
-                        gameMap.Add(prop);
-                    }
-                }
-                ++gameMap.NumOfDeceasedStudent;
-                if (GameData.numOfStudent - gameMap.NumOfDeceasedStudent - gameMap.NumOfEscapedStudent == 1)
-                {
-                    gameMap.GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
-                    try
-                    {
-                        foreach (EmergencyExit emergencyExit in gameMap.GameObjDict[GameObjType.EmergencyExit])
-                            if (emergencyExit.CanOpen)
-                            {
-                                emergencyExit.IsOpen = true;
-                                break;
-                            }
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
-                    }
-                }
-
-                //  player.Reset();
-                //    ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  // 给击杀者加分
-
+                this.characterManager = characterManager;
             }
 
             private void BombObj(Bullet bullet, GameObj objBeingShot)
             {
+#if DEBUG
+                Debugger.Output(bullet, "bombed " + objBeingShot.ToString());
+#endif
                 switch (objBeingShot.Type)
                 {
                     case GameObjType.Character:
 
-                        if ((!((Character)objBeingShot).IsGhost()) && bullet.Parent.IsGhost())
+                        if ((!(((Character)objBeingShot).IsGhost())) && bullet.Parent.IsGhost())
                         {
-                            Student oneBeAttacked = (Student)objBeingShot;
-                            if (oneBeAttacked.BeAttacked(bullet))
+                            Student whoBeAttacked = (Student)objBeingShot;
+                            if (whoBeAttacked.CharacterType == CharacterType.StraightAStudent)
                             {
-                                BeAddictedToGame(oneBeAttacked, (Ghost)bullet.Parent);
+                                ((WriteAnswers)whoBeAttacked.FindIActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
                             }
-                            if (oneBeAttacked.CanBeAwed())
+                            if (whoBeAttacked.BeAttacked(bullet))
                             {
-                                bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned);
-                                BeStunned(oneBeAttacked, GameData.basicStunnedTimeOfStudent);
+                                characterManager.BeAddictedToGame(whoBeAttacked, (Ghost)bullet.Parent);
+                            }
+                            if (whoBeAttacked.CanBeAwed())
+                            {
+                                if (CharacterManager.BeStunned(whoBeAttacked, GameData.basicStunnedTimeOfStudent))
+                                    bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.basicStunnedTimeOfStudent));
                             }
                         }
                         //       if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)
                         //          BeStunned((Character)objBeingShot, bullet.AP);
+                        break;
+                    case GameObjType.Generator:
+                        if (bullet.CanBeBombed(GameObjType.Generator))
+                            ((Generator)objBeingShot).DegreeOfRepair -= bullet.AP * GameData.factorDamageGenerator;
                         break;
                     default:
                         break;
@@ -152,57 +80,28 @@ namespace Gaming
             private void BulletBomb(Bullet bullet, GameObj? objBeingShot)
             {
 #if DEBUG
-                Debugger.Output(bullet, "bombed!");
+                if (objBeingShot != null)
+                    Debugger.Output(bullet, "bombed with" + objBeingShot.ToString());
+                else
+                    Debugger.Output(bullet, "bombed without objBeingShot");
 #endif
                 bullet.CanMove = false;
 
-                if (gameMap.Remove(bullet) && bullet.IsToBomb)
+                if (gameMap.Remove(bullet) && bullet.BulletBombRange > 0)
                     gameMap.Add(new BombedBullet(bullet));
 
-                if (!bullet.IsToBomb)
+                if (bullet.BulletBombRange == 0)
                 {
                     if (objBeingShot == null)
                     {
-                        if (bullet.Backswing > 0)
-                        {
-                            bullet.Parent.PlayerState = PlayerStateType.Swinging;
-
-                            new Thread
-                                    (() =>
-                                    {
-                                        Thread.Sleep(bullet.Backswing);
-
-                                        if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
-                                        {
-                                            bullet.Parent.PlayerState = PlayerStateType.Null;
-                                        }
-                                    }
-                                    )
-                            { IsBackground = true }.Start();
-                        }
+                        CharacterManager.BackSwing((Character?)bullet.Parent, bullet.Backswing);
                         return;
                     }
 
+                    Debugger.Output(bullet, bullet.TypeOfBullet.ToString());
 
                     BombObj(bullet, objBeingShot);
-                    if (bullet.RecoveryFromHit > 0)
-                    {
-                        bullet.Parent.PlayerState = PlayerStateType.Swinging;
-
-                        new Thread
-                                (() =>
-                                {
-
-                                    Thread.Sleep(bullet.RecoveryFromHit);
-
-                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
-                                    {
-                                        bullet.Parent.PlayerState = PlayerStateType.Null;
-                                    }
-                                }
-                                )
-                        { IsBackground = true }.Start();
-                    }
+                    CharacterManager.BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
                     return;
                 }
 
@@ -215,6 +114,17 @@ namespace Gaming
                 }*/
 
                 // 子弹爆炸会发生的事↓↓↓
+
+                if (bullet.TypeOfBullet == BulletType.BombBomb && objBeingShot != null)
+                {
+                    bullet.Parent.BulletOfPlayer = BulletType.JumpyDumpty;
+                    Debugger.Output(bullet, "JumpyDumpty!");
+                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle());
+                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI);
+                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI / 2.0);
+                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI * 3.0 / 2.0);
+                }
+
                 var beAttackedList = new List<IGameObj>();
 
                 foreach (var kvp in gameMap.GameObjDict)
@@ -242,61 +152,24 @@ namespace Gaming
                 {
                     BombObj(bullet, beAttackedObj);
                 }
+                beAttackedList.Clear();
+
                 if (objBeingShot == null)
                 {
-                    if (bullet.Backswing > 0)
-                    {
-                        bullet.Parent.PlayerState = PlayerStateType.Swinging;
-
-                        new Thread
-                                (() =>
-                                {
-                                    Thread.Sleep(bullet.Backswing);
-
-                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
-                                    {
-                                        bullet.Parent.PlayerState = PlayerStateType.Null;
-                                    }
-                                }
-                                )
-                        { IsBackground = true }.Start();
-                    }
+                    CharacterManager.BackSwing((Character?)bullet.Parent, bullet.Backswing);
                 }
                 else
-                {
-                    if (bullet.RecoveryFromHit > 0)
-                    {
-                        bullet.Parent.PlayerState = PlayerStateType.Swinging;
-
-                        new Thread
-                                (() =>
-                                {
-
-                                    Thread.Sleep(bullet.RecoveryFromHit);
-
-                                    if (gameMap.Timer.IsGaming && bullet.Parent.PlayerState == PlayerStateType.Swinging)
-                                    {
-                                        bullet.Parent.PlayerState = PlayerStateType.Null;
-                                    }
-                                }
-                                )
-                        { IsBackground = true }.Start();
-                    }
-                }
-                beAttackedList.Clear();
+                    CharacterManager.BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
             }
 
-            public bool Attack(Character? player, double angle)  // 射出去的子弹泼出去的水（狗头）
+            public bool Attack(Character? player, double angle)
             {                                                    // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
                 if (player == null)
                 {
-#if DEBUG
-                    Console.WriteLine("the player who will attack is NULL!");
-#endif
                     return false;
                 }
 
-                if (!player.Commandable())
+                if (player.BulletOfPlayer == BulletType.Null || !player.Commandable())
                     return false;
 
                 XY res = player.Position + new XY  // 子弹紧贴人物生成。
@@ -309,6 +182,7 @@ namespace Gaming
 
                 if (bullet != null)
                 {
+                    Debugger.Output(player, "Attack in" + bullet.ToString());
                     bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
                     bullet.CanMove = true;
                     gameMap.Add(bullet);

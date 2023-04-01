@@ -19,8 +19,16 @@ namespace Preparation.Utility
         }
         public XY(XY Direction, double length)
         {
-            this.x = (int)(length * Math.Cos(Direction.Angle()));
-            this.y = (int)(length * Math.Sin(Direction.Angle()));
+            if (Direction.x == 0 && Direction.y == 0)
+            {
+                this.x = 0;
+                this.y = 0;
+            }
+            else
+            {
+                this.x = (int)(length * Math.Cos(Direction.Angle()));
+                this.y = (int)(length * Math.Sin(Direction.Angle()));
+            }
         }
         public override string ToString()
         {
@@ -46,6 +54,14 @@ namespace Preparation.Utility
         {
             return new XY(v1.x - v2.x, v1.y - v2.y);
         }
+        public static bool operator ==(XY v1, XY v2)
+        {
+            return v1.x == v2.x && v1.y == v2.y;
+        }
+        public static bool operator !=(XY v1, XY v2)
+        {
+            return v1.x != v2.x || v1.y != v2.y;
+        }
         public static double Distance(XY p1, XY p2)
         {
             return Math.Sqrt(((long)(p1.x - p2.x) * (p1.x - p2.x)) + ((long)(p1.y - p2.y) * (p1.y - p2.y)));
@@ -57,6 +73,16 @@ namespace Preparation.Utility
         public double Angle()
         {
             return Math.Atan2(y, x);
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
         }
     }
 }

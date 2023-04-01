@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Preparation.Utility;
@@ -146,15 +147,15 @@ namespace GameClass.GameObj
                 return false;
             }
 
-            public void AddLIFE(int totelTime) => AddBuff(new BuffValue(), totelTime, BuffType.AddLIFE, () =>
+            public void AddLife(int totelTime) => AddBuff(new BuffValue(), totelTime, BuffType.AddLife, () =>
                                                                                                         { });
             public bool HasLIFE
             {
                 get
                 {
-                    lock (buffListLock[(int)BuffType.AddLIFE])
+                    lock (buffListLock[(int)BuffType.AddLife])
                     {
-                        return buffList[(int)BuffType.AddLIFE].Count != 0;
+                        return buffList[(int)BuffType.AddLife].Count != 0;
                     }
                 }
             }
@@ -162,9 +163,9 @@ namespace GameClass.GameObj
             {
                 if (HasLIFE)
                 {
-                    lock (buffListLock[(int)BuffType.AddLIFE])
+                    lock (buffListLock[(int)BuffType.AddLife])
                     {
-                        buffList[(int)BuffType.AddLIFE].RemoveFirst();
+                        buffList[(int)BuffType.AddLife].RemoveFirst();
                     }
                     return true;
                 }
@@ -180,6 +181,44 @@ namespace GameClass.GameObj
                     lock (buffListLock[(int)BuffType.Spear])
                     {
                         return buffList[(int)BuffType.Spear].Count != 0;
+                    }
+                }
+            }
+            public bool TryUseSpear()
+            {
+                if (HasSpear)
+                {
+                    lock (buffListLock[(int)BuffType.Spear])
+                    {
+                        buffList[(int)BuffType.Spear].RemoveFirst();
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            public void AddClairaudience(int shieldTime) => AddBuff(new BuffValue(), shieldTime, BuffType.Clairaudience, () =>
+            { });
+            public bool HasClairaudience
+            {
+                get
+                {
+                    lock (buffListLock[(int)BuffType.Clairaudience])
+                    {
+                        return buffList[(int)BuffType.Clairaudience].Count != 0;
+                    }
+                }
+            }
+
+            public void AddInvisible(int shieldTime) => AddBuff(new BuffValue(), shieldTime, BuffType.Invisible, () =>
+            { });
+            public bool HasInvisible
+            {
+                get
+                {
+                    lock (buffListLock[(int)BuffType.Invisible])
+                    {
+                        return buffList[(int)BuffType.Invisible].Count != 0;
                     }
                 }
             }

@@ -14,10 +14,10 @@ namespace Gaming
         public struct PlayerInitInfo
         {
             public uint birthPointIndex;
-            public long teamID;
-            public long playerID;
+            public int teamID;
+            public int playerID;
             public CharacterType characterType;
-            public PlayerInitInfo(uint birthPointIndex, long teamID, long playerID, CharacterType characterType)
+            public PlayerInitInfo(uint birthPointIndex, int teamID, int playerID, CharacterType characterType)
             {
                 this.birthPointIndex = birthPointIndex;
                 this.teamID = teamID;
@@ -39,145 +39,12 @@ namespace Gaming
                 return GameObj.invalidID;
 
             XY pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex];
+            Character? newPlayer = characterManager.AddPlayer(pos, playerInitInfo.teamID, playerInitInfo.playerID, playerInitInfo.characterType);
+            if (newPlayer == null) return GameObj.invalidID;
             // Console.WriteLine($"x,y: {pos.x},{pos.y}");
-
-            Character newPlayer = (GameData.IsGhost(playerInitInfo.characterType)) ? new Ghost(pos, GameData.characterRadius, playerInitInfo.characterType) : new Student(pos, GameData.characterRadius, playerInitInfo.characterType);
-            gameMap.Add(newPlayer);
 
             // Console.WriteLine($"GameObjDict[GameObjType.Character] length:{gameMap.GameObjDict[GameObjType.Character].Count}");
             teamList[(int)playerInitInfo.teamID].AddPlayer(newPlayer);
-            newPlayer.TeamID = playerInitInfo.teamID;
-            newPlayer.PlayerID = playerInitInfo.playerID;
-            #region 人物装弹
-            new Thread
-            (
-                () =>
-                {
-                    while (!gameMap.Timer.IsGaming)
-                        Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
-                    long lastTime = Environment.TickCount64;
-                    new FrameRateTaskExecutor<int>(
-                        loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
-                        loopToDo: () =>
-                        {
-                            long nowTime = Environment.TickCount64;
-                            if (newPlayer.BulletNum == newPlayer.MaxBulletNum)
-                                lastTime = nowTime;
-                            else if (nowTime - lastTime >= newPlayer.CD)
-                            {
-                                _ = newPlayer.TryAddBulletNum();
-                                lastTime = nowTime;
-                            }
-                        },
-                        timeInterval: GameData.checkInterval,
-                        finallyReturn: () => 0
-                    )
-                    {
-                        AllowTimeExceed = true/*,
-                        MaxTolerantTimeExceedCount = 5,
-                        TimeExceedAction = exceedTooMuch =>
-                        {
-                            if (exceedTooMuch) Console.WriteLine("The computer runs too slow that it cannot check the color below the player in time!");
-                        }*/
-                    }
-                        .Start();
-                }
-            )
-            { IsBackground = true }.Start();
-            #endregion
-            #region BGM,牵制得分更新
-            new Thread
-            (
-                () =>
-                {
-                    while (!gameMap.Timer.IsGaming)
-                        Thread.Sleep(GameData.checkInterval);
-                    int TimePinningDown = 0, ScoreAdded = 0;
-                    new FrameRateTaskExecutor<int>(
-                        loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
-                        loopToDo: () =>
-                            {
-                                gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                                try
-                                {
-                                    if (newPlayer.IsGhost())
-                                    {
-                                        double bgmVolume = 0;
-                                        foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
-                                        {
-                                            if (!person.IsGhost() && XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                            {
-                                                if ((double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position) > bgmVolume)
-                                                    bgmVolume = newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position);
-                                            }
-                                        }
-                                        if (bgmVolume > 0)
-                                            newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
-                                    }
-                                    else
-                                    {
-                                        foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
-                                        {
-                                            if (person.IsGhost())
-                                            {
-                                                if (XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                                    newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
-                                                if (XY.Distance(newPlayer.Position, person.Position) <= GameData.basicViewRange)
-                                                {
-                                                    TimePinningDown += GameData.checkInterval;
-                                                    newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
-                                                    ScoreAdded = GameData.StudentScorePinDown(TimePinningDown);
-                                                }
-                                                else TimePinningDown = ScoreAdded = 0;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                                finally
-                                {
-                                    gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
-                                }
-
-                                gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
-                                try
-                                {
-                                    double bgmVolume = 0;
-                                    foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
-                                    {
-                                        if (XY.Distance(newPlayer.Position, generator.Position) <= newPlayer.AlertnessRadius)
-                                        {
-                                            if ((double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position) > bgmVolume)
-                                                bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position);
-                                        }
-                                    }
-                                    if (bgmVolume > 0)
-                                        newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
-                                }
-
-
-                                finally
-                                {
-                                    gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
-                                }
-                            },
-                        timeInterval: GameData.checkInterval,
-                        finallyReturn: () => 0
-                    )
-                    {
-                        AllowTimeExceed = true/*,
-                        MaxTolerantTimeExceedCount = 5,
-                        TimeExceedAction = exceedTooMuch =>
-                        {
-                            if (exceedTooMuch) Console.WriteLine("The computer runs too slow that it cannot check the color below the player in time!");
-                        }*/
-                    }
-                        .Start();
-                }
-            )
-            { IsBackground = true }.Start();
-            #endregion
-
             return newPlayer.ID;
         }
         public bool StartGame(int milliSeconds)
@@ -210,7 +77,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 bool res = actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
@@ -233,7 +100,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            ICharacter? player = gameMap.FindPlayer(playerID);
+            ICharacter? player = gameMap.FindPlayerToAction(playerID);
             if (playerTreatedID == -1)
             {
                 if (player != null && !player.IsGhost())
@@ -254,7 +121,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            ICharacter? player = gameMap.FindPlayer(playerID);
+            ICharacter? player = gameMap.FindPlayerToAction(playerID);
             if (playerRescuedID == -1)
             {
                 if (player != null && !player.IsGhost())
@@ -276,7 +143,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            ICharacter? player = gameMap.FindPlayer(playerID);
+            ICharacter? player = gameMap.FindPlayerToAction(playerID);
             if (player != null && !player.IsGhost())
                 return actionManager.Fix((Student)player);
             return false;
@@ -285,7 +152,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            ICharacter? player = gameMap.FindPlayer(playerID);
+            ICharacter? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 if (!player.IsGhost())
@@ -297,7 +164,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 return ActionManager.Stop(player);
@@ -308,7 +175,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null && !player.IsGhost())
             {
                 return actionManager.OpenDoorway((Student)player);
@@ -319,7 +186,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 return actionManager.OpenChest(player);
@@ -330,7 +197,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 return actionManager.ClimbingThroughWindow(player);
@@ -341,7 +208,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 return actionManager.LockOrOpenDoor(player);
@@ -352,7 +219,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 _ = attackManager.Attack(player, angle);
@@ -362,7 +229,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 PropManager.UseProp(player, propType);
@@ -372,7 +239,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 propManager.ThrowProp(player, propType);
@@ -382,7 +249,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 return propManager.PickProp(player, propType);
@@ -401,6 +268,35 @@ namespace Gaming
             }
             else
                 return false;
+        }
+        public void AllActiveSkillDisabledTemporarily()
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            /*         new Thread
+                     (
+                         () =>
+                         {
+                             Thread.Sleep(10);*/
+            gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
+            try
+            {
+                foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
+                {
+                    foreach (var activeSkill in player.Occupation.ListOfIActiveSkill)
+                    {
+                        player.SetTimeUntilActiveSkillAvailable(activeSkill, 0);
+                    }
+                }
+            }
+            finally
+            {
+                gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
+            }
+            /*       }
+               )
+               { IsBackground = true }.Start();
+            */
         }
 
         public void AllPlayerUsePassiveSkill()
@@ -421,7 +317,7 @@ namespace Gaming
             }
         }
 
-        public void ClearLists(GameObjType[] objIdxes)
+        /*public void ClearLists(GameObjType[] objIdxes)
         {
             foreach (var idx in objIdxes)
             {
@@ -438,12 +334,12 @@ namespace Gaming
                     }
                 }
             }
-        }
+        }*/
         public void ClearAllLists()
         {
             foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                if (!GameData.IsMap(keyValuePair.Key))
+                if (!GameData.NeedCopy(keyValuePair.Key))
                 {
                     gameMap.GameObjLockDict[keyValuePair.Key].EnterWriteLock();
                     try
@@ -474,7 +370,7 @@ namespace Gaming
             var gameObjList = new List<IGameObj>();
             foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                if (!GameData.IsMap(keyValuePair.Key))
+                if (GameData.NeedCopy(keyValuePair.Key))
                 {
                     gameMap.GameObjLockDict[keyValuePair.Key].EnterReadLock();
                     try
@@ -503,10 +399,11 @@ namespace Gaming
                 teamList.Add(new Team());
             }
 
-            attackManager = new AttackManager(gameMap);
+            characterManager = new CharacterManager(gameMap);
+            attackManager = new AttackManager(gameMap, characterManager);
             actionManager = new ActionManager(gameMap);
             propManager = new PropManager(gameMap);
-            skillManager = new SkillManager(gameMap, actionManager, attackManager, propManager);
+            skillManager = new SkillManager(gameMap, actionManager, attackManager, propManager, characterManager);
         }
     }
 }

@@ -1,6 +1,6 @@
 import PyAPI.structures as THUAI6
 from PyAPI.Interface import IStudentAPI, ITrickerAPI, IAI
-from typing import Union, Final
+from typing import Union, Final, cast
 
 
 class Setting:
@@ -17,11 +17,11 @@ class Setting:
     # 选手需要将两个都定义，本份代码中不选择的阵营任意定义即可
     @staticmethod
     def studentType() -> THUAI6.StudentType:
-        return THUAI6.StudentType.StudentType1
+        return THUAI6.StudentType.Athlete
 
     @staticmethod
     def trickerType() -> THUAI6.TrickerType:
-        return THUAI6.TrickerType.TrickerType1
+        return THUAI6.TrickerType.Assassin
 
 
 # 辅助函数
@@ -40,6 +40,20 @@ class AssistFunction:
 
 
 class AI(IAI):
-    def play(self, api: Union[IStudentAPI, ITrickerAPI]) -> None:
-        # 选手在这里实现自己的逻辑，要求和上面选择的阵营保持一致，否则会发生错误
+    # 选手在这里实现自己的逻辑，要求和上面选择的阵营保持一致
+    def StudentPlay(self, api: IStudentAPI) -> None:
+        studentSelfInfo = api.GetSelfInfo()
+
+        if studentSelfInfo.playerID == 0:
+            api.SendMessage(1, "Hello, I'm player 0 using python interface!")
+        if studentSelfInfo.playerID == 1:
+            api.SendMessage(0, "Hello, I'm player 1 using python interface!")
+
+        if api.HaveMessage():
+            message = api.GetMessage()
+            api.Print(
+                f"Recieved Message from player {message[0]}: {message[1]}")
+        return
+
+    def TrickerPlay(self, api: ITrickerAPI) -> None:
         return

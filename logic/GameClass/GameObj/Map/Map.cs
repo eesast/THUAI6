@@ -21,7 +21,9 @@ namespace GameClass.GameObj
             set
             {
                 lock (lockForNum)
+                {
                     numOfRepairedGenerators = value;
+                }
             }
         }
         private uint numOfDeceasedStudent = 0;
@@ -31,7 +33,13 @@ namespace GameClass.GameObj
             set
             {
                 lock (lockForNum)
+                {
                     numOfDeceasedStudent = value;
+                    if (numOfDeceasedStudent + numOfEscapedStudent == GameData.numOfStudent)
+                    {
+                        Timer.IsGaming = false;
+                    }
+                }
             }
         }
         private uint numOfEscapedStudent = 0;
@@ -41,7 +49,13 @@ namespace GameClass.GameObj
             set
             {
                 lock (lockForNum)
+                {
                     numOfEscapedStudent = value;
+                    if (numOfDeceasedStudent + numOfEscapedStudent == GameData.numOfStudent)
+                    {
+                        Timer.IsGaming = false;
+                    }
+                }
             }
         }
 
@@ -95,6 +109,38 @@ namespace GameClass.GameObj
                     if (playerID == person.ID)
                     {
                         player = person;
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                gameObjLockDict[GameObjType.Character].ExitReadLock();
+            }
+            return player;
+        }
+        public Character? FindPlayerToAction(long playerID)
+        {
+            Character? player = null;
+            gameObjLockDict[GameObjType.Character].EnterReadLock();
+            try
+            {
+                foreach (Character person in gameObjDict[GameObjType.Character])
+                {
+                    if (playerID == person.ID)
+                    {
+                        if (person.CharacterType == CharacterType.TechOtaku && person.FindIActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed)
+                        {
+                            foreach (Character character in gameObjDict[GameObjType.Character])
+                            {
+                                if (playerID + GameData.numOfPeople == character.ID)
+                                {
+                                    player = character;
+                                    break;
+                                }
+                            }
+                        }
+                        else player = person;
                         break;
                     }
                 }
@@ -234,6 +280,53 @@ namespace GameClass.GameObj
                 GameObjLockDict[gameObjType].ExitReadLock();
             }
             return GameObjForInteract;
+        }
+        public bool CanSee(Character player, GameObj gameObj)
+        {
+            if ((gameObj.Type == GameObjType.Character) && ((Character)gameObj).HasInvisible) return false;
+            XY pos1 = player.Position;
+            XY pos2 = gameObj.Position;
+            XY del = pos1 - pos2;
+            if (del * del > player.ViewRange * player.ViewRange) return false;
+            if (del.x > del.y)
+            {
+                if (GetPlaceType(pos1) == PlaceType.Grass && GetPlaceType(pos2) == PlaceType.Grass)
+                {
+                    for (int x = GameData.PosGridToCellX(pos1) + GameData.numOfPosGridPerCell; x < GameData.PosGridToCellX(pos2); x += GameData.numOfPosGridPerCell)
+                    {
+                        if (GetPlaceType(pos1 + del * (x / del.x)) != PlaceType.Grass)
+                            return false;
+                    }
+                }
+                else
+                {
+                    for (int x = GameData.PosGridToCellX(pos1) + GameData.numOfPosGridPerCell; x < GameData.PosGridToCellX(pos2); x += GameData.numOfPosGridPerCell)
+                    {
+                        if (GetPlaceType(pos1 + del * (x / del.x)) == PlaceType.Wall)
+                            return false;
+                    }
+                }
+            }
+            else
+            {
+                if (GetPlaceType(pos1) == PlaceType.Grass && GetPlaceType(pos2) == PlaceType.Grass)
+                {
+                    for (int y = GameData.PosGridToCellY(pos1) + GameData.numOfPosGridPerCell; y < GameData.PosGridToCellY(pos2); y += GameData.numOfPosGridPerCell)
+                    {
+                        if (GetPlaceType(pos1 + del * (y / del.y)) != PlaceType.Grass)
+                            return false;
+                    }
+                }
+                else
+                {
+                    for (int y = GameData.PosGridToCellY(pos1) + GameData.numOfPosGridPerCell; y < GameData.PosGridToCellY(pos2); y += GameData.numOfPosGridPerCell)
+                    {
+                        if (GetPlaceType(pos1 + del * (y / del.y)) == PlaceType.Wall)
+                            return false;
+                    }
+                }
+            }
+            return true;
         }
         public Map(uint[,] mapResource)
         {

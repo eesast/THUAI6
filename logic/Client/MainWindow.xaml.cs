@@ -18,9 +18,9 @@ using Grpc.Core;
 using Protobuf;
 using Playback;
 using CommandLine;
+using Preparation.Utility;
 
 // 目前MainWindow还未复现的功能：
-// private void ReactToCommandline()，
 // private void ClickToSetMode(object sender, RoutedEventArgs e)
 // private void Bonus()
 
@@ -49,7 +49,7 @@ namespace Client
             listOfProp = new List<MessageOfProp>();
             listOfHuman = new List<MessageOfStudent>();
             listOfButcher = new List<MessageOfTricker>();
-            listOfBullet=new List<MessageOfBullet>();
+            listOfBullet = new List<MessageOfBullet>();
             listOfBombedBullet = new List<MessageOfBombedBullet>();
             listOfAll = new List<MessageOfAll>();
             listOfChest = new List<MessageOfChest>();
@@ -57,16 +57,8 @@ namespace Client
             listOfDoor = new List<MessageOfDoor>();
             listOfGate = new List<MessageOfGate>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            //comInfo[0] = "127.0.0.1";
-            //comInfo[1] = "8888";
-            //comInfo[2] = "0";
-            //comInfo[3] = "1";
-            //comInfo[4] = "1";
-            //ConnectToServer(comInfo);
-            //OnReceive();
             ReactToCommandline();
         }
-
 
         private void SetStatusBar()
         {
@@ -103,6 +95,7 @@ namespace Client
                 mapFlag = true;
             }
         }
+
         private void ReactToCommandline()
         {
             string[] args = Environment.GetCommandLineArgs();
@@ -115,12 +108,12 @@ namespace Client
             { options = o; });
             if (options == null || options.cl == false)
             {
-               OnReceive();
+                OnReceive();
             }
             else
             {
-                //if (options.PlaybackFile == DefaultArgumentOptions.FileName)
-                //{
+                if (options.PlaybackFile == DefaultArgumentOptions.FileName)
+                {
                     try
                     {
                         string[] comInfo = new string[5];
@@ -136,18 +129,19 @@ namespace Client
                     {
                         OnReceive();
                     }
-                //}
-                //else
-                //{
-                //  Playback(options.PlaybackFile, options.PlaybackSpeed);
-                //}
+                }
+                else
+                {
+                    Playback(options.PlaybackFile, options.PlaybackSpeed);
+                }
             }
         }
+
         private void Playback(string fileName, double pbSpeed = 2.0)
         {
             var pbClient = new PlaybackClient(fileName, pbSpeed);
             int[,]? map;
-            if ((map = pbClient.ReadDataFromFile(listOfProp, listOfHuman, listOfButcher, listOfBullet,listOfBombedBullet, listOfAll, listOfChest,  listOfClassroom,listOfDoor, listOfGate, drawPicLock)) != null)
+            if ((map = pbClient.ReadDataFromFile(listOfProp, listOfHuman, listOfButcher, listOfBullet, listOfBombedBullet, listOfAll, listOfChest, listOfClassroom, listOfDoor, listOfGate, drawPicLock)) != null)
             {
                 isClientStocked = false;
                 isPlaybackMode = true;
@@ -175,8 +169,6 @@ namespace Client
                 connect += comInfo[1];
                 Channel channel = new Channel(connect, ChannelCredentials.Insecure);
                 client = new AvailableService.AvailableServiceClient(channel);
-                // 没判断连没连上
-
                 PlayerMsg playerMsg = new PlayerMsg();
                 playerMsg.PlayerId = playerID;
                 playerType = Convert.ToInt64(comInfo[3]) switch
@@ -185,7 +177,7 @@ namespace Client
                     1 => PlayerType.StudentPlayer,
                     2 => PlayerType.TrickerPlayer,
                 };
-                playerMsg.PlayerType=playerType;
+                playerMsg.PlayerType = playerType;
                 if (Convert.ToInt64(comInfo[3]) == 1)
                 {
                     humanOrButcher = true;
@@ -198,22 +190,24 @@ namespace Client
                 {
                     switch (Convert.ToInt64(comInfo[4]))
                     {
-                        case 0:
-                            playerMsg.StudentType = StudentType.NullStudentType;
-                            break;
                         case 1:
                             playerMsg.StudentType = StudentType.Athlete;
                             break;
                         case 2:
-                            playerMsg.StudentType = StudentType._2;
+                            playerMsg.StudentType = StudentType.Teacher;
                             break;
                         case 3:
-                            playerMsg.StudentType = StudentType._3;
+                            playerMsg.StudentType = StudentType.StraightAStudent;
                             break;
                         case 4:
-                            playerMsg.StudentType = StudentType._4;
+                            playerMsg.StudentType = StudentType.Robot;
                             break;
+                        case 5:
+                            playerMsg.StudentType = StudentType.TechOtaku;
+                            break;
+                        case 0:
                         default:
+                            playerMsg.StudentType = StudentType.NullStudentType;
                             break;
                     }
                 }
@@ -221,22 +215,21 @@ namespace Client
                 {
                     switch (Convert.ToInt64(comInfo[4]))
                     {
-                        case 0:
-                            playerMsg.TrickerType = TrickerType.NullTrickerType;
-                            break;
                         case 1:
                             playerMsg.TrickerType = TrickerType.Assassin;
                             break;
                         case 2:
-                            playerMsg.TrickerType = TrickerType._2;
+                            playerMsg.TrickerType = TrickerType.Klee;
                             break;
                         case 3:
-                            playerMsg.TrickerType = TrickerType._3;
+                            playerMsg.TrickerType = TrickerType.ANoisyPerson;
                             break;
                         case 4:
                             playerMsg.TrickerType = TrickerType._4;
                             break;
+                        case 0:
                         default:
+                            playerMsg.TrickerType = TrickerType.NullTrickerType;
                             break;
                     }
                 }
@@ -298,8 +291,6 @@ namespace Client
                         VerticalAlignment = VerticalAlignment.Top,
                         Margin = new Thickness(Width * (j), Height * (i), 0, 0)
                     };
-                    // mapPatches[i, j].SetValue(Canvas.LeftProperty, (double)(Width / 65.5 * j));
-                    // mapPatches[i, j].SetValue(Canvas.TopProperty, (double)(Height / 56.5 * i));  // 用zoommap进行修改
                     switch (defaultMap[i, j])
                     {
                         case 6:
@@ -321,7 +312,7 @@ namespace Client
                         case 10:
                             foreach (var obj in listOfAll)
                             {
-                                if(obj.HiddenGateRefreshed)
+                                if (obj.SubjectFinished >= Preparation.Utility.GameData.numOfGeneratorRequiredForEmergencyExit)
                                 {
                                     mapPatches[i, j].Fill = Brushes.LightSalmon;
                                     mapPatches[i, j].Stroke = Brushes.LightSalmon;
@@ -408,9 +399,16 @@ namespace Client
                                     switch (obj.MessageOfObjCase)
                                     {
                                         case MessageOfObj.MessageOfObjOneofCase.StudentMessage:
+
                                             if (humanOrButcher && obj.StudentMessage.PlayerId == playerID)
                                             {
                                                 human = obj.StudentMessage;
+                                                if (human.TimeUntilSkillAvailable[0] >= 0)
+                                                    coolTime0 = human.TimeUntilSkillAvailable[0];
+                                                if (human.TimeUntilSkillAvailable[1] >= 0)
+                                                    coolTime1 = human.TimeUntilSkillAvailable[1];
+                                                if (human.TimeUntilSkillAvailable[2] >= 0)
+                                                    coolTime2 = human.TimeUntilSkillAvailable[2];
                                             }
                                             listOfHuman.Add(obj.StudentMessage);
                                             break;
@@ -418,6 +416,12 @@ namespace Client
                                             if (!humanOrButcher && obj.TrickerMessage.PlayerId == playerID)
                                             {
                                                 butcher = obj.TrickerMessage;
+                                                if (butcher.TimeUntilSkillAvailable[0] >= 0)
+                                                    coolTime0 = butcher.TimeUntilSkillAvailable[0];
+                                                if (butcher.TimeUntilSkillAvailable[1] >= 0)
+                                                    coolTime1 = butcher.TimeUntilSkillAvailable[1];
+                                                if (butcher.TimeUntilSkillAvailable[2] >= 0)
+                                                    coolTime2 = butcher.TimeUntilSkillAvailable[2];
                                             }
                                             listOfButcher.Add(obj.TrickerMessage);
                                             break;
@@ -542,17 +546,9 @@ namespace Client
             {
                 ErrorDisplayer error = new("Error: " + ex.ToString());
                 error.Show();
-            }   
+            }
         }
 
-        private int GetX(int x)
-        {
-            return x / 1000 + 1;
-        }
-        private int GetY(int y)
-        {
-            return y / 1000 + 1;
-        }
         //待修改
         private bool CanSee(MessageOfStudent msg)
         {
@@ -565,9 +561,9 @@ namespace Client
                 if (human.Guid == msg.Guid)  // 自己能看见自己
                     return true;
             }
-            if (msg.Place == PlaceType.Grass || msg.Place == PlaceType.Gate || msg.Place == PlaceType.HiddenGate)
+            if (msg.Place == Protobuf.PlaceType.Grass || msg.Place == Protobuf.PlaceType.Gate || msg.Place == Protobuf.PlaceType.HiddenGate)
                 return false;
-            if (msg.Place == PlaceType.Land || msg.Place == PlaceType.Classroom)
+            if (msg.Place == Protobuf.PlaceType.Land || msg.Place == Protobuf.PlaceType.Classroom)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -591,9 +587,9 @@ namespace Client
                 if (butcher.Guid == msg.Guid)  // 自己能看见自己
                     return true;
             }
-            if (msg.Place == PlaceType.Grass || msg.Place == PlaceType.Gate || msg.Place == PlaceType.HiddenGate)
+            if (msg.Place == Protobuf.PlaceType.Grass || msg.Place == Protobuf.PlaceType.Gate || msg.Place == Protobuf.PlaceType.HiddenGate)
                 return false;
-            if (msg.Place == PlaceType.Land || msg.Place == PlaceType.Classroom)
+            if (msg.Place == Protobuf.PlaceType.Land || msg.Place == Protobuf.PlaceType.Classroom)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -610,7 +606,7 @@ namespace Client
 
         private bool CanSee(MessageOfProp msg)
         {
-            if (msg.Place == PlaceType.Land)
+            if (msg.Place == Protobuf.PlaceType.Land)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -627,7 +623,7 @@ namespace Client
 
         private bool CanSee(MessageOfBullet msg)
         {
-            if (msg.Place == PlaceType.Land)
+            if (msg.Place == Protobuf.PlaceType.Land)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -688,22 +684,22 @@ namespace Client
                     {
                         foreach (var data in listOfAll)
                         {
-                            StatusBarsOfCircumstance.SetValue(data);
+                            StatusBarsOfCircumstance.SetValue(data, gateOpened);
                         }
                         if (!hasDrawed && mapFlag)
                             DrawMap();
                         foreach (var data in listOfHuman)
                         {
-                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data);
+                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data, coolTime0, coolTime1, coolTime2);
                             if (CanSee(data))
                             {
                                 Ellipse icon = new()
                                 {
-                                    Width = unitWidth,
-                                    Height = unitHeight,
+                                    Width = 2 * radiusTimes * unitWidth,
+                                    Height = 2 * radiusTimes * unitHeight,
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
-                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * radiusTimes, data.X * unitHeight / 1000.0 - unitHeight * radiusTimes, 0, 0),
                                     Fill = Brushes.BlueViolet,
                                 };
                                 UpperLayerOfMap.Children.Add(icon);
@@ -711,16 +707,16 @@ namespace Client
                         }
                         foreach (var data in listOfButcher)
                         {
-                            StatusBarsOfHunter.SetValue(data);
+                            StatusBarsOfHunter.SetValue(data, coolTime0, coolTime1, coolTime2);
                             if (CanSee(data))
                             {
                                 Ellipse icon = new()
                                 {
-                                    Width = unitWidth,
-                                    Height = unitHeight,
+                                    Width = 2 * radiusTimes * unitWidth,
+                                    Height = 2 * radiusTimes * unitHeight,
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
-                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * radiusTimes, data.X * unitHeight / 1000.0 - unitHeight * radiusTimes, 0, 0),
                                     Fill = Brushes.Chocolate,
                                 };
                                 UpperLayerOfMap.Children.Add(icon);
@@ -732,26 +728,29 @@ namespace Client
                             {
                                 switch (data.Type)
                                 {
-                                    case PropType.Key3:
+                                    case Protobuf.PropType.Key3:
                                         DrawProp(data, "🔑");
                                         break;
-                                    case PropType.Key5:
+                                    case Protobuf.PropType.Key5:
                                         DrawProp(data, "🔑");
                                         break;
-                                    case PropType.Key6:
+                                    case Protobuf.PropType.Key6:
                                         DrawProp(data, "🔑");
                                         break;
-                                    case PropType.AddSpeed:
+                                    case Protobuf.PropType.AddSpeed:
                                         DrawProp(data, "⛸");
                                         break;
-                                    case PropType.AddHpOrAp:
+                                    case Protobuf.PropType.AddHpOrAp:
                                         DrawProp(data, "♥");
                                         break;
-                                    case PropType.AddLifeOrAp:
+                                    case Protobuf.PropType.AddLifeOrClairaudience:
                                         DrawProp(data, "🏅");
                                         break;
-                                    case PropType.ShieldOrSpear:
+                                    case Protobuf.PropType.ShieldOrSpear:
                                         DrawProp(data, "🛡");
+                                        break;
+                                    case Protobuf.PropType.RecoveryFromDizziness:
+                                        DrawProp(data, "🕶");
                                         break;
                                     default:
                                         DrawProp(data, "");
@@ -770,8 +769,20 @@ namespace Client
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
                                     Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                    Fill = Brushes.Red
                                 };
+                                switch (data.Type)
+                                {
+                                    case Protobuf.BulletType.FlyingKnife:
+                                        icon.Fill = Brushes.Blue;
+                                        break;
+                                    case Protobuf.BulletType.CommonAttackOfTricker:
+                                    case Protobuf.BulletType.BombBomb:
+                                    case Protobuf.BulletType.JumpyDumpty:
+                                        icon.Fill = Brushes.Red;
+                                        break;
+                                    default:
+                                        break;
+                                }
                                 UpperLayerOfMap.Children.Add(icon);
                             }
                         }
@@ -779,7 +790,7 @@ namespace Client
                         {
                             switch (data.Type)
                             {
-                                case BulletType.FastBullet:
+                                case Protobuf.BulletType.BombBomb:
                                     {
                                         Ellipse icon = new();
                                         double bombRange = data.BombRange / 1000;
@@ -792,7 +803,7 @@ namespace Client
                                         UpperLayerOfMap.Children.Add(icon);
                                         break;
                                     }
-                                case BulletType.AtomBomb:
+                                case Protobuf.BulletType.JumpyDumpty:
                                     {
                                         Ellipse icon = new Ellipse();
                                         double bombRange = data.BombRange / 1000;
@@ -805,106 +816,105 @@ namespace Client
                                         UpperLayerOfMap.Children.Add(icon);
                                         break;
                                     }
-                                case BulletType.OrdinaryBullet:
-                                    {
-                                        Ellipse icon = new Ellipse();
-                                        double bombRange = data.BombRange / 1000;
-                                        icon.Width = bombRange * unitWidth;
-                                        icon.Height = bombRange * unitHeight;
-                                        icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                        icon.VerticalAlignment = VerticalAlignment.Top;
-                                        icon.Margin = new Thickness(data.Y * unitWidth / 1000.0 - bombRange * unitWidth / 2, data.X * unitHeight / 1000.0 - bombRange * unitHeight / 2, 0, 0);
-                                        icon.Fill = Brushes.Red;
-                                        UpperLayerOfMap.Children.Add(icon);
-                                        break;
-                                    }
-                                /*case BulletType.LineBullet:
-                                    {
-                                        double bombRange = data.BombRange / 1000;
-                                        DrawLaser(new Point(data.Y * unitWidth / 1000.0, data.X * unitHeight / 1000.0), -data.FacingDirection + Math.PI / 2, bombRange * unitHeight, 0.5 * unitWidth);
-                                        break;
-                                    }*/
+                                //case Protobuf.BulletType.LineBullet:
+                                //    {
+                                //        double bombRange = data.BombRange / 1000;
+                                //        DrawLaser(new Point(data.Y * unitWidth / 1000.0, data.X * unitHeight / 1000.0), -data.FacingDirection + Math.PI / 2, bombRange * unitHeight, 0.5 * unitWidth);
+                                //        break;
+                                //    }
                                 default:
                                     break;
                             }
                         }
                         foreach (var data in listOfClassroom)
                         {
+                            int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfFixedGenerator);
                             TextBox icon = new()
                             {
-                                FontSize = 10 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
                                 Width = unitWidth,
                                 Height = unitHeight,
-                                Text = Convert.ToString(data.Progress),
+                                Text = Convert.ToString(deg),
                                 HorizontalAlignment = HorizontalAlignment.Left,
                                 VerticalAlignment = VerticalAlignment.Top,
                                 Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                //Margin = new Thickness(25,25, 0, 0),
                                 Background = Brushes.Transparent,
                                 BorderBrush = Brushes.Transparent,
                                 IsReadOnly = true
                             };
+                            if (deg == 100)
+                            {
+                                icon.Text = "🌟";
+                            }
                             UpperLayerOfMap.Children.Add(icon);
                         }
-                        foreach(var data in listOfChest)
+                        foreach (var data in listOfChest)
                         {
+                            int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedChest);
                             TextBox icon = new()
                             {
-                                FontSize = 10 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
                                 Width = unitWidth,
                                 Height = unitHeight,
-                                Text = Convert.ToString(data.Progress),
+                                Text = Convert.ToString(deg),
                                 HorizontalAlignment = HorizontalAlignment.Left,
                                 VerticalAlignment = VerticalAlignment.Top,
                                 Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                //Margin = new Thickness(25,25, 0, 0),
                                 Background = Brushes.Transparent,
                                 BorderBrush = Brushes.Transparent,
                                 IsReadOnly = true
                             };
+                            if (deg == 100)
+                            {
+                                icon.Text = "Ø";
+                            }
                             UpperLayerOfMap.Children.Add(icon);
                         }
-                        foreach(var data in listOfGate)
+                        foreach (var data in listOfGate)
                         {
+                            int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedDoorway);
                             TextBox icon = new()
                             {
-                                FontSize = 10 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
                                 Width = unitWidth,
                                 Height = unitHeight,
-                                Text = Convert.ToString(data.Progress),
+                                Text = Convert.ToString(deg),
                                 HorizontalAlignment = HorizontalAlignment.Left,
                                 VerticalAlignment = VerticalAlignment.Top,
                                 Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                //Margin = new Thickness(25,25, 0, 0),
                                 Background = Brushes.Transparent,
                                 BorderBrush = Brushes.Transparent,
                                 IsReadOnly = true
                             };
+                            if (deg == 100)
+                            {
+                                gateOpened = true;
+                                icon.Text = "🔓";
+                            }
                             UpperLayerOfMap.Children.Add(icon);
                         }
-                        foreach(var data in listOfDoor)
+                        foreach (var data in listOfDoor)
                         {
                             TextBox icon = new()
                             {
-                                FontSize = 10 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 HorizontalAlignment = HorizontalAlignment.Left,
                                 VerticalAlignment = VerticalAlignment.Top,
                                 Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                //Margin = new Thickness(25,25, 0, 0),
                                 Background = Brushes.Transparent,
                                 BorderBrush = Brushes.Transparent,
                                 IsReadOnly = true
                             };
                             if (data.IsOpen)
                             {
-                                icon.Text = Convert.ToString("开");
+                                icon.Text = Convert.ToString("🔓");
                             }
                             else
                             {
-                                icon.Text = Convert.ToString("闭");
-                            }    
+                                icon.Text = Convert.ToString("🔒");
+                            }
                             UpperLayerOfMap.Children.Add(icon);
                         }
                         //}
@@ -927,400 +937,176 @@ namespace Client
         {
             if (!isPlaybackMode)
             {
-                //if(Keyboard.Modifiers == ModifierKeys.Control)
-                //{
-                //    switch (e.Key)
-                //    {
-                //        case Key.D1:
-                //            PropMsg msgP1 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.AddSpeed,
-                //            };
-                //            client.PickProp(msgP1);
-                //            break;
-                //        case Key.D2:
-                //            PropMsg msgP2 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.AddLifeOrAp,
-                //            };
-                //            client.PickProp(msgP2);
-                //            break;
-                //        case Key.D3:
-                //            PropMsg msgP3 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.AddHpOrAp,
-                //            };
-                //            client.PickProp(msgP3);
-                //            break;
-                //        case Key.D4:
-                //            PropMsg msgP4 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.ShieldOrSpear,
-                //            };
-                //            client.PickProp(msgP4);
-                //            break;
-                //        case Key.D5:
-                //            PropMsg msgP5 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.Key3,
-                //            };
-                //            client.PickProp(msgP5);
-                //            break;
-                //        case Key.D6:
-                //            PropMsg msgP6 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.Key5,
-                //            };
-                //            client.PickProp(msgP6);
-                //            break;
-                //        case Key.D7:
-                //            PropMsg msgP7 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.Key6,
-                //            };
-                //            client.PickProp(msgP7);
-                //            break;
-                //        default:
-                //            break;
-                //    }
-                //}
-                //else if (Keyboard.Modifiers == ModifierKeys.Alt)
-                //{
-                //    switch (e.Key)
-                //    {
-                //        case Key.D1:
-                //            PropMsg msgP1 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.AddSpeed,
-                //            };
-                //            client.UseProp(msgP1);
-                //            break;
-                //        case Key.D2:
-                //            PropMsg msgP2 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.AddLifeOrAp,
-                //            };
-                //            client.UseProp(msgP2);
-                //            break;
-                //        case Key.D3:
-                //            PropMsg msgP3 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.AddHpOrAp,
-                //            };
-                //            client.UseProp(msgP3);
-                //            break;
-                //        case Key.D4:
-                //            PropMsg msgP4 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.ShieldOrSpear,
-                //            };
-                //            client.UseProp(msgP4);
-                //            break;
-                //        case Key.D5:
-                //            PropMsg msgP5 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.Key3,
-                //            };
-                //            client.UseProp(msgP5);
-                //            break;
-                //        case Key.D6:
-                //            PropMsg msgP6 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.Key5,
-                //            };
-                //            client.UseProp(msgP6);
-                //            break;
-                //        case Key.D7:
-                //            PropMsg msgP7 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.Key6,
-                //            };
-                //            client.UseProp(msgP7);
-                //            break;
-                //        default:
-                //            break;
-                //    }
-                //}
-                //else if(Keyboard.Modifiers == ModifierKeys.Shift)
-                //{
-                //    switch (e.Key)
-                //    {
-                //        case Key.D1:
-                //            PropMsg msgP1 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.AddSpeed,
-                //            };
-                //            client.ThrowProp(msgP1);
-                //            break;
-                //        case Key.D2:
-                //            PropMsg msgP2 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.AddLifeOrAp,
-                //            };
-                //            client.ThrowProp(msgP2);
-                //            break;
-                //        case Key.D3:
-                //            PropMsg msgP3 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.AddHpOrAp,
-                //            };
-                //            client.ThrowProp(msgP3);
-                //            break;
-                //        case Key.D4:
-                //            PropMsg msgP4 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.ShieldOrSpear,
-                //            };
-                //            client.ThrowProp(msgP4);
-                //            break;
-                //        case Key.D5:
-                //            PropMsg msgP5 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.Key3,
-                //            };
-                //            client.ThrowProp(msgP5);
-                //            break;
-                //        case Key.D6:
-                //            PropMsg msgP6 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.Key5,
-                //            };
-                //            client.ThrowProp(msgP6);
-                //            break;
-                //        case Key.D7:
-                //            PropMsg msgP7 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                PropType = PropType.Key6,
-                //            };
-                //            client.ThrowProp(msgP7);
-                //            break;
-                //        default:
-                //            break;
-                //    }
-                //}
-                //else if (Keyboard.Modifiers == ModifierKeys.Windows)
-                //{
-                //    switch (e.Key)
-                //    {
-                //        case Key.D0:
-                //            SkillMsg msgS0 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                SkillId = 0,
-                //            };
-                //            client.UseSkill(msgS0);
-                //            break;
-                //        case Key.D1:
-                //            SkillMsg msgS1 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                SkillId = 1,
-                //            };
-                //            client.UseSkill(msgS1);
-                //            break;
-                //        case Key.D2:
-                //            SkillMsg msgS2 = new()
-                //            {
-                //                PlayerId = playerID,
-                //                SkillId = 2,
-                //            };
-                //            client.UseSkill(msgS2);
-                //            break;
-                //        default:
-                //            break;
-                //    }
-                //}
-                    switch (e.Key)
-                    {
-                        case Key.W:
-                        case Key.NumPad8:
-                            MoveMsg msgW = new()
-                            {
-                                PlayerId = playerID,
-                                TimeInMilliseconds = 50,
-                                Angle = Math.PI
-                            };
-                            client.Move(msgW);
-                            break;
-                        case Key.S:
-                        case Key.NumPad2:
-                            MoveMsg msgS = new()
-                            {
-                                PlayerId = playerID,
-                                TimeInMilliseconds = 50,
-                                Angle = 0
-                            };
-                            client.Move(msgS);
-                            break;
-                        case Key.D:
-                        case Key.NumPad6:
-                            MoveMsg msgD = new()
-                            {
-                                PlayerId = playerID,
-                                TimeInMilliseconds = 50,
-                                Angle = Math.PI / 2
-                            };
-                            client.Move(msgD);
-                            break;
-                        case Key.A:
-                        case Key.NumPad4:
-                            MoveMsg msgA = new()
-                            {
-                                PlayerId = playerID,
-                                TimeInMilliseconds = 50,
-                                Angle = 3 * Math.PI / 2
-                            };
-                            client.Move(msgA);
-                            break;
-                        case Key.J:
-                            AttackMsg msgJ = new()
-                            {
-                                PlayerId = playerID,
-                                Angle = Math.PI
-                            };
-                            client.Attack(msgJ);
-                            break;
-                        case Key.K:
-                            IDMsg msgK = new()
-                            {
-                                PlayerId = playerID,
-                            };
-                            client.StartLearning(msgK);
-                            break;
-                        case Key.R:
-                             TreatAndRescueMsg msgR = new()
-                             {
-                                PlayerId = playerID,
-                             };
-                            client.StartRescueMate(msgR);
-                            break;
-                        case Key.T:
-                            TreatAndRescueMsg msgT = new()
-                            {
-                                PlayerId = playerID,
-                            };
-                            client.StartTreatMate(msgT);
-                            break;
-                        case Key.G:
-                            IDMsg msgG = new()
-                            {
-                                PlayerId = playerID,
-                            };
-                            client.Graduate(msgG);
-                            break;
-                        case Key.H:
-                            IDMsg msgH = new()
-                            {
-                                PlayerId = playerID,
-                            };
-                            client.StartOpenGate(msgH);
-                            break;
-                        case Key.O:
-                            IDMsg msgO = new()
-                            {
-                                PlayerId = playerID,
-                            };
-                            client.OpenDoor(msgO);
-                            break;
-                        case Key.P:
-                            IDMsg msgP = new()
-                            {
-                                PlayerId = playerID,
-                            };
-                            client.CloseDoor(msgP);
-                            break;
-                        case Key.U:
-                            IDMsg msgU = new()
-                            {
-                                PlayerId = playerID,
-                            };
-                            client.SkipWindow(msgU);
-                            break;
-                        case Key.I:
-                            IDMsg msgI = new()
-                            {
-                                PlayerId = playerID,
-                            };
-                            client.StartOpenChest(msgI);
-                            break;
-                        case Key.E:
-                            IDMsg msgE = new()
-                            {
-                                PlayerId = playerID,
-                            };
-                            client.EndAllAction(msgE);
-                            break;
-                        case Key.F:
-                            PropMsg msgF = new()
-                            {
-                                PlayerId = playerID,
-                                PropType= PropType.NullPropType,
-                            };
-                            client.PickProp(msgF);
-                            break;
-                        case Key.C:
-                            PropMsg msgC = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.NullPropType,
-                            };
-                            client.ThrowProp(msgC);
-                            break;
-                        case Key.V:
-                            PropMsg msgV = new()
-                            {
-                                PlayerId = playerID,
-                                PropType = PropType.NullPropType,
-                            };
-                            client.UseProp(msgV);
-                            break;
-                        case Key.B:
-                            SkillMsg msgB = new()
-                            {
-                                PlayerId = playerID,
-                                SkillId = 0,
-                            };
-                            client.UseSkill(msgB);
-                            break;
-                        case Key.N:
-                            SkillMsg msgN = new()
-                            {
-                                PlayerId = playerID,
-                                SkillId = 1,
-                            };
-                            client.UseSkill(msgN);
-                            break;
-                        case Key.M:
-                            SkillMsg msgM = new()
-                            {
-                                PlayerId = playerID,
-                                SkillId = 2,
-                            };
-                            client.UseSkill(msgM);
-                            break;
-                        default:
-                            break;
+                switch (e.Key)
+                {
+                    case Key.W:
+                    case Key.NumPad8:
+                        MoveMsg msgW = new()
+                        {
+                            PlayerId = playerID,
+                            TimeInMilliseconds = 50,
+                            Angle = Math.PI
+                        };
+                        client.Move(msgW);
+                        break;
+                    case Key.S:
+                    case Key.NumPad2:
+                        MoveMsg msgS = new()
+                        {
+                            PlayerId = playerID,
+                            TimeInMilliseconds = 50,
+                            Angle = 0
+                        };
+                        client.Move(msgS);
+                        break;
+                    case Key.D:
+                    case Key.NumPad6:
+                        MoveMsg msgD = new()
+                        {
+                            PlayerId = playerID,
+                            TimeInMilliseconds = 50,
+                            Angle = Math.PI / 2
+                        };
+                        client.Move(msgD);
+                        break;
+                    case Key.A:
+                    case Key.NumPad4:
+                        MoveMsg msgA = new()
+                        {
+                            PlayerId = playerID,
+                            TimeInMilliseconds = 50,
+                            Angle = 3 * Math.PI / 2
+                        };
+                        client.Move(msgA);
+                        break;
+                    case Key.J:
+                        AttackMsg msgJ = new()
+                        {
+                            PlayerId = playerID,
+                            Angle = Math.PI
+                        };
+                        client.Attack(msgJ);
+                        break;
+                    case Key.K:
+                        IDMsg msgK = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.StartLearning(msgK);
+                        break;
+                    case Key.R:
+                        TreatAndRescueMsg msgR = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.StartRescueMate(msgR);
+                        break;
+                    case Key.T:
+                        TreatAndRescueMsg msgT = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.StartTreatMate(msgT);
+                        break;
+                    case Key.G:
+                        IDMsg msgG = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.Graduate(msgG);
+                        break;
+                    case Key.H:
+                        IDMsg msgH = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.StartOpenGate(msgH);
+                        break;
+                    case Key.O:
+                        IDMsg msgO = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.OpenDoor(msgO);
+                        break;
+                    case Key.P:
+                        IDMsg msgP = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.CloseDoor(msgP);
+                        break;
+                    case Key.U:
+                        IDMsg msgU = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.SkipWindow(msgU);
+                        break;
+                    case Key.I:
+                        IDMsg msgI = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.StartOpenChest(msgI);
+                        break;
+                    case Key.E:
+                        IDMsg msgE = new()
+                        {
+                            PlayerId = playerID,
+                        };
+                        client.EndAllAction(msgE);
+                        break;
+                    case Key.F:
+                        PropMsg msgF = new()
+                        {
+                            PlayerId = playerID,
+                            PropType = Protobuf.PropType.NullPropType,
+                        };
+                        client.PickProp(msgF);
+                        break;
+                    case Key.C:
+                        PropMsg msgC = new()
+                        {
+                            PlayerId = playerID,
+                            PropType = Protobuf.PropType.NullPropType,
+                        };
+                        client.ThrowProp(msgC);
+                        break;
+                    case Key.V:
+                        PropMsg msgV = new()
+                        {
+                            PlayerId = playerID,
+                            PropType = Protobuf.PropType.NullPropType,
+                        };
+                        client.UseProp(msgV);
+                        break;
+                    case Key.B:
+                        SkillMsg msgB = new()
+                        {
+                            PlayerId = playerID,
+                            SkillId = 0,
+                        };
+                        client.UseSkill(msgB);
+                        break;
+                    case Key.N:
+                        SkillMsg msgN = new()
+                        {
+                            PlayerId = playerID,
+                            SkillId = 1,
+                        };
+                        client.UseSkill(msgN);
+                        break;
+                    case Key.M:
+                        SkillMsg msgM = new()
+                        {
+                            PlayerId = playerID,
+                            SkillId = 2,
+                        };
+                        client.UseSkill(msgM);
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -1330,7 +1116,7 @@ namespace Client
         {
             if (!isPlaybackMode)
             {
-                if (humanOrButcher&&human != null)
+                if (humanOrButcher && human != null)
                 {
                     AttackMsg msgJ = new()
                     {
@@ -1406,7 +1192,7 @@ namespace Client
             {
                 _ = Process.Start("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "https://eesast.com");
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 //               ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
                 //               error.Show();
@@ -1455,7 +1241,7 @@ namespace Client
             {
                 throw new Exception("敬请期待");
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 //               ErrorDisplayer error = new(exc.Message);
                 //               error.Show();
@@ -1500,58 +1286,63 @@ namespace Client
         private bool bonusflag;
         private bool mapFlag = false;
         private bool hasDrawed = false;
-        public int[,] defaultMap = new int[,] {{ 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 9, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 7, 5, 7, 7, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
-            { 6, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
-            { 6, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
-            { 6, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
-            { 6, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
-            { 6, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
-            { 6, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
-            { 6, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 6, 6, 6, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 }};
+        public int[,] defaultMap = new int[,] {
+            { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 },//6墙,1-5出生点
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },//7草
+            { 6, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6 },//8机
+            { 6, 0, 0, 0, 0, 6, 0, 6, 7, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 6 },//9大门
+            { 6, 0, 0, 0, 0, 6, 6, 6, 6, 7, 0, 0, 0, 0, 0, 15, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 15, 0, 0, 0, 6 },//10紧急出口
+            { 6, 6, 0, 0, 0, 0, 9, 6, 6, 7, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 6, 6, 7, 7, 6, 6, 6, 6, 6, 6, 11, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },//11窗
+            { 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 7, 7, 6, 6, 7, 7, 6, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 13, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 6 },//12-14门
+            { 6, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 0, 0, 0, 7, 7, 7, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6 },//15箱
+            { 6, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 6 },
+            { 6, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 7, 7, 6, 0, 6 },
+            { 6, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 6, 6, 6, 6, 0, 0, 0, 0, 7, 6, 0, 6 },
+            { 6, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 6, 12, 6, 6, 6, 6, 6, 6, 11, 6, 6, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 6, 0, 6 },
+            { 6, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 6 },
+            { 6, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 7, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 7, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 6 },
+            { 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 7, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 6, 6, 6, 6, 0, 0, 0, 0, 0, 6, 6, 7, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 11, 6, 0, 0, 0, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 7, 0, 0, 6 },
+            { 6, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 6, 7, 0, 0, 6 },
+            { 6, 7, 7, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 7, 7, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 6 },
+            { 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 7, 0, 0, 5, 0, 7, 7, 6, 0, 0, 0, 0, 0, 0, 7, 6, 6, 6, 6, 15, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 6, 7, 7, 0, 0, 0, 0, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 7, 6, 0, 0, 0, 6 },
+            { 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 7, 7, 0, 0, 0, 0, 0, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 7, 6, 6, 0, 10, 0, 6 },
+            { 6, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 6, 6, 6, 6, 7, 0, 0, 0, 6 },
+            { 6, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 6, 7, 0, 2, 0, 0, 6 },
+            { 6, 0, 6, 0, 0, 0, 0, 0, 0, 6, 11, 6, 6, 6, 0, 0, 0, 6, 6, 6, 6, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 11, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 11, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 6, 12, 6, 6, 6, 0, 0, 0, 0, 6, 6, 6, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 6, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 7, 7, 0, 0, 0, 0, 6 },
+            { 6, 0, 6, 7, 0, 0, 0, 8, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 7, 0, 0, 0, 0, 6 },
+            { 6, 0, 6, 6, 6, 6, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6, 7, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6,6, 7, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 7, 7, 7, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 7, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 6, 7, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 6, 6, 6, 6, 6, 7, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 6 },
+            { 6, 6, 0, 0, 7, 7, 6, 7, 7, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 6 },
+            { 6, 6, 15, 0, 0, 0, 7, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 11, 6, 0, 0, 0, 0, 0, 6 },
+            { 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6,6, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 15, 0, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0,8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 6, 7, 7, 0, 0, 0, 6, 6, 6, 11, 6, 0, 0, 6, 6, 6, 7, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 0, 6, 7, 7, 6, 7, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 14, 6, 6, 6, 0, 0, 0, 0, 0, 7, 0, 0, 6, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 7, 0, 7, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 7, 6, 0, 6, 6, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 7, 0, 0, 7, 6, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 7, 6, 6, 6, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 6, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 7, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 6, 6, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 11, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 6, 6, 6, 6, 6, 7, 0, 0, 0, 10, 0, 0, 0, 0, 6, 6, 7, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 0, 0, 0, 0, 7, 6, 6, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 7, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 6, 0, 0, 0, 7, 7, 6, 6, 0, 0, 0, 6 },
+            { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 }
+            };
 
         private string[] comInfo = new string[5];
         ArgumentOptions? options = null;
+        bool gateOpened = false;
+        double coolTime0 = -1, coolTime1 = -1, coolTime2 = -1;
+        const double radiusTimes = 1.0 * Preparation.Utility.GameData.characterRadius / Preparation.Utility.GameData.numOfPosGridPerCell;
     }
 }

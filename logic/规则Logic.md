@@ -154,7 +154,7 @@
 - 子弹爆炸范围
 - 子弹攻击力
 - 是否可以穿墙
-- 是否可以爆炸
+- 是否为远程攻击
 - 移动速度
 - 子弹类型
 
@@ -208,7 +208,7 @@
 - 在指令仍在进行时，重复发出同一类型的交互指令是无效的，你需要先发出Stop指令终止进行的指令
 
 ### 破译与逃脱
-- 每张地图都会刷新 9台电机，求生者需要破译其中的7台，并开启任意一个大门后从任意一个开启的大门- 逃脱，亦或者在只剩1名求生者的情况下从紧急出口逃脱；
+- 每张地图都有10台电机，求生者需要破译其中的7台，并开启任意一个大门后从任意一个开启的大门- 逃脱，亦或者在只剩1名求生者的情况下从紧急出口逃脱；
 - 求生者和监管者在靠近电机时，可以看到电机的破译进度条。
 - 紧急出口会在电机破译完成3台的情况下在地图的3-5个固定紧急出口刷新点之一随机刷新。
 - 当求生者只剩1名时，紧急出口盖将会自动打开，该求生者可从紧急出口逃脱。
@@ -346,180 +346,277 @@
 
 |   道具       |           对学生增益            |       [学生得分条件]               |                对搞蛋鬼增益        |       [搞蛋鬼得分条件]               |
 | :-------- | :-------------------------------------- | :-----------------| :-------------------------------------- |:-----------------|
-|   AddSpeed   |  提高移动速度，持续10s                            |不得分|  提高移动速度，持续10s                            |不得分|
-|   AddLifeOrAp   |若在10s内Hp归零，该增益消失以使Hp保留100|在10s内Hp归零，得分？      |10秒内下一次攻击增伤1800000|10秒内有一次攻击，得分？ |     
-|   AddHpOrAp   |回血1500000   | 回血成功 |   10秒内下一次攻击增伤1800000|10秒内有一次攻击，得分？ |
-|   ShieldOrSpear   | 10秒内能抵挡一次伤害  |   10秒内成功抵挡一次伤害       |10秒内下一次攻击能破盾，如果对方无盾，则增伤900000|   10秒内攻击中学生| 
 |   Key3   |                            能开启3教的门                            |不得分|      能开启3教的门                            |不得分| 
 |   Key5   |                             能开启5教的门                           |不得分|      能开启3教的门                            |不得分| 
 |   Key6   |                             能开启6教的门                            |不得分|      能开启3教的门                            |不得分| 
+|   AddSpeed   |  提高移动速度，持续10s                            |得分？|  提高移动速度，持续10s                            |得分？|
+|   AddLifeOrClairaudience   |若在10s内Hp归零，该增益消失以使Hp保留100|在10s内Hp归零，得分？      |10秒内下一次攻击增伤1800000|10秒内有一次攻击，得分？ |     
+|   AddHpOrAp   |回血1500000   | 回血成功 |   10秒内下一次攻击增伤1800000|10秒内有一次攻击，得分？ |
+|   ShieldOrSpear   | 10秒内能抵挡一次伤害  |   10秒内成功抵挡一次伤害       |10秒内下一次攻击能破盾，如果对方无盾，则增伤900000|   10秒内攻击中学生| 
+|   RecoveryFromDizziness   | 使用瞬间从眩晕状态中恢复  |    成功从眩晕状态中恢复，得分？|使用瞬间从眩晕状态中恢复  |    成功从眩晕状态中恢复，得分？| 
+
+## 职业与技能
+
+### 捣蛋鬼
+#### 刺客
+  ~~~csharp
+    public class Assassin : IGhost
+    {
+        private const int moveSpeed = GameData.basicMoveSpeed * 473 / 380;
+        private const int maxHp = GameData.basicHp;
+
+        public BulletType InitBullet => BulletType.CommonAttackOfGhost;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.BecomeInvisible, ActiveSkillType.UseKnife });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public double concealment = GameData.basicConcealment * 1.5;
+        public int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.3);
+        public int viewRange = (int)(GameData.basicViewRange * 1.3);
+        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int speedOfClimbingThroughWindows = GameData.basicGhostSpeedOfClimbingThroughWindows;
+        public int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
+    }
+  ~~~
+- 普通攻击为 CommonAttackOfGhost
+  ~~~csharp
+        public CommonAttackOfGhost...
+      {
+        public override double BulletBombRange => 0;
+        public override double BulletAttackRange => GameData.basicAttackShortRange;
+        public int ap = GameData.basicApOfGhost;
+        public override int Speed => GameData.basicBulletMoveSpeed;
+        public override bool IsToBomb => false;
+  
+        public override int CastTime => GameData.basicCastTime;
+        public override int Backswing => GameData.basicBackswing;
+        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
+        public const int cd = GameData.basicBackswing;
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            switch (gameObjType) 
+            {
+                case GameObjType.Character:
+                case GameObjType.Generator:
+                    return true;
+                default: 
+                    return false;
+            }
+        }
+      }
+  ~~~
+- 主动技能
+  - 隐身
+    ~~~csharp
+        public int SkillCD => GameData.commonSkillCD;
+        public int DurationTime => GameData.commonSkillTime / 10 * 6;
+    ~~~
+    在DurationTime时间内玩家隐身
+  - 使用飞刀
+    ~~~csharp
+        public int SkillCD => GameData.commonSkillCD* 2 / 3 ;
+        public int DurationTime => GameData.commonSkillTime / 10;
+    ~~~
+    在DurationTime时间内，攻击类型变为飞刀
+    ~~~csharp
+    internal sealed class FlyingKnife : Bullet
+    {
+        public override double BulletBombRange => 0;
+        public override double BulletAttackRange => GameData.basicRemoteAttackRange * 13;
+        public int ap = GameData.basicApOfGhost * 4 / 5;
+        public override int Speed => GameData.basicBulletMoveSpeed * 2;
+        public override bool IsToBomb => false;
+    
+        public override int CastTime => GameData.basicCastTime;
+        public override int Backswing => GameData.basicBackswing * 2 / 5;
+        public override int RecoveryFromHit => GameData.basicBackswing * 3 / 4;
+        public const int cd = GameData.basicBackswing * 2 / 5 + 100;
+    
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            if (gameObjType == GameObjType.Character) return true;
+            return false;
+        }
+    }
+    ~~~
+
+#### Klee
+  - 普通攻击为 CommonAttackOfGhost
+  ~~~csharp
+      int moveSpeed = (int)(GameData.basicMoveSpeed * 155 / 127);
+      int maxHp = GameData.basicHp;
+      int maxBulletNum = 1;
+      BulletType InitBullet => BulletType.CommonAttackOfGhost;
+      List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.JumpyBomb });
+      List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+      double concealment = GameData.basicConcealment;
+      int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.069);
+      int viewRange = (int)(GameData.basicViewRange * 1.1);
+      int timeOfOpeningOrLocking = (int)(GameData.basicSpeedOfOpeningOrLocking / 1.1);
+      int speedOfClimbingThroughWindows = (int)(GameData.basicGhostSpeedOfClimbingThroughWindows / 1.1);
+      int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest * 1.1);
+  ~~~
+  - 主动技能
+    - 蹦蹦炸弹
+      ~~~csharp
+        public int SkillCD => GameData.commonSkillCD / 30 * 5;
+        public int DurationTime => GameData.commonSkillTime / 2;
+      ~~~
+    - 在DurationTime内，攻击类型变为蹦蹦炸弹
+      ~~~csharp
+        internal sealed class BombBomb : Bullet
+        {
+        public override double BulletBombRange => GameData.basicBulletBombRange;
+        public override double BulletAttackRange => GameData.basicAttackShortRange;
+        public int ap = (int)(GameData.basicApOfGhost * 6.0 / 5);
+        public override int Speed => (int)(GameData.basicBulletMoveSpeed * 0.8);
+        public override bool IsRemoteAttack => false;
+
+        public override int CastTime => (int)BulletAttackRange / Speed;
+        public override int Backswing => 0;
+        public override int RecoveryFromHit => 0;
+        public const int cd = GameData.basicCD;
+
+        public override bool CanAttack(GameObj target)
+        {
+            return XY.Distance(this.Position, target.Position) <= BulletBombRange;
+        }
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            switch (gameObjType)
+            {
+                case GameObjType.Character:
+                case GameObjType.Generator:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+      }
+      ~~~
+    - 当蹦蹦炸弹因为碰撞而爆炸，向子弹方向上加上0°，90°，180°，270° 发出四个小炸弹
+    - 四个小炸弹只会因为碰撞爆炸，停止运动后学生碰撞会造成眩晕（AP / GameData.timeFactorOfGhostFainting）ms
+    ~~~csharp
+    internal sealed class JumpyDumpty : Bullet
+    {
+        public override double BulletBombRange => GameData.basicBulletBombRange / 2;
+        public override double BulletAttackRange => GameData.basicAttackShortRange * 2;
+        public int ap = (int)(GameData.basicApOfGhost * 0.6);
+
+        public override int Speed => (int)(GameData.basicBulletMoveSpeed * 1.2);
+        public override bool IsRemoteAttack => false;
+
+        public override int CastTime => 0;
+        public override int Backswing => 0;
+        public override int RecoveryFromHit => 0;
+        public const int cd = 0;
+        public override int CD => cd;
+
+        public override bool CanAttack(GameObj target)
+        {
+            return XY.Distance(this.Position, target.Position) <= BulletBombRange;
+        }
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            switch (gameObjType)
+            {
+                case GameObjType.Character:
+                case GameObjType.Generator:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+    ~~~
+
+### 学生（&老师）
+
+#### 运动员
+    ~~~csharp
+        private const int moveSpeed = GameData.basicMoveSpeed * 40 / 38;
+        private const int maxHp = GameData.basicHp * 32 / 30;
+        public const int maxBulletNum = 0;
+        public BulletType InitBullet => BulletType.Null;
+    
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.CanBeginToCharge });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+    
+        public const int fixSpeed = GameData.basicFixSpeed * 6 / 10;
+        int treatSpeed = GameData.basicTreatSpeed * 8 / 10;
+    
+        public const double concealment = GameData.basicConcealment * 0.9;
+        int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
+        int viewRange = (int)(GameData.basicViewRange * 1.1);
+        int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking * 12 / 10;
+        int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows * 12 / 10;
+        int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
+    ~~~
+  - 主动技能 
+    - 冲撞
+    ~~~csharp
+        public int SkillCD => GameData.commonSkillCD / 5;
+        public int DurationTime => GameData.commonSkillTime * 6 / 10;
+    ~~~
+    在DurationTime内，速度变为三倍，期间撞到捣蛋鬼，会导致捣蛋鬼眩晕7.22s,学生眩晕2.09s
+
+#### 教师
+    ~~~csharp
+        private const int moveSpeed = GameData.basicMoveSpeed * 3 / 4;
+        int maxHp = GameData.basicHp * 10;
+        int maxBulletNum = 0;
+        BulletType InitBullet => BulletType.Null;
+    
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.Punish });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+    
+        public const int fixSpeed = 0;
+        int treatSpeed = GameData.basicTreatSpeed;
+        double concealment = GameData.basicConcealment * 0.5;
+        int alertnessRadius = GameData.basicAlertnessRadius / 2;
+        int viewRange = GameData.basicViewRange * 9 / 10;
+        int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows /2;
+        int timeOfOpenChest = GameData.basicSpeedOfOpenChest;
+    ~~~
+- 主动技能
+  - 惩罚
+    ~~~csharp
+        public int SkillCD => GameData.commonSkillCD;
+        public int DurationTime => 0;
+    ~~~
+  使用瞬间，在可视范围内的使用技能状态中、攻击前后摇、开锁门、开箱的捣蛋鬼会被眩晕（3070+ 玩家损失的血量 / 1000）ms，
+
 
 ## 游戏数据
 
 ### 基本常数
-  ~~~csharp
-        public const int numOfStepPerSecond = 20;     // 每秒行走的步数
-        public const int frameDuration = 50;         // 每帧时长
-        public const int checkInterval = 50;  // 检查位置标志、补充子弹的帧时长
+请自行查看Logic/Preparation/Utility/GameData.cs
 
-        public const long gameDuration = 600000;      // 游戏时长600000ms = 10min
+## 键鼠控制
 
-        public const int MinSpeed = 1;             // 最小速度
-        public const int MaxSpeed = int.MaxValue;  // 最大速度
-        #endregion
-        #region 地图相关
-        public const int numOfPosGridPerCell = 1000;  // 每格的【坐标单位】数
-        public const int lengthOfMap = 50000;         // 地图长度
-        public const int rows = 50;                   // 行数
-        public const int cols = 50;                   // 列数
-
-        public const int numOfBirthPoint = 5;
-        public const int numOfGenerator = 9;
-        public const int numOfChest = 8;
-
-        public static XY GetCellCenterPos(int x, int y)  // 求格子的中心坐标
-        {
-            XY ret = new(x * numOfPosGridPerCell + numOfPosGridPerCell / 2, y * numOfPosGridPerCell + numOfPosGridPerCell / 2);
-            return ret;
-        }
-        public static int PosGridToCellX(XY pos)  // 求坐标所在的格子的x坐标
-        {
-            return pos.x / numOfPosGridPerCell;
-        }
-        public static int PosGridToCellY(XY pos)  // 求坐标所在的格子的y坐标
-        {
-            return pos.y / numOfPosGridPerCell;
-        }
-        public static XY PosGridToCellXY(XY pos)  // 求坐标所在的格子的y坐标
-        {
-            return new XY(pos.x / numOfPosGridPerCell, pos.y / numOfPosGridPerCell);
-        }
-        public static bool IsInTheSameCell(XY pos1, XY pos2)
-        {
-            return PosGridToCellX(pos1) == PosGridToCellX(pos2) && PosGridToCellY(pos1) == PosGridToCellY(pos2);
-        }
-        public static bool ApproachToInteract(XY pos1, XY pos2)
-        {
-            return Math.Abs(PosGridToCellX(pos1) - PosGridToCellX(pos2)) <= 1 && Math.Abs(PosGridToCellY(pos1) - PosGridToCellY(pos2)) <= 1;
-        }
-        public static bool ApproachToInteractInACross(XY pos1, XY pos2)
-        {
-            return (Math.Abs(PosGridToCellX(pos1) - PosGridToCellX(pos2)) + Math.Abs(PosGridToCellY(pos1) - PosGridToCellY(pos2))) <= 1;
-        }
-  ~~~
-
-### 角色相关
-  ~~~csharp
-        public const int numOfStudent = 4;
-        public const int characterRadius = numOfPosGridPerCell / 2 / 5 * 4;  // 人物半径
-
-        public const int basicTreatSpeed = 100;
-        public const int basicFixSpeed = 100;
-        public const int basicSpeedOfOpeningOrLocking = 3280;
-        public const int basicStudentSpeedOfClimbingThroughWindows = 611;
-        public const int basicGhostSpeedOfClimbingThroughWindows = 1270;
-        public const int basicSpeedOfOpenChest = 1000;
-
-        public const int basicHp = 3000000;                             // 初始血量
-        public const int basicMaxGamingAddiction = 60000;//基本完全沉迷时间
-        public const int BeginGamingAddiction = 10003;
-        public const int MidGamingAddiction = 30000;
-        public const int basicTreatmentDegree = 1500000;
-        public const int basicTimeOfRescue = 1000;
-
-        public const int basicMoveSpeed = 1270;                      // 基本移动速度，单位：s-1
-        public const int characterMaxSpeed = 12000;                  // 最大速度
-        public const int basicBulletMoveSpeed = 2700;                // 基本子弹移动速度，单位：s-1
-
-        public const double basicConcealment = 1.0;
-        public const int basicAlertnessRadius = 30700;
-        public const int basicViewRange = 5 * numOfPosGridPerCell;
-        public const int maxNumOfPropInPropInventory = 3;
-~~~
-
-### 得分相关
-  ~~~csharp
-        public static int TrickerScoreAttackStudent(int damage)
-        {
-            return damage * 100 / basicApOfGhost;
-        }
-        public const int TrickerScoreStudentBeAddicted = 50;
-        public const int TrickerScoreStudentBeStunned = 25;
-        public const int TrickerScoreStudentDie = 1000;
-
-        public static int StudentScoreFix(int degreeOfFix)
-        {
-            return degreeOfFix;
-        }
-        public const int StudentScoreFixed = 25;
-        public static int StudentScorePinDown(int timeOfPiningDown)
-        {
-            return 0;
-        }
-        public const int StudentScoreTrickerBeStunned = 25;
-        public const int StudentScoreRescue = 100;
-        public static int StudentScoreTreat(int degree)
-        {
-            return degree;
-        }
-        public const int StudentScoreEscape = 1000;
-        public const int ScorePropRemainHp = 20;
-        public const int ScorePropUseShield = 20;
-        public const int ScorePropUseSpear = 20;
-        public const int ScorePropAddAp = 10;
-        public const int ScorePropAddHp = 50;
-
-  ~~~
-### 攻击与子弹相关
-  ~~~csharp
-        public const int basicApOfGhost = 1500000;                             // 捣蛋鬼攻击力
-        public const int MinAP = 0;                                  // 最小攻击力
-        public const int MaxAP = int.MaxValue;                       // 最大攻击力
-
-        public const int basicCD = 3000;    // 初始子弹冷却
-        public const int basicCastTime = 500;//基本前摇时间
-        public const int basicBackswing = 818;//基本后摇时间
-        public const int basicRecoveryFromHit = 4300;//基本命中攻击恢复时长
-        public const int basicStunnedTimeOfStudent = 4130;
-
-        public const int bulletRadius = 200;                         // 默认子弹半径
-        public const int basicBulletNum = 3;                         // 基本初始子弹量
-        public const double basicRemoteAttackRange = 9000;  // 基本远程攻击范围
-        public const double basicAttackShortRange = 2700;                 // 基本近程攻击范围
-        public const double basicBulletBombRange = 3000;             // 基本子弹爆炸范围
-~~~
-
-### 技能相关
-  ~~~csharp
-        public const int maxNumOfSkill = 3;
-        public const int commonSkillCD = 30000;                      // 普通技能标准冷却时间
-        public const int commonSkillTime = 10000;                    // 普通技能标准持续时间
-  ~~~
-### 道具相关
-  ~~~csharp
-        public const int MinPropTypeNum = 1;
-        public const int MaxPropTypeNum = 10;
-        public const int PropRadius = numOfPosGridPerCell / 2;
-        public const int PropMoveSpeed = 3000;
-        public const int PropMaxMoveDistance = 15 * numOfPosGridPerCell;
-        public const long PropProduceTime = 10000;
-        public const int PropDuration = 10000;
-
-        public const int ApPropAdd = basicApOfGhost * 12 / 10;
-        public const int ApSpearAdd = basicApOfGhost * 6 / 10;
-        public const int RemainHpWhenAddLife = 100;
-
-        public const int numOfKeyEachArea = 2;
-        public const int numOfPropTypeNotKey = 4;
-        public const int numOfTeachingBuilding = 3;
-  ~~~
-### 物体相关
-  ~~~csharp
-        public const int degreeOfFixedGenerator = 10300000;
-        public const int degreeOfLockingOrOpeningTheDoor = 10000;
-        public const int degreeOfOpeningChest = 10000;
-        public const int degreeOfOpenedDoorway = 18000;
-        public const int maxNumOfPropInChest = 2;
-        public const int numOfGeneratorRequiredForRepair = 7;
-        public const int numOfGeneratorRequiredForEmergencyExit = 3;
-  ~~~
+| 键位         | 效果                                           |
+| ------------ | ---------------------------------------------- |
+| W/NumPad8    | （Both）向上移动                               |
+| S/NumPad2    | （Both）向下移动                               |
+| D/NumPad6    | （Both）向右移动                               |
+| A/NumPad4    | （Both）向左移动                               |
+| J            | （Tri）攻击，方向向上                          |
+| 鼠标双击某点 | （Tri）攻击，方向与从Tricker指向该点的向量相同 |
+| K            | （Stu）开始学习                                |
+| R            | （Stu）开始营救（陷入沉迷状态的同伴）          |
+| T            | （Stu）开始治疗（学习毅力下降的同伴）          |
+| G            | （Stu）发出毕业请求                            |
+| H            | （Stu）申请毕业（或称为开大门）                |
+| O            | （Both）开（教学楼）门                         |
+| P            | （Both）关（教学楼）门                         |
+| U            | （Both）翻窗                                   |
+| I            | （Both）翻箱子                                 |
+| E            | （Both）结束当前行动，回到Idle状态             |
+| F            | （Both）随机捡起一个在周围的道具               |
+| C            | （Both）随机扔下一个已经持有的道具             |
+| V            | （Both）随机使用一个已经持有的道具             |
+| B            | （Both）使用0号技能                            |
+| N            | （Both）使用1号技能                            |
+| M            | （Both）使用2号技能                            |

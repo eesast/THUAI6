@@ -17,13 +17,11 @@ namespace Gaming
         {
             private readonly Map gameMap;
 
-            //private MoveEngine moveEngine;
-
             private readonly List<XY> availableCellForGenerateProp;
 
             public static void UseProp(Character player, PropType propType)
             {
-                if (player.IsResetting)
+                if (player.IsResetting || player.CharacterType == CharacterType.Robot)
                     return;
                 Prop prop = player.UseProp(propType);
                 switch (prop.GetPropType())
@@ -33,12 +31,17 @@ namespace Gaming
                             player.AddSpear(GameData.PropDuration);
                         else player.AddShield(GameData.PropDuration);
                         break;
-                    case PropType.AddLifeOrAp:
+                    case PropType.AddLifeOrClairaudience:
                         if (!player.IsGhost())
-                            player.AddLIFE(GameData.PropDuration);
-                        else player.AddAp(GameData.PropDuration);
+                            player.AddLife(GameData.PropDuration);
+                        else
+                        {
+                            player.AddScore(GameData.ScorePropClairaudience);
+                            player.AddClairaudience(GameData.PropDuration);
+                        }
                         break;
                     case PropType.AddSpeed:
+                        player.AddScore(GameData.ScorePropAddSpeed);
                         player.AddMoveSpeed(GameData.PropDuration);
                         break;
                     case PropType.AddHpOrAp:
@@ -49,6 +52,13 @@ namespace Gaming
                                 player.AddScore(GameData.ScorePropAddHp);
                             }
                             else player.AddAp(GameData.PropDuration);
+                        break;
+                    case PropType.RecoveryFromDizziness:
+                        if (player.PlayerState == PlayerStateType.Stunned)
+                        {
+                            player.AddScore(GameData.ScorePropRecoverFromDizziness);
+                            player.PlayerState = PlayerStateType.Null;
+                        }
                         break;
                     default:
                         break;
@@ -120,7 +130,7 @@ namespace Gaming
 
             private Prop ProduceOnePropNotKey(Random r, XY Pos)
             {
-                return PropFactory.GetProp((PropType)r.Next(0, GameData.numOfPropTypeNotKey), Pos, gameMap.GetPlaceType(Pos));
+                return PropFactory.GetProp((PropType)r.Next(GameData.numOfTeachingBuilding + 1, GameData.numOfPropSpecies + 1), Pos, gameMap.GetPlaceType(Pos));
             }
 
             private Chest GetChest(Random r)
@@ -176,7 +186,7 @@ namespace Gaming
                 {
                     gameMap.GameObjLockDict[GameObjType.Chest].ExitWriteLock();
                 }
-
+                /*
                 new Thread
                 (
                     () =>
@@ -198,6 +208,7 @@ namespace Gaming
                     }
                 )
                 { IsBackground = true }.Start();
+            */
             }
             public PropManager(Map gameMap)  // 道具不能扔过墙
             {

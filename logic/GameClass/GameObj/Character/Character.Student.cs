@@ -15,18 +15,26 @@ namespace GameClass.GameObj
         /// <returns>人物在受到攻击后死了吗</returns>
         public bool BeAttacked(Bullet bullet)
         {
-
+#if DEBUG
+            Debugger.Output(this, "is being shot!");
+#endif
             lock (beAttackedLock)
             {
                 if (hp <= 0 || NoHp())
                     return false;  // 原来已经死了
-                if (bullet.Parent.TeamID != this.TeamID)
+                if (bullet.Parent.IsGhost() != this.IsGhost())
                 {
+#if DEBUG
+                    Debugger.Output(bullet, " 's AP is " + bullet.AP.ToString());
+#endif
                     if (TryUseShield())
                     {
                         if (bullet.HasSpear)
                         {
                             int subHp = TrySubHp(bullet.AP);
+#if DEBUG
+                            Debugger.Output(this, "is being shot! Now his hp is" + HP.ToString());
+#endif
                             bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
                             bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                         }
@@ -35,13 +43,25 @@ namespace GameClass.GameObj
                     }
                     else
                     {
-                        int subHp = TrySubHp(bullet.AP + GameData.ApSpearAdd);
+                        int subHp;
+                        if (bullet.HasSpear)
+                        {
+                            subHp = TrySubHp(bullet.AP + GameData.ApSpearAdd);
+#if DEBUG
+                            Debugger.Output(this, "is being shot with Spear! Now his hp is" + HP.ToString());
+#endif
+                        }
+                        else
+                        {
+                            subHp = TrySubHp(bullet.AP);
+#if DEBUG
+                            Debugger.Output(this, "is being shot! Now his hp is" + HP.ToString());
+#endif
+                        }
                         bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
                         bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                     }
-#if DEBUG
-                    Console.WriteLine($"PlayerID:{ID} is being shot! Now his hp is {hp}.");
-#endif
+
                     if (hp <= 0)
                         TryActivatingLIFE();  // 如果有复活甲
                 }
@@ -90,7 +110,7 @@ namespace GameClass.GameObj
             get => gamingAddiction;
             set
             {
-                if (gamingAddiction > 0)
+                if (value > 0)
                     lock (gameObjLock)
                         gamingAddiction = value <= MaxGamingAddiction ? value : MaxGamingAddiction;
                 else
@@ -143,6 +163,27 @@ namespace GameClass.GameObj
         public Student(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
             this.OrgFixSpeed = this.fixSpeed = ((IStudent)Occupation).FixSpeed;
+            this.TreatSpeed = this.OrgTreatSpeed = ((IStudent)Occupation).TreatSpeed;
+            this.MaxGamingAddiction = ((IStudent)Occupation).MaxGamingAddiction;
+        }
+    }
+    public class Golem : Student
+    {
+        private Character? parent;  // 主人
+        public Character? Parent
+        {
+            get => parent;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    parent = value;
+                }
+            }
+        }
+        public Golem(XY initPos, int initRadius, Character? parent) : base(initPos, initRadius, CharacterType.Robot)
+        {
+            this.parent = parent;
         }
     }
 }

@@ -18,6 +18,10 @@ Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::TrickerType tricker, T
 {
     currentState = &state[0];
     bufferState = &state[1];
+    currentState->gameInfo = std::make_shared<THUAI6::GameInfo>();
+    currentState->mapInfo = std::make_shared<THUAI6::GameMap>();
+    bufferState->gameInfo = std::make_shared<THUAI6::GameInfo>();
+    bufferState->mapInfo = std::make_shared<THUAI6::GameMap>();
 }
 
 std::vector<std::shared_ptr<const THUAI6::Tricker>> Logic::GetTrickers() const
@@ -202,10 +206,17 @@ bool Logic::HaveMessage()
     return !messageQueue.empty();
 }
 
-std::optional<std::pair<int64_t, std::string>> Logic::GetMessage()
+std::pair<int64_t, std::string> Logic::GetMessage()
 {
     logger->debug("Called GetMessage");
-    return messageQueue.tryPop();
+    auto msg = messageQueue.tryPop();
+    if (msg.has_value())
+        return msg.value();
+    else
+    {
+        logger->warn("No message");
+        return std::make_pair(-1, "");
+    }
 }
 
 bool Logic::Graduate()
@@ -220,16 +231,16 @@ bool Logic::StartLearning()
     return pComm->StartLearning(playerID);
 }
 
-bool Logic::StartTreatMate()
+bool Logic::StartTreatMate(int64_t mateID)
 {
     logger->debug("Called StartTreatMate");
-    return pComm->StartTreatMate(playerID);
+    return pComm->StartTreatMate(playerID, mateID);
 }
 
-bool Logic::StartRescueMate()
+bool Logic::StartRescueMate(int64_t mateID)
 {
     logger->debug("Called StartRescueMate");
-    return pComm->StartRescueMate(playerID);
+    return pComm->StartRescueMate(playerID, mateID);
 }
 
 bool Logic::Attack(double angle)
@@ -282,7 +293,7 @@ bool Logic::WaitThread()
 
 void Logic::ProcessMessage()
 {
-    auto messageThread = [&]()
+    auto messageThread = [this]()
     {
         logger->info("Message thread start!");
         pComm->AddPlayer(playerID, playerType, studentType, trickerType);
@@ -318,6 +329,8 @@ void Logic::ProcessMessage()
                                 std::vector<THUAI6::PlaceType> row;
                                 for (int j = 0; j < mapResult.row(i).col_size(); j++)
                                 {
+                                    if (Proto2THUAI6::placeTypeDict.count(mapResult.row(i).col(j)) == 0)
+                                        logger->error("Unknown place type!");
                                     row.push_back(Proto2THUAI6::placeTypeDict[mapResult.row(i).col(j)]);
                                 }
                                 map.push_back(std::move(row));
@@ -325,6 +338,7 @@ void Logic::ProcessMessage()
                             bufferState->gameMap = std::move(map);
                             currentState->gameMap = bufferState->gameMap;
                             logger->info("Map loaded!");
+                            break;
                         }
                     if (currentState->gameMap.empty())
                     {
@@ -343,12 +357,6 @@ void Logic::ProcessMessage()
                     for (const auto& obj : clientMsg.obj_message())
                         if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::StudentMessage)
                             playerGUIDs.push_back(obj.student_message().guid());
-                        else if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::NewsMessage)
-                        {
-                            auto news = obj.news_message();
-                            if (news.to_id() == playerID)
-                                messageQueue.emplace(std::make_pair(news.from_id(), news.news()));
-                        }
                     for (const auto& obj : clientMsg.obj_message())
                         if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::TrickerMessage)
                             playerGUIDs.push_back(obj.tricker_message().guid());
@@ -384,6 +392,8 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
         bufferState->students.clear();
         bufferState->trickers.clear();
         bufferState->props.clear();
+        bufferState->bullets.clear();
+        bufferState->bombedBullets.clear();
 
         logger->debug("Buffer cleared!");
         // 读取新的信息
@@ -396,22 +406,24 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                     if (item.student_message().player_id() == playerID)
                     {
                         bufferState->studentSelf = Proto2THUAI6::Protobuf2THUAI6Student(item.student_message());
+                        bufferState->students.push_back(bufferState->studentSelf);
                     }
-                    bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item.student_message()));
+                    else
+                        bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item.student_message()));
                     logger->debug("Add Student!");
                 }
             for (const auto& item : message.obj_message())
                 switch (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()])
                 {
                     case THUAI6::MessageOfObj::PropMessage:
-                        if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.prop_message().x(), item.prop_message().y(), bufferState->studentSelf->place, Proto2THUAI6::placeTypeDict[item.prop_message().place()], currentState->gameMap))
+                        if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.prop_message().x(), item.prop_message().y(), currentState->gameMap))
                         {
                             bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item.prop_message()));
                             logger->debug("Add Prop!");
                         }
                         break;
                     case THUAI6::MessageOfObj::BulletMessage:
-                        if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.prop_message().x(), item.prop_message().y(), bufferState->studentSelf->place, Proto2THUAI6::placeTypeDict[item.prop_message().place()], currentState->gameMap))
+                        if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.prop_message().x(), item.prop_message().y(), currentState->gameMap))
                         {
                             bufferState->bullets.push_back(Proto2THUAI6::Protobuf2THUAI6Bullet(item.bullet_message()));
                             logger->debug("Add Bullet!");
@@ -419,9 +431,9 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         break;
                     case THUAI6::MessageOfObj::ClassroomMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.classroom_message().x(), item.classroom_message().y(), bufferState->studentSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.classroom_message().x(), item.classroom_message().y(), currentState->gameMap))
                             {
-                                auto pos = std::make_pair(item.classroom_message().x(), item.classroom_message().y());
+                                auto pos = std::make_pair(AssistFunction::GridToCell(item.classroom_message().x()), AssistFunction::GridToCell(item.classroom_message().y()));
                                 if (bufferState->mapInfo->classRoomState.count(pos) == 0)
                                 {
                                     bufferState->mapInfo->classRoomState.emplace(pos, item.classroom_message().progress());
@@ -437,9 +449,9 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::ChestMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.chest_message().x(), item.chest_message().y(), bufferState->studentSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.chest_message().x(), item.chest_message().y(), currentState->gameMap))
                             {
-                                auto pos = std::make_pair(item.chest_message().x(), item.chest_message().y());
+                                auto pos = std::make_pair(AssistFunction::GridToCell(item.chest_message().x()), AssistFunction::GridToCell(item.chest_message().y()));
                                 if (bufferState->mapInfo->chestState.count(pos) == 0)
                                 {
                                     bufferState->mapInfo->chestState.emplace(pos, item.chest_message().progress());
@@ -455,9 +467,9 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::DoorMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.door_message().x(), item.door_message().y(), bufferState->studentSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.door_message().x(), item.door_message().y(), currentState->gameMap))
                             {
-                                auto pos = std::make_pair(item.door_message().x(), item.door_message().y());
+                                auto pos = std::make_pair(AssistFunction::GridToCell(item.door_message().x()), AssistFunction::GridToCell(item.door_message().y()));
                                 if (bufferState->mapInfo->doorState.count(pos) == 0)
                                 {
                                     bufferState->mapInfo->doorState.emplace(pos, item.door_message().is_open());
@@ -475,9 +487,9 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::HiddenGateMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.hidden_gate_message().x(), item.hidden_gate_message().y(), bufferState->studentSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.hidden_gate_message().x(), item.hidden_gate_message().y(), currentState->gameMap))
                             {
-                                auto pos = std::make_pair(item.hidden_gate_message().x(), item.hidden_gate_message().y());
+                                auto pos = std::make_pair(AssistFunction::GridToCell(item.hidden_gate_message().x()), AssistFunction::GridToCell(item.hidden_gate_message().y()));
                                 if (bufferState->mapInfo->hiddenGateState.count(pos) == 0)
                                 {
                                     bufferState->mapInfo->hiddenGateState.emplace(pos, Proto2THUAI6::Bool2HiddenGateState(item.hidden_gate_message().opened()));
@@ -493,9 +505,9 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::GateMessage:
                         {
-                            if (!AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.gate_message().x(), item.gate_message().y(), bufferState->studentSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            if (!AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.gate_message().x(), item.gate_message().y(), currentState->gameMap))
                             {
-                                auto pos = std::make_pair(item.gate_message().x(), item.gate_message().y());
+                                auto pos = std::make_pair(AssistFunction::GridToCell(item.gate_message().x()), AssistFunction::GridToCell(item.gate_message().y()));
                                 if (bufferState->mapInfo->gateState.count(pos) == 0)
                                 {
                                     bufferState->mapInfo->gateState.emplace(pos, item.gate_message().progress());
@@ -511,11 +523,19 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::TrickerMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.tricker_message().x(), item.tricker_message().y(), bufferState->studentSelf->place, Proto2THUAI6::placeTypeDict[item.tricker_message().place()], bufferState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.tricker_message().x(), item.tricker_message().y(), bufferState->gameMap))
                             {
                                 bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message()));
                                 logger->debug("Add Tricker!");
                             }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::NewsMessage:
+                        {
+                            auto news = item.news_message();
+                            if (news.to_id() == playerID)
+                                messageQueue.emplace(std::make_pair(news.from_id(), news.news()));
+                            break;
                         }
                     case THUAI6::MessageOfObj::NullMessageOfObj:
                     default:
@@ -531,8 +551,10 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                     if (item.tricker_message().player_id() == playerID)
                     {
                         bufferState->trickerSelf = Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message());
+                        bufferState->trickers.push_back(bufferState->trickerSelf);
                     }
-                    bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message()));
+                    else
+                        bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message()));
                     logger->debug("Add Tricker!");
                 }
             }
@@ -540,14 +562,14 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                 switch (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()])
                 {
                     case THUAI6::MessageOfObj::PropMessage:
-                        if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.prop_message().x(), item.prop_message().y(), bufferState->trickerSelf->place, Proto2THUAI6::placeTypeDict[item.prop_message().place()], currentState->gameMap))
+                        if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.prop_message().x(), item.prop_message().y(), currentState->gameMap))
                         {
                             bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item.prop_message()));
                             logger->debug("Add Prop!");
                         }
                         break;
                     case THUAI6::MessageOfObj::BulletMessage:
-                        if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.prop_message().x(), item.prop_message().y(), bufferState->trickerSelf->place, Proto2THUAI6::placeTypeDict[item.prop_message().place()], currentState->gameMap))
+                        if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.prop_message().x(), item.prop_message().y(), currentState->gameMap))
                         {
                             bufferState->bullets.push_back(Proto2THUAI6::Protobuf2THUAI6Bullet(item.bullet_message()));
                             logger->debug("Add Bullet!");
@@ -555,9 +577,9 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         break;
                     case THUAI6::MessageOfObj::ClassroomMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.classroom_message().x(), item.classroom_message().y(), bufferState->trickerSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.classroom_message().x(), item.classroom_message().y(), currentState->gameMap))
                             {
-                                auto pos = std::make_pair(item.classroom_message().x(), item.classroom_message().y());
+                                auto pos = std::make_pair(AssistFunction::GridToCell(item.classroom_message().x()), AssistFunction::GridToCell(item.classroom_message().y()));
                                 if (bufferState->mapInfo->classRoomState.count(pos) == 0)
                                 {
                                     bufferState->mapInfo->classRoomState.emplace(pos, item.classroom_message().progress());
@@ -573,9 +595,9 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::ChestMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.chest_message().x(), item.chest_message().y(), bufferState->trickerSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.chest_message().x(), item.chest_message().y(), currentState->gameMap))
                             {
-                                auto pos = std::make_pair(item.chest_message().x(), item.chest_message().y());
+                                auto pos = std::make_pair(AssistFunction::GridToCell(item.chest_message().x()), AssistFunction::GridToCell(item.chest_message().y()));
                                 if (bufferState->mapInfo->chestState.count(pos) == 0)
                                 {
                                     bufferState->mapInfo->chestState.emplace(pos, item.chest_message().progress());
@@ -591,9 +613,9 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::DoorMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.door_message().x(), item.door_message().y(), bufferState->trickerSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.door_message().x(), item.door_message().y(), currentState->gameMap))
                             {
-                                auto pos = std::make_pair(item.door_message().x(), item.door_message().y());
+                                auto pos = std::make_pair(AssistFunction::GridToCell(item.door_message().x()), AssistFunction::GridToCell(item.door_message().y()));
                                 if (bufferState->mapInfo->doorState.count(pos) == 0)
                                 {
                                     bufferState->mapInfo->doorState.emplace(pos, item.door_message().is_open());
@@ -611,9 +633,9 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::HiddenGateMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.hidden_gate_message().x(), item.hidden_gate_message().y(), bufferState->trickerSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.hidden_gate_message().x(), item.hidden_gate_message().y(), currentState->gameMap))
                             {
-                                auto pos = std::make_pair(item.hidden_gate_message().x(), item.hidden_gate_message().y());
+                                auto pos = std::make_pair(AssistFunction::GridToCell(item.hidden_gate_message().x()), AssistFunction::GridToCell(item.hidden_gate_message().y()));
                                 if (bufferState->mapInfo->hiddenGateState.count(pos) == 0)
                                 {
                                     bufferState->mapInfo->hiddenGateState.emplace(pos, Proto2THUAI6::Bool2HiddenGateState(item.hidden_gate_message().opened()));
@@ -629,9 +651,9 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::GateMessage:
                         {
-                            if (!AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.gate_message().x(), item.gate_message().y(), bufferState->trickerSelf->place, THUAI6::PlaceType::Land, currentState->gameMap))
+                            if (!AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.gate_message().x(), item.gate_message().y(), currentState->gameMap))
                             {
-                                auto pos = std::make_pair(item.gate_message().x(), item.gate_message().y());
+                                auto pos = std::make_pair(AssistFunction::GridToCell(item.gate_message().x()), AssistFunction::GridToCell(item.gate_message().y()));
                                 if (bufferState->mapInfo->gateState.count(pos) == 0)
                                 {
                                     bufferState->mapInfo->gateState.emplace(pos, item.gate_message().progress());
@@ -647,11 +669,19 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::StudentMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.student_message().x(), item.student_message().y(), bufferState->trickerSelf->place, Proto2THUAI6::placeTypeDict[item.student_message().place()], bufferState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.student_message().x(), item.student_message().y(), bufferState->gameMap))
                             {
                                 bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item.student_message()));
                                 logger->debug("Add Student!");
                             }
+                            break;
+                        }
+                    case THUAI6::MessageOfObj::NewsMessage:
+                        {
+                            auto news = item.news_message();
+                            if (news.to_id() == playerID)
+                                messageQueue.emplace(std::make_pair(news.from_id(), news.news()));
+                            break;
                         }
                     case THUAI6::MessageOfObj::NullMessageOfObj:
                     default:
@@ -682,7 +712,7 @@ void Logic::Update() noexcept
         std::unique_lock<std::mutex> lock(mtxBuffer);
 
         // 缓冲区被更新之后才可以使用
-        cvBuffer.wait(lock, [&]()
+        cvBuffer.wait(lock, [this]()
                       { return bufferUpdated; });
 
         std::swap(currentState, bufferState);
@@ -697,7 +727,7 @@ void Logic::Wait() noexcept
     freshed = false;
     {
         std::unique_lock<std::mutex> lock(mtxBuffer);
-        cvBuffer.wait(lock, [&]()
+        cvBuffer.wait(lock, [this]()
                       { return freshed.load(); });
     }
 }

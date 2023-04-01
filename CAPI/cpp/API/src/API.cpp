@@ -15,7 +15,7 @@ int TrickerAPI::GetFrameCount() const
 
 std::future<bool> StudentAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { return logic.Move(timeInMilliseconds, angleInRadian); });
 }
 
@@ -41,7 +41,7 @@ std::future<bool> StudentAPI::MoveLeft(int64_t timeInMilliseconds)
 
 std::future<bool> TrickerAPI::Move(int64_t timeInMilliseconds, double angleInRadian)
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { return logic.Move(timeInMilliseconds, angleInRadian); });
 }
 
@@ -67,7 +67,7 @@ std::future<bool> TrickerAPI::MoveLeft(int64_t timeInMilliseconds)
 
 std::future<bool> StudentAPI::PickProp(THUAI6::PropType prop)
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { return logic.PickProp(prop); });
 }
 
@@ -79,7 +79,7 @@ std::future<bool> StudentAPI::UseProp(THUAI6::PropType prop)
 
 std::future<bool> TrickerAPI::PickProp(THUAI6::PropType prop)
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { return logic.PickProp(prop); });
 }
 
@@ -103,129 +103,125 @@ std::future<bool> TrickerAPI::UseSkill(int32_t skillID)
 
 std::future<bool> StudentAPI::OpenDoor()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.OpenDoor(); });
 }
 
 std::future<bool> TrickerAPI::OpenDoor()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.OpenDoor(); });
 }
 
 std::future<bool> StudentAPI::CloseDoor()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.CloseDoor(); });
 }
 
 std::future<bool> TrickerAPI::CloseDoor()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.CloseDoor(); });
 }
 
 std::future<bool> StudentAPI::SkipWindow()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.SkipWindow(); });
 }
 
 std::future<bool> TrickerAPI::SkipWindow()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.SkipWindow(); });
 }
 
 std::future<bool> StudentAPI::StartOpenGate()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.StartOpenGate(); });
 }
 
 std::future<bool> TrickerAPI::StartOpenGate()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.StartOpenGate(); });
 }
 
 std::future<bool> StudentAPI::StartOpenChest()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.StartOpenChest(); });
 }
 
 std::future<bool> TrickerAPI::StartOpenChest()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.StartOpenChest(); });
 }
 
 std::future<bool> StudentAPI::EndAllAction()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.EndAllAction(); });
 }
 
 std::future<bool> TrickerAPI::EndAllAction()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.EndAllAction(); });
 }
 
 std::future<bool> StudentAPI::SendMessage(int64_t toID, std::string message)
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { return logic.SendMessage(toID, message); });
 }
 
 std::future<bool> TrickerAPI::SendMessage(int64_t toID, std::string message)
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { return logic.SendMessage(toID, message); });
 }
 
-std::future<bool> StudentAPI::HaveMessage()
+bool StudentAPI::HaveMessage()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.HaveMessage(); });
+    return logic.HaveMessage();
 }
 
-std::future<bool> TrickerAPI::HaveMessage()
+bool TrickerAPI::HaveMessage()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.HaveMessage(); });
+    return logic.HaveMessage();
 }
 
-std::future<std::optional<std::pair<int64_t, std::string>>> StudentAPI::GetMessage()
+std::pair<int64_t, std::string> StudentAPI::GetMessage()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.GetMessage(); });
+    return logic.GetMessage();
 }
 
-std::future<std::optional<std::pair<int64_t, std::string>>> TrickerAPI::GetMessage()
+std::pair<int64_t, std::string> TrickerAPI::GetMessage()
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.GetMessage(); });
+    return logic.GetMessage();
 }
 
 std::future<bool> StudentAPI::Wait()
 {
     if (logic.GetCounter() == -1)
-        return std::async(std::launch::async, [&]()
+        return std::async(std::launch::async, [this]()
                           { return false; });
     else
-        return std::async(std::launch::async, [&]()
+        return std::async(std::launch::async, [this]()
                           { return logic.WaitThread(); });
 }
 
 std::future<bool> TrickerAPI::Wait()
 {
     if (logic.GetCounter() == -1)
-        return std::async(std::launch::async, [&]()
+        return std::async(std::launch::async, [this]()
                           { return false; });
     else
-        return std::async(std::launch::async, [&]()
+        return std::async(std::launch::async, [this]()
                           { return logic.WaitThread(); });
 }
 
@@ -361,25 +357,25 @@ std::vector<int64_t> TrickerAPI::GetPlayerGUIDs() const
 
 std::future<bool> StudentAPI::StartLearning()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.StartLearning(); });
 }
 
-std::future<bool> StudentAPI::StartTreatMate()
+std::future<bool> StudentAPI::StartTreatMate(int64_t mateID)
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.StartTreatMate(); });
+    return std::async(std::launch::async, [=]()
+                      { return logic.StartTreatMate(mateID); });
 }
 
-std::future<bool> StudentAPI::StartRescueMate()
+std::future<bool> StudentAPI::StartRescueMate(int64_t mateID)
 {
-    return std::async(std::launch::async, [&]()
-                      { return logic.StartRescueMate(); });
+    return std::async(std::launch::async, [=]()
+                      { return logic.StartRescueMate(mateID); });
 }
 
 std::future<bool> StudentAPI::Graduate()
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [this]()
                       { return logic.Graduate(); });
 }
 
@@ -390,13 +386,13 @@ std::shared_ptr<const THUAI6::Student> StudentAPI::GetSelfInfo() const
 
 std::future<bool> TrickerAPI::Attack(double angleInRadian)
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { return logic.Attack(angleInRadian); });
 }
 
 std::future<bool> StudentAPI::Attack(double angleInRadian)
 {
-    return std::async(std::launch::async, [&]()
+    return std::async(std::launch::async, [=]()
                       { return logic.Attack(angleInRadian); });
 }
 

@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Tuple
 from concurrent.futures import Future
 from abc import abstractmethod, ABCMeta
 import PyAPI.structures as THUAI6
@@ -85,7 +85,7 @@ class ILogic(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, str]:
         pass
 
     @abstractmethod
@@ -227,7 +227,7 @@ class IAPI(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, str]:
         pass
 
     # 等待下一帧

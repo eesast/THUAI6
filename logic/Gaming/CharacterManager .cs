@@ -161,7 +161,7 @@ namespace Gaming
                                     {
                                         if (XY.Distance(newPlayer.Position, generator.Position) <= newPlayer.AlertnessRadius)
                                         {
-                                            if ((double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position) > bgmVolume)
+                                            if (generator.DegreeOfRepair < GameData.degreeOfFixedGenerator && (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position) > bgmVolume)
                                                 bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position);
                                         }
                                     }

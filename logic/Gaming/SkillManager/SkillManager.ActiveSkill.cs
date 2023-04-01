@@ -11,7 +11,7 @@ namespace Gaming
     {
         private partial class SkillManager
         {
-            public bool CanBeginToCharge(Character player)
+            public static bool CanBeginToCharge(Character player)
             {
 
                 if ((!player.Commandable())) return false;
@@ -49,7 +49,7 @@ namespace Gaming
                 return true;
             }
 
-            public bool JumpyBomb(Character player)
+            public static bool JumpyBomb(Character player)
             {
                 return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.JumpyBomb), player, () =>
                 {

@@ -96,7 +96,7 @@ namespace GameClass.GameObj
             this.alertnessRadius = Occupation.AlertnessRadius;
             this.ViewRange = Occupation.ViewRange;
             this.characterType = characterType;
-            this.SpeedOfOpeningOrLocking = Occupation.TimeOfOpeningOrLocking;
+            this.SpeedOfOpeningOrLocking = Occupation.SpeedOfOpeningOrLocking;
             this.SpeedOfClimbingThroughWindows = Occupation.SpeedOfClimbingThroughWindows;
             this.SpeedOfOpenChest = Occupation.SpeedOfOpenChest;
 

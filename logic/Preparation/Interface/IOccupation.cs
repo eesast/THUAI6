@@ -13,7 +13,7 @@ namespace Preparation.Interface
         public double Concealment { get; }
         public int AlertnessRadius { get; }
         public int ViewRange { get; }
-        public int TimeOfOpeningOrLocking { get; }
+        public int SpeedOfOpeningOrLocking { get; }
         public int SpeedOfClimbingThroughWindows { get; }
         public int SpeedOfOpenChest { get; }
     }
@@ -51,8 +51,8 @@ namespace Preparation.Interface
         public int viewRange = (int)(GameData.basicViewRange * 1.3);
         public int ViewRange => viewRange;
 
-        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
-        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = GameData.basicGhostSpeedOfClimbingThroughWindows;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
@@ -82,8 +82,8 @@ namespace Preparation.Interface
         public int viewRange = (int)(GameData.basicViewRange * 1.1);
         public int ViewRange => viewRange;
 
-        public int timeOfOpeningOrLocking = (int)(GameData.basicSpeedOfOpeningOrLocking / 1.1);
-        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+        public int speedOfOpeningOrLocking = (int)(GameData.basicSpeedOfOpeningOrLocking / 1.1);
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = (int)(GameData.basicGhostSpeedOfClimbingThroughWindows / 1.1);
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
@@ -113,8 +113,8 @@ namespace Preparation.Interface
         public int viewRange = (int)(GameData.basicViewRange);
         public int ViewRange => viewRange;
 
-        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
-        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = (int)(GameData.basicGhostSpeedOfClimbingThroughWindows * 1.1);
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
@@ -153,8 +153,8 @@ namespace Preparation.Interface
         public int viewRange = GameData.basicViewRange * 9 / 10;
         public int ViewRange => viewRange;
 
-        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
-        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows / 2;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
@@ -193,8 +193,8 @@ namespace Preparation.Interface
         public int viewRange = (int)(GameData.basicViewRange * 1.1);
         public int ViewRange => viewRange;
 
-        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking * 12 / 10;
-        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking * 12 / 10;
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows * 12 / 10;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
@@ -233,8 +233,8 @@ namespace Preparation.Interface
         public int viewRange = (int)(GameData.basicViewRange * 0.9);
         public int ViewRange => viewRange;
 
-        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
-        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = (int)(GameData.basicStudentSpeedOfClimbingThroughWindows * 10 / 12.0);
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
@@ -273,8 +273,8 @@ namespace Preparation.Interface
         public int viewRange = GameData.basicViewRange;
         public int ViewRange => viewRange;
 
-        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
-        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = 1;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
@@ -313,8 +313,8 @@ namespace Preparation.Interface
         public int viewRange = (int)(GameData.basicViewRange * 0.9);
         public int ViewRange => viewRange;
 
-        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
-        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = (int)(GameData.basicStudentSpeedOfClimbingThroughWindows * 3 / 4);
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
@@ -353,8 +353,8 @@ namespace Preparation.Interface
         public int viewRange = (int)(GameData.basicViewRange * 1.1);
         public int ViewRange => viewRange;
 
-        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
-        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;

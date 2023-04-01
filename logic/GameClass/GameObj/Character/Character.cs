@@ -607,11 +607,11 @@ namespace GameClass.GameObj
 
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;
-        protected override bool IgnoreCollideExecutor(IGameObj targetObj)
+        public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
             if (IsResetting)
                 return true;
-            if (targetObj.Type == GameObjType.Prop)  // 自己队的地雷忽略碰撞
+            if (targetObj.Type == GameObjType.Prop)
             {
                 return true;
             }

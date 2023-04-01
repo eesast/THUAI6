@@ -16,7 +16,7 @@ namespace GameClass.GameObj
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;
-        protected override bool IgnoreCollideExecutor(IGameObj targetObj)
+        public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
             if (!IsOpen()) return false;
             if (targetObj.Type != GameObjType.Character)

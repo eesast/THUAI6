@@ -173,18 +173,6 @@ namespace GameClass.GameObj
             }
             return flag;
         }
-        public bool RemoveJustFromMap(GameObj gameObj)
-        {
-            GameObjLockDict[gameObj.Type].EnterWriteLock();
-            try
-            {
-                return GameObjDict[gameObj.Type].Remove(gameObj);
-            }
-            finally
-            {
-                GameObjLockDict[gameObj.Type].ExitWriteLock();
-            }
-        }
         public void Add(GameObj gameObj)
         {
             GameObjLockDict[gameObj.Type].EnterWriteLock();

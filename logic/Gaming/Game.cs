@@ -273,11 +273,6 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return;
-            /*         new Thread
-                     (
-                         () =>
-                         {
-                             Thread.Sleep(10);*/
             gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
             try
             {
@@ -293,10 +288,6 @@ namespace Gaming
             {
                 gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
             }
-            /*       }
-               )
-               { IsBackground = true }.Start();
-            */
         }
 
         public void AllPlayerUsePassiveSkill()

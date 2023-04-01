@@ -1030,6 +1030,7 @@ namespace Client
                         TreatAndRescueMsg msgR = new()
                         {
                             PlayerId = playerID,
+                            ToPlayerId = -1,
                         };
                         client.StartRescueMate(msgR);
                         break;
@@ -1037,6 +1038,7 @@ namespace Client
                         TreatAndRescueMsg msgT = new()
                         {
                             PlayerId = playerID,
+                            ToPlayerId = -1,
                         };
                         client.StartTreatMate(msgT);
                         break;

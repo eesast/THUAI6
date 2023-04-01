@@ -1,6 +1,6 @@
 from math import pi
 from concurrent.futures import ThreadPoolExecutor, Future
-from typing import List, cast
+from typing import List, cast, Tuple
 import logging
 import os
 import datetime
@@ -18,7 +18,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
         self.__logger = logging.getLogger("api " + str(playerID))
         self.__logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter(
-            "[%(name)s] [%(asctime)s] [%(levelname)s] %(message)s", "%H:%M:%S.%e")
+            "[%(name)s] [%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s", '%H:%M:%S')
         # 确保文件存在
         if not os.path.exists(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/logs"):
             os.makedirs(os.path.dirname(os.path.dirname(
@@ -225,7 +225,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
                 f"HaveMessage: failed at {self.__GetTime()}ms")
         return result
 
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, str]:
         self.__logger.info(
             f"GetMessage: called at {self.__GetTime()}ms")
         result = self.__logic.GetMessage()
@@ -452,7 +452,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
         self.__logger = logging.getLogger("api " + str(playerID))
         self.__logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter(
-            "[%(name)s] [%(asctime)s] [%(levelname)s] %(message)s", "%H:%M:%S.%e")
+            "[%(name)s] [%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s", '%H:%M:%S')
         # 确保文件存在
         if not os.path.exists(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/logs"):
             os.makedirs(os.path.dirname(os.path.dirname(
@@ -661,7 +661,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
                 f"HaveMessage: failed at {self.__GetTime()}ms")
         return result
 
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, str]:
         self.__logger.info(
             f"GetMessage: called at {self.__GetTime()}ms")
         result = self.__logic.GetMessage()

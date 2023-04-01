@@ -4,6 +4,7 @@
 #define UTILS_HPP
 
 #include <cstdint>
+#include <cmath>
 #include "Message2Clients.pb.h"
 #include "Message2Server.pb.h"
 #include "MessageType.pb.h"
@@ -93,7 +94,7 @@ namespace Proto2THUAI6
         {protobuf::PropType::KEY6, THUAI6::PropType::Key6},
         {protobuf::PropType::ADD_SPEED, THUAI6::PropType::AddSpeed},
         {protobuf::PropType::ADD_HP_OR_AP, THUAI6::PropType::AddHpOrAp},
-        {protobuf::PropType::ADD_LIFE_OR_AP, THUAI6::PropType::AddLifeOrAp},
+        {protobuf::PropType::ADD_LIFE_OR_CLAIRAUDIENCE, THUAI6::PropType::AddLifeOrClairaudience},
         {protobuf::PropType::SHIELD_OR_SPEAR, THUAI6::PropType::ShieldOrSpear},
         {protobuf::PropType::RECOVERY_FROM_DIZZINESS, THUAI6::PropType::RecoveryFromDizziness},
     };
@@ -107,34 +108,35 @@ namespace Proto2THUAI6
     inline std::map<protobuf::StudentType, THUAI6::StudentType> studentTypeDict{
         {protobuf::StudentType::NULL_STUDENT_TYPE, THUAI6::StudentType::NullStudentType},
         {protobuf::StudentType::ATHLETE, THUAI6::StudentType::Athlete},
-        {protobuf::StudentType::STUDENTTYPE2, THUAI6::StudentType::Teacher},
-        {protobuf::StudentType::STUDENTTYPE3, THUAI6::StudentType::StraightAStudent},
-        {protobuf::StudentType::STUDENTTYPE4, THUAI6::StudentType::StudentType4},
+        {protobuf::StudentType::TEACHER, THUAI6::StudentType::Teacher},
+        {protobuf::StudentType::STRAIGHT_A_STUDENT, THUAI6::StudentType::StraightAStudent},
+        {protobuf::StudentType::ROBOT, THUAI6::StudentType::Robot},
+        {protobuf::StudentType::TECH_OTAKU, THUAI6::StudentType::TechOtaku},
     };
 
     inline std::map<protobuf::TrickerType, THUAI6::TrickerType> trickerTypeDict{
         {protobuf::TrickerType::NULL_TRICKER_TYPE, THUAI6::TrickerType::NullTrickerType},
         {protobuf::TrickerType::ASSASSIN, THUAI6::TrickerType::Assassin},
-        {protobuf::TrickerType::TRICKERTYPE2, THUAI6::TrickerType::Klee},
-        {protobuf::TrickerType::TRICKERTYPE3, THUAI6::TrickerType::ANoisyPerson},
+        {protobuf::TrickerType::KLEE, THUAI6::TrickerType::Klee},
+        {protobuf::TrickerType::A_NOISY_PERSON, THUAI6::TrickerType::ANoisyPerson},
         {protobuf::TrickerType::TRICKERTYPE4, THUAI6::TrickerType::TrickerType4},
     };
 
     inline std::map<protobuf::StudentBuffType, THUAI6::StudentBuffType> studentBuffTypeDict{
         {protobuf::StudentBuffType::NULL_SBUFF_TYPE, THUAI6::StudentBuffType::NullStudentBuffType},
-        {protobuf::StudentBuffType::SBUFFTYPE1, THUAI6::StudentBuffType::AddSpeed},
-        {protobuf::StudentBuffType::SBUFFTYPE2, THUAI6::StudentBuffType::AddLife},
-        {protobuf::StudentBuffType::SBUFFTYPE3, THUAI6::StudentBuffType::Shield},
-        {protobuf::StudentBuffType::SBUFFTYPE4, THUAI6::StudentBuffType::Invisible},
+        {protobuf::StudentBuffType::STUDENT_ADD_SPEED, THUAI6::StudentBuffType::AddSpeed},
+        {protobuf::StudentBuffType::ADD_LIFE, THUAI6::StudentBuffType::AddLife},
+        {protobuf::StudentBuffType::SHIELD, THUAI6::StudentBuffType::Shield},
+        {protobuf::StudentBuffType::STUDENT_INVISIBLE, THUAI6::StudentBuffType::Invisible},
     };
 
     inline std::map<protobuf::TrickerBuffType, THUAI6::TrickerBuffType> trickerBuffTypeDict{
         {protobuf::TrickerBuffType::NULL_TBUFF_TYPE, THUAI6::TrickerBuffType::NullTrickerBuffType},
-        {protobuf::TrickerBuffType::TBUFFTYPE1, THUAI6::TrickerBuffType::AddSpeed},
-        {protobuf::TrickerBuffType::TBUFFTYPE2, THUAI6::TrickerBuffType::Spear},
-        {protobuf::TrickerBuffType::TBUFFTYPE3, THUAI6::TrickerBuffType::AddAp},
-        {protobuf::TrickerBuffType::TBUFFTYPE4, THUAI6::TrickerBuffType::Clairaudience},
-        {protobuf::TrickerBuffType::INVISIBLE, THUAI6::TrickerBuffType::Invisible},
+        {protobuf::TrickerBuffType::TRICKER_ADD_SPEED, THUAI6::TrickerBuffType::AddSpeed},
+        {protobuf::TrickerBuffType::SPEAR, THUAI6::TrickerBuffType::Spear},
+        {protobuf::TrickerBuffType::ADD_AP, THUAI6::TrickerBuffType::AddAp},
+        {protobuf::TrickerBuffType::CLAIRAUDIENCE, THUAI6::TrickerBuffType::Clairaudience},
+        {protobuf::TrickerBuffType::TRICKER_INVISIBLE, THUAI6::TrickerBuffType::Invisible},
     };
 
     inline std::map<protobuf::PlayerState, THUAI6::PlayerState> playerStateDict{
@@ -170,8 +172,8 @@ namespace Proto2THUAI6
         {protobuf::BulletType::NULL_BULLET_TYPE, THUAI6::BulletType::NullBulletType},
         {protobuf::BulletType::FLYING_KNIFE, THUAI6::BulletType::FlyingKnife},
         {protobuf::BulletType::COMMON_ATTACK_OF_TRICKER, THUAI6::BulletType::CommonAttackOfTricker},
-        {protobuf::BulletType::FAST_BULLET, THUAI6::BulletType::BombBomb},
-        {protobuf::BulletType::ORDINARY_BULLET, THUAI6::BulletType::JumpyDumpty},
+        {protobuf::BulletType::BOMB_BOMB, THUAI6::BulletType::BombBomb},
+        {protobuf::BulletType::JUMPY_DUMPTY, THUAI6::BulletType::JumpyDumpty},
         {protobuf::BulletType::ATOM_BOMB, THUAI6::BulletType::AtomBomb},
     };
 
@@ -350,7 +352,7 @@ namespace THUAI62Proto
         {THUAI6::PropType::Key5, protobuf::PropType::KEY5},
         {THUAI6::PropType::Key6, protobuf::PropType::KEY6},
         {THUAI6::PropType::AddHpOrAp, protobuf::PropType::ADD_HP_OR_AP},
-        {THUAI6::PropType::AddLifeOrAp, protobuf::PropType::ADD_LIFE_OR_AP},
+        {THUAI6::PropType::AddLifeOrClairaudience, protobuf::PropType::ADD_LIFE_OR_CLAIRAUDIENCE},
         {THUAI6::PropType::AddSpeed, protobuf::PropType::ADD_SPEED},
         {THUAI6::PropType::ShieldOrSpear, protobuf::PropType::SHIELD_OR_SPEAR},
     };
@@ -364,14 +366,15 @@ namespace THUAI62Proto
     inline std::map<THUAI6::StudentType, protobuf::StudentType> studentTypeDict{
         {THUAI6::StudentType::NullStudentType, protobuf::StudentType::NULL_STUDENT_TYPE},
         {THUAI6::StudentType::Athlete, protobuf::StudentType::ATHLETE},
-        {THUAI6::StudentType::Teacher, protobuf::StudentType::STUDENTTYPE2},
-        {THUAI6::StudentType::StraightAStudent, protobuf::StudentType::STUDENTTYPE3},
-        {THUAI6::StudentType::StudentType4, protobuf::StudentType::STUDENTTYPE4},
+        {THUAI6::StudentType::Teacher, protobuf::StudentType::TEACHER},
+        {THUAI6::StudentType::StraightAStudent, protobuf::StudentType::STRAIGHT_A_STUDENT},
+        {THUAI6::StudentType::Robot, protobuf::StudentType::ROBOT},
+        {THUAI6::StudentType::TechOtaku, protobuf::StudentType::TECH_OTAKU},
     };
 
     // inline std::map<THUAI6::StudentBuffType, protobuf::StudentBuffType> studentBuffTypeDict{
     //     {THUAI6::StudentBuffType::NullStudentBuffType, protobuf::StudentBuffType::NULL_SBUFF_TYPE},
-    //     {THUAI6::StudentBuffType::StudentBuffType1, protobuf::StudentBuffType::SBUFFTYPE1},
+    //     {THUAI6::StudentBuffType::StudentBuffType1, protobuf::StudentBuffType::ADD_SPEED},
     //     {THUAI6::StudentBuffType::StudentBuffType2, protobuf::StudentBuffType::SBUFFTYPE2},
     //     {THUAI6::StudentBuffType::StudentBuffType3, protobuf::StudentBuffType::SBUFFTYPE3},
     //     {THUAI6::StudentBuffType::StudentBuffType4, protobuf::StudentBuffType::SBUFFTYPE4},
@@ -380,8 +383,8 @@ namespace THUAI62Proto
     inline std::map<THUAI6::TrickerType, protobuf::TrickerType> trickerTypeDict{
         {THUAI6::TrickerType::NullTrickerType, protobuf::TrickerType::NULL_TRICKER_TYPE},
         {THUAI6::TrickerType::Assassin, protobuf::TrickerType::ASSASSIN},
-        {THUAI6::TrickerType::Klee, protobuf::TrickerType::TRICKERTYPE2},
-        {THUAI6::TrickerType::ANoisyPerson, protobuf::TrickerType::TRICKERTYPE3},
+        {THUAI6::TrickerType::Klee, protobuf::TrickerType::KLEE},
+        {THUAI6::TrickerType::ANoisyPerson, protobuf::TrickerType::A_NOISY_PERSON},
         {THUAI6::TrickerType::TrickerType4, protobuf::TrickerType::TRICKERTYPE4},
     };
 

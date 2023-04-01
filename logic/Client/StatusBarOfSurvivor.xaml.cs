@@ -41,17 +41,21 @@ namespace Client
                     coolTime0 = coolTime1 = coolTime2 = 10000;
                     serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: Athlete";
                     break;
-                case StudentType._2:
+                case StudentType.Teacher:
                     coolTime0 = coolTime1 = coolTime2 = 20000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: StudentType2";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: Teacher";
                     break;
-                case StudentType._3:
+                case StudentType.StraightAStudent:
                     coolTime0 = coolTime1 = coolTime2 = 30000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: StudentType3";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: StraightAStudent";
                     break;
-                case StudentType._4:
+                case StudentType.Robot:
                     coolTime0 = coolTime1 = coolTime2 = 40000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: StudentType4";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: Robot";
+                    break;
+                case StudentType.TechOtaku:
+                    coolTime0 = coolTime1 = coolTime2 = 40000;
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: TechOtaku";
                     break;
                 case StudentType.NullStudentType:
                     coolTime0 = coolTime1 = coolTime2 = -1;
@@ -145,123 +149,19 @@ namespace Client
                 switch (cnt)
                 {
                     case 0:
-                        switch (icon)
-                        {
-                            case Protobuf.PropType.Key3:
-                                prop0.Text = "🔑";
-                                break;
-                            case Protobuf.PropType.Key5:
-                                prop0.Text = "🔑";
-                                break;
-                            case Protobuf.PropType.Key6:
-                                prop0.Text = "🔑";
-                                break;
-                            case Protobuf.PropType.AddSpeed:
-                                prop0.Text = "⛸";
-                                break;
-                            case Protobuf.PropType.AddLifeOrAp:
-                                prop0.Text = "🏅";
-                                break;
-                            case Protobuf.PropType.AddHpOrAp:
-                                prop0.Text = "♥";
-                                break;
-                            case Protobuf.PropType.ShieldOrSpear:
-                                prop0.Text = "🛡";
-                                break;
-                            default:
-                                prop0.Text = "";
-                                break;
-                        }
+                        SetPropValue(prop0, icon);
                         cnt++;
                         break;
                     case 1:
-                        switch (icon)
-                        {
-                            case Protobuf.PropType.Key3:
-                                prop1.Text = "🔑";
-                                break;
-                            case Protobuf.PropType.Key5:
-                                prop1.Text = "🔑";
-                                break;
-                            case Protobuf.PropType.Key6:
-                                prop1.Text = "🔑";
-                                break;
-                            case Protobuf.PropType.AddSpeed:
-                                prop1.Text = "⛸";
-                                break;
-                            case Protobuf.PropType.AddLifeOrAp:
-                                prop1.Text = "🏅";
-                                break;
-                            case Protobuf.PropType.AddHpOrAp:
-                                prop1.Text = "♥";
-                                break;
-                            case Protobuf.PropType.ShieldOrSpear:
-                                prop1.Text = "🛡";
-                                break;
-                            default:
-                                prop1.Text = "";
-                                break;
-                        }
+                        SetPropValue(prop0, icon);
                         cnt++;
                         break;
                     case 2:
-                        switch (icon)
-                        {
-                            case Protobuf.PropType.Key3:
-                                prop2.Text = "🔑";
-                                break;
-                            case Protobuf.PropType.Key5:
-                                prop2.Text = "🔑";
-                                break;
-                            case Protobuf.PropType.Key6:
-                                prop2.Text = "🔑";
-                                break;
-                            case Protobuf.PropType.AddSpeed:
-                                prop2.Text = "⛸";
-                                break;
-                            case Protobuf.PropType.AddLifeOrAp:
-                                prop2.Text = "🏅";
-                                break;
-                            case Protobuf.PropType.AddHpOrAp:
-                                prop2.Text = "♥";
-                                break;
-                            case Protobuf.PropType.ShieldOrSpear:
-                                prop2.Text = "🛡";
-                                break;
-                            default:
-                                prop2.Text = "";
-                                break;
-                        }
+                        SetPropValue(prop0, icon);
                         cnt++;
                         break;
                     case 3:
-                        switch (icon)
-                        {
-                            case Protobuf.PropType.Key3:
-                                prop3.Text = "🔑";
-                                break;
-                            case Protobuf.PropType.Key5:
-                                prop3.Text = "🔑";
-                                break;
-                            case Protobuf.PropType.Key6:
-                                prop3.Text = "🔑";
-                                break;
-                            case Protobuf.PropType.AddSpeed:
-                                prop3.Text = "⛸";
-                                break;
-                            case Protobuf.PropType.AddLifeOrAp:
-                                prop3.Text = "🏅";
-                                break;
-                            case Protobuf.PropType.AddHpOrAp:
-                                prop3.Text = "♥";
-                                break;
-                            case Protobuf.PropType.ShieldOrSpear:
-                                prop3.Text = "🛡";
-                                break;
-                            default:
-                                prop3.Text = "";
-                                break;
-                        }
+                        SetPropValue(prop0, icon);
                         cnt++;
                         break;
                     default:
@@ -269,6 +169,40 @@ namespace Client
                 }
             }
         }
+        public void SetPropValue(TextBox textBox, Protobuf.PropType propType)
+        {
+            switch (propType)
+            {
+                case Protobuf.PropType.Key3:
+                    textBox.Text = "🔑";
+                    break;
+                case Protobuf.PropType.Key5:
+                    textBox.Text = "🔑";
+                    break;
+                case Protobuf.PropType.Key6:
+                    textBox.Text = "🔑";
+                    break;
+                case Protobuf.PropType.AddSpeed:
+                    textBox.Text = "⛸";
+                    break;
+                case Protobuf.PropType.AddLifeOrClairaudience:
+                    textBox.Text = "🏅";
+                    break;
+                case Protobuf.PropType.AddHpOrAp:
+                    textBox.Text = "♥";
+                    break;
+                case Protobuf.PropType.ShieldOrSpear:
+                    textBox.Text = "🛡";
+                    break;
+                case Protobuf.PropType.RecoveryFromDizziness:
+                    textBox.Text = "🕶";
+                    break;
+                default:
+                    textBox.Text = "";
+                    break;
+            }
+        }
+
         public void SetValue(MessageOfStudent obj)
         {
             if (!initialized)

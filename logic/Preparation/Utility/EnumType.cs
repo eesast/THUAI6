@@ -110,7 +110,7 @@ namespace Preparation.Utility
     {
         Null = 0,
         AddSpeed = 1,
-        AddLIFE = 2,
+        AddLife = 2,
         Shield = 3,
         Spear = 4,
         AddAp = 5,

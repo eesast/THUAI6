@@ -496,7 +496,7 @@ namespace GameClass.GameObj
         public void AddShield(int shieldTime) => buffManager.AddShield(shieldTime);
         public bool HasShield => buffManager.HasShield;
 
-        public void AddLIFE(int LIFETime) => buffManager.AddLIFE(LIFETime);
+        public void AddLife(int LIFETime) => buffManager.AddLife(LIFETime);
         public bool HasLIFE => buffManager.HasLIFE;
 
         public void AddAp(int time) => buffManager.AddAp(time);
@@ -535,7 +535,7 @@ namespace GameClass.GameObj
                     return this.HasFasterSpeed;
                 case BuffType.Shield:
                     return this.HasShield;
-                case BuffType.AddLIFE:
+                case BuffType.AddLife:
                     return this.HasLIFE;
                 default:
                     return false;

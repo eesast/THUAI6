@@ -190,22 +190,24 @@ namespace Client
                 {
                     switch (Convert.ToInt64(comInfo[4]))
                     {
-                        case 0:
-                            playerMsg.StudentType = StudentType.NullStudentType;
-                            break;
                         case 1:
                             playerMsg.StudentType = StudentType.Athlete;
                             break;
                         case 2:
-                            playerMsg.StudentType = StudentType._2;
+                            playerMsg.StudentType = StudentType.Teacher;
                             break;
                         case 3:
-                            playerMsg.StudentType = StudentType._3;
+                            playerMsg.StudentType = StudentType.StraightAStudent;
                             break;
                         case 4:
-                            playerMsg.StudentType = StudentType._4;
+                            playerMsg.StudentType = StudentType.Robot;
                             break;
+                        case 5:
+                            playerMsg.StudentType = StudentType.TechOtaku;
+                            break;
+                        case 0:
                         default:
+                            playerMsg.StudentType = StudentType.NullStudentType;
                             break;
                     }
                 }
@@ -213,22 +215,21 @@ namespace Client
                 {
                     switch (Convert.ToInt64(comInfo[4]))
                     {
-                        case 0:
-                            playerMsg.TrickerType = TrickerType.NullTrickerType;
-                            break;
                         case 1:
                             playerMsg.TrickerType = TrickerType.Assassin;
                             break;
                         case 2:
-                            playerMsg.TrickerType = TrickerType._2;
+                            playerMsg.TrickerType = TrickerType.Klee;
                             break;
                         case 3:
-                            playerMsg.TrickerType = TrickerType._3;
+                            playerMsg.TrickerType = TrickerType.ANoisyPerson;
                             break;
                         case 4:
                             playerMsg.TrickerType = TrickerType._4;
                             break;
+                        case 0:
                         default:
+                            playerMsg.TrickerType = TrickerType.NullTrickerType;
                             break;
                     }
                 }
@@ -538,15 +539,6 @@ namespace Client
             }
         }
 
-        private int GetX(int x)
-        {
-            return x / 1000 + 1;
-        }
-        private int GetY(int y)
-        {
-            return y / 1000 + 1;
-        }
-
         //待修改
         private bool CanSee(MessageOfStudent msg)
         {
@@ -741,11 +733,14 @@ namespace Client
                                     case Protobuf.PropType.AddHpOrAp:
                                         DrawProp(data, "♥");
                                         break;
-                                    case Protobuf.PropType.AddLifeOrAp:
+                                    case Protobuf.PropType.AddLifeOrClairaudience:
                                         DrawProp(data, "🏅");
                                         break;
                                     case Protobuf.PropType.ShieldOrSpear:
                                         DrawProp(data, "🛡");
+                                        break;
+                                    case Protobuf.PropType.RecoveryFromDizziness:
+                                        DrawProp(data, "🕶");
                                         break;
                                     default:
                                         DrawProp(data, "");
@@ -764,8 +759,20 @@ namespace Client
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
                                     Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                    Fill = Brushes.Red
                                 };
+                                switch (data.Type)
+                                {
+                                    case Protobuf.BulletType.FlyingKnife:
+                                        icon.Fill = Brushes.Blue;
+                                        break;
+                                    case Protobuf.BulletType.CommonAttackOfTricker:
+                                    case Protobuf.BulletType.BombBomb:
+                                    case Protobuf.BulletType.JumpyDumpty:
+                                        icon.Fill = Brushes.Red;
+                                        break;
+                                    default:
+                                        break;
+                                }
                                 UpperLayerOfMap.Children.Add(icon);
                             }
                         }
@@ -773,7 +780,7 @@ namespace Client
                         {
                             switch (data.Type)
                             {
-                                case Protobuf.BulletType.FastBullet:
+                                case Protobuf.BulletType.BombBomb:
                                     {
                                         Ellipse icon = new();
                                         double bombRange = data.BombRange / 1000;
@@ -786,7 +793,7 @@ namespace Client
                                         UpperLayerOfMap.Children.Add(icon);
                                         break;
                                     }
-                                case Protobuf.BulletType.AtomBomb:
+                                case Protobuf.BulletType.JumpyDumpty:
                                     {
                                         Ellipse icon = new Ellipse();
                                         double bombRange = data.BombRange / 1000;
@@ -799,25 +806,12 @@ namespace Client
                                         UpperLayerOfMap.Children.Add(icon);
                                         break;
                                     }
-                                case Protobuf.BulletType.OrdinaryBullet:
-                                    {
-                                        Ellipse icon = new Ellipse();
-                                        double bombRange = data.BombRange / 1000;
-                                        icon.Width = bombRange * unitWidth;
-                                        icon.Height = bombRange * unitHeight;
-                                        icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                        icon.VerticalAlignment = VerticalAlignment.Top;
-                                        icon.Margin = new Thickness(data.Y * unitWidth / 1000.0 - bombRange * unitWidth / 2, data.X * unitHeight / 1000.0 - bombRange * unitHeight / 2, 0, 0);
-                                        icon.Fill = Brushes.Red;
-                                        UpperLayerOfMap.Children.Add(icon);
-                                        break;
-                                    }
-                                /*case Protobuf.BulletType.LineBullet:
-                                    {
-                                        double bombRange = data.BombRange / 1000;
-                                        DrawLaser(new Point(data.Y * unitWidth / 1000.0, data.X * unitHeight / 1000.0), -data.FacingDirection + Math.PI / 2, bombRange * unitHeight, 0.5 * unitWidth);
-                                        break;
-                                    }*/
+                                //case Protobuf.BulletType.LineBullet:
+                                //    {
+                                //        double bombRange = data.BombRange / 1000;
+                                //        DrawLaser(new Point(data.Y * unitWidth / 1000.0, data.X * unitHeight / 1000.0), -data.FacingDirection + Math.PI / 2, bombRange * unitHeight, 0.5 * unitWidth);
+                                //        break;
+                                //    }
                                 default:
                                     break;
                             }

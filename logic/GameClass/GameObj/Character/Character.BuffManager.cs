@@ -147,15 +147,15 @@ namespace GameClass.GameObj
                 return false;
             }
 
-            public void AddLIFE(int totelTime) => AddBuff(new BuffValue(), totelTime, BuffType.AddLIFE, () =>
+            public void AddLife(int totelTime) => AddBuff(new BuffValue(), totelTime, BuffType.AddLife, () =>
                                                                                                         { });
             public bool HasLIFE
             {
                 get
                 {
-                    lock (buffListLock[(int)BuffType.AddLIFE])
+                    lock (buffListLock[(int)BuffType.AddLife])
                     {
-                        return buffList[(int)BuffType.AddLIFE].Count != 0;
+                        return buffList[(int)BuffType.AddLife].Count != 0;
                     }
                 }
             }
@@ -163,9 +163,9 @@ namespace GameClass.GameObj
             {
                 if (HasLIFE)
                 {
-                    lock (buffListLock[(int)BuffType.AddLIFE])
+                    lock (buffListLock[(int)BuffType.AddLife])
                     {
-                        buffList[(int)BuffType.AddLIFE].RemoveFirst();
+                        buffList[(int)BuffType.AddLife].RemoveFirst();
                     }
                     return true;
                 }

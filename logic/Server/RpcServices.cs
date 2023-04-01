@@ -65,6 +65,10 @@ namespace Server
                             //Console.WriteLine("Send!");
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
                     finally
                     {
                         semaDict[request.PlayerId].Item2.Release();
@@ -115,6 +119,10 @@ namespace Server
                         await responseStream.WriteAsync(currentGameInfo);
                         //Console.WriteLine("Send!");
                     }
+                }
+                catch (Exception ex)
+                {
+                    //Console.WriteLine(ex);
                 }
                 finally
                 {

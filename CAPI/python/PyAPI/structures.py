@@ -1,6 +1,11 @@
 from enum import Enum
-from typing import List, Dict, Tuple
+from typing import List, Dict
+import sys
 
+if sys.version_info < (3, 9):
+    from typing import Tuple
+else:
+    Tuple = tuple
 
 class GameState(Enum):
     NullGameState = 0

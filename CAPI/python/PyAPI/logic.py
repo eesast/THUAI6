@@ -184,7 +184,7 @@ class Logic(ILogic):
         self.__logger.debug("Called HaveMessage")
         return not self.__messageQueue.empty()
 
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, str]:
         self.__logger.debug("Called GetMessage")
         if self.__messageQueue.empty():
             self.__logger.warning("Message queue is empty!")

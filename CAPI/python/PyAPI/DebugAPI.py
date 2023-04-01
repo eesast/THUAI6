@@ -1,11 +1,6 @@
 from math import pi
 from concurrent.futures import ThreadPoolExecutor, Future
-from typing import List, cast
-import sys
-if sys.version_info < (3, 9):
-    from typing import Tuple
-else:
-    Tuple = tuple
+from typing import List, cast, Tuple
 import logging
 import os
 import datetime
@@ -23,7 +18,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
         self.__logger = logging.getLogger("api " + str(playerID))
         self.__logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter(
-            "[%(name)s] [%(asctime)s] [%(levelname)s] %(message)s", "%H:%M:%S.%e")
+            "[%(name)s] [%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s", '%H:%M:%S')
         # 确保文件存在
         if not os.path.exists(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/logs"):
             os.makedirs(os.path.dirname(os.path.dirname(
@@ -457,7 +452,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
         self.__logger = logging.getLogger("api " + str(playerID))
         self.__logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter(
-            "[%(name)s] [%(asctime)s] [%(levelname)s] %(message)s", "%H:%M:%S.%e")
+            "[%(name)s] [%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s", '%H:%M:%S')
         # 确保文件存在
         if not os.path.exists(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/logs"):
             os.makedirs(os.path.dirname(os.path.dirname(

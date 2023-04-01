@@ -2,12 +2,7 @@ import PyAPI.structures as THUAI6
 from PyAPI.Interface import ILogic, IStudentAPI, ITrickerAPI, IGameTimer, IAI
 from math import pi
 from concurrent.futures import ThreadPoolExecutor, Future
-from typing import List, cast
-import sys
-if sys.version_info < (3, 9):
-    from typing import Tuple
-else:
-    Tuple = tuple
+from typing import List, cast, Tuple
 
 
 class StudentAPI(IStudentAPI, IGameTimer):

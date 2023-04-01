@@ -215,7 +215,6 @@ bool Communication::TryConnection(int64_t playerID)
     auto status = THUAI6Stub->TryConnection(&context, request, &reply);
     if (status.ok())
     {
-        std::cout << "Connection success!" << std::endl;
         return true;
     }
     else

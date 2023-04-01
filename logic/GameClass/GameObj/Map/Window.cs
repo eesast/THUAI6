@@ -20,7 +20,7 @@ namespace GameClass.GameObj
         {
             if (targetObj.Type != GameObjType.Character)
                 return true;  // 非玩家不碰撞
-            if (whoIsClimbing != null && targetObj.ID == whoIsClimbing.ID)
+            if (whoIsClimbing != null && targetObj == whoIsClimbing)
             {
                 return true;
             }

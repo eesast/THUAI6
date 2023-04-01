@@ -89,12 +89,13 @@ namespace Preparation.Utility
         BecomeInvisible = 1,
         BecomeVampire = 2,
         JumpyBomb = 3,
-        SuperFast = 4,
+        SummonGolem = 4,
         UseKnife = 5,
         CanBeginToCharge = 6,
         Punish = 7,
         WriteAnswers = 8,
         Howl = 9,
+        UseRobot = 10,
     }
     public enum PassiveSkillType
     {

@@ -37,6 +37,9 @@ namespace Gaming
                         case ActiveSkillType.WriteAnswers:
                             WriteAnswers(character);
                             break;
+                        case ActiveSkillType.SummonGolem:
+                            SummonGolem(character);
+                            break;
                         default:
                             return false;
                     }

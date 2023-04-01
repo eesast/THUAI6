@@ -373,8 +373,8 @@ namespace GameClass.GameObj
         /// <summary>
         /// 角色所属队伍ID
         /// </summary>
-        private long teamID = long.MaxValue;
-        public long TeamID
+        private int teamID = int.MaxValue;
+        public int TeamID
         {
             get => teamID;
             set
@@ -386,8 +386,8 @@ namespace GameClass.GameObj
                 }
             }
         }
-        private long playerID = long.MaxValue;
-        public long PlayerID
+        private int playerID = int.MaxValue;
+        public int PlayerID
         {
             get => playerID;
             set

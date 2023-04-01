@@ -11,20 +11,6 @@ namespace Gaming
     {
         private partial class SkillManager
         {
-            public bool BecomeVampire(Character player)
-            {
-                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.BecomeVampire), player, () =>
-                {
-                    player.Vampire += 0.5;
-                    Debugger.Output(player, "becomes vampire!");
-                },
-                                                      () =>
-                                                      {
-                                                          double tempVam = player.Vampire - 0.5;
-                                                          player.Vampire = tempVam < player.OriVampire ? player.OriVampire : tempVam;
-                                                      });
-            }
-
             public bool CanBeginToCharge(Character player)
             {
 
@@ -42,9 +28,9 @@ namespace Gaming
                                                       { });
             }
 
-
             public static bool BecomeInvisible(Character player)
             {
+                if ((!player.Commandable())) return false;
                 IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.BecomeInvisible);
                 return ActiveSkillEffect(activeSkill, player, () =>
                 {
@@ -53,6 +39,14 @@ namespace Gaming
                 },
                                                       () =>
                                                       { });
+            }
+
+            public static bool UseRobot(Character player)
+            {
+                if ((!player.Commandable()) || ((SummonGolem)player.FindIActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned == null) return false;
+                IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.UseRobot);
+                activeSkill.IsBeingUsed = (activeSkill.IsBeingUsed) ? false : true;
+                return true;
             }
 
             public bool JumpyBomb(Character player)
@@ -68,6 +62,7 @@ namespace Gaming
 
             public bool WriteAnswers(Character player)
             {
+                if ((!player.Commandable())) return false;
                 IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.WriteAnswers);
                 return ActiveSkillEffect(activeSkill, player, () =>
                 {
@@ -83,6 +78,22 @@ namespace Gaming
                                                       { });
             }
 
+            public bool SummonGolem(Character player)
+            {
+                if ((!player.Commandable())) return false;
+                IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.SummonGolem);
+                if (((SummonGolem)activeSkill).GolemSummoned != null) return false;
+                XY res = player.Position + new XY(player.FacingDirection, player.Radius * 2);
+                if (actionManager.moveEngine.CheckCollision(player, res) != null)
+                    return false;
+
+                return ActiveSkillEffect(activeSkill, player, () =>
+                {
+                    characterManager.AddPlayer(res, player.TeamID, player.PlayerID + GameData.numOfPeople, CharacterType.Robot, player);
+                },
+                                                      () =>
+                                                      { });
+            }
 
             public static bool UseKnife(Character player)
             {
@@ -97,6 +108,7 @@ namespace Gaming
 
             public bool Howl(Character player)
             {
+                if ((!player.Commandable())) return false;
                 return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Howl), player, () =>
                 {
                     gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
@@ -125,6 +137,7 @@ namespace Gaming
 
             public bool Punish(Character player)
             {
+                if ((!player.Commandable())) return false;
                 return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Punish), player, () =>
                 {
                     gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
@@ -152,18 +165,6 @@ namespace Gaming
                                                       () =>
                                                       { });
             }
-
-            public bool SuperFast(Character player)
-            {
-                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.SuperFast), player, () =>
-                {
-                    player.AddMoveSpeed(player.FindIActiveSkill(ActiveSkillType.SuperFast).DurationTime, 3.0);
-                    Debugger.Output(player, "moves very fast!");
-                },
-                                                      () =>
-                                                      { });
-            }
-
 
             public static bool ActiveSkillEffect(IActiveSkill activeSkill, Character player, Action startSkill, Action endSkill)
             {

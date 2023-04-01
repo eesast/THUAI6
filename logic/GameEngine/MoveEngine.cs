@@ -33,6 +33,12 @@ namespace GameEngine
                 return PlaceType.Null;
             }
         }
+
+        public IGameObj? CheckCollision(IMoveable obj, XY Pos)
+        {
+            return collisionChecker.CheckCollision(obj, Pos);
+        }
+
         private readonly CollisionChecker collisionChecker;
         private readonly Func<IMoveable, IGameObj, XY, AfterCollision> OnCollision;
         /// <summary>
@@ -65,7 +71,7 @@ namespace GameEngine
             XY nextPos = obj.Position + moveVec;
             double maxLen = collisionChecker.FindMax(obj, nextPos, moveVec);
             maxLen = Math.Min(maxLen, obj.MoveSpeed / GameData.numOfStepPerSecond);
-            obj.MovingSetPos(new XY(moveVec.Angle(), maxLen), GetPlaceType(nextPos));
+            obj.MovingSetPos(new XY(moveVec, maxLen), GetPlaceType(nextPos));
         }
 
         public void MoveObj(IMoveable obj, int moveTime, double direction)
@@ -98,7 +104,7 @@ namespace GameEngine
                             do
                             {
                                 flag = false;
-                                collisionObj = collisionChecker.CheckCollision(obj, res);
+                                collisionObj = collisionChecker.CheckCollisionWhenMoving(obj, res);
                                 if (collisionObj == null)
                                     break;
 
@@ -135,7 +141,7 @@ namespace GameEngine
                                 {
                                     moveVecLength = deltaLen + leftTime * obj.MoveSpeed / GameData.numOfPosGridPerCell;
                                     res = new XY(direction, moveVecLength);
-                                    if ((collisionObj = collisionChecker.CheckCollision(obj, res)) == null)
+                                    if ((collisionObj = collisionChecker.CheckCollisionWhenMoving(obj, res)) == null)
                                     {
                                         obj.MovingSetPos(res, GetPlaceType(obj.Position + res));
                                     }

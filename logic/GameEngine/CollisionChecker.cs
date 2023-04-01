@@ -7,46 +7,33 @@ namespace GameEngine
 {
     internal class CollisionChecker
     {
-        /// <summary>
-        /// 碰撞检测，如果这样行走是否会与之碰撞，返回与之碰撞的物体
-        /// </summary>
-        /// <param name="obj">移动的物体</param>
-        /// <param name="moveVec">移动的位移向量</param>
-        /// <returns>和它碰撞的物体</returns>
-        public IGameObj? CheckCollision(IMoveable obj, XY moveVec)
+        public IGameObj? CheckCollision(IMoveable obj, XY Pos)
         {
-            XY nextPos = obj.Position + moveVec;
-            if (!obj.IsRigid)
-            {
-                if (gameMap.IsOutOfBound(obj))
-                    return gameMap.GetOutOfBound(nextPos);
-                return null;
-            }
             // 在列表中检查碰撞
             Func<IEnumerable<IGameObj>, ReaderWriterLockSlim, IGameObj?> CheckCollisionInList =
                 (IEnumerable<IGameObj> lst, ReaderWriterLockSlim listLock) =>
-            {
-                IGameObj? collisionObj = null;
-                listLock.EnterReadLock();
-                try
                 {
-                    foreach (var listObj in lst)
+                    IGameObj? collisionObj = null;
+                    listLock.EnterReadLock();
+                    try
                     {
-                        if (obj.WillCollideWith(listObj, nextPos))
+                        foreach (var listObj in lst)
                         {
-                            collisionObj = listObj;
-                            break;
+                            if (obj.WillCollideWith(listObj, Pos))
+                            {
+                                collisionObj = listObj;
+                                break;
+                            }
                         }
                     }
-                }
-                finally
-                {
-                    listLock.ExitReadLock();
-                }
-                return collisionObj;
-            };
+                    finally
+                    {
+                        listLock.ExitReadLock();
+                    }
+                    return collisionObj;
+                };
 
-            IGameObj? collisionObj = null;
+            IGameObj? collisionObj;
             foreach (var list in lists)
             {
                 if ((collisionObj = CheckCollisionInList(list.Item1, list.Item2)) != null)
@@ -56,6 +43,23 @@ namespace GameEngine
             }
 
             return null;
+        }
+        /// <summary>
+        /// 碰撞检测，如果这样行走是否会与之碰撞，返回与之碰撞的物体
+        /// </summary>
+        /// <param name="obj">移动的物体</param>
+        /// <param name="moveVec">移动的位移向量</param>
+        /// <returns>和它碰撞的物体</returns>
+        public IGameObj? CheckCollisionWhenMoving(IMoveable obj, XY moveVec)
+        {
+            XY nextPos = obj.Position + moveVec;
+            if (!obj.IsRigid)
+            {
+                if (gameMap.IsOutOfBound(obj))
+                    return gameMap.GetOutOfBound(nextPos);
+                return null;
+            }
+            return CheckCollision(obj, nextPos);
         }
         /// <summary>
         /// /// 可移动物体（圆）向矩形物体移动时，可移动且不会碰撞的最大距离。直接用double计算，防止误差

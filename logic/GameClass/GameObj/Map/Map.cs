@@ -119,6 +119,38 @@ namespace GameClass.GameObj
             }
             return player;
         }
+        public Character? FindPlayerToAction(long playerID)
+        {
+            Character? player = null;
+            gameObjLockDict[GameObjType.Character].EnterReadLock();
+            try
+            {
+                foreach (Character person in gameObjDict[GameObjType.Character])
+                {
+                    if (playerID == person.ID)
+                    {
+                        if (person.CharacterType == CharacterType.TechOtaku && person.FindIActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed)
+                        {
+                            foreach (Character character in gameObjDict[GameObjType.Character])
+                            {
+                                if (playerID + GameData.numOfPeople == character.ID)
+                                {
+                                    player = character;
+                                    break;
+                                }
+                            }
+                        }
+                        else player = person;
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                gameObjLockDict[GameObjType.Character].ExitReadLock();
+            }
+            return player;
+        }
         public bool Remove(GameObj gameObj)
         {
             bool flag = false;

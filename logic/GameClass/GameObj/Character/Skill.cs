@@ -91,6 +91,20 @@ namespace GameClass.GameObj
         }
     }
 
+    public class UseRobot : IActiveSkill
+    {
+        public int SkillCD => 0;
+        public int DurationTime => 0;
+        private readonly object commonSkillLock = new object();
+        public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
+    }
+
     public class WriteAnswers : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD;
@@ -107,6 +121,32 @@ namespace GameClass.GameObj
                 lock (commonSkillLock)
                 {
                     degreeOfMeditation = value;
+                }
+            }
+        }
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
+    }
+
+    public class SummonGolem : IActiveSkill
+    {
+        public int SkillCD => GameData.commonSkillCD;
+        public int DurationTime => 0;
+        private readonly object commonSkillLock = new object();
+        public object ActiveSkillLock => commonSkillLock;
+
+        private Golem? golemSummoned = null;
+        public Golem? GolemSummoned
+        {
+            get => golemSummoned;
+            set
+            {
+                lock (commonSkillLock)
+                {
+                    golemSummoned = value;
                 }
             }
         }
@@ -152,6 +192,8 @@ namespace GameClass.GameObj
                     return new JumpyBomb();
                 case ActiveSkillType.WriteAnswers:
                     return new WriteAnswers();
+                case ActiveSkillType.SummonGolem:
+                    return new SummonGolem();
                 default:
                     return new NullSkill();
             }
@@ -175,6 +217,8 @@ namespace GameClass.GameObj
                     return ActiveSkillType.JumpyBomb;
                 case WriteAnswers:
                     return ActiveSkillType.WriteAnswers;
+                case SummonGolem:
+                    return ActiveSkillType.SummonGolem;
                 default:
                     return ActiveSkillType.Null;
             }

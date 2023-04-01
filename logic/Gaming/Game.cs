@@ -77,7 +77,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 bool res = actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
@@ -100,7 +100,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            ICharacter? player = gameMap.FindPlayer(playerID);
+            ICharacter? player = gameMap.FindPlayerToAction(playerID);
             if (playerTreatedID == -1)
             {
                 if (player != null && !player.IsGhost())
@@ -121,7 +121,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            ICharacter? player = gameMap.FindPlayer(playerID);
+            ICharacter? player = gameMap.FindPlayerToAction(playerID);
             if (playerRescuedID == -1)
             {
                 if (player != null && !player.IsGhost())
@@ -143,7 +143,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            ICharacter? player = gameMap.FindPlayer(playerID);
+            ICharacter? player = gameMap.FindPlayerToAction(playerID);
             if (player != null && !player.IsGhost())
                 return actionManager.Fix((Student)player);
             return false;
@@ -152,7 +152,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            ICharacter? player = gameMap.FindPlayer(playerID);
+            ICharacter? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 if (!player.IsGhost())
@@ -164,7 +164,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 return ActionManager.Stop(player);
@@ -175,7 +175,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null && !player.IsGhost())
             {
                 return actionManager.OpenDoorway((Student)player);
@@ -186,7 +186,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 return actionManager.OpenChest(player);
@@ -197,7 +197,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 return actionManager.ClimbingThroughWindow(player);
@@ -208,7 +208,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 return actionManager.LockOrOpenDoor(player);
@@ -219,7 +219,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 _ = attackManager.Attack(player, angle);
@@ -229,7 +229,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 PropManager.UseProp(player, propType);
@@ -239,7 +239,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 propManager.ThrowProp(player, propType);
@@ -249,7 +249,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
                 return propManager.PickProp(player, propType);

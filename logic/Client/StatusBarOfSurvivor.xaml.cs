@@ -33,38 +33,35 @@ namespace Client
             serial.FontSize = scores.FontSize = status.FontSize = activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = prop3.FontSize = fontsize;
         }
 
-        private void SetStaticValue(MessageOfStudent obj)
+        private void SetStaticValue(MessageOfStudent obj, double time0, double time1, double time2)
         {
             switch (obj.StudentType)  // coolTime参数未设定，
             {
                 case StudentType.Athlete:
-                    coolTime0 = coolTime1 = coolTime2 = 10000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: Athlete";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nAthlete";
                     break;
                 case StudentType.Teacher:
-                    coolTime0 = coolTime1 = coolTime2 = 20000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: Teacher";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nTeacher";
                     break;
                 case StudentType.StraightAStudent:
-                    coolTime0 = coolTime1 = coolTime2 = 30000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: StraightAStudent";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nStraightAStudent";
                     break;
                 case StudentType.Robot:
-                    coolTime0 = coolTime1 = coolTime2 = 40000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: Robot";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nRobot";
                     break;
                 case StudentType.TechOtaku:
-                    coolTime0 = coolTime1 = coolTime2 = 40000;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: TechOtaku";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nTechOtaku";
                     break;
                 case StudentType.NullStudentType:
-                    coolTime0 = coolTime1 = coolTime2 = -1;
-                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\n职业: NullStudentType";
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nNullStudentType";
                     break;
             }
             activeSkill0.Text = "Skill0";
             activeSkill1.Text = "Skill1";
             activeSkill2.Text = "Skill2";
+            coolTime0 = time0;
+            coolTime1 = time1;
+            coolTime2 = time2;
             initialized = true;
         }
         private void SetDynamicValue(MessageOfStudent obj)
@@ -149,19 +146,135 @@ namespace Client
                 switch (cnt)
                 {
                     case 0:
-                        SetPropValue(prop0, icon);
+                        switch (icon)
+                        {
+                            case Protobuf.PropType.Key3:
+                                prop0.Text = "🔑3";
+                                break;
+                            case Protobuf.PropType.Key5:
+                                prop0.Text = "🔑5";
+                                break;
+                            case Protobuf.PropType.Key6:
+                                prop0.Text = "🔑6";
+                                break;
+                            case Protobuf.PropType.AddSpeed:
+                                prop0.Text = "⛸";
+                                break;
+                            case Protobuf.PropType.AddLifeOrClairaudience:
+                                prop0.Text = "🏅";
+                                break;
+                            case Protobuf.PropType.AddHpOrAp:
+                                prop0.Text = "♥";
+                                break;
+                            case Protobuf.PropType.ShieldOrSpear:
+                                prop0.Text = "🛡";
+                                break;
+                            case Protobuf.PropType.RecoveryFromDizziness:
+                                prop0.Text = "🕶";
+                                break;
+                            default:
+                                prop0.Text = "";
+                                break;
+                        }
                         cnt++;
                         break;
                     case 1:
-                        SetPropValue(prop0, icon);
+                        switch (icon)
+                        {
+                            case Protobuf.PropType.Key3:
+                                prop1.Text = "🔑3";
+                                break;
+                            case Protobuf.PropType.Key5:
+                                prop1.Text = "🔑5";
+                                break;
+                            case Protobuf.PropType.Key6:
+                                prop1.Text = "🔑6";
+                                break;
+                            case Protobuf.PropType.AddSpeed:
+                                prop1.Text = "⛸";
+                                break;
+                            case Protobuf.PropType.AddLifeOrClairaudience:
+                                prop1.Text = "🏅";
+                                break;
+                            case Protobuf.PropType.AddHpOrAp:
+                                prop1.Text = "♥";
+                                break;
+                            case Protobuf.PropType.ShieldOrSpear:
+                                prop1.Text = "🛡";
+                                break;
+                            case Protobuf.PropType.RecoveryFromDizziness:
+                                prop1.Text = "🕶";
+                                break;
+                            default:
+                                prop1.Text = "";
+                                break;
+                        }
                         cnt++;
                         break;
                     case 2:
-                        SetPropValue(prop0, icon);
+                        switch (icon)
+                        {
+                            case Protobuf.PropType.Key3:
+                                prop2.Text = "🔑3";
+                                break;
+                            case Protobuf.PropType.Key5:
+                                prop2.Text = "🔑5";
+                                break;
+                            case Protobuf.PropType.Key6:
+                                prop2.Text = "🔑6";
+                                break;
+                            case Protobuf.PropType.AddSpeed:
+                                prop2.Text = "⛸";
+                                break;
+                            case Protobuf.PropType.AddLifeOrClairaudience:
+                                prop2.Text = "🏅";
+                                break;
+                            case Protobuf.PropType.AddHpOrAp:
+                                prop2.Text = "♥";
+                                break;
+                            case Protobuf.PropType.ShieldOrSpear:
+                                prop2.Text = "🛡";
+                                break;
+                            case Protobuf.PropType.RecoveryFromDizziness:
+                                prop2.Text = "🕶";
+                                break;
+                            default:
+                                prop2.Text = "";
+                                break;
+                        }
                         cnt++;
                         break;
                     case 3:
-                        SetPropValue(prop0, icon);
+                        switch (icon)
+                        {
+                            case Protobuf.PropType.Key3:
+                                prop3.Text = "🔑3";
+                                break;
+                            case Protobuf.PropType.Key5:
+                                prop3.Text = "🔑5";
+                                break;
+                            case Protobuf.PropType.Key6:
+                                prop3.Text = "🔑6";
+                                break;
+                            case Protobuf.PropType.AddSpeed:
+                                prop3.Text = "⛸";
+                                break;
+                            case Protobuf.PropType.AddLifeOrClairaudience:
+                                prop3.Text = "🏅";
+                                break;
+                            case Protobuf.PropType.AddHpOrAp:
+                                prop3.Text = "♥";
+                                break;
+                            case Protobuf.PropType.ShieldOrSpear:
+                                prop3.Text = "🛡";
+                                break;
+                            case Protobuf.PropType.RecoveryFromDizziness:
+                                prop3.Text = "🕶";
+                                break;
+                            default:
+                                prop3.Text = "";
+                                break;
+                        }
                         cnt++;
                         break;
                     default:
@@ -169,47 +282,14 @@ namespace Client
                 }
             }
         }
-        public void SetPropValue(TextBox textBox, Protobuf.PropType propType)
-        {
-            switch (propType)
-            {
-                case Protobuf.PropType.Key3:
-                    textBox.Text = "🔑";
-                    break;
-                case Protobuf.PropType.Key5:
-                    textBox.Text = "🔑";
-                    break;
-                case Protobuf.PropType.Key6:
-                    textBox.Text = "🔑";
-                    break;
-                case Protobuf.PropType.AddSpeed:
-                    textBox.Text = "⛸";
-                    break;
-                case Protobuf.PropType.AddLifeOrClairaudience:
-                    textBox.Text = "🏅";
-                    break;
-                case Protobuf.PropType.AddHpOrAp:
-                    textBox.Text = "♥";
-                    break;
-                case Protobuf.PropType.ShieldOrSpear:
-                    textBox.Text = "🛡";
-                    break;
-                case Protobuf.PropType.RecoveryFromDizziness:
-                    textBox.Text = "🕶";
-                    break;
-                default:
-                    textBox.Text = "";
-                    break;
-            }
-        }
 
-        public void SetValue(MessageOfStudent obj)
+        public void SetValue(MessageOfStudent obj, double time0, double time1, double time2)
         {
             if (!initialized)
-                SetStaticValue(obj);
+                SetStaticValue(obj, time0, time1, time2);
             SetDynamicValue(obj);
         }
-        private int coolTime0, coolTime1, coolTime2;
+        private double coolTime0, coolTime1, coolTime2;
         private bool initialized;
     }
 }

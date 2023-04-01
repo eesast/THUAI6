@@ -93,7 +93,7 @@ namespace GameClass.GameObj
 
     public class UseRobot : IActiveSkill
     {
-        public int SkillCD => 0;
+        public int SkillCD => GameData.frameDuration;
         public int DurationTime => 0;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;

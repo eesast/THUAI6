@@ -201,8 +201,8 @@ namespace Server
             MessageOfAll msg = new MessageOfAll();
             //msg.GameTime
             msg.SubjectFinished = (int)game.GameMap.NumOfRepairedGenerators;
-            //msg.StudentGraduated
-            //msg.StudentQuited
+            msg.StudentGraduated = (int)game.GameMap.NumOfEscapedStudent;
+            msg.StudentQuited = (int)game.GameMap.NumOfDeceasedStudent;
             msg.StudentScore = 0;
             msg.TrickerScore = 0;
             game.GameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();

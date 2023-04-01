@@ -55,8 +55,8 @@ namespace protobuf
         NULL_BULLET_TYPE = 0,
         FLYING_KNIFE = 1,
         COMMON_ATTACK_OF_TRICKER = 2,
-        FAST_BULLET = 3,
-        ORDINARY_BULLET = 4,
+        BOMB_BOMB = 3,
+        JUMPY_DUMPTY = 4,
         ATOM_BOMB = 5,
         BulletType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         BulletType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
@@ -156,7 +156,7 @@ namespace protobuf
     {
         NULL_PROP_TYPE = 0,
         ADD_SPEED = 1,
-        ADD_LIFE_OR_AP = 2,
+        ADD_LIFE_OR_CLAIRAUDIENCE = 2,
         ADD_HP_OR_AP = 3,
         SHIELD_OR_SPEAR = 4,
         KEY3 = 5,
@@ -191,16 +191,16 @@ namespace protobuf
     enum StudentBuffType : int
     {
         NULL_SBUFF_TYPE = 0,
-        SBUFFTYPE1 = 1,
-        SBUFFTYPE2 = 2,
-        SBUFFTYPE3 = 3,
-        SBUFFTYPE4 = 4,
+        STUDENT_ADD_SPEED = 1,
+        ADD_LIFE = 2,
+        SHIELD = 3,
+        STUDENT_INVISIBLE = 4,
         StudentBuffType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         StudentBuffType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool StudentBuffType_IsValid(int value);
     constexpr StudentBuffType StudentBuffType_MIN = NULL_SBUFF_TYPE;
-    constexpr StudentBuffType StudentBuffType_MAX = SBUFFTYPE4;
+    constexpr StudentBuffType StudentBuffType_MAX = STUDENT_INVISIBLE;
     constexpr int StudentBuffType_ARRAYSIZE = StudentBuffType_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StudentBuffType_descriptor();
@@ -269,17 +269,17 @@ namespace protobuf
     enum TrickerBuffType : int
     {
         NULL_TBUFF_TYPE = 0,
-        TBUFFTYPE1 = 1,
-        TBUFFTYPE2 = 2,
-        TBUFFTYPE3 = 3,
-        TBUFFTYPE4 = 4,
-        INVISIBLE = 5,
+        TRICKER_ADD_SPEED = 1,
+        SPEAR = 2,
+        ADD_AP = 3,
+        CLAIRAUDIENCE = 4,
+        TRICKER_INVISIBLE = 5,
         TrickerBuffType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         TrickerBuffType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool TrickerBuffType_IsValid(int value);
     constexpr TrickerBuffType TrickerBuffType_MIN = NULL_TBUFF_TYPE;
-    constexpr TrickerBuffType TrickerBuffType_MAX = INVISIBLE;
+    constexpr TrickerBuffType TrickerBuffType_MAX = TRICKER_INVISIBLE;
     constexpr int TrickerBuffType_ARRAYSIZE = TrickerBuffType_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TrickerBuffType_descriptor();
@@ -333,15 +333,16 @@ namespace protobuf
     {
         NULL_STUDENT_TYPE = 0,
         ATHLETE = 1,
-        STUDENTTYPE2 = 2,
-        STUDENTTYPE3 = 3,
-        STUDENTTYPE4 = 4,
+        TEACHER = 2,
+        STRAIGHT_A_STUDENT = 3,
+        ROBOT = 4,
+        TECH_OTAKU = 5,
         StudentType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         StudentType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool StudentType_IsValid(int value);
     constexpr StudentType StudentType_MIN = NULL_STUDENT_TYPE;
-    constexpr StudentType StudentType_MAX = STUDENTTYPE4;
+    constexpr StudentType StudentType_MAX = TECH_OTAKU;
     constexpr int StudentType_ARRAYSIZE = StudentType_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StudentType_descriptor();
@@ -365,8 +366,8 @@ namespace protobuf
     {
         NULL_TRICKER_TYPE = 0,
         ASSASSIN = 1,
-        TRICKERTYPE2 = 2,
-        TRICKERTYPE3 = 3,
+        KLEE = 2,
+        A_NOISY_PERSON = 3,
         TRICKERTYPE4 = 4,
         TrickerType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         TrickerType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()

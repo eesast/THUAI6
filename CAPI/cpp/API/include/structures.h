@@ -52,7 +52,7 @@ namespace THUAI6
         Key5 = 2,
         Key6 = 3,
         AddSpeed = 4,
-        AddLifeOrAp = 5,
+        AddLifeOrClairaudience = 5,
         AddHpOrAp = 6,
         ShieldOrSpear = 7,
         RecoveryFromDizziness = 8,
@@ -83,7 +83,8 @@ namespace THUAI6
         Athlete = 1,
         Teacher = 2,
         StraightAStudent = 3,
-        StudentType4 = 4,
+        Robot = 4,
+        TechOtaku = 5,
     };
 
     // 捣蛋鬼类型
@@ -282,12 +283,15 @@ namespace THUAI6
         {StudentType::Athlete, "Athlete"},
         {StudentType::Teacher, "Teacher"},
         {StudentType::StraightAStudent, "StraightAStudent"},
+        {StudentType::Robot, "Robot"},
+        {StudentType::TechOtaku, "TechOtaku"},
     };
 
     inline std::map<TrickerType, std::string> trickerTypeDict{
         {TrickerType::NullTrickerType, "NullTrickerType"},
         {TrickerType::Assassin, "Assassin"},
         {TrickerType::Klee, "Klee"},
+        {TrickerType::ANoisyPerson, "ANoisyPerson"},
     };
 
     inline std::map<PlayerState, std::string> playerStateDict{
@@ -339,7 +343,7 @@ namespace THUAI6
         {PropType::Key5, "Key5"},
         {PropType::Key6, "Key6"},
         {PropType::AddSpeed, "AddSpeed"},
-        {PropType::AddLifeOrAp, "AddLifeOrAp"},
+        {PropType::AddLifeOrClairaudience, "AddLifeOrClairaudience"},
         {PropType::AddHpOrAp, "AddHpOrAp"},
         {PropType::ShieldOrSpear, "ShieldOrSpear"},
         {PropType::RecoveryFromDizziness, "RecoveryFromDizziness"},

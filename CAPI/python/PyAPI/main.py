@@ -26,12 +26,12 @@ def THUAI6Main(argv: List[str], AIBuilder: Callable) -> None:
                         help="Server`s Port 8888 in default", dest="sPort", default="8888")
     parser.add_argument("-p", type=int, required=True,
                         help="Player`s ID", dest="pID", choices=[0, 1, 2, 3, 4])
-    parser.add_argument("-d", type=bool, required=False,
-                        help="Set this flag to save the debug log to ./logs folder", dest="file", default=False, const=True, nargs='?')
-    parser.add_argument("-o", type=bool, required=False,
-                        help="Set this flag to print the debug log to the screen", dest="screen", default=False, const=True, nargs='?')
-    parser.add_argument("-w", type=bool, required=False,
-                        help="Set this flag to only print warning on the screen", dest="warnOnly", default=False, const=True, nargs='?')
+    parser.add_argument("-d", action='store_true',
+                        help="Set this flag to save the debug log to ./logs folder", dest="file")
+    parser.add_argument("-o", action='store_true',
+                        help="Set this flag to print the debug log to the screen", dest="screen")
+    parser.add_argument("-w", action='store_true',
+                        help="Set this flag to only print warning on the screen", dest="warnOnly")
     args = parser.parse_args()
     pID = args.pID
     sIP = args.sIP
@@ -39,6 +39,7 @@ def THUAI6Main(argv: List[str], AIBuilder: Callable) -> None:
     file = args.file
     screen = args.screen
     warnOnly = args.warnOnly
+    print(warnOnly)
     logic = Logic(pID)
     logic.Main(AIBuilder, sIP, sPort, file, screen, warnOnly)
 

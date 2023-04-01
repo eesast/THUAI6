@@ -2,7 +2,7 @@ import PyAPI.structures as THUAI6
 from PyAPI.Interface import ILogic, IStudentAPI, ITrickerAPI, IGameTimer, IAI
 from math import pi
 from concurrent.futures import ThreadPoolExecutor, Future
-from typing import List, cast
+from typing import List, cast, Tuple
 
 
 class StudentAPI(IStudentAPI, IGameTimer):
@@ -71,7 +71,7 @@ class StudentAPI(IStudentAPI, IGameTimer):
     def HaveMessage(self) -> bool:
         return self.__logic.HaveMessage()
 
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, str]:
         return self.__logic.GetMessage()
 
     # 等待下一帧
@@ -238,7 +238,7 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
     def HaveMessage(self) -> bool:
         return self.__logic.HaveMessage()
 
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, str]:
         return self.__logic.GetMessage()
 
     # 等待下一帧

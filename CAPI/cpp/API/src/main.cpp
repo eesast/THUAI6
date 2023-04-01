@@ -18,13 +18,13 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     extern const THUAI6::PlayerType playerType;
     extern const THUAI6::TrickerType trickerType;
     extern const THUAI6::StudentType studentType;
-    {
-        file = true;
-        print = true;
-        Logic logic(playerType, pID, trickerType, studentType);
-        logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);
-        return 0;
-    }
+    // {
+    //     file = true;
+    //     print = true;
+    //     Logic logic(playerType, pID, trickerType, studentType);
+    //     logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);
+    //     return 0;
+    // }
 
     // 使用cmdline的正式版本
     try

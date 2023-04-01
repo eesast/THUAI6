@@ -1,6 +1,5 @@
 import os
-from abc import abstractmethod
-from typing import List, Union, Callable
+from typing import List, Union, Callable, Tuple
 import threading
 import logging
 import proto.MessageType_pb2 as MessageType
@@ -96,6 +95,9 @@ class Logic(ILogic):
 
     def GetPlaceType(self, x: int, y: int) -> THUAI6.PlaceType:
         with self.__mtxState:
+            if x < 0 or x >= len(self.__currentState.gameMap) or y < 0 or y >= len(self.__currentState.gameMap[0]):
+                self.__logger.warning("Invalid position")
+                return THUAI6.PlaceType.NullPlaceType
             self.__logger.debug("Called GetPlaceType")
             return self.__currentState.gameMap[x][y]
 
@@ -182,7 +184,7 @@ class Logic(ILogic):
         self.__logger.debug("Called HaveMessage")
         return not self.__messageQueue.empty()
 
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, str]:
         self.__logger.debug("Called GetMessage")
         if self.__messageQueue.empty():
             self.__logger.warning("Message queue is empty!")
@@ -544,7 +546,7 @@ class Logic(ILogic):
         # 建立日志组件
         self.__logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter(
-            "[%(name)s] [%(asctime)s] [%(levelname)s] %(message)s", "%H:%M:%S.%e")
+            "[%(name)s] [%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s", '%H:%M:%S')
         # 确保文件存在
         if not os.path.exists(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/logs"):
             os.makedirs(os.path.dirname(os.path.dirname(

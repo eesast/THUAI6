@@ -295,7 +295,7 @@ namespace Preparation.Interface
 
         public BulletType InitBullet => BulletType.Null;
 
-        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { });
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.SummonGolem, ActiveSkillType.UseRobot });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
 
         public const int fixSpeed = (int)(GameData.basicFixSpeed * 1.1);
@@ -317,6 +317,46 @@ namespace Preparation.Interface
         public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = (int)(GameData.basicStudentSpeedOfClimbingThroughWindows * 3 / 4);
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
+
+        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
+        public int SpeedOfOpenChest => speedOfOpenChest;
+    }
+    public class Sunshine : IStudent
+    {
+        private const int moveSpeed = GameData.basicMoveSpeed;
+        public int MoveSpeed => moveSpeed;
+
+        private const int maxHp = GameData.basicHp * 32 / 30;
+        public int MaxHp => maxHp;
+
+        private const int maxGamingAddiction = GameData.basicMaxGamingAddiction * 11 / 10;
+        public int MaxGamingAddiction => maxGamingAddiction;
+
+        public BulletType InitBullet => BulletType.Null;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.Rouse });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public const int fixSpeed = GameData.basicFixSpeed * 11 / 10;
+        public int FixSpeed => fixSpeed;
+
+        public const int treatSpeed = GameData.basicTreatSpeed * 2;
+        public int TreatSpeed => treatSpeed;
+
+        public const double concealment = GameData.basicConcealment * 1.2;
+        public double Concealment => concealment;
+
+        public const int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.2);
+        public int AlertnessRadius => alertnessRadius;
+
+        public int viewRange = (int)(GameData.basicViewRange * 1.1);
+        public int ViewRange => viewRange;
+
+        public int timeOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int TimeOfOpeningOrLocking => timeOfOpeningOrLocking;
+
+        public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
         public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;

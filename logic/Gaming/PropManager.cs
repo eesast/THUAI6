@@ -33,7 +33,7 @@ namespace Gaming
                         break;
                     case PropType.AddLifeOrClairaudience:
                         if (!player.IsGhost())
-                            player.AddLIFE(GameData.PropDuration);
+                            player.AddLife(GameData.PropDuration);
                         else
                         {
                             player.AddScore(GameData.ScorePropClairaudience);
@@ -186,7 +186,7 @@ namespace Gaming
                 {
                     gameMap.GameObjLockDict[GameObjType.Chest].ExitWriteLock();
                 }
-
+                /*
                 new Thread
                 (
                     () =>
@@ -208,6 +208,7 @@ namespace Gaming
                     }
                 )
                 { IsBackground = true }.Start();
+            */
             }
             public PropManager(Map gameMap)  // 道具不能扔过墙
             {

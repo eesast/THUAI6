@@ -375,7 +375,7 @@ namespace Gaming
                     loopToDo: () => { },
                     timeInterval: GameData.frameDuration,
                     finallyReturn: () => 0,
-                    maxTotalDuration: (int)((windowToPlayer + windowForClimb.Position - player.Position).Length() / player.MoveSpeed)
+                    maxTotalDuration: (int)((windowToPlayer + windowForClimb.Position - player.Position).Length() * 1000 / player.MoveSpeed)
                     )
                     .Start();
                   if (player.PlayerState != PlayerStateType.ClimbingThroughWindows)
@@ -386,13 +386,13 @@ namespace Gaming
 
                   player.ReSetPos(windowToPlayer + windowForClimb.Position, PlaceType.Window);
                   player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
-                  MovePlayer(player, (int)(windowToPlayer.Length() * 3.0 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
+                  MovePlayer(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
                   new FrameRateTaskExecutor<int>(
                     loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && player.IsMoving && gameMap.Timer.IsGaming,
                     loopToDo: () => { },
                     timeInterval: GameData.frameDuration,
                     finallyReturn: () => 0,
-                    maxTotalDuration: (int)(windowToPlayer.Length() * 3.0 / player.MoveSpeed)
+                    maxTotalDuration: (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed)
                     )
                     .Start();
                   XY PosJumpOff = windowForClimb.Position - 2 * windowToPlayer;
@@ -497,7 +497,7 @@ namespace Gaming
             */
 
             private readonly Map gameMap;
-            private readonly MoveEngine moveEngine;
+            public readonly MoveEngine moveEngine;
             public ActionManager(Map gameMap)
             {
                 this.gameMap = gameMap;

@@ -287,7 +287,15 @@ namespace Gaming
                         gameMap.Add(prop);
                     }
                 }
-                if (player.CharacterType == CharacterType.Robot) return;
+                if (player.CharacterType == CharacterType.Robot)
+                {
+                    if (((Golem)player).Parent != null && ((Golem)player).Parent.CharacterType == CharacterType.TechOtaku)
+                    {
+                        ((SummonGolem)player.FindIActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned = null;
+                        player.FindIActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed = false;
+                    }
+                    return;
+                }
                 ++gameMap.NumOfDeceasedStudent;
                 if (GameData.numOfStudent - gameMap.NumOfDeceasedStudent - gameMap.NumOfEscapedStudent == 1)
                 {

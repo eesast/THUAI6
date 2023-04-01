@@ -16,6 +16,9 @@ namespace Preparation.Utility
 
         public const int MinSpeed = 1;             // 最小速度
         public const int MaxSpeed = int.MaxValue;  // 最大速度
+
+        public const int numOfStudent = 4;
+        public const int numOfPeople = 5;
         #endregion
         #region 地图相关
         public const int numOfPosGridPerCell = 1000;  // 每格的【坐标单位】数
@@ -24,7 +27,7 @@ namespace Preparation.Utility
         public const int cols = 50;                   // 列数
 
         public const int numOfBirthPoint = 5;
-        public const int numOfGenerator = 9;
+        public const int numOfGenerator = 10;
         public const int numOfChest = 8;
 
         public static bool IsMap(GameObjType gameObjType)
@@ -77,7 +80,6 @@ namespace Preparation.Utility
         }
         #endregion
         #region 角色相关
-        public const int numOfStudent = 4;
         public const int characterRadius = numOfPosGridPerCell * 4 / 10;  // 人物半径
 
         public const int basicTreatSpeed = 100;

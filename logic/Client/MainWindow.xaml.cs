@@ -291,8 +291,6 @@ namespace Client
                         VerticalAlignment = VerticalAlignment.Top,
                         Margin = new Thickness(Width * (j), Height * (i), 0, 0)
                     };
-                    // mapPatches[i, j].SetValue(Canvas.LeftProperty, (double)(Width / 65.5 * j));
-                    // mapPatches[i, j].SetValue(Canvas.TopProperty, (double)(Height / 56.5 * i));  // 用zoommap进行修改
                     switch (defaultMap[i, j])
                     {
                         case 6:
@@ -405,6 +403,12 @@ namespace Client
                                             if (humanOrButcher && obj.StudentMessage.PlayerId == playerID)
                                             {
                                                 human = obj.StudentMessage;
+                                                if (human.TimeUntilSkillAvailable[0] >= 0)
+                                                    coolTime0 = human.TimeUntilSkillAvailable[0];
+                                                if (human.TimeUntilSkillAvailable[1] >= 0)
+                                                    coolTime1 = human.TimeUntilSkillAvailable[1];
+                                                if (human.TimeUntilSkillAvailable[2] >= 0)
+                                                    coolTime2 = human.TimeUntilSkillAvailable[2];
                                             }
                                             listOfHuman.Add(obj.StudentMessage);
                                             break;
@@ -412,6 +416,12 @@ namespace Client
                                             if (!humanOrButcher && obj.TrickerMessage.PlayerId == playerID)
                                             {
                                                 butcher = obj.TrickerMessage;
+                                                if (butcher.TimeUntilSkillAvailable[0] >= 0)
+                                                    coolTime0 = butcher.TimeUntilSkillAvailable[0];
+                                                if (butcher.TimeUntilSkillAvailable[1] >= 0)
+                                                    coolTime1 = butcher.TimeUntilSkillAvailable[1];
+                                                if (butcher.TimeUntilSkillAvailable[2] >= 0)
+                                                    coolTime2 = butcher.TimeUntilSkillAvailable[2];
                                             }
                                             listOfButcher.Add(obj.TrickerMessage);
                                             break;
@@ -680,16 +690,16 @@ namespace Client
                             DrawMap();
                         foreach (var data in listOfHuman)
                         {
-                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data);
+                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data, coolTime0, coolTime1, coolTime2);
                             if (CanSee(data))
                             {
                                 Ellipse icon = new()
                                 {
-                                    Width = unitWidth,
-                                    Height = unitHeight,
+                                    Width = 2 * radiusTimes * unitWidth,
+                                    Height = 2 * radiusTimes * unitHeight,
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
-                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * radiusTimes, data.X * unitHeight / 1000.0 - unitHeight * radiusTimes, 0, 0),
                                     Fill = Brushes.BlueViolet,
                                 };
                                 UpperLayerOfMap.Children.Add(icon);
@@ -697,16 +707,16 @@ namespace Client
                         }
                         foreach (var data in listOfButcher)
                         {
-                            StatusBarsOfHunter.SetValue(data);
+                            StatusBarsOfHunter.SetValue(data, coolTime0, coolTime1, coolTime2);
                             if (CanSee(data))
                             {
                                 Ellipse icon = new()
                                 {
-                                    Width = unitWidth,
-                                    Height = unitHeight,
+                                    Width = 2 * radiusTimes * unitWidth,
+                                    Height = 2 * radiusTimes * unitHeight,
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
-                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * radiusTimes, data.X * unitHeight / 1000.0 - unitHeight * radiusTimes, 0, 0),
                                     Fill = Brushes.Chocolate,
                                 };
                                 UpperLayerOfMap.Children.Add(icon);
@@ -821,7 +831,7 @@ namespace Client
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfFixedGenerator);
                             TextBox icon = new()
                             {
-                                FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 Text = Convert.ToString(deg),
@@ -834,7 +844,7 @@ namespace Client
                             };
                             if (deg == 100)
                             {
-                                icon.Text = "🅰";
+                                icon.Text = "🌟";
                             }
                             UpperLayerOfMap.Children.Add(icon);
                         }
@@ -843,7 +853,7 @@ namespace Client
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedChest);
                             TextBox icon = new()
                             {
-                                FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 Text = Convert.ToString(deg),
@@ -856,7 +866,7 @@ namespace Client
                             };
                             if (deg == 100)
                             {
-                                icon.Text = "😄";
+                                icon.Text = "Ø";
                             }
                             UpperLayerOfMap.Children.Add(icon);
                         }
@@ -865,7 +875,7 @@ namespace Client
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedDoorway);
                             TextBox icon = new()
                             {
-                                FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 Text = Convert.ToString(deg),
@@ -879,7 +889,7 @@ namespace Client
                             if (deg == 100)
                             {
                                 gateOpened = true;
-                                icon.Text = "😄";
+                                icon.Text = "🔓";
                             }
                             UpperLayerOfMap.Children.Add(icon);
                         }
@@ -899,11 +909,11 @@ namespace Client
                             };
                             if (data.IsOpen)
                             {
-                                icon.Text = Convert.ToString("开");
+                                icon.Text = Convert.ToString("🔓");
                             }
                             else
                             {
-                                icon.Text = Convert.ToString("闭");
+                                icon.Text = Convert.ToString("🔒");
                             }
                             UpperLayerOfMap.Children.Add(icon);
                         }
@@ -1332,5 +1342,7 @@ namespace Client
         private string[] comInfo = new string[5];
         ArgumentOptions? options = null;
         bool gateOpened = false;
+        double coolTime0 = -1, coolTime1 = -1, coolTime2 = -1;
+        const double radiusTimes = 1.0 * Preparation.Utility.GameData.characterRadius / Preparation.Utility.GameData.numOfPosGridPerCell;
     }
 }

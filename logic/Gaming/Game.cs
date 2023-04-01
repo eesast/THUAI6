@@ -269,6 +269,35 @@ namespace Gaming
             else
                 return false;
         }
+        public void AllActiveSkillDisabledTemporarily()
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            /*         new Thread
+                     (
+                         () =>
+                         {
+                             Thread.Sleep(10);*/
+            gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
+            try
+            {
+                foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
+                {
+                    foreach (var activeSkill in player.Occupation.ListOfIActiveSkill)
+                    {
+                        player.SetTimeUntilActiveSkillAvailable(activeSkill, 0);
+                    }
+                }
+            }
+            finally
+            {
+                gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
+            }
+            /*       }
+               )
+               { IsBackground = true }.Start();
+            */
+        }
 
         public void AllPlayerUsePassiveSkill()
         {

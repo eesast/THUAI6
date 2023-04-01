@@ -84,7 +84,7 @@ namespace Preparation.Utility
 
         public const int basicTreatSpeed = 100;
         public const int basicFixSpeed = 100;
-        public const int basicSpeedOfOpeningOrLocking = 3280;
+        public const int basicSpeedOfOpeningOrLocking = 30;
         public const int basicStudentSpeedOfClimbingThroughWindows = 611;
         public const int basicGhostSpeedOfClimbingThroughWindows = 1270;
         public const int basicSpeedOfOpenChest = 1000;

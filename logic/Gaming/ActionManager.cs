@@ -164,7 +164,7 @@ namespace Gaming
             {
                 if (!(player.Commandable()) || player.CharacterType == CharacterType.Robot)
                     return false;
-                Doorway? doorwayForEscape = (Doorway?)gameMap.OneInTheSameCell(player.Position, GameObjType.Doorway);
+                Doorway? doorwayForEscape = (Doorway?)gameMap.OneForInteractInACross(player.Position, GameObjType.Doorway);
                 if (doorwayForEscape != null)
                 {
                     if (doorwayForEscape.IsOpen())
@@ -179,7 +179,7 @@ namespace Gaming
                 }
                 else
                 {
-                    EmergencyExit? emergencyExit = (EmergencyExit?)gameMap.OneInTheSameCell(player.Position, GameObjType.EmergencyExit);
+                    EmergencyExit? emergencyExit = (EmergencyExit?)gameMap.OneForInteractInACross(player.Position, GameObjType.EmergencyExit);
                     if (emergencyExit != null && emergencyExit.IsOpen)
                     {
                         player.Die(PlayerStateType.Escaped);
@@ -371,13 +371,13 @@ namespace Gaming
               () =>
               {
                   new FrameRateTaskExecutor<int>(
-                    loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,
-                    loopToDo: () => { },
-                    timeInterval: GameData.frameDuration,
-                    finallyReturn: () => 0,
-                    maxTotalDuration: (int)((windowToPlayer + windowForClimb.Position - player.Position).Length() * 1000 / player.MoveSpeed)
-                    )
-                    .Start();
+                  loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,
+                  loopToDo: () => { },
+                  timeInterval: GameData.frameDuration,
+                  finallyReturn: () => 0,
+                  maxTotalDuration: (int)((windowToPlayer + windowForClimb.Position - player.Position).Length() * 1000 / player.MoveSpeed)
+                  )
+                  .Start();
                   if (player.PlayerState != PlayerStateType.ClimbingThroughWindows)
                   {
                       windowForClimb.WhoIsClimbing = null;
@@ -386,10 +386,14 @@ namespace Gaming
 
                   player.ReSetPos(windowToPlayer + windowForClimb.Position, PlaceType.Window);
                   player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
-                  MovePlayer(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
+
+                  moveEngine.MoveObj(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
+
                   new FrameRateTaskExecutor<int>(
-                    loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && player.IsMoving && gameMap.Timer.IsGaming,
-                    loopToDo: () => { },
+                    loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,
+                    loopToDo: () =>
+                    {
+                    },
                     timeInterval: GameData.frameDuration,
                     finallyReturn: () => 0,
                     maxTotalDuration: (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed)
@@ -450,7 +454,7 @@ namespace Gaming
                       loopCondition: () => flag && player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor && gameMap.Timer.IsGaming && doorToLock.OpenOrLockDegree < GameData.degreeOfLockingOrOpeningTheDoor,
                       loopToDo: () =>
                       {
-                          flag = ((gameMap.OneInTheSameCell(doorToLock.Position, GameObjType.Character)) != null);
+                          flag = ((gameMap.OneInTheSameCell(doorToLock.Position, GameObjType.Character)) == null);
                           doorToLock.OpenOrLockDegree += GameData.frameDuration * player.SpeedOfOpeningOrLocking;
                       },
                       timeInterval: GameData.frameDuration,
@@ -506,6 +510,7 @@ namespace Gaming
                     OnCollision: (obj, collisionObj, moveVec) =>
                     {
                         SkillWhenColliding((Character)obj, collisionObj);
+                        Preparation.Utility.Debugger.Output(obj, " end move with " + collisionObj.ToString());
                         //if (collisionObj is Mine)
                         //{
                         //    ActivateMine((Character)obj, (Mine)collisionObj);

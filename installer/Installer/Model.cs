@@ -24,6 +24,7 @@ using System.Windows.Shapes;
 
 using MessageBox = System.Windows.MessageBox;
 using Downloader;
+using COSXML.Transfer;
 
 namespace starter.viewmodel.settings
 {
@@ -215,6 +216,12 @@ namespace starter.viewmodel.settings
 }
 namespace Downloader
 {
+    class UserInfo
+    {
+        static public string _id = "";
+        static public string email = "";
+    }
+
     class Program
     {
         static List<string> newFileName = new List<string>();     // 新文件名
@@ -1028,6 +1035,9 @@ namespace WebConnect
                                 throw new Exception("no token!");
                         logintoken = token;
                         SaveToken();
+                        var info = JsonConvert.DeserializeObject<Dictionary<string, string>>(await response.Content.ReadAsStringAsync());
+                        Downloader.UserInfo._id = info["_id"];
+                        Downloader.UserInfo.email = info["email"];
                         break;
 
                     default:
@@ -1060,21 +1070,101 @@ namespace WebConnect
                     Console.WriteLine("文件不存在！");
                     return;
                 }
-                Console.WriteLine("要将文件上传到何处？：");
-                filedest = Console.ReadLine();
+                Console.WriteLine("请选择语言类型：1.C++   2.python");
+                string type = Console.ReadLine();
+                if (type == "1")
+                {
+                    type = "cpp";
+                }
+                else if (type == "2")
+                {
+                    type = "python";
+                }
+                else
+                {
+                    return;
+                }
+                Console.WriteLine("请确认这是哪个玩家的代码：1.player_1  2.player_2  3.player_3  4.player_4");
+                string plr = Console.ReadLine();
+                if (plr == "1")
+                {
+                    plr = "player_1";
+                }
+                else if (plr == "2")
+                {
+                    plr = "player_2";
+                }
+                else if (plr == "3")
+                {
+                    plr = "player_3";
+                }
+                else if (plr == "4")
+                {
+                    plr = "player_4";
+                }
+                else
+                {
+                    return;
+                }
                 using FileStream fs = new FileStream(tarfile, FileMode.Open, FileAccess.Read);
                 using StreamReader sr = new StreamReader(fs);
                 content = sr.ReadToEnd();
-                using (var response = await client.PostAsync("https://api.eesast.com/files/upload", JsonContent.Create(new
-                {
-                    file = content,
-                    dest = filedest
-                })))
+                using (var response = await client.GetAsync($"https://api.eesast.com/static/player?team_id={GetTeamId()}"))
                 {
                     switch (response.StatusCode)
                     {
                         case System.Net.HttpStatusCode.OK:
-                            Console.WriteLine("上传成功！");
+
+                            var res = JsonConvert.DeserializeObject<Dictionary<string, string>>(await response.Content.ReadAsStringAsync());
+                            string appid = "1255334966";   // 设置腾讯云账户的账户标识（APPID）
+                            string region = "ap-beijing";  // 设置一个默认的存储桶地域
+                            CosXmlConfig config = new CosXmlConfig.Builder()
+                                                      .IsHttps(true)      // 设置默认 HTTPS 请求
+                                                      .SetAppid(appid)    // 设置腾讯云账户的账户标识 APPID
+                                                      .SetRegion(region)  // 设置一个默认的存储桶地域
+                                                      .SetDebugLog(true)  // 显示日志
+                                                      .Build();           // 创建 CosXmlConfig 对象
+                            string tmpSecretId = res["TmpSecretId"]; //"临时密钥 SecretId";
+                            string tmpSecretKey = res["TmpSecretKey"]; //"临时密钥 SecretKey";
+                            string tmpToken = res["SecurityToken"]; //"临时密钥 token";
+                            long tmpExpiredTime = Convert.ToInt64(res["ExpiredTime"]);//临时密钥有效截止时间，精确到秒
+                            QCloudCredentialProvider cosCredentialProvider = new DefaultSessionQCloudCredentialProvider(
+                                tmpSecretId, tmpSecretKey, tmpExpiredTime, tmpToken
+                            );
+                            // 初始化 CosXmlServer
+                            CosXmlServer cosXml = new CosXmlServer(config, cosCredentialProvider);
+
+                            // 初始化 TransferConfig
+                            TransferConfig transferConfig = new TransferConfig();
+
+                            // 初始化 TransferManager
+                            TransferManager transferManager = new TransferManager(cosXml, transferConfig);
+
+                            string bucket = "eesast-1255334966"; //存储桶，格式：BucketName-APPID
+                            string cosPath = $"/THUAI6/{GetTeamId()}/{type}/{plr}"; //对象在存储桶中的位置标识符，即称对象键
+                            string srcPath = tarfile;//本地文件绝对路径
+
+                            // 上传对象
+                            COSXMLUploadTask uploadTask = new COSXMLUploadTask(bucket, cosPath);
+                            uploadTask.SetSrcPath(srcPath);
+
+                            uploadTask.progressCallback = delegate (long completed, long total)
+                            {
+                                Console.WriteLine(string.Format("progress = {0:##.##}%", completed * 100.0 / total));
+                            };
+
+                            try
+                            {
+                                COSXMLUploadTask.UploadTaskResult result = await transferManager.UploadAsync(uploadTask);
+                                Console.WriteLine(result.GetResultInfo());
+                                string eTag = result.eTag;
+                                //到这里应该是成功了，但是因为我没有试过，也不知道具体情况，可能还要根据result的内容判断
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("CosException: " + e);
+                            }
+
                             break;
                         case System.Net.HttpStatusCode.Unauthorized:
                             Console.WriteLine("您未登录或登录过期，请先登录");
@@ -1225,6 +1315,33 @@ namespace WebConnect
                 return false;
             }
         }
+
+        async public Task<string> GetTeamId()
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://api.eesast.com/dev/v1/graphql");
+            request.Headers.Add("x-hasura-admin-secret", "hasuraDevAdminSecret");
+            var content = new StringContent("{\"query\":\"query MyQuery {\r\n    contest_team_member(where: {user_id: {_eq: \""
+                + Downloader.UserInfo._id + "\"}}) {\r\n    team_id\r\n  }\r\n}\r\n\",\"variables\":{}}", null, "application/json");
+            request.Content = content;
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+        async public Task<string> GetUserId(string learnNumber)
+        {
+            var client = new HttpClient();
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://api.eesast.com/dev/v1/graphql");
+            request.Headers.Add("x-hasura-admin-secret", "hasuraDevAdminSecret");
+            var content = new StringContent("{\"query\":\"query MyQuery {\r\n  user(where: {id: {_eq: \""
+                + learnNumber + "\"}}) {\r\n    _id\r\n  }\r\n}\r\n\",\"variables\":{}}", null, "application/json");
+            request.Content = content;
+            var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+
+
     }
     [Serializable]
     record LoginResponse

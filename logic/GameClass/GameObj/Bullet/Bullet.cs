@@ -34,7 +34,7 @@ namespace GameClass.GameObj
         public abstract bool CanAttack(GameObj target);
         public abstract bool CanBeBombed(GameObjType gameObjType);
 
-        protected override bool IgnoreCollideExecutor(IGameObj targetObj)
+        public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
             if (targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet)
                 return true;

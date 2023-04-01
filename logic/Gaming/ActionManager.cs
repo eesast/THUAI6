@@ -164,7 +164,7 @@ namespace Gaming
             {
                 if (!(player.Commandable()) || player.CharacterType == CharacterType.Robot)
                     return false;
-                Doorway? doorwayForEscape = (Doorway?)gameMap.OneInTheSameCell(player.Position, GameObjType.Doorway);
+                Doorway? doorwayForEscape = (Doorway?)gameMap.OneForInteractInACross(player.Position, GameObjType.Doorway);
                 if (doorwayForEscape != null)
                 {
                     if (doorwayForEscape.IsOpen())
@@ -179,7 +179,7 @@ namespace Gaming
                 }
                 else
                 {
-                    EmergencyExit? emergencyExit = (EmergencyExit?)gameMap.OneInTheSameCell(player.Position, GameObjType.EmergencyExit);
+                    EmergencyExit? emergencyExit = (EmergencyExit?)gameMap.OneForInteractInACross(player.Position, GameObjType.EmergencyExit);
                     if (emergencyExit != null && emergencyExit.IsOpen)
                     {
                         player.Die(PlayerStateType.Escaped);

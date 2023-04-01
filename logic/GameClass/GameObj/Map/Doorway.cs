@@ -18,10 +18,9 @@ namespace GameClass.GameObj
         public override ShapeType Shape => ShapeType.Square;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
+            if (!IsOpen()) return false;
             if (targetObj.Type != GameObjType.Character)
                 return true;  // 非玩家不碰撞
-            else if (!((Character)targetObj).IsGhost())
-                return true;  // 不是鬼不碰撞
             return false;
         }
 

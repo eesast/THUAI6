@@ -247,8 +247,8 @@ namespace Client
             TextBox icon = new()
             {
                 FontSize = 10,
-                Width = unitWidth,
-                Height = unitHeight,
+                Width = 20,
+                Height = 20,
                 Text = text,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
@@ -764,11 +764,11 @@ namespace Client
                             {
                                 Ellipse icon = new()
                                 {
-                                    Width = unitWidth * radiusTimes,
-                                    Height = unitHeight * radiusTimes,
+                                    Width = 10,
+                                    Height = 10,
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
-                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * radiusTimes / 2, data.X * unitHeight / 1000.0 - unitHeight * radiusTimes / 2, 0, 0),
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
                                     Fill = Brushes.Red,
                                 };
                                 switch (data.Type)
@@ -779,8 +779,9 @@ namespace Client
                                     case Protobuf.BulletType.CommonAttackOfTricker:
                                     case Protobuf.BulletType.BombBomb:
                                     case Protobuf.BulletType.JumpyDumpty:
-                                    default:
                                         icon.Fill = Brushes.Red;
+                                        break;
+                                    default:
                                         break;
                                 }
                                 UpperLayerOfMap.Children.Add(icon);

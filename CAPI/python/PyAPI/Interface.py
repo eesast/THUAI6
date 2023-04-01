@@ -1,4 +1,9 @@
 from typing import List, Union
+import sys
+if sys.version_info < (3, 9):
+    from typing import Tuple
+else:
+    Tuple = tuple
 from concurrent.futures import Future
 from abc import abstractmethod, ABCMeta
 import PyAPI.structures as THUAI6
@@ -85,7 +90,7 @@ class ILogic(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, str]:
         pass
 
     @abstractmethod
@@ -227,7 +232,7 @@ class IAPI(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, str]:
         pass
 
     # 等待下一帧

@@ -3,6 +3,11 @@ from PyAPI.Interface import ILogic, IStudentAPI, ITrickerAPI, IGameTimer, IAI
 from math import pi
 from concurrent.futures import ThreadPoolExecutor, Future
 from typing import List, cast
+import sys
+if sys.version_info < (3, 9):
+    from typing import Tuple
+else:
+    Tuple = tuple
 
 
 class StudentAPI(IStudentAPI, IGameTimer):
@@ -71,7 +76,7 @@ class StudentAPI(IStudentAPI, IGameTimer):
     def HaveMessage(self) -> bool:
         return self.__logic.HaveMessage()
 
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, str]:
         return self.__logic.GetMessage()
 
     # 等待下一帧
@@ -238,7 +243,7 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
     def HaveMessage(self) -> bool:
         return self.__logic.HaveMessage()
 
-    def GetMessage(self) -> tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, str]:
         return self.__logic.GetMessage()
 
     # 等待下一帧

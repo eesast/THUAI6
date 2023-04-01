@@ -40,6 +40,9 @@ namespace Gaming
                         case ActiveSkillType.SummonGolem:
                             SummonGolem(character);
                             break;
+                        case ActiveSkillType.UseRobot: 
+                            UseRobot(character);
+                            break;
                         default:
                             return false;
                     }

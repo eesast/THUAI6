@@ -194,6 +194,8 @@ namespace GameClass.GameObj
                     return new WriteAnswers();
                 case ActiveSkillType.SummonGolem:
                     return new SummonGolem();
+                case ActiveSkillType.UseRobot:
+                    return new UseRobot();
                 default:
                     return new NullSkill();
             }
@@ -219,6 +221,8 @@ namespace GameClass.GameObj
                     return ActiveSkillType.WriteAnswers;
                 case SummonGolem:
                     return ActiveSkillType.SummonGolem;
+                case UseRobot:
+                    return ActiveSkillType.UseRobot;
                 default:
                     return ActiveSkillType.Null;
             }

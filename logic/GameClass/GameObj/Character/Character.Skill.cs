@@ -61,7 +61,6 @@ namespace GameClass.GameObj
             this.CanMove = true;
             this.score = 0;
             this.buffManager = new BuffManager();
-            Debugger.Output(this, characterType.ToString());
             switch (characterType)
             {
                 case CharacterType.Assassin:

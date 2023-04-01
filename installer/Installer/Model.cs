@@ -1061,7 +1061,6 @@ namespace WebConnect
             {
                 string tarfile; //要上传的文件路径
                 string content;
-                string filedest;    //文件目的地
                 client.DefaultRequestHeaders.Authorization = new("Bearer", logintoken);
                 Console.WriteLine("请输入要上传的文件完整路径：");
                 tarfile = Console.ReadLine();

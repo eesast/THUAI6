@@ -106,6 +106,17 @@ namespace Client
             }
             _ = Parser.Default.ParseArguments<ArgumentOptions>(args).WithParsed(o =>
             { options = o; });
+            if ((args.Length == 3 || args.Length == 4) && options != null && Convert.ToInt64(options.PlayerID) > 2023)
+            {
+                spectatorMode = true;
+                string[] comInfo = new string[3];
+                comInfo[0] = options.Ip;
+                comInfo[1] = options.Port;
+                comInfo[2] = options.PlayerID;
+                ConnectToServer(comInfo);
+                OnReceive();
+                return;
+            }
             if (options == null || options.cl == false)
             {
                 OnReceive();
@@ -160,7 +171,7 @@ namespace Client
         {
             if (!isPlaybackMode)
             {
-                if (comInfo.Length != 5)
+                if (!spectatorMode && comInfo.Length != 5 || spectatorMode && comInfo.Length != 3)
                     throw new Exception("注册信息有误！");
                 playerID = Convert.ToInt64(comInfo[2]);
                 Connect.Background = Brushes.Gray;
@@ -171,66 +182,69 @@ namespace Client
                 client = new AvailableService.AvailableServiceClient(channel);
                 PlayerMsg playerMsg = new PlayerMsg();
                 playerMsg.PlayerId = playerID;
-                playerType = Convert.ToInt64(comInfo[3]) switch
+                if (!spectatorMode)
                 {
-                    0 => PlayerType.NullPlayerType,
-                    1 => PlayerType.StudentPlayer,
-                    2 => PlayerType.TrickerPlayer,
-                };
-                playerMsg.PlayerType = playerType;
-                if (Convert.ToInt64(comInfo[3]) == 1)
-                {
-                    humanOrButcher = true;
-                }
-                else if (Convert.ToInt64(comInfo[3]) == 2)
-                {
-                    humanOrButcher = false;
-                }
-                if (playerType == PlayerType.StudentPlayer)
-                {
-                    switch (Convert.ToInt64(comInfo[4]))
+                    playerType = Convert.ToInt64(comInfo[3]) switch
                     {
-                        case 1:
-                            playerMsg.StudentType = StudentType.Athlete;
-                            break;
-                        case 2:
-                            playerMsg.StudentType = StudentType.Teacher;
-                            break;
-                        case 3:
-                            playerMsg.StudentType = StudentType.StraightAStudent;
-                            break;
-                        case 4:
-                            playerMsg.StudentType = StudentType.Robot;
-                            break;
-                        case 5:
-                            playerMsg.StudentType = StudentType.TechOtaku;
-                            break;
-                        case 0:
-                        default:
-                            playerMsg.StudentType = StudentType.NullStudentType;
-                            break;
+                        0 => PlayerType.NullPlayerType,
+                        1 => PlayerType.StudentPlayer,
+                        2 => PlayerType.TrickerPlayer,
+                    };
+                    playerMsg.PlayerType = playerType;
+                    if (Convert.ToInt64(comInfo[3]) == 1)
+                    {
+                        humanOrButcher = true;
                     }
-                }
-                else if (playerType == PlayerType.TrickerPlayer)
-                {
-                    switch (Convert.ToInt64(comInfo[4]))
+                    else if (Convert.ToInt64(comInfo[3]) == 2)
                     {
-                        case 1:
-                            playerMsg.TrickerType = TrickerType.Assassin;
-                            break;
-                        case 2:
-                            playerMsg.TrickerType = TrickerType.Klee;
-                            break;
-                        case 3:
-                            playerMsg.TrickerType = TrickerType.ANoisyPerson;
-                            break;
-                        case 4:
-                            playerMsg.TrickerType = TrickerType._4;
-                            break;
-                        case 0:
-                        default:
-                            playerMsg.TrickerType = TrickerType.NullTrickerType;
-                            break;
+                        humanOrButcher = false;
+                    }
+                    if (playerType == PlayerType.StudentPlayer)
+                    {
+                        switch (Convert.ToInt64(comInfo[4]))
+                        {
+                            case 1:
+                                playerMsg.StudentType = StudentType.Athlete;
+                                break;
+                            case 2:
+                                playerMsg.StudentType = StudentType.Teacher;
+                                break;
+                            case 3:
+                                playerMsg.StudentType = StudentType.StraightAStudent;
+                                break;
+                            case 4:
+                                playerMsg.StudentType = StudentType.Robot;
+                                break;
+                            case 5:
+                                playerMsg.StudentType = StudentType.TechOtaku;
+                                break;
+                            case 0:
+                            default:
+                                playerMsg.StudentType = StudentType.NullStudentType;
+                                break;
+                        }
+                    }
+                    else if (playerType == PlayerType.TrickerPlayer)
+                    {
+                        switch (Convert.ToInt64(comInfo[4]))
+                        {
+                            case 1:
+                                playerMsg.TrickerType = TrickerType.Assassin;
+                                break;
+                            case 2:
+                                playerMsg.TrickerType = TrickerType.Klee;
+                                break;
+                            case 3:
+                                playerMsg.TrickerType = TrickerType.ANoisyPerson;
+                                break;
+                            case 4:
+                                playerMsg.TrickerType = TrickerType._4;
+                                break;
+                            case 0:
+                            default:
+                                playerMsg.TrickerType = TrickerType.NullTrickerType;
+                                break;
+                        }
                     }
                 }
                 responseStream = client.AddPlayer(playerMsg);
@@ -554,8 +568,8 @@ namespace Client
         {
             if (msg.PlayerState == PlayerState.Quit)
                 return false;
-            //if (playerID >= 2022 || teamID >= 2022)
-            //   return true;
+            if (spectatorMode)
+                return true;
             if (humanOrButcher && human != null)
             {
                 if (human.Guid == msg.Guid)  // 自己能看见自己
@@ -580,8 +594,8 @@ namespace Client
 
         private bool CanSee(MessageOfTricker msg)
         {
-            // if (playerID >= 2022 || teamID >= 2022)
-            //     return true;
+            if (spectatorMode)
+                return true;
             if (!humanOrButcher && butcher != null)
             {
                 if (butcher.Guid == msg.Guid)  // 自己能看见自己
@@ -606,6 +620,8 @@ namespace Client
 
         private bool CanSee(MessageOfProp msg)
         {
+            if (spectatorMode)
+                return true;
             if (msg.Place == Protobuf.PlaceType.Land)
                 return true;
             if (humanOrButcher && human != null)
@@ -623,6 +639,8 @@ namespace Client
 
         private bool CanSee(MessageOfBullet msg)
         {
+            if (spectatorMode)
+                return true;
             if (msg.Place == Protobuf.PlaceType.Land)
                 return true;
             if (humanOrButcher && human != null)
@@ -769,7 +787,7 @@ namespace Client
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
                                     Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                    Fill = Brushes.Red,
+                                    //Fill = Brushes.Red,
                                 };
                                 switch (data.Type)
                                 {
@@ -845,7 +863,7 @@ namespace Client
                             };
                             if (deg == 100)
                             {
-                                icon.Text = "🌟";
+                                icon.Text = "A+";
                             }
                             UpperLayerOfMap.Children.Add(icon);
                         }
@@ -1343,6 +1361,7 @@ namespace Client
         private string[] comInfo = new string[5];
         ArgumentOptions? options = null;
         bool gateOpened = false;
+        bool spectatorMode = false;
         double coolTime0 = -1, coolTime1 = -1, coolTime2 = -1;
         const double radiusTimes = 1.0 * Preparation.Utility.GameData.characterRadius / Preparation.Utility.GameData.numOfPosGridPerCell;
     }

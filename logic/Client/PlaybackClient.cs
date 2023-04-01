@@ -38,7 +38,7 @@ namespace Client
 
         public int[,]? ReadDataFromFile(List<MessageOfProp> listOfProp, List<MessageOfStudent> listOfHuman, List<MessageOfTricker> listOfButcher, List<MessageOfBullet> listOfBullet,
         List<MessageOfBombedBullet> listOfBombedBullet, List<MessageOfAll> listOfAll, List<MessageOfChest> listOfChest, List<MessageOfClassroom> listOfClassroom,
-        List<MessageOfDoor> listOfDoor, List<MessageOfGate> listOfGate, object dataLock)
+        List<MessageOfDoor> listOfDoor, List<MessageOfHiddenGate> listOfHiddenGate, List<MessageOfGate> listOfGate, object dataLock)
         {
             if (Reader == null)
                 return null;
@@ -103,6 +103,7 @@ namespace Client
                                 listOfChest.Clear();
                                 listOfClassroom.Clear();
                                 listOfDoor.Clear();
+                                listOfHiddenGate.Clear();
                                 listOfGate.Clear();
                                 switch (content.GameState)
                                 {
@@ -145,6 +146,9 @@ namespace Client
                                                     break;
                                                 case MessageOfObj.MessageOfObjOneofCase.GateMessage:
                                                     listOfGate.Add(obj.GateMessage);
+                                                    break;
+                                                case MessageOfObj.MessageOfObjOneofCase.HiddenGateMessage:
+                                                    listOfHiddenGate.Add(obj.HiddenGateMessage);
                                                     break;
                                                 case MessageOfObj.MessageOfObjOneofCase.MapMessage:
                                                     break;
@@ -189,6 +193,9 @@ namespace Client
                                                 case MessageOfObj.MessageOfObjOneofCase.DoorMessage:
                                                     listOfDoor.Add(obj.DoorMessage);
                                                     break;
+                                                case MessageOfObj.MessageOfObjOneofCase.HiddenGateMessage:
+                                                    listOfHiddenGate.Add(obj.HiddenGateMessage);
+                                                    break;
                                                 case MessageOfObj.MessageOfObjOneofCase.GateMessage:
                                                     listOfGate.Add(obj.GateMessage);
                                                     break;
@@ -225,6 +232,9 @@ namespace Client
                                                     break;
                                                 case MessageOfObj.MessageOfObjOneofCase.DoorMessage:
                                                     listOfDoor.Add(obj.DoorMessage);
+                                                    break;
+                                                case MessageOfObj.MessageOfObjOneofCase.HiddenGateMessage:
+                                                    listOfHiddenGate.Add(obj.HiddenGateMessage);
                                                     break;
                                                 case MessageOfObj.MessageOfObjOneofCase.GateMessage:
                                                     listOfGate.Add(obj.GateMessage);

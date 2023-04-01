@@ -36,9 +36,8 @@ namespace Client
             scoresOfStudents.FontSize = scoresOfTrickers.FontSize = fontsize;
         }
 
-        public void SetValue(MessageOfAll obj, bool gateOpened)
+        public void SetValue(MessageOfAll obj, bool gateOpened, bool hiddenGateRefreshed, bool hiddenGateOpened)
         {
-            bool hiddenGateRefreshed = false, hiddenGateOpened = false;
             time.Text = "Time⏳: " + Convert.ToString(obj.GameTime);
             status.Text = "📱: " + Convert.ToString(obj.SubjectFinished) + "\n🚪: ";
             if (gateOpened)
@@ -49,14 +48,14 @@ namespace Client
             {
                 status.Text += "Close\n🆘: ";
             }
-            if (obj.SubjectFinished >= Preparation.Utility.GameData.numOfGeneratorRequiredForEmergencyExit)
-            {
-                hiddenGateRefreshed = true;
-            }
-            if (Preparation.Utility.GameData.numOfStudent == 1 + obj.StudentQuited + obj.StudentGraduated)
-            {
-                hiddenGateOpened = true;
-            }
+            //if (obj.SubjectFinished >= Preparation.Utility.GameData.numOfGeneratorRequiredForEmergencyExit)
+            //{
+            //    hiddenGateRefreshed = true;
+            //}
+            //if (Preparation.Utility.GameData.numOfStudent == 1 + obj.StudentQuited + obj.StudentGraduated)
+            //{
+            //    hiddenGateOpened = true;
+            //}
             if (hiddenGateRefreshed)
             {
                 if (hiddenGateOpened)

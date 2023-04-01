@@ -57,6 +57,7 @@ namespace Client
             listOfClassroom = new List<MessageOfClassroom>();
             listOfDoor = new List<MessageOfDoor>();
             listOfGate = new List<MessageOfGate>();
+            listOfHiddenGate = new List<MessageOfHiddenGate>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             ReactToCommandline();
         }
@@ -153,7 +154,7 @@ namespace Client
         {
             var pbClient = new PlaybackClient(fileName, pbSpeed);
             int[,]? map;
-            if ((map = pbClient.ReadDataFromFile(listOfProp, listOfHuman, listOfButcher, listOfBullet, listOfBombedBullet, listOfAll, listOfChest, listOfClassroom, listOfDoor, listOfGate, drawPicLock)) != null)
+            if ((map = pbClient.ReadDataFromFile(listOfProp, listOfHuman, listOfButcher, listOfBullet, listOfBombedBullet, listOfAll, listOfChest, listOfClassroom, listOfDoor, listOfHiddenGate, listOfGate, drawPicLock)) != null)
             {
                 isClientStocked = false;
                 isPlaybackMode = true;
@@ -325,14 +326,6 @@ namespace Client
                             mapPatches[i, j].Stroke = Brushes.LightSkyBlue;
                             break;//gate
                         case 10:
-                            foreach (var obj in listOfAll)
-                            {
-                                if (obj.SubjectFinished >= Preparation.Utility.GameData.numOfGeneratorRequiredForEmergencyExit)
-                                {
-                                    mapPatches[i, j].Fill = Brushes.LightSalmon;
-                                    mapPatches[i, j].Stroke = Brushes.LightSalmon;
-                                }
-                            }
                             break;//emergency
                         case 11:
                             mapPatches[i, j].Fill = Brushes.Gray;
@@ -404,6 +397,7 @@ namespace Client
                         listOfChest.Clear();
                         listOfClassroom.Clear();
                         listOfDoor.Clear();
+                        listOfHiddenGate.Clear();
                         listOfGate.Clear();
                         MessageToClient content = responseStream.ResponseStream.Current;
                         switch (content.GameState)
@@ -508,11 +502,13 @@ namespace Client
                                         case MessageOfObj.MessageOfObjOneofCase.GateMessage:
                                             listOfGate.Add(obj.GateMessage);
                                             break;
+                                        case MessageOfObj.MessageOfObjOneofCase.HiddenGateMessage:
+                                            listOfHiddenGate.Add(obj.HiddenGateMessage);
+                                            break;
                                     }
                                 }
                                 listOfAll.Add(content.AllMessage);
                                 break;
-
                             case GameState.GameEnd:
                                 foreach (var obj in content.ObjMessage)
                                 {
@@ -545,6 +541,9 @@ namespace Client
                                         case MessageOfObj.MessageOfObjOneofCase.GateMessage:
                                             listOfGate.Add(obj.GateMessage);
                                             break;
+                                        case MessageOfObj.MessageOfObjOneofCase.HiddenGateMessage:
+                                            listOfHiddenGate.Add(obj.HiddenGateMessage);
+                                            break;
                                     }
                                 }
                                 listOfAll.Add(content.AllMessage);
@@ -567,7 +566,7 @@ namespace Client
         //待修改
         private bool CanSee(MessageOfStudent msg)
         {
-            if (msg.PlayerState == PlayerState.Quit)
+            if (msg.PlayerState == PlayerState.Quit || msg.PlayerState == PlayerState.Graduated)
                 return false;
             if (isSpectatorMode)
                 return true;
@@ -703,7 +702,7 @@ namespace Client
                     {
                         foreach (var data in listOfAll)
                         {
-                            StatusBarsOfCircumstance.SetValue(data, gateOpened);
+                            StatusBarsOfCircumstance.SetValue(data, gateOpened, isEmergencyDrawed, isEmergencyOpened);
                         }
                         if (!hasDrawed && mapFlag)
                             DrawMap();
@@ -936,6 +935,19 @@ namespace Client
                                 icon.Text = Convert.ToString("🔒");
                             }
                             UpperLayerOfMap.Children.Add(icon);
+                        }
+                        foreach (var data in listOfHiddenGate)
+                        {
+                            if (!isEmergencyDrawed)
+                            {
+                                mapPatches[data.X / Preparation.Utility.GameData.numOfPosGridPerCell, data.Y / Preparation.Utility.GameData.numOfPosGridPerCell].Fill = Brushes.LightSalmon;
+                                mapPatches[data.X / Preparation.Utility.GameData.numOfPosGridPerCell, data.Y / Preparation.Utility.GameData.numOfPosGridPerCell].Stroke = Brushes.LightSalmon;
+                                isEmergencyDrawed = true;
+                            }
+                            if (data.Opened && !isEmergencyOpened)
+                            {
+                                isEmergencyOpened = true;
+                            }
                         }
                         //}
                         ZoomMap();
@@ -1298,6 +1310,7 @@ namespace Client
         private List<MessageOfClassroom> listOfClassroom;
         private List<MessageOfDoor> listOfDoor;
         private List<MessageOfGate> listOfGate;
+        private List<MessageOfHiddenGate> listOfHiddenGate;
         private object drawPicLock = new object();
         private MessageOfStudent? human = null;
         private MessageOfTricker? butcher = null;
@@ -1363,6 +1376,8 @@ namespace Client
         ArgumentOptions? options = null;
         bool gateOpened = false;
         bool isSpectatorMode = false;
+        bool isEmergencyOpened = false;
+        bool isEmergencyDrawed = false;
         double coolTime0 = -1, coolTime1 = -1, coolTime2 = -1;
         const double radiusTimes = 1.0 * Preparation.Utility.GameData.characterRadius / Preparation.Utility.GameData.numOfPosGridPerCell;
     }

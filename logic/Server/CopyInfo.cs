@@ -51,7 +51,7 @@ namespace Server
                 case Preparation.Utility.PropType.AddSpeed:
                     return Protobuf.PropType.AddSpeed;
                 case Preparation.Utility.PropType.AddLifeOrClairaudience:
-                    return Protobuf.PropType.AddLifeOrAp;
+                    return Protobuf.PropType.AddLifeOrClairaudience;
                 case Preparation.Utility.PropType.AddHpOrAp:
                     return Protobuf.PropType.AddHpOrAp;
                 case Preparation.Utility.PropType.ShieldOrSpear:
@@ -75,7 +75,7 @@ namespace Server
             {
                 case Protobuf.PropType.AddSpeed:
                     return Preparation.Utility.PropType.AddSpeed;
-                case Protobuf.PropType.AddLifeOrAp:
+                case Protobuf.PropType.AddLifeOrClairaudience:
                     return Preparation.Utility.PropType.AddLifeOrClairaudience;
                 case Protobuf.PropType.AddHpOrAp:
                     return Preparation.Utility.PropType.AddHpOrAp;
@@ -141,7 +141,14 @@ namespace Server
         {
             switch (buffType)
             {
-                case Preparation.Utility.BuffType.Null:
+                case Preparation.Utility.BuffType.AddSpeed:
+                    return Protobuf.StudentBuffType.AddSpeed;
+                case Preparation.Utility.BuffType.AddLife:
+                    return Protobuf.StudentBuffType.AddLife;
+                case Preparation.Utility.BuffType.Shield:
+                    return Protobuf.StudentBuffType.Shield;
+                case Preparation.Utility.BuffType.Invisible:
+                    return Protobuf.StudentBuffType.Invisible;
                 default:
                     return Protobuf.StudentBuffType.NullSbuffType;
             }
@@ -150,7 +157,16 @@ namespace Server
         {
             switch (buffType)
             {
-                case Preparation.Utility.BuffType.Null:
+                case Preparation.Utility.BuffType.AddSpeed:
+                    return Protobuf.TrickerBuffType.AddSpeed;
+                case Preparation.Utility.BuffType.Spear:
+                    return Protobuf.TrickerBuffType.Spear;
+                case Preparation.Utility.BuffType.AddAp:
+                    return Protobuf.TrickerBuffType.AddAp;
+                case Preparation.Utility.BuffType.Clairaudience:
+                    return Protobuf.TrickerBuffType.Clairaudience;
+                case Preparation.Utility.BuffType.Invisible:
+                    return Protobuf.TrickerBuffType.Invisible;
                 default:
                     return Protobuf.TrickerBuffType.NullTbuffType;
             }
@@ -164,9 +180,9 @@ namespace Server
                 case Preparation.Utility.BulletType.CommonAttackOfGhost:
                     return Protobuf.BulletType.CommonAttackOfTricker;
                 case Preparation.Utility.BulletType.BombBomb:
-                    return Protobuf.BulletType.FastBullet;
+                    return Protobuf.BulletType.BombBomb;
                 case Preparation.Utility.BulletType.JumpyDumpty:
-                    return Protobuf.BulletType.OrdinaryBullet;
+                    return Protobuf.BulletType.JumpyDumpty;
                 default:
                     return Protobuf.BulletType.NullBulletType;
             }
@@ -179,13 +195,13 @@ namespace Server
                 case Preparation.Utility.CharacterType.Athlete:
                     return Protobuf.StudentType.Athlete;
                 case Preparation.Utility.CharacterType.Teacher:
-                    return StudentType._2;
-                case CharacterType.StraightAStudent:
-                    return StudentType._3;
-                case CharacterType.Robot:
-                    return StudentType._4;
-                case CharacterType.TechOtaku:
-                    return StudentType.TechOtaku;
+                    return Protobuf.StudentType.Teacher;
+                case Preparation.Utility.CharacterType.StraightAStudent:
+                    return Protobuf.StudentType.StraightAStudent;
+                case Preparation.Utility.CharacterType.Robot:
+                    return Protobuf.StudentType.Robot;
+                case Preparation.Utility.CharacterType.TechOtaku:
+                    return Protobuf.StudentType.TechOtaku;
                 default:
                     return Protobuf.StudentType.NullStudentType;
             }
@@ -197,14 +213,14 @@ namespace Server
             {
                 case Protobuf.StudentType.Athlete:
                     return Preparation.Utility.CharacterType.Athlete;
-                case StudentType._2:
+                case Protobuf.StudentType.Teacher:
                     return Preparation.Utility.CharacterType.Teacher;
-                case StudentType._3:
-                    return CharacterType.StraightAStudent;
-                case StudentType._4:
-                    return CharacterType.Robot;
-                case StudentType.TechOtaku:
-                    return CharacterType.TechOtaku;
+                case Protobuf.StudentType.StraightAStudent:
+                    return Preparation.Utility.CharacterType.StraightAStudent;
+                case Protobuf.StudentType.Robot:
+                    return Preparation.Utility.CharacterType.Robot;
+                case Protobuf.StudentType.TechOtaku:
+                    return Preparation.Utility.CharacterType.TechOtaku;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }
@@ -216,9 +232,9 @@ namespace Server
                 case Preparation.Utility.CharacterType.Assassin:
                     return Protobuf.TrickerType.Assassin;
                 case Preparation.Utility.CharacterType.Klee:
-                    return Protobuf.TrickerType._2;
-                case CharacterType.ANoisyPerson:
-                    return Protobuf.TrickerType._3;
+                    return Protobuf.TrickerType.Klee;
+                case Preparation.Utility.CharacterType.ANoisyPerson:
+                    return Protobuf.TrickerType.ANoisyPerson;
                 default:
                     return Protobuf.TrickerType.NullTrickerType;
             }
@@ -230,10 +246,10 @@ namespace Server
             {
                 case Protobuf.TrickerType.Assassin:
                     return Preparation.Utility.CharacterType.Assassin;
-                case Protobuf.TrickerType._2:
+                case Protobuf.TrickerType.Klee:
                     return Preparation.Utility.CharacterType.Klee;
-                case Protobuf.TrickerType._3:
-                    return CharacterType.ANoisyPerson;
+                case Protobuf.TrickerType.ANoisyPerson:
+                    return Preparation.Utility.CharacterType.ANoisyPerson;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }

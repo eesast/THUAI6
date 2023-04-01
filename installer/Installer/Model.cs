@@ -1110,7 +1110,6 @@ namespace WebConnect
             try
             {
                 string content;
-                string filedest;    //文件目的地
                 client.DefaultRequestHeaders.Authorization = new("Bearer", logintoken);
                 if (!File.Exists(tarfile))
                 {

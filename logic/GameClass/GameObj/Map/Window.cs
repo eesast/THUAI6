@@ -18,6 +18,8 @@ namespace GameClass.GameObj
         public override ShapeType Shape => ShapeType.Square;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
+            if (targetObj.Type != GameObjType.Character)
+                return true;  // 非玩家不碰撞
             if (targetObj == whoIsClimbing)
                 return true;
             return false;

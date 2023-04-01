@@ -1,4 +1,9 @@
-from typing import List, Union, Tuple
+from typing import List, Union
+import sys
+if sys.version_info < (3, 9):
+    from typing import Tuple
+else:
+    Tuple = tuple
 from concurrent.futures import Future
 from abc import abstractmethod, ABCMeta
 import PyAPI.structures as THUAI6

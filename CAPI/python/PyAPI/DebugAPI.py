@@ -1,6 +1,11 @@
 from math import pi
 from concurrent.futures import ThreadPoolExecutor, Future
-from typing import List, cast, Tuple
+from typing import List, cast
+import sys
+if sys.version_info < (3, 9):
+    from typing import Tuple
+else:
+    Tuple = tuple
 import logging
 import os
 import datetime

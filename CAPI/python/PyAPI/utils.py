@@ -90,7 +90,7 @@ class Proto2THUAI6(NoInstance):
         MessageType.KEY6: THUAI6.PropType.Key6,
         MessageType.ADD_SPEED: THUAI6.PropType.AddSpeed,
         MessageType.ADD_HP_OR_AP: THUAI6.PropType.AddHpOrAp,
-        MessageType.ADD_LIFE_OR_AP: THUAI6.PropType.AddLifeOrAp,
+        # MessageType.ADD_LIFE_OR_AP: THUAI6.PropType.AddLifeOrAp,
         MessageType.SHIELD_OR_SPEAR: THUAI6.PropType.ShieldOrSpear,
         MessageType.RECOVERY_FROM_DIZZINESS: THUAI6.PropType.RecoveryFromDizziness, }
 
@@ -102,8 +102,9 @@ class Proto2THUAI6(NoInstance):
     studentTypeDict: Final[dict] = {
         MessageType.NULL_STUDENT_TYPE: THUAI6.StudentType.NullStudentType,
         MessageType.ATHLETE: THUAI6.StudentType.Athlete,
-        MessageType.STUDENTTYPE2: THUAI6.StudentType.Teacher,
-        MessageType.STUDENTTYPE3: THUAI6.StudentType.StraightAStudent, }
+        # MessageType.STUDENTTYPE2: THUAI6.StudentType.Teacher,
+        # MessageType.STUDENTTYPE3: THUAI6.StudentType.StraightAStudent,
+        }
 
     trickerTypeDict: Final[dict] = {
         MessageType.NULL_TRICKER_TYPE: THUAI6.TrickerType.NullTrickerType,

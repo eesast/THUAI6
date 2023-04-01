@@ -2,6 +2,8 @@ import PyAPI.structures as THUAI6
 from PyAPI.Interface import IStudentAPI, ITrickerAPI, IAI
 from typing import Union, Final, cast
 
+import time
+
 
 class Setting:
     # 为假则play()期间确保游戏状态不更新，为真则只保证游戏状态在调用相关方法时不更新
@@ -39,20 +41,49 @@ class AssistFunction:
         return grid // numOfGridPerCell
 
 
+arrive: bool = False
+
+
 class AI(IAI):
     # 选手在这里实现自己的逻辑，要求和上面选择的阵营保持一致
     def StudentPlay(self, api: IStudentAPI) -> None:
-        studentSelfInfo = api.GetSelfInfo()
+        api.Attack(float('nan'))
+        time.sleep(0.5)
+        api.PrintSelfInfo()
+        # api.SendMessage(4, "Hello World!")
+        # api.PrintSelfInfo()
+        # global arrive
+        # if not arrive:
+        #     if api.GetSelfInfo().x < 25500:
+        #         api.MoveDown(50)
+        #         return
+        #     if api.GetSelfInfo().y > 10500:
+        #         api.MoveLeft(50)
+        #         return
+        #     arrive = True
+        # else:
+        #     api.SkipWindow()
+        #     # time.sleep(1)
 
-        if studentSelfInfo.playerID == 0:
-            api.SendMessage(1, "Hello, I'm player 0 using python interface!")
-        if studentSelfInfo.playerID == 1:
-            api.SendMessage(0, "Hello, I'm player 1 using python interface!")
+        # api.PrintSelfInfo()
 
-        if api.HaveMessage():
-            message = api.GetMessage()
-            api.Print(
-                f"Recieved Message from player {message[0]}: {message[1]}")
+        # if api.GetSelfInfo().y < 18500:
+        #     api.MoveRight(50)
+        #     return
+        # api.StartLearning()
+
+        # if api.GetSelfInfo().y > 7000:
+        #     api.MoveLeft(50)
+        #     return
+        # if api.GetSelfInfo().x > 20500:
+        #     api.MoveUp(50)
+        #     return
+        # if api.GetSelfInfo().y > 4500:
+        #     api.MoveLeft(50)
+        #     return
+
+        api.PrintTricker()
+
         return
 
     def TrickerPlay(self, api: ITrickerAPI) -> None:

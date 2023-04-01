@@ -6,7 +6,7 @@
 extern const bool asynchronous = false;
 
 // 选手必须定义该变量来选择自己的阵营
-extern const THUAI6::PlayerType playerType = THUAI6::PlayerType::StudentPlayer;
+extern const THUAI6::PlayerType playerType = THUAI6::PlayerType::TrickerPlayer;
 
 // 选手需要将两个都定义，本份代码中不选择的阵营任意定义即可
 extern const THUAI6::TrickerType trickerType = THUAI6::TrickerType::Assassin;
@@ -17,15 +17,14 @@ extern const THUAI6::StudentType studentType = THUAI6::StudentType::Athlete;
 
 void AI::play(IStudentAPI& api)
 {
-    api.SendMessage(1, "Hello, I'm player 0 using C++ interface!");
-    if (api.HaveMessage())
-    {
-        auto msg = api.GetMessage();
-        api.Print("Player " + std::to_string(msg.first) + " says: " + msg.second);
-    }
+    api.PrintTricker();
 }
 
 void AI::play(ITrickerAPI& api)
 {
-    api.Move(100, 1);
+    if (api.HaveMessage())
+    {
+        auto msg = api.GetMessage();
+        api.Print("Message from " + std::to_string(msg.first) + ": " + msg.second);
+    }
 }

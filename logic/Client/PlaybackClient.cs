@@ -52,7 +52,7 @@ namespace Client
             {
                 var msg = mapCollecter.ReadOne();
                 if (msg == null)
-                    throw new Exception("Map messgae is not in the playback file!");
+                    throw new Exception("Map message is not in the playback file!");
                 foreach (var obj in msg.ObjMessage)
                 {
                     if (obj.MessageOfObjCase == MessageOfObj.MessageOfObjOneofCase.MapMessage)
@@ -78,7 +78,6 @@ namespace Client
                         break;
                     }
                 }
-
             };
 
             new Thread(() =>

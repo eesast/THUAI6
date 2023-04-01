@@ -769,6 +769,7 @@ namespace Client
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
                                     Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                    Fill = Brushes.Red,
                                 };
                                 switch (data.Type)
                                 {
@@ -1194,8 +1195,8 @@ namespace Client
             }
             catch (Exception)
             {
-                //               ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
-                //               error.Show();
+                //ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
+                //error.Show();
             }
         }
 
@@ -1243,8 +1244,8 @@ namespace Client
             }
             catch (Exception)
             {
-                //               ErrorDisplayer error = new(exc.Message);
-                //               error.Show();
+                //ErrorDisplayer error = new(exc.Message)
+                //error.Show()
             }
         }
 

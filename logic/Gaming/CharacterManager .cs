@@ -297,23 +297,6 @@ namespace Gaming
                     return;
                 }
                 ++gameMap.NumOfDeceasedStudent;
-                if (GameData.numOfStudent - gameMap.NumOfDeceasedStudent - gameMap.NumOfEscapedStudent == 1)
-                {
-                    gameMap.GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
-                    try
-                    {
-                        foreach (EmergencyExit emergencyExit in gameMap.GameObjDict[GameObjType.EmergencyExit])
-                            if (emergencyExit.CanOpen)
-                            {
-                                emergencyExit.IsOpen = true;
-                                break;
-                            }
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
-                    }
-                }
             }
 
         }

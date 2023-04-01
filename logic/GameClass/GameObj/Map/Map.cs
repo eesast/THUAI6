@@ -14,6 +14,31 @@ namespace GameClass.GameObj
         public Dictionary<uint, XY> BirthPointList => birthPointList;
 
         private object lockForNum = new();
+        private void WhenNumChange()
+        {
+            if (numOfDeceasedStudent + numOfEscapedStudent == GameData.numOfStudent)
+            {
+                Timer.IsGaming = false;
+            }
+
+            if (GameData.numOfStudent - NumOfDeceasedStudent - NumOfEscapedStudent == 1)
+            {
+                GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
+                try
+                {
+                    foreach (EmergencyExit emergencyExit in GameObjDict[GameObjType.EmergencyExit])
+                        if (emergencyExit.CanOpen)
+                        {
+                            emergencyExit.IsOpen = true;
+                            break;
+                        }
+                }
+                finally
+                {
+                    GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
+                }
+            }
+        }
         private uint numOfRepairedGenerators = 0;
         public uint NumOfRepairedGenerators
         {
@@ -23,6 +48,7 @@ namespace GameClass.GameObj
                 lock (lockForNum)
                 {
                     numOfRepairedGenerators = value;
+                    WhenNumChange();
                 }
             }
         }
@@ -35,10 +61,7 @@ namespace GameClass.GameObj
                 lock (lockForNum)
                 {
                     numOfDeceasedStudent = value;
-                    if (numOfDeceasedStudent + numOfEscapedStudent == GameData.numOfStudent)
-                    {
-                        Timer.IsGaming = false;
-                    }
+                    WhenNumChange();
                 }
             }
         }

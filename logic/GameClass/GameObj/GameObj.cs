@@ -82,11 +82,7 @@ namespace GameClass.GameObj
 
         public int Radius { get; }
 
-        /// </summary>
-        /// <returns> 依具体类及该方法参数而定，默认为false </returns>
-        protected virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
-
-        bool IGameObj.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
+        public virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
         public GameObj(XY initPos, int initRadius, GameObjType initType)
         {
             this.Position = this.birthPos = initPos;

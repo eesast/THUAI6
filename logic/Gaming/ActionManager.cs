@@ -371,13 +371,13 @@ namespace Gaming
               () =>
               {
                   new FrameRateTaskExecutor<int>(
-                    loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,
-                    loopToDo: () => { },
-                    timeInterval: GameData.frameDuration,
-                    finallyReturn: () => 0,
-                    maxTotalDuration: (int)((windowToPlayer + windowForClimb.Position - player.Position).Length() * 1000 / player.MoveSpeed)
-                    )
-                    .Start();
+                  loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,
+                  loopToDo: () => { },
+                  timeInterval: GameData.frameDuration,
+                  finallyReturn: () => 0,
+                  maxTotalDuration: (int)((windowToPlayer + windowForClimb.Position - player.Position).Length() * 1000 / player.MoveSpeed)
+                  )
+                  .Start();
                   if (player.PlayerState != PlayerStateType.ClimbingThroughWindows)
                   {
                       windowForClimb.WhoIsClimbing = null;
@@ -386,10 +386,14 @@ namespace Gaming
 
                   player.ReSetPos(windowToPlayer + windowForClimb.Position, PlaceType.Window);
                   player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
-                  MovePlayer(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
+
+                  moveEngine.MoveObj(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
+
                   new FrameRateTaskExecutor<int>(
-                    loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && player.IsMoving && gameMap.Timer.IsGaming,
-                    loopToDo: () => { },
+                    loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,
+                    loopToDo: () =>
+                    {
+                    },
                     timeInterval: GameData.frameDuration,
                     finallyReturn: () => 0,
                     maxTotalDuration: (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed)
@@ -506,6 +510,7 @@ namespace Gaming
                     OnCollision: (obj, collisionObj, moveVec) =>
                     {
                         SkillWhenColliding((Character)obj, collisionObj);
+                        Preparation.Utility.Debugger.Output(obj, " end move with " + collisionObj.ToString());
                         //if (collisionObj is Mine)
                         //{
                         //    ActivateMine((Character)obj, (Mine)collisionObj);

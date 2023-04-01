@@ -18,8 +18,10 @@ namespace Preparation.Interface
             // 会移动的只有子弹和人物，都是Circle
             if (!targetObj.IsRigid || targetObj.ID == ID)
                 return false;
-            if (IgnoreCollide(targetObj))
+
+            if (IgnoreCollideExecutor(targetObj) || targetObj.IgnoreCollideExecutor(this))
                 return false;
+
             if (targetObj.Shape == ShapeType.Circle)
             {
                 return XY.Distance(nextPos, targetObj.Position) < targetObj.Radius + Radius;

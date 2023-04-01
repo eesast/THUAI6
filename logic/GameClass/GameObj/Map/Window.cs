@@ -16,12 +16,14 @@ namespace GameClass.GameObj
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;
-        protected override bool IgnoreCollideExecutor(IGameObj targetObj)
+        public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
             if (targetObj.Type != GameObjType.Character)
                 return true;  // 非玩家不碰撞
-            if (targetObj == whoIsClimbing)
+            if (whoIsClimbing != null && targetObj.ID == whoIsClimbing.ID)
+            {
                 return true;
+            }
             return false;
         }
 

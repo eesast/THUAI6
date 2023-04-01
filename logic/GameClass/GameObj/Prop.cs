@@ -7,7 +7,7 @@ namespace GameClass.GameObj
     {
         public override bool IsRigid => true;
 
-        protected override bool IgnoreCollideExecutor(IGameObj targetObj)
+        public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
             if (targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet
                 || targetObj.Type == GameObjType.Character || targetObj.Type == GameObjType.Chest)

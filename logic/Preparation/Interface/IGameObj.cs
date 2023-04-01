@@ -14,6 +14,6 @@ namespace Preparation.Interface
         public bool CanMove { get; set; }
         public bool IsResetting { get; set; }  // reviving
         public int Radius { get; }  // if Square, Radius equals half length of one side
-        protected bool IgnoreCollide(IGameObj targetObj);             // 忽略碰撞，在具体类中实现
+        public bool IgnoreCollideExecutor(IGameObj targetObj);             // 忽略碰撞，在具体类中实现
     }
 }

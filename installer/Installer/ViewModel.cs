@@ -20,6 +20,7 @@ namespace starter.viewmodel.settings
         /// </summary>
         public SettingsViewModel()
         {
+            //Program.Tencent_cos_download.UpdateHash();
             if (Downloader.Program.Tencent_cos_download.CheckAlreadyDownload())
             {
                 obj.checkUpdate();
@@ -135,10 +136,7 @@ namespace starter.viewmodel.settings
 
         public string Route
         {
-            get
-            {
-                return obj.Route;
-            }
+            get => obj.Route;
             set
             {
                 obj.Route = value;
@@ -147,10 +145,7 @@ namespace starter.viewmodel.settings
         }
         public string Username
         {
-            get
-            {
-                return obj.Username;
-            }
+            get => obj.Username;
             set
             {
                 obj.Username = value;
@@ -159,11 +154,18 @@ namespace starter.viewmodel.settings
         }
         public string Password
         {
-            get { return obj.Password; }
+            get => obj.Password;
             set
             {
                 obj.Password = value;
                 this.RaisePropertyChanged("Password");
+            }
+        }
+        public string CodeName
+        {
+            get
+            {
+                return obj.CodeRoute.Substring(obj.CodeRoute.LastIndexOf('/') == -1 ? obj.CodeRoute.LastIndexOf('\\') + 1 : obj.CodeRoute.LastIndexOf('/') + 1);
             }
         }
         public Visibility MenuVis
@@ -208,6 +210,13 @@ namespace starter.viewmodel.settings
                 return Status == SettingsModel.Status.web ? Visibility.Visible : Visibility.Collapsed;
             }
         }
+        public Visibility CoverVis
+        {
+            get
+            {
+                return Status == SettingsModel.Status.web && !obj.UploadReady ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
         public Visibility LoginFailVis
         {
             get
@@ -221,6 +230,10 @@ namespace starter.viewmodel.settings
             {
                 return obj.CombatCompleted ? Visibility.Visible : Visibility.Collapsed;
             }
+        }
+        public Visibility UploadReadyVis
+        {
+            get { return obj.UploadReady ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         public string UpdateBtnCont
@@ -247,6 +260,39 @@ namespace starter.viewmodel.settings
                 return obj.UpdatePlanned ? "更新" : "启动";
             }
         }
+        public string UploadBtnCont
+        {
+            get
+            {
+                return obj.UploadReady ? "上传代码" : "选择代码上传";
+            }
+        }
+
+        public string RouteSelectWindow(string type)
+        {
+            if (type == "Folder")
+            {
+                using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+                {
+                    _ = dialog.ShowDialog();
+                    if (dialog.SelectedPath != String.Empty)
+                        return dialog.SelectedPath;
+                }
+            }
+            else if (type == "File")
+            {
+                var openFileDialog = new Microsoft.Win32.OpenFileDialog()
+                {
+                    Filter = "c++ Source Files (.cpp)|*.cpp|c++ Header File (.h)|*.h|python Source File (.py)|*.py"
+                };
+                var result = openFileDialog.ShowDialog();
+                if (result == true)
+                {
+                    return openFileDialog.FileName;
+                }
+            }
+            return "";
+        }
 
         private BaseCommand clickBrowseCommand;
         public BaseCommand ClickBrowseCommand
@@ -257,12 +303,7 @@ namespace starter.viewmodel.settings
                 {
                     clickBrowseCommand = new BaseCommand(new Action<object>(o =>
                     {
-                        using (FolderBrowserDialog dialog = new FolderBrowserDialog())
-                        {
-                            _ = dialog.ShowDialog();
-                            if (dialog.SelectedPath != String.Empty)
-                                Route = dialog.SelectedPath;
-                        }
+                        Route = RouteSelectWindow("Folder");
                     }));
                 }
                 return clickBrowseCommand;
@@ -397,9 +438,16 @@ namespace starter.viewmodel.settings
             {
                 if (clickLoginCommand == null)
                 {
-                    clickLoginCommand = new BaseCommand(new Action<object>(o =>
+                    clickLoginCommand = new BaseCommand(new Action<object>(async o =>
                     {
-                        obj.Login();
+                        if (!(await obj.Login()))
+                        {
+                            obj.LoginFailed = true;
+                        }
+                        else
+                        {
+                            Status = SettingsModel.Status.web;
+                        }
                         this.RaisePropertyChanged("LoginFailVis");
                     }));
                 }
@@ -469,5 +517,70 @@ namespace starter.viewmodel.settings
                 return clickBackCommand;
             }
         }
+        private BaseCommand clickUploadCommand;
+        public BaseCommand ClickUploadCommand
+        {
+            get
+            {
+                if (clickUploadCommand == null)
+                {
+                    clickUploadCommand = new BaseCommand(new Action<object>(async o =>
+                    {
+                        if (obj.UploadReady)
+                        {
+                            switch (await obj.Upload())
+                            {
+                                case -1:
+                                    MessageBox.Show("Token失效！", "", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                                    break;
+                                case -2:
+                                    MessageBox.Show("目标路径不存在！", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                                    break;
+                                case -3:
+                                    MessageBox.Show("服务器错误", "", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                                    break;
+                                case -4:
+                                    MessageBox.Show("您未登录或登录失效", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                                    Status = SettingsModel.Status.login;
+                                    break;
+                                case -5:
+                                    MessageBox.Show("您未报名THUAI!", "", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                                    break;
+                                case -6:
+                                    MessageBox.Show("读取文件失败，请确认文件是否被占用", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                                    break;
+                                case -7:
+                                    MessageBox.Show("网络错误，请检查你的网络", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                                    break;
+                                case -8:
+                                    MessageBox.Show("不是c++或python源文件", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                                    break;
+                            }
+                            obj.CodeRoute = "";
+                            obj.UploadReady = false;
+                            this.RaisePropertyChanged("UploadBtnCont");
+                            this.RaisePropertyChanged("UploadReadyVis");
+                        }
+                        else
+                        {
+                            obj.CodeRoute = RouteSelectWindow("File");
+                            if (obj.CodeRoute != "")
+                            {
+                                obj.UploadReady = true;
+                                this.RaisePropertyChanged("UploadBtnCont");
+                                this.RaisePropertyChanged("UploadReadyVis");
+                                this.RaisePropertyChanged("CodeName");
+                            }
+                            else
+                            {
+                                MessageBox.Show("未选择代码，请重新选择！", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                            }
+                        }
+                    }));
+                }
+                return clickUploadCommand;
+            }
+        }
     }
+
 }

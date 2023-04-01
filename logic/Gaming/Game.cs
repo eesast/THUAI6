@@ -264,6 +264,7 @@ namespace Gaming
             Character? player = gameMap.FindPlayer(playerID);
             if (player != null)
             {
+                if (player.Occupation.ListOfIActiveSkill.Count <= skillNum) return false;
                 return skillManager.UseActiveSkill(player, player.Occupation.ListOfIActiveSkill[skillNum]);
             }
             else

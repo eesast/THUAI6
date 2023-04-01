@@ -161,7 +161,7 @@ namespace Gaming
                                     {
                                         if (XY.Distance(newPlayer.Position, generator.Position) <= newPlayer.AlertnessRadius)
                                         {
-                                            if ((double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position) > bgmVolume)
+                                            if (generator.DegreeOfRepair < GameData.degreeOfFixedGenerator && (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position) > bgmVolume)
                                                 bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position);
                                         }
                                     }
@@ -297,23 +297,6 @@ namespace Gaming
                     return;
                 }
                 ++gameMap.NumOfDeceasedStudent;
-                if (GameData.numOfStudent - gameMap.NumOfDeceasedStudent - gameMap.NumOfEscapedStudent == 1)
-                {
-                    gameMap.GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
-                    try
-                    {
-                        foreach (EmergencyExit emergencyExit in gameMap.GameObjDict[GameObjType.EmergencyExit])
-                            if (emergencyExit.CanOpen)
-                            {
-                                emergencyExit.IsOpen = true;
-                                break;
-                            }
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
-                    }
-                }
             }
 
         }

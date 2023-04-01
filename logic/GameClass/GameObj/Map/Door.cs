@@ -17,7 +17,7 @@ namespace GameClass.GameObj
         public override bool IsRigid => !isOpen;
         public override ShapeType Shape => ShapeType.Square;
 
-        private bool isOpen = false;
+        private bool isOpen = true;
         public bool IsOpen
         {
             get => isOpen;

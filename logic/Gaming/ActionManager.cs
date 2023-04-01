@@ -165,28 +165,23 @@ namespace Gaming
                 if (!(player.Commandable()) || player.CharacterType == CharacterType.Robot)
                     return false;
                 Doorway? doorwayForEscape = (Doorway?)gameMap.OneForInteractInACross(player.Position, GameObjType.Doorway);
-                if (doorwayForEscape != null)
+                if (doorwayForEscape != null && doorwayForEscape.IsOpen())
                 {
-                    if (doorwayForEscape.IsOpen())
-                    {
-                        player.AddScore(GameData.StudentScoreEscape);
-                        ++gameMap.NumOfEscapedStudent;
-                        player.Die(PlayerStateType.Escaped);
-                        return true;
-                    }
-                    else
-                        return false;
+                    player.AddScore(GameData.StudentScoreEscape);
+                    ++gameMap.NumOfEscapedStudent;
+                    player.Die(PlayerStateType.Escaped);
+                    return true;
                 }
                 else
                 {
                     EmergencyExit? emergencyExit = (EmergencyExit?)gameMap.OneForInteractInACross(player.Position, GameObjType.EmergencyExit);
                     if (emergencyExit != null && emergencyExit.IsOpen)
                     {
+                        ++gameMap.NumOfEscapedStudent;
                         player.Die(PlayerStateType.Escaped);
                         return true;
                     }
-                    else
-                        return false;
+                    return false;
                 }
             }
 

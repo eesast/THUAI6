@@ -7,8 +7,8 @@ enum BulletType
     NULL_BULLET_TYPE = 0;
     FLYING_KNIFE = 1;
     COMMON_ATTACK_OF_TRICKER = 2;
-    FAST_BULLET = 3;//BombBomb
-    ORDINARY_BULLET = 4;// JumpyDumpty
+    BOMBBOMB = 3;
+    JUMPY_DUMPTY = 4;
     ATOM_BOMB = 5;
 }
 
@@ -29,7 +29,6 @@ enum PlaceType // 地图中的所有物件类型
     DOOR6 = 10;
     CHEST = 11;
     // 待补充有特殊效果的地形
-
 }
 
 enum ShapeType // 形状类型
@@ -43,7 +42,7 @@ enum PropType // 地图中的可拾取道具类型
 {
     NULL_PROP_TYPE = 0;
     ADD_SPEED = 1;
-    ADD_LIFE_OR_AP = 2;//ADD_LIFE_OR_Clairaudience
+    ADD_LIFE_OR_CLAIRAUDIENCE = 2;
     ADD_HP_OR_AP = 3;
     SHIELD_OR_SPEAR = 4;
     KEY3 = 5;
@@ -55,10 +54,10 @@ enum PropType // 地图中的可拾取道具类型
 enum StudentBuffType // 人类可用的增益效果类型
 {
     NULL_SBUFF_TYPE = 0;
-    SBUFFTYPE1 = 1;//AddSpeed
-    SBUFFTYPE2 = 2;//AddLIFE
-    SBUFFTYPE3 = 3;//Shield
-    SBUFFTYPE4 = 4;//INVISIBLE
+    ADD_SPEED = 1;
+    ADD_LIFE = 2;
+    SHIELD = 3;
+    INVISIBLE = 4;
 }
 
 enum PlayerState
@@ -87,10 +86,10 @@ enum PlayerState
 enum TrickerBuffType // 屠夫可用的增益效果类型
 {
     NULL_TBUFF_TYPE = 0;
-    TBUFFTYPE1 = 1;//AddSpeed
-    TBUFFTYPE2 = 2;//Spear
-    TBUFFTYPE3 = 3;//AddAp
-    TBUFFTYPE4 = 4;//Clairaudience
+    ADD_SPEED = 1;
+    SPEAR = 2;
+    ADD_AP = 3;
+    CLAIRAUDIENCE = 4;
     INVISIBLE = 5;
 }
 
@@ -107,9 +106,9 @@ enum StudentType
 {
     NULL_STUDENT_TYPE = 0;
     ATHLETE  = 1;
-    STUDENTTYPE2 = 2;//Teacher
-    STUDENTTYPE3 = 3;//StraightAStudent
-    STUDENTTYPE4 = 4;//Robot
+    TEACHER = 2;
+    STRAIGHT_A_STUDENT = 3;
+    ROBOT = 4;
     TECH_OTAKU =5;
 }
 
@@ -117,8 +116,8 @@ enum TrickerType
 {
     NULL_TRICKER_TYPE = 0;
     ASSASSIN = 1;
-    TRICKERTYPE2 = 2;//KLEE
-    TRICKERTYPE3 = 3;// ANoisyPerson
+    KLEE = 2;
+    A_NOISY_PERSON = 3;
     TRICKERTYPE4 = 4;
 }
 

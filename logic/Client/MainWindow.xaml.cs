@@ -690,16 +690,16 @@ namespace Client
                             DrawMap();
                         foreach (var data in listOfHuman)
                         {
-                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data,coolTime0,coolTime1,coolTime2);
+                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data, coolTime0, coolTime1, coolTime2);
                             if (CanSee(data))
                             {
                                 Ellipse icon = new()
                                 {
-                                    Width = unitWidth,
-                                    Height = unitHeight,
+                                    Width = 2 * radiusTimes * unitWidth,
+                                    Height = 2 * radiusTimes * unitHeight,
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
-                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * radiusTimes, data.X * unitHeight / 1000.0 - unitHeight * radiusTimes, 0, 0),
                                     Fill = Brushes.BlueViolet,
                                 };
                                 UpperLayerOfMap.Children.Add(icon);
@@ -712,11 +712,11 @@ namespace Client
                             {
                                 Ellipse icon = new()
                                 {
-                                    Width = unitWidth,
-                                    Height = unitHeight,
+                                    Width = 2 * radiusTimes * unitWidth,
+                                    Height = 2 * radiusTimes * unitHeight,
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
-                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * radiusTimes, data.X * unitHeight / 1000.0 - unitHeight * radiusTimes, 0, 0),
                                     Fill = Brushes.Chocolate,
                                 };
                                 UpperLayerOfMap.Children.Add(icon);
@@ -831,7 +831,7 @@ namespace Client
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfFixedGenerator);
                             TextBox icon = new()
                             {
-                                FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 Text = Convert.ToString(deg),
@@ -853,7 +853,7 @@ namespace Client
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedChest);
                             TextBox icon = new()
                             {
-                                FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 Text = Convert.ToString(deg),
@@ -875,7 +875,7 @@ namespace Client
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedDoorway);
                             TextBox icon = new()
                             {
-                                FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 Text = Convert.ToString(deg),
@@ -1342,6 +1342,7 @@ namespace Client
         private string[] comInfo = new string[5];
         ArgumentOptions? options = null;
         bool gateOpened = false;
-        double coolTime0=-1,coolTime1=-1,coolTime2=-1;
+        double coolTime0 = -1, coolTime1 = -1, coolTime2 = -1;
+        const double radiusTimes = 1.0 * Preparation.Utility.GameData.characterRadius / Preparation.Utility.GameData.numOfPosGridPerCell;
     }
 }

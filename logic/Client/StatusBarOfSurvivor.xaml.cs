@@ -33,7 +33,7 @@ namespace Client
             serial.FontSize = scores.FontSize = status.FontSize = activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = prop3.FontSize = fontsize;
         }
 
-        private void SetStaticValue(MessageOfStudent obj,double time0, double time1, double time2)
+        private void SetStaticValue(MessageOfStudent obj, double time0, double time1, double time2)
         {
             switch (obj.StudentType)  // coolTime参数未设定，
             {
@@ -286,7 +286,7 @@ namespace Client
         public void SetValue(MessageOfStudent obj, double time0, double time1, double time2)
         {
             if (!initialized)
-                SetStaticValue(obj,time0,time1,time2);
+                SetStaticValue(obj, time0, time1, time2);
             SetDynamicValue(obj);
         }
         private double coolTime0, coolTime1, coolTime2;

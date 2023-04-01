@@ -39,7 +39,7 @@ namespace Client
             serial.FontSize = scores.FontSize = state.FontSize = status.FontSize = activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = prop3.FontSize = fontsize;
         }
 
-        private void SetStaticValue(MessageOfTricker obj,double time0, double time1, double time2)
+        private void SetStaticValue(MessageOfTricker obj, double time0, double time1, double time2)
         {
             switch (obj.TrickerType)  // 参数未设定
             {
@@ -289,7 +289,7 @@ namespace Client
         public void SetValue(MessageOfTricker obj, double time0, double time1, double time2)
         {
             if (!initialized)
-                SetStaticValue(obj,time0,time1,time2);
+                SetStaticValue(obj, time0, time1, time2);
             SetDynamicValue(obj);
         }
         private double coolTime0, coolTime1, coolTime2;

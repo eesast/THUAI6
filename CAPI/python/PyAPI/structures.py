@@ -42,7 +42,7 @@ class PropType(Enum):
     Key5 = 2
     Key6 = 3
     AddSpeed = 4
-    AddLifeOrAp = 5
+    AddLifeOrClairaudience = 5
     AddHpOrAp = 6
     ShieldOrSpear = 7
     RecoveryFromDizziness = 8
@@ -62,6 +62,8 @@ class StudentType(Enum):
     Athlete = 1
     Teacher = 2
     StraightAStudent = 3
+    Robot = 4
+    TechOtaku = 5
 
 
 class TrickerType(Enum):

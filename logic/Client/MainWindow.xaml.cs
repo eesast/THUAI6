@@ -45,6 +45,7 @@ namespace Client
             SetStatusBar();
             isClientStocked = true;
             isPlaybackMode = false;
+            isSpectatorMode = false;
             drawPicLock = new();
             listOfProp = new List<MessageOfProp>();
             listOfHuman = new List<MessageOfStudent>();
@@ -108,7 +109,7 @@ namespace Client
             { options = o; });
             if ((args.Length == 3 || args.Length == 4) && options != null && Convert.ToInt64(options.PlayerID) > 2023)
             {
-                spectatorMode = true;
+                isSpectatorMode = true;
                 string[] comInfo = new string[3];
                 comInfo[0] = options.Ip;
                 comInfo[1] = options.Port;
@@ -171,7 +172,7 @@ namespace Client
         {
             if (!isPlaybackMode)
             {
-                if (!spectatorMode && comInfo.Length != 5 || spectatorMode && comInfo.Length != 3)
+                if (!isSpectatorMode && comInfo.Length != 5 || isSpectatorMode && comInfo.Length != 3)
                     throw new Exception("注册信息有误！");
                 playerID = Convert.ToInt64(comInfo[2]);
                 Connect.Background = Brushes.Gray;
@@ -182,7 +183,7 @@ namespace Client
                 client = new AvailableService.AvailableServiceClient(channel);
                 PlayerMsg playerMsg = new PlayerMsg();
                 playerMsg.PlayerId = playerID;
-                if (!spectatorMode)
+                if (!isSpectatorMode)
                 {
                     playerType = Convert.ToInt64(comInfo[3]) switch
                     {
@@ -568,7 +569,7 @@ namespace Client
         {
             if (msg.PlayerState == PlayerState.Quit)
                 return false;
-            if (spectatorMode)
+            if (isSpectatorMode)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -594,7 +595,7 @@ namespace Client
 
         private bool CanSee(MessageOfTricker msg)
         {
-            if (spectatorMode)
+            if (isSpectatorMode)
                 return true;
             if (!humanOrButcher && butcher != null)
             {
@@ -620,7 +621,7 @@ namespace Client
 
         private bool CanSee(MessageOfProp msg)
         {
-            if (spectatorMode)
+            if (isSpectatorMode)
                 return true;
             if (msg.Place == Protobuf.PlaceType.Land)
                 return true;
@@ -639,7 +640,7 @@ namespace Client
 
         private bool CanSee(MessageOfBullet msg)
         {
-            if (spectatorMode)
+            if (isSpectatorMode)
                 return true;
             if (msg.Place == Protobuf.PlaceType.Land)
                 return true;
@@ -787,7 +788,7 @@ namespace Client
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
                                     Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                    //Fill = Brushes.Red,
+                                    Fill = Brushes.Red,
                                 };
                                 switch (data.Type)
                                 {
@@ -954,7 +955,7 @@ namespace Client
         // 键盘控制，未完善
         private void KeyBoardControl(object sender, KeyEventArgs e)
         {
-            if (!isPlaybackMode)
+            if (!isPlaybackMode && !isSpectatorMode)
             {
                 switch (e.Key)
                 {
@@ -1133,7 +1134,7 @@ namespace Client
         //鼠标双击
         private void Attack(object sender, RoutedEventArgs e)
         {
-            if (!isPlaybackMode)
+            if (!isPlaybackMode && !isSpectatorMode)
             {
                 if (humanOrButcher && human != null)
                 {
@@ -1361,7 +1362,7 @@ namespace Client
         private string[] comInfo = new string[5];
         ArgumentOptions? options = null;
         bool gateOpened = false;
-        bool spectatorMode = false;
+        bool isSpectatorMode = false;
         double coolTime0 = -1, coolTime1 = -1, coolTime2 = -1;
         const double radiusTimes = 1.0 * Preparation.Utility.GameData.characterRadius / Preparation.Utility.GameData.numOfPosGridPerCell;
     }

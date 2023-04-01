@@ -202,8 +202,6 @@ namespace Gaming
                     playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
                     return false;
 
-                Preparation.Utility.Debugger.Output(player, "treat " + playerTreated.ToString());
-
                 if (playerTreated.HP + playerTreated.DegreeOfTreatment >= playerTreated.MaxHp)
                 {
                     playerTreated.HP = playerTreated.MaxHp;

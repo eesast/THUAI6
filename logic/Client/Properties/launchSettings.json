@@ -2,7 +2,7 @@
   "profiles": {
     "Client": {
       "commandName": "Project",
-      "commandLineArgs": " --cl --port 8888 --characterID 0 --type 1 --occupation 1"
+      "commandLineArgs": "--ip 183.172.235.138 --cl --port 8888 --characterID 0 --type 1 --occupation 1"
     }
   }
 }

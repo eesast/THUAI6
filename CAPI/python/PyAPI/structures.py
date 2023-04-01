@@ -1,6 +1,11 @@
 from enum import Enum
-from typing import List, Dict, Tuple
+from typing import List, Dict
+import sys
 
+if sys.version_info < (3, 9):
+    from typing import Tuple
+else:
+    Tuple = tuple
 
 class GameState(Enum):
     NullGameState = 0
@@ -200,12 +205,12 @@ class BombedBullet:
 
 
 class GameMap:
-    classroomState: Dict[tuple[int, int], int] = {}
-    gateState: Dict[tuple[int, int], int] = {}
-    chestState: Dict[tuple[int, int], int] = {}
-    doorState: Dict[tuple[int, int], bool] = {}
-    doorProgress: Dict[tuple[int, int], int] = {}
-    hiddenGateState: Dict[tuple[int, int], HiddenGateState] = {}
+    classroomState: Dict[Tuple[int, int], int] = {}
+    gateState: Dict[Tuple[int, int], int] = {}
+    chestState: Dict[Tuple[int, int], int] = {}
+    doorState: Dict[Tuple[int, int], bool] = {}
+    doorProgress: Dict[Tuple[int, int], int] = {}
+    hiddenGateState: Dict[Tuple[int, int], HiddenGateState] = {}
 
 
 class GameInfo:

@@ -61,12 +61,29 @@
         <TextBlock Grid.Row="6" Grid.Column="1" Text="用户名或密码错误！" Visibility="{Binding LoginFailVis}"/>
 
         <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="你有已完成的比赛！" Visibility="{Binding MatchFinishedVis}"/>
-        <Button Grid.Row="3" Grid.Column="1" Name ="Upload" Content="上传代码" Command="{Binding ClickUploadCommand}" Visibility="{Binding WebVis}"/>
-        <Button Grid.Row="5" Grid.Column="1" Name="Download" Content="下载回放" Command="{Binding ClickDownloadCommand}" Visibility="{Binding WebVis}" />
-        <Button Grid.Row="7" Grid.Column="1" Name="Replay" Content="打开回放" Command="{Binding ClickReplayCommand}" Visibility="{Binding WebVis}" />
-        <Button Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Content="申请对战" Command="{Binding ClickRequestCommand}" Visibility="{Binding WebVis}" />
-        <TextBox Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Text="{Binding Enemy}" Visibility="{Binding WebVis}" />
+        <Button Grid.Row="3" Grid.Column="1" Name ="Upload" Content="{Binding UploadBtnCont}" Command="{Binding ClickUploadCommand}" Visibility="{Binding WebVis}"/>
+        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding CodeName}" Visibility="{Binding UploadReadyVis}" />
+        <Button Grid.Row="3" Grid.Column="2" Name="ReUpload" Content="重新选择代码" Command="{Binding ReselectCommand}" Visibility="{Binding UploadReadyVis}" />
         <Button Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Content="退出登录" Command="{Binding ClickBackCommand}" Visibility="{Binding WebVis}" />
-
+        
+        <!--objects below are not enabled-->
+        <Button Grid.Row="5" Grid.Column="1" Name="Download" Content="下载回放" IsEnabled="False" Command="{Binding ClickDownloadCommand}" Visibility="{Binding CoverVis}" />
+        <Button Grid.Row="7" Grid.Column="1" Name="Replay" Content="打开回放" IsEnabled="False" Command="{Binding ClickReplayCommand}" Visibility="{Binding CoverVis}" />
+        <Button Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Content="申请对战" IsEnabled="False" Command="{Binding ClickRequestCommand}" Visibility="{Binding WebVis}" />
+        <TextBox Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Text="暂不支持" IsEnabled="False" Visibility="{Binding WebVis}" />
+        <StackPanel Grid.Row="5" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="15"/>
+                </Grid.RowDefinitions>
+                <RadioButton GroupName="playerNum" Grid.Row="0" Visibility="{Binding UploadReadyVis}">玩家1</RadioButton>
+                <RadioButton GroupName="playerNum" Grid.Row="1" Visibility="{Binding UploadReadyVis}">玩家2</RadioButton>
+                <RadioButton GroupName="playerNum" Grid.Row="2" Visibility="{Binding UploadReadyVis}">玩家3</RadioButton>
+                <RadioButton GroupName="playerNum" Grid.Row="3" Visibility="{Binding UploadReadyVis}">玩家4</RadioButton>
+            </Grid>
+        </StackPanel>
     </Grid>
 </Window>

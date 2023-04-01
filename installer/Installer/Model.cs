@@ -48,6 +48,9 @@ namespace starter.viewmodel.settings
             Username = "";
             Password = "";
             updates = "";
+            CodeRoute = "";
+            UploadReady = false;
+            LoginFailed = false;
         }
 
         /// <summary>
@@ -58,11 +61,11 @@ namespace starter.viewmodel.settings
             if (Tencent_cos_download.CheckAlreadyDownload())
             {
                 MessageBoxResult repeatOption = MessageBox.Show($"文件已存在于{Downloader.Program.Data.FilePath},是否移动到新位置？", "重复安装", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
-                // ask if abort install, with warning sign, defalut no;
+                // ask if abort install, with warning sign, defalut move instead of abort;
                 if (repeatOption == MessageBoxResult.No)
                 {
                     Route = Data.FilePath;
-                    return false;  // 回到选择地址界面
+                    return false;
                 }
                 else
                 {
@@ -120,9 +123,9 @@ namespace starter.viewmodel.settings
             }
         }
 
-        public void Login()
+        public async Task<bool> Login()
         {
-            _ = web.LoginToEEsast(client, Username, Password);
+            return await web.LoginToEEsast(client, Username, Password);
         }
         public bool Update()
         {
@@ -146,6 +149,25 @@ namespace starter.viewmodel.settings
                 return false;
             }
         }
+
+        public async Task<int> Upload()
+        {
+            switch (CodeRoute.Substring(CodeRoute.LastIndexOf('.') + 1))
+            {
+                case "cpp":
+                    Language = "cpp";
+                    break;
+                case "h":
+                    Language = "cpp";
+                    break;
+                case "py":
+                    Language = "python";
+                    break;
+                default:
+                    return -8;
+            }
+            return await web.UploadFiles(client, CodeRoute, Language, "player_1");
+        }
         /// <summary>
         /// Route of files
         /// </summary>
@@ -159,6 +181,18 @@ namespace starter.viewmodel.settings
             get; set;
         }
         public string Password
+        {
+            get; set;
+        }
+        public string CodeRoute
+        {
+            get; set;
+        }
+        public string Language
+        {
+            get; set;
+        }
+        public string PlayerNum
         {
             get; set;
         }
@@ -209,6 +243,11 @@ namespace starter.viewmodel.settings
         }
 
         public bool LoginFailed
+        {
+            get; set;
+        }
+
+        public bool UploadReady
         {
             get; set;
         }
@@ -355,8 +394,8 @@ namespace Downloader
                                           .Build();           // 创建 CosXmlConfig 对象
 
                 // 永久密钥访问凭证
-                string secretId = "***";   //"云 API 密钥 SecretId";
-                string secretKey = "***";  //"云 API 密钥 SecretKey";
+                string secretId = "***"; //"云 API 密钥 SecretId";
+                string secretKey = "***"; //"云 API 密钥 SecretKey";
 
                 long durationSecond = 1000;  // 每次请求签名有效时长，单位为秒
                 QCloudCredentialProvider cosCredentialProvider = new DefaultQCloudCredentialProvider(
@@ -997,7 +1036,7 @@ namespace Downloader
                     }
                     else if (choose == "9")
                     {
-                        await web.UploadFiles(client);
+                        await web.UploadFiles(client, "", "", "");
                     }
                     else if (choose == "exit")
                     {
@@ -1013,8 +1052,9 @@ namespace WebConnect
 {
     class Web
     {
+        public enum language { cpp, py };
         public static string logintoken = "";
-        async public Task LoginToEEsast(HttpClient client, string useremail, string password)
+        async public Task<bool> LoginToEEsast(HttpClient client, string useremail, string password)
         {
             string token = "";
             using (var response = await client.PostAsync("https://api.eesast.com/users/login", JsonContent.Create(new
@@ -1045,71 +1085,42 @@ namespace WebConnect
                         Console.WriteLine(code);
                         if (code == 401)
                         {
-                            Console.WriteLine("邮箱或密码错误！");
+                            //Console.WriteLine("邮箱或密码错误！");
+                            return false;
                         }
-                        return;
+                        break;
                 }
+                return true;
             }
         }
-        async public Task UploadFiles(HttpClient client)    //用来上传文件
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client">http client</param>
+        /// <param name="tarfile">代码源位置</param>
+        /// <param name="type">编程语言，格式为"cpp"或"python"</param>
+        /// <param name="plr">第x位玩家，格式为"player_x"</param>
+        /// <returns>-1:tokenFail;-2:FileNotExist;-3:CosFail;-4:loginTimeout;-5:Fail;-6:ReadFileFail;-7:networkError</returns>
+        async public Task<int> UploadFiles(HttpClient client, string tarfile, string type, string plr)    //用来上传文件
         {
             if (!ReadToken())   //读取token失败
             {
-                return;
+                return -1;
             }
             try
             {
-                string tarfile; //要上传的文件路径
                 string content;
                 string filedest;    //文件目的地
                 client.DefaultRequestHeaders.Authorization = new("Bearer", logintoken);
-                Console.WriteLine("请输入要上传的文件完整路径：");
-                tarfile = Console.ReadLine();
                 if (!File.Exists(tarfile))
                 {
-                    Console.WriteLine("文件不存在！");
-                    return;
-                }
-                Console.WriteLine("请选择语言类型：1.C++   2.python");
-                string type = Console.ReadLine();
-                if (type == "1")
-                {
-                    type = "cpp";
-                }
-                else if (type == "2")
-                {
-                    type = "python";
-                }
-                else
-                {
-                    return;
-                }
-                Console.WriteLine("请确认这是哪个玩家的代码：1.player_1  2.player_2  3.player_3  4.player_4");
-                string plr = Console.ReadLine();
-                if (plr == "1")
-                {
-                    plr = "player_1";
-                }
-                else if (plr == "2")
-                {
-                    plr = "player_2";
-                }
-                else if (plr == "3")
-                {
-                    plr = "player_3";
-                }
-                else if (plr == "4")
-                {
-                    plr = "player_4";
-                }
-                else
-                {
-                    return;
+                    //Console.WriteLine("文件不存在！");
+                    return -2;
                 }
                 using FileStream fs = new FileStream(tarfile, FileMode.Open, FileAccess.Read);
                 using StreamReader sr = new StreamReader(fs);
                 content = sr.ReadToEnd();
-                using (var response = await client.GetAsync($"https://api.eesast.com/static/player?team_id={GetTeamId()}"))
+                using (var response = await client.GetAsync($"https://api.eesast.com/static/player?team_id={await GetTeamId()}"))
                 {
                     switch (response.StatusCode)
                     {
@@ -1162,27 +1173,30 @@ namespace WebConnect
                             }
                             catch (Exception e)
                             {
-                                Console.WriteLine("CosException: " + e);
+                                return -3;
                             }
 
                             break;
                         case System.Net.HttpStatusCode.Unauthorized:
-                            Console.WriteLine("您未登录或登录过期，请先登录");
-                            break;
+                            //Console.WriteLine("您未登录或登录过期，请先登录");
+                            return -4;
                         default:
-                            Console.WriteLine("上传失败！");
-                            break;
+                            //Console.WriteLine("上传失败！");
+                            return -5;
                     }
                 }
             }
             catch (IOException)
             {
-                Console.WriteLine("文件读取错误！请检查文件是否被其它应用占用！");
+                //Console.WriteLine("文件读取错误！请检查文件是否被其它应用占用！");
+                return -6;
             }
             catch
             {
-                Console.WriteLine("请求错误！请检查网络连接！");
+                //Console.WriteLine("请求错误！请检查网络连接！");
+                return -7;
             }
+            return 0;
         }
 
         async public Task UserDetails(HttpClient client)  // 用来测试访问网站
@@ -1238,6 +1252,10 @@ namespace WebConnect
                         json += @"{""THUAI6""" + ":" + @"""2023""}";
                     }
                     dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                    if (dict.ContainsKey("token"))
+                    {
+                        dict.Remove("token");
+                    }
                     dict?.Add("token", logintoken);
                 }
                 using FileStream fs2 = new FileStream(savepath, FileMode.OpenOrCreate, FileAccess.ReadWrite);

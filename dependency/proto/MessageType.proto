@@ -42,7 +42,7 @@ enum PropType // 地图中的可拾取道具类型
 {
     NULL_PROP_TYPE = 0;
     ADD_SPEED = 1;
-    ADD_LIFE_OR_Clairaudience = 2;
+    ADD_LIFE_OR_CLAIRAUDIENCE = 2;
     ADD_HP_OR_AP = 3;
     SHIELD_OR_SPEAR = 4;
     KEY3 = 5;

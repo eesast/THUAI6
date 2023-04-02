@@ -541,7 +541,7 @@ namespace GameClass.GameObj
                     return false;
             }
         }
-        protected void TryActivatingLIFE()
+        public void TryActivatingLIFE()
         {
             if (buffManager.TryActivatingLIFE())
             {

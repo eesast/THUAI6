@@ -164,7 +164,7 @@ namespace Gaming
             {
                 if (!(player.Commandable()) || player.CharacterType == CharacterType.Robot)
                     return false;
-                Doorway? doorwayForEscape = (Doorway?)gameMap.OneForInteractInACross(player.Position, GameObjType.Doorway);
+                Doorway? doorwayForEscape = (Doorway?)gameMap.OneForInteract(player.Position, GameObjType.Doorway);
                 if (doorwayForEscape != null && doorwayForEscape.IsOpen())
                 {
                     player.AddScore(GameData.StudentScoreEscape);
@@ -174,7 +174,7 @@ namespace Gaming
                 }
                 else
                 {
-                    EmergencyExit? emergencyExit = (EmergencyExit?)gameMap.OneForInteractInACross(player.Position, GameObjType.EmergencyExit);
+                    EmergencyExit? emergencyExit = (EmergencyExit?)gameMap.OneForInteract(player.Position, GameObjType.EmergencyExit);
                     if (emergencyExit != null && emergencyExit.IsOpen)
                     {
                         ++gameMap.NumOfEscapedStudent;
@@ -353,12 +353,23 @@ namespace Gaming
                 if (windowForClimb == null || windowForClimb.WhoIsClimbing != null)
                     return false;
 
+                XY windowToPlayer = new(
+                      (Math.Abs(player.Position.x - windowForClimb.Position.x) > GameData.numOfPosGridPerCell / 2) ? (GameData.numOfPosGridPerCell / 2 * (player.Position.x > windowForClimb.Position.x ? 1 : -1)) : 0,
+                      (Math.Abs(player.Position.y - windowForClimb.Position.y) > GameData.numOfPosGridPerCell / 2) ? (GameData.numOfPosGridPerCell / 2 * (player.Position.y > windowForClimb.Position.y ? 1 : -1)) : 0);
+
+                Character? characterInWindow = (Character?)gameMap.OneInTheSameCell(windowForClimb.Position - 2 * windowToPlayer, GameObjType.Character);
+                if (characterInWindow != null)
+                {
+                    if (player.IsGhost() && !characterInWindow.IsGhost())
+                        characterManager.BeAttacked((Student)(characterInWindow), player.Attack(characterInWindow.Position, PlaceType.Null));
+                    return false;
+                }
+
+                Wall addWall = new Wall(windowForClimb.Position - 2 * windowToPlayer);
+                gameMap.Add(addWall);
+
                 player.PlayerState = PlayerStateType.ClimbingThroughWindows;
                 windowForClimb.WhoIsClimbing = player;
-                XY windowToPlayer = new XY(
-                      (Math.Abs(player.Position.x - windowForClimb.Position.x) > GameData.numOfPosGridPerCell / 2) ? (GameData.numOfPosGridPerCell / 2 * (player.Position.x > windowForClimb.Position.x ? 1 : -1)) : 0,
-                      (Math.Abs(player.Position.y - windowForClimb.Position.y) > GameData.numOfPosGridPerCell / 2) ? (GameData.numOfPosGridPerCell / 2 * (player.Position.y > windowForClimb.Position.y ? 1 : -1)) : 0)
-                    ;
                 new Thread
           (
               () =>
@@ -396,6 +407,7 @@ namespace Gaming
                   player.ReSetPos(PosJumpOff, gameMap.GetPlaceType(PosJumpOff));
                   player.MoveSpeed = player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
                   windowForClimb.WhoIsClimbing = null;
+                  gameMap.Remove(addWall);
                   if (player.PlayerState == PlayerStateType.ClimbingThroughWindows)
                   {
                       player.PlayerState = PlayerStateType.Null;
@@ -494,10 +506,12 @@ namespace Gaming
             */
 
             private readonly Map gameMap;
+            private readonly CharacterManager characterManager;
             public readonly MoveEngine moveEngine;
-            public ActionManager(Map gameMap)
+            public ActionManager(Map gameMap, CharacterManager characterManager)
             {
                 this.gameMap = gameMap;
+
                 this.moveEngine = new MoveEngine(
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>
@@ -516,6 +530,7 @@ namespace Gaming
                         // Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                     }
                 );
+                this.characterManager = characterManager;
             }
         }
     }

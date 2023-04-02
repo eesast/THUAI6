@@ -50,20 +50,7 @@ namespace Gaming
 
                         if ((!(((Character)objBeingShot).IsGhost())) && bullet.Parent.IsGhost())
                         {
-                            Student whoBeAttacked = (Student)objBeingShot;
-                            if (whoBeAttacked.CharacterType == CharacterType.StraightAStudent)
-                            {
-                                ((WriteAnswers)whoBeAttacked.FindIActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
-                            }
-                            if (whoBeAttacked.BeAttacked(bullet))
-                            {
-                                characterManager.BeAddictedToGame(whoBeAttacked, (Ghost)bullet.Parent);
-                            }
-                            if (whoBeAttacked.CanBeAwed())
-                            {
-                                if (CharacterManager.BeStunned(whoBeAttacked, GameData.basicStunnedTimeOfStudent))
-                                    bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.basicStunnedTimeOfStudent));
-                            }
+                            characterManager.BeAttacked((Student)objBeingShot, bullet);
                         }
                         //       if (((Character)objBeingShot).IsGhost() && !bullet.Parent.IsGhost() && bullet.TypeOfBullet == BulletType.Ram)
                         //          BeStunned((Character)objBeingShot, bullet.AP);

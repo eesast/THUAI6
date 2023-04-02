@@ -97,10 +97,11 @@ namespace Preparation.Utility
         public const int basicTimeOfRescue = 1000;
 
 #if DEBUG
-        public const int basicMoveSpeed = 9000;// 基本移动速度，单位：s-1
+        public const int basicStudentMoveSpeed = 9000;// 基本移动速度，单位：s-1
 #else
-        public const int basicMoveSpeed = 1270;
+        public const int basicStudentMoveSpeed = 1270;
 #endif
+        public const int basicGhostMoveSpeed = (int)(basicStudentMoveSpeed * 45.0 / 38);
 
         public const int characterMaxSpeed = 12000;                  // 最大速度
 
@@ -181,7 +182,7 @@ namespace Preparation.Utility
 
         public const int basicBulletMoveSpeed = 1800;                // 基本子弹移动速度，单位：s-1
         public const double basicRemoteAttackRange = 3000;  // 基本远程攻击范围
-        public const double basicAttackShortRange = 900;                 // 基本近程攻击范围
+        public const double basicAttackShortRange = 1100;                 // 基本近程攻击范围
         public const double basicBulletBombRange = 1000;             // 基本子弹爆炸范围
         #endregion
         #region 技能相关

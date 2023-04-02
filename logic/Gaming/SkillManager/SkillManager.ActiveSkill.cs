@@ -147,10 +147,10 @@ namespace Gaming
                         {
                             if (character.IsGhost() &&
                                 (character.PlayerState == PlayerStateType.TryingToAttack || character.PlayerState == PlayerStateType.Swinging
-                                || character.PlayerState == PlayerStateType.UsingSkill || character.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || character.PlayerState == PlayerStateType.OpeningTheChest)
+                                || character.PlayerState == PlayerStateType.UsingSkill)
                                 && gameMap.CanSee(player, character))
                             {
-                                if (CharacterManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.timeFactorOfGhostFainting))
+                                if (CharacterManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish))
                                     player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.timeFactorOfGhostFainting));
                                 break;
                             }

@@ -67,14 +67,11 @@ namespace Gaming
           (
               () =>
               {
-                  int ScoreAdded = GameData.StudentScoreFix(generatorForFix.DegreeOfRepair);
                   new FrameRateTaskExecutor<int>(
                       loopCondition: () => player.PlayerState == PlayerStateType.Fixing && gameMap.Timer.IsGaming && generatorForFix.DegreeOfRepair < GameData.degreeOfFixedGenerator,
                       loopToDo: () =>
                       {
-                          generatorForFix.Repair(player.FixSpeed * GameData.frameDuration);
-                          player.AddScore(GameData.StudentScoreFix(generatorForFix.DegreeOfRepair - ScoreAdded));
-                          ScoreAdded = GameData.StudentScoreFix(generatorForFix.DegreeOfRepair);
+                          generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player);
                       },
                       timeInterval: GameData.frameDuration,
                       finallyReturn: () => 0
@@ -84,34 +81,6 @@ namespace Gaming
                   {
                       gameMap.NumOfRepairedGenerators++;
                       if (player.PlayerState == PlayerStateType.Fixing) player.PlayerState = PlayerStateType.Null;
-                      if (gameMap.NumOfRepairedGenerators == GameData.numOfGeneratorRequiredForEmergencyExit)
-                      {
-                          gameMap.GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
-                          try
-                          {
-                              Random r = new Random(Environment.TickCount);
-                              ((EmergencyExit)(gameMap.GameObjDict[GameObjType.EmergencyExit][r.Next(0, gameMap.GameObjDict[GameObjType.EmergencyExit].Count)])).CanOpen = true;
-                          }
-                          finally
-                          {
-                              gameMap.GameObjLockDict[GameObjType.EmergencyExit].ExitWriteLock();
-                          }
-                      }
-                      else
-                      if (gameMap.NumOfRepairedGenerators == GameData.numOfGeneratorRequiredForRepair)
-                      {
-                          gameMap.GameObjLockDict[GameObjType.Doorway].EnterWriteLock();
-                          try
-                          {
-                              foreach (Doorway doorway in gameMap.GameObjDict[GameObjType.Doorway])
-                                  doorway.PowerSupply = true;
-                          }
-                          finally
-                          {
-                              gameMap.GameObjLockDict[GameObjType.Doorway].ExitWriteLock();
-                          }
-                      }
-
                   }
               }
 
@@ -164,29 +133,24 @@ namespace Gaming
             {
                 if (!(player.Commandable()) || player.CharacterType == CharacterType.Robot)
                     return false;
-                Doorway? doorwayForEscape = (Doorway?)gameMap.OneForInteractInACross(player.Position, GameObjType.Doorway);
-                if (doorwayForEscape != null)
+                Doorway? doorwayForEscape = (Doorway?)gameMap.OneForInteract(player.Position, GameObjType.Doorway);
+                if (doorwayForEscape != null && doorwayForEscape.IsOpen())
                 {
-                    if (doorwayForEscape.IsOpen())
+                    player.AddScore(GameData.StudentScoreEscape);
+                    ++gameMap.NumOfEscapedStudent;
+                    player.Die(PlayerStateType.Escaped);
+                    return true;
+                }
+                else
+                {
+                    EmergencyExit? emergencyExit = (EmergencyExit?)gameMap.OneForInteract(player.Position, GameObjType.EmergencyExit);
+                    if (emergencyExit != null && emergencyExit.IsOpen)
                     {
-                        player.AddScore(GameData.StudentScoreEscape);
                         ++gameMap.NumOfEscapedStudent;
                         player.Die(PlayerStateType.Escaped);
                         return true;
                     }
-                    else
-                        return false;
-                }
-                else
-                {
-                    EmergencyExit? emergencyExit = (EmergencyExit?)gameMap.OneForInteractInACross(player.Position, GameObjType.EmergencyExit);
-                    if (emergencyExit != null && emergencyExit.IsOpen)
-                    {
-                        player.Die(PlayerStateType.Escaped);
-                        return true;
-                    }
-                    else
-                        return false;
+                    return false;
                 }
             }
 
@@ -358,12 +322,23 @@ namespace Gaming
                 if (windowForClimb == null || windowForClimb.WhoIsClimbing != null)
                     return false;
 
+                XY windowToPlayer = new(
+                      (Math.Abs(player.Position.x - windowForClimb.Position.x) > GameData.numOfPosGridPerCell / 2) ? (GameData.numOfPosGridPerCell / 2 * (player.Position.x > windowForClimb.Position.x ? 1 : -1)) : 0,
+                      (Math.Abs(player.Position.y - windowForClimb.Position.y) > GameData.numOfPosGridPerCell / 2) ? (GameData.numOfPosGridPerCell / 2 * (player.Position.y > windowForClimb.Position.y ? 1 : -1)) : 0);
+
+                /*       Character? characterInWindow = (Character?)gameMap.OneInTheSameCell(windowForClimb.Position - 2 * windowToPlayer, GameObjType.Character);
+                       if (characterInWindow != null)
+                       {
+                           if (player.IsGhost() && !characterInWindow.IsGhost())
+                               characterManager.BeAttacked((Student)(characterInWindow), player.Attack(characterInWindow.Position, PlaceType.Null));
+                           return false;
+                       }*/
+
+                //Wall addWall = new Wall(windowForClimb.Position - 2 * windowToPlayer);
+                // gameMap.Add(addWall);
+
                 player.PlayerState = PlayerStateType.ClimbingThroughWindows;
                 windowForClimb.WhoIsClimbing = player;
-                XY windowToPlayer = new XY(
-                      (Math.Abs(player.Position.x - windowForClimb.Position.x) > GameData.numOfPosGridPerCell / 2) ? (GameData.numOfPosGridPerCell / 2 * (player.Position.x > windowForClimb.Position.x ? 1 : -1)) : 0,
-                      (Math.Abs(player.Position.y - windowForClimb.Position.y) > GameData.numOfPosGridPerCell / 2) ? (GameData.numOfPosGridPerCell / 2 * (player.Position.y > windowForClimb.Position.y ? 1 : -1)) : 0)
-                    ;
                 new Thread
           (
               () =>
@@ -401,6 +376,7 @@ namespace Gaming
                   player.ReSetPos(PosJumpOff, gameMap.GetPlaceType(PosJumpOff));
                   player.MoveSpeed = player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
                   windowForClimb.WhoIsClimbing = null;
+                  //  gameMap.Remove(addWall);
                   if (player.PlayerState == PlayerStateType.ClimbingThroughWindows)
                   {
                       player.PlayerState = PlayerStateType.Null;
@@ -499,10 +475,12 @@ namespace Gaming
             */
 
             private readonly Map gameMap;
+            private readonly CharacterManager characterManager;
             public readonly MoveEngine moveEngine;
-            public ActionManager(Map gameMap)
+            public ActionManager(Map gameMap, CharacterManager characterManager)
             {
                 this.gameMap = gameMap;
+
                 this.moveEngine = new MoveEngine(
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>
@@ -521,6 +499,7 @@ namespace Gaming
                         // Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                     }
                 );
+                this.characterManager = characterManager;
             }
         }
     }

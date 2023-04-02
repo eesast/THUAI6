@@ -989,7 +989,7 @@ namespace Client
                         MoveMsg msgW = new()
                         {
                             PlayerId = playerID,
-                            TimeInMilliseconds = 50,
+                            TimeInMilliseconds = 25,
                             Angle = Math.PI
                         };
                         client.Move(msgW);
@@ -999,7 +999,7 @@ namespace Client
                         MoveMsg msgS = new()
                         {
                             PlayerId = playerID,
-                            TimeInMilliseconds = 50,
+                            TimeInMilliseconds = 25,
                             Angle = 0
                         };
                         client.Move(msgS);
@@ -1009,7 +1009,7 @@ namespace Client
                         MoveMsg msgD = new()
                         {
                             PlayerId = playerID,
-                            TimeInMilliseconds = 50,
+                            TimeInMilliseconds = 25,
                             Angle = Math.PI / 2
                         };
                         client.Move(msgD);
@@ -1019,7 +1019,7 @@ namespace Client
                         MoveMsg msgA = new()
                         {
                             PlayerId = playerID,
-                            TimeInMilliseconds = 50,
+                            TimeInMilliseconds = 25,
                             Angle = 3 * Math.PI / 2
                         };
                         client.Move(msgA);

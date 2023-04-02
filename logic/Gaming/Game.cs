@@ -393,7 +393,7 @@ namespace Gaming
 
             characterManager = new CharacterManager(gameMap);
             attackManager = new AttackManager(gameMap, characterManager);
-            actionManager = new ActionManager(gameMap);
+            actionManager = new ActionManager(gameMap, characterManager);
             propManager = new PropManager(gameMap);
             skillManager = new SkillManager(gameMap, actionManager, attackManager, propManager, characterManager);
         }

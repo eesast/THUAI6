@@ -67,14 +67,11 @@ namespace Gaming
           (
               () =>
               {
-                  int ScoreAdded = GameData.StudentScoreFix(generatorForFix.DegreeOfRepair);
                   new FrameRateTaskExecutor<int>(
                       loopCondition: () => player.PlayerState == PlayerStateType.Fixing && gameMap.Timer.IsGaming && generatorForFix.DegreeOfRepair < GameData.degreeOfFixedGenerator,
                       loopToDo: () =>
                       {
-                          generatorForFix.Repair(player.FixSpeed * GameData.frameDuration);
-                          player.AddScore(GameData.StudentScoreFix(generatorForFix.DegreeOfRepair - ScoreAdded));
-                          ScoreAdded = GameData.StudentScoreFix(generatorForFix.DegreeOfRepair);
+                          generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player);
                       },
                       timeInterval: GameData.frameDuration,
                       finallyReturn: () => 0
@@ -363,7 +360,7 @@ namespace Gaming
                   player.ReSetPos(windowToPlayer + windowForClimb.Position, PlaceType.Window);
                   player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
 
-                  moveEngine.MoveObj(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
+                  moveEngine.MoveObj(player, (int)(windowToPlayer.Length() * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
 
                   new FrameRateTaskExecutor<int>(
                     loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,

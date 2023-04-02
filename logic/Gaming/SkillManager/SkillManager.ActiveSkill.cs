@@ -69,7 +69,8 @@ namespace Gaming
                     Generator? generator = (Generator?)gameMap.OneForInteract(player.Position, GameObjType.Generator);
                     if (generator != null)
                     {
-                        generator.Repair(((WriteAnswers)activeSkill).DegreeOfMeditation);
+                        if (generator.Repair(((WriteAnswers)activeSkill).DegreeOfMeditation, player))
+                            gameMap.NumOfRepairedGenerators++;
                         Debugger.Output(player, "uses WriteAnswers in" + generator.ToString() + "with " + (((WriteAnswers)activeSkill).DegreeOfMeditation).ToString());
                         ((WriteAnswers)activeSkill).DegreeOfMeditation = 0;
                     }

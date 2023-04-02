@@ -135,13 +135,17 @@ namespace Preparation.Utility
         {
             return time;
         }
+        public static int TrickerScoreDamageGenerator(int degree)
+        {
+            return degree * 200 / degreeOfFixedGenerator;
+        }
 
         public static int StudentScoreFix(int degreeOfFix)
         {
-            return degreeOfFix;
+            return degreeOfFix * 200 / degreeOfFixedGenerator;
         }
         public const int StudentScoreFixed = 25;
-        public static int StudentScorePinDown(int timeOfPiningDown)
+        public static int StudentScorePinDown(int timeOfPinningDown)
         {
             return 0;
         }

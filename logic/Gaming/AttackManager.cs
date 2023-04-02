@@ -57,7 +57,7 @@ namespace Gaming
                         break;
                     case GameObjType.Generator:
                         if (bullet.CanBeBombed(GameObjType.Generator))
-                            ((Generator)objBeingShot).DegreeOfRepair -= bullet.AP * GameData.factorDamageGenerator;
+                            ((Generator)objBeingShot).Repair(-bullet.AP * GameData.factorDamageGenerator, (Character)bullet.Parent);
                         break;
                     default:
                         break;

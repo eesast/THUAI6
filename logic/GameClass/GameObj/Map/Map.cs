@@ -14,7 +14,7 @@ namespace GameClass.GameObj
         public Dictionary<uint, XY> BirthPointList => birthPointList;
 
         private object lockForNum = new();
-        private void WhenNumChange()
+        private void WhenStudentNumChange()
         {
             if (numOfDeceasedStudent + numOfEscapedStudent == GameData.numOfStudent)
             {
@@ -48,7 +48,35 @@ namespace GameClass.GameObj
                 lock (lockForNum)
                 {
                     numOfRepairedGenerators = value;
-                    WhenNumChange();
+                    if (NumOfRepairedGenerators == GameData.numOfGeneratorRequiredForEmergencyExit)
+                    {
+                        GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
+                        try
+                        {
+                            Random r = new Random(Environment.TickCount);
+                            EmergencyExit emergencyExit = (EmergencyExit)(GameObjDict[GameObjType.EmergencyExit][r.Next(0, GameObjDict[GameObjType.EmergencyExit].Count)]);
+                            emergencyExit.CanOpen = true;
+                            Preparation.Utility.Debugger.Output(emergencyExit, emergencyExit.Position.ToString());
+                        }
+                        finally
+                        {
+                            GameObjLockDict[GameObjType.EmergencyExit].ExitWriteLock();
+                        }
+                    }
+                    else
+                      if (NumOfRepairedGenerators == GameData.numOfGeneratorRequiredForRepair)
+                    {
+                        GameObjLockDict[GameObjType.Doorway].EnterWriteLock();
+                        try
+                        {
+                            foreach (Doorway doorway in GameObjDict[GameObjType.Doorway])
+                                doorway.PowerSupply = true;
+                        }
+                        finally
+                        {
+                            GameObjLockDict[GameObjType.Doorway].ExitWriteLock();
+                        }
+                    }
                 }
             }
         }
@@ -61,7 +89,7 @@ namespace GameClass.GameObj
                 lock (lockForNum)
                 {
                     numOfDeceasedStudent = value;
-                    WhenNumChange();
+                    WhenStudentNumChange();
                 }
             }
         }
@@ -74,10 +102,7 @@ namespace GameClass.GameObj
                 lock (lockForNum)
                 {
                     numOfEscapedStudent = value;
-                    if (numOfDeceasedStudent + numOfEscapedStudent == GameData.numOfStudent)
-                    {
-                        Timer.IsGaming = false;
-                    }
+                    WhenStudentNumChange();
                 }
             }
         }

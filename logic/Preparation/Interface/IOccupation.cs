@@ -62,7 +62,7 @@ namespace Preparation.Interface
     }
     public class Klee : IGhost
     {
-        private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed * 155 / 127);
+        private const int moveSpeed = (int)(GameData.basicGhostMoveSpeed * 155 / 127);
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp;
@@ -93,7 +93,7 @@ namespace Preparation.Interface
     }
     public class ANoisyPerson : IGhost
     {
-        private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed * 1.07);
+        private const int moveSpeed = (int)(GameData.basicGhostMoveSpeed * 1.07);
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp * 12 / 10;
@@ -218,7 +218,7 @@ namespace Preparation.Interface
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.WriteAnswers });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { PassiveSkillType.Meditate });
 
-        public const int fixSpeed = GameData.basicFixSpeed * 13 / 10;
+        public const int fixSpeed = GameData.basicFixSpeed * 11 / 10;
         public int FixSpeed => fixSpeed;
 
         public const int treatSpeed = GameData.basicTreatSpeed * 8 / 10;

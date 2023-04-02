@@ -84,34 +84,6 @@ namespace Gaming
                   {
                       gameMap.NumOfRepairedGenerators++;
                       if (player.PlayerState == PlayerStateType.Fixing) player.PlayerState = PlayerStateType.Null;
-                      if (gameMap.NumOfRepairedGenerators == GameData.numOfGeneratorRequiredForEmergencyExit)
-                      {
-                          gameMap.GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
-                          try
-                          {
-                              Random r = new Random(Environment.TickCount);
-                              ((EmergencyExit)(gameMap.GameObjDict[GameObjType.EmergencyExit][r.Next(0, gameMap.GameObjDict[GameObjType.EmergencyExit].Count)])).CanOpen = true;
-                          }
-                          finally
-                          {
-                              gameMap.GameObjLockDict[GameObjType.EmergencyExit].ExitWriteLock();
-                          }
-                      }
-                      else
-                      if (gameMap.NumOfRepairedGenerators == GameData.numOfGeneratorRequiredForRepair)
-                      {
-                          gameMap.GameObjLockDict[GameObjType.Doorway].EnterWriteLock();
-                          try
-                          {
-                              foreach (Doorway doorway in gameMap.GameObjDict[GameObjType.Doorway])
-                                  doorway.PowerSupply = true;
-                          }
-                          finally
-                          {
-                              gameMap.GameObjLockDict[GameObjType.Doorway].ExitWriteLock();
-                          }
-                      }
-
                   }
               }
 

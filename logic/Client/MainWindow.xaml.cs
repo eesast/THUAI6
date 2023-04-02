@@ -944,9 +944,22 @@ namespace Client
                                 mapPatches[data.X / Preparation.Utility.GameData.numOfPosGridPerCell, data.Y / Preparation.Utility.GameData.numOfPosGridPerCell].Stroke = Brushes.LightSalmon;
                                 isEmergencyDrawed = true;
                             }
-                            if (data.Opened && !isEmergencyOpened)
+                            if (data.Opened)
                             {
                                 isEmergencyOpened = true;
+                                TextBox icon = new()
+                                {
+                                    FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
+                                    Width = unitWidth,
+                                    Height = unitHeight,
+                                    Text = Convert.ToString("🔓"),
+                                    HorizontalAlignment = HorizontalAlignment.Left,
+                                    VerticalAlignment = VerticalAlignment.Top,
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                    Background = Brushes.Transparent,
+                                    BorderBrush = Brushes.Transparent,
+                                    IsReadOnly = true
+                                };
                             }
                         }
                         //}

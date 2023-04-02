@@ -69,7 +69,8 @@ namespace Gaming
                     Generator? generator = (Generator?)gameMap.OneForInteract(player.Position, GameObjType.Generator);
                     if (generator != null)
                     {
-                        generator.Repair(((WriteAnswers)activeSkill).DegreeOfMeditation);
+                        if (generator.Repair(((WriteAnswers)activeSkill).DegreeOfMeditation, player))
+                            gameMap.NumOfRepairedGenerators++;
                         Debugger.Output(player, "uses WriteAnswers in" + generator.ToString() + "with " + (((WriteAnswers)activeSkill).DegreeOfMeditation).ToString());
                         ((WriteAnswers)activeSkill).DegreeOfMeditation = 0;
                     }
@@ -147,10 +148,10 @@ namespace Gaming
                         {
                             if (character.IsGhost() &&
                                 (character.PlayerState == PlayerStateType.TryingToAttack || character.PlayerState == PlayerStateType.Swinging
-                                || character.PlayerState == PlayerStateType.UsingSkill || character.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || character.PlayerState == PlayerStateType.OpeningTheChest)
+                                || character.PlayerState == PlayerStateType.UsingSkill)
                                 && gameMap.CanSee(player, character))
                             {
-                                if (CharacterManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.timeFactorOfGhostFainting))
+                                if (CharacterManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish))
                                     player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.timeFactorOfGhostFainting));
                                 break;
                             }

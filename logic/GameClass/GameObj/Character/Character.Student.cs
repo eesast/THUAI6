@@ -6,69 +6,6 @@ namespace GameClass.GameObj
 {
     public class Student : Character
     {
-        /// <summary>
-        /// 遭受攻击
-        /// </summary>
-        /// <param name="subHP"></param>
-        /// <param name="hasSpear"></param>
-        /// <param name="attacker">伤害来源</param>
-        /// <returns>人物在受到攻击后死了吗</returns>
-        public bool BeAttacked(Bullet bullet)
-        {
-#if DEBUG
-            Debugger.Output(this, "is being shot!");
-#endif
-            lock (beAttackedLock)
-            {
-                if (hp <= 0 || NoHp())
-                    return false;  // 原来已经死了
-                if (bullet.Parent.IsGhost() != this.IsGhost())
-                {
-#if DEBUG
-                    Debugger.Output(bullet, " 's AP is " + bullet.AP.ToString());
-#endif
-                    if (TryUseShield())
-                    {
-                        if (bullet.HasSpear)
-                        {
-                            int subHp = TrySubHp(bullet.AP);
-#if DEBUG
-                            Debugger.Output(this, "is being shot! Now his hp is" + HP.ToString());
-#endif
-                            bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
-                            bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
-                        }
-                        else
-                            return false;
-                    }
-                    else
-                    {
-                        int subHp;
-                        if (bullet.HasSpear)
-                        {
-                            subHp = TrySubHp(bullet.AP + GameData.ApSpearAdd);
-#if DEBUG
-                            Debugger.Output(this, "is being shot with Spear! Now his hp is" + HP.ToString());
-#endif
-                        }
-                        else
-                        {
-                            subHp = TrySubHp(bullet.AP);
-#if DEBUG
-                            Debugger.Output(this, "is being shot! Now his hp is" + HP.ToString());
-#endif
-                        }
-                        bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
-                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
-                    }
-
-                    if (hp <= 0)
-                        TryActivatingLIFE();  // 如果有复活甲
-                }
-                return hp <= 0;
-            }
-        }
-
         protected int fixSpeed;
         /// <summary>
         /// 修理电机速度

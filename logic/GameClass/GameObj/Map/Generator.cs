@@ -20,7 +20,7 @@ namespace GameClass.GameObj
         public int DegreeOfRepair
         {
             get => degreeOfRepair;
-            set
+            private set
             {
                 lock (gameObjLock)
                 {
@@ -31,10 +31,14 @@ namespace GameClass.GameObj
             }
         }
 
-        public bool Repair(int addDegree)
+        public bool Repair(int addDegree, Character character)
         {
             if (DegreeOfRepair == GameData.degreeOfFixedGenerator) return false;
+            int orgDegreeOfRepair = degreeOfRepair;
             DegreeOfRepair += addDegree;
+            if (DegreeOfRepair > orgDegreeOfRepair)
+                character.AddScore(GameData.StudentScoreFix(DegreeOfRepair) - GameData.StudentScoreFix(orgDegreeOfRepair));
+            else character.AddScore(GameData.TrickerScoreDamageGenerator(orgDegreeOfRepair) - GameData.TrickerScoreDamageGenerator(DegreeOfRepair));
             if (DegreeOfRepair == GameData.degreeOfFixedGenerator)
                 return true;
             else return false;

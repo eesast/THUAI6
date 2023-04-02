@@ -31,7 +31,7 @@ namespace Preparation.Interface
 
     public class Assassin : IGhost
     {
-        private const int moveSpeed = (int)(GameData.basicMoveSpeed * 473.0 / 380);
+        private const int moveSpeed = (int)(GameData.basicGhostMoveSpeed * 1.1);
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp;
@@ -62,7 +62,7 @@ namespace Preparation.Interface
     }
     public class Klee : IGhost
     {
-        private const int moveSpeed = (int)(GameData.basicMoveSpeed * 155 / 127);
+        private const int moveSpeed = (int)(GameData.basicGhostMoveSpeed * 155 / 127);
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp;
@@ -93,7 +93,7 @@ namespace Preparation.Interface
     }
     public class ANoisyPerson : IGhost
     {
-        private const int moveSpeed = (int)(GameData.basicMoveSpeed * 1.1);
+        private const int moveSpeed = (int)(GameData.basicGhostMoveSpeed * 1.07);
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp * 12 / 10;
@@ -124,7 +124,7 @@ namespace Preparation.Interface
     }
     public class Teacher : IStudent
     {
-        private const int moveSpeed = GameData.basicMoveSpeed * 3 / 4;
+        private const int moveSpeed = GameData.basicStudentMoveSpeed * 3 / 4;
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp * 10;
@@ -164,7 +164,7 @@ namespace Preparation.Interface
     }
     public class Athlete : IStudent
     {
-        private const int moveSpeed = GameData.basicMoveSpeed * 40 / 38;
+        private const int moveSpeed = GameData.basicStudentMoveSpeed * 40 / 38;
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp * 32 / 30;
@@ -204,7 +204,7 @@ namespace Preparation.Interface
     }
     public class StraightAStudent : IStudent
     {
-        private const int moveSpeed = (int)(GameData.basicMoveSpeed * 0.8);
+        private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed * 0.8);
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = (int)(GameData.basicHp * 1.1);
@@ -218,7 +218,7 @@ namespace Preparation.Interface
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.WriteAnswers });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { PassiveSkillType.Meditate });
 
-        public const int fixSpeed = GameData.basicFixSpeed * 13 / 10;
+        public const int fixSpeed = GameData.basicFixSpeed * 11 / 10;
         public int FixSpeed => fixSpeed;
 
         public const int treatSpeed = GameData.basicTreatSpeed * 8 / 10;
@@ -244,7 +244,7 @@ namespace Preparation.Interface
     }
     public class Robot : IStudent
     {
-        private const int moveSpeed = (int)(GameData.basicMoveSpeed);
+        private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed);
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = (int)(GameData.basicHp / 2.5);
@@ -284,7 +284,7 @@ namespace Preparation.Interface
     }
     public class TechOtaku : IStudent
     {
-        private const int moveSpeed = (int)(GameData.basicMoveSpeed * 0.75);
+        private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed * 0.75);
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = (int)(GameData.basicHp * 0.9);
@@ -324,7 +324,7 @@ namespace Preparation.Interface
     }
     public class Sunshine : IStudent
     {
-        private const int moveSpeed = GameData.basicMoveSpeed;
+        private const int moveSpeed = GameData.basicStudentMoveSpeed;
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp * 32 / 30;

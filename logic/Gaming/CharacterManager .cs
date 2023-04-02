@@ -134,7 +134,7 @@ namespace Gaming
                                         {
                                             if (!noise && XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
                                                 newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
-                                            if (XY.Distance(newPlayer.Position, person.Position) <= GameData.basicViewRange)
+                                            if (newPlayer.CharacterType != CharacterType.Teacher && XY.Distance(newPlayer.Position, person.Position) <= GameData.basicViewRange)
                                             {
                                                 TimePinningDown += GameData.checkInterval;
                                                 newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
@@ -250,6 +250,81 @@ namespace Gaming
                 { IsBackground = true }.Start();
                 return true;
             }
+
+            public static bool TryBeAwed(Student character, Bullet bullet)
+            {
+                if (character.CanBeAwed())
+                {
+                    if (BeStunned(character, GameData.basicStunnedTimeOfStudent))
+                        bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.basicStunnedTimeOfStudent));
+                    return true;
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// 遭受攻击
+            /// </summary>
+            /// <param name="subHP"></param>
+            /// <param name="hasSpear"></param>
+            /// <param name="attacker">伤害来源</param>
+            /// <returns>人物在受到攻击后死了吗</returns>
+            public void BeAttacked(Student student, Bullet bullet)
+            {
+#if DEBUG
+                Debugger.Output(student, "is being shot!");
+#endif
+                if (student.NoHp()) return;  // 原来已经死了
+                if (!bullet.Parent.IsGhost()) return;
+
+                if (student.CharacterType == CharacterType.StraightAStudent)
+                {
+                    ((WriteAnswers)student.FindIActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
+                }
+#if DEBUG
+                Debugger.Output(bullet, " 's AP is " + bullet.AP.ToString());
+#endif
+                if (student.TryUseShield())
+                {
+                    if (bullet.HasSpear)
+                    {
+                        int subHp = student.TrySubHp(bullet.AP);
+#if DEBUG
+                        Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
+#endif
+                        bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
+                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
+                    }
+                    else return;
+                }
+                else
+                {
+                    int subHp;
+                    if (bullet.HasSpear)
+                    {
+                        subHp = student.TrySubHp(bullet.AP + GameData.ApSpearAdd);
+#if DEBUG
+                        Debugger.Output(this, "is being shot with Spear! Now his hp is" + student.HP.ToString());
+#endif
+                    }
+                    else
+                    {
+                        subHp = student.TrySubHp(bullet.AP);
+#if DEBUG
+                        Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
+#endif
+                    }
+                    bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
+                    bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
+                }
+                if (student.HP <= 0)
+                    student.TryActivatingLIFE();  // 如果有复活甲
+
+                if (student.HP <= 0)
+                    BeAddictedToGame(student, (Ghost)bullet.Parent);
+                else TryBeAwed(student, bullet);
+            }
+
             public static bool BackSwing(Character? player, int time)
             {
                 if (player == null || time <= 0) return false;

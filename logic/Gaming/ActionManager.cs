@@ -326,16 +326,16 @@ namespace Gaming
                       (Math.Abs(player.Position.x - windowForClimb.Position.x) > GameData.numOfPosGridPerCell / 2) ? (GameData.numOfPosGridPerCell / 2 * (player.Position.x > windowForClimb.Position.x ? 1 : -1)) : 0,
                       (Math.Abs(player.Position.y - windowForClimb.Position.y) > GameData.numOfPosGridPerCell / 2) ? (GameData.numOfPosGridPerCell / 2 * (player.Position.y > windowForClimb.Position.y ? 1 : -1)) : 0);
 
-                Character? characterInWindow = (Character?)gameMap.OneInTheSameCell(windowForClimb.Position - 2 * windowToPlayer, GameObjType.Character);
-                if (characterInWindow != null)
-                {
-                    if (player.IsGhost() && !characterInWindow.IsGhost())
-                        characterManager.BeAttacked((Student)(characterInWindow), player.Attack(characterInWindow.Position, PlaceType.Null));
-                    return false;
-                }
+                /*       Character? characterInWindow = (Character?)gameMap.OneInTheSameCell(windowForClimb.Position - 2 * windowToPlayer, GameObjType.Character);
+                       if (characterInWindow != null)
+                       {
+                           if (player.IsGhost() && !characterInWindow.IsGhost())
+                               characterManager.BeAttacked((Student)(characterInWindow), player.Attack(characterInWindow.Position, PlaceType.Null));
+                           return false;
+                       }*/
 
-                Wall addWall = new Wall(windowForClimb.Position - 2 * windowToPlayer);
-                gameMap.Add(addWall);
+                //Wall addWall = new Wall(windowForClimb.Position - 2 * windowToPlayer);
+                // gameMap.Add(addWall);
 
                 player.PlayerState = PlayerStateType.ClimbingThroughWindows;
                 windowForClimb.WhoIsClimbing = player;
@@ -360,7 +360,7 @@ namespace Gaming
                   player.ReSetPos(windowToPlayer + windowForClimb.Position, PlaceType.Window);
                   player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
 
-                  moveEngine.MoveObj(player, (int)(windowToPlayer.Length() * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
+                  moveEngine.MoveObj(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
 
                   new FrameRateTaskExecutor<int>(
                     loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,
@@ -376,7 +376,7 @@ namespace Gaming
                   player.ReSetPos(PosJumpOff, gameMap.GetPlaceType(PosJumpOff));
                   player.MoveSpeed = player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
                   windowForClimb.WhoIsClimbing = null;
-                  gameMap.Remove(addWall);
+                  //  gameMap.Remove(addWall);
                   if (player.PlayerState == PlayerStateType.ClimbingThroughWindows)
                   {
                       player.PlayerState = PlayerStateType.Null;

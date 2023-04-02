@@ -91,8 +91,8 @@ namespace Preparation.Utility
 
         public const int basicHp = 3000000;                             // 初始血量
         public const int basicMaxGamingAddiction = 60000;//基本完全沉迷时间
-        public const int BeginGamingAddiction = 10003;
-        public const int MidGamingAddiction = 30000;
+        public const int BeginGamingAddiction = 20900;
+        public const int MidGamingAddiction = 40300;
         public const int basicTreatmentDegree = 1500000;
         public const int basicTimeOfRescue = 1000;
 

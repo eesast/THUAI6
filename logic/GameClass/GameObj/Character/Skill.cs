@@ -5,8 +5,8 @@ namespace GameClass.GameObj
 {
     public class CanBeginToCharge : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD / 5;
-        public int DurationTime => GameData.commonSkillTime * 6 / 10;
+        public int SkillCD => GameData.commonSkillCD * 24 / 30;
+        public int DurationTime => GameData.commonSkillTime * 5 / 10;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
@@ -65,8 +65,8 @@ namespace GameClass.GameObj
 
     public class JumpyBomb : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD / 25 * 5;
-        public int DurationTime => GameData.commonSkillTime / 2;
+        public int SkillCD => GameData.commonSkillCD / 2;
+        public int DurationTime => GameData.commonSkillTime * 3 / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
 

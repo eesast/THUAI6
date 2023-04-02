@@ -121,8 +121,8 @@ namespace GameClass.GameObj
         public override bool IsRemoteAttack => false;
 
         public override int CastTime => (int)BulletAttackRange / Speed;
-        public override int Backswing => 0;
-        public override int RecoveryFromHit => 0;
+        public override int Backswing => GameData.basicRecoveryFromHit;
+        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public const int cd = GameData.basicCD;
         public override int CD => cd;
         public const int maxBulletNum = 1;

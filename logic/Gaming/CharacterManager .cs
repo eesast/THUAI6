@@ -213,6 +213,7 @@ namespace Gaming
                     {
                         ghost.AddScore(GameData.TrickerScoreStudentDie);
                         Die(player);
+                        return;
                     }
                 }
                 player.PlayerState = PlayerStateType.Addicted;

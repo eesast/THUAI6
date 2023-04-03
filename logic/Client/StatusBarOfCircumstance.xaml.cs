@@ -32,14 +32,43 @@ namespace Client
         public void SetFontSize(double fontsize)
         {
             status.FontSize = 13 * fontsize / 12;
-            time.FontSize = 13 * fontsize / 12;
+            time.FontSize = 14 * fontsize / 12;
+            name.FontSize = 14 * fontsize / 12;
             scoresOfStudents.FontSize = scoresOfTrickers.FontSize = fontsize;
         }
 
-        public void SetValue(MessageOfAll obj, bool gateOpened, bool hiddenGateRefreshed, bool hiddenGateOpened)
+        public void SetValue(MessageOfAll obj, bool gateOpened, bool hiddenGateRefreshed, bool hiddenGateOpened,long playerId)
         {
-            time.Text = "Time⏳: " + Convert.ToString(obj.GameTime);
-            status.Text = "📱: " + Convert.ToString(obj.SubjectFinished) + "\n🚪: ";
+            int min, sec;
+            sec = obj.GameTime / 1000;
+            min = sec / 60;
+            sec = sec % 60;
+            time.Text = "Time⏳: " + Convert.ToString(min)+": ";
+            if(sec/10==0)
+            {
+                time.Text += "0" ;
+                time.Text += Convert.ToString(sec);
+            }
+            else
+            {
+                time.Text += Convert.ToString(sec);
+            }
+            if(playerId==4)
+            {
+                name.Text = "🚀 Tricker's";
+            }
+            else
+            {
+                name.Text = "🚀 Student"+ Convert.ToString(playerId)+"'s";
+            }
+            if(obj.SubjectFinished< Preparation.Utility.GameData.numOfGeneratorRequiredForRepair)
+            {
+                status.Text = "📱: " + Convert.ToString(obj.SubjectFinished) + "\n🚪: ";
+            }
+            else
+            {
+                status.Text = "📱: Gate can be opened" + "\n🚪: ";
+            }
             if (gateOpened)
             {
                 status.Text += "Open\n🆘: ";

@@ -702,7 +702,7 @@ namespace Client
                     {
                         foreach (var data in listOfAll)
                         {
-                            StatusBarsOfCircumstance.SetValue(data, gateOpened, isEmergencyDrawed, isEmergencyOpened);
+                            StatusBarsOfCircumstance.SetValue(data, gateOpened, isEmergencyDrawed, isEmergencyOpened,playerID);
                         }
                         if (!hasDrawed && mapFlag)
                             DrawMap();

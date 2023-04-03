@@ -37,31 +37,31 @@ namespace Client
             scoresOfStudents.FontSize = scoresOfTrickers.FontSize = fontsize;
         }
 
-        public void SetValue(MessageOfAll obj, bool gateOpened, bool hiddenGateRefreshed, bool hiddenGateOpened,long playerId)
+        public void SetValue(MessageOfAll obj, bool gateOpened, bool hiddenGateRefreshed, bool hiddenGateOpened, long playerId)
         {
             int min, sec;
             sec = obj.GameTime / 1000;
             min = sec / 60;
             sec = sec % 60;
-            time.Text = "Time⏳: " + Convert.ToString(min)+": ";
-            if(sec/10==0)
+            time.Text = "Time⏳: " + Convert.ToString(min) + ": ";
+            if (sec / 10 == 0)
             {
-                time.Text += "0" ;
+                time.Text += "0";
                 time.Text += Convert.ToString(sec);
             }
             else
             {
                 time.Text += Convert.ToString(sec);
             }
-            if(playerId==4)
+            if (playerId == 4)
             {
                 name.Text = "🚀 Tricker's";
             }
             else
             {
-                name.Text = "🚀 Student"+ Convert.ToString(playerId)+"'s";
+                name.Text = "🚀 Student" + Convert.ToString(playerId) + "'s";
             }
-            if(obj.SubjectFinished< Preparation.Utility.GameData.numOfGeneratorRequiredForRepair)
+            if (obj.SubjectFinished < Preparation.Utility.GameData.numOfGeneratorRequiredForRepair)
             {
                 status.Text = "📱: " + Convert.ToString(obj.SubjectFinished) + "\n🚪: ";
             }

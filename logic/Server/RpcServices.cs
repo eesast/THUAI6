@@ -120,7 +120,7 @@ namespace Server
                         //Console.WriteLine("Send!");
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //Console.WriteLine(ex);
                 }

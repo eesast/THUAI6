@@ -43,6 +43,9 @@ namespace Gaming
                         case ActiveSkillType.UseRobot:
                             UseRobot(character);
                             break;
+                        case ActiveSkillType.Rouse:
+                            Rouse(character);
+                            break;
                         default:
                             return false;
                     }

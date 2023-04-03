@@ -39,7 +39,7 @@ namespace Client
             serial.FontSize = scores.FontSize = state.FontSize = status.FontSize = activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = fontsize;
         }
 
-        private void SetStaticValue(MessageOfTricker obj, double time0, double time1, double time2)
+        private void SetStaticValue(MessageOfTricker obj)
         {
             switch (obj.TrickerType)  // 参数未设定
             {
@@ -62,9 +62,6 @@ namespace Client
             activeSkill0.Text = "Skill0";
             activeSkill1.Text = "Skill1";
             activeSkill2.Text = "Skill2";
-            coolTime0 = time0;
-            coolTime1 = time1;
-            coolTime2 = time2;
             initialized = true;
         }
         private void SetDynamicValue(MessageOfTricker obj)
@@ -131,11 +128,11 @@ namespace Client
             }
             scores.Text = "Scores: " + Convert.ToString(obj.Score);
             if (obj.TimeUntilSkillAvailable[0] >= 0)
-                skillprogress0.Value = 100 - obj.TimeUntilSkillAvailable[0] / coolTime0 * 100;
+                skillprogress0.Value = 100 - obj.TimeUntilSkillAvailable[0] / coolTime0[4] * 100;
             if (obj.TimeUntilSkillAvailable[1] >= 0)
-                skillprogress1.Value = 100 - obj.TimeUntilSkillAvailable[1] / coolTime1 * 100;
+                skillprogress1.Value = 100 - obj.TimeUntilSkillAvailable[1] / coolTime1[4] * 100;
             if (obj.TimeUntilSkillAvailable[2] >= 0)
-                skillprogress2.Value = 100 - obj.TimeUntilSkillAvailable[2] / coolTime2 * 100;
+                skillprogress2.Value = 100 - obj.TimeUntilSkillAvailable[2] / coolTime2[4] * 100;
             if (obj.PlayerState == PlayerState.Quit)
             {
                 skillprogress0.Value = skillprogress1.Value = skillprogress2.Value = 0;
@@ -253,13 +250,14 @@ namespace Client
             }
         }
 
-        public void SetValue(MessageOfTricker obj, double time0, double time1, double time2)
+        public void SetValue(MessageOfTricker obj)
         {
             if (!initialized)
-                SetStaticValue(obj, time0, time1, time2);
+                SetStaticValue(obj);
             SetDynamicValue(obj);
         }
-        private double coolTime0, coolTime1, coolTime2;
+        private int[] totalLife = new int[4] { 100, 100, 100, 100 }, totalDeath = new int[4] { 100, 100, 100, 100 };
+        private int[] coolTime0 = new int[5] { 100, 100, 100, 100, 100 }, coolTime1 = new int[5] { 100, 100, 100, 100, 100 }, coolTime2 = new int[5] { 100, 100, 100, 100, 100 };
         private bool initialized;
     }
 }

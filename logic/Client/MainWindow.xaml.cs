@@ -412,12 +412,6 @@ namespace Client
                                             if (humanOrButcher && obj.StudentMessage.PlayerId == playerID)
                                             {
                                                 human = obj.StudentMessage;
-                                                if (human.TimeUntilSkillAvailable[0] >= 0)
-                                                    coolTime0 = human.TimeUntilSkillAvailable[0];
-                                                if (human.TimeUntilSkillAvailable[1] >= 0)
-                                                    coolTime1 = human.TimeUntilSkillAvailable[1];
-                                                if (human.TimeUntilSkillAvailable[2] >= 0)
-                                                    coolTime2 = human.TimeUntilSkillAvailable[2];
                                             }
                                             listOfHuman.Add(obj.StudentMessage);
                                             break;
@@ -425,12 +419,6 @@ namespace Client
                                             if (!humanOrButcher && obj.TrickerMessage.PlayerId == playerID)
                                             {
                                                 butcher = obj.TrickerMessage;
-                                                if (butcher.TimeUntilSkillAvailable[0] >= 0)
-                                                    coolTime0 = butcher.TimeUntilSkillAvailable[0];
-                                                if (butcher.TimeUntilSkillAvailable[1] >= 0)
-                                                    coolTime1 = butcher.TimeUntilSkillAvailable[1];
-                                                if (butcher.TimeUntilSkillAvailable[2] >= 0)
-                                                    coolTime2 = butcher.TimeUntilSkillAvailable[2];
                                             }
                                             listOfButcher.Add(obj.TrickerMessage);
                                             break;
@@ -708,7 +696,7 @@ namespace Client
                             DrawMap();
                         foreach (var data in listOfHuman)
                         {
-                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data, coolTime0, coolTime1, coolTime2);
+                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data, data.PlayerId);
                             if (CanSee(data))
                             {
                                 Ellipse icon = new()
@@ -725,7 +713,7 @@ namespace Client
                         }
                         foreach (var data in listOfButcher)
                         {
-                            StatusBarsOfHunter.SetValue(data, coolTime0, coolTime1, coolTime2);
+                            StatusBarsOfHunter.SetValue(data);
                             if (CanSee(data))
                             {
                                 Ellipse icon = new()
@@ -1393,7 +1381,6 @@ namespace Client
         bool isSpectatorMode = false;
         bool isEmergencyOpened = false;
         bool isEmergencyDrawed = false;
-        double coolTime0 = -1, coolTime1 = -1, coolTime2 = -1;
         const double radiusTimes = 1.0 * Preparation.Utility.GameData.characterRadius / Preparation.Utility.GameData.numOfPosGridPerCell;
     }
 }

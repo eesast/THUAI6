@@ -105,9 +105,6 @@ namespace Gaming
                 if (bullet.TypeOfBullet == BulletType.BombBomb && objBeingShot != null)
                 {
                     bullet.Parent.BulletOfPlayer = BulletType.JumpyDumpty;
-                    Debugger.Output(bullet, "JumpyDumpty!");
-                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle());
-                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI);
                     Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI / 2.0);
                     Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI * 3.0 / 2.0);
                 }

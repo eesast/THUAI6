@@ -203,12 +203,23 @@ namespace Gaming
                     return;
                 }
                 ghost.AddScore(GameData.TrickerScoreStudentBeAddicted);
+                if (player.GamingAddiction > 0)
+                {
+                    if (player.GamingAddiction < GameData.BeginGamingAddiction)
+                        player.GamingAddiction = GameData.BeginGamingAddiction;
+                    else if (player.GamingAddiction < GameData.MidGamingAddiction)
+                        player.GamingAddiction = GameData.MidGamingAddiction;
+                    else
+                    {
+                        ghost.AddScore(GameData.TrickerScoreStudentDie);
+                        Die(player);
+                        return;
+                    }
+                }
+                player.PlayerState = PlayerStateType.Addicted;
                 new Thread
                     (() =>
                     {
-                        if (player.GamingAddiction > GameData.BeginGamingAddiction && player.GamingAddiction < GameData.MidGamingAddiction)
-                            player.GamingAddiction = GameData.MidGamingAddiction;
-                        player.PlayerState = PlayerStateType.Addicted;
 #if DEBUG
                         Debugger.Output(player, " is addicted ");
 #endif
@@ -317,6 +328,7 @@ namespace Gaming
                     bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
                     bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                 }
+                student.DegreeOfTreatment = 0;
                 if (student.HP <= 0)
                     student.TryActivatingLIFE();  // 如果有复活甲
 

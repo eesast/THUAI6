@@ -5,8 +5,8 @@ namespace GameClass.GameObj
 {
     public class CanBeginToCharge : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD / 5;
-        public int DurationTime => GameData.commonSkillTime * 6 / 10;
+        public int SkillCD => GameData.commonSkillCD * 24 / 30;
+        public int DurationTime => GameData.commonSkillTime * 5 / 10;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
@@ -48,6 +48,21 @@ namespace GameClass.GameObj
         }
     }
 
+    public class Rouse : IActiveSkill
+    {
+        public int SkillCD => GameData.commonSkillCD;
+        public int DurationTime => 0;
+
+        private readonly object commonSkillLock = new object();
+        public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
+    }
+
     public class Howl : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD * 3 / 4;
@@ -65,8 +80,8 @@ namespace GameClass.GameObj
 
     public class JumpyBomb : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD / 25 * 5;
-        public int DurationTime => GameData.commonSkillTime / 2;
+        public int SkillCD => GameData.commonSkillCD / 2;
+        public int DurationTime => GameData.commonSkillTime * 3 / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
 
@@ -196,6 +211,8 @@ namespace GameClass.GameObj
                     return new SummonGolem();
                 case ActiveSkillType.UseRobot:
                     return new UseRobot();
+                case ActiveSkillType.Rouse:
+                    return new Rouse();
                 default:
                     return new NullSkill();
             }
@@ -223,6 +240,8 @@ namespace GameClass.GameObj
                     return ActiveSkillType.SummonGolem;
                 case UseRobot:
                     return ActiveSkillType.UseRobot;
+                case Rouse:
+                    return ActiveSkillType.Rouse;
                 default:
                     return ActiveSkillType.Null;
             }

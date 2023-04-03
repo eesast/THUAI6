@@ -51,6 +51,7 @@ namespace Gaming
 
             public static bool JumpyBomb(Character player)
             {
+                if ((!player.Commandable())) return false;
                 return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.JumpyBomb), player, () =>
                 {
                     player.BulletOfPlayer = BulletType.BombBomb;
@@ -162,6 +163,36 @@ namespace Gaming
                         gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
                     Debugger.Output(player, "uses punishing!");
+                },
+                                                      () =>
+                                                      { });
+            }
+
+            public bool Rouse(Character player)
+            {
+                if ((!player.Commandable())) return false;
+                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Rouse), player, () =>
+                {
+                    gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+                    try
+                    {
+                        foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                        {
+                            if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
+                            {
+                                character.PlayerState = PlayerStateType.Null;
+                                character.HP = GameData.RemainHpWhenAddLife;
+                                ((Student)character).TimeOfRescue = 0;
+                                player.AddScore(GameData.StudentScoreRescue);
+                                break;
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                    }
+                    Debugger.Output(player, "rouse someone!");
                 },
                                                       () =>
                                                       { });

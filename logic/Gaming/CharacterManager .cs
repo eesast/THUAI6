@@ -328,6 +328,7 @@ namespace Gaming
                     bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
                     bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                 }
+                student.DegreeOfTreatment = 0;
                 if (student.HP <= 0)
                     student.TryActivatingLIFE();  // 如果有复活甲
 

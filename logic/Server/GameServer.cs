@@ -199,7 +199,7 @@ namespace Server
         private MessageOfAll GetMessageOfAll()
         {
             MessageOfAll msg = new MessageOfAll();
-            //msg.GameTime
+            msg.GameTime = game.GameMap.Timer.nowTime();
             msg.SubjectFinished = (int)game.GameMap.NumOfRepairedGenerators;
             msg.StudentGraduated = (int)game.GameMap.NumOfEscapedStudent;
             msg.StudentQuited = (int)game.GameMap.NumOfDeceasedStudent;

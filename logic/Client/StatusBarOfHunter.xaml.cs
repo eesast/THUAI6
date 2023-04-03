@@ -36,7 +36,7 @@ namespace Client
         }
         public void SetFontSize(double fontsize)
         {
-            serial.FontSize = scores.FontSize = state.FontSize = status.FontSize = activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = prop3.FontSize = fontsize;
+            serial.FontSize = scores.FontSize = state.FontSize = status.FontSize = activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = fontsize;
         }
 
         private void SetStaticValue(MessageOfTricker obj, double time0, double time1, double time2)
@@ -243,39 +243,6 @@ namespace Client
                                 break;
                             default:
                                 prop2.Text = "";
-                                break;
-                        }
-                        cnt++;
-                        break;
-                    case 3:
-                        switch (icon)
-                        {
-                            case Protobuf.PropType.Key3:
-                                prop3.Text = "🔑3";
-                                break;
-                            case Protobuf.PropType.Key5:
-                                prop3.Text = "🔑5";
-                                break;
-                            case Protobuf.PropType.Key6:
-                                prop3.Text = "🔑6";
-                                break;
-                            case Protobuf.PropType.AddSpeed:
-                                prop3.Text = "⛸";
-                                break;
-                            case Protobuf.PropType.AddLifeOrClairaudience:
-                                prop3.Text = "🏅";
-                                break;
-                            case Protobuf.PropType.AddHpOrAp:
-                                prop3.Text = "♥";
-                                break;
-                            case Protobuf.PropType.ShieldOrSpear:
-                                prop3.Text = "🛡";
-                                break;
-                            case Protobuf.PropType.RecoveryFromDizziness:
-                                prop3.Text = "🕶";
-                                break;
-                            default:
-                                prop3.Text = "";
                                 break;
                         }
                         cnt++;

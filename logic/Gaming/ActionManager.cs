@@ -166,19 +166,6 @@ namespace Gaming
                     playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
                     return false;
 
-                if (playerTreated.HP + playerTreated.DegreeOfTreatment >= playerTreated.MaxHp)
-                {
-                    playerTreated.HP = playerTreated.MaxHp;
-                    playerTreated.DegreeOfTreatment = 0;
-                    return false;
-                }
-
-                if (playerTreated.DegreeOfTreatment >= GameData.basicTreatmentDegree)
-                {
-                    playerTreated.HP += GameData.basicTreatmentDegree;
-                    playerTreated.DegreeOfTreatment = 0;
-                    return false;
-                }
                 new Thread
            (
                () =>
@@ -186,10 +173,11 @@ namespace Gaming
                    playerTreated.PlayerState = PlayerStateType.Treated;
                    player.PlayerState = PlayerStateType.Treating;
                    new FrameRateTaskExecutor<int>(
-                       loopCondition: () => playerTreated.PlayerState == PlayerStateType.Treated && player.PlayerState == PlayerStateType.Treating && gameMap.Timer.IsGaming && playerTreated.HP + playerTreated.DegreeOfTreatment < playerTreated.MaxHp && playerTreated.DegreeOfTreatment < GameData.basicTreatmentDegree && GameData.ApproachToInteract(playerTreated.Position, player.Position),
+                       loopCondition: () => playerTreated.PlayerState == PlayerStateType.Treated && player.PlayerState == PlayerStateType.Treating && gameMap.Timer.IsGaming && GameData.ApproachToInteract(playerTreated.Position, player.Position),
                        loopToDo: () =>
                        {
-                           playerTreated.DegreeOfTreatment += GameData.frameDuration * player.TreatSpeed;
+                           if (playerTreated.AddDegreeOfTreatment(GameData.frameDuration * player.TreatSpeed, player))
+                               playerTreated.PlayerState = PlayerStateType.Null;
                        },
                        timeInterval: GameData.frameDuration,
                        finallyReturn: () => 0
@@ -199,20 +187,6 @@ namespace Gaming
 
                    if (playerTreated.PlayerState == PlayerStateType.Treated) playerTreated.PlayerState = PlayerStateType.Null;
                    if (player.PlayerState == PlayerStateType.Treating) player.PlayerState = PlayerStateType.Null;
-
-                   if (playerTreated.HP + playerTreated.DegreeOfTreatment >= playerTreated.MaxHp)
-                   {
-                       player.AddScore(GameData.StudentScoreTreat(playerTreated.MaxHp - playerTreated.HP));
-                       playerTreated.HP = playerTreated.MaxHp;
-                       playerTreated.DegreeOfTreatment = 0;
-                   }
-                   else
-                   if (playerTreated.DegreeOfTreatment >= GameData.basicTreatmentDegree)
-                   {
-                       player.AddScore(GameData.StudentScoreTreat(GameData.basicTreatmentDegree));
-                       playerTreated.HP += GameData.basicTreatmentDegree;
-                       playerTreated.DegreeOfTreatment = 0;
-                   }
                }
            )
                 { IsBackground = true }.Start();

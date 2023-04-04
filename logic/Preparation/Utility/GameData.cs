@@ -106,8 +106,10 @@ namespace Preparation.Utility
         public const int characterMaxSpeed = 12000;                  // 最大速度
 
         public const double basicConcealment = 1.0;
-        public const int basicAlertnessRadius = 10700;
-        public const int basicViewRange = 5 * numOfPosGridPerCell;
+        public const int basicStudentAlertnessRadius = 15 * numOfPosGridPerCell;
+        public const int basicGhostAlertnessRadius = 17 * numOfPosGridPerCell;
+        public const int basicStudentViewRange = 10 * numOfPosGridPerCell;
+        public const int basicGhostViewRange = 15 * numOfPosGridPerCell;
         public const int maxNumOfPropInPropInventory = 3;
 
         public static XY PosWhoDie = new XY(1, 1);

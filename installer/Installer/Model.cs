@@ -1170,7 +1170,7 @@ namespace WebConnect
                                 string eTag = result.eTag;
                                 //到这里应该是成功了，但是因为我没有试过，也不知道具体情况，可能还要根据result的内容判断
                             }
-                            catch (Exception e)
+                            catch (Exception)
                             {
                                 return -3;
                             }

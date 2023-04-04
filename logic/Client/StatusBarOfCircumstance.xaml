@@ -14,10 +14,11 @@
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20*"/>
-            <ColumnDefinition Width="62*"/>
+            <ColumnDefinition Width="41*"/>
+            <ColumnDefinition Width="41*"/>
         </Grid.ColumnDefinitions>
-        <TextBox Name="time" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="Time⏳: "  Grid.Row="0" Grid.ColumnSpan="2" FontSize="14"/>
+        <TextBox Name="time" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="Time⏳: "  Grid.Row="0" Grid.ColumnSpan="1" FontSize="14"/>
+        <TextBox Name="name" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="🚀"  Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" FontSize="14"/>
         <TextBox Name="status" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="📱: &#xA;🚪: &#xA;🆘: &#xA;🏃: &#xA;⚰️: " Grid.Row="1" Grid.ColumnSpan="2" FontSize="13"/>
         <TextBox Name="scoresOfStudents" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="Scores of Students: " Grid.Row="2" Grid.ColumnSpan="2" FontSize="12"/>
         <TextBox Name="scoresOfTrickers" IsReadOnly="True" BorderBrush="LightGray" TextWrapping="Wrap" Text="Scores of Tricker: " Grid.Row="3" Grid.ColumnSpan="2" FontSize="12"/>

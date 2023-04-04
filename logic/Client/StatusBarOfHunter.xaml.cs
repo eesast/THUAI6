@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Protobuf;
+using Preparation.Utility;
 
 namespace Client
 {
@@ -127,11 +124,11 @@ namespace Client
             }
             scores.Text = "Scores: " + Convert.ToString(obj.Score);
             if (obj.TimeUntilSkillAvailable[0] >= 0)
-                skillprogress0.Value = 100 - obj.TimeUntilSkillAvailable[0] / coolTime0[4] * 100;
+                skillprogress0.Value = 100 - 100.0 * obj.TimeUntilSkillAvailable[0] / coolTime0[4];
             if (obj.TimeUntilSkillAvailable[1] >= 0)
-                skillprogress1.Value = 100 - obj.TimeUntilSkillAvailable[1] / coolTime1[4] * 100;
+                skillprogress1.Value = 100 - 100.0 * obj.TimeUntilSkillAvailable[1] / coolTime1[4];
             if (obj.TimeUntilSkillAvailable[2] >= 0)
-                skillprogress2.Value = 100 - obj.TimeUntilSkillAvailable[2] / coolTime2[4] * 100;
+                skillprogress2.Value = 100 - 100.0 * obj.TimeUntilSkillAvailable[2] / coolTime2[4];
             if (obj.PlayerState == PlayerState.Quit)
             {
                 skillprogress0.Value = skillprogress1.Value = skillprogress2.Value = 0;
@@ -254,6 +251,20 @@ namespace Client
             if (!initialized)
                 SetStaticValue(obj);
             SetDynamicValue(obj);
+        }
+        public void NewData(int[] life, int[] death, int[,] coolTime)
+        {
+            for (int i = 0; i < GameData.numOfStudent; ++i)
+            {
+                totalLife[i] = life[i];
+                totalDeath[i] = death[i];
+                coolTime0[i] = coolTime[0, i];
+                coolTime1[i] = coolTime[1, i];
+                coolTime2[i] = coolTime[2, i];
+            }
+            coolTime0[4] = coolTime[0, 4];
+            coolTime1[4] = coolTime[1, 4];
+            coolTime2[4] = coolTime[2, 4];
         }
         private int[] totalLife = new int[4] { 100, 100, 100, 100 }, totalDeath = new int[4] { 100, 100, 100, 100 };
         private int[] coolTime0 = new int[5] { 100, 100, 100, 100, 100 }, coolTime1 = new int[5] { 100, 100, 100, 100, 100 }, coolTime2 = new int[5] { 100, 100, 100, 100, 100 };

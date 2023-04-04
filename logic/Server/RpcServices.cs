@@ -86,9 +86,9 @@ namespace Server
 
             Preparation.Utility.CharacterType characterType = Preparation.Utility.CharacterType.Null;
             if (request.PlayerType == PlayerType.StudentPlayer)
-                characterType = CopyInfo.ToStudentType(request.StudentType);
+                characterType = Transformation.ToStudentType(request.StudentType);
             else if (request.PlayerType == PlayerType.TrickerPlayer)
-                characterType = CopyInfo.ToTrickerType(request.TrickerType);
+                characterType = Transformation.ToTrickerType(request.TrickerType);
 
             lock (addPlayerLock)
             {
@@ -229,7 +229,7 @@ namespace Server
                 return Task.FromResult(boolRes);
             }
             var gameID = communicationToGameID[request.PlayerId];
-            boolRes.ActSuccess = game.PickProp(gameID, CopyInfo.ToPropType(request.PropType));
+            boolRes.ActSuccess = game.PickProp(gameID, Transformation.ToPropType(request.PropType));
             return Task.FromResult(boolRes);
         }
 
@@ -245,7 +245,7 @@ namespace Server
                 return Task.FromResult(boolRes);
             }
             var gameID = communicationToGameID[request.PlayerId];
-            game.UseProp(gameID, CopyInfo.ToPropType(request.PropType));
+            game.UseProp(gameID, Transformation.ToPropType(request.PropType));
             boolRes.ActSuccess = true;
             return Task.FromResult(boolRes);
         }
@@ -261,7 +261,7 @@ namespace Server
                 return Task.FromResult(boolRes);
             }
             var gameID = communicationToGameID[request.PlayerId];
-            game.ThrowProp(gameID, CopyInfo.ToPropType(request.PropType));
+            game.ThrowProp(gameID, Transformation.ToPropType(request.PropType));
             boolRes.ActSuccess = true;
             return Task.FromResult(boolRes);
         }

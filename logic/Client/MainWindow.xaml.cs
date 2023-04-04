@@ -19,6 +19,7 @@ using Protobuf;
 using Playback;
 using CommandLine;
 using Preparation.Utility;
+using Preparation.Interface;
 
 // 目前MainWindow还未复现的功能：
 // private void ClickToSetMode(object sender, RoutedEventArgs e)
@@ -408,16 +409,22 @@ namespace Client
                                     switch (obj.MessageOfObjCase)
                                     {
                                         case MessageOfObj.MessageOfObjOneofCase.StudentMessage:
-
                                             if (humanOrButcher && obj.StudentMessage.PlayerId == playerID)
                                             {
                                                 human = obj.StudentMessage;
-                                                if (human.TimeUntilSkillAvailable[0] >= 0)
-                                                    coolTime0 = human.TimeUntilSkillAvailable[0];
-                                                if (human.TimeUntilSkillAvailable[1] >= 0)
-                                                    coolTime1 = human.TimeUntilSkillAvailable[1];
-                                                if (human.TimeUntilSkillAvailable[2] >= 0)
-                                                    coolTime2 = human.TimeUntilSkillAvailable[2];
+                                            }
+                                            if (obj.StudentMessage.PlayerId < GameData.numOfStudent)
+                                            {
+                                                IStudentType occupation = (IStudentType)OccupationFactory.FindIOccupation(Transformation.ToStudentType(obj.StudentMessage.StudentType));
+                                                totalLife[obj.StudentMessage.PlayerId] = occupation.MaxHp;
+                                                totalDeath[obj.StudentMessage.PlayerId] = occupation.MaxGamingAddiction;
+                                                int i = 0;
+                                                foreach (var skill in occupation.ListOfIActiveSkill)
+                                                {
+                                                    var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
+                                                    coolTime[i, obj.StudentMessage.PlayerId] = iActiveSkill.SkillCD;
+                                                    ++i;
+                                                }
                                             }
                                             listOfHuman.Add(obj.StudentMessage);
                                             break;
@@ -425,12 +432,14 @@ namespace Client
                                             if (!humanOrButcher && obj.TrickerMessage.PlayerId == playerID)
                                             {
                                                 butcher = obj.TrickerMessage;
-                                                if (butcher.TimeUntilSkillAvailable[0] >= 0)
-                                                    coolTime0 = butcher.TimeUntilSkillAvailable[0];
-                                                if (butcher.TimeUntilSkillAvailable[1] >= 0)
-                                                    coolTime1 = butcher.TimeUntilSkillAvailable[1];
-                                                if (butcher.TimeUntilSkillAvailable[2] >= 0)
-                                                    coolTime2 = butcher.TimeUntilSkillAvailable[2];
+                                            }
+                                            IGhostType occupation1 = (IGhostType)OccupationFactory.FindIOccupation(Transformation.ToTrickerType(obj.TrickerMessage.TrickerType));
+                                            int j = 0;
+                                            foreach (var skill in occupation1.ListOfIActiveSkill)
+                                            {
+                                                var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
+                                                coolTime[j, GameData.numOfStudent] = iActiveSkill.SkillCD;
+                                                ++j;
                                             }
                                             listOfButcher.Add(obj.TrickerMessage);
                                             break;
@@ -656,7 +665,7 @@ namespace Client
             return true;
         }
 
-        private void Refresh(object? sender, EventArgs e) // 已按照3.5版proto更新信息，circumstance栏未更新 log未更新
+        private void Refresh(object? sender, EventArgs e) //log未更新
         {
             // Bonus();
             if (WindowState == WindowState.Maximized)
@@ -664,16 +673,21 @@ namespace Client
             else
                 MaxButton.Content = "🗖";
             if (StatusBarsOfSurvivor != null)
-                for (int i = 4; i < 8; i++)
+            {
+                for (int i = 0; i < GameData.numOfStudent; i++)
                 {
-                    StatusBarsOfSurvivor[i - 4].SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
+                    StatusBarsOfSurvivor[i].SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
+                    StatusBarsOfSurvivor[i].NewData(totalLife, totalDeath, coolTime);
                 }
+            }
             if (StatusBarsOfHunter != null)
+            {
                 StatusBarsOfHunter.SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
+                StatusBarsOfHunter.NewData(totalLife, totalDeath, coolTime);
+            }
             if (StatusBarsOfCircumstance != null)
                 StatusBarsOfCircumstance.SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
             // 完成窗口信息更新
-
             if (!isClientStocked)
             {
                 unit = Math.Sqrt(UpperLayerOfMap.ActualHeight * UpperLayerOfMap.ActualWidth) / 50;
@@ -708,7 +722,7 @@ namespace Client
                             DrawMap();
                         foreach (var data in listOfHuman)
                         {
-                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data, coolTime0, coolTime1, coolTime2);
+                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data, data.PlayerId);
                             if (CanSee(data))
                             {
                                 Ellipse icon = new()
@@ -725,7 +739,7 @@ namespace Client
                         }
                         foreach (var data in listOfButcher)
                         {
-                            StatusBarsOfHunter.SetValue(data, coolTime0, coolTime1, coolTime2);
+                            StatusBarsOfHunter.SetValue(data);
                             if (CanSee(data))
                             {
                                 Ellipse icon = new()
@@ -1374,10 +1388,10 @@ namespace Client
             { 6, 6, 0, 0, 7, 7, 6, 7, 7, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 6 },
             { 6, 6, 15, 0, 0, 0, 7, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 11, 6, 0, 0, 0, 0, 0, 6 },
             { 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6,6, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 15, 0, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0,8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 15, 0, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 6, 7, 0, 0,8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6 },
             { 6, 0, 0, 0, 0, 0, 0, 0, 6, 7, 7, 0, 0, 0, 6, 6, 6, 11, 6, 0, 0, 6, 6, 6, 7, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 6 },
-            { 6, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 0, 6, 7, 7, 6, 7, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 14, 6, 6, 6, 0, 0, 0, 0, 0, 7, 0, 0, 6, 0, 6 },
+            { 6, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 6, 0, 6, 7, 7, 6, 7, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 14, 6, 6, 6, 0, 0, 0, 0, 0, 7, 0, 0, 6, 0, 6 },
             { 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 7, 0, 7, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 7, 6, 0, 6, 6, 0, 6 },
             { 6, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 7, 0, 0, 7, 6, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 7, 6, 6, 6, 0, 0, 6 },
             { 6, 0, 0, 0, 0, 0, 6, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 7, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6 },
@@ -1393,7 +1407,8 @@ namespace Client
         bool isSpectatorMode = false;
         bool isEmergencyOpened = false;
         bool isEmergencyDrawed = false;
-        double coolTime0 = -1, coolTime1 = -1, coolTime2 = -1;
         const double radiusTimes = 1.0 * Preparation.Utility.GameData.characterRadius / Preparation.Utility.GameData.numOfPosGridPerCell;
+        private int[] totalLife = new int[4] { 100, 100, 100, 100 }, totalDeath = new int[4] { 100, 100, 100, 100 };
+        private int[,] coolTime = new int[3, 5] { { 100, 100, 100, 100, 100 }, { 100, 100, 100, 100, 100 }, { 100, 100, 100, 100, 100 } };
     }
 }

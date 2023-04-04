@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Protobuf;
+using Preparation.Utility;
 
 namespace Client
 {
@@ -32,8 +33,7 @@ namespace Client
         {
             serial.FontSize = scores.FontSize = status.FontSize = activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = fontsize;
         }
-
-        private void SetStaticValue(MessageOfStudent obj, double time0, double time1, double time2)
+        private void SetStaticValue(MessageOfStudent obj)
         {
             switch (obj.StudentType)  // coolTime参数未设定，
             {
@@ -59,80 +59,78 @@ namespace Client
             activeSkill0.Text = "Skill0";
             activeSkill1.Text = "Skill1";
             activeSkill2.Text = "Skill2";
-            coolTime0 = time0;
-            coolTime1 = time1;
-            coolTime2 = time2;
             initialized = true;
         }
-        private void SetDynamicValue(MessageOfStudent obj)
+        private void SetDynamicValue(MessageOfStudent obj, long i)
         {
             int life = obj.Determination, death = obj.Addiction;
+            int perLife = (int)(100.0 * life / totalLife[i]), perDeath = (int)(100.0 * death / totalDeath[i]);
             switch (obj.PlayerState)
             {
                 case PlayerState.Idle:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nIdle";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nIdle, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Learning:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nLearning";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nLearning, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Addicted:
-                    status.Text = "💀: " + Convert.ToString(death) + "\nAddicted";
+                    status.Text = "💀: " + Convert.ToString(death) + "\nAddicted, " + Convert.ToString(perDeath) + "%";
                     break;
                 case PlayerState.Graduated:
-                    status.Text = status.Text = "♥" + "\nGraduated";
+                    status.Text = "♥" + "\nGraduated";
                     break;
                 case PlayerState.Quit:
                     status.Text = "💀" + "\nQuit";
                     break;
                 case PlayerState.Treated:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nTreated";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nTreated, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Rescued:
-                    status.Text = "💀: " + Convert.ToString(death) + "\nRescued";
+                    status.Text = "💀: " + Convert.ToString(death) + "\nRescued, " + Convert.ToString(perDeath) + "%";
                     break;
                 case PlayerState.Stunned:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nStunned";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nStunned, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Treating:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nTreating";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nTreating, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Rescuing:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nRescuing";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nRescuing, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Swinging:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nSwinging";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nSwinging, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Attacking:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nAttacking";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nAttacking, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Locking:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nLocking";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nLocking, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Rummaging:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nRummaging";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nRummaging, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Climbing:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nClimbing";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nClimbing, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.OpeningAChest:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nOpeningAChest";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nOpeningAChest, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.UsingSpecialSkill:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nUsingSpecialSkill";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nUsingSpecialSkill, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.OpeningAGate:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nOpeningAGate";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nOpeningAGate, " + Convert.ToString(perLife) + "%";
                     break;
                 default:
                     break;
             }
             scores.Text = "Scores: " + obj.Score;
             if (obj.TimeUntilSkillAvailable[0] >= 0)
-                skillprogress0.Value = 100 - obj.TimeUntilSkillAvailable[0] / coolTime0 * 100;
+                skillprogress0.Value = 100 - 100.0 * obj.TimeUntilSkillAvailable[0] / coolTime0[i];
             if (obj.TimeUntilSkillAvailable[1] >= 0)
-                skillprogress1.Value = 100 - obj.TimeUntilSkillAvailable[1] / coolTime1 * 100;
+                skillprogress1.Value = 100 - 100.0 * obj.TimeUntilSkillAvailable[1] / coolTime1[i];
             if (obj.TimeUntilSkillAvailable[2] >= 0)
-                skillprogress2.Value = 100 - obj.TimeUntilSkillAvailable[2] / coolTime2 * 100;
+                skillprogress2.Value = 100 - 100.0 * obj.TimeUntilSkillAvailable[2] / coolTime2[i];
             if (obj.PlayerState == PlayerState.Quit)
             {
                 skillprogress0.Value = skillprogress1.Value = skillprogress2.Value = 0;
@@ -249,14 +247,29 @@ namespace Client
                 }
             }
         }
-
-        public void SetValue(MessageOfStudent obj, double time0, double time1, double time2)
+        public void SetValue(MessageOfStudent obj, long i)
         {
             if (!initialized)
-                SetStaticValue(obj, time0, time1, time2);
-            SetDynamicValue(obj);
+                SetStaticValue(obj);
+            SetDynamicValue(obj, i);
         }
-        private double coolTime0, coolTime1, coolTime2;
+        public void NewData(int[] life, int[] death, int[,] coolTime)
+        {
+            for (int i = 0; i < GameData.numOfStudent; ++i)
+            {
+                totalLife[i] = life[i];
+                totalDeath[i] = death[i];
+                coolTime0[i] = coolTime[0, i];
+                coolTime1[i] = coolTime[1, i];
+                coolTime2[i] = coolTime[2, i];
+            }
+            coolTime0[4] = coolTime[0, 4];
+            coolTime1[4] = coolTime[1, 4];
+            coolTime2[4] = coolTime[2, 4];
+        }
+
+        private int[] totalLife = new int[4] { 100, 100, 100, 100 }, totalDeath = new int[4] { 100, 100, 100, 100 };
+        private int[] coolTime0 = new int[5] { 100, 100, 100, 100, 100 }, coolTime1 = new int[5] { 100, 100, 100, 100, 100 }, coolTime2 = new int[5] { 100, 100, 100, 100, 100 };
         private bool initialized;
     }
 }

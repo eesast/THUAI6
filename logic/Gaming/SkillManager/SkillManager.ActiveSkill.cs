@@ -153,7 +153,7 @@ namespace Gaming
                                 && gameMap.CanSee(player, character))
                             {
                                 if (CharacterManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish))
-                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish + (player.MaxHp - player.HP) / GameData.timeFactorOfGhostFainting));
+                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish));
                                 break;
                             }
                         }
@@ -193,6 +193,62 @@ namespace Gaming
                         gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
                     Debugger.Output(player, "rouse someone!");
+                },
+                                                      () =>
+                                                      { });
+            }
+
+            public bool Encourage(Character player)
+            {
+                if ((!player.Commandable())) return false;
+                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Encourage), player, () =>
+                {
+                    gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+                    try
+                    {
+                        foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                        {
+                            if ((character.HP < character.MaxHp) && gameMap.CanSee(player, character))
+                            {
+                                player.AddScore(GameData.StudentScoreTreat(character.MaxHp - character.HP));
+                                character.HP = character.MaxHp;
+                                ((Student)character).SetDegreeOfTreatment0();
+                                break;
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                    }
+                    Debugger.Output(player, "encourage someone!");
+                },
+                                                      () =>
+                                                      { });
+            }
+
+            public bool Inspire(Character player)
+            {
+                if ((!player.Commandable())) return false;
+                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Inspire), player, () =>
+                {
+                    gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+                    try
+                    {
+                        foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                        {
+                            if (gameMap.CanSee(player, character))
+                            {
+                                player.AddScore(GameData.StudentScoreTreat(character.MaxHp - character.HP));
+                                character.AddMoveSpeed(GameData.PropDuration);
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                    }
+                    Debugger.Output(player, "inspires!");
                 },
                                                       () =>
                                                       { });

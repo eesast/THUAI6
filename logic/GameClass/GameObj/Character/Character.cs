@@ -243,22 +243,6 @@ namespace GameClass.GameObj
         }
 
         /// <summary>
-        /// 尝试加血
-        /// </summary>
-        /// <param name="add">欲加量</param>
-        /// <returns>加操作是否成功</returns>
-        public bool TryAddHp(int add)
-        {
-            if (hp < MaxHp)
-            {
-                lock (gameObjLock)
-                    hp = MaxHp > hp + add ? hp + add : MaxHp;
-                Debugger.Output(this, " hp has added to: " + hp.ToString());
-                return true;
-            }
-            return false;
-        }
-        /// <summary>
         /// 尝试减血
         /// </summary>
         /// <param name="sub">减血量</param>

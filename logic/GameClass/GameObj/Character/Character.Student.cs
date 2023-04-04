@@ -71,15 +71,38 @@ namespace GameClass.GameObj
         public int DegreeOfTreatment
         {
             get => degreeOfTreatment;
-            set
+            private set
             {
-                if (value > 0)
-                    lock (gameObjLock)
-                        degreeOfTreatment = (value < MaxHp - HP) ? value : MaxHp - HP;
-                else
-                    lock (gameObjLock)
-                        degreeOfTreatment = 0;
+                degreeOfTreatment = value;
             }
+        }
+        public void SetDegreeOfTreatment0()
+        {
+            DegreeOfTreatment = 0;
+        }
+        public bool SetDegreeOfTreatment(int value, Student whoTreatYou)
+        {
+            if (value <= 0) { degreeOfTreatment = 0; return false; }
+            if (value >= MaxHp - HP)
+            {
+                whoTreatYou.AddScore(GameData.StudentScoreTreat(MaxHp - HP));
+                HP = MaxHp;
+                degreeOfTreatment = 0;
+                return true;
+            }
+            if (value >= GameData.basicTreatmentDegree)
+            {
+                whoTreatYou.AddScore(GameData.StudentScoreTreat(GameData.basicTreatmentDegree));
+                HP += GameData.basicTreatmentDegree;
+                DegreeOfTreatment = 0;
+                return true;
+            }
+            DegreeOfTreatment = value;
+            return false;
+        }
+        public bool AddDegreeOfTreatment(int value, Student student)
+        {
+            return SetDegreeOfTreatment(value + degreeOfTreatment, student);
         }
 
         private int timeOfRescue = 0;
@@ -99,12 +122,12 @@ namespace GameClass.GameObj
 
         public Student(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
-            this.OrgFixSpeed = this.fixSpeed = ((IStudent)Occupation).FixSpeed;
-            this.TreatSpeed = this.OrgTreatSpeed = ((IStudent)Occupation).TreatSpeed;
-            this.MaxGamingAddiction = ((IStudent)Occupation).MaxGamingAddiction;
+            this.OrgFixSpeed = this.fixSpeed = ((IStudentType)Occupation).FixSpeed;
+            this.TreatSpeed = this.OrgTreatSpeed = ((IStudentType)Occupation).TreatSpeed;
+            this.MaxGamingAddiction = ((IStudentType)Occupation).MaxGamingAddiction;
         }
     }
-    public class Golem : Student
+    public class Golem : Student, IGolem
     {
         private Character? parent;  // 主人
         public Character? Parent

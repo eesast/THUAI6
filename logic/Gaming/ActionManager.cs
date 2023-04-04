@@ -23,8 +23,8 @@ namespace Gaming
                 {
                     if (((Bullet)collisionObj).Parent != player && ((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
                     {
-                        if (CharacterManager.BeStunned((Character)player, ((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting))
-                            player.AddScore(GameData.TrickerScoreStudentBeStunned(((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting));
+                        if (CharacterManager.BeStunned((Character)player, GameData.TimeOfStunnedWhenJumpyDumpty))
+                            player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStunnedWhenJumpyDumpty));
                         gameMap.Remove((GameObj)collisionObj);
                     }
                 }
@@ -68,20 +68,19 @@ namespace Gaming
               () =>
               {
                   new FrameRateTaskExecutor<int>(
-                      loopCondition: () => player.PlayerState == PlayerStateType.Fixing && gameMap.Timer.IsGaming && generatorForFix.DegreeOfRepair < GameData.degreeOfFixedGenerator,
+                      loopCondition: () => gameMap.Timer.IsGaming && player.PlayerState == PlayerStateType.Fixing,
                       loopToDo: () =>
                       {
-                          generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player);
+                          if (generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player))
+                          {
+                              player.PlayerState = PlayerStateType.Null;
+                              gameMap.NumOfRepairedGenerators++;
+                          }
                       },
                       timeInterval: GameData.frameDuration,
                       finallyReturn: () => 0
                   )
                       .Start();
-                  if (generatorForFix.DegreeOfRepair >= GameData.degreeOfFixedGenerator)
-                  {
-                      gameMap.NumOfRepairedGenerators++;
-                      if (player.PlayerState == PlayerStateType.Fixing) player.PlayerState = PlayerStateType.Null;
-                  }
               }
 
           )
@@ -146,6 +145,7 @@ namespace Gaming
                     EmergencyExit? emergencyExit = (EmergencyExit?)gameMap.OneForInteract(player.Position, GameObjType.EmergencyExit);
                     if (emergencyExit != null && emergencyExit.IsOpen)
                     {
+                        player.AddScore(GameData.StudentScoreEscape);
                         ++gameMap.NumOfEscapedStudent;
                         player.Die(PlayerStateType.Escaped);
                         return true;
@@ -166,19 +166,6 @@ namespace Gaming
                     playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
                     return false;
 
-                if (playerTreated.HP + playerTreated.DegreeOfTreatment >= playerTreated.MaxHp)
-                {
-                    playerTreated.HP = playerTreated.MaxHp;
-                    playerTreated.DegreeOfTreatment = 0;
-                    return false;
-                }
-
-                if (playerTreated.DegreeOfTreatment >= GameData.basicTreatmentDegree)
-                {
-                    playerTreated.HP += GameData.basicTreatmentDegree;
-                    playerTreated.DegreeOfTreatment = 0;
-                    return false;
-                }
                 new Thread
            (
                () =>
@@ -186,33 +173,19 @@ namespace Gaming
                    playerTreated.PlayerState = PlayerStateType.Treated;
                    player.PlayerState = PlayerStateType.Treating;
                    new FrameRateTaskExecutor<int>(
-                       loopCondition: () => playerTreated.PlayerState == PlayerStateType.Treated && player.PlayerState == PlayerStateType.Treating && gameMap.Timer.IsGaming && playerTreated.HP + playerTreated.DegreeOfTreatment < playerTreated.MaxHp && playerTreated.DegreeOfTreatment < GameData.basicTreatmentDegree && GameData.ApproachToInteract(playerTreated.Position, player.Position),
+                       loopCondition: () => playerTreated.PlayerState == PlayerStateType.Treated && player.PlayerState == PlayerStateType.Treating && gameMap.Timer.IsGaming,
                        loopToDo: () =>
                        {
-                           playerTreated.DegreeOfTreatment += GameData.frameDuration * player.TreatSpeed;
+                           if (playerTreated.AddDegreeOfTreatment(GameData.frameDuration * player.TreatSpeed, player))
+                               playerTreated.PlayerState = PlayerStateType.Null;
                        },
                        timeInterval: GameData.frameDuration,
                        finallyReturn: () => 0
                    )
-
                        .Start();
 
-                   if (playerTreated.PlayerState == PlayerStateType.Treated) playerTreated.PlayerState = PlayerStateType.Null;
                    if (player.PlayerState == PlayerStateType.Treating) player.PlayerState = PlayerStateType.Null;
-
-                   if (playerTreated.HP + playerTreated.DegreeOfTreatment >= playerTreated.MaxHp)
-                   {
-                       player.AddScore(GameData.StudentScoreTreat(playerTreated.MaxHp - playerTreated.HP));
-                       playerTreated.HP = playerTreated.MaxHp;
-                       playerTreated.DegreeOfTreatment = 0;
-                   }
-                   else
-                   if (playerTreated.DegreeOfTreatment >= GameData.basicTreatmentDegree)
-                   {
-                       player.AddScore(GameData.StudentScoreTreat(GameData.basicTreatmentDegree));
-                       playerTreated.HP += GameData.basicTreatmentDegree;
-                       playerTreated.DegreeOfTreatment = 0;
-                   }
+                   else if (playerTreated.PlayerState == PlayerStateType.Treated) playerTreated.PlayerState = PlayerStateType.Null;
                }
            )
                 { IsBackground = true }.Start();
@@ -236,7 +209,7 @@ namespace Gaming
                () =>
                {
                    new FrameRateTaskExecutor<int>(
-                       loopCondition: () => playerRescued.PlayerState == PlayerStateType.Rescued && player.PlayerState == PlayerStateType.Rescuing && gameMap.Timer.IsGaming && GameData.ApproachToInteract(playerRescued.Position, player.Position),
+                       loopCondition: () => playerRescued.PlayerState == PlayerStateType.Rescued && player.PlayerState == PlayerStateType.Rescuing && gameMap.Timer.IsGaming,
                        loopToDo: () =>
                        {
                            playerRescued.TimeOfRescue += GameData.frameDuration;

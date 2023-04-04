@@ -28,6 +28,12 @@ namespace Gaming
                         case ActiveSkillType.CanBeginToCharge:
                             CanBeginToCharge(character);
                             break;
+                        case ActiveSkillType.Inspire:
+                            Inspire(character);
+                            break;
+                        case ActiveSkillType.Encourage:
+                            Encourage(character);
+                            break;
                         case ActiveSkillType.Punish:
                             Punish(character);
                             break;

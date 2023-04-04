@@ -438,7 +438,7 @@ namespace Client
                                             foreach (var skill in occupation1.ListOfIActiveSkill)
                                             {
                                                 var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
-                                                coolTime[j, 4] = iActiveSkill.SkillCD;
+                                                coolTime[j, GameData.numOfStudent] = iActiveSkill.SkillCD;
                                                 ++j;
                                             }
                                             listOfButcher.Add(obj.TrickerMessage);

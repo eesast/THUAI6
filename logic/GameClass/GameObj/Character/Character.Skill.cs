@@ -76,7 +76,7 @@ namespace GameClass.GameObj
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)
             {
                 this.IActiveSkillDictionary.Add(activeSkill, SkillFactory.FindIActiveSkill(activeSkill));
-                this.TimeUntilActiveSkillAvailable.Add(activeSkill, 0);
+                this.TimeUntilActiveSkillAvailable.Add(activeSkill, IActiveSkillDictionary[activeSkill].SkillCD);
             }
 
             // UsePassiveSkill();  //创建player时开始被动技能，这一过程也可以放到gamestart时进行

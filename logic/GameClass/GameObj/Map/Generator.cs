@@ -33,7 +33,7 @@ namespace GameClass.GameObj
 
         public bool Repair(int addDegree, Character character)
         {
-            if (DegreeOfRepair == GameData.degreeOfFixedGenerator) return false;
+            if (DegreeOfRepair == GameData.degreeOfFixedGenerator) return true;
             int orgDegreeOfRepair = degreeOfRepair;
             DegreeOfRepair += addDegree;
             if (DegreeOfRepair > orgDegreeOfRepair)

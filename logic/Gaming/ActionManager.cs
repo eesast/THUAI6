@@ -68,20 +68,19 @@ namespace Gaming
               () =>
               {
                   new FrameRateTaskExecutor<int>(
-                      loopCondition: () => player.PlayerState == PlayerStateType.Fixing && gameMap.Timer.IsGaming && generatorForFix.DegreeOfRepair < GameData.degreeOfFixedGenerator,
+                      loopCondition: () => gameMap.Timer.IsGaming && player.PlayerState == PlayerStateType.Fixing,
                       loopToDo: () =>
                       {
-                          generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player);
+                          if (generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player))
+                          {
+                              player.PlayerState = PlayerStateType.Null;
+                              gameMap.NumOfRepairedGenerators++;
+                          }
                       },
                       timeInterval: GameData.frameDuration,
                       finallyReturn: () => 0
                   )
                       .Start();
-                  if (generatorForFix.DegreeOfRepair >= GameData.degreeOfFixedGenerator)
-                  {
-                      gameMap.NumOfRepairedGenerators++;
-                      if (player.PlayerState == PlayerStateType.Fixing) player.PlayerState = PlayerStateType.Null;
-                  }
               }
 
           )

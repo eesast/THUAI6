@@ -84,7 +84,7 @@ namespace Preparation.Utility
 
         public const int basicTreatSpeed = 100;
         public const int basicFixSpeed = 100;
-        public const int basicSpeedOfOpeningOrLocking = 30;
+        public const int basicSpeedOfOpeningOrLocking = 40;
         public const int basicStudentSpeedOfClimbingThroughWindows = 611;
         public const int basicGhostSpeedOfClimbingThroughWindows = 1270;
         public const int basicSpeedOfOpenChest = 1000;
@@ -229,7 +229,7 @@ namespace Preparation.Utility
         #endregion
         #region 物体相关
         public const int degreeOfFixedGenerator = 10300000;
-        public const int degreeOfLockingOrOpeningTheDoor = 10000;
+        public const int degreeOfLockingOrOpeningTheDoor = 100000;
         public const int degreeOfOpenedChest = 10000;
         public const int degreeOfOpenedDoorway = 18000;
         public const int maxNumOfPropInChest = 2;

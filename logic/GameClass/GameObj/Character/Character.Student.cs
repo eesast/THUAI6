@@ -122,12 +122,12 @@ namespace GameClass.GameObj
 
         public Student(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
-            this.OrgFixSpeed = this.fixSpeed = ((IStudent)Occupation).FixSpeed;
-            this.TreatSpeed = this.OrgTreatSpeed = ((IStudent)Occupation).TreatSpeed;
-            this.MaxGamingAddiction = ((IStudent)Occupation).MaxGamingAddiction;
+            this.OrgFixSpeed = this.fixSpeed = ((IStudentType)Occupation).FixSpeed;
+            this.TreatSpeed = this.OrgTreatSpeed = ((IStudentType)Occupation).TreatSpeed;
+            this.MaxGamingAddiction = ((IStudentType)Occupation).MaxGamingAddiction;
         }
     }
-    public class Golem : Student
+    public class Golem : Student, IGolem
     {
         private Character? parent;  // 主人
         public Character? Parent

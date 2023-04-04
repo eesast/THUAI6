@@ -15,4 +15,6 @@ namespace Preparation.Interface
 
         public bool IsGhost();
     }
+    public interface IStudent : ICharacter { }
+    public interface IGolem : IStudent { }
 }

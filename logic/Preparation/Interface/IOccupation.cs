@@ -18,18 +18,18 @@ namespace Preparation.Interface
         public int SpeedOfOpenChest { get; }
     }
 
-    public interface IGhost : IOccupation
+    public interface IGhostType : IOccupation
     {
     }
 
-    public interface IStudent : IOccupation
+    public interface IStudentType : IOccupation
     {
         public int FixSpeed { get; }
         public int TreatSpeed { get; }
         public int MaxGamingAddiction { get; }
     }
 
-    public class Assassin : IGhost
+    public class Assassin : IGhostType
     {
         private const int moveSpeed = (int)(GameData.basicGhostMoveSpeed * 1.1);
         public int MoveSpeed => moveSpeed;
@@ -60,7 +60,7 @@ namespace Preparation.Interface
         public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
-    public class Klee : IGhost
+    public class Klee : IGhostType
     {
         private const int moveSpeed = (int)(GameData.basicGhostMoveSpeed * 155 / 127);
         public int MoveSpeed => moveSpeed;
@@ -91,7 +91,7 @@ namespace Preparation.Interface
         public int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest * 1.1);
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
-    public class ANoisyPerson : IGhost
+    public class ANoisyPerson : IGhostType
     {
         private const int moveSpeed = (int)(GameData.basicGhostMoveSpeed * 1.07);
         public int MoveSpeed => moveSpeed;
@@ -122,7 +122,7 @@ namespace Preparation.Interface
         public int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest);
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
-    public class Teacher : IStudent
+    public class Teacher : IStudentType
     {
         private const int moveSpeed = GameData.basicStudentMoveSpeed * 3 / 4;
         public int MoveSpeed => moveSpeed;
@@ -162,7 +162,7 @@ namespace Preparation.Interface
         public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
-    public class Athlete : IStudent
+    public class Athlete : IStudentType
     {
         private const int moveSpeed = GameData.basicStudentMoveSpeed * 40 / 38;
         public int MoveSpeed => moveSpeed;
@@ -202,7 +202,7 @@ namespace Preparation.Interface
         public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
-    public class StraightAStudent : IStudent
+    public class StraightAStudent : IStudentType
     {
         private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed * 0.8);
         public int MoveSpeed => moveSpeed;
@@ -242,7 +242,7 @@ namespace Preparation.Interface
         public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
-    public class Robot : IStudent
+    public class Robot : IStudentType
     {
         private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed);
         public int MoveSpeed => moveSpeed;
@@ -282,7 +282,7 @@ namespace Preparation.Interface
         public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
-    public class TechOtaku : IStudent
+    public class TechOtaku : IStudentType
     {
         private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed * 0.75);
         public int MoveSpeed => moveSpeed;
@@ -322,7 +322,7 @@ namespace Preparation.Interface
         public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
-    public class Sunshine : IStudent
+    public class Sunshine : IStudentType
     {
         private const int moveSpeed = GameData.basicStudentMoveSpeed;
         public int MoveSpeed => moveSpeed;
@@ -361,5 +361,32 @@ namespace Preparation.Interface
 
         public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
         public int SpeedOfOpenChest => speedOfOpenChest;
+    }
+
+    public static class OccupationFactory
+    {
+        public static IOccupation FindIOccupation(CharacterType characterType)
+        {
+            switch (characterType)
+            {
+                case CharacterType.Assassin:
+                    return new Assassin();
+                case CharacterType.Robot:
+                    return new Robot();
+                case CharacterType.Teacher:
+                    return new Teacher();
+                case CharacterType.Klee:
+                    return new Klee();
+                case CharacterType.StraightAStudent:
+                    return new StraightAStudent();
+                case CharacterType.ANoisyPerson:
+                    return new ANoisyPerson();
+                case CharacterType.TechOtaku:
+                    return new TechOtaku();
+                case CharacterType.Athlete:
+                default:
+                    return new Athlete();
+            }
+        }
     }
 }

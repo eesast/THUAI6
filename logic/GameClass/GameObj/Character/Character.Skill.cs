@@ -61,34 +61,7 @@ namespace GameClass.GameObj
             this.CanMove = true;
             this.score = 0;
             this.buffManager = new BuffManager();
-            switch (characterType)
-            {
-                case CharacterType.Assassin:
-                    this.occupation = new Assassin();
-                    break;
-                case CharacterType.Robot:
-                    this.occupation = new Robot();
-                    break;
-                case CharacterType.Teacher:
-                    this.occupation = new Teacher();
-                    break;
-                case CharacterType.Klee:
-                    this.occupation = new Klee();
-                    break;
-                case CharacterType.StraightAStudent:
-                    this.occupation = new StraightAStudent();
-                    break;
-                case CharacterType.ANoisyPerson:
-                    this.occupation = new ANoisyPerson();
-                    break;
-                case CharacterType.TechOtaku:
-                    this.occupation = new TechOtaku();
-                    break;
-                case CharacterType.Athlete:
-                default:
-                    this.occupation = new Athlete();
-                    break;
-            }
+            this.occupation = OccupationFactory.FindIOccupation(characterType);
             this.MaxHp = this.hp = Occupation.MaxHp;
             this.OrgMoveSpeed = this.moveSpeed = Occupation.MoveSpeed;
             this.BulletOfPlayer = this.OriBulletOfPlayer = Occupation.InitBullet;
@@ -103,7 +76,7 @@ namespace GameClass.GameObj
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)
             {
                 this.IActiveSkillDictionary.Add(activeSkill, SkillFactory.FindIActiveSkill(activeSkill));
-                this.TimeUntilActiveSkillAvailable.Add(activeSkill, IActiveSkillDictionary[activeSkill].SkillCD);
+                this.TimeUntilActiveSkillAvailable.Add(activeSkill, 0);
             }
 
             // UsePassiveSkill();  //创建player时开始被动技能，这一过程也可以放到gamestart时进行

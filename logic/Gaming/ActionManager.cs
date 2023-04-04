@@ -173,7 +173,7 @@ namespace Gaming
                    playerTreated.PlayerState = PlayerStateType.Treated;
                    player.PlayerState = PlayerStateType.Treating;
                    new FrameRateTaskExecutor<int>(
-                       loopCondition: () => playerTreated.PlayerState == PlayerStateType.Treated && player.PlayerState == PlayerStateType.Treating && gameMap.Timer.IsGaming && GameData.ApproachToInteract(playerTreated.Position, player.Position),
+                       loopCondition: () => playerTreated.PlayerState == PlayerStateType.Treated && player.PlayerState == PlayerStateType.Treating && gameMap.Timer.IsGaming,
                        loopToDo: () =>
                        {
                            if (playerTreated.AddDegreeOfTreatment(GameData.frameDuration * player.TreatSpeed, player))
@@ -182,11 +182,10 @@ namespace Gaming
                        timeInterval: GameData.frameDuration,
                        finallyReturn: () => 0
                    )
-
                        .Start();
 
-                   if (playerTreated.PlayerState == PlayerStateType.Treated) playerTreated.PlayerState = PlayerStateType.Null;
                    if (player.PlayerState == PlayerStateType.Treating) player.PlayerState = PlayerStateType.Null;
+                   else if (playerTreated.PlayerState == PlayerStateType.Treated) playerTreated.PlayerState = PlayerStateType.Null;
                }
            )
                 { IsBackground = true }.Start();

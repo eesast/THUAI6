@@ -64,7 +64,37 @@ public class Punish : IActiveSkill
 
 public class Rouse : IActiveSkill
 {
-    public int SkillCD => GameData.commonSkillCD;
+    public int SkillCD => GameData.commonSkillCD * 2;
+    public int DurationTime => 0;
+
+    private readonly object commonSkillLock = new object();
+    public object ActiveSkillLock => commonSkillLock;
+
+    public bool isBeingUsed = false;
+    public bool IsBeingUsed
+    {
+        get => isBeingUsed; set => isBeingUsed = value;
+    }
+}
+
+public class Encourage : IActiveSkill
+{
+    public int SkillCD => GameData.commonSkillCD * 2;
+    public int DurationTime => 0;
+
+    private readonly object commonSkillLock = new object();
+    public object ActiveSkillLock => commonSkillLock;
+
+    public bool isBeingUsed = false;
+    public bool IsBeingUsed
+    {
+        get => isBeingUsed; set => isBeingUsed = value;
+    }
+}
+
+public class Inspire : IActiveSkill
+{
+    public int SkillCD => GameData.commonSkillCD * 2;
     public int DurationTime => 0;
 
     private readonly object commonSkillLock = new object();
@@ -213,6 +243,8 @@ public static class SkillFactory
                 return new UseKnife();
             case ActiveSkillType.Howl:
                 return new Howl();
+            case ActiveSkillType.Encourage:
+                return new Encourage();
             case ActiveSkillType.CanBeginToCharge:
                 return new CanBeginToCharge();
             case ActiveSkillType.Punish:
@@ -227,6 +259,8 @@ public static class SkillFactory
                 return new UseRobot();
             case ActiveSkillType.Rouse:
                 return new Rouse();
+            case ActiveSkillType.Inspire:
+                return new Inspire();
             default:
                 return new NullSkill();
         }
@@ -242,8 +276,12 @@ public static class SkillFactory
                 return ActiveSkillType.Howl;
             case UseKnife:
                 return ActiveSkillType.UseKnife;
+            case Encourage:
+                return ActiveSkillType.Encourage;
             case CanBeginToCharge:
                 return ActiveSkillType.CanBeginToCharge;
+            case Inspire:
+                return ActiveSkillType.Inspire;
             case Punish:
                 return ActiveSkillType.Punish;
             case JumpyBomb:

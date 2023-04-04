@@ -23,8 +23,8 @@ namespace Gaming
                 {
                     if (((Bullet)collisionObj).Parent != player && ((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
                     {
-                        if (CharacterManager.BeStunned((Character)player, ((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting))
-                            player.AddScore(GameData.TrickerScoreStudentBeStunned(((Bullet)collisionObj).AP / GameData.timeFactorOfGhostFainting));
+                        if (CharacterManager.BeStunned((Character)player, GameData.TimeOfStunnedWhenJumpyDumpty))
+                            player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStunnedWhenJumpyDumpty));
                         gameMap.Remove((GameObj)collisionObj);
                     }
                 }
@@ -145,6 +145,7 @@ namespace Gaming
                     EmergencyExit? emergencyExit = (EmergencyExit?)gameMap.OneForInteract(player.Position, GameObjType.EmergencyExit);
                     if (emergencyExit != null && emergencyExit.IsOpen)
                     {
+                        player.AddScore(GameData.StudentScoreEscape);
                         ++gameMap.NumOfEscapedStudent;
                         player.Die(PlayerStateType.Escaped);
                         return true;
@@ -208,7 +209,7 @@ namespace Gaming
                () =>
                {
                    new FrameRateTaskExecutor<int>(
-                       loopCondition: () => playerRescued.PlayerState == PlayerStateType.Rescued && player.PlayerState == PlayerStateType.Rescuing && gameMap.Timer.IsGaming && GameData.ApproachToInteract(playerRescued.Position, player.Position),
+                       loopCondition: () => playerRescued.PlayerState == PlayerStateType.Rescued && player.PlayerState == PlayerStateType.Rescuing && gameMap.Timer.IsGaming,
                        loopToDo: () =>
                        {
                            playerRescued.TimeOfRescue += GameData.frameDuration;

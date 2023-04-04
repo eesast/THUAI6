@@ -193,23 +193,17 @@ namespace Preparation.Utility
         public const int maxNumOfSkill = 3;
         public const int commonSkillCD = 30000;                      // 普通技能标准冷却时间
         public const int commonSkillTime = 10000;                    // 普通技能标准持续时间
-        /// <summary>
-        /// BeginToCharge
-        /// </summary>
+
         public const int TimeOfGhostFaintingWhenCharge = 7220;
         public const int TimeOfStudentFaintingWhenCharge = 2090;
 
-        /// <summary>
-        /// Punish
-        /// </summary>
         public const int TimeOfGhostFaintingWhenPunish = 3070;
-        public const int timeFactorOfGhostFainting = 250;
 
-        /// <summary>
-        /// Howl
-        /// </summary>
         public const int TimeOfGhostSwingingAfterHowl = 3070;
         public const int TimeOfStudentFaintingWhenHowl = 6110;
+
+        public const int TimeOfStunnedWhenJumpyDumpty = 3070;
+
         #endregion
         #region 道具相关
         public const int PropRadius = numOfPosGridPerCell / 2;

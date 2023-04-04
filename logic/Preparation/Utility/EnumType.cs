@@ -98,6 +98,8 @@ namespace Preparation.Utility
         Howl = 9,
         UseRobot = 10,
         Rouse = 11,
+        Encourage = 12,
+        Inspire = 13,
     }
     public enum PassiveSkillType
     {

@@ -84,7 +84,7 @@ namespace Preparation.Utility
 
         public const int basicTreatSpeed = 100;
         public const int basicFixSpeed = 100;
-        public const int basicSpeedOfOpeningOrLocking = 30;
+        public const int basicSpeedOfOpeningOrLocking = 40;
         public const int basicStudentSpeedOfClimbingThroughWindows = 611;
         public const int basicGhostSpeedOfClimbingThroughWindows = 1270;
         public const int basicSpeedOfOpenChest = 1000;
@@ -193,23 +193,17 @@ namespace Preparation.Utility
         public const int maxNumOfSkill = 3;
         public const int commonSkillCD = 30000;                      // 普通技能标准冷却时间
         public const int commonSkillTime = 10000;                    // 普通技能标准持续时间
-        /// <summary>
-        /// BeginToCharge
-        /// </summary>
+
         public const int TimeOfGhostFaintingWhenCharge = 7220;
         public const int TimeOfStudentFaintingWhenCharge = 2090;
 
-        /// <summary>
-        /// Punish
-        /// </summary>
         public const int TimeOfGhostFaintingWhenPunish = 3070;
-        public const int timeFactorOfGhostFainting = 250;
 
-        /// <summary>
-        /// Howl
-        /// </summary>
         public const int TimeOfGhostSwingingAfterHowl = 3070;
         public const int TimeOfStudentFaintingWhenHowl = 6110;
+
+        public const int TimeOfStunnedWhenJumpyDumpty = 3070;
+
         #endregion
         #region 道具相关
         public const int PropRadius = numOfPosGridPerCell / 2;
@@ -229,7 +223,7 @@ namespace Preparation.Utility
         #endregion
         #region 物体相关
         public const int degreeOfFixedGenerator = 10300000;
-        public const int degreeOfLockingOrOpeningTheDoor = 10000;
+        public const int degreeOfLockingOrOpeningTheDoor = 100000;
         public const int degreeOfOpenedChest = 10000;
         public const int degreeOfOpenedDoorway = 18000;
         public const int maxNumOfPropInChest = 2;

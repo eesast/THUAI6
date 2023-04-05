@@ -48,7 +48,7 @@ namespace Preparation.Interface
         public int alertnessRadius = (int)(GameData.basicGhostAlertnessRadius * 1.3);
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = (int)(GameData.basicGhostViewRange * 1.3);
+        public int viewRange = (int)(GameData.basicGhostViewRange * 1.2);
         public int ViewRange => viewRange;
 
         public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
@@ -62,7 +62,7 @@ namespace Preparation.Interface
     }
     public class Klee : IGhostType
     {
-        private const int moveSpeed = (int)(GameData.basicGhostMoveSpeed * 155 / 127);
+        private const int moveSpeed = GameData.basicGhostMoveSpeed;
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp;
@@ -76,16 +76,16 @@ namespace Preparation.Interface
         public double concealment = GameData.basicConcealment;
         public double Concealment => concealment;
 
-        public int alertnessRadius = (int)(GameData.basicGhostAlertnessRadius * 1.069);
+        public int alertnessRadius = GameData.basicGhostAlertnessRadius;
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = (int)(GameData.basicGhostViewRange * 1.1);
+        public int viewRange = GameData.basicGhostViewRange ;
         public int ViewRange => viewRange;
 
-        public int speedOfOpeningOrLocking = (int)(GameData.basicSpeedOfOpeningOrLocking / 1.1);
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking ;
         public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
-        public int speedOfClimbingThroughWindows = (int)(GameData.basicGhostSpeedOfClimbingThroughWindows / 1.1);
+        public int speedOfClimbingThroughWindows = GameData.basicGhostSpeedOfClimbingThroughWindows ;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
         public int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest * 1.1);

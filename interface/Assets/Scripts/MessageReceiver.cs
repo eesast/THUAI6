@@ -5,7 +5,7 @@ using Grpc.Core;
 using Google.Protobuf;
 using Protobuf;
 using System.Data;
-using UnityEditor.U2D.Path;
+//using UnityEditor.U2D.Path;
 
 public class MessageReceiver : MonoBehaviour
 {
@@ -27,6 +27,7 @@ public class MessageReceiver : MonoBehaviour
             if (isMap)
             {
                 map = responseVal.ObjMessage[0].MapMessage;
+                //Debug.Log(map.ToString());
                 isMap = false;
             }
         }

@@ -108,7 +108,7 @@ namespace Preparation.Interface
 
     public class Howl : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 3 / 4;
+        public int SkillCD => GameData.commonSkillCD * 25 / 30;
         public int DurationTime => 0;
 
         private readonly object commonSkillLock = new object();

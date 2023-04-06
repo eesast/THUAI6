@@ -206,6 +206,9 @@ namespace Preparation.Utility
 
         public const int TimeOfStunnedWhenJumpyDumpty = 3070;
 
+        public const double AddedTimeOfSpeedWhenInspire = 0.6;
+        public const int TimeOfAddingSpeedWhenInspire = 6000;
+
         #endregion
         #region 道具相关
         public const int PropRadius = numOfPosGridPerCell / 2;

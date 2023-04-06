@@ -141,7 +141,7 @@ namespace Preparation.Interface
         public const int fixSpeed = 0;
         public int FixSpeed => fixSpeed;
 
-        public const int treatSpeed = (int)(GameData.basicTreatSpeed*0.7);
+        public const int treatSpeed = (int)(GameData.basicTreatSpeed * 0.7);
         public int TreatSpeed => treatSpeed;
 
         public const double concealment = GameData.basicConcealment * 0.5;
@@ -164,7 +164,7 @@ namespace Preparation.Interface
     }
     public class Athlete : IStudentType
     {
-        private const int moveSpeed = GameData.basicStudentMoveSpeed * 11/10;
+        private const int moveSpeed = GameData.basicStudentMoveSpeed * 11 / 10;
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp;
@@ -187,7 +187,7 @@ namespace Preparation.Interface
         public const double concealment = GameData.basicConcealment * 0.9;
         public double Concealment => concealment;
 
-        public const int alertnessRadius =GameData.basicStudentAlertnessRadius;
+        public const int alertnessRadius = GameData.basicStudentAlertnessRadius;
         public int AlertnessRadius => alertnessRadius;
 
         public int viewRange = (int)(GameData.basicStudentViewRange * 1.1);

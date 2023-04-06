@@ -239,7 +239,7 @@ namespace Gaming
                         {
                             if (gameMap.CanSee(player, character))
                             {
-                                player.AddScore(GameData.StudentScoreTreat(character.MaxHp - character.HP));
+                                player.AddScore(GameData.ScoreInspire);
                                 character.AddMoveSpeed(GameData.TimeOfAddingSpeedWhenInspire, GameData.AddedTimeOfSpeedWhenInspire);
                             }
                         }

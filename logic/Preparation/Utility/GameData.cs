@@ -170,6 +170,9 @@ namespace Preparation.Utility
         public const int ScorePropClairaudience = 10;
         public const int ScorePropAddHp = 20;
         public const int ScorePropRecoverFromDizziness = 20;
+
+        public const int ScoreBecomeInvisible = 10;
+        public const int ScoreInspire = ScorePropAddSpeed;
         #endregion
         #region 攻击与子弹相关
         public const int basicApOfGhost = 1500000;                             // 捣蛋鬼攻击力

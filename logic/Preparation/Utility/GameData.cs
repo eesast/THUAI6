@@ -224,7 +224,7 @@ namespace Preparation.Utility
         public const int numOfTeachingBuilding = 3;
         #endregion
         #region 物体相关
-        public const int degreeOfFixedGenerator = 10300000;
+        public const int degreeOfFixedGenerator = 8180000;
         public const int degreeOfLockingOrOpeningTheDoor = 100000;
         public const int degreeOfOpenedChest = 100000;
         public const int degreeOfOpenedDoorway = 18000;

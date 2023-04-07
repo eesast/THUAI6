@@ -87,7 +87,7 @@ namespace Preparation.Utility
         public const int basicSpeedOfOpeningOrLocking = 40;
         public const int basicStudentSpeedOfClimbingThroughWindows = 611;
         public const int basicGhostSpeedOfClimbingThroughWindows = 1270;
-        public const int basicSpeedOfOpenChest = 1000;
+        public const int basicSpeedOfOpenChest = 100;
 
         public const int basicHp = 3000000;                             // 初始血量
         public const int basicMaxGamingAddiction = 60000;//基本完全沉迷时间
@@ -106,8 +106,10 @@ namespace Preparation.Utility
         public const int characterMaxSpeed = 12000;                  // 最大速度
 
         public const double basicConcealment = 1.0;
-        public const int basicAlertnessRadius = 10700;
-        public const int basicViewRange = 5 * numOfPosGridPerCell;
+        public const int basicStudentAlertnessRadius = 15 * numOfPosGridPerCell;
+        public const int basicGhostAlertnessRadius = 17 * numOfPosGridPerCell;
+        public const int basicStudentViewRange = 10 * numOfPosGridPerCell;
+        public const int basicGhostViewRange = 15 * numOfPosGridPerCell;
         public const int maxNumOfPropInPropInventory = 3;
 
         public static XY PosWhoDie = new XY(1, 1);
@@ -168,6 +170,9 @@ namespace Preparation.Utility
         public const int ScorePropClairaudience = 10;
         public const int ScorePropAddHp = 20;
         public const int ScorePropRecoverFromDizziness = 20;
+
+        public const int ScoreBecomeInvisible = 10;
+        public const int ScoreInspire = ScorePropAddSpeed;
         #endregion
         #region 攻击与子弹相关
         public const int basicApOfGhost = 1500000;                             // 捣蛋鬼攻击力
@@ -204,6 +209,9 @@ namespace Preparation.Utility
 
         public const int TimeOfStunnedWhenJumpyDumpty = 3070;
 
+        public const double AddedTimeOfSpeedWhenInspire = 0.6;
+        public const int TimeOfAddingSpeedWhenInspire = 6000;
+
         #endregion
         #region 道具相关
         public const int PropRadius = numOfPosGridPerCell / 2;
@@ -222,9 +230,9 @@ namespace Preparation.Utility
         public const int numOfTeachingBuilding = 3;
         #endregion
         #region 物体相关
-        public const int degreeOfFixedGenerator = 10300000;
+        public const int degreeOfFixedGenerator = 8180000;
         public const int degreeOfLockingOrOpeningTheDoor = 100000;
-        public const int degreeOfOpenedChest = 10000;
+        public const int degreeOfOpenedChest = 100000;
         public const int degreeOfOpenedDoorway = 18000;
         public const int maxNumOfPropInChest = 2;
         public const int numOfGeneratorRequiredForRepair = 7;

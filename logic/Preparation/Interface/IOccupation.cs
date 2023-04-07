@@ -45,10 +45,10 @@ namespace Preparation.Interface
         public double concealment = GameData.basicConcealment * 1.5;
         public double Concealment => concealment;
 
-        public int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.3);
+        public int alertnessRadius = (int)(GameData.basicGhostAlertnessRadius * 1.3);
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = (int)(GameData.basicViewRange * 1.3);
+        public int viewRange = (int)(GameData.basicGhostViewRange * 1.2);
         public int ViewRange => viewRange;
 
         public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
@@ -62,7 +62,7 @@ namespace Preparation.Interface
     }
     public class Klee : IGhostType
     {
-        private const int moveSpeed = (int)(GameData.basicGhostMoveSpeed * 155 / 127);
+        private const int moveSpeed = GameData.basicGhostMoveSpeed;
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp;
@@ -76,16 +76,16 @@ namespace Preparation.Interface
         public double concealment = GameData.basicConcealment;
         public double Concealment => concealment;
 
-        public int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.069);
+        public int alertnessRadius = GameData.basicGhostAlertnessRadius;
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = (int)(GameData.basicViewRange * 1.1);
+        public int viewRange = GameData.basicGhostViewRange;
         public int ViewRange => viewRange;
 
-        public int speedOfOpeningOrLocking = (int)(GameData.basicSpeedOfOpeningOrLocking / 1.1);
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
         public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
-        public int speedOfClimbingThroughWindows = (int)(GameData.basicGhostSpeedOfClimbingThroughWindows / 1.1);
+        public int speedOfClimbingThroughWindows = GameData.basicGhostSpeedOfClimbingThroughWindows;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
         public int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest * 1.1);
@@ -107,10 +107,10 @@ namespace Preparation.Interface
         public double concealment = GameData.basicConcealment * 0.8;
         public double Concealment => concealment;
 
-        public int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
+        public int alertnessRadius = (int)(GameData.basicGhostAlertnessRadius * 0.9);
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = (int)(GameData.basicViewRange);
+        public int viewRange = (int)(GameData.basicGhostViewRange);
         public int ViewRange => viewRange;
 
         public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
@@ -141,16 +141,16 @@ namespace Preparation.Interface
         public const int fixSpeed = 0;
         public int FixSpeed => fixSpeed;
 
-        public const int treatSpeed = GameData.basicTreatSpeed;
+        public const int treatSpeed = (int)(GameData.basicTreatSpeed * 0.7);
         public int TreatSpeed => treatSpeed;
 
         public const double concealment = GameData.basicConcealment * 0.5;
         public double Concealment => concealment;
 
-        public const int alertnessRadius = GameData.basicAlertnessRadius / 2;
+        public const int alertnessRadius = GameData.basicStudentAlertnessRadius / 2;
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = GameData.basicViewRange * 9 / 10;
+        public int viewRange = GameData.basicStudentViewRange * 9 / 10;
         public int ViewRange => viewRange;
 
         public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
@@ -164,10 +164,10 @@ namespace Preparation.Interface
     }
     public class Athlete : IStudentType
     {
-        private const int moveSpeed = GameData.basicStudentMoveSpeed * 40 / 38;
+        private const int moveSpeed = GameData.basicStudentMoveSpeed * 11 / 10;
         public int MoveSpeed => moveSpeed;
 
-        private const int maxHp = GameData.basicHp * 32 / 30;
+        private const int maxHp = GameData.basicHp;
         public int MaxHp => maxHp;
 
         private const int maxGamingAddiction = GameData.basicMaxGamingAddiction * 9 / 10;
@@ -187,13 +187,13 @@ namespace Preparation.Interface
         public const double concealment = GameData.basicConcealment * 0.9;
         public double Concealment => concealment;
 
-        public const int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
+        public const int alertnessRadius = GameData.basicStudentAlertnessRadius;
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = (int)(GameData.basicViewRange * 1.1);
+        public int viewRange = (int)(GameData.basicStudentViewRange * 1.1);
         public int ViewRange => viewRange;
 
-        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking * 12 / 10;
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
         public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows * 12 / 10;
@@ -210,7 +210,7 @@ namespace Preparation.Interface
         private const int maxHp = (int)(GameData.basicHp * 1.1);
         public int MaxHp => maxHp;
 
-        private const int maxGamingAddiction = (int)(GameData.basicMaxGamingAddiction * 1.5);
+        private const int maxGamingAddiction = (int)(GameData.basicMaxGamingAddiction * 1.3);
         public int MaxGamingAddiction => maxGamingAddiction;
 
         public BulletType InitBullet => BulletType.Null;
@@ -227,10 +227,10 @@ namespace Preparation.Interface
         public const double concealment = GameData.basicConcealment * 0.9;
         public double Concealment => concealment;
 
-        public const int alertnessRadius = (int)(GameData.basicAlertnessRadius * 0.9);
+        public const int alertnessRadius = (int)(GameData.basicStudentAlertnessRadius * 0.9);
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = (int)(GameData.basicViewRange * 0.9);
+        public int viewRange = (int)(GameData.basicStudentViewRange * 0.9);
         public int ViewRange => viewRange;
 
         public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
@@ -267,10 +267,10 @@ namespace Preparation.Interface
         public const double concealment = GameData.basicConcealment;
         public double Concealment => concealment;
 
-        public const int alertnessRadius = (int)(GameData.basicAlertnessRadius);
+        public const int alertnessRadius = (int)(GameData.basicStudentAlertnessRadius);
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = GameData.basicViewRange;
+        public int viewRange = GameData.basicStudentViewRange;
         public int ViewRange => viewRange;
 
         public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
@@ -307,10 +307,10 @@ namespace Preparation.Interface
         public const double concealment = GameData.basicConcealment;
         public double Concealment => concealment;
 
-        public const int alertnessRadius = (int)(GameData.basicAlertnessRadius);
+        public const int alertnessRadius = (int)(GameData.basicStudentAlertnessRadius);
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = (int)(GameData.basicViewRange * 0.9);
+        public int viewRange = (int)(GameData.basicStudentViewRange * 0.9);
         public int ViewRange => viewRange;
 
         public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
@@ -338,19 +338,19 @@ namespace Preparation.Interface
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.Rouse, ActiveSkillType.Encourage, ActiveSkillType.Inspire });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
 
-        public const int fixSpeed = GameData.basicFixSpeed * 11 / 10;
+        public const int fixSpeed = GameData.basicFixSpeed;
         public int FixSpeed => fixSpeed;
 
         public const int treatSpeed = GameData.basicTreatSpeed * 2;
         public int TreatSpeed => treatSpeed;
 
-        public const double concealment = GameData.basicConcealment * 1.2;
+        public const double concealment = GameData.basicConcealment;
         public double Concealment => concealment;
 
-        public const int alertnessRadius = (int)(GameData.basicAlertnessRadius * 1.2);
+        public const int alertnessRadius = GameData.basicStudentAlertnessRadius;
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = (int)(GameData.basicViewRange * 1.1);
+        public int viewRange = GameData.basicStudentViewRange;
         public int ViewRange => viewRange;
 
         public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;

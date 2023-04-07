@@ -472,7 +472,7 @@ namespace GameClass.GameObj
             return indexing;
         }
 
-        public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManager.AddMoveSpeed(add, buffTime, newVal =>
+        public void AddMoveSpeed(int buffTime, double add = 1.0) => buffManager.AddMoveSpeed(add, buffTime, newVal =>
                                                                                                             { MoveSpeed = newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed; },
                                                                                              OrgMoveSpeed);
         public bool HasFasterSpeed => buffManager.HasFasterSpeed;

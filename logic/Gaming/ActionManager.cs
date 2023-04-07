@@ -62,6 +62,7 @@ namespace Gaming
                 if (generatorForFix == null || generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
                     return false;
 
+                ++generatorForFix.NumOfFixing;
                 player.PlayerState = PlayerStateType.Fixing;
                 new Thread
           (
@@ -85,6 +86,7 @@ namespace Gaming
 
           )
                 { IsBackground = true }.Start();
+                --generatorForFix.NumOfFixing;
 
                 return true;
             }

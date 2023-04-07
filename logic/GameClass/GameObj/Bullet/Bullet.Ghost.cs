@@ -25,7 +25,7 @@ namespace GameClass.GameObj
         public override int Speed => GameData.basicBulletMoveSpeed;
         public override bool IsRemoteAttack => false;
 
-        public override int CastTime => (int)BulletAttackRange / Speed;
+        public override int CastTime => (int)BulletAttackRange * 1000 / Speed;
         public override int Backswing => GameData.basicBackswing;
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public const int cd = GameData.basicBackswing;
@@ -49,8 +49,8 @@ namespace GameClass.GameObj
             }
         }
         public override BulletType TypeOfBullet => BulletType.CommonAttackOfGhost;
-
     }
+
     internal sealed class FlyingKnife : Bullet
     {
         public FlyingKnife(Character player, PlaceType placeType, XY pos, int radius = GameData.bulletRadius) :
@@ -75,7 +75,7 @@ namespace GameClass.GameObj
         public override int CastTime => GameData.basicCastTime;
         public override int Backswing => 0;
         public override int RecoveryFromHit => 0;
-        public const int cd = GameData.basicBackswing * 2 / 5 + 100;
+        public const int cd = GameData.basicBackswing / 2;
         public override int CD => cd;
         public const int maxBulletNum = 1;
         public override int MaxBulletNum => maxBulletNum;
@@ -117,10 +117,10 @@ namespace GameClass.GameObj
                     ap = value;
             }
         }
-        public override int Speed => (int)(GameData.basicBulletMoveSpeed * 0.8);
+        public override int Speed => (int)(GameData.basicBulletMoveSpeed * 30 / 37);
         public override bool IsRemoteAttack => false;
 
-        public override int CastTime => (int)BulletAttackRange / Speed;
+        public override int CastTime => (int)(BulletAttackRange * 1000 / Speed);
         public override int Backswing => GameData.basicRecoveryFromHit;
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public const int cd = GameData.basicCD;
@@ -164,7 +164,7 @@ namespace GameClass.GameObj
                     ap = value;
             }
         }
-        public override int Speed => (int)(GameData.basicBulletMoveSpeed * 1.2);
+        public override int Speed => 4300;
         public override bool IsRemoteAttack => false;
 
         public override int CastTime => 0;

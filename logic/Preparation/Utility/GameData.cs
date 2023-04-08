@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Preparation.Interface;
+using System;
 using System.Net.NetworkInformation;
 
 namespace Preparation.Utility
@@ -67,6 +68,11 @@ namespace Preparation.Utility
         public static bool IsInTheSameCell(XY pos1, XY pos2)
         {
             return PosGridToCellX(pos1) == PosGridToCellX(pos2) && PosGridToCellY(pos1) == PosGridToCellY(pos2);
+        }
+        public static bool PartInTheSameCell(XY pos1, XY pos2)
+        {
+            return Math.Abs((pos1 - pos2).x) < characterRadius + (numOfPosGridPerCell / 2)
+                        && Math.Abs((pos1 - pos2).y) < characterRadius + (numOfPosGridPerCell / 2);
         }
         public static bool ApproachToInteract(XY pos1, XY pos2)
         {

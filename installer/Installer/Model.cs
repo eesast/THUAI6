@@ -49,6 +49,7 @@ namespace starter.viewmodel.settings
             Password = "";
             updates = "";
             CodeRoute = "";
+            PlayerNum = "nSelect";
             UploadReady = false;
             LoginFailed = false;
         }
@@ -166,7 +167,9 @@ namespace starter.viewmodel.settings
                 default:
                     return -8;
             }
-            return await web.UploadFiles(client, CodeRoute, Language, "player_1");
+            if (PlayerNum.Equals("nSelect"))
+                return -9;
+            return await web.UploadFiles(client, CodeRoute, Language, PlayerNum);
         }
         /// <summary>
         /// Route of files
@@ -394,8 +397,8 @@ namespace Downloader
                                           .Build();           // 创建 CosXmlConfig 对象
 
                 // 永久密钥访问凭证
-                string secretId = "***"; //"云 API 密钥 SecretId";
-                string secretKey = "***"; //"云 API 密钥 SecretKey";
+                string secretId = "***";    //"云 API 密钥 SecretId";
+                string secretKey = "***";   //"云 API 密钥 SecretKey";
 
                 long durationSecond = 1000;  // 每次请求签名有效时长，单位为秒
                 QCloudCredentialProvider cosCredentialProvider = new DefaultQCloudCredentialProvider(
@@ -1119,7 +1122,8 @@ namespace WebConnect
                 using FileStream fs = new FileStream(tarfile, FileMode.Open, FileAccess.Read);
                 using StreamReader sr = new StreamReader(fs);
                 content = sr.ReadToEnd();
-                using (var response = await client.GetAsync($"https://api.eesast.com/static/player?team_id={await GetTeamId()}"))
+                string targetUrl = $"https://api.eesast.com/static/player?team_id={await GetTeamId()}";
+                using (var response = await client.GetAsync(targetUrl))
                 {
                     switch (response.StatusCode)
                     {
@@ -1343,7 +1347,7 @@ namespace WebConnect
             //        ""query"": ""query MyQuery {{contest_team_member(where: {{user_id: {{_eq: \""{Downloader.UserInfo._id}\""}}}}) {{ team_id  }}}}"",
             //        ""variables"": {{}},
             //    }}", null, "application/json");
-            var content = new StringContent("{\"query\":\"query MyQuery {\\r\\n  contest_team_member(where: {user_id: {_eq: \\\""+Downloader.UserInfo._id+"\\\"}}) {\\r\\n    team_id\\r\\n  }\\r\\n}\",\"variables\":{}}", null, "application/json");
+            var content = new StringContent("{\"query\":\"query MyQuery {\\r\\n  contest_team_member(where: {user_id: {_eq: \\\"" + Downloader.UserInfo._id + "\\\"}}) {\\r\\n    team_id\\r\\n  }\\r\\n}\",\"variables\":{}}", null, "application/json");
             request.Content = content;
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();

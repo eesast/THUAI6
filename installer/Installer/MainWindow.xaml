@@ -3,9 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Installer"
+        xmlns:local="clr-namespace:Installer" xmlns:c="clr-namespace:starter.viewmodel.common"
         mc:Ignorable="d"
         Title="Installer" Window.SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <c:RadioConverter x:Key="RadioConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="40" />
@@ -34,14 +37,14 @@
         <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5" Text="{Binding RouteBoxIntro}"/>
 
         <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="5" Name="RouteTxtBox" Text="{Binding Route}" Visibility="{Binding RouteBoxVis}"/>
-        <Button Grid.Row="3" Grid.Column="6" Name="GetRouteBtn" Content="Browse..." Command="{Binding ClickBrowseCommand}" Visibility="{Binding RouteBoxVis}" />
-        <Button Grid.Row="3" Grid.Column="7" Name="SetBtm" Content="Confirm" Command="{Binding ClickConfirmCommand}" Visibility="{Binding RouteBoxVis}"/>
+        <Button Grid.Row="3" Grid.Column="6" Name="GetRouteBtn" Content="选择文件夹" Command="{Binding ClickBrowseCommand}" Visibility="{Binding RouteBoxVis}" />
+        <Button Grid.Row="3" Grid.Column="7" Name="SetBtm" Content="确认并安装" Command="{Binding ClickConfirmCommand}" Visibility="{Binding RouteBoxVis}"/>
         <Button Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Name="UpdateBtn" Content="{Binding UpdateBtnCont}" Command="{Binding ClickUpdateCommand}" Visibility="{Binding MenuVis}" />
         <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding UpdateInfo}" Visibility="{Binding MenuVis}" />
 
-        <Button Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Name="MoveBtn" Content="Move" Command="{Binding ClickMoveCommand}" Visibility="{Binding MenuVis}" />
+        <Button Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Name="MoveBtn" Content="移动文件" Command="{Binding ClickMoveCommand}" Visibility="{Binding MenuVis}" />
 
-        <Button Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" Name="UninstBtn" Content="UnInstall" Command="{Binding ClickUninstCommand}" Visibility="{Binding MenuVis}" />
+        <Button Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" Name="UninstBtn" Content="卸载选手包" Command="{Binding ClickUninstCommand}" Visibility="{Binding MenuVis}" />
         <Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Name="MenuBackBtn" Content="回到登陆界面" Command="{Binding ClickBackCommand}" Visibility="{Binding MenuVis}" />
 
         <TextBlock Grid.Row="3" Grid.Column="4" Text="Processing" Grid.ColumnSpan="2" Visibility="{Binding ProgressVis}"/>
@@ -50,27 +53,40 @@
         <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4" Text="操作完成！你可以继续操作或退出" Visibility="{Binding CompleteVis}"/>
         <Button Grid.Row="6" Grid.Column="1" Name="BackBtn" Content="返回" Command="{Binding ClickBackCommand}" Visibility="{Binding CompleteVis}" Click="BackBtn_Click"/>
         <Button Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="2" Name="ExitBtn" Content="退出" Command="{Binding ClickExitCommand}" Visibility="{Binding CompleteVis}"/>
-
-        <TextBlock Grid.Row="3" Grid.Column="1" Text="账号：" Visibility="{Binding LoginVis}" />
-        <TextBlock Grid.Row="5" Grid.Column="1" Text="密码：" Visibility="{Binding LoginVis}" />
-        <TextBox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="4" Name="Username" Visibility="{Binding LoginVis}" Text="{Binding Username}" />
-        <TextBox Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="4" Name="Password" Visibility="{Binding LoginVis}" Text="{Binding Password}" />
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.RowSpan="5" Grid.ColumnSpan="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="账号：" Visibility="{Binding LoginVis}" />
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="密码：" Visibility="{Binding LoginVis}" />
+                <TextBox Grid.Row="1" Grid.Column="1" Name="Username" Visibility="{Binding LoginVis}" Text="{Binding Username}" />
+                <TextBox Grid.Row="3" Grid.Column="1" Name="Password" Visibility="{Binding LoginVis}" Text="{Binding Password}" />
+                <!--<CheckBox Grid.Row="5" Grid.Column="0" Visibility="{Binding LoginVis}">记住我</CheckBox>-->
+                <TextBlock Grid.Row="5" Grid.Column="1" Foreground="Red" Text="    用户名或密码错误！" Visibility="{Binding LoginFailVis}"/>
+            </Grid>
+        </StackPanel>
+        
         <Button Grid.Row="7" Grid.Column="1"  Name="Login" Content="登录" Command="{Binding ClickLoginCommand}" Visibility="{Binding LoginVis}"/>
         <Button Grid.Row="7" Grid.Column="2"  Name="Launch" Content="{Binding LaunchBtnCont}" Command="{Binding ClickLaunchCommand}" Visibility="{Binding LoginVis}"/>
         <Button Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="2" Name="Edit" Content="修改文件" Command="{Binding ClickEditCommand}" Visibility="{Binding LoginVis}"/>
-        <TextBlock Grid.Row="6" Grid.Column="1" Text="用户名或密码错误！" Visibility="{Binding LoginFailVis}"/>
+
 
         <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="你有已完成的比赛！" Visibility="{Binding MatchFinishedVis}"/>
         <Button Grid.Row="3" Grid.Column="1" Name ="Upload" Content="{Binding UploadBtnCont}" Command="{Binding ClickUploadCommand}" Visibility="{Binding WebVis}"/>
         <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding CodeName}" Visibility="{Binding UploadReadyVis}" />
-        <Button Grid.Row="3" Grid.Column="2" Name="ReUpload" Content="重新选择代码" Command="{Binding ReselectCommand}" Visibility="{Binding UploadReadyVis}" />
+        <Button Grid.Row="3" Grid.Column="2" Name="ReUpload" Content="放弃上传" Command="{Binding ClickReselectCommand}" Visibility="{Binding UploadReadyVis}" />
         <Button Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Content="退出登录" Command="{Binding ClickBackCommand}" Visibility="{Binding WebVis}" />
-        
-        <!--objects below are not enabled-->
-        <Button Grid.Row="5" Grid.Column="1" Name="Download" Content="下载回放" IsEnabled="False" Command="{Binding ClickDownloadCommand}" Visibility="{Binding CoverVis}" />
-        <Button Grid.Row="7" Grid.Column="1" Name="Replay" Content="打开回放" IsEnabled="False" Command="{Binding ClickReplayCommand}" Visibility="{Binding CoverVis}" />
-        <Button Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Content="申请对战" IsEnabled="False" Command="{Binding ClickRequestCommand}" Visibility="{Binding WebVis}" />
-        <TextBox Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Text="暂不支持" IsEnabled="False" Visibility="{Binding WebVis}" />
         <StackPanel Grid.Row="5" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
@@ -79,11 +95,18 @@
                     <RowDefinition Height="15"/>
                     <RowDefinition Height="15"/>
                 </Grid.RowDefinitions>
-                <RadioButton GroupName="playerNum" Grid.Row="0" Visibility="{Binding UploadReadyVis}">玩家1</RadioButton>
-                <RadioButton GroupName="playerNum" Grid.Row="1" Visibility="{Binding UploadReadyVis}">玩家2</RadioButton>
-                <RadioButton GroupName="playerNum" Grid.Row="2" Visibility="{Binding UploadReadyVis}">玩家3</RadioButton>
-                <RadioButton GroupName="playerNum" Grid.Row="3" Visibility="{Binding UploadReadyVis}">玩家4</RadioButton>
+                <RadioButton GroupName="playerNum" Grid.Row="0" Visibility="{Binding UploadReadyVis}" IsChecked="{Binding PlayerNum,Mode=TwoWay,Converter={StaticResource RadioConverter},ConverterParameter=1}">玩家1</RadioButton>
+                <RadioButton GroupName="playerNum" Grid.Row="1" Visibility="{Binding UploadReadyVis}" IsChecked="{Binding PlayerNum,Mode=TwoWay,Converter={StaticResource RadioConverter},ConverterParameter=2}">玩家2</RadioButton>
+                <RadioButton GroupName="playerNum" Grid.Row="2" Visibility="{Binding UploadReadyVis}" IsChecked="{Binding PlayerNum,Mode=TwoWay,Converter={StaticResource RadioConverter},ConverterParameter=3}">玩家3</RadioButton>
+                <RadioButton GroupName="playerNum" Grid.Row="3" Visibility="{Binding UploadReadyVis}" IsChecked="{Binding PlayerNum,Mode=TwoWay,Converter={StaticResource RadioConverter},ConverterParameter=4}">玩家4</RadioButton>
             </Grid>
         </StackPanel>
+        
+        <!--objects below are not enabled-->
+        <Button Grid.Row="5" Grid.Column="1" Name="Download" Content="下载回放" IsEnabled="False" Command="{Binding ClickDownloadCommand}" Visibility="{Binding CoverVis}" />
+        <Button Grid.Row="7" Grid.Column="1" Name="Replay" Content="打开回放" IsEnabled="False" Command="{Binding ClickReplayCommand}" Visibility="{Binding CoverVis}" />
+        <Button Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Content="申请对战" IsEnabled="False" Command="{Binding ClickRequestCommand}" Visibility="{Binding WebVis}" />
+        <TextBox Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Text="暂不支持" IsEnabled="False" Visibility="{Binding WebVis}" />
+        
     </Grid>
 </Window>

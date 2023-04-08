@@ -55,7 +55,7 @@ namespace Gaming
 
             public bool Fix(Student player)// 自动检查有无发电机可修
             {
-                if ((!player.Commandable()) || player.PlayerState == PlayerStateType.Fixing)
+                if (player.CharacterType == CharacterType.Teacher || (!player.Commandable()) || player.PlayerState == PlayerStateType.Fixing)
                     return false;
                 Generator? generatorForFix = (Generator?)gameMap.OneForInteract(player.Position, GameObjType.Generator);
 
@@ -368,7 +368,7 @@ namespace Gaming
                 if (!(player.Commandable()) || player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor)
                     return false;
                 Door? doorToLock = (Door?)gameMap.OneForInteract(player.Position, GameObjType.Door);
-                if (doorToLock == null || doorToLock.OpenOrLockDegree > 0)
+                if (doorToLock == null || doorToLock.OpenOrLockDegree > 0 || gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character) != null)
                     return false;
                 bool flag = false;
                 foreach (Prop prop in player.PropInventory)
@@ -403,7 +403,8 @@ namespace Gaming
                       loopCondition: () => flag && player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor && gameMap.Timer.IsGaming && doorToLock.OpenOrLockDegree < GameData.degreeOfLockingOrOpeningTheDoor,
                       loopToDo: () =>
                       {
-                          flag = ((gameMap.OneInTheSameCell(doorToLock.Position, GameObjType.Character)) == null);
+                          flag = ((gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character)) == null);
+                          Preparation.Utility.Debugger.Output(doorToLock, flag.ToString());
                           doorToLock.OpenOrLockDegree += GameData.frameDuration * player.SpeedOfOpeningOrLocking;
                       },
                       timeInterval: GameData.frameDuration,

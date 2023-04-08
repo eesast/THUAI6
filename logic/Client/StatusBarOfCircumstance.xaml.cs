@@ -31,10 +31,13 @@ namespace Client
         }
         public void SetFontSize(double fontsize)
         {
-            status.FontSize = 13 * fontsize / 12;
-            time.FontSize = 14 * fontsize / 12;
-            name.FontSize = 14 * fontsize / 12;
-            scoresOfStudents.FontSize = scoresOfTrickers.FontSize = fontsize;
+            if (fontsize != 0)
+            {
+                status.FontSize = 13 * fontsize / 12;
+                time.FontSize = 14 * fontsize / 12;
+                name.FontSize = 14 * fontsize / 12;
+                scoresOfStudents.FontSize = scoresOfTrickers.FontSize = fontsize;
+            }
         }
 
         public void SetValue(MessageOfAll obj, bool gateOpened, bool hiddenGateRefreshed, bool hiddenGateOpened, long playerId)

@@ -2,7 +2,7 @@
   "profiles": {
     "Client": {
       "commandName": "Project",
-      "commandLineArgs": "--ip 127.0.0.1 --cl --port 8888 --characterID 4 --type 2 --occupation 2"
+      "commandLineArgs": "--cl --playbackFile D:\\2_autumn\\thuai6\\THUAI6\\logic\\cmd\\test.thuaipb --playbackSpeed 2 "
     }
   }
 }

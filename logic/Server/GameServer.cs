@@ -130,7 +130,7 @@ namespace Server
                     case GameState.GameRunning:
                     case GameState.GameEnd:
                     case GameState.GameStart:
-                        currentGameInfo.ObjMessage.Add(currentMapMsg);
+                        if (gameState == GameState.GameStart) currentGameInfo.ObjMessage.Add(currentMapMsg);
                         foreach (GameObj gameObj in gameObjList)
                         {
                             MessageOfObj? msg = CopyInfo.Auto(gameObj);
@@ -153,7 +153,6 @@ namespace Server
                         break;
                 }
             }
-
             foreach (var kvp in semaDict)
             {
                 kvp.Value.Item1.Release();

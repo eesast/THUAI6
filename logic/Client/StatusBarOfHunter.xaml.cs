@@ -32,7 +32,8 @@ namespace Client
         }
         public void SetFontSize(double fontsize)
         {
-            serial.FontSize = scores.FontSize = state.FontSize = status.FontSize = activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = fontsize;
+            if (fontsize != 0)
+                serial.FontSize = scores.FontSize = state.FontSize = status.FontSize = activeSkill0.FontSize = activeSkill1.FontSize = activeSkill2.FontSize = prop0.FontSize = prop1.FontSize = prop2.FontSize = fontsize;
         }
 
         private void SetStaticValue(MessageOfTricker obj)

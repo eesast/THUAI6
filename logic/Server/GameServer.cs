@@ -167,6 +167,7 @@ namespace Server
         public int[] GetScore()
         {
             int[] score = new int[2]; // 0代表Student，1代表Tricker
+            game.GameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
             try
             {
                 foreach (Character character in game.GameMap.GameObjDict[GameObjType.Character])
@@ -214,10 +215,9 @@ namespace Server
             msg.SubjectFinished = (int)game.GameMap.NumOfRepairedGenerators;
             msg.StudentGraduated = (int)game.GameMap.NumOfEscapedStudent;
             msg.StudentQuited = (int)game.GameMap.NumOfDeceasedStudent;
-            msg.StudentScore = 0;
-            msg.TrickerScore = 0;
-            game.GameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-
+            int[] score = GetScore();
+            msg.StudentScore = score[0];
+            msg.TrickerScore = score[1];
             //msg.GateOpened
             //msg.HiddenGateRefreshed
             //msg.HiddenGateOpened

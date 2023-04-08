@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Downloader;
 using MessageBox = System.Windows.MessageBox;
 using System.Configuration;
+using System.Drawing.Design;
 
 namespace starter.viewmodel.settings
 {
@@ -133,6 +134,46 @@ namespace starter.viewmodel.settings
                 }
             }
         }
+        public int PlayerNum
+        {
+            get
+            {
+                int ans;
+                if (obj.PlayerNum.Equals("player_1"))
+                    ans = 1;
+                else if (obj.PlayerNum.Equals("player_2"))
+                    ans = 2;
+                else if (obj.PlayerNum.Equals("player_3"))
+                    ans = 3;
+                else if (obj.PlayerNum.Equals("player_4"))
+                    ans = 4;
+                else
+                    ans = 0;
+                return ans;
+            }
+            set
+            {
+                switch (value)
+                {
+                    case 1:
+                        obj.PlayerNum = "player_1";
+                        break;
+                    case 2:
+                        obj.PlayerNum = "player_2";
+                        break;
+                    case 3:
+                        obj.PlayerNum = "player_3";
+                        break;
+                    case 4:
+                        obj.PlayerNum = "player_4";
+                        break;
+                    default:
+                        obj.PlayerNum = "nSelect";
+                        break;
+                }
+                this.RaisePropertyChanged("PlayerNum");
+            }
+        }
 
         public string Route
         {
@@ -240,7 +281,7 @@ namespace starter.viewmodel.settings
         {
             get
             {
-                return obj.UpdatePlanned ? "Update" : "Check Updates";
+                return obj.UpdatePlanned ? "更新" : "检查更新";
             }
         }
         public string UpdateInfo
@@ -446,7 +487,9 @@ namespace starter.viewmodel.settings
                         }
                         else
                         {
+                            obj.LoginFailed = false;
                             Status = SettingsModel.Status.web;
+                            this.RaisePropertyChanged("CoverVis");
                         }
                         this.RaisePropertyChanged("LoginFailVis");
                     }));
@@ -528,38 +571,46 @@ namespace starter.viewmodel.settings
                     {
                         if (obj.UploadReady)
                         {
-                            switch (await obj.Upload())
+                            if (obj.PlayerNum.Equals("nSelect"))
                             {
-                                case -1:
-                                    MessageBox.Show("Token失效！", "", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-                                    break;
-                                case -2:
-                                    MessageBox.Show("目标路径不存在！", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
-                                    break;
-                                case -3:
-                                    MessageBox.Show("服务器错误", "", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-                                    break;
-                                case -4:
-                                    MessageBox.Show("您未登录或登录失效", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
-                                    Status = SettingsModel.Status.login;
-                                    break;
-                                case -5:
-                                    MessageBox.Show("您未报名THUAI!", "", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
-                                    break;
-                                case -6:
-                                    MessageBox.Show("读取文件失败，请确认文件是否被占用", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
-                                    break;
-                                case -7:
-                                    MessageBox.Show("网络错误，请检查你的网络", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
-                                    break;
-                                case -8:
-                                    MessageBox.Show("不是c++或python源文件", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
-                                    break;
+                                MessageBox.Show("您还没有选择要上传的玩家身份", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                             }
-                            obj.CodeRoute = "";
-                            obj.UploadReady = false;
-                            this.RaisePropertyChanged("UploadBtnCont");
-                            this.RaisePropertyChanged("UploadReadyVis");
+                            else
+                            {
+                                switch (await obj.Upload())
+                                {
+                                    case -1:
+                                        MessageBox.Show("Token失效！", "", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                                        break;
+                                    case -2:
+                                        MessageBox.Show("目标路径不存在！", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                                        break;
+                                    case -3:
+                                        MessageBox.Show("服务器错误", "", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                                        break;
+                                    case -4:
+                                        MessageBox.Show("您未登录或登录失效", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                                        Status = SettingsModel.Status.login;
+                                        break;
+                                    case -5:
+                                        MessageBox.Show("您未报名THUAI!", "", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                                        break;
+                                    case -6:
+                                        MessageBox.Show("读取文件失败，请确认文件是否被占用", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                                        break;
+                                    case -7:
+                                        MessageBox.Show("网络错误，请检查你的网络", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                                        break;
+                                    case -8:
+                                        MessageBox.Show("不是c++或python源文件", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                                        break;
+                                }
+                                obj.CodeRoute = "";
+                                obj.UploadReady = false;
+                                this.RaisePropertyChanged("UploadBtnCont");
+                                this.RaisePropertyChanged("UploadReadyVis");
+                                this.RaisePropertyChanged("CoverVis");
+                            }
                         }
                         else
                         {
@@ -570,6 +621,7 @@ namespace starter.viewmodel.settings
                                 this.RaisePropertyChanged("UploadBtnCont");
                                 this.RaisePropertyChanged("UploadReadyVis");
                                 this.RaisePropertyChanged("CodeName");
+                                this.RaisePropertyChanged("CoverVis");
                             }
                             else
                             {
@@ -579,6 +631,26 @@ namespace starter.viewmodel.settings
                     }));
                 }
                 return clickUploadCommand;
+            }
+        }
+        private BaseCommand clickReselectCommand;
+        public BaseCommand ClickReselectCommand
+        {
+            get
+            {
+                if (clickReselectCommand == null)
+                {
+                    clickReselectCommand = new BaseCommand(new Action<object>(o =>
+                    {
+                        obj.CodeRoute = "";
+                        obj.UploadReady = false;
+                        this.RaisePropertyChanged("UploadBtnCont");
+                        this.RaisePropertyChanged("UploadReadyVis");
+                        this.RaisePropertyChanged("CodeName");
+                        this.RaisePropertyChanged("CoverVis");
+                    }));
+                }
+                return clickReselectCommand;
             }
         }
     }

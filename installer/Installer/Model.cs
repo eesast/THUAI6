@@ -1113,7 +1113,7 @@ namespace WebConnect
             try
             {
                 string content;
-                client.DefaultRequestHeaders.Authorization = new("Bearer", logintoken);
+                client.DefaultRequestHeaders.Authorization = new("bearertoken", logintoken);
                 if (!File.Exists(tarfile))
                 {
                     //Console.WriteLine("文件不存在！");
@@ -1342,12 +1342,20 @@ namespace WebConnect
             var client = new HttpClient();
             var request = new HttpRequestMessage(HttpMethod.Post, "https://api.eesast.com/dev/v1/graphql");
             request.Headers.Add("x-hasura-admin-secret", "hasuraDevAdminSecret");
-            var content = new StringContent("{\"query\":\"query MyQuery {\r\n    contest_team_member(where: {user_id: {_eq: \""
-                + Downloader.UserInfo._id + "\"}}) {\r\n    team_id\r\n  }\r\n}\r\n\",\"variables\":{}}", null, "application/json");
+            //var content = new StringContent($@"
+            //    {{
+            //        ""query"": ""query MyQuery {{contest_team_member(where: {{user_id: {{_eq: \""{Downloader.UserInfo._id}\""}}}}) {{ team_id  }}}}"",
+            //        ""variables"": {{}},
+            //    }}", null, "application/json");
+            var content = new StringContent("{\"query\":\"query MyQuery {\\r\\n  contest_team_member(where: {user_id: {_eq: \\\"" + Downloader.UserInfo._id + "\\\"}}) {\\r\\n    team_id\\r\\n  }\\r\\n}\",\"variables\":{}}", null, "application/json");
             request.Content = content;
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            var info = await response.Content.ReadAsStringAsync();
+            var s1 = JsonConvert.DeserializeObject<Dictionary<string, object>>(info)["data"];
+            var s2 = JsonConvert.DeserializeObject<Dictionary<string, List<object>>>(s1.ToString())["contest_team_member"];
+            var sres = JsonConvert.DeserializeObject<Dictionary<string, string>>(s2[0].ToString())["team_id"];
+            return sres;
         }
         async public Task<string> GetUserId(string learnNumber)
         {

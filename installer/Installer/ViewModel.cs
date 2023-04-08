@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using Downloader;
 using MessageBox = System.Windows.MessageBox;
 using System.Configuration;
+using WebConnect;
+using System.Net.Http;
 
 namespace starter.viewmodel.settings
 {

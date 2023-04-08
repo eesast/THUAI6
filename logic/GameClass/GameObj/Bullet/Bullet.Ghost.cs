@@ -164,7 +164,7 @@ namespace GameClass.GameObj
                     ap = value;
             }
         }
-        public override int Speed => 4300;
+        public override int Speed => (int)(GameData.basicBulletMoveSpeed * 43 / 37);
         public override bool IsRemoteAttack => false;
 
         public override int CastTime => 0;

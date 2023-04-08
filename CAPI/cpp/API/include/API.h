@@ -99,6 +99,7 @@ public:
     // 捡道具、使用技能
     virtual std::future<bool> PickProp(THUAI6::PropType prop) = 0;
     virtual std::future<bool> UseProp(THUAI6::PropType prop) = 0;
+    virtual std::future<bool> ThrowProp(THUAI6::PropType prop) = 0;
     virtual std::future<bool> UseSkill(int32_t skillID) = 0;
     virtual std::future<bool> Attack(double angleInRadian) = 0;
 
@@ -124,7 +125,6 @@ public:
     // 获取视野内可见的道具信息
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
 
-    // 获取地图信息，视野外的地图统一为Land
     [[nodiscard]] virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
     [[nodiscard]] virtual THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const = 0;
 

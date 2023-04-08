@@ -137,7 +137,6 @@ namespace GameClass.GameObj
             switch (gameObjType)
             {
                 case GameObjType.Character:
-                case GameObjType.Generator:
                     return true;
                 default:
                     return false;
@@ -184,7 +183,6 @@ namespace GameClass.GameObj
             switch (gameObjType)
             {
                 case GameObjType.Character:
-                case GameObjType.Generator:
                     return true;
                 default:
                     return false;

@@ -130,7 +130,11 @@ namespace Server
                     case GameState.GameRunning:
                     case GameState.GameEnd:
                     case GameState.GameStart:
-                        if (gameState == GameState.GameStart) currentGameInfo.ObjMessage.Add(currentMapMsg);
+                        if (gameState == GameState.GameStart || IsSpectatorJoin)
+                        {
+                            currentGameInfo.ObjMessage.Add(currentMapMsg);
+                            IsSpectatorJoin = false;
+                        }
                         foreach (GameObj gameObj in gameObjList)
                         {
                             MessageOfObj? msg = CopyInfo.Auto(gameObj);

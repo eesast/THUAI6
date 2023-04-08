@@ -14,4 +14,4 @@ start cmd /k ..\Client\bin\Debug\net6.0-windows\Client.exe --cl --port 8888 --ch
 
 start cmd /k ..\Client\bin\Debug\net6.0-windows\Client.exe --cl --port 8888 --characterID 3 --type 1 --occupation 3
 
-::start cmd /k ..\Client\bin\Debug\net6.0-windows\Client.exe --ip 0.0.0.0 --port 8888 --characterID 2030
+start cmd /k ..\Client\bin\Debug\net6.0-windows\Client.exe --cl --port 8888 --characterID 2030

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Protobuf;
+using Preparation.Utility;
 
 namespace Client
 {
@@ -56,13 +57,17 @@ namespace Client
             {
                 time.Text += Convert.ToString(sec);
             }
-            if (playerId == 4)
+            if (playerId == GameData.numOfStudent)
             {
                 name.Text = "🚀 Tricker's";
             }
-            else
+            else if (playerId < GameData.numOfStudent)
             {
                 name.Text = "🚀 Student" + Convert.ToString(playerId) + "'s";
+            }
+            else
+            {
+                name.Text = "🚀 Spectator's";
             }
             if (obj.SubjectFinished < Preparation.Utility.GameData.numOfGeneratorRequiredForRepair)
             {

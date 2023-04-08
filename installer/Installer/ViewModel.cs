@@ -481,7 +481,7 @@ namespace starter.viewmodel.settings
                 {
                     clickLoginCommand = new BaseCommand(new Action<object>(async o =>
                     {
-                        switch(await obj.Login())
+                        switch (await obj.Login())
                         {
                             case -1:
                                 obj.LoginFailed = true;

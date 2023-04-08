@@ -65,9 +65,9 @@ namespace Server
                             //Console.WriteLine("Send!");
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        Console.WriteLine(ex);
+                        //Console.WriteLine(ex);
                     }
                     finally
                     {
@@ -97,7 +97,6 @@ namespace Server
                 if (newPlayerID == GameObj.invalidID)
                     return;
                 communicationToGameID[request.PlayerId] = newPlayerID;
-                // 内容待修改
                 var temp = (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1));
                 bool start = false;
                 Console.WriteLine($"Id: {request.PlayerId} joins.");
@@ -172,7 +171,6 @@ namespace Server
             }
             var gameID = communicationToGameID[request.PlayerId];
             game.MovePlayer(gameID, (int)request.TimeInMilliseconds, request.Angle);
-            // 之后game.MovePlayer可能改为bool类
             moveRes.ActSuccess = true;
             if (!game.GameMap.Timer.IsGaming) moveRes.ActSuccess = false;
             return Task.FromResult(moveRes);

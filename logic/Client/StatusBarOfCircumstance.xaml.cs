@@ -61,7 +61,7 @@ namespace Client
             {
                 name.Text = "🚀 Tricker's";
             }
-            else if(playerId< GameData.numOfStudent)
+            else if (playerId < GameData.numOfStudent)
             {
                 name.Text = "🚀 Student" + Convert.ToString(playerId) + "'s";
             }

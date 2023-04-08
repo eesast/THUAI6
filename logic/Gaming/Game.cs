@@ -215,15 +215,16 @@ namespace Gaming
             }
             return false;
         }
-        public void Attack(long playerID, double angle)
+        public bool Attack(long playerID, double angle)
         {
             if (!gameMap.Timer.IsGaming)
-                return;
+                return false;
             Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
-                _ = attackManager.Attack(player, angle);
+                return attackManager.Attack(player, angle);
             }
+            return false;
         }
         public void UseProp(long playerID, PropType propType = PropType.Null)
         {

@@ -493,6 +493,9 @@ namespace Client
                                         case MessageOfObj.MessageOfObjOneofCase.HiddenGateMessage:
                                             listOfHiddenGate.Add(obj.HiddenGateMessage);
                                             break;
+                                        case MessageOfObj.MessageOfObjOneofCase.MapMessage:
+                                            GetMap(obj.MapMessage);
+                                            break;
                                     }
                                 }
                                 listOfAll.Add(content.AllMessage);

@@ -481,15 +481,19 @@ namespace starter.viewmodel.settings
                 {
                     clickLoginCommand = new BaseCommand(new Action<object>(async o =>
                     {
-                        if (!(await obj.Login()))
+                        switch(await obj.Login())
                         {
-                            obj.LoginFailed = true;
-                        }
-                        else
-                        {
-                            obj.LoginFailed = false;
-                            Status = SettingsModel.Status.web;
-                            this.RaisePropertyChanged("CoverVis");
+                            case -1:
+                                obj.LoginFailed = true;
+                                break;
+                            case 0:
+                                obj.LoginFailed = false;
+                                Status = SettingsModel.Status.web;
+                                this.RaisePropertyChanged("CoverVis");
+                                break;
+                            case -2:
+                                MessageBox.Show("无法连接服务器，请检查网络情况", "网络错误", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                                break;
                         }
                         this.RaisePropertyChanged("LoginFailVis");
                     }));

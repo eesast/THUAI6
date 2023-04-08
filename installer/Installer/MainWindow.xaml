@@ -71,7 +71,7 @@
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="账号：" Visibility="{Binding LoginVis}" />
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="密码：" Visibility="{Binding LoginVis}" />
                 <TextBox Grid.Row="1" Grid.Column="1" Name="Username" Visibility="{Binding LoginVis}" Text="{Binding Username}" />
-                <TextBox Grid.Row="3" Grid.Column="1" Name="Password" Visibility="{Binding LoginVis}" Text="{Binding Password}" />
+                <PasswordBox Grid.Row="3" Grid.Column="1" Name="Password" Visibility="{Binding LoginVis}" c:PasswordHelper.Attach="True" c:PasswordHelper.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <!--<CheckBox Grid.Row="5" Grid.Column="0" Visibility="{Binding LoginVis}">记住我</CheckBox>-->
                 <TextBlock Grid.Row="5" Grid.Column="1" Foreground="Red" Text="    用户名或密码错误！" Visibility="{Binding LoginFailVis}"/>
             </Grid>

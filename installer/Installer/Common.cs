@@ -3,6 +3,8 @@ using System;
 using System.Windows.Input;
 using System.Globalization;
 using System.Windows.Data;
+using System.Windows.Controls;
+using System.Windows;
 
 namespace starter.viewmodel.common
 {
@@ -95,6 +97,60 @@ namespace starter.viewmodel.common
                 return parameter.ToString();
             }
             return null;
+        }
+    }
+
+    /// <summary>
+    /// Password 附加属性，来自https://blog.csdn.net/qq_43562262/article/details/121786337
+    /// </summary>
+    public class PasswordHelper
+    {
+        public static readonly DependencyProperty PasswordProperty = DependencyProperty.RegisterAttached("Password", typeof(string), typeof(PasswordHelper),
+            new PropertyMetadata(new PropertyChangedCallback(OnPropertyChanged)));
+
+        public static string GetPassword(DependencyObject d)
+        {
+            return (string)d.GetValue(PasswordProperty);
+        }
+        public static void SetPassword(DependencyObject d, string value)
+        {
+            d.SetValue(PasswordProperty, value);
+        }
+
+        public static readonly DependencyProperty AttachProperty = DependencyProperty.RegisterAttached("Attach", typeof(string), typeof(PasswordHelper),
+            new PropertyMetadata(new PropertyChangedCallback(OnAttachChanged)));
+
+        public static string GetAttach(DependencyObject d)
+        {
+            return (string)d.GetValue(AttachProperty);
+        }
+        public static void SetAttach(DependencyObject d, string value)
+        {
+            d.SetValue(AttachProperty, value);
+        }
+
+        static bool _isUpdating = false;
+        private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            PasswordBox pb = d as PasswordBox;
+            pb.PasswordChanged -= Pb_PasswordChanged;
+            if (!_isUpdating)
+                (d as PasswordBox).Password = e.NewValue.ToString();
+            pb.PasswordChanged += Pb_PasswordChanged;
+        }
+
+        private static void OnAttachChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            PasswordBox pb = d as PasswordBox;
+            pb.PasswordChanged += Pb_PasswordChanged;
+        }
+
+        private static void Pb_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            PasswordBox pb = sender as PasswordBox;
+            _isUpdating = true;
+            SetPassword(pb, pb.Password);
+            _isUpdating = false;
         }
     }
 

@@ -1358,7 +1358,6 @@ namespace Client
         private List<MessageOfGate> listOfGate;
         private List<MessageOfHiddenGate> listOfHiddenGate;
         private object drawPicLock = new object();
-        private object recvLock = new object();
         private MessageOfStudent? human = null;
         private MessageOfTricker? butcher = null;
         private bool humanOrButcher;//true for human

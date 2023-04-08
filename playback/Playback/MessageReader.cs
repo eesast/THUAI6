@@ -27,7 +27,7 @@ namespace Playback
         public readonly uint teamCount;
         public readonly uint playerCount;
 
-        const int bufferMaxSize = 1024 * 1024;       // 1M
+        const int bufferMaxSize = 10 * 1024 * 1024;       // 10M
 
         public MessageReader(string fileName)
         {
@@ -83,7 +83,8 @@ namespace Playback
         public MessageToClient? ReadOne()
         {
         beginRead:
-            if (Finished) return null;
+            if (Finished)
+                return null;
             var pos = cos.Position;
             try
             {
@@ -94,9 +95,21 @@ namespace Playback
             catch (InvalidProtocolBufferException)
             {
                 var leftByte = buffer.Length - pos;     // 上次读取剩余的字节
-                for (int i = 0; i < leftByte; ++i)
+                if (buffer.Length < bufferMaxSize / 2)
                 {
-                    buffer[i] = buffer[pos + i];
+                    var newBuffer = new byte[bufferMaxSize];
+                    for (int i = 0; i < leftByte; i++)
+                    {
+                        newBuffer[i] = buffer[pos + i];
+                    }
+                    buffer = newBuffer;
+                }
+                else
+                {
+                    for (int i = 0; i < leftByte; ++i)
+                    {
+                        buffer[i] = buffer[pos + i];
+                    }
                 }
                 var bufferSize = gzs.Read(buffer, (int)leftByte, (int)(buffer.Length - leftByte)) + leftByte;
                 if (bufferSize == leftByte)

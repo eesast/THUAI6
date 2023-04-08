@@ -36,7 +36,7 @@ namespace Client
         public string PlaybackFile { get; set; } = DefaultArgumentOptions.FileName;
 
         [Option("playbackSpeed", Required = false, HelpText = "The speed of the playback, between 0.25 and 4.0")]
-        public double PlaybackSpeed { get; set; } = 1.0;
+        public double PlaybackSpeed { get; set; } = 2.0;
 
     }
 }

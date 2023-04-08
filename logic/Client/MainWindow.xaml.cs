@@ -413,33 +413,12 @@ namespace Client
                                             {
                                                 human = obj.StudentMessage;
                                             }
-                                            if (obj.StudentMessage.PlayerId < GameData.numOfStudent)
-                                            {
-                                                IStudentType occupation = (IStudentType)OccupationFactory.FindIOccupation(Transformation.ToStudentType(obj.StudentMessage.StudentType));
-                                                totalLife[obj.StudentMessage.PlayerId] = occupation.MaxHp;
-                                                totalDeath[obj.StudentMessage.PlayerId] = occupation.MaxGamingAddiction;
-                                                int i = 0;
-                                                foreach (var skill in occupation.ListOfIActiveSkill)
-                                                {
-                                                    var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
-                                                    coolTime[i, obj.StudentMessage.PlayerId] = iActiveSkill.SkillCD;
-                                                    ++i;
-                                                }
-                                            }
                                             listOfHuman.Add(obj.StudentMessage);
                                             break;
                                         case MessageOfObj.MessageOfObjOneofCase.TrickerMessage:
                                             if (!humanOrButcher && obj.TrickerMessage.PlayerId == playerID)
                                             {
                                                 butcher = obj.TrickerMessage;
-                                            }
-                                            IGhostType occupation1 = (IGhostType)OccupationFactory.FindIOccupation(Transformation.ToTrickerType(obj.TrickerMessage.TrickerType));
-                                            int j = 0;
-                                            foreach (var skill in occupation1.ListOfIActiveSkill)
-                                            {
-                                                var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
-                                                coolTime[j, GameData.numOfStudent] = iActiveSkill.SkillCD;
-                                                ++j;
                                             }
                                             listOfButcher.Add(obj.TrickerMessage);
                                             break;
@@ -519,6 +498,7 @@ namespace Client
                                 listOfAll.Add(content.AllMessage);
                                 break;
                             case GameState.GameEnd:
+                                MessageBox.Show("Game Over!");
                                 foreach (var obj in content.ObjMessage)
                                 {
                                     switch (obj.MessageOfObjCase)
@@ -667,53 +647,81 @@ namespace Client
 
         private void Refresh(object? sender, EventArgs e) //log未更新
         {
-            // Bonus();
-            if (WindowState == WindowState.Maximized)
-                MaxButton.Content = "❐";
-            else
-                MaxButton.Content = "🗖";
-            if (StatusBarsOfSurvivor != null)
+            lock (drawPicLock)  // 加锁是必要的，画图操作和接收信息操作不能同时进行
             {
-                for (int i = 0; i < GameData.numOfStudent; i++)
+                // Bonus();
+                if (WindowState == WindowState.Maximized)
+                    MaxButton.Content = "❐";
+                else
+                    MaxButton.Content = "🗖";
+                foreach (var obj in listOfHuman)
                 {
-                    StatusBarsOfSurvivor[i].SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
-                    StatusBarsOfSurvivor[i].NewData(totalLife, totalDeath, coolTime);
-                }
-            }
-            if (StatusBarsOfHunter != null)
-            {
-                StatusBarsOfHunter.SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
-                StatusBarsOfHunter.NewData(totalLife, totalDeath, coolTime);
-            }
-            if (StatusBarsOfCircumstance != null)
-                StatusBarsOfCircumstance.SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
-            // 完成窗口信息更新
-            if (!isClientStocked)
-            {
-                unit = Math.Sqrt(UpperLayerOfMap.ActualHeight * UpperLayerOfMap.ActualWidth) / 50;
-                unitHeight = UpperLayerOfMap.ActualHeight / 50;
-                unitWidth = UpperLayerOfMap.ActualWidth / 50;
-                try
-                {
-                    // if (log != null)
-                    //{
-                    //     string temp = "";
-                    //     for (int i = 0; i < dataDict[GameObjType.Character].Count; i++)
-                    //     {
-                    //         temp += Convert.ToString(dataDict[GameObjType.Character][i].MessageOfCharacter.TeamID) + "\n";
-                    //     }
-                    //     log.Content = temp;
-                    // }
-                    UpperLayerOfMap.Children.Clear();
-                    // if ((communicator == null || !communicator.Client.IsConnected) && !isPlaybackMode)
-                    //{
-                    //     UnderLayerOfMap.Children.Clear();
-                    //     throw new Exception("Client is unconnected.");
-                    // }
-                    // else
-                    //{
-                    lock (drawPicLock)  // 加锁是必要的，画图操作和接收信息操作不能同时进行
+                    if (obj.PlayerId < GameData.numOfStudent)
                     {
+                        IStudentType occupation = (IStudentType)OccupationFactory.FindIOccupation(Transformation.ToStudentType(obj.StudentType));
+                        totalLife[obj.PlayerId] = occupation.MaxHp;
+                        totalDeath[obj.PlayerId] = occupation.MaxGamingAddiction;
+                        int i = 0;
+                        foreach (var skill in occupation.ListOfIActiveSkill)
+                        {
+                            var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
+                            coolTime[i, obj.PlayerId] = iActiveSkill.SkillCD;
+                            ++i;
+                        }
+                    }
+                }
+                foreach (var obj in listOfButcher)
+                {
+                    IGhostType occupation1 = (IGhostType)OccupationFactory.FindIOccupation(Transformation.ToTrickerType(obj.TrickerType));
+                    int j = 0;
+                    foreach (var skill in occupation1.ListOfIActiveSkill)
+                    {
+                        var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
+                        coolTime[j, GameData.numOfStudent] = iActiveSkill.SkillCD;
+                        ++j;
+                    }
+                }
+                if (StatusBarsOfSurvivor != null)
+                {
+                    for (int i = 0; i < GameData.numOfStudent; i++)
+                    {
+                        StatusBarsOfSurvivor[i].SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
+                        StatusBarsOfSurvivor[i].NewData(totalLife, totalDeath, coolTime);
+                    }
+                }
+                if (StatusBarsOfHunter != null)
+                {
+                    StatusBarsOfHunter.SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
+                    StatusBarsOfHunter.NewData(totalLife, totalDeath, coolTime);
+                }
+                if (StatusBarsOfCircumstance != null)
+                    StatusBarsOfCircumstance.SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
+                // 完成窗口信息更新
+                if (!isClientStocked)
+                {
+                    unit = Math.Sqrt(UpperLayerOfMap.ActualHeight * UpperLayerOfMap.ActualWidth) / 50;
+                    unitHeight = UpperLayerOfMap.ActualHeight / 50;
+                    unitWidth = UpperLayerOfMap.ActualWidth / 50;
+                    try
+                    {
+                        // if (log != null)
+                        //{
+                        //     string temp = "";
+                        //     for (int i = 0; i < dataDict[GameObjType.Character].Count; i++)
+                        //     {
+                        //         temp += Convert.ToString(dataDict[GameObjType.Character][i].MessageOfCharacter.TeamID) + "\n";
+                        //     }
+                        //     log.Content = temp;
+                        // }
+                        UpperLayerOfMap.Children.Clear();
+                        // if ((communicator == null || !communicator.Client.IsConnected) && !isPlaybackMode)
+                        //{
+                        //     UnderLayerOfMap.Children.Clear();
+                        //     throw new Exception("Client is unconnected.");
+                        // }
+                        // else
+                        //{
+
                         foreach (var data in listOfAll)
                         {
                             StatusBarsOfCircumstance.SetValue(data, gateOpened, isEmergencyDrawed, isEmergencyOpened, playerID);
@@ -978,17 +986,18 @@ namespace Client
                         }
                         //}
                         ZoomMap();
+
+                    }
+                    catch (Exception exc)
+                    {
+                        ErrorDisplayer error = new("Error: " + exc.ToString());
+                        error.Show();
+                        isClientStocked = true;
+                        PorC.Content = "▶";
                     }
                 }
-                catch (Exception exc)
-                {
-                    ErrorDisplayer error = new("Error: " + exc.ToString());
-                    error.Show();
-                    isClientStocked = true;
-                    PorC.Content = "▶";
-                }
+                counter++;
             }
-            counter++;
         }
 
         // 键盘控制，未完善
@@ -1210,10 +1219,18 @@ namespace Client
                 isClientStocked = true;
                 PorC.Content = "▶";
             }
-            else
+            else if (!isPlaybackMode)
             {
-                isClientStocked = false;
-                PorC.Content = "⏸";
+                try
+                {
+                    isClientStocked = false;
+                    PorC.Content = "⏸";
+                }
+                catch (Exception ex)
+                {
+                    ErrorDisplayer error = new("发生错误。以下是系统报告:\n" + ex.ToString());
+                    error.Show();
+                }
             }
         }
         // 未复现
@@ -1341,6 +1358,7 @@ namespace Client
         private List<MessageOfGate> listOfGate;
         private List<MessageOfHiddenGate> listOfHiddenGate;
         private object drawPicLock = new object();
+        private object recvLock = new object();
         private MessageOfStudent? human = null;
         private MessageOfTricker? butcher = null;
         private bool humanOrButcher;//true for human
@@ -1407,6 +1425,7 @@ namespace Client
         bool isSpectatorMode = false;
         bool isEmergencyOpened = false;
         bool isEmergencyDrawed = false;
+        bool isDataFixed = false;
         const double radiusTimes = 1.0 * Preparation.Utility.GameData.characterRadius / Preparation.Utility.GameData.numOfPosGridPerCell;
         private int[] totalLife = new int[4] { 100, 100, 100, 100 }, totalDeath = new int[4] { 100, 100, 100, 100 };
         private int[,] coolTime = new int[3, 5] { { 100, 100, 100, 100, 100 }, { 100, 100, 100, 100, 100 }, { 100, 100, 100, 100, 100 } };

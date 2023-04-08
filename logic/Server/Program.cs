@@ -42,6 +42,12 @@ namespace Server
                 gameServer.WaitForEnd();
                 Console.WriteLine("Server end!");
                 server.ShutdownAsync().Wait();
+
+                Thread.Sleep(50);
+                Console.WriteLine("");
+                Console.WriteLine("===================  Final Score   ====================");
+                Console.WriteLine($"Studnet: {gameServer.GetScore()[0]}");
+                Console.WriteLine($"Tricker: {gameServer.GetScore()[1]}");
             }
             catch (Exception ex)
             {

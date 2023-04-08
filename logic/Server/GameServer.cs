@@ -83,10 +83,9 @@ namespace Server
         private void SaveGameResult(string path)
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
-            for (int i = 0; i < TeamCount; i++)
-            {
-                result.Add("Team" + i.ToString(), GetTeamScore(i)); //Team待修改
-            }
+            int[] score = GetScore();
+            result.Add("Student", score[0]);
+            result.Add("Tricker", score[1]);
             JsonSerializer serializer = new JsonSerializer();
             using (StreamWriter sw = new StreamWriter(path))
             {
@@ -99,10 +98,9 @@ namespace Server
         protected virtual void SendGameResult()		// 天梯的 Server 给网站发消息记录比赛结果
         {
             var scores = new JObject[options.TeamCount];
-            for (ushort i = 0; i < options.TeamCount; ++i)
-            {
-                scores[i] = new JObject { ["team_id"] = i.ToString(), ["score"] = GetTeamScore(i) };
-            } // Team待修改
+            int[] score = GetScore();
+            scores[0] = new JObject { ["team_name"] = "Student", ["score"] = score[0] };
+            scores[1] = new JObject { ["team_name"] = "Tricker", ["score"] = score[1] };
             httpSender?.SendHttpRequest
                 (
                     new JObject
@@ -166,9 +164,23 @@ namespace Server
                 kvp.Value.Item2.Wait();
             }
         }
-        public int GetTeamScore(long teamID)
+        public int[] GetScore()
         {
-            return game.GetTeamScore(teamID);
+            int[] score = new int[2]; // 0代表Student，1代表Tricker
+            try
+            {
+                foreach (Character character in game.GameMap.GameObjDict[GameObjType.Character])
+                {
+                    if (!character.IsGhost()) score[0] += character.Score;
+                    else score[1] += character.Score;
+                }
+
+            }
+            finally
+            {
+                game.GameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+            }
+            return score;
         }
 
         private int PlayerIDToTeamID(long playerID)
@@ -205,19 +217,7 @@ namespace Server
             msg.StudentScore = 0;
             msg.TrickerScore = 0;
             game.GameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-            try
-            {
-                foreach (Character character in game.GameMap.GameObjDict[GameObjType.Character])
-                {
-                    if (!character.IsGhost()) msg.StudentScore += character.Score;
-                    else msg.TrickerScore += character.Score;
-                }
 
-            }
-            finally
-            {
-                game.GameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
-            }
             //msg.GateOpened
             //msg.HiddenGateRefreshed
             //msg.HiddenGateOpened

@@ -16,6 +16,19 @@ namespace GameClass.GameObj
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;
 
+        private int numOfFixing = 0;
+        public int NumOfFixing
+        {
+            get => numOfFixing;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    numOfFixing = value;
+                }
+            }
+        }
+
         private int degreeOfRepair = 0;
         public int DegreeOfRepair
         {

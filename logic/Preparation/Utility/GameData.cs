@@ -83,11 +83,11 @@ namespace Preparation.Utility
         public const int characterRadius = numOfPosGridPerCell * 4 / 10;  // 人物半径
 
         public const int basicTreatSpeed = 100;
-        public const int basicFixSpeed = 100;
-        public const int basicSpeedOfOpeningOrLocking = 40;
+        public const int basicFixSpeed = 123;
+        public const int basicSpeedOfOpeningOrLocking = 4130;
         public const int basicStudentSpeedOfClimbingThroughWindows = 611;
         public const int basicGhostSpeedOfClimbingThroughWindows = 1270;
-        public const int basicSpeedOfOpenChest = 100;
+        public const int basicSpeedOfOpenChest = 1000;
 
         public const int basicHp = 3000000;                             // 初始血量
         public const int basicMaxGamingAddiction = 60000;//基本完全沉迷时间
@@ -185,11 +185,11 @@ namespace Preparation.Utility
 
         public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicCastTime = 500;//基本前摇时间
-        public const int basicBackswing = 818;//基本后摇时间
+        public const int basicBackswing = 800;//基本后摇时间
         public const int basicRecoveryFromHit = 3700;//基本命中攻击恢复时长
-        public const int basicStunnedTimeOfStudent = 4130;
+        public const int basicStunnedTimeOfStudent = 4300;
 
-        public const int basicBulletMoveSpeed = 1800;                // 基本子弹移动速度，单位：s-1
+        public const int basicBulletMoveSpeed = 3700;                // 基本子弹移动速度，单位：s-1
         public const double basicRemoteAttackRange = 3000;  // 基本远程攻击范围
         public const double basicAttackShortRange = 1100;                 // 基本近程攻击范围
         public const double basicBulletBombRange = 1000;             // 基本子弹爆炸范围
@@ -230,9 +230,9 @@ namespace Preparation.Utility
         public const int numOfTeachingBuilding = 3;
         #endregion
         #region 物体相关
-        public const int degreeOfFixedGenerator = 8180000;
-        public const int degreeOfLockingOrOpeningTheDoor = 100000;
-        public const int degreeOfOpenedChest = 100000;
+        public const int degreeOfFixedGenerator = 10000000;
+        public const int degreeOfLockingOrOpeningTheDoor = 10000000;
+        public const int degreeOfOpenedChest = 10000000;
         public const int degreeOfOpenedDoorway = 18000;
         public const int maxNumOfPropInChest = 2;
         public const int numOfGeneratorRequiredForRepair = 7;

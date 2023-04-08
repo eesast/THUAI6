@@ -40,6 +40,7 @@ namespace Preparation.Utility
                     return Protobuf.PlaceType.NullPlaceType;
             }
         }
+
         public static Protobuf.PropType ToPropType(Preparation.Utility.PropType prop)
         {
             switch (prop)
@@ -64,7 +65,6 @@ namespace Preparation.Utility
                     return Protobuf.PropType.NullPropType;
             }
         }
-
         public static Preparation.Utility.PropType ToPropType(Protobuf.PropType prop)
         {
             switch (prop)
@@ -133,6 +133,7 @@ namespace Preparation.Utility
                     return PlayerState.NullStatus;
             }
         }
+
         public static Protobuf.StudentBuffType ToStudentBuffType(Preparation.Utility.BuffType buffType)
         {
             switch (buffType)
@@ -167,6 +168,7 @@ namespace Preparation.Utility
                     return Protobuf.TrickerBuffType.NullTbuffType;
             }
         }
+
         public static Protobuf.BulletType ToBulletType(Preparation.Utility.BulletType bulletType)
         {
             switch (bulletType)
@@ -202,7 +204,6 @@ namespace Preparation.Utility
                     return Protobuf.StudentType.NullStudentType;
             }
         }
-
         public static Preparation.Utility.CharacterType ToStudentType(Protobuf.StudentType characterType)
         {
             switch (characterType)
@@ -221,6 +222,7 @@ namespace Preparation.Utility
                     return Preparation.Utility.CharacterType.Null;
             }
         }
+
         public static Protobuf.TrickerType ToTrickerType(Preparation.Utility.CharacterType characterType)
         {
             switch (characterType)
@@ -235,7 +237,6 @@ namespace Preparation.Utility
                     return Protobuf.TrickerType.NullTrickerType;
             }
         }
-
         public static Preparation.Utility.CharacterType ToTrickerType(Protobuf.TrickerType characterType)
         {
             switch (characterType)
@@ -250,6 +251,5 @@ namespace Preparation.Utility
                     return Preparation.Utility.CharacterType.Null;
             }
         }
-
     }
 }

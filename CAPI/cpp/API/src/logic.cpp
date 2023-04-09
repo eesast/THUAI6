@@ -543,6 +543,15 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::TrickerMessage:
                         {
+                            bool flag = false;
+                            for (int i = 0; i < item.tricker_message().buff_size(); i++)
+                                if (Proto2THUAI6::trickerBuffTypeDict[item.tricker_message().buff(i)] == THUAI6::TrickerBuffType::Invisible)
+                                {
+                                    flag = true;
+                                    break;
+                                }
+                            if (flag)
+                                break;
                             if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.tricker_message().x(), item.tricker_message().y(), bufferState->gameMap))
                             {
                                 bufferState->trickers.push_back(Proto2THUAI6::Protobuf2THUAI6Tricker(item.tricker_message()));
@@ -689,6 +698,15 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::StudentMessage:
                         {
+                            bool flag = false;
+                            for (int i = 0; i < item.student_message().buff_size(); i++)
+                                if (Proto2THUAI6::studentBuffTypeDict[item.student_message().buff(i)] == THUAI6::StudentBuffType::Invisible)
+                                {
+                                    flag = true;
+                                    break;
+                                }
+                            if (flag)
+                                break;
                             if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.student_message().x(), item.student_message().y(), bufferState->gameMap))
                             {
                                 bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item.student_message()));

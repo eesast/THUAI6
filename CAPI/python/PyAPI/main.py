@@ -39,7 +39,6 @@ def THUAI6Main(argv: List[str], AIBuilder: Callable) -> None:
     file = args.file
     screen = args.screen
     warnOnly = args.warnOnly
-    print(warnOnly)
     logic = Logic(pID)
     logic.Main(AIBuilder, sIP, sPort, file, screen, warnOnly)
 

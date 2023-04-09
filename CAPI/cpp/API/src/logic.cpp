@@ -51,6 +51,15 @@ std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
     return temp;
 }
 
+std::vector<std::shared_ptr<const THUAI6::Bullet>> Logic::GetBullets() const
+{
+    std::unique_lock<std::mutex> lock(mtxState);
+    std::vector<std::shared_ptr<const THUAI6::Bullet>> temp;
+    temp.assign(currentState->bullets.begin(), currentState->bullets.end());
+    logger->debug("Called GetBullets");
+    return temp;
+}
+
 std::shared_ptr<const THUAI6::Student> Logic::StudentGetSelfInfo() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
@@ -191,6 +200,12 @@ bool Logic::UseProp(THUAI6::PropType prop)
 {
     logger->debug("Called UseProp");
     return pComm->UseProp(prop, playerID);
+}
+
+bool Logic::ThrowProp(THUAI6::PropType prop)
+{
+    logger->debug("Called ThrowProp");
+    return pComm->ThrowProp(prop, playerID);
 }
 
 bool Logic::UseSkill(int32_t skill)

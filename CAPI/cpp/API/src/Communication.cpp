@@ -51,6 +51,18 @@ bool Communication::UseProp(THUAI6::PropType prop, int64_t playerID)
         return false;
 }
 
+bool Communication::ThrowProp(THUAI6::PropType prop, int64_t playerID)
+{
+    protobuf::BoolRes throwPropResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufProp(prop, playerID);
+    auto status = THUAI6Stub->ThrowProp(&context, request, &throwPropResult);
+    if (status.ok())
+        return throwPropResult.act_success();
+    else
+        return false;
+}
+
 bool Communication::UseSkill(int32_t skillID, int64_t playerID)
 {
     protobuf::BoolRes useSkillResult;

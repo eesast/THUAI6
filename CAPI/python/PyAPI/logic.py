@@ -2,6 +2,7 @@ import os
 from typing import List, Union, Callable, Tuple
 import threading
 import logging
+import copy
 import proto.MessageType_pb2 as MessageType
 import proto.Message2Server_pb2 as Message2Server
 import proto.Message2Clients_pb2 as Message2Clients
@@ -71,27 +72,32 @@ class Logic(ILogic):
     def GetTrickers(self) -> List[THUAI6.Tricker]:
         with self.__mtxState:
             self.__logger.debug("Called GetTrickers")
-            return self.__currentState.trickers
+            return copy.deepcopy(self.__currentState.trickers)
 
     def GetStudents(self) -> List[THUAI6.Student]:
         with self.__mtxState:
             self.__logger.debug("Called GetStudents")
-            return self.__currentState.students
+            return copy.deepcopy(self.__currentState.students)
 
     def GetProps(self) -> List[THUAI6.Prop]:
         with self.__mtxState:
             self.__logger.debug("Called GetProps")
-            return self.__currentState.props
+            return copy.deepcopy(self.__currentState.props)
+
+    def GetBullets(self) -> List[THUAI6.Bullet]:
+        with self.__mtxState:
+            self.__logger.debug("Called GetBullets")
+            return copy.deepcopy(self.__currentState.bullets)
 
     def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
         with self.__mtxState:
             self.__logger.debug("Called GetSelfInfo")
-            return self.__currentState.self
+            return copy.deepcopy(self.__currentState.self)
 
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         with self.__mtxState:
             self.__logger.debug("Called GetFullMap")
-            return self.__currentState.gameMap
+            return copy.deepcopy(self.__currentState.gameMap)
 
     def GetPlaceType(self, x: int, y: int) -> THUAI6.PlaceType:
         with self.__mtxState:
@@ -99,13 +105,13 @@ class Logic(ILogic):
                 self.__logger.warning("Invalid position")
                 return THUAI6.PlaceType.NullPlaceType
             self.__logger.debug("Called GetPlaceType")
-            return self.__currentState.gameMap[x][y]
+            return copy.deepcopy(self.__currentState.gameMap[x][y])
 
     def IsDoorOpen(self, x: int, y: int) -> bool:
         with self.__mtxState:
             self.__logger.debug("Called IsDoorOpen")
             if (x, y) in self.__currentState.mapInfo.doorState:
-                return self.__currentState.mapInfo.doorState[(x, y)]
+                return copy.deepcopy(self.__currentState.mapInfo.doorState[(x, y)])
             else:
                 self.__logger.warning("Door not found")
                 return False
@@ -114,7 +120,7 @@ class Logic(ILogic):
         with self.__mtxState:
             self.__logger.debug("Called GetClassroomProgress")
             if (x, y) in self.__currentState.mapInfo.classroomState:
-                return self.__currentState.mapInfo.classroomState[(x, y)]
+                return copy.deepcopy(self.__currentState.mapInfo.classroomState[(x, y)])
             else:
                 self.__logger.warning("Classroom not found")
                 return 0
@@ -123,7 +129,7 @@ class Logic(ILogic):
         with self.__mtxState:
             self.__logger.debug("Called GetChestProgress")
             if (x, y) in self.__currentState.mapInfo.chestState:
-                return self.__currentState.mapInfo.chestState[(x, y)]
+                return copy.deepcopy(self.__currentState.mapInfo.chestState[(x, y)])
             else:
                 self.__logger.warning("Chest not found")
                 return 0
@@ -132,7 +138,7 @@ class Logic(ILogic):
         with self.__mtxState:
             self.__logger.debug("Called GetGateProgress")
             if (x, y) in self.__currentState.mapInfo.gateState:
-                return self.__currentState.mapInfo.gateState[(x, y)]
+                return copy.deepcopy(self.__currentState.mapInfo.gateState[(x, y)])
             else:
                 self.__logger.warning("Gate not found")
                 return 0
@@ -141,7 +147,7 @@ class Logic(ILogic):
         with self.__mtxState:
             self.__logger.debug("Called GetHiddenGateState")
             if (x, y) in self.__currentState.mapInfo.hiddenGateState:
-                return self.__currentState.mapInfo.hiddenGateState[(x, y)]
+                return copy.deepcopy(self.__currentState.mapInfo.hiddenGateState[(x, y)])
             else:
                 self.__logger.warning("HiddenGate not found")
                 return THUAI6.HiddenGateState.Null
@@ -150,7 +156,7 @@ class Logic(ILogic):
         with self.__mtxState:
             self.__logger.debug("Called GetDoorProgress")
             if (x, y) in self.__currentState.mapInfo.doorProgress:
-                return self.__currentState.mapInfo.doorProgress[(x, y)]
+                return copy.deepcopy(self.__currentState.mapInfo.doorProgress[(x, y)])
             else:
                 self.__logger.warning("Door not found")
                 return 0
@@ -158,7 +164,7 @@ class Logic(ILogic):
     def GetGameInfo(self) -> THUAI6.GameInfo:
         with self.__mtxState:
             self.__logger.debug("Called GetGameInfo")
-            return self.__currentState.gameInfo
+            return copy.deepcopy(self.__currentState.gameInfo)
 
     def Move(self, time: int, angle: float) -> bool:
         self.__logger.debug("Called Move")
@@ -171,6 +177,10 @@ class Logic(ILogic):
     def UseProp(self, propType: THUAI6.PropType) -> bool:
         self.__logger.debug("Called UseProp")
         return self.__comm.UseProp(propType, self.__playerID)
+
+    def ThrowProp(self, propType: THUAI6.PropType) -> bool:
+        self.__logger.debug("Called ThrowProp")
+        return self.__comm.ThrowProp(propType, self.__playerID)
 
     def UseSkill(self, skillID: int) -> bool:
         self.__logger.debug("Called UseSkill")
@@ -198,11 +208,11 @@ class Logic(ILogic):
 
     def GetCounter(self) -> int:
         with self.__mtxState:
-            return self.__counterState
+            return copy.deepcopy(self.__counterState)
 
     def GetPlayerGUIDs(self) -> List[int]:
         with self.__mtxState:
-            return self.__playerGUIDs
+            return copy.deepcopy(self.__playerGUIDs)
 
     # IStudentAPI使用的接口
 

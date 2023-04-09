@@ -41,6 +41,9 @@ class StudentAPI(IStudentAPI, IGameTimer):
     def UseProp(self, propType: THUAI6.PropType) -> Future[bool]:
         return self.__pool.submit(self.__logic.UseProp, propType)
 
+    def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
+        return self.__pool.submit(self.__logic.ThrowProp, propType)
+
     def UseSkill(self, skillID: int) -> Future[bool]:
         return self.__pool.submit(self.__logic.UseSkill, skillID)
 
@@ -98,6 +101,9 @@ class StudentAPI(IStudentAPI, IGameTimer):
 
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
+
+    def GetBullets(self) -> List[THUAI6.Bullet]:
+        return self.__logic.GetBullets()
 
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         return self.__logic.GetFullMap()
@@ -208,6 +214,9 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
     def UseProp(self, propType: THUAI6.PropType) -> Future[bool]:
         return self.__pool.submit(self.__logic.UseProp, propType)
 
+    def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
+        return self.__pool.submit(self.__logic.ThrowProp, propType)
+
     def UseSkill(self, skillID: int) -> Future[bool]:
         return self.__pool.submit(self.__logic.UseSkill, skillID)
 
@@ -265,6 +274,9 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
 
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
+
+    def GetBullets(self) -> List[THUAI6.Bullet]:
+        return self.__logic.GetBullets()
 
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         return self.__logic.GetFullMap()

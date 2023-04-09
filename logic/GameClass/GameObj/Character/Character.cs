@@ -521,6 +521,12 @@ namespace GameClass.GameObj
                     return this.HasShield;
                 case BuffType.AddLife:
                     return this.HasLIFE;
+                case BuffType.AddAp:
+                    return this.HasAp;
+                case BuffType.Clairaudience:
+                    return this.HasClairaudience;
+                case BuffType.Invisible:
+                    return this.HasInvisible;
                 default:
                     return false;
             }

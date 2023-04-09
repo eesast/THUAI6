@@ -90,7 +90,7 @@ namespace Preparation.Utility
 
         public const int basicTreatSpeed = 100;
         public const int basicFixSpeed = 123;
-        public const int basicSpeedOfOpeningOrLocking = 4130;
+        public const int basicSpeedOfOpeningOrLocking = 4000;
         public const int basicStudentSpeedOfClimbingThroughWindows = 611;
         public const int basicGhostSpeedOfClimbingThroughWindows = 1270;
         public const int basicSpeedOfOpenChest = 1000;
@@ -185,7 +185,7 @@ namespace Preparation.Utility
         public const int MinAP = 0;                                  // 最小攻击力
         public const int MaxAP = int.MaxValue;                       // 最大攻击力
 
-        public const int factorDamageGenerator = 2;//子弹对电机的破坏=factorDamageGenerator*AP;
+        public const int factorDamageGenerator = 1;//子弹对电机的破坏=factorDamageGenerator*AP;
         public const int bulletRadius = 200;                         // 默认子弹半径
         public const int basicBulletNum = 3;                         // 基本初始子弹量
 

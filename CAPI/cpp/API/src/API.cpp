@@ -89,6 +89,18 @@ std::future<bool> TrickerAPI::UseProp(THUAI6::PropType prop)
                       { return logic.UseProp(prop); });
 }
 
+std::future<bool> StudentAPI::ThrowProp(THUAI6::PropType prop)
+{
+    return std::async(std::launch::async, [=]()
+                      { return logic.ThrowProp(prop); });
+}
+
+std::future<bool> TrickerAPI::ThrowProp(THUAI6::PropType prop)
+{
+    return std::async(std::launch::async, [=]()
+                      { return logic.ThrowProp(prop); });
+}
+
 std::future<bool> StudentAPI::UseSkill(int32_t skillID)
 {
     return std::async(std::launch::async, [=]()
@@ -253,6 +265,16 @@ std::vector<std::shared_ptr<const THUAI6::Prop>> StudentAPI::GetProps() const
 std::vector<std::shared_ptr<const THUAI6::Prop>> TrickerAPI::GetProps() const
 {
     return logic.GetProps();
+}
+
+std::vector<std::shared_ptr<const THUAI6::Bullet>> StudentAPI::GetBullets() const
+{
+    return logic.GetBullets();
+}
+
+std::vector<std::shared_ptr<const THUAI6::Bullet>> TrickerAPI::GetBullets() const
+{
+    return logic.GetBullets();
 }
 
 std::vector<std::vector<THUAI6::PlaceType>> StudentAPI::GetFullMap() const

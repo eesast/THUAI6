@@ -187,6 +187,26 @@ std::future<bool> TrickerDebugAPI::UseProp(THUAI6::PropType prop)
                         return result; });
 }
 
+std::future<bool> StudentDebugAPI::ThrowProp(THUAI6::PropType prop)
+{
+    logger->info("ThrowProp: prop={}, called at {}ms", THUAI6::propTypeDict[prop], Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [=]()
+                      { auto result = logic.ThrowProp(prop);
+                        if (!result)
+                            logger->warn("ThrowProp: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
+}
+
+std::future<bool> TrickerDebugAPI::ThrowProp(THUAI6::PropType prop)
+{
+    logger->info("ThrowProp: prop={}, called at {}ms", THUAI6::propTypeDict[prop], Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [=]()
+                      { auto result = logic.ThrowProp(prop);
+                        if (!result)
+                            logger->warn("ThrowProp: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
+}
+
 std::future<bool> StudentDebugAPI::UseSkill(int32_t skillID)
 {
     logger->info("UseSkill: skillID={}, called at {}ms", skillID, Time::TimeSinceStart(startPoint));
@@ -433,6 +453,16 @@ std::vector<std::shared_ptr<const THUAI6::Prop>> StudentDebugAPI::GetProps() con
 std::vector<std::shared_ptr<const THUAI6::Prop>> TrickerDebugAPI::GetProps() const
 {
     return logic.GetProps();
+}
+
+std::vector<std::shared_ptr<const THUAI6::Bullet>> StudentDebugAPI::GetBullets() const
+{
+    return logic.GetBullets();
+}
+
+std::vector<std::shared_ptr<const THUAI6::Bullet>> TrickerDebugAPI::GetBullets() const
+{
+    return logic.GetBullets();
 }
 
 std::vector<std::vector<THUAI6::PlaceType>> StudentDebugAPI::GetFullMap() const

@@ -50,6 +50,7 @@ namespace Playback
             {
                 cos.Flush();
                 gzs.Write(ms.GetBuffer(), 0, (int)ms.Length);
+                gzs.Flush();
                 ClearMemoryStream(ms);
                 fs.Flush();
             }

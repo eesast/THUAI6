@@ -26,6 +26,7 @@ public:
     bool Move(int64_t time, double angle, int64_t playerID);
     bool PickProp(THUAI6::PropType prop, int64_t playerID);
     bool UseProp(THUAI6::PropType prop, int64_t playerID);
+    bool ThrowProp(THUAI6::PropType prop, int64_t playerID);
     bool UseSkill(int32_t skillID, int64_t playerID);
     bool SendMessage(int64_t toID, std::string message, int64_t playerID);
     bool OpenDoor(int64_t playerID);

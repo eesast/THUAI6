@@ -109,6 +109,19 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
         return self.__pool.submit(logUse)
 
+    def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
+        self.__logger.info(
+            f"ThrowProp: prop = {propType.name}, called at {self.__GetTime()}ms")
+
+        def logThrow() -> bool:
+            result = self.__logic.ThrowProp(propType)
+            if not result:
+                self.__logger.warning(
+                    f"ThrowProp: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logThrow)
+
     def UseSkill(self, skillID: int) -> Future[bool]:
         self.__logger.info(
             f"UseSkill: skillID = {skillID}, called at {self.__GetTime()}ms")
@@ -260,6 +273,9 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
+
+    def GetBullets(self) -> List[THUAI6.Bullet]:
+        return self.__logic.GetBullets()
 
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         return self.__logic.GetFullMap()
@@ -545,6 +561,19 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
         return self.__pool.submit(logUse)
 
+    def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
+        self.__logger.info(
+            f"ThrowProp: prop = {propType.name}, called at {self.__GetTime()}ms")
+
+        def logThrow() -> bool:
+            result = self.__logic.ThrowProp(propType)
+            if not result:
+                self.__logger.warning(
+                    f"ThrowProp: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logThrow)
+
     def UseSkill(self, skillID: int) -> Future[bool]:
         self.__logger.info(
             f"UseSkill: skillID = {skillID}, called at {self.__GetTime()}ms")
@@ -696,6 +725,9 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
+
+    def GetBullets(self) -> List[THUAI6.Bullet]:
+        return self.__logic.GetBullets()
 
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         return self.__logic.GetFullMap()

@@ -127,12 +127,9 @@ public:
     // 获取视野内可见的道具信息
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
 
-<<<<<<< HEAD
-=======
     // 获取视野内可见的子弹信息
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const = 0;
 
->>>>>>> 413ef5584c0bd44e1399284a775da492adf98475
     [[nodiscard]] virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
     [[nodiscard]] virtual THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const = 0;
 

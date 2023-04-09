@@ -113,6 +113,7 @@
 `std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const`：返回整张地图的地形信息。
 
 - 下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。
+
 `THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY)` ：返回某一位置场地种类信息。场地种类详见 structure.h 。
 `bool IsDoorOpen(int32_t cellX, int32_t cellY) const`:查询特定位置门是否开启
 `int32_t GetChestProgress(int32_t cellX, int32_t cellY) const`:查询特定位置箱子开启进度
@@ -277,7 +278,9 @@
 
 ## 辅助函数
 `static inline int CellToGrid(int cell) noexcept`:将地图格数 cell 转换为绝对坐标grid。
+
 `static inline int GridToCell(int grid) noexcept`:将绝对坐标 grid 转换为地图格数cell。
+
 下面为用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
 ~~~c
     void Print(std::string str) const；

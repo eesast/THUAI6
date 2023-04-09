@@ -292,6 +292,7 @@ namespace Gaming
                 {
                     ((WriteAnswers)student.FindIActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
                 }
+                student.SetDegreeOfTreatment0();
 #if DEBUG
                 Debugger.Output(bullet, " 's AP is " + bullet.AP.ToString());
 #endif
@@ -328,7 +329,6 @@ namespace Gaming
                     bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
                     bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                 }
-                student.SetDegreeOfTreatment0();
                 if (student.HP <= 0)
                     student.TryActivatingLIFE();  // 如果有复活甲
 

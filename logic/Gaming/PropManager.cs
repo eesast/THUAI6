@@ -57,7 +57,7 @@ namespace Gaming
                         if (player.PlayerState == PlayerStateType.Stunned)
                         {
                             player.AddScore(GameData.ScorePropRecoverFromDizziness);
-                            player.PlayerState = PlayerStateType.Null;
+                            player.SetPlayerState();
                         }
                         break;
                     default:

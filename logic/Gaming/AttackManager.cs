@@ -174,7 +174,7 @@ namespace Gaming
 
                     if (bullet.CastTime > 0)
                     {
-                        player.PlayerState = PlayerStateType.TryingToAttack;
+                        player.SetPlayerState(PlayerStateType.TryingToAttack);
 
                         new Thread
                                 (() =>
@@ -195,7 +195,7 @@ namespace Gaming
                                     {
                                         if (player.PlayerState == PlayerStateType.TryingToAttack)
                                         {
-                                            player.PlayerState = PlayerStateType.Null;
+                                            player.SetPlayerState();
                                         }
                                         else
                                             bullet.IsMoving = false;

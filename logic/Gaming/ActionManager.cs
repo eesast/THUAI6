@@ -38,7 +38,7 @@ namespace Gaming
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
                 if (!playerToMove.Commandable()) return false;
-                playerToMove.PlayerState = PlayerStateType.Moving;
+                playerToMove.SetPlayerState(PlayerStateType.Moving);
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
                 return true;
             }
@@ -47,7 +47,7 @@ namespace Gaming
             {
                 if (player.Commandable())
                 {
-                    player.PlayerState = PlayerStateType.Null;
+                    player.SetPlayerState();
                     return true;
                 }
                 return false;
@@ -63,7 +63,7 @@ namespace Gaming
                     return false;
 
                 ++generatorForFix.NumOfFixing;
-                player.PlayerState = PlayerStateType.Fixing;
+                player.SetPlayerState(PlayerStateType.Fixing);
                 new Thread
           (
               () =>
@@ -74,7 +74,7 @@ namespace Gaming
                       {
                           if (generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player))
                           {
-                              player.PlayerState = PlayerStateType.Null;
+                              player.SetPlayerState();
                               gameMap.NumOfRepairedGenerators++;
                           }
                       },
@@ -99,7 +99,7 @@ namespace Gaming
                 if (doorwayToOpen == null || doorwayToOpen.IsOpening || !doorwayToOpen.PowerSupply)
                     return false;
 
-                player.PlayerState = PlayerStateType.OpeningTheDoorway;
+                player.SetPlayerState(PlayerStateType.OpeningTheDoorway);
                 doorwayToOpen.IsOpening = true;
                 new Thread
           (
@@ -120,7 +120,7 @@ namespace Gaming
                   if (doorwayToOpen.OpenDegree >= GameData.degreeOfOpenedDoorway)
                   {
                       if (player.PlayerState == PlayerStateType.OpeningTheDoorway)
-                          player.PlayerState = PlayerStateType.Null;
+                          player.SetPlayerState();
                   }
               }
 
@@ -163,7 +163,7 @@ namespace Gaming
                     playerTreated = gameMap.StudentForInteract(player.Position);
                     if (playerTreated == null) return false;
                 }
-                if (player == playerTreated || (!player.Commandable()) || player.PlayerState == PlayerStateType.Treating ||
+                if (player == playerTreated || (!player.Commandable()) || playerTreated.PlayerState == PlayerStateType.Treated ||
                     (!playerTreated.Commandable()) ||
                     playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
                     return false;
@@ -172,22 +172,22 @@ namespace Gaming
            (
                () =>
                {
-                   playerTreated.PlayerState = PlayerStateType.Treated;
-                   player.PlayerState = PlayerStateType.Treating;
+                   playerTreated.SetPlayerState(PlayerStateType.Treated);
+                   player.SetPlayerState(PlayerStateType.Treating);
                    new FrameRateTaskExecutor<int>(
                        loopCondition: () => playerTreated.PlayerState == PlayerStateType.Treated && player.PlayerState == PlayerStateType.Treating && gameMap.Timer.IsGaming,
                        loopToDo: () =>
                        {
                            if (playerTreated.AddDegreeOfTreatment(GameData.frameDuration * player.TreatSpeed, player))
-                               playerTreated.PlayerState = PlayerStateType.Null;
+                               playerTreated.SetPlayerState();
                        },
                        timeInterval: GameData.frameDuration,
                        finallyReturn: () => 0
                    )
                        .Start();
 
-                   if (player.PlayerState == PlayerStateType.Treating) player.PlayerState = PlayerStateType.Null;
-                   else if (playerTreated.PlayerState == PlayerStateType.Treated) playerTreated.PlayerState = PlayerStateType.Null;
+                   if (player.PlayerState == PlayerStateType.Treating) player.SetPlayerState();
+                   else if (playerTreated.PlayerState == PlayerStateType.Treated) playerTreated.SetPlayerState();
                }
            )
                 { IsBackground = true }.Start();
@@ -200,11 +200,10 @@ namespace Gaming
                     playerRescued = gameMap.StudentForInteract(player.Position);
                     if (playerRescued == null) return false;
                 }
-                if ((!player.Commandable()) || playerRescued.PlayerState != PlayerStateType.Addicted || player == playerRescued
-                    || !GameData.ApproachToInteract(playerRescued.Position, player.Position) || playerRescued.TimeOfRescue > 0)
+                if ((!player.Commandable()) || playerRescued.PlayerState != PlayerStateType.Addicted || !GameData.ApproachToInteract(playerRescued.Position, player.Position))
                     return false;
-                player.PlayerState = PlayerStateType.Rescuing;
-                playerRescued.PlayerState = PlayerStateType.Rescued;
+                player.SetPlayerState(PlayerStateType.Rescuing);
+                playerRescued.SetPlayerState(PlayerStateType.Rescued);
 
                 new Thread
            (
@@ -226,14 +225,14 @@ namespace Gaming
                    {
                        if (playerRescued.TimeOfRescue >= GameData.basicTimeOfRescue)
                        {
-                           playerRescued.PlayerState = PlayerStateType.Null;
+                           playerRescued.SetPlayerState();
                            playerRescued.HP = playerRescued.MaxHp / 2;
                            player.AddScore(GameData.StudentScoreRescue);
                        }
                        else
-                           playerRescued.PlayerState = PlayerStateType.Addicted;
+                           playerRescued.SetPlayerState(PlayerStateType.Addicted);
                    }
-                   if (player.PlayerState == PlayerStateType.Rescuing) player.PlayerState = PlayerStateType.Null;
+                   if (player.PlayerState == PlayerStateType.Rescuing) player.SetPlayerState();
                    playerRescued.TimeOfRescue = 0;
                }
            )
@@ -247,30 +246,21 @@ namespace Gaming
                     return false;
                 Chest? chestToOpen = (Chest?)gameMap.OneForInteract(player.Position, GameObjType.Chest);
 
-                if (chestToOpen == null || chestToOpen.OpenDegree > 0)
+                if (chestToOpen == null || chestToOpen.OpenStartTime > 0)
                     return false;
 
-                player.PlayerState = PlayerStateType.OpeningTheChest;
+                player.SetPlayerState(PlayerStateType.OpeningTheChest, chestToOpen);
+                int startTime = gameMap.Timer.nowTime();
+                chestToOpen.Open(startTime, player);
                 new Thread
           (
               () =>
               {
-                  new FrameRateTaskExecutor<int>(
-                      loopCondition: () => player.PlayerState == PlayerStateType.OpeningTheChest && gameMap.Timer.IsGaming && (!chestToOpen.IsOpen()),
-                      loopToDo: () =>
-                      {
-                          chestToOpen.OpenDegree += GameData.frameDuration * player.SpeedOfOpenChest;
-                      },
-                      timeInterval: GameData.frameDuration,
-                      finallyReturn: () => 0
-                  )
+                  Thread.Sleep(GameData.degreeOfOpenedChest / player.SpeedOfOpenChest);
 
-                      .Start();
-
-                  if (chestToOpen.IsOpen())
+                  if (chestToOpen.OpenStartTime == startTime)
                   {
-                      if (player.PlayerState == PlayerStateType.OpeningTheChest)
-                          player.PlayerState = PlayerStateType.Null;
+                      player.SetPlayerStateNaturally();
                       for (int i = 0; i < GameData.maxNumOfPropInChest; ++i)
                       {
                           Prop prop = chestToOpen.PropInChest[i];
@@ -279,8 +269,6 @@ namespace Gaming
                           gameMap.Add(prop);
                       }
                   }
-                  else chestToOpen.OpenDegree = 0;
-
               }
 
           )
@@ -312,7 +300,7 @@ namespace Gaming
                 //Wall addWall = new Wall(windowForClimb.Position - 2 * windowToPlayer);
                 // gameMap.Add(addWall);
 
-                player.PlayerState = PlayerStateType.ClimbingThroughWindows;
+                player.SetPlayerState(PlayerStateType.ClimbingThroughWindows);
                 windowForClimb.WhoIsClimbing = player;
                 new Thread
           (
@@ -354,7 +342,7 @@ namespace Gaming
                   //  gameMap.Remove(addWall);
                   if (player.PlayerState == PlayerStateType.ClimbingThroughWindows)
                   {
-                      player.PlayerState = PlayerStateType.Null;
+                      player.SetPlayerState();
                   }
               }
 
@@ -394,7 +382,7 @@ namespace Gaming
                 }
                 if (!flag) return false;
 
-                player.PlayerState = PlayerStateType.LockingOrOpeningTheDoor;
+                player.SetPlayerState(PlayerStateType.LockingOrOpeningTheDoor);
                 new Thread
           (
               () =>
@@ -417,7 +405,7 @@ namespace Gaming
                       doorToLock.IsOpen = (!doorToLock.IsOpen);
                   }
                   if (player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor)
-                      player.PlayerState = PlayerStateType.Null;
+                      player.SetPlayerState();
                   doorToLock.OpenOrLockDegree = 0;
               }
 

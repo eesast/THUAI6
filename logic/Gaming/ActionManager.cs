@@ -37,15 +37,15 @@ namespace Gaming
             }
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
-                if (!playerToMove.Commandable()) return false;
+                if (!playerToMove.Commandable() || !TryToStop()) return false;
                 playerToMove.SetPlayerState(PlayerStateType.Moving);
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
                 return true;
             }
 
-            public static bool Stop(Character player)
+            public bool Stop(Character player)
             {
-                if (player.Commandable())
+                if (player.Commandable() || !TryToStop())
                 {
                     player.SetPlayerState();
                     return true;
@@ -437,6 +437,33 @@ namespace Gaming
                 }
             }
             */
+            private object numLock = new object();
+            private int lastTime = 0;
+            private int numStop = 0;
+            private int NumStop => numStop;
+            private bool TryToStop()
+            {
+                lock (numLock)
+                {
+                    int time = gameMap.Timer.nowTime();
+                    if (time / GameData.frameDuration > lastTime)
+                    {
+                        lastTime = time / GameData.frameDuration;
+                        numStop = 1;
+                        return true;
+                    }
+                    else
+                    {
+                        if (numStop == GameData.LimitOfStopAndMove)
+                            return false;
+                        else
+                        {
+                            ++numStop;
+                            return true;
+                        }
+                    }
+                }
+            }
 
             private readonly Map gameMap;
             private readonly CharacterManager characterManager;

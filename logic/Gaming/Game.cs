@@ -167,7 +167,7 @@ namespace Gaming
             Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
-                return ActionManager.Stop(player);
+                return actionManager.Stop(player);
             }
             return false;
         }

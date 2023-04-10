@@ -15,6 +15,8 @@ namespace Preparation.Utility
         public const int checkInterval = 50;  // 检查位置标志、补充子弹的帧时长
         public const long gameDuration = 600000;      // 游戏时长600000ms = 10min
 
+        public const int LimitOfStopAndMove = 15;
+
         public const int MinSpeed = 1;             // 最小速度
         public const int MaxSpeed = int.MaxValue;  // 最大速度
 

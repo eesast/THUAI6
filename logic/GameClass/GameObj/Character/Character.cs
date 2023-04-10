@@ -300,14 +300,6 @@ namespace GameClass.GameObj
                 if (playerState == PlayerStateType.Null && IsMoving) return PlayerStateType.Moving;
                 return playerState;
             }
-            set
-            {
-                if (value != PlayerStateType.Moving)
-                    lock (gameObjLock)
-                        IsMoving = false;
-
-                lock (gameObjLock) playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
-            }
         }
 
         public bool NoHp() => (playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
@@ -322,6 +314,38 @@ namespace GameClass.GameObj
                                                             || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued
                                                             || playerState == PlayerStateType.Treated || playerState == PlayerStateType.Stunned
                                                             || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
+
+        private GameObj? whatInteractingWith = null;
+        public GameObj? WhatInteractingWith => whatInteractingWith;
+
+        public void SetPlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        {
+            lock (gameObjLock)
+            {
+                switch (playerState)
+                {
+                    case PlayerStateType.OpeningTheChest:
+                        ((Chest)whatInteractingWith).StopOpen();
+                        break;
+                    default:
+                        break;
+                }
+                whatInteractingWith = gameObj;
+                if (value != PlayerStateType.Moving)
+                    IsMoving = false;
+                playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
+                //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
+            }
+        }
+
+        public void SetPlayerStateNaturally()
+        {
+            lock (gameObjLock)
+            {
+                whatInteractingWith = null;
+                playerState = PlayerStateType.Null;
+            }
+        }
 
         private int score = 0;
         public int Score
@@ -379,21 +403,6 @@ namespace GameClass.GameObj
                 lock (gameObjLock)
                 {
                     playerID = value;
-                }
-            }
-        }
-        /// <summary>
-        /// 角色携带的信息
-        /// </summary>
-        private string message = "THUAI6";
-        public string Message
-        {
-            get => message;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    message = value;
                 }
             }
         }

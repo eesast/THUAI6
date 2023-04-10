@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using GameClass.GameObj;
 using System.Numerics;
 using Preparation.Utility;
+using Gaming;
 
 namespace Server
 {
 
     public static class CopyInfo
     {
-        public static MessageOfObj? Auto(GameObj gameObj)
+        public static MessageOfObj? Auto(GameObj gameObj, int time)
         {
             switch (gameObj.Type)
             {
@@ -29,7 +30,7 @@ namespace Server
                 case Preparation.Utility.GameObjType.Generator:
                     return Classroom((Generator)gameObj);
                 case Preparation.Utility.GameObjType.Chest:
-                    return Chest((Chest)gameObj);
+                    return Chest((Chest)gameObj, time);
                 case Preparation.Utility.GameObjType.Doorway:
                     return Gate((Doorway)gameObj);
                 case Preparation.Utility.GameObjType.EmergencyExit:
@@ -223,13 +224,14 @@ namespace Server
             msg.DoorMessage.IsOpen = door.IsOpen;
             return msg;
         }
-        private static MessageOfObj Chest(Chest chest)
+        private static MessageOfObj Chest(Chest chest, int time)
         {
             MessageOfObj msg = new MessageOfObj();
             msg.ChestMessage = new();
             msg.ChestMessage.X = chest.Position.x;
             msg.ChestMessage.Y = chest.Position.y;
-            msg.ChestMessage.Progress = chest.OpenDegree;
+            int progress = (chest.OpenStartTime > 0) ? ((time - chest.OpenStartTime) * chest.WhoOpen.SpeedOfOpenChest) : 0;
+            msg.ChestMessage.Progress = (progress > GameData.degreeOfOpenedChest) ? GameData.degreeOfOpenedChest : progress;
             return msg;
         }
     }

@@ -20,20 +20,25 @@ namespace GameClass.GameObj
         private Prop[] propInChest = new Prop[GameData.maxNumOfPropInChest] { new NullProp(), new NullProp() };
         public Prop[] PropInChest => propInChest;
 
-        private int openDegree = 0;
-        public int OpenDegree
+        private int openStartTime = 0;
+        public int OpenStartTime => openStartTime;
+        private Character? whoOpen = null;
+        public Character? WhoOpen => whoOpen;
+        public void Open(int startTime, Character character)
         {
-            get => openDegree;
-            set
+            lock (gameObjLock)
             {
-                if (value > 0)
-                    lock (gameObjLock)
-                        openDegree = (value > GameData.degreeOfOpenedChest) ? GameData.degreeOfOpenedChest : value;
-                else
-                    lock (gameObjLock)
-                        openDegree = 0;
+                openStartTime = startTime;
+                whoOpen = character;
             }
         }
-        public bool IsOpen() => (OpenDegree == GameData.degreeOfOpenedChest);
+        public void StopOpen()
+        {
+            lock (gameObjLock)
+            {
+                openStartTime = 0;
+                whoOpen = null;
+            }
+        }
     }
 }

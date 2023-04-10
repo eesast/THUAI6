@@ -100,6 +100,7 @@ namespace Preparation.Utility
         Rouse = 11,
         Encourage = 12,
         Inspire = 13,
+        ShowTime = 14,
     }
     public enum PassiveSkillType
     {

@@ -91,6 +91,37 @@ namespace Preparation.Interface
         public int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest * 1.1);
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
+    public class Idol : IGhostType
+    {
+        private const int moveSpeed = GameData.basicGhostMoveSpeed;
+        public int MoveSpeed => moveSpeed;
+
+        private const int maxHp = GameData.basicHp;
+        public int MaxHp => maxHp;
+
+        public BulletType InitBullet => BulletType.CommonAttackOfGhost;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public double concealment = GameData.basicConcealment;
+        public double Concealment => concealment;
+
+        public int alertnessRadius = GameData.basicGhostAlertnessRadius;
+        public int AlertnessRadius => alertnessRadius;
+
+        public int viewRange = GameData.basicGhostViewRange * 11 / 10;
+        public int ViewRange => viewRange;
+
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
+
+        public int speedOfClimbingThroughWindows = GameData.basicGhostSpeedOfClimbingThroughWindows;
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
+
+        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
+        public int SpeedOfOpenChest => speedOfOpenChest;
+    }
     public class ANoisyPerson : IGhostType
     {
         private const int moveSpeed = (int)(GameData.basicGhostMoveSpeed * 1.07);

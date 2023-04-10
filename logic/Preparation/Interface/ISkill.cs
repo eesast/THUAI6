@@ -33,7 +33,7 @@ namespace Preparation.Interface
 
     public class BecomeInvisible : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD;
+        public int SkillCD => GameData.commonSkillCD * 2;
         public int DurationTime => GameData.commonSkillTime * 6 / 10;
 
         private readonly object commonSkillLock = new object();
@@ -121,6 +121,21 @@ namespace Preparation.Interface
         }
     }
 
+    public class ShowTime : IActiveSkill
+    {
+        public int SkillCD => GameData.commonSkillCD * 3;
+        public int DurationTime => GameData.commonSkillTime;
+
+        private readonly object commonSkillLock = new object();
+        public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
+    }
+
     public class JumpyBomb : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD / 2;
@@ -137,7 +152,7 @@ namespace Preparation.Interface
 
     public class UseKnife : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 2 / 3;
+        public int SkillCD => GameData.commonSkillCD;
         public int DurationTime => GameData.commonSkillTime / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;

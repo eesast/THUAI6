@@ -216,7 +216,7 @@ namespace Gaming
                         return;
                     }
                 }
-                player.PlayerState = PlayerStateType.Addicted;
+                player.SetPlayerState(PlayerStateType.Addicted);
                 new Thread
                     (() =>
                     {
@@ -252,10 +252,10 @@ namespace Gaming
                 new Thread
                     (() =>
                     {
-                        player.PlayerState = PlayerStateType.Stunned;
+                        player.SetPlayerState(PlayerStateType.Stunned);
                         Thread.Sleep(time);
                         if (player.PlayerState == PlayerStateType.Stunned)
-                            player.PlayerState = PlayerStateType.Null;
+                            player.SetPlayerState();
                     }
                     )
                 { IsBackground = true }.Start();
@@ -341,7 +341,7 @@ namespace Gaming
             {
                 if (player == null || time <= 0) return false;
                 if (player.PlayerState == PlayerStateType.Swinging || (!player.Commandable() && player.PlayerState != PlayerStateType.TryingToAttack)) return false;
-                player.PlayerState = PlayerStateType.Swinging;
+                player.SetPlayerState(PlayerStateType.Swinging);
 
                 new Thread
                         (() =>
@@ -350,7 +350,7 @@ namespace Gaming
 
                             if (player.PlayerState == PlayerStateType.Swinging)
                             {
-                                player.PlayerState = PlayerStateType.Null;
+                                player.SetPlayerState();
                             }
                         }
                         )

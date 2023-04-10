@@ -28,6 +28,31 @@ namespace Gaming
                                                       { });
             }
 
+            public static bool ShowTime(Character player)
+            {
+                if ((!player.Commandable())) return false;
+                IActiveSkill skill = player.FindIActiveSkill(ActiveSkillType.ShowTime);
+                Debugger.Output(player, ": It's show time!");
+
+                return ActiveSkillEffect(skill, player, () =>
+                {
+                    /*            Thread
+                     *            new FrameRateTaskExecutor<int>(
+                                   loopCondition: () => player.PlayerState == PlayerStateType.OpeningTheChest && gameMap.Timer.IsGaming && (!chestToOpen.IsOpen()),
+                                   loopToDo: () =>
+                                   {
+                                       chestToOpen.OpenStartTime += GameData.frameDuration * player.SpeedOfOpenChest;
+                                   },
+                                   timeInterval: GameData.frameDuration,
+                                   finallyReturn: () => 0
+                               )
+
+                                   .Start();*/
+                },
+                                                      () =>
+                                                      { });
+            }
+
             public static bool BecomeInvisible(Character player)
             {
                 if ((!player.Commandable())) return false;
@@ -180,7 +205,7 @@ namespace Gaming
                         {
                             if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
                             {
-                                character.PlayerState = PlayerStateType.Null;
+                                character.SetPlayerState();
                                 character.HP = GameData.RemainHpWhenAddLife;
                                 ((Student)character).TimeOfRescue = 0;
                                 player.AddScore(GameData.StudentScoreRescue);

@@ -32,7 +32,7 @@ namespace Server
                 case Preparation.Utility.GameObjType.Chest:
                     return Chest((Chest)gameObj, time);
                 case Preparation.Utility.GameObjType.Doorway:
-                    return Gate((Doorway)gameObj);
+                    return Gate((Doorway)gameObj, time);
                 case Preparation.Utility.GameObjType.EmergencyExit:
                     if (((EmergencyExit)gameObj).CanOpen)
                         return HiddenGate((EmergencyExit)gameObj);
@@ -195,13 +195,14 @@ namespace Server
             msg.ClassroomMessage.Progress = generator.DegreeOfRepair;
             return msg;
         }
-        private static MessageOfObj Gate(Doorway doorway)
+        private static MessageOfObj Gate(Doorway doorway, int time)
         {
             MessageOfObj msg = new MessageOfObj();
             msg.GateMessage = new();
             msg.GateMessage.X = doorway.Position.x;
             msg.GateMessage.Y = doorway.Position.y;
-            msg.GateMessage.Progress = doorway.OpenDegree;
+            int progress = ((doorway.OpenStartTime > 0) ? (time - doorway.OpenStartTime) : 0) + doorway.OpenDegree;
+            msg.GateMessage.Progress = (progress > GameData.degreeOfOpenedDoorway) ? GameData.degreeOfOpenedDoorway : progress;
             return msg;
         }
         private static MessageOfObj HiddenGate(EmergencyExit Exit)

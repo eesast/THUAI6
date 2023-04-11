@@ -145,7 +145,7 @@ namespace Gaming
                         {
                             if (!character.IsGhost() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
                             {
-                                if (CharacterManager.BeStunned(character, GameData.TimeOfStudentFaintingWhenHowl))
+                                if (characterManager.BeStunned(character, GameData.TimeOfStudentFaintingWhenHowl))
                                     player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStudentFaintingWhenHowl));
                                 break;
                             }
@@ -155,7 +155,7 @@ namespace Gaming
                     {
                         gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
-                    CharacterManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl);
+                    characterManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl);
                     Debugger.Output(player, "howled!");
                 },
                                                       () =>
@@ -177,7 +177,7 @@ namespace Gaming
                                 || character.PlayerState == PlayerStateType.UsingSkill)
                                 && gameMap.CanSee(player, character))
                             {
-                                if (CharacterManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish))
+                                if (characterManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish))
                                     player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish));
                                 break;
                             }
@@ -205,7 +205,7 @@ namespace Gaming
                         {
                             if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
                             {
-                                character.SetPlayerState();
+                                characterManager.SetPlayerState(character);
                                 character.HP = GameData.RemainHpWhenAddLife;
                                 ((Student)character).TimeOfRescue = 0;
                                 player.AddScore(GameData.StudentScoreRescue);

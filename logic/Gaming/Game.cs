@@ -233,7 +233,7 @@ namespace Gaming
             Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
-                PropManager.UseProp(player, propType);
+                propManager.UseProp(player, propType);
             }
         }
         public void ThrowProp(long playerID, PropType propType = PropType.Null)
@@ -375,7 +375,7 @@ namespace Gaming
             characterManager = new CharacterManager(gameMap);
             attackManager = new AttackManager(gameMap, characterManager);
             actionManager = new ActionManager(gameMap, characterManager);
-            propManager = new PropManager(gameMap);
+            propManager = new PropManager(gameMap, characterManager);
             skillManager = new SkillManager(gameMap, actionManager, attackManager, propManager, characterManager);
         }
     }

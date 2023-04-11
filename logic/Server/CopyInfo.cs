@@ -32,7 +32,7 @@ namespace Server
                 case Preparation.Utility.GameObjType.Chest:
                     return Chest((Chest)gameObj, time);
                 case Preparation.Utility.GameObjType.Doorway:
-                    return Gate((Doorway)gameObj);
+                    return Gate((Doorway)gameObj, time);
                 case Preparation.Utility.GameObjType.EmergencyExit:
                     if (((EmergencyExit)gameObj).CanOpen)
                         return HiddenGate((EmergencyExit)gameObj);
@@ -44,42 +44,52 @@ namespace Server
         }
         public static MessageOfObj? Auto(MessageOfNews news)
         {
-            MessageOfObj objMsg = new();
-            objMsg.NewsMessage = news;
+            MessageOfObj objMsg = new()
+            {
+                NewsMessage = news
+            };
             return objMsg;
         }
 
         private static MessageOfObj? Student(Student player)
         {
-            MessageOfObj msg = new MessageOfObj();
             if (player.IsGhost()) return null;
-            msg.StudentMessage = new();
+            MessageOfObj msg = new()
+            {
+                StudentMessage = new()
+                {
+                    X = player.Position.x,
+                    Y = player.Position.y,
+                    Speed = player.MoveSpeed,
+                    Determination = player.HP,
+                    Addiction = player.GamingAddiction,
+                    Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)player.Place),
+                    Guid = player.ID,
 
-            msg.StudentMessage.X = player.Position.x;
-            msg.StudentMessage.Y = player.Position.y;
-            msg.StudentMessage.Speed = player.MoveSpeed;
-            msg.StudentMessage.Determination = player.HP;
-            msg.StudentMessage.Addiction = player.GamingAddiction;
+                    PlayerState = Transformation.ToPlayerState((PlayerStateType)player.PlayerState),
+                    PlayerId = player.PlayerID,
+                    ViewRange = player.ViewRange,
+                    Radius = player.Radius,
+                    DangerAlert = (player.BgmDictionary.ContainsKey(BgmType.GhostIsComing)) ? player.BgmDictionary[BgmType.GhostIsComing] : 0,
+                    Score = player.Score,
+                    TreatProgress = player.DegreeOfTreatment,
+                    RescueProgress = player.TimeOfRescue,
+
+                    BulletType = Transformation.ToBulletType((Preparation.Utility.BulletType)player.BulletOfPlayer),
+                    LearningSpeed = player.FixSpeed,
+                    TreatSpeed = player.TreatSpeed,
+                    FacingDirection = player.FacingDirection.Angle(),
+                    StudentType = Transformation.ToStudentType(player.CharacterType)
+                }
+            };
 
             foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
-            for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count(); ++i)
+            for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count; ++i)
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
 
             foreach (var value in player.PropInventory)
                 msg.StudentMessage.Prop.Add(Transformation.ToPropType(value.GetPropType()));
-
-            msg.StudentMessage.Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)player.Place);
-            msg.StudentMessage.Guid = player.ID;
-
-            msg.StudentMessage.PlayerState = Transformation.ToPlayerState((PlayerStateType)player.PlayerState);
-            msg.StudentMessage.PlayerId = player.PlayerID;
-            msg.StudentMessage.ViewRange = player.ViewRange;
-            msg.StudentMessage.Radius = player.Radius;
-            msg.StudentMessage.DangerAlert = (player.BgmDictionary.ContainsKey(BgmType.GhostIsComing)) ? player.BgmDictionary[BgmType.GhostIsComing] : 0;
-            msg.StudentMessage.Score = player.Score;
-            msg.StudentMessage.TreatProgress = player.DegreeOfTreatment;
-            msg.StudentMessage.RescueProgress = player.TimeOfRescue;
 
             foreach (KeyValuePair<Preparation.Utility.BuffType, bool> kvp in player.Buff)
             {
@@ -87,90 +97,100 @@ namespace Server
                     msg.StudentMessage.Buff.Add(Transformation.ToStudentBuffType(kvp.Key));
             }
 
-            msg.StudentMessage.BulletType = Transformation.ToBulletType((Preparation.Utility.BulletType)player.BulletOfPlayer);
-            msg.StudentMessage.LearningSpeed = player.FixSpeed;
-            msg.StudentMessage.TreatSpeed = player.TreatSpeed;
-            msg.StudentMessage.FacingDirection = player.FacingDirection.Angle();
-            msg.StudentMessage.StudentType = Transformation.ToStudentType(player.CharacterType);
             return msg;
         }
 
         private static MessageOfObj? Tricker(Character player)
         {
-            MessageOfObj msg = new MessageOfObj();
             if (!player.IsGhost()) return null;
-            msg.TrickerMessage = new();
+            MessageOfObj msg = new()
+            {
+                TrickerMessage = new()
+                {
+                    X = player.Position.x,
+                    Y = player.Position.y,
+                    Speed = player.MoveSpeed,
+                    Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)player.Place),
 
-            msg.TrickerMessage.X = player.Position.x;
-            msg.TrickerMessage.Y = player.Position.y;
-            msg.TrickerMessage.Speed = player.MoveSpeed;
+                    TrickerType = Transformation.ToTrickerType(player.CharacterType),
+                    Guid = player.ID,
+                    Score = player.Score,
+                    PlayerId = player.PlayerID,
+                    ViewRange = player.ViewRange,
+                    Radius = player.Radius,
+                    PlayerState = Transformation.ToPlayerState((PlayerStateType)player.PlayerState),
+                    TrickDesire = (player.BgmDictionary.ContainsKey(BgmType.StudentIsApproaching)) ? player.BgmDictionary[BgmType.StudentIsApproaching] : 0,
+                    ClassVolume = (player.BgmDictionary.ContainsKey(BgmType.GeneratorIsBeingFixed)) ? player.BgmDictionary[BgmType.GeneratorIsBeingFixed] : 0,
+                    FacingDirection = player.FacingDirection.Angle(),
+                    BulletType = Transformation.ToBulletType((Preparation.Utility.BulletType)player.BulletOfPlayer)
+                }
+            };
+
             foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
-            for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count(); ++i)
+            for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count; ++i)
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(-1);
 
-            msg.TrickerMessage.Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)player.Place);
             foreach (var value in player.PropInventory)
                 msg.TrickerMessage.Prop.Add(Transformation.ToPropType(value.GetPropType()));
-
-            msg.TrickerMessage.TrickerType = Transformation.ToTrickerType(player.CharacterType);
-            msg.TrickerMessage.Guid = player.ID;
-            msg.TrickerMessage.Score = player.Score;
-            msg.TrickerMessage.PlayerId = player.PlayerID;
-            msg.TrickerMessage.ViewRange = player.ViewRange;
-            msg.TrickerMessage.Radius = player.Radius;
-            msg.TrickerMessage.PlayerState = Transformation.ToPlayerState((PlayerStateType)player.PlayerState);
-            msg.TrickerMessage.TrickDesire = (player.BgmDictionary.ContainsKey(BgmType.StudentIsApproaching)) ? player.BgmDictionary[BgmType.StudentIsApproaching] : 0;
-            msg.TrickerMessage.ClassVolume = (player.BgmDictionary.ContainsKey(BgmType.GeneratorIsBeingFixed)) ? player.BgmDictionary[BgmType.GeneratorIsBeingFixed] : 0;
-            msg.TrickerMessage.FacingDirection = player.FacingDirection.Angle();
-            msg.TrickerMessage.BulletType = Transformation.ToBulletType((Preparation.Utility.BulletType)player.BulletOfPlayer);
             foreach (KeyValuePair<Preparation.Utility.BuffType, bool> kvp in player.Buff)
             {
                 if (kvp.Value)
                     msg.TrickerMessage.Buff.Add(Transformation.ToTrickerBuffType(kvp.Key));
             }
 
-
             return msg;
         }
 
         private static MessageOfObj Bullet(Bullet bullet)
         {
-            MessageOfObj msg = new MessageOfObj();
-            msg.BulletMessage = new();
-            msg.BulletMessage.X = bullet.Position.x;
-            msg.BulletMessage.Y = bullet.Position.y;
-            msg.BulletMessage.FacingDirection = bullet.FacingDirection.Angle();
-            msg.BulletMessage.Guid = bullet.ID;
-            msg.BulletMessage.Team = (bullet.Parent.IsGhost()) ? PlayerType.TrickerPlayer : PlayerType.StudentPlayer;
-            msg.BulletMessage.Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)bullet.Place);
-            msg.BulletMessage.BombRange = bullet.BulletBombRange;
-            msg.BulletMessage.Speed = bullet.Speed;
+            MessageOfObj msg = new()
+            {
+                BulletMessage = new()
+                {
+                    X = bullet.Position.x,
+                    Y = bullet.Position.y,
+                    FacingDirection = bullet.FacingDirection.Angle(),
+                    Guid = bullet.ID,
+                    Team = (bullet.Parent.IsGhost()) ? PlayerType.TrickerPlayer : PlayerType.StudentPlayer,
+                    Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)bullet.Place),
+                    BombRange = bullet.BulletBombRange,
+                    Speed = bullet.Speed
+                }
+            };
             return msg;
         }
 
         private static MessageOfObj Prop(Prop prop)
         {
-            MessageOfObj msg = new MessageOfObj();
-            msg.PropMessage = new();
-            msg.PropMessage.Type = Transformation.ToPropType(prop.GetPropType());
-            msg.PropMessage.X = prop.Position.x;
-            msg.PropMessage.Y = prop.Position.y;
-            msg.PropMessage.FacingDirection = prop.FacingDirection.Angle();
-            msg.PropMessage.Guid = prop.ID;
-            msg.PropMessage.Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)prop.Place);
+            MessageOfObj msg = new()
+            {
+                PropMessage = new()
+                {
+                    Type = Transformation.ToPropType(prop.GetPropType()),
+                    X = prop.Position.x,
+                    Y = prop.Position.y,
+                    FacingDirection = prop.FacingDirection.Angle(),
+                    Guid = prop.ID,
+                    Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)prop.Place)
+                }
+            };
             return msg;
         }
 
         private static MessageOfObj BombedBullet(BombedBullet bombedBullet)
         {
-            MessageOfObj msg = new MessageOfObj();
-            msg.BombedBulletMessage = new();
-            msg.BombedBulletMessage.X = bombedBullet.bulletHasBombed.Position.x;
-            msg.BombedBulletMessage.Y = bombedBullet.bulletHasBombed.Position.y;
-            msg.BombedBulletMessage.FacingDirection = bombedBullet.FacingDirection.Angle();
-            msg.BombedBulletMessage.MappingId = bombedBullet.MappingID;
-            msg.BombedBulletMessage.BombRange = bombedBullet.bulletHasBombed.BulletBombRange;
+            MessageOfObj msg = new()
+            {
+                BombedBulletMessage = new()
+                {
+                    X = bombedBullet.bulletHasBombed.Position.x,
+                    Y = bombedBullet.bulletHasBombed.Position.y,
+                    FacingDirection = bombedBullet.FacingDirection.Angle(),
+                    MappingId = bombedBullet.MappingID,
+                    BombRange = bombedBullet.bulletHasBombed.BulletBombRange
+                }
+            };
             return msg;
         }
 
@@ -188,48 +208,69 @@ namespace Server
 
         private static MessageOfObj Classroom(Generator generator)
         {
-            MessageOfObj msg = new MessageOfObj();
-            msg.ClassroomMessage = new();
-            msg.ClassroomMessage.X = generator.Position.x;
-            msg.ClassroomMessage.Y = generator.Position.y;
-            msg.ClassroomMessage.Progress = generator.DegreeOfRepair;
+            MessageOfObj msg = new()
+            {
+                ClassroomMessage = new()
+                {
+                    X = generator.Position.x,
+                    Y = generator.Position.y,
+                    Progress = generator.DegreeOfRepair
+                }
+            };
             return msg;
         }
-        private static MessageOfObj Gate(Doorway doorway)
+        private static MessageOfObj Gate(Doorway doorway, int time)
         {
-            MessageOfObj msg = new MessageOfObj();
-            msg.GateMessage = new();
-            msg.GateMessage.X = doorway.Position.x;
-            msg.GateMessage.Y = doorway.Position.y;
-            msg.GateMessage.Progress = doorway.OpenDegree;
+            MessageOfObj msg = new()
+            {
+                GateMessage = new()
+                {
+                    X = doorway.Position.x,
+                    Y = doorway.Position.y
+                }
+            };
+            int progress = ((doorway.OpenStartTime > 0) ? (time - doorway.OpenStartTime) : 0) + doorway.OpenDegree;
+            msg.GateMessage.Progress = (progress > GameData.degreeOfOpenedDoorway) ? GameData.degreeOfOpenedDoorway : progress;
             return msg;
         }
         private static MessageOfObj HiddenGate(EmergencyExit Exit)
         {
-            MessageOfObj msg = new MessageOfObj();
-            msg.HiddenGateMessage = new();
-            msg.HiddenGateMessage.X = Exit.Position.x;
-            msg.HiddenGateMessage.Y = Exit.Position.y;
-            msg.HiddenGateMessage.Opened = Exit.IsOpen;
+            MessageOfObj msg = new()
+            {
+                HiddenGateMessage = new()
+                {
+                    X = Exit.Position.x,
+                    Y = Exit.Position.y,
+                    Opened = Exit.IsOpen
+                }
+            };
             return msg;
         }
 
         private static MessageOfObj Door(Door door)
         {
-            MessageOfObj msg = new MessageOfObj();
-            msg.DoorMessage = new();
-            msg.DoorMessage.X = door.Position.x;
-            msg.DoorMessage.Y = door.Position.y;
-            msg.DoorMessage.Progress = door.OpenOrLockDegree;
-            msg.DoorMessage.IsOpen = door.IsOpen;
+            MessageOfObj msg = new()
+            {
+                DoorMessage = new()
+                {
+                    X = door.Position.x,
+                    Y = door.Position.y,
+                    Progress = door.OpenOrLockDegree,
+                    IsOpen = door.IsOpen
+                }
+            };
             return msg;
         }
         private static MessageOfObj Chest(Chest chest, int time)
         {
-            MessageOfObj msg = new MessageOfObj();
-            msg.ChestMessage = new();
-            msg.ChestMessage.X = chest.Position.x;
-            msg.ChestMessage.Y = chest.Position.y;
+            MessageOfObj msg = new()
+            {
+                ChestMessage = new()
+                {
+                    X = chest.Position.x,
+                    Y = chest.Position.y
+                }
+            };
             int progress = (chest.OpenStartTime > 0) ? ((time - chest.OpenStartTime) * chest.WhoOpen.SpeedOfOpenChest) : 0;
             msg.ChestMessage.Progress = (progress > GameData.degreeOfOpenedChest) ? GameData.degreeOfOpenedChest : progress;
             return msg;

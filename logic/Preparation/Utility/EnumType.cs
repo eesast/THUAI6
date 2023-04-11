@@ -83,6 +83,7 @@ namespace Preparation.Utility
         ANoisyPerson = 7,
         Robot = 8,
         Sunshine = 9,
+        Idol = 10,
     }
     public enum ActiveSkillType  // 主动技能
     {

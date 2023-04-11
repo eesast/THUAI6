@@ -4,6 +4,7 @@ using Preparation.Interface;
 using Preparation.Utility;
 using System;
 using Timothy.FrameRateTask;
+using Google.Protobuf.Compiler;
 
 namespace Gaming
 {
@@ -28,29 +29,51 @@ namespace Gaming
                                                       { });
             }
 
-            public static bool ShowTime(Character player)
+            public bool ShowTime(Character player)
             {
                 if ((!player.Commandable())) return false;
                 IActiveSkill skill = player.FindIActiveSkill(ActiveSkillType.ShowTime);
-                Debugger.Output(player, ": It's show time!");
+                characterManager.SetPlayerState(player, PlayerStateType.UsingSkill);
 
                 return ActiveSkillEffect(skill, player, () =>
                 {
-                    /*            Thread
-                     *            new FrameRateTaskExecutor<int>(
-                                   loopCondition: () => player.PlayerState == PlayerStateType.OpeningTheChest && gameMap.Timer.IsGaming && (!chestToOpen.IsOpen()),
-                                   loopToDo: () =>
-                                   {
-                                       chestToOpen.OpenStartTime += GameData.frameDuration * player.SpeedOfOpenChest;
-                                   },
-                                   timeInterval: GameData.frameDuration,
-                                   finallyReturn: () => 0
-                               )
+                    new Thread
+                    (
+                   () =>
+                   {
+                       new FrameRateTaskExecutor<int>(
+                       loopCondition: () => player.PlayerState == PlayerStateType.UsingSkill && gameMap.Timer.IsGaming,
+                             loopToDo: () =>
+                             {
+                                 gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+                                 try
+                                 {
+                                     foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
+                                     {
+                                         if (!person.IsGhost())
+                                             actionManager.MovePlayer(person, GameData.frameDuration, (player.Position - person.Position).Angle());
+                                     }
+                                 }
+                                 finally
+                                 {
+                                     gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                                 }
+                             },
+                             timeInterval: GameData.frameDuration,
+                             finallyReturn: () => 0
+                         )
 
-                                   .Start();*/
+                             .Start();
+                   }
+                    )
+                    { IsBackground = true }.Start();
                 },
                                                       () =>
-                                                      { });
+                                                      {
+                                                          if (player.PlayerState == PlayerStateType.UsingSkill)
+                                                              player.SetPlayerStateNaturally();
+                                                      }
+                                                      );
             }
 
             public static bool BecomeInvisible(Character player)
@@ -145,7 +168,7 @@ namespace Gaming
                         {
                             if (!character.IsGhost() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
                             {
-                                if (CharacterManager.BeStunned(character, GameData.TimeOfStudentFaintingWhenHowl))
+                                if (characterManager.BeStunned(character, GameData.TimeOfStudentFaintingWhenHowl))
                                     player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStudentFaintingWhenHowl));
                                 break;
                             }
@@ -155,7 +178,7 @@ namespace Gaming
                     {
                         gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
-                    CharacterManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl);
+                    characterManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl);
                     Debugger.Output(player, "howled!");
                 },
                                                       () =>
@@ -177,7 +200,7 @@ namespace Gaming
                                 || character.PlayerState == PlayerStateType.UsingSkill)
                                 && gameMap.CanSee(player, character))
                             {
-                                if (CharacterManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish))
+                                if (characterManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish))
                                     player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish));
                                 break;
                             }
@@ -205,7 +228,7 @@ namespace Gaming
                         {
                             if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
                             {
-                                character.SetPlayerState();
+                                characterManager.SetPlayerState(character);
                                 character.HP = GameData.RemainHpWhenAddLife;
                                 ((Student)character).TimeOfRescue = 0;
                                 player.AddScore(GameData.StudentScoreRescue);

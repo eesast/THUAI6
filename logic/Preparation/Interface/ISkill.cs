@@ -126,7 +126,7 @@ namespace Preparation.Interface
         public int SkillCD => GameData.commonSkillCD * 3;
         public int DurationTime => GameData.commonSkillTime;
 
-        private readonly object commonSkillLock = new object();
+        private readonly object commonSkillLock = new();
         public object ActiveSkillLock => commonSkillLock;
 
         public bool isBeingUsed = false;
@@ -275,6 +275,8 @@ namespace Preparation.Interface
                     return new Rouse();
                 case ActiveSkillType.Inspire:
                     return new Inspire();
+                case ActiveSkillType.ShowTime:
+                    return new ShowTime();
                 default:
                     return new NullSkill();
             }
@@ -308,6 +310,8 @@ namespace Preparation.Interface
                     return ActiveSkillType.UseRobot;
                 case Rouse:
                     return ActiveSkillType.Rouse;
+                case ShowTime:
+                    return ActiveSkillType.ShowTime;
                 default:
                     return ActiveSkillType.Null;
             }

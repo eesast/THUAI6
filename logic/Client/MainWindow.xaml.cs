@@ -241,7 +241,7 @@ namespace Client
                                 playerMsg.TrickerType = TrickerType.ANoisyPerson;
                                 break;
                             case 4:
-                                playerMsg.TrickerType = TrickerType._4;
+                                playerMsg.TrickerType = TrickerType.Idol;
                                 break;
                             case 0:
                             default:

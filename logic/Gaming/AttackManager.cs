@@ -81,14 +81,14 @@ namespace Gaming
                 {
                     if (objBeingShot == null)
                     {
-                        CharacterManager.BackSwing((Character?)bullet.Parent, bullet.Backswing);
+                        characterManager.BackSwing((Character?)bullet.Parent, bullet.Backswing);
                         return;
                     }
 
                     Debugger.Output(bullet, bullet.TypeOfBullet.ToString());
 
                     BombObj(bullet, objBeingShot);
-                    CharacterManager.BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
+                    characterManager.BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
                     return;
                 }
 
@@ -140,10 +140,10 @@ namespace Gaming
 
                 if (objBeingShot == null)
                 {
-                    CharacterManager.BackSwing((Character?)bullet.Parent, bullet.Backswing);
+                    characterManager.BackSwing((Character?)bullet.Parent, bullet.Backswing);
                 }
                 else
-                    CharacterManager.BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
+                    characterManager.BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
             }
 
             public bool Attack(Character? player, double angle)
@@ -174,7 +174,7 @@ namespace Gaming
 
                     if (bullet.CastTime > 0)
                     {
-                        player.SetPlayerState(PlayerStateType.TryingToAttack);
+                        characterManager.SetPlayerState(player, PlayerStateType.TryingToAttack);
 
                         new Thread
                                 (() =>
@@ -195,7 +195,7 @@ namespace Gaming
                                     {
                                         if (player.PlayerState == PlayerStateType.TryingToAttack)
                                         {
-                                            player.SetPlayerState();
+                                            characterManager.SetPlayerState(player);
                                         }
                                         else
                                             bullet.IsMoving = false;

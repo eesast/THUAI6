@@ -52,6 +52,9 @@ namespace Gaming
                         case ActiveSkillType.Rouse:
                             Rouse(character);
                             break;
+                        case ActiveSkillType.ShowTime:
+                            ShowTime(character);
+                            break;
                         default:
                             return false;
                     }

@@ -318,18 +318,10 @@ namespace GameClass.GameObj
         private GameObj? whatInteractingWith = null;
         public GameObj? WhatInteractingWith => whatInteractingWith;
 
-        public void SetPlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        public void ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
             lock (gameObjLock)
             {
-                switch (playerState)
-                {
-                    case PlayerStateType.OpeningTheChest:
-                        ((Chest)whatInteractingWith).StopOpen();
-                        break;
-                    default:
-                        break;
-                }
                 whatInteractingWith = gameObj;
                 if (value != PlayerStateType.Moving)
                     IsMoving = false;

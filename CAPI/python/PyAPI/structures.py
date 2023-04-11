@@ -7,6 +7,7 @@ if sys.version_info < (3, 9):
 else:
     Tuple = tuple
 
+
 class GameState(Enum):
     NullGameState = 0
     GameStart = 1
@@ -76,6 +77,7 @@ class TrickerType(Enum):
     Assassin = 1
     Klee = 2
     ANoisyPerson = 3
+    Idol = 4
 
 
 class StudentBuffType(Enum):

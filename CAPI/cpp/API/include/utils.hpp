@@ -119,7 +119,7 @@ namespace Proto2THUAI6
         {protobuf::TrickerType::ASSASSIN, THUAI6::TrickerType::Assassin},
         {protobuf::TrickerType::KLEE, THUAI6::TrickerType::Klee},
         {protobuf::TrickerType::A_NOISY_PERSON, THUAI6::TrickerType::ANoisyPerson},
-        {protobuf::TrickerType::TRICKERTYPE4, THUAI6::TrickerType::TrickerType4},
+        {protobuf::TrickerType::IDOL, THUAI6::TrickerType::Idol},
     };
 
     inline std::map<protobuf::StudentBuffType, THUAI6::StudentBuffType> studentBuffTypeDict{
@@ -385,7 +385,7 @@ namespace THUAI62Proto
         {THUAI6::TrickerType::Assassin, protobuf::TrickerType::ASSASSIN},
         {THUAI6::TrickerType::Klee, protobuf::TrickerType::KLEE},
         {THUAI6::TrickerType::ANoisyPerson, protobuf::TrickerType::A_NOISY_PERSON},
-        {THUAI6::TrickerType::TrickerType4, protobuf::TrickerType::TRICKERTYPE4},
+        {THUAI6::TrickerType::Idol, protobuf::TrickerType::IDOL},
     };
 
     // inline std::map<THUAI6::TrickerBuffType, protobuf::TrickerBuffType> trickerBuffTypeDict{

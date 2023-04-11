@@ -162,7 +162,7 @@ namespace Gaming
            (
                () =>
                {
-                   characterManager.SetPlayerState(player, PlayerStateType.Treated);
+                   characterManager.SetPlayerState(playerTreated, PlayerStateType.Treated);
                    characterManager.SetPlayerState(player, PlayerStateType.Treating);
                    new FrameRateTaskExecutor<int>(
                        loopCondition: () => playerTreated.PlayerState == PlayerStateType.Treated && player.PlayerState == PlayerStateType.Treating && gameMap.Timer.IsGaming,

@@ -49,8 +49,8 @@ namespace Client
                 case TrickerType.ANoisyPerson:
                     serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nANoisyPerson";
                     break;
-                case TrickerType._4:
-                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nTrickerType4";
+                case TrickerType.Idol:
+                    serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nIdol";
                     break;
                 case TrickerType.NullTrickerType:
                     serial.Text = "👥" + Convert.ToString(1) + "👻" + Convert.ToString(obj.PlayerId) + "\nNullTrickerType";

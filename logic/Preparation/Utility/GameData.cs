@@ -129,6 +129,7 @@ namespace Preparation.Utility
                 CharacterType.Assassin => true,
                 CharacterType.Klee => true,
                 CharacterType.ANoisyPerson => true,
+                CharacterType.Idol => true,
                 _ => false,
             };
         }

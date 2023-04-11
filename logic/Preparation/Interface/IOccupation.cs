@@ -101,10 +101,10 @@ namespace Preparation.Interface
 
         public BulletType InitBullet => BulletType.CommonAttackOfGhost;
 
-        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { });
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.ShowTime });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
 
-        public double concealment = GameData.basicConcealment;
+        public double concealment = GameData.basicConcealment * 3 / 4;
         public double Concealment => concealment;
 
         public int alertnessRadius = GameData.basicGhostAlertnessRadius;
@@ -414,6 +414,8 @@ namespace Preparation.Interface
                     return new ANoisyPerson();
                 case CharacterType.TechOtaku:
                     return new TechOtaku();
+                case CharacterType.Idol:
+                    return new Idol();
                 case CharacterType.Athlete:
                 default:
                     return new Athlete();

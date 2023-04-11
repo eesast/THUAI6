@@ -30,7 +30,9 @@ namespace Gaming
                         ((Chest)player.WhatInteractingWith).StopOpen();
                         break;
                     case PlayerStateType.OpeningTheDoorway:
-                        ((Doorway)player.WhatInteractingWith).OpenDegree += gameMap.Timer.nowTime() - ((Doorway)player.WhatInteractingWith).OpenStartTime;
+                        Doorway doorway = (Doorway)player.WhatInteractingWith;
+                        doorway.OpenDegree += gameMap.Timer.nowTime() - doorway.OpenStartTime;
+                        doorway.OpenStartTime = 0;
                         break;
                     default:
                         break;

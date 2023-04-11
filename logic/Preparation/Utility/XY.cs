@@ -75,10 +75,7 @@ namespace Preparation.Utility
             return Math.Atan2(y, x);
         }
 
-        public override bool Equals(object obj)
-        {
-            throw new NotImplementedException();
-        }
+        public override bool Equals(object obj) => throw new NotImplementedException();
 
         public override int GetHashCode()
         {

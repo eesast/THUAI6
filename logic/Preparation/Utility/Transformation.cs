@@ -233,6 +233,8 @@ namespace Preparation.Utility
                     return Protobuf.TrickerType.Klee;
                 case Preparation.Utility.CharacterType.ANoisyPerson:
                     return Protobuf.TrickerType.ANoisyPerson;
+                case CharacterType.Idol:
+                    return TrickerType.Idol;
                 default:
                     return Protobuf.TrickerType.NullTrickerType;
             }
@@ -247,6 +249,8 @@ namespace Preparation.Utility
                     return Preparation.Utility.CharacterType.Klee;
                 case Protobuf.TrickerType.ANoisyPerson:
                     return Preparation.Utility.CharacterType.ANoisyPerson;
+                case TrickerType.Idol:
+                    return CharacterType.Idol;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }

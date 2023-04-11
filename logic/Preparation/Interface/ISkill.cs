@@ -33,8 +33,8 @@ namespace Preparation.Interface
 
     public class BecomeInvisible : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 2;
-        public int DurationTime => GameData.commonSkillTime * 6 / 10;
+        public int SkillCD => GameData.commonSkillCD * 4 / 3;
+        public int DurationTime => GameData.commonSkillTime;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;

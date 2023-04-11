@@ -44,6 +44,7 @@ class Constants(NoInstance):
     basicTrickerAlertnessRadius = 17 * numOfGridPerCell
     basicStudentViewRange = 10 * numOfGridPerCell
     basicTrickerViewRange = 15 * numOfGridPerCell
+    PinningDownRange = 5 * numOfPosGridPerCell
 
     maxNumOfProp = 3
 
@@ -186,13 +187,13 @@ class Constants(NoInstance):
     commonSkillCD = 30000  # 普通技能标准冷却时间
     commonSkillTime = 10000  # 普通技能标准持续时间
 
-    timeOfTrickerFaintingWhenCharge = 7220
-    timeOfStudentFaintingWhenCharge = 2090
+    timeOfTrickerStunnedWhenCharge = 7220
+    timeOfStudentStunnedWhenCharge = 2090
 
-    timeOfTrickerFaintingWhenPunish = 3070
+    timeOfTrickerStunnedWhenPunish = 3070
 
-    timeOfTrickerSwingingAfterHowl = 3070
-    timeOfStudentFaintingWhenHowl = 6110
+    timeOfTrickerSwingingAfterHowl = 800
+    timeOfStudentStunnedWhenHowl = 5500
 
     timeOfStunnedWhenJumpyDumpty = 3070
 
@@ -204,8 +205,8 @@ class Constants(NoInstance):
         durationTime = 0.5*commonSkillTime
 
     class BecomeInvisible:
-        skillCD = 2.0*commonSkillCD
-        durationTime = 0.6*commonSkillTime
+        skillCD = 4*commonSkillCD/3
+        durationTime = commonSkillTime
 
     class Punish:
         skillCD = 1.0*commonSkillCD
@@ -225,7 +226,7 @@ class Constants(NoInstance):
 
     class Howl:
         skillCD = 0.8333*commonSkillCD
-        durationTime = 0.0*commonSkillTime
+        durationTime = 0*commonSkillTime
 
     class ShowTime:
         skillCD = 3.0*commonSkillCD

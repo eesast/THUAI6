@@ -32,7 +32,6 @@ namespace Gaming
             {
                 if ((!player.Commandable())) return false;
                 IActiveSkill skill = player.FindIActiveSkill(ActiveSkillType.ShowTime);
-                characterManager.SetPlayerState(player, PlayerStateType.UsingSkill);
 
                 return ActiveSkillEffect(skill, player, () =>
                 {
@@ -41,7 +40,7 @@ namespace Gaming
                    () =>
                    {
                        new FrameRateTaskExecutor<int>(
-                       loopCondition: () => player.PlayerState == PlayerStateType.UsingSkill && gameMap.Timer.IsGaming,
+                       loopCondition: () => player.Commandable() && gameMap.Timer.IsGaming,
                              loopToDo: () =>
                              {
                                  gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
@@ -69,8 +68,6 @@ namespace Gaming
                 },
                                                       () =>
                                                       {
-                                                          if (player.PlayerState == PlayerStateType.UsingSkill)
-                                                              player.SetPlayerStateNaturally();
                                                       }
                                                       );
             }
@@ -167,8 +164,8 @@ namespace Gaming
                         {
                             if (!character.IsGhost() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
                             {
-                                if (characterManager.BeStunned(character, GameData.TimeOfStudentFaintingWhenHowl))
-                                    player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStudentFaintingWhenHowl));
+                                if (characterManager.BeStunned(character, GameData.TimeOfStudentStunnedWhenHowl))
+                                    player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStudentStunnedWhenHowl));
                                 break;
                             }
                         }
@@ -199,8 +196,8 @@ namespace Gaming
                                 || character.PlayerState == PlayerStateType.UsingSkill)
                                 && gameMap.CanSee(player, character))
                             {
-                                if (characterManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish))
-                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish));
+                                if (characterManager.BeStunned(character, GameData.TimeOfGhostStunnedWhenPunish))
+                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostStunnedWhenPunish));
                                 break;
                             }
                         }

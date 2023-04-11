@@ -49,6 +49,7 @@ namespace Constants
     SCCI int basicTrickerAlertnessRadius = 17 * numOfGridPerCell;
     SCCI int basicStudentViewRange = 10 * numOfGridPerCell;
     SCCI int basicTrickerViewRange = 15 * numOfGridPerCell;
+    SCCI int PinningDownRange = 5 * numOfGridPerCell;
 
     SCCI int maxNumOfProp = 3;
 
@@ -216,13 +217,13 @@ namespace Constants
     SCCI int commonSkillCD = 30000;    // 普通技能标准冷却时间
     SCCI int commonSkillTime = 10000;  // 普通技能标准持续时间
 
-    SCCI int timeOfTrickerFaintingWhenCharge = 7220;
-    SCCI int timeOfStudentFaintingWhenCharge = 2090;
+    SCCI int timeOfTrickerStunnedWhenCharge = 7220;
+    SCCI int timeOfStudentStunnedWhenCharge = 2090;
 
-    SCCI int timeOfTrickerFaintingWhenPunish = 3070;
+    SCCI int timeOfTrickerStunnedWhenPunish = 3070;
 
-    SCCI int timeOfTrickerSwingingAfterHowl = 3070;
-    SCCI int timeOfStudentFaintingWhenHowl = 6110;
+    SCCI int timeOfTrickerSwingingAfterHowl = 800;
+    SCCI int timeOfStudentStunnedWhenHowl = 5500;
 
     SCCI int timeOfStunnedWhenJumpyDumpty = 3070;
 
@@ -230,8 +231,8 @@ namespace Constants
     SCCI int timeOfAddingSpeedWhenInspire = 6000;
     struct CanBeginToCharge
     {
-        SCCI double skillCD = 0.8;
-        SCCI double durationTime = 0.5;
+        SCCI double skillCD = 4 / 3;
+        SCCI double durationTime = 1;
     };
 
     struct BecomeInvisible

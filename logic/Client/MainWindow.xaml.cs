@@ -807,11 +807,11 @@ namespace Client
                             {
                                 Ellipse icon = new()
                                 {
-                                    Width = 10,
-                                    Height = 10,
+                                    Width = 2*bulletRadiusTimes*unitWidth,
+                                    Height =  2*bulletRadiusTimes*unitHeight,
                                     HorizontalAlignment = HorizontalAlignment.Left,
                                     VerticalAlignment = VerticalAlignment.Top,
-                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth*bulletRadiusTimes, data.X * unitHeight / 1000.0 - unitHeight *bulletRadiusTimes, 0, 0),
                                     Fill = Brushes.Red,
                                 };
                                 switch (data.Type)
@@ -849,7 +849,7 @@ namespace Client
                                     }
                                 case Protobuf.BulletType.JumpyDumpty:
                                     {
-                                        Ellipse icon = new Ellipse();
+                                        Ellipse icon = new();
                                         double bombRange = data.BombRange / 1000;
                                         icon.Width = bombRange * unitWidth;
                                         icon.Height = bombRange * unitHeight;
@@ -1429,6 +1429,7 @@ namespace Client
         bool isEmergencyDrawed = false;
         bool isDataFixed = false;
         const double radiusTimes = 1.0 * Preparation.Utility.GameData.characterRadius / Preparation.Utility.GameData.numOfPosGridPerCell;
+        const double bulletRadiusTimes =1.0* GameData.bulletRadius/ Preparation.Utility.GameData.numOfPosGridPerCell;
         private int[] totalLife = new int[4] { 100, 100, 100, 100 }, totalDeath = new int[4] { 100, 100, 100, 100 };
         private int[,] coolTime = new int[3, 5] { { 100, 100, 100, 100, 100 }, { 100, 100, 100, 100, 100 }, { 100, 100, 100, 100, 100 } };
     }

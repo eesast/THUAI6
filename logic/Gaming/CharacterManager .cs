@@ -152,7 +152,7 @@ namespace Gaming
                                         {
                                             if (!noise && XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
                                                 newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
-                                            if (newPlayer.CharacterType != CharacterType.Teacher && XY.Distance(newPlayer.Position, person.Position) <= newPlayer.ViewRange)
+                                            if (newPlayer.CharacterType != CharacterType.Teacher && XY.Distance(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
                                             {
                                                 TimePinningDown += GameData.checkInterval;
                                                 newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);

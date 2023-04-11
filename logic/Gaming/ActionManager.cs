@@ -30,9 +30,9 @@ namespace Gaming
                 }
                 if (player.FindIActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
                 {
-                    if (characterManager.BeStunned((Character)collisionObj, GameData.TimeOfGhostFaintingWhenCharge))
-                        player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenCharge));
-                    characterManager.BeStunned(player, GameData.TimeOfStudentFaintingWhenCharge);
+                    if (characterManager.BeStunned((Character)collisionObj, GameData.TimeOfGhostStunnedWhenCharge))
+                        player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostStunnedWhenCharge));
+                    characterManager.BeStunned(player, GameData.TimeOfStudentStunnedWhenCharge);
                 }
             }
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)

@@ -107,9 +107,9 @@ namespace Preparation.Utility
 #if DEBUG
         public const int basicStudentMoveSpeed = 9000;// 基本移动速度，单位：s-1
 #else
-        public const int basicStudentMoveSpeed = 1270;
+        public const int basicStudentMoveSpeed = 1500;
 #endif
-        public const int basicGhostMoveSpeed = (int)(basicStudentMoveSpeed * 45.0 / 38);
+        public const int basicGhostMoveSpeed = (int)(basicStudentMoveSpeed * 1.2);
 
         public const int characterMaxSpeed = 12000;                  // 最大速度
 

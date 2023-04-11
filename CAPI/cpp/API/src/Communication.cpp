@@ -183,7 +183,7 @@ bool Communication::StartLearning(int64_t playerID)
         return false;
 }
 
-bool Communication::StartRescueMate(int64_t playerID, int64_t mateID)
+bool Communication::StartRouseMate(int64_t playerID, int64_t mateID)
 {
     protobuf::BoolRes saveStudentResult;
     ClientContext context;
@@ -195,7 +195,7 @@ bool Communication::StartRescueMate(int64_t playerID, int64_t mateID)
         return false;
 }
 
-bool Communication::StartTreatMate(int64_t playerID, int64_t mateID)
+bool Communication::StartEncourageMate(int64_t playerID, int64_t mateID)
 {
     protobuf::BoolRes healStudentResult;
     ClientContext context;

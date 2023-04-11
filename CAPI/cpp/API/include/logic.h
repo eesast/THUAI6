@@ -125,8 +125,8 @@ private:
 
     bool StartLearning() override;
 
-    bool StartTreatMate(int64_t mateID) override;
-    bool StartRescueMate(int64_t mateID) override;
+    bool StartEncourageMate(int64_t mateID) override;
+    bool StartRouseMate(int64_t mateID) override;
 
     bool Attack(double angle) override;
 

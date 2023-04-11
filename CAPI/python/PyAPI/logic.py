@@ -224,13 +224,13 @@ class Logic(ILogic):
         self.__logger.debug("Called StartLearning")
         return self.__comm.StartLearning(self.__playerID)
 
-    def StartTreatMate(self, mateID: int) -> bool:
-        self.__logger.debug("Called StartTreatMate")
-        return self.__comm.StartTreatMate(self.__playerID, mateID)
+    def StartEncourageMate(self, mateID: int) -> bool:
+        self.__logger.debug("Called StartEncourageMate")
+        return self.__comm.StartEncourageMate(self.__playerID, mateID)
 
-    def StartRescueMate(self, mateID: int) -> bool:
-        self.__logger.debug("Called StartRescueMate")
-        return self.__comm.StartRescueMate(self.__playerID, mateID)
+    def StartRouseMate(self, mateID: int) -> bool:
+        self.__logger.debug("Called StartRouseMate")
+        return self.__comm.StartRouseMate(self.__playerID, mateID)
 
     def Attack(self, angle: float) -> bool:
         self.__logger.debug("Called Trick")

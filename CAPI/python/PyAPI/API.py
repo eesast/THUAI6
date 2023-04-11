@@ -157,11 +157,11 @@ class StudentAPI(IStudentAPI, IGameTimer):
     def StartLearning(self) -> Future[bool]:
         return self.__pool.submit(self.__logic.StartLearning)
 
-    def StartTreatMate(self, mateID: int) -> Future[bool]:
-        return self.__pool.submit(self.__logic.StartTreatMate, mateID)
+    def StartEncourageMate(self, mateID: int) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartEncourageMate, mateID)
 
-    def StartRescueMate(self, mateID: int) -> Future[bool]:
-        return self.__pool.submit(self.__logic.StartRescueMate, mateID)
+    def StartRouseMate(self, mateID: int) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartRouseMate, mateID)
 
     def GetSelfInfo(self) -> THUAI6.Student:
         return cast(THUAI6.Student, self.__logic.GetSelfInfo())

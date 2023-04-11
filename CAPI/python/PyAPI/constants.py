@@ -1,4 +1,9 @@
-class Constants():
+class NoInstance:
+    def __call__(self):
+        raise TypeError("This class cannot be instantiated.")
+
+
+class Constants(NoInstance):
     numOfGridPerCell = 1000  # 单位坐标数
     rows = 50                # 地图行数
     cols = 50                # 地图列数

@@ -575,23 +575,23 @@ std::future<bool> StudentDebugAPI::StartLearning()
                         return result; });
 }
 
-std::future<bool> StudentDebugAPI::StartRescueMate(int64_t mateID)
+std::future<bool> StudentDebugAPI::StartRouseMate(int64_t mateID)
 {
-    logger->info("StartRescueMate: mate id={}, called at {}ms", mateID, Time::TimeSinceStart(startPoint));
+    logger->info("StartRouseMate: mate id={}, called at {}ms", mateID, Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
-                      { auto result = logic.StartRescueMate(mateID);
+                      { auto result = logic.StartRouseMate(mateID);
                         if (!result)
-                            logger->warn("StartRescueMate: failed at {}ms", Time::TimeSinceStart(startPoint));
+                            logger->warn("StartRouseMate: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 
-std::future<bool> StudentDebugAPI::StartTreatMate(int64_t mateID)
+std::future<bool> StudentDebugAPI::StartEncourageMate(int64_t mateID)
 {
-    logger->info("StartTreatMate: mate id={}, called at {}ms", mateID, Time::TimeSinceStart(startPoint));
+    logger->info("StartEncourageMate: mate id={}, called at {}ms", mateID, Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
-                      { auto result = logic.StartTreatMate(mateID);
+                      { auto result = logic.StartEncourageMate(mateID);
                         if (!result)
-                            logger->warn("StartTreatMate: failed at {}ms", Time::TimeSinceStart(startPoint));
+                            logger->warn("StartEncourageMate: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 

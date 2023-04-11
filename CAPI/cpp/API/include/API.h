@@ -69,8 +69,8 @@ public:
     virtual bool Graduate() = 0;
 
     virtual bool StartLearning() = 0;
-    virtual bool StartTreatMate(int64_t mateID) = 0;
-    virtual bool StartRescueMate(int64_t mateID) = 0;
+    virtual bool StartEncourageMate(int64_t mateID) = 0;
+    virtual bool StartRouseMate(int64_t mateID) = 0;
 
     virtual bool OpenDoor() = 0;
     virtual bool CloseDoor() = 0;
@@ -177,8 +177,8 @@ public:
     /*****学生阵营的特定函数*****/
 
     virtual std::future<bool> StartLearning() = 0;
-    virtual std::future<bool> StartTreatMate(int64_t mateID) = 0;
-    virtual std::future<bool> StartRescueMate(int64_t mateID) = 0;
+    virtual std::future<bool> StartEncourageMate(int64_t mateID) = 0;
+    virtual std::future<bool> StartRouseMate(int64_t mateID) = 0;
     virtual std::future<bool> Graduate() = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const = 0;
 };
@@ -266,8 +266,8 @@ public:
     [[nodiscard]] std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> StartLearning() override;
-    std::future<bool> StartTreatMate(int64_t mateID) override;
-    std::future<bool> StartRescueMate(int64_t mateID) override;
+    std::future<bool> StartEncourageMate(int64_t mateID) override;
+    std::future<bool> StartRouseMate(int64_t mateID) override;
     std::future<bool> Graduate() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
@@ -434,8 +434,8 @@ public:
     [[nodiscard]] std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> StartLearning() override;
-    std::future<bool> StartTreatMate(int64_t mateID) override;
-    std::future<bool> StartRescueMate(int64_t mateID) override;
+    std::future<bool> StartEncourageMate(int64_t mateID) override;
+    std::future<bool> StartRouseMate(int64_t mateID) override;
     std::future<bool> Graduate() override;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 

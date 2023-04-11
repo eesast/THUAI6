@@ -147,11 +147,11 @@ class ILogic(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def StartTreatMate(self, mateID: int) -> bool:
+    def StartEncourageMate(self, mateID: int) -> bool:
         pass
 
     @abstractmethod
-    def StartRescueMate(self, mateID: int) -> bool:
+    def StartRouseMate(self, mateID: int) -> bool:
         pass
 
 
@@ -350,11 +350,11 @@ class IStudentAPI(IAPI, metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def StartTreatMate(self, mateID: int) -> Future[bool]:
+    def StartEncourageMate(self, mateID: int) -> Future[bool]:
         pass
 
     @abstractmethod
-    def StartRescueMate(self, mateID: int) -> Future[bool]:
+    def StartRouseMate(self, mateID: int) -> Future[bool]:
         pass
 
     @abstractmethod

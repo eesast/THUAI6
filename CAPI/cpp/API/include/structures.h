@@ -94,7 +94,7 @@ namespace THUAI6
         Assassin = 1,
         Klee = 2,
         ANoisyPerson = 3,
-        TrickerType4 = 4,
+        Idol = 4,
     };
 
     // 学生Buff类型
@@ -292,6 +292,7 @@ namespace THUAI6
         {TrickerType::Assassin, "Assassin"},
         {TrickerType::Klee, "Klee"},
         {TrickerType::ANoisyPerson, "ANoisyPerson"},
+        {TrickerType::Idol, "Idol"},
     };
 
     inline std::map<PlayerState, std::string> playerStateDict{

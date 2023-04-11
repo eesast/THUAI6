@@ -1,6 +1,7 @@
 import PyAPI.structures as THUAI6
 from PyAPI.Interface import IStudentAPI, ITrickerAPI, IAI
 from typing import Union, Final, cast
+from PyAPI.constants import Constants
 import queue
 
 import time
@@ -147,4 +148,7 @@ class AI(IAI):
         api.PrintTricker()
 
     def TrickerPlay(self, api: ITrickerAPI) -> None:
+        api.UseSkill(0)
+        api.UseSkill(1)
+        api.PrintSelfInfo()
         return

@@ -368,13 +368,13 @@ namespace protobuf
         ASSASSIN = 1,
         KLEE = 2,
         A_NOISY_PERSON = 3,
-        TRICKERTYPE4 = 4,
+        IDOL = 4,
         TrickerType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         TrickerType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool TrickerType_IsValid(int value);
     constexpr TrickerType TrickerType_MIN = NULL_TRICKER_TYPE;
-    constexpr TrickerType TrickerType_MAX = TRICKERTYPE4;
+    constexpr TrickerType TrickerType_MAX = IDOL;
     constexpr int TrickerType_ARRAYSIZE = TrickerType_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* TrickerType_descriptor();

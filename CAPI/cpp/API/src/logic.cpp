@@ -251,16 +251,16 @@ bool Logic::StartLearning()
     return pComm->StartLearning(playerID);
 }
 
-bool Logic::StartTreatMate(int64_t mateID)
+bool Logic::StartEncourageMate(int64_t mateID)
 {
-    logger->debug("Called StartTreatMate");
-    return pComm->StartTreatMate(playerID, mateID);
+    logger->debug("Called StartEncourageMate");
+    return pComm->StartEncourageMate(playerID, mateID);
 }
 
-bool Logic::StartRescueMate(int64_t mateID)
+bool Logic::StartRouseMate(int64_t mateID)
 {
-    logger->debug("Called StartRescueMate");
-    return pComm->StartRescueMate(playerID, mateID);
+    logger->debug("Called StartRouseMate");
+    return pComm->StartRouseMate(playerID, mateID);
 }
 
 bool Logic::Attack(double angle)

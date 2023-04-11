@@ -383,16 +383,16 @@ std::future<bool> StudentAPI::StartLearning()
                       { return logic.StartLearning(); });
 }
 
-std::future<bool> StudentAPI::StartTreatMate(int64_t mateID)
+std::future<bool> StudentAPI::StartEncourageMate(int64_t mateID)
 {
     return std::async(std::launch::async, [=]()
-                      { return logic.StartTreatMate(mateID); });
+                      { return logic.StartEncourageMate(mateID); });
 }
 
-std::future<bool> StudentAPI::StartRescueMate(int64_t mateID)
+std::future<bool> StudentAPI::StartRouseMate(int64_t mateID)
 {
     return std::async(std::launch::async, [=]()
-                      { return logic.StartRescueMate(mateID); });
+                      { return logic.StartRouseMate(mateID); });
 }
 
 std::future<bool> StudentAPI::Graduate()

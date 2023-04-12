@@ -699,6 +699,14 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                     case THUAI6::MessageOfObj::StudentMessage:
                         {
                             bool flag = false;
+                            for (const auto& buff : bufferState->trickerSelf->buff)
+                                if (buff == THUAI6::TrickerBuffType::Clairaudience)
+                                {
+                                    flag = true;
+                                    bufferState->students.push_back(Proto2THUAI6::Protobuf2THUAI6Student(item.student_message()));
+                                    logger->debug("Add Student!");
+                                    break;
+                                }
                             for (int i = 0; i < item.student_message().buff_size(); i++)
                                 if (Proto2THUAI6::studentBuffTypeDict[item.student_message().buff(i)] == THUAI6::StudentBuffType::Invisible)
                                 {

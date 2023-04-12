@@ -745,7 +745,22 @@ namespace Client
                                     Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * radiusTimes, data.X * unitHeight / 1000.0 - unitHeight * radiusTimes, 0, 0),
                                     Fill = Brushes.BlueViolet,
                                 };
+                                TextBox num = new()
+                                {
+                                    FontSize = 7 * UpperLayerOfMap.ActualHeight / 650,
+                                    Width = 2 * radiusTimes * unitWidth,
+                                    Height = 2 * radiusTimes * unitHeight,
+                                    Text = Convert.ToString(data.PlayerId),
+                                    HorizontalAlignment = HorizontalAlignment.Left,
+                                    VerticalAlignment = VerticalAlignment.Top,
+                                    Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * radiusTimes, data.X * unitHeight / 1000.0 - unitHeight * radiusTimes, 0, 0),
+                                    Background = Brushes.Transparent,
+                                    BorderBrush = Brushes.Transparent,
+                                    IsReadOnly = true,
+                                    Foreground = Brushes.White,
+                                };
                                 UpperLayerOfMap.Children.Add(icon);
+                                UpperLayerOfMap.Children.Add(num);
                             }
                         }
                         foreach (var data in listOfButcher)
@@ -836,27 +851,31 @@ namespace Client
                             {
                                 case Protobuf.BulletType.BombBomb:
                                     {
-                                        Ellipse icon = new();
-                                        double bombRange = data.BombRange / 1000;
-                                        icon.Width = bombRange * unitWidth;
-                                        icon.Height = bombRange * unitHeight;
-                                        icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                        icon.VerticalAlignment = VerticalAlignment.Top;
-                                        icon.Margin = new Thickness(data.Y * unitWidth / 1000.0 - bombRange * unitWidth / 2, data.X * unitHeight / 1000.0 - bombRange * unitHeight / 2, 0, 0);
-                                        icon.Fill = Brushes.Red;
+                                        double bombRange = 1.0*data.BombRange / Preparation.Utility.GameData.numOfPosGridPerCell;
+                                        Ellipse icon = new()
+                                        {
+                                            Width = 2 * bombRange * unitWidth,
+                                            Height = 2 * bombRange * unitHeight,
+                                            HorizontalAlignment = HorizontalAlignment.Left,
+                                            VerticalAlignment = VerticalAlignment.Top,
+                                            Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * bombRange, data.X * unitHeight / 1000.0 - unitHeight * bombRange, 0, 0),
+                                            Fill = Brushes.DarkRed,
+                                        };
                                         UpperLayerOfMap.Children.Add(icon);
                                         break;
                                     }
                                 case Protobuf.BulletType.JumpyDumpty:
                                     {
-                                        Ellipse icon = new();
-                                        double bombRange = data.BombRange / 1000;
-                                        icon.Width = bombRange * unitWidth;
-                                        icon.Height = bombRange * unitHeight;
-                                        icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                        icon.VerticalAlignment = VerticalAlignment.Top;
-                                        icon.Margin = new Thickness(data.Y * unitWidth / 1000.0 - bombRange * unitWidth / 2, data.X * unitHeight / 1000.0 - bombRange * unitHeight / 2, 0, 0);
-                                        icon.Fill = Brushes.Red;
+                                        double bombRange = 1.0 * data.BombRange / Preparation.Utility.GameData.numOfPosGridPerCell;
+                                        Ellipse icon = new()
+                                        {
+                                            Width = 2 * bombRange * unitWidth,
+                                            Height = 2 * bombRange * unitHeight,
+                                            HorizontalAlignment = HorizontalAlignment.Left,
+                                            VerticalAlignment = VerticalAlignment.Top,
+                                            Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * bombRange, data.X * unitHeight / 1000.0 - unitHeight * bombRange, 0, 0),
+                                            Fill = Brushes.DarkViolet,
+                                        };
                                         UpperLayerOfMap.Children.Add(icon);
                                         break;
                                     }

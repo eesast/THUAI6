@@ -452,6 +452,11 @@ class Logic(ILogic):
                         self.__logger.debug("Add Tricker!")
                 for item in message.obj_message:
                     if item.WhichOneof("message_of_obj") == "student_message":
+                        if THUAI6.TrickerBuffType.Clairaudience in self.__bufferState.self.buff:
+                            self.__bufferState.students.append(
+                                Proto2THUAI6.Protobuf2THUAI6Student(item.student_message))
+                            self.__logger.debug("Add Student!")
+                            continue
                         if MessageType.STUDENT_INVISIBLE in item.student_message.buff:
                             continue
                         if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.student_message.x, item.student_message.y, self.__bufferState.gameMap):

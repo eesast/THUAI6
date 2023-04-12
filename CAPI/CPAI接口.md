@@ -1,35 +1,36 @@
-# CAPI接口
 - [CAPI接口](#capi接口)
   - [接口解释](#接口解释)
-    - [移动](#移动)
-    - [使用技能](#使用技能)
-    - [人物](#人物)
-    - [攻击](#攻击)
+    - [主动指令](#主动指令)
+      - [移动](#移动)
+      - [使用技能](#使用技能)
+      - [人物](#人物)
+      - [攻击](#攻击)
       - [学习与毕业](#学习与毕业)
-      - [勉励](#勉励)
-      - [沉迷与唤醒](#沉迷与唤醒)
-      - [门](#门)
-      - [窗](#窗)
-      - [箱子](#箱子)
-    - [队内信息](#队内信息)
+      - [勉励与唤醒](#勉励与唤醒)
+      - [地图互动](#地图互动)
+      - [道具](#道具)
     - [信息获取](#信息获取)
-  - [辅助函数](#辅助函数)
-    - [道具](#道具)
+      - [队内信息](#队内信息)
+      - [查询可视范围内的信息](#查询可视范围内的信息)
+      - [查询特定位置物体的信息，下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。](#查询特定位置物体的信息下面的-cellx-和-celly-指的是地图格数而非绝对坐标)
+      - [其他](#其他)
+    - [辅助函数](#辅助函数)
   - [接口一览](#接口一览)
-
+# CAPI接口
 ## 接口解释
 
-### 移动
+### 主动指令
+#### 移动
 - `std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian)`:移动，`timeInMilliseconds` 为移动时间，单位毫秒；`angleInRadian` 表示移动方向，单位弧度，使用极坐标，**竖直向下方向为x轴，水平向右方向为y轴**  
-- `bool MoveRight(uint32_t timeInMilliseconds)`即向右移动,`MoveLeft`、`MoveDown`、`MoveUp`同理  
+- `std::future<bool> MoveRight(uint32_t timeInMilliseconds)`即向右移动,`MoveLeft`、`MoveDown`、`MoveUp`同理  
 
-### 使用技能
+#### 使用技能
 - `std::future<bool> UseSkill(int32_t skillID)`:使用对应序号的主动技能
 
-### 人物
+#### 人物
 - `std::future<bool> EndAllAction()`:可以使不处在不可行动状态中的玩家终止当前行动
 
-### 攻击
+#### 攻击
 - `std::future<bool> Attack(double angleInRadian)`:`angleInRadian`为攻击方向
 
 #### 学习与毕业
@@ -37,35 +38,35 @@
 - `std::future<bool> StartOpenGate()`:开始开启校门
 - `std::future<bool> Graduate()`:从开启的校门或隐藏校门毕业。
 
-#### 勉励
-- `std::future<bool> StartEncourageMate(int64_t mateID)`:勉励对应玩家ID的学生，
-
-#### 沉迷与唤醒
+#### 勉励与唤醒
+- `std::future<bool> StartEncourageMate(int64_t mateID)`:勉励对应玩家ID的学生。
 - `std::future<bool> StartRouseMate(int64_t mateID)`：唤醒对应玩家ID的沉迷的学生。
 
-#### 门
+#### 地图互动
 - `std::future<bool> OpenDoor()`:开门
 - `std::future<bool> CloseDoor()`:关门
-
-#### 窗
 - `std::future<bool> SkipWindow()`:翻窗
-
-#### 箱子
 - `std::future<bool> StartOpenChest()`:开箱
 
-### 队内信息
-- `std::future<bool> SendMessage(int64_t, std::string)`：给同队的队友发送消息。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
-- `bool HaveMessage()`:是否有队友发来的尚未接收的信息。
-- `std::pair<int64_t, std::string> GetMessage()`:从玩家ID为第一个参数的队友获取信息。
+#### 道具
+- `bool PickProp(THUAI6::PropType prop)`捡起与自己处于同一个格子（cell）的道具。
+- `bool UseProp(THUAI6::PropType prop)`使用对应类型的道具
+- `bool ThrowProp(THUAI6::PropType prop)`将对应类型的道具扔在原地
 
 ### 信息获取
-- 查询可视范围内的信息
+
+#### 队内信息
+  - `std::future<bool> SendMessage(int64_t, std::string)`：给同队的队友发送消息。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
+  - `bool HaveMessage()`:是否有队友发来的尚未接收的信息。
+  - `std::pair<int64_t, std::string> GetMessage()`:从玩家ID为第一个参数的队友获取信息。
+
+#### 查询可视范围内的信息
   - `std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const` ：返回所有可视学生的信息。
   - `std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const` ：返回所有可视捣蛋鬼的信息。
   - `std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const` ：返回所有可视道具的信息。
   - `std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const` ：返回所有可视子弹（攻击）的信息。
 
-- 查询特定位置物体的信息，下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。
+#### 查询特定位置物体的信息，下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。
   - `THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY)` ：返回某一位置场地种类信息。场地种类详见 structure.h 。
   - `bool IsDoorOpen(int32_t cellX, int32_t cellY) const`:查询特定位置门是否开启
   - `int32_t GetChestProgress(int32_t cellX, int32_t cellY) const`:查询特定位置箱子开启进度
@@ -73,14 +74,15 @@
   - `int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const`:查询特定位置教室作业完成进度
   - `THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const`：:查询特定位置隐藏校门状态
   - `int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const`:查询特定位置门开启状态
-- 其他
+
+#### 其他
   - `std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const`:查询当前游戏状态\
   - `std::vector<int64_t> GetPlayerGUIDs() const`:获取所有玩家的GUID\
   - `int GetFrameCount() const`:获取目前所进行的帧数\
   - `std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const`或`std::shared_ptr<const THUAI6::Student> GetSelfInfo() const`：获取自己的信息
   - `std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const`：返回整张地图的地形信息。
 
-## 辅助函数
+### 辅助函数
 `static inline int CellToGrid(int cell) noexcept`:将地图格数 cell 转换为绝对坐标grid。
 
 `static inline int GridToCell(int grid) noexcept`:将绝对坐标 grid 转换为地图格数cell。
@@ -93,11 +95,6 @@
     void PrintProp() const；
     void PrintSelfInfo() const；
 ~~~
-
-### 道具
-- `bool PickProp(THUAI6::PropType prop)`捡起与自己处于同一个格子（cell）的道具。
-- `bool UseProp(THUAI6::PropType prop)`使用对应类型的道具
-- `bool ThrowProp(THUAI6::PropType prop)`将对应类型的道具扔在原地
 
 ## 接口一览
 ~~~csharp

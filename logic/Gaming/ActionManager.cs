@@ -382,7 +382,6 @@ namespace Gaming
                       loopToDo: () =>
                       {
                           flag = ((gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character)) == null);
-                          Preparation.Utility.Debugger.Output(doorToLock, flag.ToString());
                           doorToLock.OpenOrLockDegree += GameData.frameDuration * player.SpeedOfOpeningOrLocking;
                       },
                       timeInterval: GameData.frameDuration,

@@ -29,15 +29,11 @@ class Constants(NoInstance):
 
     basicHp = 3000000
     basicMaxGamingAddiction = 60000
-    BeginGamingAddiction = 20900
-    MidGamingAddiction = 40300
     basicEncouragementDegree = 1500000
     basicTimeOfRouse = 1000
 
     basicStudentSpeed = 1270
     basicTrickerSpeed = 1504
-
-    maxSpeed = 12000
 
     basicConcealment = 1.0
     basicStudentAlertnessRadius = 15 * numOfGridPerCell
@@ -46,7 +42,7 @@ class Constants(NoInstance):
     basicTrickerViewRange = 15 * numOfGridPerCell
     PinningDownRange = 5 * numOfPosGridPerCell
 
-    maxNumOfProp = 3
+    maxNumOfProp = 3 # 人物道具栏容量
 
     # 攻击相关
 
@@ -66,7 +62,6 @@ class Constants(NoInstance):
 
     apPropAdd = basicApOfTricker * 12 / 10
     apSpearAdd = basicApOfTricker * 6 / 10
-    remainHpWhenAddLife = 100
 
     class Assassin:
         moveSpeed = 1.1*basicTrickerSpeed

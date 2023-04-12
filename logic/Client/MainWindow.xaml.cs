@@ -851,7 +851,7 @@ namespace Client
                             {
                                 case Protobuf.BulletType.BombBomb:
                                     {
-                                        double bombRange = 1.0*data.BombRange / Preparation.Utility.GameData.numOfPosGridPerCell;
+                                        double bombRange = 1.0 * data.BombRange / Preparation.Utility.GameData.numOfPosGridPerCell;
                                         Ellipse icon = new()
                                         {
                                             Width = 2 * bombRange * unitWidth,

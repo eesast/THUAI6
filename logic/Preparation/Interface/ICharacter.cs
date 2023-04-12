@@ -12,6 +12,8 @@ namespace Preparation.Interface
         public double Vampire { get; }
         public PlayerStateType PlayerState { get; }
         public BulletType BulletOfPlayer { get; set; }
+        public CharacterType CharacterType { get; }
+        public int BulletNum { get; }
 
         public bool IsGhost();
     }

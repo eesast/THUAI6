@@ -221,6 +221,20 @@ namespace GameClass.GameObj
             }
             return flag;
         }
+        public bool RemoveJustFromMap(GameObj gameObj)
+        {
+            GameObjLockDict[gameObj.Type].EnterWriteLock();
+            bool flag;
+            try
+            {
+                flag = GameObjDict[gameObj.Type].Remove(gameObj);
+            }
+            finally
+            {
+                GameObjLockDict[gameObj.Type].ExitWriteLock();
+            }
+            return flag;
+        }
         public void Add(GameObj gameObj)
         {
             GameObjLockDict[gameObj.Type].EnterWriteLock();

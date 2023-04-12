@@ -564,23 +564,16 @@ namespace Client
                 return true;
             if (humanOrButcher && human != null)
             {
-                if (human.Guid == msg.Guid)  // 自己能看见自己
+                if (msg.Place == human.Place)
                     return true;
-            }
-            if (msg.Place == Protobuf.PlaceType.Grass || msg.Place == Protobuf.PlaceType.Gate || msg.Place == Protobuf.PlaceType.HiddenGate)
-                return false;
-            if (msg.Place == Protobuf.PlaceType.Land || msg.Place == Protobuf.PlaceType.Classroom)
-                return true;
-            if (humanOrButcher && human != null)
-            {
-                if (msg.Place != human.Place)
-                    return false;
             }
             else if (!humanOrButcher && butcher != null)
             {
-                if (msg.Place != butcher.Place)
-                    return false;
+                if (msg.Place == butcher.Place)
+                    return true;
             }
+            if (msg.Place == Protobuf.PlaceType.Grass)
+                return false;
             return true;
         }
 
@@ -593,20 +586,21 @@ namespace Client
                 if (butcher.Guid == msg.Guid)  // 自己能看见自己
                     return true;
             }
-            if (msg.Place == Protobuf.PlaceType.Grass || msg.Place == Protobuf.PlaceType.Gate || msg.Place == Protobuf.PlaceType.HiddenGate)
-                return false;
-            if (msg.Place == Protobuf.PlaceType.Land || msg.Place == Protobuf.PlaceType.Classroom)
-                return true;
             if (humanOrButcher && human != null)
             {
-                if (msg.Place != human.Place)
-                    return false;
+                if (msg.TrickerType == Protobuf.TrickerType.Assassin)
+                {
+                    foreach (var buff in msg.Buff)
+                    {
+                        if (buff == Protobuf.TrickerBuffType.TrickerInvisible)
+                            return false;
+                    }
+                }
+                if (msg.Place == human.Place)
+                    return true;
             }
-            else if (!humanOrButcher && butcher != null)
-            {
-                if (msg.Place != butcher.Place)
-                    return false;
-            }
+            if (msg.Place == Protobuf.PlaceType.Grass)
+                return false;
             return true;
         }
 
@@ -614,18 +608,18 @@ namespace Client
         {
             if (isSpectatorMode)
                 return true;
-            if (msg.Place == Protobuf.PlaceType.Land)
-                return true;
             if (humanOrButcher && human != null)
             {
-                if (msg.Place != human.Place)
-                    return false;
+                if (msg.Place == human.Place)
+                    return true;
             }
             else if (!humanOrButcher && butcher != null)
             {
-                if (msg.Place != butcher.Place)
-                    return false;
+                if (msg.Place == butcher.Place)
+                    return true;
             }
+            if (msg.Place == Protobuf.PlaceType.Grass)
+                return false;
             return true;
         }
 
@@ -633,18 +627,37 @@ namespace Client
         {
             if (isSpectatorMode)
                 return true;
-            if (msg.Place == Protobuf.PlaceType.Land)
-                return true;
             if (humanOrButcher && human != null)
             {
-                if (msg.Place != human.Place)
-                    return false;
+                if (msg.Place == human.Place)
+                    return true;
             }
             else if (!humanOrButcher && butcher != null)
             {
-                if (msg.Place != butcher.Place)
-                    return false;
+                if (msg.Place == butcher.Place)
+                    return true;
             }
+            if (msg.Place == Protobuf.PlaceType.Grass)
+                return false;
+            return true;
+        }
+
+        private bool CanSee(MessageOfBombedBullet msg)
+        {
+            if (isSpectatorMode)
+                return true;
+            //if (humanOrButcher && human != null)
+            //{
+            //    if (msg.Place == human.Place)
+            //        return true;
+            //}
+            //else if (!humanOrButcher && butcher != null)
+            //{
+            //    if (msg.Place == butcher.Place)
+            //        return true;
+            //}
+            //if (msg.Place == Protobuf.PlaceType.Grass)
+            //    return false;
             return true;
         }
 
@@ -847,46 +860,49 @@ namespace Client
                         }
                         foreach (var data in listOfBombedBullet)
                         {
-                            switch (data.Type)
+                            if (CanSee(data))
                             {
-                                case Protobuf.BulletType.BombBomb:
-                                    {
-                                        double bombRange = 1.0 * data.BombRange / Preparation.Utility.GameData.numOfPosGridPerCell;
-                                        Ellipse icon = new()
+                                switch (data.Type)
+                                {
+                                    case Protobuf.BulletType.BombBomb:
                                         {
-                                            Width = 2 * bombRange * unitWidth,
-                                            Height = 2 * bombRange * unitHeight,
-                                            HorizontalAlignment = HorizontalAlignment.Left,
-                                            VerticalAlignment = VerticalAlignment.Top,
-                                            Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * bombRange, data.X * unitHeight / 1000.0 - unitHeight * bombRange, 0, 0),
-                                            Fill = Brushes.DarkRed,
-                                        };
-                                        UpperLayerOfMap.Children.Add(icon);
-                                        break;
-                                    }
-                                case Protobuf.BulletType.JumpyDumpty:
-                                    {
-                                        double bombRange = 1.0 * data.BombRange / Preparation.Utility.GameData.numOfPosGridPerCell;
-                                        Ellipse icon = new()
+                                            double bombRange = 1.0 * data.BombRange / Preparation.Utility.GameData.numOfPosGridPerCell;
+                                            Ellipse icon = new()
+                                            {
+                                                Width = 2 * bombRange * unitWidth,
+                                                Height = 2 * bombRange * unitHeight,
+                                                HorizontalAlignment = HorizontalAlignment.Left,
+                                                VerticalAlignment = VerticalAlignment.Top,
+                                                Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * bombRange, data.X * unitHeight / 1000.0 - unitHeight * bombRange, 0, 0),
+                                                Fill = Brushes.DarkRed,
+                                            };
+                                            UpperLayerOfMap.Children.Add(icon);
+                                            break;
+                                        }
+                                    case Protobuf.BulletType.JumpyDumpty:
                                         {
-                                            Width = 2 * bombRange * unitWidth,
-                                            Height = 2 * bombRange * unitHeight,
-                                            HorizontalAlignment = HorizontalAlignment.Left,
-                                            VerticalAlignment = VerticalAlignment.Top,
-                                            Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * bombRange, data.X * unitHeight / 1000.0 - unitHeight * bombRange, 0, 0),
-                                            Fill = Brushes.DarkViolet,
-                                        };
-                                        UpperLayerOfMap.Children.Add(icon);
+                                            double bombRange = 1.0 * data.BombRange / Preparation.Utility.GameData.numOfPosGridPerCell;
+                                            Ellipse icon = new()
+                                            {
+                                                Width = 2 * bombRange * unitWidth,
+                                                Height = 2 * bombRange * unitHeight,
+                                                HorizontalAlignment = HorizontalAlignment.Left,
+                                                VerticalAlignment = VerticalAlignment.Top,
+                                                Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * bombRange, data.X * unitHeight / 1000.0 - unitHeight * bombRange, 0, 0),
+                                                Fill = Brushes.DarkRed,
+                                            };
+                                            UpperLayerOfMap.Children.Add(icon);
+                                            break;
+                                        }
+                                    //case Protobuf.BulletType.LineBullet:
+                                    //    {
+                                    //        double bombRange = data.BombRange / 1000;
+                                    //        DrawLaser(new Point(data.Y * unitWidth / 1000.0, data.X * unitHeight / 1000.0), -data.FacingDirection + Math.PI / 2, bombRange * unitHeight, 0.5 * unitWidth);
+                                    //        break;
+                                    //    }
+                                    default:
                                         break;
-                                    }
-                                //case Protobuf.BulletType.LineBullet:
-                                //    {
-                                //        double bombRange = data.BombRange / 1000;
-                                //        DrawLaser(new Point(data.Y * unitWidth / 1000.0, data.X * unitHeight / 1000.0), -data.FacingDirection + Math.PI / 2, bombRange * unitHeight, 0.5 * unitWidth);
-                                //        break;
-                                //    }
-                                default:
-                                    break;
+                                }
                             }
                         }
                         foreach (var data in listOfClassroom)

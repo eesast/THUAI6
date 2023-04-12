@@ -6,7 +6,6 @@ using Preparation.Utility;
 using GameEngine;
 using Preparation.Interface;
 using Timothy.FrameRateTask;
-using System.Numerics;
 
 namespace Gaming
 {
@@ -85,8 +84,6 @@ namespace Gaming
                         return;
                     }
 
-                    Debugger.Output(bullet, bullet.TypeOfBullet.ToString());
-
                     BombObj(bullet, objBeingShot);
                     characterManager.BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
                     return;
@@ -105,6 +102,7 @@ namespace Gaming
                 if (bullet.TypeOfBullet == BulletType.BombBomb && objBeingShot != null)
                 {
                     bullet.Parent.BulletOfPlayer = BulletType.JumpyDumpty;
+                    Debugger.Output(bullet.Parent, bullet.Parent.CharacterType.ToString() + " " + bullet.Parent.BulletNum.ToString());
                     Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI / 2.0);
                     Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI * 3.0 / 2.0);
                 }
@@ -146,15 +144,11 @@ namespace Gaming
                     characterManager.BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
             }
 
-            public bool Attack(Character? player, double angle)
+            public bool Attack(Character player, double angle)
             {                                                    // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
-                if (player == null)
-                {
+                if (player.BulletOfPlayer == BulletType.Null)
                     return false;
-                }
-
-                if (player.BulletOfPlayer == BulletType.Null || !player.Commandable())
-                    return false;
+                Debugger.Output(player, player.CharacterType.ToString() + "Attack in " + player.BulletOfPlayer.ToString());
 
                 XY res = player.Position + new XY  // 子弹紧贴人物生成。
                     (
@@ -166,7 +160,7 @@ namespace Gaming
 
                 if (bullet != null)
                 {
-                    Debugger.Output(player, "Attack in" + bullet.ToString());
+                    Debugger.Output(player, "Attack in " + bullet.ToString());
                     bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
                     bullet.CanMove = true;
                     gameMap.Add(bullet);

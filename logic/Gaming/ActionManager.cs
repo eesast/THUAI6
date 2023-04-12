@@ -122,7 +122,7 @@ namespace Gaming
 
             public bool Escape(Student player)
             {
-                if (!(player.Commandable()) || player.CharacterType == CharacterType.Robot)
+                if (!(player.Commandable()) || player.CharacterType == CharacterType.Robot || player.CharacterType == CharacterType.Teacher)
                     return false;
                 Doorway? doorwayForEscape = (Doorway?)gameMap.OneForInteract(player.Position, GameObjType.Doorway);
                 if (doorwayForEscape != null && doorwayForEscape.IsOpen())

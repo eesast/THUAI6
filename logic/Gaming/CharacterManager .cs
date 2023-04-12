@@ -141,8 +141,7 @@ namespace Gaming
                                                 bgmVolume = newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position);
                                         }
                                     }
-                                    if (bgmVolume > 0)
-                                        newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
+                                    newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
                                 }
                                 else
                                 {
@@ -152,7 +151,7 @@ namespace Gaming
                                         {
                                             if (!noise && XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
                                                 newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
-                                            if (newPlayer.CharacterType != CharacterType.Teacher && XY.Distance(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
+                                            if (newPlayer.CharacterType != CharacterType.Teacher && !newPlayer.NoHp() && newPlayer.PlayerState != PlayerStateType.Stunned && XY.Distance(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
                                             {
                                                 TimePinningDown += GameData.checkInterval;
                                                 newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);

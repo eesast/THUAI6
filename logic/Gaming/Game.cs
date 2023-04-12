@@ -220,7 +220,7 @@ namespace Gaming
             if (!gameMap.Timer.IsGaming)
                 return false;
             Character? player = gameMap.FindPlayerToAction(playerID);
-            if (player != null)
+            if (player != null && player.Commandable())
             {
                 return attackManager.Attack(player, angle);
             }

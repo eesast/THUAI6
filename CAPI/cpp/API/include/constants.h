@@ -25,7 +25,7 @@ namespace Constants
     SCCI int numOfRequiredClassroomForHiddenGate = 3;  // 打开隐藏门需要完成的教室数量
 
     // 人物属性相关
-    SCCI int basicTreatSpeed = 100;
+    SCCI int basicEncourageSpeed = 100;
     SCCI int basicFixSpeed = 123;
     SCCI int basicSpeedOfOpeningOrLocking = 4000;
     SCCI int basicStudentSpeedOfClimbingThroughWindows = 611;
@@ -34,8 +34,8 @@ namespace Constants
 
     SCCI int basicHp = 3000000;
     SCCI int basicMaxGamingAddiction = 60000;
-    SCCI int basicTreatmentDegree = 1500000;
-    SCCI int basicTimeOfRescue = 1000;
+    SCCI int basicEncouragementDegree = 1500000;
+    SCCI int basicTimeOfRouse = 1000;
 
     SCCI int basicStudentSpeed = 1270;
     SCCI int basicTrickerSpeed = 1504;
@@ -119,7 +119,7 @@ namespace Constants
         SCCI int maxHp = basicHp;
         SCCI int maxAddiction = basicMaxGamingAddiction * 9 / 10;
         SCCI int fixSpeed = basicFixSpeed * 6 / 10;
-        SCCI int treatSpeed = basicTreatSpeed * 8 / 10;
+        SCCI int encourageSpeed = basicEncourageSpeed * 8 / 10;
         SCCI double concealment = 0.9;
         SCCI int alertnessRadius = basicStudentAlertnessRadius;
         SCCI int viewRange = basicStudentViewRange * 11 / 10;
@@ -134,7 +134,7 @@ namespace Constants
         SCCI int maxHp = basicHp * 10;
         SCCI int maxAddiction = basicMaxGamingAddiction * 10;
         SCCI int fixSpeed = basicFixSpeed * 0;
-        SCCI int treatSpeed = basicTreatSpeed * 7 / 10;
+        SCCI int encourageSpeed = basicEncourageSpeed * 7 / 10;
         SCCI double concealment = 0.5;
         SCCI int alertnessRadius = basicStudentAlertnessRadius / 2;
         SCCI int viewRange = basicStudentViewRange * 9 / 10;
@@ -149,7 +149,7 @@ namespace Constants
         SCCI int maxHp = basicHp * 11 / 10;
         SCCI int maxAddiction = basicMaxGamingAddiction * 13 / 10;
         SCCI int fixSpeed = basicFixSpeed * 11 / 10;
-        SCCI int treatSpeed = basicTreatSpeed * 8 / 10;
+        SCCI int encourageSpeed = basicEncourageSpeed * 8 / 10;
         SCCI double concealment = 0.9;
         SCCI int alertnessRadius = basicStudentAlertnessRadius * 9 / 10;
         SCCI int viewRange = basicStudentViewRange * 9 / 10;
@@ -164,7 +164,7 @@ namespace Constants
         SCCI int maxHp = basicHp * 0.4;
         SCCI int maxAddiction = basicMaxGamingAddiction * 0;
         SCCI int fixSpeed = basicFixSpeed;
-        SCCI int treatSpeed = basicTreatSpeed * 8 / 10;
+        SCCI int encourageSpeed = basicEncourageSpeed * 8 / 10;
         SCCI double concealment = 1;
         SCCI int alertnessRadius = basicStudentAlertnessRadius * 1;
         SCCI int viewRange = basicStudentViewRange;
@@ -179,7 +179,7 @@ namespace Constants
         SCCI int maxHp = basicHp * 9 / 10;
         SCCI int maxAddiction = basicMaxGamingAddiction * 11 / 10;
         SCCI int fixSpeed = basicFixSpeed * 11 / 10;
-        SCCI int treatSpeed = basicTreatSpeed * 9 / 10;
+        SCCI int encourageSpeed = basicEncourageSpeed * 9 / 10;
         SCCI double concealment = 1;
         SCCI int alertnessRadius = basicStudentAlertnessRadius;
         SCCI int viewRange = basicStudentViewRange * 9 / 10;
@@ -194,7 +194,7 @@ namespace Constants
         SCCI int maxHp = basicHp * 32 / 30;
         SCCI int maxAddiction = basicMaxGamingAddiction * 11 / 10;
         SCCI int fixSpeed = basicFixSpeed;
-        SCCI int treatSpeed = basicTreatSpeed * 2;
+        SCCI int encourageSpeed = basicEncourageSpeed * 2;
         SCCI double concealment = 1;
         SCCI int alertnessRadius = basicStudentAlertnessRadius;
         SCCI int viewRange = basicStudentViewRange;

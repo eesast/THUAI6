@@ -104,11 +104,11 @@ class PlayerState(Enum):
     Addicted = 3
     Quit = 4
     Graduated = 5
-    Treated = 6
-    Rescued = 7
+    Encouraged = 6
+    Roused = 7
     Stunned = 8
-    Treating = 9
-    Rescuing = 10
+    Encouraging = 9
+    Rousing = 10
     Swinging = 11
     Attacking = 12
     Locking = 13
@@ -163,10 +163,10 @@ class Student(Player):
     studentType: StudentType
     determination: int
     addiction: int
-    treatProgress: int
-    rescueProgress: int
+    encourageProgress: int
+    rouseProgress: int
     learningSpeed: int
-    treatSpeed: int
+    encourageSpeed: int
     dangerAlert: float
     buff: List[StudentBuffType] = []
 

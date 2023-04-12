@@ -1,7 +1,7 @@
 # 规则
 V3.7
 - [规则](#规则)
-  - [规则](#规则-1)
+  - [简则](#简则)
     - [地图](#地图)
     - [人物](#人物)
     - [攻击](#攻击)
@@ -13,7 +13,7 @@ V3.7
       - [窗](#窗)
       - [箱子](#箱子)
     - [信息相关](#信息相关)
-    - [视野](#视野)
+    - [可视范围](#可视范围)
     - [道具](#道具)
   - [得分](#得分)
     - [捣蛋鬼](#捣蛋鬼)
@@ -29,7 +29,6 @@ V3.7
       - [教师](#教师)
       - [学霸](#学霸)
       - [开心果](#开心果)
-  - [接口一览](#接口一览)
   - [细则](#细则)
     - [特殊说明](#特殊说明)
     - [移动](#移动)
@@ -46,7 +45,7 @@ V3.7
     - [信息获取](#信息获取)
   - [键鼠控制](#键鼠控制)
 
-## 规则
+## 简则
 
 ### 地图
 - 地图为矩形区域，地图上的游戏对象坐标为（x, y），且x和y均为整数。
@@ -132,14 +131,14 @@ V3.7
 3. 学习的声音: 捣蛋鬼警戒半径内有人学习时收到；bgmVolume=（警戒半径x学习进度百分比）/二者距离
 4. 可以向其他每一个队友发送不超过256字节的信息
 
-### 视野
-- 可视范围
+### 可视范围
   - 小于视野半径，且受限于墙和草地
   - 对于在从草地中的物体，物体与玩家连线上均为草地方可见
 
 ### 道具
 - 玩家最多同时拥有三个道具
 - 可以捡起与自己处于同一个格子（cell）的道具，或将道具扔在原地
+  
 |   道具       |           对学生增益            |       [学生得分条件]               |                对搞蛋鬼增益        |       [搞蛋鬼得分条件]               |
 | :-------- | :-------------------------------------- | :-----------------| :-------------------------------------- |:-----------------|
 |   Key3   |                            能开启3教的门                            |不得分|      能开启3教的门                            |不得分| 
@@ -279,108 +278,6 @@ V3.7
     - CD：60s  
     - 使用瞬间，可视范围内学生（包括自己）获得持续6秒的1.6倍速Buff
     - 每鼓舞一个学生得分10
-
-## 接口一览
-~~~csharp
-    // 指挥本角色进行移动，`timeInMilliseconds` 为移动时间，单位为毫秒；`angleInRadian` 表示移动的方向，单位是弧度，使用极坐标——竖直向下方向为 x 轴，水平向右方向为 y 轴
-    virtual std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) = 0;
-
-    // 向特定方向移动
-    virtual std::future<bool> MoveRight(int64_t timeInMilliseconds) = 0;
-    virtual std::future<bool> MoveUp(int64_t timeInMilliseconds) = 0;
-    virtual std::future<bool> MoveLeft(int64_t timeInMilliseconds) = 0;
-    virtual std::future<bool> MoveDown(int64_t timeInMilliseconds) = 0;
-
-    // 捡道具、使用技能
-    virtual std::future<bool> PickProp(THUAI6::PropType prop) = 0;
-    virtual std::future<bool> UseProp(THUAI6::PropType prop) = 0;
-    virtual std::future<bool> UseSkill(int32_t skillID) = 0;
-    virtual std::future<bool> Attack(double angleInRadian) = 0;
-
-    virtual std::future<bool> OpenDoor() = 0;
-    virtual std::future<bool> CloseDoor() = 0;
-    virtual std::future<bool> SkipWindow() = 0;
-    virtual std::future<bool> StartOpenGate() = 0;
-    virtual std::future<bool> StartOpenChest() = 0;
-    virtual std::future<bool> EndAllAction() = 0;
-
-    // 发送信息、接受信息，注意收消息时无消息则返回nullopt
-    virtual std::future<bool> SendMessage(int64_t, std::string) = 0;
-    [[nodiscard]] virtual bool HaveMessage() = 0;
-    [[nodiscard]] virtual std::pair<int64_t, std::string> GetMessage() = 0;
-
-    // 等待下一帧
-    virtual std::future<bool> Wait() = 0;
-
-    // 获取视野内可见的学生/捣蛋鬼的信息
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const = 0;
-
-    // 获取视野内可见的道具信息
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
-
-    // 获取地图信息，视野外的地图统一为Land
-    [[nodiscard]] virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
-    [[nodiscard]] virtual THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const = 0;
-
-    [[nodiscard]] virtual bool IsDoorOpen(int32_t cellX, int32_t cellY) const = 0;
-    [[nodiscard]] virtual int32_t GetChestProgress(int32_t cellX, int32_t cellY) const = 0;
-    [[nodiscard]] virtual int32_t GetGateProgress(int32_t cellX, int32_t cellY) const = 0;
-    [[nodiscard]] virtual int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const = 0;
-    [[nodiscard]] virtual THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const = 0;
-    [[nodiscard]] virtual int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const = 0;
-
-    [[nodiscard]] virtual std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const = 0;
-
-    // 获取所有玩家的GUID
-    [[nodiscard]] virtual std::vector<int64_t> GetPlayerGUIDs() const = 0;
-
-    // 获取游戏目前所进行的帧数
-    [[nodiscard]] virtual int GetFrameCount() const = 0;
-
-    /*****选手可能用的辅助函数*****/
-
-    // 获取指定格子中心的坐标
-    [[nodiscard]] static inline int CellToGrid(int cell) noexcept
-    {
-        return cell * numOfGridPerCell + numOfGridPerCell / 2;
-    }
-
-    // 获取指定坐标点所位于的格子的 X 序号
-    [[nodiscard]] static inline int GridToCell(int grid) noexcept
-    {
-        return grid / numOfGridPerCell;
-    }
-
-    // 用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
-
-    virtual void Print(std::string str) const = 0;
-    virtual void PrintStudent() const = 0;
-    virtual void PrintTricker() const = 0;
-    virtual void PrintProp() const = 0;
-    virtual void PrintSelfInfo() const = 0;
-};
-
-class IStudentAPI : public IAPI
-{
-public:
-    /*****学生阵营的特定函数*****/
-
-    virtual std::future<bool> StartLearning() = 0;
-    virtual std::future<bool> StartEncourageMate(int64_t mateID) = 0;
-    virtual std::future<bool> StartRouseMate(int64_t mateID) = 0;
-    virtual std::future<bool> Graduate() = 0;
-    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const = 0;
-};
-
-class ITrickerAPI : public IAPI
-{
-public:
-    /*****捣蛋鬼阵营的特定函数*****/
-
-    [[nodiscard]] virtual std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const = 0;
-};
-~~~
 
 ## 细则
 

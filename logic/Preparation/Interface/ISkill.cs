@@ -168,7 +168,7 @@ namespace Preparation.Interface
     {
         public int SkillCD => GameData.commonSkillCD / 300;
         public int DurationTime => 0;
-        private readonly object commonSkillLock = new object();
+        private readonly object commonSkillLock = new();
         public object ActiveSkillLock => commonSkillLock;
 
         public bool isBeingUsed = false;

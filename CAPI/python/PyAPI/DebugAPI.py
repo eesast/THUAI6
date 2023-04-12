@@ -326,7 +326,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
             self.__logger.info(
                 f"type={student.studentType.name}, determination={student.determination}, addiction={student.addiction}, danger alert={student.dangerAlert}")
             self.__logger.info(
-                f"learning speed={student.learningSpeed}, treat speed={student.treatSpeed}, treat progress={student.treatProgress}, rescue progress={student.rescueProgress}")
+                f"learning speed={student.learningSpeed}, encourage speed={student.encourageSpeed}, encourage progress={student.encourageProgress}, rouse progress={student.rouseProgress}")
             studentBuff = ""
             for buff in student.buff:
                 studentBuff += buff.name + ", "
@@ -379,7 +379,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
         self.__logger.info(
             f"type={student.studentType.name}, determination={student.determination}, addiction={student.addiction}, danger alert={student.dangerAlert}")
         self.__logger.info(
-            f"learning speed={student.learningSpeed}, treat speed={student.treatSpeed}, treat progress={student.treatProgress}, rescue progress={student.rescueProgress}")
+            f"learning speed={student.learningSpeed}, encourage speed={student.encourageSpeed}, encourage progress={student.encourageProgress}, rouse progress={student.rouseProgress}")
         studentBuff = ""
         for buff in student.buff:
             studentBuff += buff.name + ", "
@@ -778,7 +778,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
             self.__logger.info(
                 f"type={student.studentType.name}, determination={student.determination}, addiction={student.addiction}, danger alert={student.dangerAlert}")
             self.__logger.info(
-                f"learning speed={student.learningSpeed}, treat speed={student.treatSpeed}, treat progress={student.treatProgress}, rescue progress={student.rescueProgress}")
+                f"learning speed={student.learningSpeed}, encourage speed={student.encourageSpeed}, encourage progress={student.encourageProgress}, rouse progress={student.rouseProgress}")
             studentBuff = ""
             for buff in student.buff:
                 studentBuff += buff.name + ", "

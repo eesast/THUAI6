@@ -661,7 +661,7 @@ void StudentDebugAPI::PrintStudent() const
             props += THUAI6::propTypeDict[prop] + ", ";
         logger->info("state={}, bullet={}, props={}", THUAI6::playerStateDict[student->playerState], THUAI6::bulletTypeDict[student->bulletType], props);
         logger->info("type={}, determination={}, addiction={}, danger alert={}", THUAI6::studentTypeDict[student->studentType], student->determination, student->addiction, student->dangerAlert);
-        logger->info("learning speed={}, treat speed={}, treat progress={}, rescue progress={}", student->learningSpeed, student->treatSpeed, student->treatProgress, student->rescueProgress);
+        logger->info("learning speed={}, encourage speed={}, encourage progress={}, rouse progress={}", student->learningSpeed, student->encourageSpeed, student->encourageProgress, student->rouseProgress);
         std::string studentBuff = "";
         for (const auto& buff : student->buff)
             studentBuff += THUAI6::studentBuffDict[buff] + ", ";
@@ -686,7 +686,7 @@ void TrickerDebugAPI::PrintStudent() const
             props += THUAI6::propTypeDict[prop] + ", ";
         logger->info("state={}, bullet={}, props={}", THUAI6::playerStateDict[student->playerState], THUAI6::bulletTypeDict[student->bulletType], props);
         logger->info("type={}, determination={}, addiction={}, danger alert={}", THUAI6::studentTypeDict[student->studentType], student->determination, student->addiction, student->dangerAlert);
-        logger->info("learning speed={}, treat speed={}, treat progress={}, rescue progress={}", student->learningSpeed, student->treatSpeed, student->treatProgress, student->rescueProgress);
+        logger->info("learning speed={}, encourage speed={}, encourage progress={}, rouse progress={}", student->learningSpeed, student->encourageSpeed, student->encourageProgress, student->rouseProgress);
         std::string studentBuff = "";
         for (const auto& buff : student->buff)
             studentBuff += THUAI6::studentBuffDict[buff] + ", ";
@@ -778,7 +778,7 @@ void StudentDebugAPI::PrintSelfInfo() const
         props += THUAI6::propTypeDict[prop] + ", ";
     logger->info("state={}, bullet={}, props={}", THUAI6::playerStateDict[student->playerState], THUAI6::bulletTypeDict[student->bulletType], props);
     logger->info("type={}, determination={}, addiction={}, danger alert={}", THUAI6::studentTypeDict[student->studentType], student->determination, student->addiction, student->dangerAlert);
-    logger->info("learning speed={}, treat speed={}, treat progress={}, rescue progress={}", student->learningSpeed, student->treatSpeed, student->treatProgress, student->rescueProgress);
+    logger->info("learning speed={}, encourage speed={}, encourage progress={}, rouse progress={}", student->learningSpeed, student->encourageSpeed, student->encourageProgress, student->rouseProgress);
     std::string studentBuff = "";
     for (const auto& buff : student->buff)
         studentBuff += THUAI6::studentBuffDict[buff] + ", ";

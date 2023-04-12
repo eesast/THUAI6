@@ -195,9 +195,9 @@ namespace THUAI6
         int32_t determination;  // 剩余毅力
         int32_t addiction;      // 沉迷程度
         int32_t learningSpeed;
-        int32_t treatSpeed;
-        int32_t treatProgress;
-        int32_t rescueProgress;
+        int32_t encourageSpeed;
+        int32_t encourageProgress;
+        int32_t rouseProgress;
         double dangerAlert;
         std::vector<StudentBuffType> buff;  // buff
     };

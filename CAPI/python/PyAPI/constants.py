@@ -135,11 +135,11 @@ class Idol:
 
 
 class Athlete:
-    moveSpeed = (int)(1.1 * Constants.basicStudentSpeed)
+    moveSpeed = (int)(1.05 * Constants.basicStudentSpeed)
     maxHp = (int)(1.0 * Constants.basicHp)
     maxAddiction = (int)(0.9 * Constants.basicMaxGamingAddiction)
     LearnSpeed = (int)(0.6 * Constants.basicLearnSpeed)
-    EncourageSpeed = (int)(0.8 * Constants.basicLearnSpeed)
+    EncourageSpeed = (int)(0.9 * Constants.basicEncourageSpeed)
     concealment = 0.9 * Constants.basicConcealment
     alertnessRadius = (int)(1.0 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(1.1 * Constants.basicStudentViewRange)
@@ -151,11 +151,11 @@ class Athlete:
 
 
 class Teacher:
-    moveSpeed = (int)(0.75 * Constants.basicStudentSpeed)
+    moveSpeed = (int)(0.9 * Constants.basicStudentSpeed)
     maxHp = (int)(10.0 * Constants.basicHp)
     maxAddiction = (int)(10.0 * Constants.basicMaxGamingAddiction)
     LearnSpeed = (int)(0.0 * Constants.basicLearnSpeed)
-    EncourageSpeed = (int)(0.7 * Constants.basicLearnSpeed)
+    EncourageSpeed = (int)(0.8 * Constants.basicEncourageSpeed)
     concealment = 0.5 * Constants.basicConcealment
     alertnessRadius = (int)(0.5 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(0.9 * Constants.basicStudentViewRange)
@@ -167,11 +167,11 @@ class Teacher:
 
 
 class StraightAStudent:
-    moveSpeed = (int)(0.8 * Constants.basicStudentSpeed)
+    moveSpeed = (int)(0.96 * Constants.basicStudentSpeed)
     maxHp = (int)(1.1 * Constants.basicHp)
     maxAddiction = (int)(1.3 * Constants.basicMaxGamingAddiction)
     LearnSpeed = (int)(1.1 * Constants.basicLearnSpeed)
-    EncourageSpeed = (int)(0.8 * Constants.basicLearnSpeed)
+    EncourageSpeed = (int)(Constants.basicEncourageSpeed)
     concealment = 0.9 * Constants.basicConcealment
     alertnessRadius = (int)(0.9 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(0.9 * Constants.basicStudentViewRange)
@@ -187,7 +187,7 @@ class Robot:
     maxHp = (int)(0.4 * Constants.basicHp)
     maxAddiction = (int)(0.0 * Constants.basicMaxGamingAddiction)
     LearnSpeed = (int)(1.0 * Constants.basicLearnSpeed)
-    EncourageSpeed = (int)(0.8 * Constants.basicLearnSpeed)
+    EncourageSpeed = 0
     concealment = 1.0 * Constants.basicConcealment
     alertnessRadius = (int)(1.0 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(1.0 * Constants.basicStudentViewRange)
@@ -203,7 +203,7 @@ class TechOtaku:
     maxHp = (int)(0.9 * Constants.basicHp)
     maxAddiction = (int)(1.1 * Constants.basicMaxGamingAddiction)
     LearnSpeed = (int)(1.1 * Constants.basicLearnSpeed)
-    EncourageSpeed = (int)(0.9 * Constants.basicLearnSpeed)
+    EncourageSpeed = (int)(0.9 * Constants.basicEncourageSpeed)
     concealment = 1.0 * Constants.basicConcealment
     alertnessRadius = (int)(1.0 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(0.9 * Constants.basicStudentViewRange)
@@ -219,20 +219,20 @@ class Sunshine:
     maxHp = (int)(1.0667 * Constants.basicHp)
     maxAddiction = (int)(1.1 * Constants.basicMaxGamingAddiction)
     LearnSpeed = (int)(1.0 * Constants.basicLearnSpeed)
-    EncourageSpeed = (int)(2.0 * Constants.basicLearnSpeed)
+    EncourageSpeed = (int)(1.2 * Constants.basicEncourageSpeed)
     concealment = 1.0 * Constants.basicConcealment
     alertnessRadius = (int)(1.0 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(1.0 * Constants.basicStudentViewRange)
     speedOfOpeningOrLocking = (int)(
-        1.0 * Constants.basicSpeedOfOpeningOrLocking)
+        0.7 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
         1.0 * Constants.basicStudentSpeedOfClimbingThroughWindows)
-    speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
+    speedOfOpenChest = (int)(0.9 * Constants.basicSpeedOfOpenChest)
 
 
 class CanBeginToCharge:
-    skillCD = (int)(0.8 * Constants.commonSkillCD)
-    durationTime = (int)(0.5 * Constants.commonSkillTime)
+    skillCD = (int)(2 * Constants.commonSkillCD)
+    durationTime = (int)(0.3 * Constants.commonSkillTime)
 
 
 class BecomeInvisible:
@@ -246,17 +246,17 @@ class Punish:
 
 
 class Rouse:
-    skillCD = (int)(2.0 * Constants.commonSkillCD)
+    skillCD = (int)(4.0 * Constants.commonSkillCD)
     durationTime = (int)(0.0 * Constants.commonSkillTime)
 
 
 class Encourage:
-    skillCD = (int)(2.0 * Constants.commonSkillCD)
+    skillCD = (int)(4.0 * Constants.commonSkillCD)
     durationTime = (int)(0.0 * Constants.commonSkillTime)
 
 
 class Inspire:
-    skillCD = (int)(2.0 * Constants.commonSkillCD)
+    skillCD = (int)(4.0 * Constants.commonSkillCD)
     durationTime = (int)(0.0 * Constants.commonSkillTime)
 
 

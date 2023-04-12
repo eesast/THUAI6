@@ -115,11 +115,11 @@ namespace Constants
 
     struct Athlete
     {
-        SCCI int moveSpeed = basicStudentSpeed * 11 / 10;
+        SCCI int moveSpeed = basicStudentSpeed * 105 / 100;
         SCCI int maxHp = basicHp;
         SCCI int maxAddiction = basicMaxGamingAddiction * 9 / 10;
         SCCI int fixSpeed = basicFixSpeed * 6 / 10;
-        SCCI int encourageSpeed = basicEncourageSpeed * 8 / 10;
+        SCCI int encourageSpeed = basicEncourageSpeed * 9 / 10;
         SCCI double concealment = 0.9;
         SCCI int alertnessRadius = basicStudentAlertnessRadius;
         SCCI int viewRange = basicStudentViewRange * 11 / 10;
@@ -130,11 +130,11 @@ namespace Constants
 
     struct Teacher
     {
-        SCCI int moveSpeed = basicStudentSpeed * 3 / 4;
+        SCCI int moveSpeed = basicStudentSpeed * 9 / 10;
         SCCI int maxHp = basicHp * 10;
         SCCI int maxAddiction = basicMaxGamingAddiction * 10;
         SCCI int fixSpeed = basicFixSpeed * 0;
-        SCCI int encourageSpeed = basicEncourageSpeed * 7 / 10;
+        SCCI int encourageSpeed = basicEncourageSpeed * 8 / 10;
         SCCI double concealment = 0.5;
         SCCI int alertnessRadius = basicStudentAlertnessRadius / 2;
         SCCI int viewRange = basicStudentViewRange * 9 / 10;
@@ -145,11 +145,11 @@ namespace Constants
 
     struct StraightAStudent
     {
-        SCCI int moveSpeed = basicStudentSpeed * 8 / 10;
+        SCCI int moveSpeed = basicStudentSpeed * 96 / 100;
         SCCI int maxHp = basicHp * 11 / 10;
         SCCI int maxAddiction = basicMaxGamingAddiction * 13 / 10;
         SCCI int fixSpeed = basicFixSpeed * 11 / 10;
-        SCCI int encourageSpeed = basicEncourageSpeed * 8 / 10;
+        SCCI int encourageSpeed = basicEncourageSpeed;
         SCCI double concealment = 0.9;
         SCCI int alertnessRadius = basicStudentAlertnessRadius * 9 / 10;
         SCCI int viewRange = basicStudentViewRange * 9 / 10;
@@ -164,7 +164,7 @@ namespace Constants
         SCCI int maxHp = basicHp * 0.4;
         SCCI int maxAddiction = basicMaxGamingAddiction * 0;
         SCCI int fixSpeed = basicFixSpeed;
-        SCCI int encourageSpeed = basicEncourageSpeed * 8 / 10;
+        SCCI int encourageSpeed = 0;
         SCCI double concealment = 1;
         SCCI int alertnessRadius = basicStudentAlertnessRadius * 1;
         SCCI int viewRange = basicStudentViewRange;
@@ -194,13 +194,13 @@ namespace Constants
         SCCI int maxHp = basicHp * 32 / 30;
         SCCI int maxAddiction = basicMaxGamingAddiction * 11 / 10;
         SCCI int fixSpeed = basicFixSpeed;
-        SCCI int encourageSpeed = basicEncourageSpeed * 2;
+        SCCI int encourageSpeed = basicEncourageSpeed * 12 / 10;
         SCCI double concealment = 1;
         SCCI int alertnessRadius = basicStudentAlertnessRadius;
         SCCI int viewRange = basicStudentViewRange;
-        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
+        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking * 7 / 10;
         SCCI int speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows;
-        SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest * 9 / 10;
     };
 
     // 技能相关
@@ -222,14 +222,14 @@ namespace Constants
     SCCI int timeOfAddingSpeedWhenInspire = 6000;
     struct CanBeginToCharge
     {
-        SCCI int skillCD = commonSkillCD * 4 / 3;
-        SCCI int durationTime = commonSkillTime * 1;
+        SCCI int skillCD = commonSkillCD * 2;
+        SCCI int durationTime = commonSkillTime * 3 / 10;
     };
 
     struct BecomeInvisible
     {
-        SCCI int skillCD = commonSkillCD * 2;
-        SCCI int durationTime = commonSkillTime * 6 / 10;
+        SCCI int skillCD = commonSkillCD * 4 / 3;
+        SCCI int durationTime = commonSkillTime;
     };
 
     struct Punish
@@ -240,19 +240,19 @@ namespace Constants
 
     struct Rouse
     {
-        SCCI int skillCD = commonSkillCD * 2;
+        SCCI int skillCD = commonSkillCD * 4;
         SCCI int durationTime = commonSkillTime * 0;
     };
 
     struct Encourage
     {
-        SCCI int skillCD = commonSkillCD * 2;
+        SCCI int skillCD = commonSkillCD * 4;
         SCCI int durationTime = commonSkillTime * 0;
     };
 
     struct Inspire
     {
-        SCCI int skillCD = commonSkillCD * 2;
+        SCCI int skillCD = commonSkillCD * 4;
         SCCI int durationTime = commonSkillTime * 0;
     };
 

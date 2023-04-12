@@ -95,7 +95,7 @@ namespace Gaming
                     new Thread
                                 (() =>
                                 {
-                                    Thread.Sleep(GameData.frameDuration);
+                                    Thread.Sleep(GameData.frameDuration * 5);
                                     gameMap.RemoveJustFromMap(bombedBullet);
                                 }
                                 )

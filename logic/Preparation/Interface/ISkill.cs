@@ -18,8 +18,8 @@ namespace Preparation.Interface
     }
     public class CanBeginToCharge : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 24 / 30;
-        public int DurationTime => GameData.commonSkillTime * 5 / 10;
+        public int SkillCD => GameData.commonSkillCD * 2;
+        public int DurationTime => GameData.commonSkillTime * 3 / 10;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
@@ -63,7 +63,7 @@ namespace Preparation.Interface
 
     public class Rouse : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 2;
+        public int SkillCD => GameData.commonSkillCD * 4;
         public int DurationTime => 0;
 
         private readonly object commonSkillLock = new object();
@@ -78,7 +78,7 @@ namespace Preparation.Interface
 
     public class Encourage : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 2;
+        public int SkillCD => GameData.commonSkillCD * 4;
         public int DurationTime => 0;
 
         private readonly object commonSkillLock = new object();
@@ -93,7 +93,7 @@ namespace Preparation.Interface
 
     public class Inspire : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 2;
+        public int SkillCD => GameData.commonSkillCD * 4;
         public int DurationTime => 0;
 
         private readonly object commonSkillLock = new object();

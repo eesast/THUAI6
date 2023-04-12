@@ -354,9 +354,9 @@ namespace Gaming
                 else TryBeAwed(student, bullet);
             }
 
-            public bool BackSwing(Character? player, int time)
+            public bool BackSwing(Character player, int time)
             {
-                if (player == null || time <= 0) return false;
+                if (time <= 0) return false;
                 if (player.PlayerState == PlayerStateType.Swinging || (!player.Commandable() && player.PlayerState != PlayerStateType.TryingToAttack)) return false;
                 SetPlayerState(player, PlayerStateType.Swinging);
 

@@ -6,6 +6,7 @@ using Preparation.Utility;
 using GameEngine;
 using Preparation.Interface;
 using Timothy.FrameRateTask;
+using System.Numerics;
 
 namespace Gaming
 {
@@ -73,20 +74,32 @@ namespace Gaming
 #endif
                 bullet.CanMove = false;
 
-                if (gameMap.Remove(bullet) && bullet.BulletBombRange > 0)
-                    gameMap.Add(new BombedBullet(bullet));
-
                 if (bullet.BulletBombRange == 0)
                 {
+                    gameMap.Remove(bullet);
                     if (objBeingShot == null)
                     {
-                        characterManager.BackSwing((Character?)bullet.Parent, bullet.Backswing);
+                        characterManager.BackSwing((Character)bullet.Parent, bullet.Backswing);
                         return;
                     }
 
                     BombObj(bullet, objBeingShot);
-                    characterManager.BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
+                    characterManager.BackSwing((Character)bullet.Parent, bullet.RecoveryFromHit);
                     return;
+                }
+
+                if (gameMap.Remove(bullet))
+                {
+                    BombedBullet bombedBullet = new(bullet);
+                    gameMap.Add(bombedBullet);
+                    new Thread
+                                (() =>
+                                {
+                                    Thread.Sleep(GameData.frameDuration);
+                                    gameMap.RemoveJustFromMap(bombedBullet);
+                                }
+                                )
+                    { IsBackground = true }.Start();
                 }
 
                 /*if (objBeingShot != null)
@@ -138,10 +151,10 @@ namespace Gaming
 
                 if (objBeingShot == null)
                 {
-                    characterManager.BackSwing((Character?)bullet.Parent, bullet.Backswing);
+                    characterManager.BackSwing((Character)bullet.Parent, bullet.Backswing);
                 }
                 else
-                    characterManager.BackSwing((Character?)bullet.Parent, bullet.RecoveryFromHit);
+                    characterManager.BackSwing((Character)bullet.Parent, bullet.RecoveryFromHit);
             }
 
             public bool Attack(Character player, double angle)
@@ -169,35 +182,20 @@ namespace Gaming
                     if (bullet.CastTime > 0)
                     {
                         characterManager.SetPlayerState(player, PlayerStateType.TryingToAttack);
-
-                        new Thread
+                        if (bullet.IsRemoteAttack)
+                        {
+                            new Thread
                                 (() =>
                                 {
-                                    new FrameRateTaskExecutor<int>(
-                                    loopCondition: () => player.PlayerState == PlayerStateType.TryingToAttack && gameMap.Timer.IsGaming,
-                                    loopToDo: () =>
+                                    Thread.Sleep(bullet.CastTime);
+                                    if (player.PlayerState == PlayerStateType.TryingToAttack)
                                     {
-                                    },
-                                    timeInterval: GameData.frameDuration,
-                                    finallyReturn: () => 0,
-                                    maxTotalDuration: bullet.CastTime
-                      )
-
-                          .Start();
-
-                                    if (gameMap.Timer.IsGaming)
-                                    {
-                                        if (player.PlayerState == PlayerStateType.TryingToAttack)
-                                        {
-                                            characterManager.SetPlayerState(player);
-                                        }
-                                        else
-                                            bullet.IsMoving = false;
-                                        gameMap.Remove(bullet);
+                                        characterManager.SetPlayerState(player);
                                     }
                                 }
                                 )
-                        { IsBackground = true }.Start();
+                            { IsBackground = true }.Start();
+                        }
                     }
                 }
                 if (bullet != null)

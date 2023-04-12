@@ -148,6 +148,7 @@ namespace Server
             {
                 BulletMessage = new()
                 {
+                    Type = Transformation.ToBulletType(bullet.TypeOfBullet),
                     X = bullet.Position.x,
                     Y = bullet.Position.y,
                     FacingDirection = bullet.FacingDirection.Angle(),
@@ -184,6 +185,7 @@ namespace Server
             {
                 BombedBulletMessage = new()
                 {
+                    Type = Transformation.ToBulletType(bombedBullet.bulletHasBombed.TypeOfBullet),
                     X = bombedBullet.bulletHasBombed.Position.x,
                     Y = bombedBullet.bulletHasBombed.Position.y,
                     FacingDirection = bombedBullet.FacingDirection.Angle(),
@@ -191,6 +193,7 @@ namespace Server
                     BombRange = bombedBullet.bulletHasBombed.BulletBombRange
                 }
             };
+            //   Debugger.Output(bombedBullet, bombedBullet.Place.ToString()+" "+bombedBullet.Position.ToString());
             return msg;
         }
 

@@ -107,9 +107,9 @@ namespace Preparation.Utility
 #if DEBUG
         public const int basicStudentMoveSpeed = 9000;// 基本移动速度，单位：s-1
 #else
-        public const int basicStudentMoveSpeed = 1270;
+        public const int basicStudentMoveSpeed = 1500;
 #endif
-        public const int basicGhostMoveSpeed = (int)(basicStudentMoveSpeed * 45.0 / 38);
+        public const int basicGhostMoveSpeed = (int)(basicStudentMoveSpeed * 1.2);
 
         public const int characterMaxSpeed = 12000;                  // 最大速度
 
@@ -118,6 +118,8 @@ namespace Preparation.Utility
         public const int basicGhostAlertnessRadius = 17 * numOfPosGridPerCell;
         public const int basicStudentViewRange = 10 * numOfPosGridPerCell;
         public const int basicGhostViewRange = 15 * numOfPosGridPerCell;
+        public const int PinningDownRange = 5 * numOfPosGridPerCell;
+
         public const int maxNumOfPropInPropInventory = 3;
 
         public static XY PosWhoDie = new XY(1, 1);
@@ -140,47 +142,47 @@ namespace Preparation.Utility
             return damage * 100 / basicApOfGhost;
         }
         public const int TrickerScoreStudentBeAddicted = 50;
-        public const int TrickerScoreDestroyRobot = 20;
+        public const int TrickerScoreDestroyRobot = 30;
         public const int TrickerScoreStudentDie = 1000;
         public static int TrickerScoreStudentBeStunned(int time)
         {
-            return time;
+            return time * 20 / 1000;
         }
         public static int TrickerScoreDamageGenerator(int degree)
         {
-            return degree * 200 / degreeOfFixedGenerator;
+            return degree * 100 / degreeOfFixedGenerator;
         }
 
         public static int StudentScoreFix(int degreeOfFix)
         {
             return degreeOfFix * 200 / degreeOfFixedGenerator;
         }
-        public const int StudentScoreFixed = 25;
+        //public const int StudentScoreFixed = 25;
         public static int StudentScorePinDown(int timeOfPinningDown)
         {
-            return 0;
+            return (int)(timeOfPinningDown * 0.00369);
         }
         public static int StudentScoreTrickerBeStunned(int time)
         {
-            return time;
+            return time * 20 / 1000;
         }
         public const int StudentScoreRescue = 100;
         public static int StudentScoreTreat(int degree)
         {
-            return degree;
+            return degree * 50 / basicTreatmentDegree;
         }
         public const int StudentScoreEscape = 1000;
 
-        public const int ScorePropRemainHp = 20;
-        public const int ScorePropUseShield = 20;
-        public const int ScorePropUseSpear = 20;
-        public const int ScorePropAddAp = 10;
+        public const int ScorePropRemainHp = 100;
+        public const int ScorePropUseShield = 50;
+        public const int ScorePropUseSpear = 50;
+        public const int ScorePropAddAp = 0;
         public const int ScorePropAddSpeed = 10;
         public const int ScorePropClairaudience = 10;
-        public const int ScorePropAddHp = 20;
-        public const int ScorePropRecoverFromDizziness = 20;
+        public const int ScorePropAddHp = 10;
+        public const int ScorePropRecoverFromDizziness = 30;
 
-        public const int ScoreBecomeInvisible = 10;
+        public const int ScoreBecomeInvisible = 15;
         public const int ScoreInspire = ScorePropAddSpeed;
         #endregion
         #region 攻击与子弹相关
@@ -208,13 +210,13 @@ namespace Preparation.Utility
         public const int commonSkillCD = 30000;                      // 普通技能标准冷却时间
         public const int commonSkillTime = 10000;                    // 普通技能标准持续时间
 
-        public const int TimeOfGhostFaintingWhenCharge = 7220;
-        public const int TimeOfStudentFaintingWhenCharge = 2090;
+        public const int TimeOfGhostStunnedWhenCharge = 7220;
+        public const int TimeOfStudentStunnedWhenCharge = 2090;
 
-        public const int TimeOfGhostFaintingWhenPunish = 3070;
+        public const int TimeOfGhostStunnedWhenPunish = 3070;
 
-        public const int TimeOfGhostSwingingAfterHowl = 3070;
-        public const int TimeOfStudentFaintingWhenHowl = 6110;
+        public const int TimeOfGhostSwingingAfterHowl = 800;
+        public const int TimeOfStudentStunnedWhenHowl = 5500;
 
         public const int TimeOfStunnedWhenJumpyDumpty = 3070;
 

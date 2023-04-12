@@ -69,10 +69,10 @@ namespace GameClass.GameObj
                     ap = value;
             }
         }
-        public override int Speed => GameData.basicBulletMoveSpeed * 2;
+        public override int Speed => GameData.basicBulletMoveSpeed * 25 / 10;
         public override bool IsRemoteAttack => true;
 
-        public override int CastTime => GameData.basicCastTime;
+        public override int CastTime => GameData.basicCastTime * 4 / 5;
         public override int Backswing => 0;
         public override int RecoveryFromHit => 0;
         public const int cd = GameData.basicBackswing / 2;

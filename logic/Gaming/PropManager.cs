@@ -48,7 +48,7 @@ namespace Gaming
                         if (!player.IsGhost())
                             if (player.HP < player.MaxHp)
                             {
-                                player.HP += GameData.basicTreatmentDegree;
+                                player.HP += GameData.basicTreatmentDegree / 2;
                                 player.AddScore(GameData.ScorePropAddHp);
                             }
                             else player.AddAp(GameData.PropDuration);

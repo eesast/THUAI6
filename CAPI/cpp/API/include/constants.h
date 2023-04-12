@@ -34,23 +34,20 @@ namespace Constants
 
     SCCI int basicHp = 3000000;
     SCCI int basicMaxGamingAddiction = 60000;
-    SCCI int BeginGamingAddiction = 20900;
-    SCCI int MidGamingAddiction = 40300;
     SCCI int basicTreatmentDegree = 1500000;
     SCCI int basicTimeOfRescue = 1000;
 
     SCCI int basicStudentSpeed = 1270;
     SCCI int basicTrickerSpeed = 1504;
 
-    SCCI int maxSpeed = 12000;
-
-    SCCI double basicConcealment = 1.0;
+    SCCI double basicConcealment = 1;
     SCCI int basicStudentAlertnessRadius = 15 * numOfGridPerCell;
     SCCI int basicTrickerAlertnessRadius = 17 * numOfGridPerCell;
     SCCI int basicStudentViewRange = 10 * numOfGridPerCell;
     SCCI int basicTrickerViewRange = 15 * numOfGridPerCell;
+    SCCI int PinningDownRange = 5 * numOfGridPerCell;
 
-    SCCI int maxNumOfProp = 3;
+    SCCI int maxNumOfProp = 3;  // 人物道具栏容量
 
     // 攻击相关
 
@@ -70,145 +67,140 @@ namespace Constants
 
     SCCI int apPropAdd = basicApOfTricker * 12 / 10;
     SCCI int apSpearAdd = basicApOfTricker * 6 / 10;
-    SCCI int remainHpWhenAddLife = 100;
 
     // 职业相关
     struct Assassin
     {
-        SCCI double moveSpeed = 1.1;
-        SCCI double maxHp = 1.0;
+        SCCI int moveSpeed = basicTrickerSpeed * 11 / 10;
         SCCI double concealment = 1.5;
-        SCCI double alertnessRadius = 1.3;
-        SCCI double viewRange = 1.2;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 1.0;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI int alertnessRadius = basicTrickerAlertnessRadius * 13 / 10;
+        SCCI int viewRange = basicTrickerViewRange * 12 / 10;
+        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
+        SCCI int speedOfClimbingThroughWindows = basicTrickerSpeedOfClimbingThroughWindows;
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
     };
 
     struct Klee
     {
-        SCCI double moveSpeed = 1.0;
-        SCCI double maxHp = 1.0;
-        SCCI double concealment = 1.0;
-        SCCI double alertnessRadius = 1.0;
-        SCCI double viewRange = 1.0;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 1.0;
-        SCCI double speedOfOpenChest = 1.1;
+        SCCI int moveSpeed = basicTrickerSpeed;
+        SCCI double concealment = 1;
+        SCCI int alertnessRadius = basicTrickerAlertnessRadius;
+        SCCI int viewRange = basicTrickerViewRange;
+        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
+        SCCI int speedOfClimbingThroughWindows = basicTrickerSpeedOfClimbingThroughWindows;
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest * 11 / 10;
     };
 
     struct ANoisyPerson
     {
-        SCCI double moveSpeed = 1.07;
-        SCCI double maxHp = 1.2;
+        SCCI int moveSpeed = (int)(basicTrickerSpeed * 1.07);
         SCCI double concealment = 0.8;
-        SCCI double alertnessRadius = 0.9;
-        SCCI double viewRange = 1.0;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 1.1;
-        SCCI double speedOfOpenChest = 1.1;
+        SCCI int alertnessRadius = basicTrickerAlertnessRadius * 9 / 10;
+        SCCI int viewRange = basicTrickerViewRange;
+        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
+        SCCI int speedOfClimbingThroughWindows = basicTrickerSpeedOfClimbingThroughWindows * 11 / 10;
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest * 11 / 10;
     };
 
     struct Idol
     {
-        SCCI double moveSpeed = 1.0;
-        SCCI double maxHp = 1.0;
+        SCCI int moveSpeed = basicTrickerSpeed;
         SCCI double concealment = 0.75;
-        SCCI double alertnessRadius = 1.0;
-        SCCI double viewRange = 1.1;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 1.0;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI int alertnessRadius = basicTrickerAlertnessRadius;
+        SCCI int viewRange = basicTrickerViewRange * 11 / 10;
+        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
+        SCCI int speedOfClimbingThroughWindows = basicTrickerSpeedOfClimbingThroughWindows;
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
     };
 
     struct Athlete
     {
-        SCCI double moveSpeed = 1.1;
-        SCCI double maxHp = 1.0;
-        SCCI double maxAddiction = 0.9;
-        SCCI double fixSpeed = 0.6;
-        SCCI double treatSpeed = 0.8;
+        SCCI int moveSpeed = basicStudentSpeed * 11 / 10;
+        SCCI int maxHp = basicHp;
+        SCCI int maxAddiction = basicMaxGamingAddiction * 9 / 10;
+        SCCI int fixSpeed = basicFixSpeed * 6 / 10;
+        SCCI int treatSpeed = basicTreatSpeed * 8 / 10;
         SCCI double concealment = 0.9;
-        SCCI double alertnessRadius = 1.0;
-        SCCI double viewRange = 1.1;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 1.2;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI int alertnessRadius = basicStudentAlertnessRadius;
+        SCCI int viewRange = basicStudentViewRange * 11 / 10;
+        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
+        SCCI int speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows * 12 / 10;
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
     };
 
     struct Teacher
     {
-        SCCI double moveSpeed = 0.75;
-        SCCI double maxHp = 10.0;
-        SCCI double maxAddiction = 10.0;
-        SCCI double fixSpeed = 0.0;
-        SCCI double treatSpeed = 0.7;
+        SCCI int moveSpeed = basicStudentSpeed * 3 / 4;
+        SCCI int maxHp = basicHp * 10;
+        SCCI int maxAddiction = basicMaxGamingAddiction * 10;
+        SCCI int fixSpeed = basicFixSpeed * 0;
+        SCCI int treatSpeed = basicTreatSpeed * 7 / 10;
         SCCI double concealment = 0.5;
-        SCCI double alertnessRadius = 0.5;
-        SCCI double viewRange = 0.9;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 0.5;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI int alertnessRadius = basicStudentAlertnessRadius / 2;
+        SCCI int viewRange = basicStudentViewRange * 9 / 10;
+        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
+        SCCI int speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows / 2;
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
     };
 
     struct StraightAStudent
     {
-        SCCI double moveSpeed = 0.8;
-        SCCI double maxHp = 1.1;
-        SCCI double maxAddiction = 1.3;
-        SCCI double fixSpeed = 1.1;
-        SCCI double treatSpeed = 0.8;
+        SCCI int moveSpeed = basicStudentSpeed * 8 / 10;
+        SCCI int maxHp = basicHp * 11 / 10;
+        SCCI int maxAddiction = basicMaxGamingAddiction * 13 / 10;
+        SCCI int fixSpeed = basicFixSpeed * 11 / 10;
+        SCCI int treatSpeed = basicTreatSpeed * 8 / 10;
         SCCI double concealment = 0.9;
-        SCCI double alertnessRadius = 0.9;
-        SCCI double viewRange = 0.9;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 0.83333;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI int alertnessRadius = basicStudentAlertnessRadius * 9 / 10;
+        SCCI int viewRange = basicStudentViewRange * 9 / 10;
+        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
+        SCCI int speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows * 10 / 12;
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
     };
 
     struct Robot
     {
-        SCCI double moveSpeed = 1.0;
-        SCCI double maxHp = 0.4;
-        SCCI double maxAddiction = 0.0;
-        SCCI double fixSpeed = 1.0;
-        SCCI double treatSpeed = 0.8;
-        SCCI double concealment = 1.0;
-        SCCI double alertnessRadius = 1.0;
-        SCCI double viewRange = 1.0;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 0.0016;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI int moveSpeed = basicStudentSpeed;
+        SCCI int maxHp = basicHp * 0.4;
+        SCCI int maxAddiction = basicMaxGamingAddiction * 0;
+        SCCI int fixSpeed = basicFixSpeed;
+        SCCI int treatSpeed = basicTreatSpeed * 8 / 10;
+        SCCI double concealment = 1;
+        SCCI int alertnessRadius = basicStudentAlertnessRadius * 1;
+        SCCI int viewRange = basicStudentViewRange;
+        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
+        SCCI int speedOfClimbingThroughWindows = 1;
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
     };
 
     struct TechOtaku
     {
-        SCCI double moveSpeed = 0.75;
-        SCCI double maxHp = 0.9;
-        SCCI double maxAddiction = 1.1;
-        SCCI double fixSpeed = 1.1;
-        SCCI double treatSpeed = 0.9;
-        SCCI double concealment = 1.0;
-        SCCI double alertnessRadius = 1.0;
-        SCCI double viewRange = 0.9;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 0.75;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI int moveSpeed = basicStudentSpeed * 3 / 4;
+        SCCI int maxHp = basicHp * 9 / 10;
+        SCCI int maxAddiction = basicMaxGamingAddiction * 11 / 10;
+        SCCI int fixSpeed = basicFixSpeed * 11 / 10;
+        SCCI int treatSpeed = basicTreatSpeed * 9 / 10;
+        SCCI double concealment = 1;
+        SCCI int alertnessRadius = basicStudentAlertnessRadius;
+        SCCI int viewRange = basicStudentViewRange * 9 / 10;
+        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
+        SCCI int speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows * 3 / 4;
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
     };
 
     struct Sunshine
     {
-        SCCI double moveSpeed = 1.0;
-        SCCI double maxHp = 1.0667;
-        SCCI double maxAddiction = 1.1;
-        SCCI double fixSpeed = 1.0;
-        SCCI double treatSpeed = 2.0;
-        SCCI double concealment = 1.0;
-        SCCI double alertnessRadius = 1.0;
-        SCCI double viewRange = 1.0;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 1.0;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI int moveSpeed = basicStudentSpeed;
+        SCCI int maxHp = basicHp * 32 / 30;
+        SCCI int maxAddiction = basicMaxGamingAddiction * 11 / 10;
+        SCCI int fixSpeed = basicFixSpeed;
+        SCCI int treatSpeed = basicTreatSpeed * 2;
+        SCCI double concealment = 1;
+        SCCI int alertnessRadius = basicStudentAlertnessRadius;
+        SCCI int viewRange = basicStudentViewRange;
+        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
+        SCCI int speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows;
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
     };
 
     // 技能相关
@@ -216,13 +208,13 @@ namespace Constants
     SCCI int commonSkillCD = 30000;    // 普通技能标准冷却时间
     SCCI int commonSkillTime = 10000;  // 普通技能标准持续时间
 
-    SCCI int timeOfTrickerFaintingWhenCharge = 7220;
-    SCCI int timeOfStudentFaintingWhenCharge = 2090;
+    SCCI int timeOfTrickerStunnedWhenCharge = 7220;
+    SCCI int timeOfStudentStunnedWhenCharge = 2090;
 
-    SCCI int timeOfTrickerFaintingWhenPunish = 3070;
+    SCCI int timeOfTrickerStunnedWhenPunish = 3070;
 
-    SCCI int timeOfTrickerSwingingAfterHowl = 3070;
-    SCCI int timeOfStudentFaintingWhenHowl = 6110;
+    SCCI int timeOfTrickerSwingingAfterHowl = 800;
+    SCCI int timeOfStudentStunnedWhenHowl = 5500;
 
     SCCI int timeOfStunnedWhenJumpyDumpty = 3070;
 
@@ -230,80 +222,80 @@ namespace Constants
     SCCI int timeOfAddingSpeedWhenInspire = 6000;
     struct CanBeginToCharge
     {
-        SCCI double skillCD = 0.8;
-        SCCI double durationTime = 0.5;
+        SCCI int skillCD = commonSkillCD * 4 / 3;
+        SCCI int durationTime = commonSkillTime * 1;
     };
 
     struct BecomeInvisible
     {
-        SCCI double skillCD = 2.0;
-        SCCI double durationTime = 0.6;
+        SCCI int skillCD = commonSkillCD * 2;
+        SCCI int durationTime = commonSkillTime * 6 / 10;
     };
 
     struct Punish
     {
-        SCCI double skillCD = 1.0;
-        SCCI double durationTime = 0.0;
+        SCCI int skillCD = commonSkillCD * 1;
+        SCCI int durationTime = commonSkillTime * 0;
     };
 
     struct Rouse
     {
-        SCCI double skillCD = 2.0;
-        SCCI double durationTime = 0.0;
+        SCCI int skillCD = commonSkillCD * 2;
+        SCCI int durationTime = commonSkillTime * 0;
     };
 
     struct Encourage
     {
-        SCCI double skillCD = 2.0;
-        SCCI double durationTime = 0.0;
+        SCCI int skillCD = commonSkillCD * 2;
+        SCCI int durationTime = commonSkillTime * 0;
     };
 
     struct Inspire
     {
-        SCCI double skillCD = 2.0;
-        SCCI double durationTime = 0.0;
+        SCCI int skillCD = commonSkillCD * 2;
+        SCCI int durationTime = commonSkillTime * 0;
     };
 
     struct Howl
     {
-        SCCI double skillCD = 0.8333;
-        SCCI double durationTime = 0.0;
+        SCCI int skillCD = commonSkillCD * 25 / 30;
+        SCCI int durationTime = commonSkillTime * 0;
     };
 
     struct ShowTime
     {
-        SCCI double skillCD = 3.0;
-        SCCI double durationTime = 1.0;
+        SCCI int skillCD = commonSkillCD * 3;
+        SCCI int durationTime = commonSkillTime * 1;
     };
 
     struct JumpyBomb
     {
-        SCCI double skillCD = 0.5;
-        SCCI double durationTime = 0.3;
+        SCCI int skillCD = commonSkillCD / 2;
+        SCCI int durationTime = commonSkillTime * 3 / 10;
     };
 
     struct UseKnife
     {
-        SCCI double skillCD = 1.0;
-        SCCI double durationTime = 0.1;
+        SCCI int skillCD = commonSkillCD * 1;
+        SCCI int durationTime = commonSkillTime / 10;
     };
 
     struct UseRobot
     {
-        SCCI double skillCD = 0.0017;
-        SCCI double durationTime = 0.0;
+        SCCI int skillCD = commonSkillCD / 300;
+        SCCI int durationTime = commonSkillTime * 0;
     };
 
     struct WriteAnswers
     {
-        SCCI double skillCD = 1.0;
-        SCCI double durationTime = 0.0;
+        SCCI int skillCD = commonSkillCD * 1;
+        SCCI int durationTime = commonSkillTime * 0;
     };
 
     struct SummonGolem
     {
-        SCCI double skillCD = 1.0;
-        SCCI double durationTime = 0.0;
+        SCCI int skillCD = commonSkillCD * 1;
+        SCCI int durationTime = commonSkillTime * 0;
     };
 }  // namespace Constants
 #endif

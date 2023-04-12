@@ -34,15 +34,11 @@ namespace Constants
 
     SCCI int basicHp = 3000000;
     SCCI int basicMaxGamingAddiction = 60000;
-    SCCI int BeginGamingAddiction = 20900;
-    SCCI int MidGamingAddiction = 40300;
     SCCI int basicTreatmentDegree = 1500000;
     SCCI int basicTimeOfRescue = 1000;
 
     SCCI int basicStudentSpeed = 1270;
     SCCI int basicTrickerSpeed = 1504;
-
-    SCCI int maxSpeed = 12000;
 
     SCCI double basicConcealment = 1.0;
     SCCI int basicStudentAlertnessRadius = 15 * numOfGridPerCell;
@@ -51,7 +47,7 @@ namespace Constants
     SCCI int basicTrickerViewRange = 15 * numOfGridPerCell;
     SCCI int PinningDownRange = 5 * numOfGridPerCell;
 
-    SCCI int maxNumOfProp = 3;
+    SCCI int maxNumOfProp = 3;  // 人物道具栏容量
 
     // 攻击相关
 
@@ -71,145 +67,140 @@ namespace Constants
 
     SCCI int apPropAdd = basicApOfTricker * 12 / 10;
     SCCI int apSpearAdd = basicApOfTricker * 6 / 10;
-    SCCI int remainHpWhenAddLife = 100;
 
     // 职业相关
     struct Assassin
     {
-        SCCI double moveSpeed = 1.1;
-        SCCI double maxHp = 1.0;
+        SCCI double moveSpeed = basicTrickerSpeed * 1.1;
         SCCI double concealment = 1.5;
-        SCCI double alertnessRadius = 1.3;
-        SCCI double viewRange = 1.2;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 1.0;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI double alertnessRadius = basicTrickerAlertnessRadius * 1.3;
+        SCCI double viewRange = basicTrickerViewRange * 1.2;
+        SCCI double speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking * 1.0;
+        SCCI double speedOfClimbingThroughWindows = basicTrickerSpeedOfClimbingThroughWindows * 1.0;
+        SCCI double speedOfOpenChest = basicSpeedOfOpenChest * 1.0;
     };
 
     struct Klee
     {
-        SCCI double moveSpeed = 1.0;
-        SCCI double maxHp = 1.0;
+        SCCI double moveSpeed = basicTrickerSpeed * 1.0;
         SCCI double concealment = 1.0;
-        SCCI double alertnessRadius = 1.0;
-        SCCI double viewRange = 1.0;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 1.0;
-        SCCI double speedOfOpenChest = 1.1;
+        SCCI double alertnessRadius = basicTrickerAlertnessRadius * 1.0;
+        SCCI double viewRange = basicTrickerViewRange * 1.0;
+        SCCI double speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking * 1.0;
+        SCCI double speedOfClimbingThroughWindows = basicTrickerSpeedOfClimbingThroughWindows * 1.0;
+        SCCI double speedOfOpenChest = basicSpeedOfOpenChest * 1.1;
     };
 
     struct ANoisyPerson
     {
-        SCCI double moveSpeed = 1.07;
-        SCCI double maxHp = 1.2;
+        SCCI double moveSpeed = basicTrickerSpeed * 1.07;
         SCCI double concealment = 0.8;
-        SCCI double alertnessRadius = 0.9;
-        SCCI double viewRange = 1.0;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 1.1;
-        SCCI double speedOfOpenChest = 1.1;
+        SCCI double alertnessRadius = basicTrickerAlertnessRadius * 0.9;
+        SCCI double viewRange = basicTrickerViewRange * 1.0;
+        SCCI double speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking * 1.0;
+        SCCI double speedOfClimbingThroughWindows = basicTrickerSpeedOfClimbingThroughWindows * 1.1;
+        SCCI double speedOfOpenChest = basicSpeedOfOpenChest * 1.1;
     };
 
     struct Idol
     {
-        SCCI double moveSpeed = 1.0;
-        SCCI double maxHp = 1.0;
+        SCCI double moveSpeed = basicTrickerSpeed * 1.0;
         SCCI double concealment = 0.75;
-        SCCI double alertnessRadius = 1.0;
-        SCCI double viewRange = 1.1;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 1.0;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI double alertnessRadius = basicTrickerAlertnessRadius * 1.0;
+        SCCI double viewRange = basicTrickerViewRange * 1.1;
+        SCCI double speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking * 1.0;
+        SCCI double speedOfClimbingThroughWindows = basicTrickerSpeedOfClimbingThroughWindows * 1.0;
+        SCCI double speedOfOpenChest = basicSpeedOfOpenChest * 1.0;
     };
 
     struct Athlete
     {
-        SCCI double moveSpeed = 1.1;
-        SCCI double maxHp = 1.0;
-        SCCI double maxAddiction = 0.9;
-        SCCI double fixSpeed = 0.6;
-        SCCI double treatSpeed = 0.8;
+        SCCI double moveSpeed = basicStudentSpeed * 1.1;
+        SCCI double maxHp = basicHp * 1.0;
+        SCCI double maxAddiction = basicMaxGamingAddiction * 0.9;
+        SCCI double fixSpeed = basicFixSpeed * 0.6;
+        SCCI double treatSpeed = basicTreatSpeed * 0.8;
         SCCI double concealment = 0.9;
-        SCCI double alertnessRadius = 1.0;
-        SCCI double viewRange = 1.1;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 1.2;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI double alertnessRadius = basicStudentAlertnessRadius * 1.0;
+        SCCI double viewRange = basicStudentViewRange * 1.1;
+        SCCI double speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking * 1.0;
+        SCCI double speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows * 1.2;
+        SCCI double speedOfOpenChest = basicSpeedOfOpenChest * 1.0;
     };
 
     struct Teacher
     {
-        SCCI double moveSpeed = 0.75;
-        SCCI double maxHp = 10.0;
-        SCCI double maxAddiction = 10.0;
-        SCCI double fixSpeed = 0.0;
-        SCCI double treatSpeed = 0.7;
+        SCCI double moveSpeed = basicStudentSpeed * 0.75;
+        SCCI double maxHp = basicHp * 10.0;
+        SCCI double maxAddiction = basicMaxGamingAddiction * 10.0;
+        SCCI double fixSpeed = basicFixSpeed * 0.0;
+        SCCI double treatSpeed = basicTreatSpeed * 0.7;
         SCCI double concealment = 0.5;
-        SCCI double alertnessRadius = 0.5;
-        SCCI double viewRange = 0.9;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 0.5;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI double alertnessRadius = basicStudentAlertnessRadius * 0.5;
+        SCCI double viewRange = basicStudentViewRange * 0.9;
+        SCCI double speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking * 1.0;
+        SCCI double speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows * 0.5;
+        SCCI double speedOfOpenChest = basicSpeedOfOpenChest * 1.0;
     };
 
     struct StraightAStudent
     {
-        SCCI double moveSpeed = 0.8;
-        SCCI double maxHp = 1.1;
-        SCCI double maxAddiction = 1.3;
-        SCCI double fixSpeed = 1.1;
-        SCCI double treatSpeed = 0.8;
+        SCCI double moveSpeed = basicStudentSpeed * 0.8;
+        SCCI double maxHp = basicHp * 1.1;
+        SCCI double maxAddiction = basicMaxGamingAddiction * 1.3;
+        SCCI double fixSpeed = basicFixSpeed * 1.1;
+        SCCI double treatSpeed = basicTreatSpeed * 0.8;
         SCCI double concealment = 0.9;
-        SCCI double alertnessRadius = 0.9;
-        SCCI double viewRange = 0.9;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 0.83333;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI double alertnessRadius = basicStudentAlertnessRadius * 0.9;
+        SCCI double viewRange = basicStudentViewRange * 0.9;
+        SCCI double speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking * 1.0;
+        SCCI double speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows * 0.83333;
+        SCCI double speedOfOpenChest = basicSpeedOfOpenChest * 1.0;
     };
 
     struct Robot
     {
-        SCCI double moveSpeed = 1.0;
-        SCCI double maxHp = 0.4;
-        SCCI double maxAddiction = 0.0;
-        SCCI double fixSpeed = 1.0;
-        SCCI double treatSpeed = 0.8;
+        SCCI double moveSpeed = basicStudentSpeed * 1.0;
+        SCCI double maxHp = basicHp * 0.4;
+        SCCI double maxAddiction = basicMaxGamingAddiction * 0.0;
+        SCCI double fixSpeed = basicFixSpeed * 1.0;
+        SCCI double treatSpeed = basicTreatSpeed * 0.8;
         SCCI double concealment = 1.0;
-        SCCI double alertnessRadius = 1.0;
-        SCCI double viewRange = 1.0;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 0.0016;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI double alertnessRadius = basicStudentAlertnessRadius * 1;
+        SCCI double viewRange = basicStudentViewRange * 1.0;
+        SCCI double speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking * 1.0;
+        SCCI double speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows * 0.0016;
+        SCCI double speedOfOpenChest = basicSpeedOfOpenChest * 1.0;
     };
 
     struct TechOtaku
     {
-        SCCI double moveSpeed = 0.75;
-        SCCI double maxHp = 0.9;
-        SCCI double maxAddiction = 1.1;
-        SCCI double fixSpeed = 1.1;
-        SCCI double treatSpeed = 0.9;
+        SCCI double moveSpeed = basicStudentSpeed * 0.75;
+        SCCI double maxHp = basicHp * 0.9;
+        SCCI double maxAddiction = basicMaxGamingAddiction * 1.1;
+        SCCI double fixSpeed = basicFixSpeed * 1.1;
+        SCCI double treatSpeed = basicTreatSpeed * 0.9;
         SCCI double concealment = 1.0;
-        SCCI double alertnessRadius = 1.0;
-        SCCI double viewRange = 0.9;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 0.75;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI double alertnessRadius = basicStudentAlertnessRadius;
+        SCCI double viewRange = basicStudentViewRange * 0.9;
+        SCCI double speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking * 1.0;
+        SCCI double speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows * 0.75;
+        SCCI double speedOfOpenChest = basicSpeedOfOpenChest * 1.0;
     };
 
     struct Sunshine
     {
-        SCCI double moveSpeed = 1.0;
-        SCCI double maxHp = 1.0667;
-        SCCI double maxAddiction = 1.1;
-        SCCI double fixSpeed = 1.0;
-        SCCI double treatSpeed = 2.0;
+        SCCI double moveSpeed = basicStudentSpeed * 1.0;
+        SCCI double maxHp = basicHp * 1.0667;
+        SCCI double maxAddiction = basicMaxGamingAddiction * 1.1;
+        SCCI double fixSpeed = basicFixSpeed * 1.0;
+        SCCI double treatSpeed = basicTreatSpeed * 2.0;
         SCCI double concealment = 1.0;
-        SCCI double alertnessRadius = 1.0;
-        SCCI double viewRange = 1.0;
-        SCCI double speedOfOpeningOrLocking = 1.0;
-        SCCI double speedOfClimbingThroughWindows = 1.0;
-        SCCI double speedOfOpenChest = 1.0;
+        SCCI double alertnessRadius = basicStudentAlertnessRadius * 1.0;
+        SCCI double viewRange = basicStudentViewRange * 1.0;
+        SCCI double speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking * 1.0;
+        SCCI double speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows * 1.0;
+        SCCI double speedOfOpenChest = basicSpeedOfOpenChest * 1.0;
     };
 
     // 技能相关

@@ -160,7 +160,7 @@ namespace Preparation.Utility
         //public const int StudentScoreFixed = 25;
         public static int StudentScorePinDown(int timeOfPinningDown)
         {
-            return (int)(timeOfPinningDown * 0.00369);
+            return (int)(timeOfPinningDown * 0.00246);
         }
         public static int StudentScoreTrickerBeStunned(int time)
         {
@@ -214,6 +214,7 @@ namespace Preparation.Utility
         public const int TimeOfStudentStunnedWhenCharge = 2090;
 
         public const int TimeOfGhostStunnedWhenPunish = 3070;
+        public const int factorOfTimeStunnedWhenPunish = 300 / basicApOfGhost;
 
         public const int TimeOfGhostSwingingAfterHowl = 800;
         public const int TimeOfStudentStunnedWhenHowl = 5500;
@@ -222,6 +223,8 @@ namespace Preparation.Utility
 
         public const double AddedTimeOfSpeedWhenInspire = 0.6;
         public const int TimeOfAddingSpeedWhenInspire = 6000;
+
+        public const int AddHpWhenEncourage = basicHp / 4;
 
         #endregion
         #region 道具相关

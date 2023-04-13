@@ -193,11 +193,11 @@ namespace Gaming
                         {
                             if (character.IsGhost() &&
                                 (character.PlayerState == PlayerStateType.TryingToAttack || character.PlayerState == PlayerStateType.Swinging
-                                || character.PlayerState == PlayerStateType.UsingSkill)
+                                || character.PlayerState == PlayerStateType.UsingSkill || character.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || character.PlayerState == PlayerStateType.ClimbingThroughWindows)
                                 && gameMap.CanSee(player, character))
                             {
-                                if (characterManager.BeStunned(character, GameData.TimeOfGhostStunnedWhenPunish))
-                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostStunnedWhenPunish));
+                                if (characterManager.BeStunned(character, GameData.TimeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)))
+                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)));
                                 break;
                             }
                         }
@@ -254,8 +254,8 @@ namespace Gaming
                         {
                             if ((character.HP < character.MaxHp) && gameMap.CanSee(player, character))
                             {
-                                player.AddScore(GameData.StudentScoreTreat(character.MaxHp - character.HP));
-                                character.HP = character.MaxHp;
+                                player.AddScore(GameData.StudentScoreTreat(GameData.AddHpWhenEncourage));
+                                character.HP += GameData.AddHpWhenEncourage;
                                 ((Student)character).SetDegreeOfTreatment0();
                                 break;
                             }

@@ -149,8 +149,12 @@ namespace Gaming
                                     {
                                         if (person.IsGhost())
                                         {
-                                            if (!noise && XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                                newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
+                                            if (!noise)
+                                            {
+                                                if (XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
+                                                    newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
+                                                else newPlayer.AddBgm(BgmType.GhostIsComing, 0);
+                                            }
                                             if (newPlayer.CharacterType != CharacterType.Teacher && !newPlayer.NoHp() && newPlayer.PlayerState != PlayerStateType.Stunned && XY.Distance(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
                                             {
                                                 TimePinningDown += GameData.checkInterval;
@@ -182,8 +186,7 @@ namespace Gaming
                                                 bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position);
                                         }
                                     }
-                                    if (bgmVolume > 0)
-                                        newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, bgmVolume);
+                                    newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, bgmVolume);
                                 }
                                 finally
                                 {

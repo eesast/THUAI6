@@ -64,6 +64,29 @@ namespace Gaming
                 }
             }
 
+            public bool TryRemoveBullet(Bullet bullet)
+            {
+                bullet.CanMove = false;
+                if (gameMap.Remove(bullet))
+                {
+                    if (bullet.BulletBombRange > 0)
+                    {
+                        BombedBullet bombedBullet = new(bullet);
+                        gameMap.Add(bombedBullet);
+                        new Thread
+                                    (() =>
+                                    {
+                                        Thread.Sleep(GameData.frameDuration * 5);
+                                        gameMap.RemoveJustFromMap(bombedBullet);
+                                    }
+                                    )
+                        { IsBackground = true }.Start();
+                    }
+                    return true;
+                }
+                else return false;
+            }
+
             private void BulletBomb(Bullet bullet, GameObj? objBeingShot)
             {
 #if DEBUG
@@ -72,11 +95,10 @@ namespace Gaming
                 else
                     Debugger.Output(bullet, "bombed without objBeingShot");
 #endif
-                bullet.CanMove = false;
+                if (!TryRemoveBullet(bullet)) return;
 
                 if (bullet.BulletBombRange == 0)
                 {
-                    gameMap.Remove(bullet);
                     if (objBeingShot == null)
                     {
                         characterManager.BackSwing((Character)bullet.Parent, bullet.Backswing);
@@ -86,20 +108,6 @@ namespace Gaming
                     BombObj(bullet, objBeingShot);
                     characterManager.BackSwing((Character)bullet.Parent, bullet.RecoveryFromHit);
                     return;
-                }
-
-                if (gameMap.Remove(bullet))
-                {
-                    BombedBullet bombedBullet = new(bullet);
-                    gameMap.Add(bombedBullet);
-                    new Thread
-                                (() =>
-                                {
-                                    Thread.Sleep(GameData.frameDuration * 5);
-                                    gameMap.RemoveJustFromMap(bombedBullet);
-                                }
-                                )
-                    { IsBackground = true }.Start();
                 }
 
                 /*if (objBeingShot != null)
@@ -178,24 +186,35 @@ namespace Gaming
                     bullet.CanMove = true;
                     gameMap.Add(bullet);
                     moveEngine.MoveObj(bullet, (int)((bullet.BulletAttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
-
                     if (bullet.CastTime > 0)
                     {
                         characterManager.SetPlayerState(player, PlayerStateType.TryingToAttack);
-                        if (bullet.IsRemoteAttack)
-                        {
-                            new Thread
+
+                        new Thread
                                 (() =>
                                 {
-                                    Thread.Sleep(bullet.CastTime);
-                                    if (player.PlayerState == PlayerStateType.TryingToAttack)
+                                    new FrameRateTaskExecutor<int>(
+                                    loopCondition: () => player.PlayerState == PlayerStateType.TryingToAttack && gameMap.Timer.IsGaming,
+                                    loopToDo: () =>
                                     {
-                                        characterManager.SetPlayerState(player);
+                                    },
+                                    timeInterval: GameData.checkInterval,
+                                    finallyReturn: () => 0,
+                                    maxTotalDuration: bullet.CastTime
+                      )
+                          .Start();
+
+                                    if (gameMap.Timer.IsGaming)
+                                    {
+                                        if (player.PlayerState == PlayerStateType.TryingToAttack)
+                                        {
+                                            characterManager.SetPlayerState(player);
+                                        }
+                                        else TryRemoveBullet(bullet);
                                     }
                                 }
                                 )
-                            { IsBackground = true }.Start();
-                        }
+                        { IsBackground = true }.Start();
                     }
                 }
                 if (bullet != null)

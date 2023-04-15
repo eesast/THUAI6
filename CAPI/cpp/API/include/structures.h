@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <array>
 #include <map>
+#include <vector>
+#include <string>
 
 namespace THUAI6
 {

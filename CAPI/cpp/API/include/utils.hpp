@@ -5,6 +5,8 @@
 
 #include <cstdint>
 #include <cmath>
+#include <map>
+#include <vector>
 #include "Message2Clients.pb.h"
 #include "Message2Server.pb.h"
 #include "MessageType.pb.h"

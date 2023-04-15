@@ -43,6 +43,14 @@ namespace Gaming
                 return true;
             }
 
+            public bool MovePlayerWhenStunned(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
+            {
+                if (!playerToMove.Commandable() && playerToMove.PlayerState != PlayerStateType.Stunned) return false;
+                characterManager.SetPlayerState(playerToMove, PlayerStateType.Stunned);
+                moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
+                return true;
+            }
+
             public bool Stop(Character player)
             {
                 if (player.Commandable() || !TryToStop())
@@ -129,7 +137,7 @@ namespace Gaming
                 {
                     player.AddScore(GameData.StudentScoreEscape);
                     ++gameMap.NumOfEscapedStudent;
-                    player.Die(PlayerStateType.Escaped);
+                    player.RemoveFromGame(PlayerStateType.Escaped);
                     return true;
                 }
                 else
@@ -139,7 +147,7 @@ namespace Gaming
                     {
                         player.AddScore(GameData.StudentScoreEscape);
                         ++gameMap.NumOfEscapedStudent;
-                        player.Die(PlayerStateType.Escaped);
+                        player.RemoveFromGame(PlayerStateType.Escaped);
                         return true;
                     }
                     return false;

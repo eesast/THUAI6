@@ -269,7 +269,7 @@ namespace Constants
 
     struct ShowTime
     {
-        SCCI int skillCD = commonSkillCD * 3;
+        SCCI int skillCD = commonSkillCD * 8 / 3;
         SCCI int durationTime = commonSkillTime * 1;
     };
 

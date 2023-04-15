@@ -270,7 +270,7 @@ class Howl:
 
 
 class ShowTime:
-    skillCD = (int)(3.0 * Constants.commonSkillCD)
+    skillCD = (int)(8 * Constants.commonSkillCD/3)
     durationTime = (int)(1.0 * Constants.commonSkillTime)
 
 

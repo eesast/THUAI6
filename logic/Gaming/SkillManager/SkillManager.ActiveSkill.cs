@@ -49,8 +49,25 @@ namespace Gaming
                                  {
                                      foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
                                      {
-                                         if (!person.IsGhost())
-                                             actionManager.MovePlayer(person, GameData.frameDuration, (player.Position - person.Position).Angle());
+                                         if (!person.IsGhost() && player.CharacterType != CharacterType.Robot && !person.NoHp())
+                                         {
+                                             double dis = XY.Distance(person.Position, player.Position);
+                                             if (dis >= player.AlertnessRadius)
+                                             {
+                                                 person.AddMoveSpeed(GameData.checkIntervalWhenShowTime, dis / player.AlertnessRadius);
+                                                 actionManager.MovePlayerWhenStunned(person, GameData.checkIntervalWhenShowTime, (player.Position - person.Position).Angle());
+                                             }
+                                             else if (dis >= player.ViewRange)
+                                             {
+                                                 Student student = (Student)person;
+                                                 student.GamingAddiction += GameData.checkIntervalWhenShowTime;
+                                                 if (student.GamingAddiction == student.MaxGamingAddiction)
+                                                 {
+                                                     player.AddScore(GameData.TrickerScoreStudentDie);
+                                                     characterManager.Die(student);
+                                                 }
+                                             }
+                                         }
                                      }
                                  }
                                  finally
@@ -58,7 +75,7 @@ namespace Gaming
                                      gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                                  }
                              },
-                             timeInterval: GameData.frameDuration,
+                             timeInterval: GameData.checkIntervalWhenShowTime,
                              finallyReturn: () => 0
                          )
 
@@ -167,7 +184,7 @@ namespace Gaming
                     {
                         foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            if (!character.IsGhost() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
+                            if (!character.IsGhost() && !character.NoHp() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
                             {
                                 if (characterManager.BeStunned(character, GameData.timeOfStudentStunnedWhenHowl))
                                     player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStudentStunnedWhenHowl));

@@ -4,11 +4,15 @@
 
 ## Visual Studio使用说明
 
-待更新...
+选手开始编写代码之前，要先编译好服务器（logic）。具体方法是进入logic文件夹，分别编译`logic.sln`和client文件夹里的`client.sln`，然后就可以开始编写自己的代码。需要注意，选手需要分别在Debug和Release模式下编译，然后才可以分别运行`gameServer_dbg.cmd`和`gameServer_rls.cmd`
+
+## Python使用说明
+
+选手编写Python代码之前需要安装必要的Python包，具体方法为：Windows下运行（需要在有Python环境的情况下运行）`generate_proto.cmd`，Linux下运行`generate_proto.sh`，然后可以开始进行代码编写。
 
 ## cmd脚本的参数修改
 
-待更新...
+右键点击`.cmd`或`.bat`文件之后，选择编辑就可以开始修改文件。通过在一行的开头加上`::`，可以注释掉该行。
 
 ## C++接口必看
 

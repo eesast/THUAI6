@@ -5,6 +5,8 @@
 
 #include <cstdint>
 #include <cmath>
+#include <map>
+#include <vector>
 #include "Message2Clients.pb.h"
 #include "Message2Server.pb.h"
 #include "MessageType.pb.h"
@@ -19,6 +21,11 @@ namespace AssistFunction
     [[nodiscard]] constexpr inline int GridToCell(int grid) noexcept
     {
         return grid / numOfGridPerCell;
+    }
+
+    [[nodiscard]] constexpr inline int GridToCell(double grid) noexcept
+    {
+        return int(grid) / numOfGridPerCell;
     }
 
     inline bool HaveView(int viewRange, int x, int y, int newX, int newY, std::vector<std::vector<THUAI6::PlaceType>>& map)
@@ -112,6 +119,7 @@ namespace Proto2THUAI6
         {protobuf::StudentType::STRAIGHT_A_STUDENT, THUAI6::StudentType::StraightAStudent},
         {protobuf::StudentType::ROBOT, THUAI6::StudentType::Robot},
         {protobuf::StudentType::TECH_OTAKU, THUAI6::StudentType::TechOtaku},
+        {protobuf::StudentType::SUNSHINE, THUAI6::StudentType::Sunshine},
     };
 
     inline std::map<protobuf::TrickerType, THUAI6::TrickerType> trickerTypeDict{
@@ -370,6 +378,7 @@ namespace THUAI62Proto
         {THUAI6::StudentType::StraightAStudent, protobuf::StudentType::STRAIGHT_A_STUDENT},
         {THUAI6::StudentType::Robot, protobuf::StudentType::ROBOT},
         {THUAI6::StudentType::TechOtaku, protobuf::StudentType::TECH_OTAKU},
+        {THUAI6::StudentType::Sunshine, protobuf::StudentType::SUNSHINE},
     };
 
     // inline std::map<THUAI6::StudentBuffType, protobuf::StudentBuffType> studentBuffTypeDict{
@@ -415,7 +424,7 @@ namespace THUAI62Proto
         return playerMsg;
     }
 
-    inline protobuf::IDMsg THUAI62ProtobufID(int playerID)
+    inline protobuf::IDMsg THUAI62ProtobufID(int64_t playerID)
     {
         protobuf::IDMsg idMsg;
         idMsg.set_player_id(playerID);

@@ -343,12 +343,13 @@ namespace protobuf
         STRAIGHT_A_STUDENT = 3,
         ROBOT = 4,
         TECH_OTAKU = 5,
+        SUNSHINE = 6,
         StudentType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         StudentType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool StudentType_IsValid(int value);
     constexpr StudentType StudentType_MIN = NULL_STUDENT_TYPE;
-    constexpr StudentType StudentType_MAX = TECH_OTAKU;
+    constexpr StudentType StudentType_MAX = SUNSHINE;
     constexpr int StudentType_ARRAYSIZE = StudentType_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* StudentType_descriptor();

@@ -82,7 +82,6 @@ namespace Client
             };
             new Thread(() =>
             {
-                int i = 0;
                 try
                 {
                     new FrameRateTaskExecutor<int>
@@ -91,10 +90,8 @@ namespace Client
                         () =>
                         {
                             var content = Reader.ReadOne();
-                            i++;
                             if (content == null)
                             {
-                                MessageBox.Show($"End! {i}");
                                 endFile = true;
                             }
                             else

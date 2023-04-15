@@ -1,6 +1,8 @@
-tclap/** linguist-vendored
+* text=auto
 
+tclap/** linguist-vendored
 spdlog/** linguist-vendored
+grpc/** linguist-vendored
 
 proto/** linguist-generated
 

@@ -338,7 +338,7 @@ namespace Server
 
             if (options.Url != DefaultArgumentOptions.Url && options.Token != DefaultArgumentOptions.Token)
             {
-                this.httpSender = new HttpSender(options.Url, options.Token, "PUT");
+                this.httpSender = new HttpSender(options.Url, options.Token);
             }
         }
     }

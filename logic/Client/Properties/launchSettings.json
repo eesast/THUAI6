@@ -2,7 +2,7 @@
   "profiles": {
     "Client": {
       "commandName": "Project",
-      "commandLineArgs": "--cl --port 8888 --characterID 2031"
+      "commandLineArgs": "--cl --playbackFile .\\video.thuaipb"
     }
   }
 }

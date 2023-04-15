@@ -200,6 +200,8 @@ namespace Preparation.Utility
                     return Protobuf.StudentType.Robot;
                 case Preparation.Utility.CharacterType.TechOtaku:
                     return Protobuf.StudentType.TechOtaku;
+                case Preparation.Utility.CharacterType.Sunshine:
+                    return Protobuf.StudentType.Sunshine;
                 default:
                     return Protobuf.StudentType.NullStudentType;
             }
@@ -218,6 +220,8 @@ namespace Preparation.Utility
                     return Preparation.Utility.CharacterType.Robot;
                 case Protobuf.StudentType.TechOtaku:
                     return Preparation.Utility.CharacterType.TechOtaku;
+                case Protobuf.StudentType.Sunshine:
+                    return Preparation.Utility.CharacterType.Sunshine;
                 default:
                     return Preparation.Utility.CharacterType.Null;
             }

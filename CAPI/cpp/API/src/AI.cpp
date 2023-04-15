@@ -18,14 +18,11 @@ extern const THUAI6::StudentType studentType = THUAI6::StudentType::Athlete;
 
 void AI::play(IStudentAPI& api)
 {
-    api.PrintTricker();
+    auto self = api.GetSelfInfo();
 }
 
 void AI::play(ITrickerAPI& api)
 {
-    if (api.HaveMessage())
-    {
-        auto msg = api.GetMessage();
-        api.Print("Message from " + std::to_string(msg.first) + ": " + msg.second);
-    }
+    auto self = api.GetSelfInfo();
+    api.PrintSelfInfo();
 }

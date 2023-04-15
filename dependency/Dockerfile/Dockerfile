@@ -32,7 +32,7 @@ RUN make -j$(nproc)
 RUN make install
 RUN ldconfig
 
-COPY ./CAPI /usr/local/PlayerCode
+COPY ./README.md /usr/local/PlayerCode
 RUN cd /usr/local/PlayerCode/CAPI
 RUN cmake CMakeLists.txt
 RUN make

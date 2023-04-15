@@ -23,22 +23,30 @@ namespace Gaming
                 {
                     if (((Bullet)collisionObj).Parent != player && ((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
                     {
-                        if (characterManager.BeStunned((Character)player, GameData.TimeOfStunnedWhenJumpyDumpty))
-                            player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStunnedWhenJumpyDumpty));
+                        if (characterManager.BeStunned((Character)player, GameData.timeOfStunnedWhenJumpyDumpty))
+                            player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStunnedWhenJumpyDumpty));
                         gameMap.Remove((GameObj)collisionObj);
                     }
                 }
                 if (player.FindIActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
                 {
-                    if (characterManager.BeStunned((Character)collisionObj, GameData.TimeOfGhostStunnedWhenCharge))
-                        player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostStunnedWhenCharge));
-                    characterManager.BeStunned(player, GameData.TimeOfStudentStunnedWhenCharge);
+                    if (characterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge))
+                        player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenCharge));
+                    characterManager.BeStunned(player, GameData.timeOfStudentStunnedWhenCharge);
                 }
             }
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
                 if (!playerToMove.Commandable() || !TryToStop()) return false;
                 characterManager.SetPlayerState(playerToMove, PlayerStateType.Moving);
+                moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
+                return true;
+            }
+
+            public bool MovePlayerWhenStunned(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
+            {
+                if (!playerToMove.Commandable() && playerToMove.PlayerState != PlayerStateType.Stunned) return false;
+                characterManager.SetPlayerState(playerToMove, PlayerStateType.Stunned);
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
                 return true;
             }
@@ -129,7 +137,7 @@ namespace Gaming
                 {
                     player.AddScore(GameData.StudentScoreEscape);
                     ++gameMap.NumOfEscapedStudent;
-                    player.Die(PlayerStateType.Escaped);
+                    player.RemoveFromGame(PlayerStateType.Escaped);
                     return true;
                 }
                 else
@@ -139,7 +147,7 @@ namespace Gaming
                     {
                         player.AddScore(GameData.StudentScoreEscape);
                         ++gameMap.NumOfEscapedStudent;
-                        player.Die(PlayerStateType.Escaped);
+                        player.RemoveFromGame(PlayerStateType.Escaped);
                         return true;
                     }
                     return false;

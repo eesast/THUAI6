@@ -153,7 +153,7 @@ namespace Server
                     Y = bullet.Position.y,
                     FacingDirection = bullet.FacingDirection.Angle(),
                     Guid = bullet.ID,
-                    Team = (bullet.Parent.IsGhost()) ? PlayerType.TrickerPlayer : PlayerType.StudentPlayer,
+                    Team = (bullet.Parent!.IsGhost()) ? PlayerType.TrickerPlayer : PlayerType.StudentPlayer,
                     Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)bullet.Place),
                     BombRange = bullet.BulletBombRange,
                     Speed = bullet.Speed
@@ -274,7 +274,7 @@ namespace Server
                     Y = chest.Position.y
                 }
             };
-            int progress = (chest.OpenStartTime > 0) ? ((time - chest.OpenStartTime) * chest.WhoOpen.SpeedOfOpenChest) : 0;
+            int progress = (chest.OpenStartTime > 0) ? ((time - chest.OpenStartTime) * chest.WhoOpen!.SpeedOfOpenChest) : 0;
             msg.ChestMessage.Progress = (progress > GameData.degreeOfOpenedChest) ? GameData.degreeOfOpenedChest : progress;
             return msg;
         }

@@ -28,8 +28,8 @@ namespace Constants
     SCCI int basicEncourageSpeed = 100;
     SCCI int basicFixSpeed = 123;
     SCCI int basicSpeedOfOpeningOrLocking = 4000;
-    SCCI int basicStudentSpeedOfClimbingThroughWindows = 611;
-    SCCI int basicTrickerSpeedOfClimbingThroughWindows = 1270;
+    SCCI int basicStudentSpeedOfClimbingThroughWindows = 1222;
+    SCCI int basicTrickerSpeedOfClimbingThroughWindows = 2540;
     SCCI int basicSpeedOfOpenChest = 1000;
 
     SCCI int basicHp = 3000000;
@@ -37,14 +37,14 @@ namespace Constants
     SCCI int basicEncouragementDegree = 1500000;
     SCCI int basicTimeOfRouse = 1000;
 
-    SCCI int basicStudentSpeed = 1270;
-    SCCI int basicTrickerSpeed = 1504;
+    SCCI int basicStudentSpeed = 3000;
+    SCCI int basicTrickerSpeed = 3600;
 
     SCCI double basicConcealment = 1;
     SCCI int basicStudentAlertnessRadius = 15 * numOfGridPerCell;
     SCCI int basicTrickerAlertnessRadius = 17 * numOfGridPerCell;
     SCCI int basicStudentViewRange = 10 * numOfGridPerCell;
-    SCCI int basicTrickerViewRange = 15 * numOfGridPerCell;
+    SCCI int basicTrickerViewRange = 13 * numOfGridPerCell;
     SCCI int PinningDownRange = 5 * numOfGridPerCell;
 
     SCCI int maxNumOfProp = 3;  // 人物道具栏容量
@@ -58,10 +58,10 @@ namespace Constants
     SCCI int basicRecoveryFromHit = 3700;  // 基本命中攻击恢复时长
     SCCI int basicStunnedTimeOfStudent = 4300;
 
-    SCCI int basicBulletMoveSpeed = 3700;       // 基本子弹移动速度
-    SCCI double basicRemoteAttackRange = 3000;  // 基本远程攻击范围
-    SCCI double basicAttackShortRange = 1100;   // 基本近程攻击范围
-    SCCI double basicBulletBombRange = 1000;    // 基本子弹爆炸范围
+    SCCI int basicBulletMoveSpeed = 7400;       // 基本子弹移动速度
+    SCCI double basicRemoteAttackRange = 6000;  // 基本远程攻击范围
+    SCCI double basicAttackShortRange = 2200;   // 基本近程攻击范围
+    SCCI double basicBulletBombRange = 2000;    // 基本子弹爆炸范围
 
     // 道具相关
 
@@ -218,8 +218,13 @@ namespace Constants
 
     SCCI int timeOfStunnedWhenJumpyDumpty = 3070;
 
-    SCCI double addedTimeOfSpeedWhenInspire = 0.6;
+    SCCI double addedTimeOfSpeedWhenInspire = 1.6;
     SCCI int timeOfAddingSpeedWhenInspire = 6000;
+
+    SCCI int addHpWhenEncourage = basicHp / 4;
+
+    SCCI int checkIntervalWhenShowTime = 200;
+    SCCI int addAddictionPer100msWhenShowTime = 300;
     struct CanBeginToCharge
     {
         SCCI int skillCD = commonSkillCD * 2;
@@ -264,7 +269,7 @@ namespace Constants
 
     struct ShowTime
     {
-        SCCI int skillCD = commonSkillCD * 3;
+        SCCI int skillCD = commonSkillCD * 8 / 3;
         SCCI int durationTime = commonSkillTime * 1;
     };
 

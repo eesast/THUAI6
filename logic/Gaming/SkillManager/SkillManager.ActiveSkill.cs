@@ -35,6 +35,7 @@ namespace Gaming
 
                 return ActiveSkillEffect(skill, player, () =>
                 {
+                    player.AddMoveSpeed(skill.DurationTime, 0.8);
                     new Thread
                     (
                    () =>
@@ -48,8 +49,25 @@ namespace Gaming
                                  {
                                      foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
                                      {
-                                         if (!person.IsGhost())
-                                             actionManager.MovePlayer(person, GameData.frameDuration, (player.Position - person.Position).Angle());
+                                         if (!person.IsGhost() && player.CharacterType != CharacterType.Robot && !person.NoHp())
+                                         {
+                                             double dis = XY.Distance(person.Position, player.Position);
+                                             if (dis >= player.AlertnessRadius)
+                                             {
+                                                 person.AddMoveSpeed(GameData.checkIntervalWhenShowTime, dis / player.AlertnessRadius);
+                                                 actionManager.MovePlayerWhenStunned(person, GameData.checkIntervalWhenShowTime, (player.Position - person.Position).Angle());
+                                             }
+                                             else if (dis >= player.ViewRange)
+                                             {
+                                                 Student student = (Student)person;
+                                                 student.GamingAddiction += GameData.checkIntervalWhenShowTime;
+                                                 if (student.GamingAddiction == student.MaxGamingAddiction)
+                                                 {
+                                                     player.AddScore(GameData.TrickerScoreStudentDie);
+                                                     characterManager.Die(student);
+                                                 }
+                                             }
+                                         }
                                      }
                                  }
                                  finally
@@ -57,7 +75,7 @@ namespace Gaming
                                      gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                                  }
                              },
-                             timeInterval: GameData.frameDuration,
+                             timeInterval: GameData.checkIntervalWhenShowTime,
                              finallyReturn: () => 0
                          )
 
@@ -87,7 +105,10 @@ namespace Gaming
 
             public static bool UseRobot(Character player)
             {
+                IGolem? golem = (IGolem?)(((SummonGolem)player.FindIActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned);
+                Debugger.Output(player, (golem != null).ToString());
                 if ((!player.Commandable()) || ((SummonGolem)player.FindIActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned == null) return false;
+                Debugger.Output(player, player.PlayerID.ToString());
                 IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.UseRobot);
                 activeSkill.IsBeingUsed = (activeSkill.IsBeingUsed) ? false : true;
                 return true;
@@ -132,10 +153,11 @@ namespace Gaming
                 XY res = player.Position + new XY(player.FacingDirection, player.Radius * 2);
                 if (actionManager.moveEngine.CheckCollision(player, res) != null)
                     return false;
-
+                Golem? golem = (Golem?)characterManager.AddPlayer(res, player.TeamID, player.PlayerID + GameData.numOfPeople, CharacterType.Robot, player);
+                if (golem == null) return false;
+                ((SummonGolem)activeSkill).GolemSummoned = golem;
                 return ActiveSkillEffect(activeSkill, player, () =>
                 {
-                    characterManager.AddPlayer(res, player.TeamID, player.PlayerID + GameData.numOfPeople, CharacterType.Robot, player);
                 },
                                                       () =>
                                                       { });
@@ -162,11 +184,10 @@ namespace Gaming
                     {
                         foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            if (!character.IsGhost() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
+                            if (!character.IsGhost() && !character.NoHp() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
                             {
-                                if (characterManager.BeStunned(character, GameData.TimeOfStudentStunnedWhenHowl))
-                                    player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStudentStunnedWhenHowl));
-                                break;
+                                if (characterManager.BeStunned(character, GameData.timeOfStudentStunnedWhenHowl))
+                                    player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStudentStunnedWhenHowl));
                             }
                         }
                     }
@@ -174,7 +195,7 @@ namespace Gaming
                     {
                         gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
-                    characterManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl);
+                    characterManager.BackSwing(player, GameData.timeOfGhostSwingingAfterHowl);
                     Debugger.Output(player, "howled!");
                 },
                                                       () =>
@@ -196,8 +217,8 @@ namespace Gaming
                                 || character.PlayerState == PlayerStateType.UsingSkill || character.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || character.PlayerState == PlayerStateType.ClimbingThroughWindows)
                                 && gameMap.CanSee(player, character))
                             {
-                                if (characterManager.BeStunned(character, GameData.TimeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)))
-                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)));
+                                if (characterManager.BeStunned(character, GameData.timeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)))
+                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)));
                                 break;
                             }
                         }
@@ -254,8 +275,8 @@ namespace Gaming
                         {
                             if ((character.HP < character.MaxHp) && gameMap.CanSee(player, character))
                             {
-                                player.AddScore(GameData.StudentScoreTreat(GameData.AddHpWhenEncourage));
-                                character.HP += GameData.AddHpWhenEncourage;
+                                player.AddScore(GameData.StudentScoreTreat(GameData.addHpWhenEncourage));
+                                character.HP += GameData.addHpWhenEncourage;
                                 ((Student)character).SetDegreeOfTreatment0();
                                 break;
                             }
@@ -284,7 +305,7 @@ namespace Gaming
                             if (gameMap.CanSee(player, character))
                             {
                                 player.AddScore(GameData.ScoreInspire);
-                                character.AddMoveSpeed(GameData.TimeOfAddingSpeedWhenInspire, GameData.AddedTimeOfSpeedWhenInspire);
+                                character.AddMoveSpeed(GameData.timeOfAddingSpeedWhenInspire, GameData.addedTimeOfSpeedWhenInspire);
                             }
                         }
                     }

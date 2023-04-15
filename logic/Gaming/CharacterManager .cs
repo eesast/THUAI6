@@ -378,12 +378,12 @@ namespace Gaming
                 return true;
             }
 
-            private void Die(Character player)
+            public void Die(Student player)
             {
 #if DEBUG
                 Debugger.Output(player, "die.");
 #endif
-                player.Die(PlayerStateType.Deceased);
+                player.RemoveFromGame(PlayerStateType.Deceased);
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {
@@ -398,7 +398,7 @@ namespace Gaming
                 {
                     if (((Golem)player).Parent != null && ((Golem)player).Parent.CharacterType == CharacterType.TechOtaku)
                     {
-                        ((SummonGolem)player.FindIActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned = null;
+                        ((SummonGolem)(((Golem)player).Parent.FindIActiveSkill(ActiveSkillType.SummonGolem))).GolemSummoned = null;
                         player.FindIActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed = false;
                     }
                     return;

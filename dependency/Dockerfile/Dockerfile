@@ -8,31 +8,37 @@ RUN apt-get update && apt-get install --no-install-recommends -y gcc g++ make wg
 RUN git clone -b v1.46.3 --depth 1 --shallow-submodules  https://gitee.com/mirrors/grpc.git
 RUN wget -P . https://cloud.tsinghua.edu.cn/f/1f2713efd9e44255abd6/?dl=1
 RUN mv 'index.html?dl=1' third_party.tar.gz
-RUN cd grpc
+WORKDIR /usr/local/grpc
 RUN rm -rf third_party
 RUN mv ../third_party.tar.gz .
 RUN tar -zxvf third_party.tar.gz
 RUN mkdir -p cmake/build
-RUN pushd cmake/build
+WORKDIR /usr/local/grpc/cmake/build
 RUN cmake -DgRPC_INSTALL=ON \
 -DgRPC_BUILD_TESTS=OFF \
 ../..
 RUN make -j$(nproc)
 RUN make install
-RUN popd
 
 #安装protobuf
-RUN cd /usr/local
+WORKDIR /usr/local
 RUN git clone https://gitee.com/mirrors/protobuf_source.git ./protobuf
-RUN cd protobuf
-RUN git checkout 3.22.1
-RUN ./autogen.sh
+WORKDIR /usr/local/protobuf
+RUN git checkout 3.20.x
+RUN  ./autogen.sh
 RUN ./configure
 RUN make -j$(nproc)
 RUN make install
 RUN ldconfig
+#RUN git submodule update --init --recursive
+#RUN cmake .
+#RUN cmake --build . --parallel 10
+#RUN make install
 
-COPY ./README.md /usr/local/PlayerCode
-RUN cd /usr/local/PlayerCode/CAPI
-RUN cmake CMakeLists.txt
+COPY ./CAPI /usr/local/PlayerCode/CAPI
+COPY ./dependency /usr/local/PlayerCode/dependency
+WORKDIR /usr/local/PlayerCode/dependency/proto
+RUN ./cpp_output.sh
+WORKDIR /usr/local/PlayerCode/CAPI/cpp
+RUN cmake ./CMakeLists.txt
 RUN make

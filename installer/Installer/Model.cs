@@ -292,8 +292,8 @@ namespace Downloader
             public static string dataPath = "";  // C盘的文档文件夹
             public Data(string path)
             {
-                // dataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                dataPath = new DirectoryInfo(".").FullName;
+                dataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                //dataPath = new DirectoryInfo(".").FullName;
                 Data.path = System.IO.Path.Combine(dataPath, "THUAI6.json");
                 if (File.Exists(Data.path))
                 {
@@ -516,11 +516,14 @@ namespace Downloader
                 Dictionary<string, string> jsonDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
                 foreach (KeyValuePair<string, string> pair in jsonDict)
                 {
-                    MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key));
-                    if (MD5.Length == 0)  // 文档不存在
-                        newFileName.Add(pair.Key);
-                    else if (MD5 != pair.Value)  // MD5不匹配
-                        updateFileName.Add(pair.Key);
+                    if (System.IO.Path.GetFileName(pair.Key) != "AI.cpp" && System.IO.Path.GetFileName(pair.))
+                    {
+                        MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key));
+                        if (MD5.Length == 0)  // 文档不存在
+                            newFileName.Add(pair.Key);
+                        else if (MD5 != pair.Value)  // MD5不匹配
+                            updateFileName.Add(pair.Key);
+                    }
                 }
 
                 newFile = newFileName.Count;
@@ -818,7 +821,7 @@ namespace Downloader
                     }
                     foreach (FileInfo file in player.GetFiles())
                     {
-                        if (file.Name == "README.md")
+                        if (file.Name == "AI.cpp" || file.Name == "AI.py")
                         {
                             continue;
                         }
@@ -1289,6 +1292,121 @@ namespace WebConnect
             catch (IOException)
             {
                 Console.WriteLine("写入token.dat发生冲突！请检查token.dat是否被其它程序占用！");
+            }
+        }
+
+        public static int WriteUserEmail(string email)
+        {
+            try
+            {
+                string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
+                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.ReadWrite);
+                StreamReader sr = new StreamReader(fs);
+                string json = sr.ReadToEnd();
+                if (json == null || json == "")
+                {
+                    json += @"{""THUAI6""" + ":" + @"""2023""}";
+                }
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                if (!dict.ContainsKey("email"))
+                {
+                    dict.Add("email", email);
+                }
+                else
+                {
+                    dict["email"] = email;
+                }
+                sr.Close();
+                StreamWriter sw = new StreamWriter(fs);
+                sw.WriteLine(JsonConvert.SerializeObject(dict));
+                sw.Close();
+                fs.Close();
+                return 0;//成功
+            }
+            catch
+            {
+                return -1;//失败
+            }
+        }
+
+        public static int WriteUserPassword(string password)
+        {
+            try
+            {
+                string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
+                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.ReadWrite);
+                StreamReader sr = new StreamReader(fs);
+                string json = sr.ReadToEnd();
+                if (json == null || json == "")
+                {
+                    json += @"{""THUAI6""" + ":" + @"""2023""}";
+                }
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                if (!dict.ContainsKey("password"))
+                {
+                    dict.Add("password", password);
+                }
+                else
+                {
+                    dict["password"] = password;
+                }
+                sr.Close();
+                StreamWriter sw = new StreamWriter(fs);
+                sw.WriteLine(JsonConvert.SerializeObject(dict));
+                sw.Close();
+                fs.Close();
+                return 0;//成功
+            }
+            catch
+            {
+                return -1;//失败,THUAI6.json 文件不存在或者已被占用
+            }
+        }
+
+        public static string ReadUserPassword()
+        {
+            try
+            {
+                string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
+                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.Read);
+                StreamReader sr = new StreamReader(fs);
+                string json = sr.ReadToEnd();
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                if (json == null || json == "")
+                {
+                    json += @"{""THUAI6""" + ":" + @"""2023""}";
+                }
+                dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                return dict["password"];
+
+            }
+            catch
+            {
+                return null;  //文件不存在或者已被占用
+            }
+        }
+
+        public static string ReadUserEmail()
+        {
+            try
+            {
+                string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
+                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.Read);
+                StreamReader sr = new StreamReader(fs);
+                string json = sr.ReadToEnd();
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                if (json == null || json == "")
+                {
+                    json += @"{""THUAI6""" + ":" + @"""2023""}";
+                }
+                dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                return dict["email"];
+            }
+            catch
+            {
+                return null;
             }
         }
         public bool ReadToken()  // 读取token

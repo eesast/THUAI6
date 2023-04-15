@@ -102,8 +102,13 @@ namespace Client
         private void ReactToCommandline()
         {
             string[] args = Environment.GetCommandLineArgs();
+            if (args.Length == 2)
+            {
+                Playback(args[1]);
+                return;
+            }
             _ = Parser.Default.ParseArguments<ArgumentOptions>(args).WithParsed(o =>
-            { options = o; });
+        { options = o; });
             if (options != null && Convert.ToInt64(options.PlayerID) > 2023)
             {
                 isSpectatorMode = true;
@@ -566,6 +571,8 @@ namespace Client
             {
                 if (msg.Place == human.Place)
                     return true;
+                if (human.StudentType == StudentType.TechOtaku && msg.PlayerId == playerID + Preparation.Utility.GameData.numOfPeople)
+                    return true;
             }
             else if (!humanOrButcher && butcher != null)
             {
@@ -1025,6 +1032,7 @@ namespace Client
                                     BorderBrush = Brushes.Transparent,
                                     IsReadOnly = true
                                 };
+                                UpperLayerOfMap.Children.Add(icon);
                             }
                         }
                         //}

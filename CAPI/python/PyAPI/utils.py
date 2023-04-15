@@ -105,7 +105,8 @@ class Proto2THUAI6(NoInstance):
         MessageType.TEACHER: THUAI6.StudentType.Teacher,
         MessageType.STRAIGHT_A_STUDENT: THUAI6.StudentType.StraightAStudent,
         MessageType.ROBOT: THUAI6.StudentType.Robot,
-        MessageType.TECH_OTAKU: THUAI6.StudentType.TechOtaku, }
+        MessageType.TECH_OTAKU: THUAI6.StudentType.TechOtaku,
+        MessageType.SUNSHINE: THUAI6.StudentType.Sunshine, }
 
     trickerTypeDict: Final[dict] = {
         MessageType.NULL_TRICKER_TYPE: THUAI6.TrickerType.NullTrickerType,
@@ -309,7 +310,8 @@ class THUAI62Proto(NoInstance):
         THUAI6.StudentType.Teacher: MessageType.TEACHER,
         THUAI6.StudentType.StraightAStudent: MessageType.STRAIGHT_A_STUDENT,
         THUAI6.StudentType.Robot: MessageType.ROBOT,
-        THUAI6.StudentType.TechOtaku: MessageType.TECH_OTAKU, }
+        THUAI6.StudentType.TechOtaku: MessageType.TECH_OTAKU,
+        THUAI6.StudentType.Sunshine: MessageType.SUNSHINE, }
 
     trickerTypeDict: Final[dict] = {
         THUAI6.TrickerType.NullTrickerType: MessageType.NULL_TRICKER_TYPE,

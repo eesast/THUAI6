@@ -43,7 +43,7 @@ class Constants(NoInstance):
     basicStudentAlertnessRadius = 15 * numOfGridPerCell
     basicTrickerAlertnessRadius = 17 * numOfGridPerCell
     basicStudentViewRange = 10 * numOfGridPerCell
-    basicTrickerViewRange = 15 * numOfGridPerCell
+    basicTrickerViewRange = 13 * numOfGridPerCell
     PinningDownRange = 5 * numOfGridPerCell
 
     maxNumOfProp = 3  # 人物道具栏容量
@@ -82,8 +82,12 @@ class Constants(NoInstance):
 
     timeOfStunnedWhenJumpyDumpty = 3070
 
-    addedTimeOfSpeedWhenInspire = 0.6
+    addedTimeOfSpeedWhenInspire = 1.6
     timeOfAddingSpeedWhenInspire = 6000
+    addHpWhenEncourage = basicHp / 4;
+
+    checkIntervalWhenShowTime = 200;
+    addAddictionPer100msWhenShowTime = 300;
 
 
 class Assassin:

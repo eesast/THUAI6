@@ -179,9 +179,11 @@ namespace GameClass.GameObj
                     {
                         if (person.CharacterType == CharacterType.TechOtaku && person.FindIActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed)
                         {
+                            Debugger.Output(person, person.PlayerID.ToString());
                             foreach (Character character in gameObjDict[GameObjType.Character])
                             {
-                                if (playerID + GameData.numOfPeople == character.ID)
+                                Debugger.Output(character, character.PlayerID.ToString());
+                                if (person.PlayerID + GameData.numOfPeople == character.PlayerID)
                                 {
                                     player = character;
                                     break;

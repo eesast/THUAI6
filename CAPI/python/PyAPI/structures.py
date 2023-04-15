@@ -113,7 +113,7 @@ class PlayerState(Enum):
     Swinging = 11
     Attacking = 12
     Locking = 13
-    Rummaging = 14
+    # Rummaging = 14
     Climbing = 15
     OpeningAChest = 16
     UsingSpecialSkill = 17

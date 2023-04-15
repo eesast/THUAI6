@@ -21,20 +21,25 @@
 
 // IWYU pragma: private
 
-namespace grpc {
+namespace grpc
+{
 
-namespace internal {
-class CallOpSetInterface;
-class Call;
+    namespace internal
+    {
+        class CallOpSetInterface;
+        class Call;
 
-/// This is an interface that Channel and Server implement to allow them to hook
-/// performing ops.
-class CallHook {
- public:
-  virtual ~CallHook() {}
-  virtual void PerformOpsOnCall(CallOpSetInterface* ops, Call* call) = 0;
-};
-}  // namespace internal
+        /// This is an interface that Channel and Server implement to allow them to hook
+        /// performing ops.
+        class CallHook
+        {
+        public:
+            virtual ~CallHook()
+            {
+            }
+            virtual void PerformOpsOnCall(CallOpSetInterface* ops, Call* call) = 0;
+        };
+    }  // namespace internal
 
 }  // namespace grpc
 

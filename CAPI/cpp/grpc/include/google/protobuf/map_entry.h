@@ -46,87 +46,91 @@
 #error "You cannot SWIG proto headers"
 #endif
 
-namespace google {
-namespace protobuf {
-class Arena;
-namespace internal {
-template <typename Derived, typename Key, typename Value,
-          WireFormatLite::FieldType kKeyFieldType,
-          WireFormatLite::FieldType kValueFieldType>
-class MapField;
-}
-}  // namespace protobuf
+namespace google
+{
+    namespace protobuf
+    {
+        class Arena;
+        namespace internal
+        {
+            template<typename Derived, typename Key, typename Value, WireFormatLite::FieldType kKeyFieldType, WireFormatLite::FieldType kValueFieldType>
+            class MapField;
+        }
+    }  // namespace protobuf
 }  // namespace google
 
-namespace google {
-namespace protobuf {
-namespace internal {
+namespace google
+{
+    namespace protobuf
+    {
+        namespace internal
+        {
 
-// MapEntry is the returned google::protobuf::Message when calling AddMessage of
-// google::protobuf::Reflection. In order to let it work with generated message
-// reflection, its in-memory type is the same as generated message with the same
-// fields. However, in order to decide the in-memory type of key/value, we need
-// to know both their cpp type in generated api and proto type. In
-// implementation, all in-memory types have related wire format functions to
-// support except ArenaStringPtr. Therefore, we need to define another type with
-// supporting wire format functions. Since this type is only used as return type
-// of MapEntry accessors, it's named MapEntry accessor type.
-//
-// cpp type:               the type visible to users in public API.
-// proto type:             WireFormatLite::FieldType of the field.
-// in-memory type:         type of the data member used to stored this field.
-// MapEntry accessor type: type used in MapEntry getters/mutators to access the
-//                         field.
-//
-// cpp type | proto type  | in-memory type | MapEntry accessor type
-// int32_t    TYPE_INT32    int32_t          int32_t
-// int32_t    TYPE_FIXED32  int32_t          int32_t
-// string     TYPE_STRING   ArenaStringPtr   string
-// FooEnum    TYPE_ENUM     int              int
-// FooMessage TYPE_MESSAGE  FooMessage*      FooMessage
-//
-// The in-memory types of primitive types can be inferred from its proto type,
-// while we need to explicitly specify the cpp type if proto type is
-// TYPE_MESSAGE to infer the in-memory type.
-template <typename Derived, typename Key, typename Value,
-          WireFormatLite::FieldType kKeyFieldType,
-          WireFormatLite::FieldType kValueFieldType>
-class MapEntry : public MapEntryImpl<Derived, Message, Key, Value,
-                                     kKeyFieldType, kValueFieldType> {
- public:
-  constexpr MapEntry() {}
-  explicit MapEntry(Arena* arena)
-      : MapEntryImpl<Derived, Message, Key, Value, kKeyFieldType,
-                     kValueFieldType>(arena) {}
-  ~MapEntry() override {
-    Message::_internal_metadata_.template Delete<UnknownFieldSet>();
-  }
-  typedef void InternalArenaConstructable_;
-  typedef void DestructorSkippable_;
+            // MapEntry is the returned google::protobuf::Message when calling AddMessage of
+            // google::protobuf::Reflection. In order to let it work with generated message
+            // reflection, its in-memory type is the same as generated message with the same
+            // fields. However, in order to decide the in-memory type of key/value, we need
+            // to know both their cpp type in generated api and proto type. In
+            // implementation, all in-memory types have related wire format functions to
+            // support except ArenaStringPtr. Therefore, we need to define another type with
+            // supporting wire format functions. Since this type is only used as return type
+            // of MapEntry accessors, it's named MapEntry accessor type.
+            //
+            // cpp type:               the type visible to users in public API.
+            // proto type:             WireFormatLite::FieldType of the field.
+            // in-memory type:         type of the data member used to stored this field.
+            // MapEntry accessor type: type used in MapEntry getters/mutators to access the
+            //                         field.
+            //
+            // cpp type | proto type  | in-memory type | MapEntry accessor type
+            // int32_t    TYPE_INT32    int32_t          int32_t
+            // int32_t    TYPE_FIXED32  int32_t          int32_t
+            // string     TYPE_STRING   ArenaStringPtr   string
+            // FooEnum    TYPE_ENUM     int              int
+            // FooMessage TYPE_MESSAGE  FooMessage*      FooMessage
+            //
+            // The in-memory types of primitive types can be inferred from its proto type,
+            // while we need to explicitly specify the cpp type if proto type is
+            // TYPE_MESSAGE to infer the in-memory type.
+            template<typename Derived, typename Key, typename Value, WireFormatLite::FieldType kKeyFieldType, WireFormatLite::FieldType kValueFieldType>
+            class MapEntry : public MapEntryImpl<Derived, Message, Key, Value, kKeyFieldType, kValueFieldType>
+            {
+            public:
+                constexpr MapEntry()
+                {
+                }
+                explicit MapEntry(Arena* arena) :
+                    MapEntryImpl<Derived, Message, Key, Value, kKeyFieldType, kValueFieldType>(arena)
+                {
+                }
+                ~MapEntry() override
+                {
+                    Message::_internal_metadata_.template Delete<UnknownFieldSet>();
+                }
+                typedef void InternalArenaConstructable_;
+                typedef void DestructorSkippable_;
 
-  typedef typename MapEntryImpl<Derived, Message, Key, Value, kKeyFieldType,
-                                kValueFieldType>::KeyTypeHandler KeyTypeHandler;
-  typedef
-      typename MapEntryImpl<Derived, Message, Key, Value, kKeyFieldType,
-                            kValueFieldType>::ValueTypeHandler ValueTypeHandler;
-  size_t SpaceUsedLong() const override {
-    size_t size = sizeof(Derived);
-    size += KeyTypeHandler::SpaceUsedInMapEntryLong(this->key_);
-    size += ValueTypeHandler::SpaceUsedInMapEntryLong(this->value_);
-    return size;
-  }
+                typedef typename MapEntryImpl<Derived, Message, Key, Value, kKeyFieldType, kValueFieldType>::KeyTypeHandler KeyTypeHandler;
+                typedef
+                    typename MapEntryImpl<Derived, Message, Key, Value, kKeyFieldType, kValueFieldType>::ValueTypeHandler ValueTypeHandler;
+                size_t SpaceUsedLong() const override
+                {
+                    size_t size = sizeof(Derived);
+                    size += KeyTypeHandler::SpaceUsedInMapEntryLong(this->key_);
+                    size += ValueTypeHandler::SpaceUsedInMapEntryLong(this->value_);
+                    return size;
+                }
 
- private:
-  friend class ::PROTOBUF_NAMESPACE_ID::Arena;
-  template <typename C, typename K, typename V,
-            WireFormatLite::FieldType k_wire_type, WireFormatLite::FieldType>
-  friend class internal::MapField;
+            private:
+                friend class ::PROTOBUF_NAMESPACE_ID::Arena;
+                template<typename C, typename K, typename V, WireFormatLite::FieldType k_wire_type, WireFormatLite::FieldType>
+                friend class internal::MapField;
 
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(MapEntry);
-};
+                GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(MapEntry);
+            };
 
-}  // namespace internal
-}  // namespace protobuf
+        }  // namespace internal
+    }      // namespace protobuf
 }  // namespace google
 
 #include <google/protobuf/port_undef.inc>

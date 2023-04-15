@@ -90,12 +90,14 @@
 
 // Read/write annotations are enabled in Annotalysis mode; disabled otherwise.
 #define ABSL_INTERNAL_READS_WRITES_ANNOTATIONS_ENABLED \
-  ABSL_INTERNAL_ANNOTALYSIS_ENABLED
+    ABSL_INTERNAL_ANNOTALYSIS_ENABLED
 
 #endif  // ABSL_HAVE_THREAD_SANITIZER
 
 #ifdef __cplusplus
-#define ABSL_INTERNAL_BEGIN_EXTERN_C extern "C" {
+#define ABSL_INTERNAL_BEGIN_EXTERN_C \
+    extern "C"                       \
+    {
 #define ABSL_INTERNAL_END_EXTERN_C }  // extern "C"
 #define ABSL_INTERNAL_GLOBAL_SCOPED(F) ::F
 #define ABSL_INTERNAL_STATIC_INLINE inline
@@ -123,29 +125,30 @@
 // "sizeof(*(pointer))". `pointer` must be a non-void* pointer. Insert at the
 // point where `pointer` has been allocated, preferably close to the point
 // where the race happens. See also ABSL_ANNOTATE_BENIGN_RACE_STATIC.
-#define ABSL_ANNOTATE_BENIGN_RACE(pointer, description) \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateBenignRaceSized)  \
-  (__FILE__, __LINE__, pointer, sizeof(*(pointer)), description)
+#define ABSL_ANNOTATE_BENIGN_RACE(pointer, description)  \
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateBenignRaceSized) \
+    (__FILE__, __LINE__, pointer, sizeof(*(pointer)), description)
 
 // Same as ABSL_ANNOTATE_BENIGN_RACE(`address`, `description`), but applies to
 // the memory range [`address`, `address`+`size`).
 #define ABSL_ANNOTATE_BENIGN_RACE_SIZED(address, size, description) \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateBenignRaceSized)              \
-  (__FILE__, __LINE__, address, size, description)
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateBenignRaceSized)            \
+    (__FILE__, __LINE__, address, size, description)
 
 // Enable (`enable`!=0) or disable (`enable`==0) race detection for all threads.
 // This annotation could be useful if you want to skip expensive race analysis
 // during some period of program execution, e.g. during initialization.
-#define ABSL_ANNOTATE_ENABLE_RACE_DETECTION(enable)        \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateEnableRaceDetection) \
-  (__FILE__, __LINE__, enable)
+#define ABSL_ANNOTATE_ENABLE_RACE_DETECTION(enable)          \
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateEnableRaceDetection) \
+    (__FILE__, __LINE__, enable)
 
 // -------------------------------------------------------------
 // Annotations useful for debugging.
 
 // Report the current thread `name` to a race detector.
-#define ABSL_ANNOTATE_THREAD_NAME(name) \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateThreadName)(__FILE__, __LINE__, name)
+#define ABSL_ANNOTATE_THREAD_NAME(name)             \
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateThreadName) \
+    (__FILE__, __LINE__, name)
 
 // -------------------------------------------------------------
 // Annotations useful when implementing locks. They are not normally needed by
@@ -153,66 +156,62 @@
 // object.
 
 // Report that a lock has been created at address `lock`.
-#define ABSL_ANNOTATE_RWLOCK_CREATE(lock) \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateRWLockCreate)(__FILE__, __LINE__, lock)
+#define ABSL_ANNOTATE_RWLOCK_CREATE(lock)             \
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateRWLockCreate) \
+    (__FILE__, __LINE__, lock)
 
 // Report that a linker initialized lock has been created at address `lock`.
 #ifdef ABSL_HAVE_THREAD_SANITIZER
-#define ABSL_ANNOTATE_RWLOCK_CREATE_STATIC(lock)          \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateRWLockCreateStatic) \
-  (__FILE__, __LINE__, lock)
+#define ABSL_ANNOTATE_RWLOCK_CREATE_STATIC(lock)            \
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateRWLockCreateStatic) \
+    (__FILE__, __LINE__, lock)
 #else
 #define ABSL_ANNOTATE_RWLOCK_CREATE_STATIC(lock) \
-  ABSL_ANNOTATE_RWLOCK_CREATE(lock)
+    ABSL_ANNOTATE_RWLOCK_CREATE(lock)
 #endif
 
 // Report that the lock at address `lock` is about to be destroyed.
-#define ABSL_ANNOTATE_RWLOCK_DESTROY(lock) \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateRWLockDestroy)(__FILE__, __LINE__, lock)
+#define ABSL_ANNOTATE_RWLOCK_DESTROY(lock)             \
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateRWLockDestroy) \
+    (__FILE__, __LINE__, lock)
 
 // Report that the lock at address `lock` has been acquired.
 // `is_w`=1 for writer lock, `is_w`=0 for reader lock.
-#define ABSL_ANNOTATE_RWLOCK_ACQUIRED(lock, is_w)     \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateRWLockAcquired) \
-  (__FILE__, __LINE__, lock, is_w)
+#define ABSL_ANNOTATE_RWLOCK_ACQUIRED(lock, is_w)       \
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateRWLockAcquired) \
+    (__FILE__, __LINE__, lock, is_w)
 
 // Report that the lock at address `lock` is about to be released.
 // `is_w`=1 for writer lock, `is_w`=0 for reader lock.
-#define ABSL_ANNOTATE_RWLOCK_RELEASED(lock, is_w)     \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateRWLockReleased) \
-  (__FILE__, __LINE__, lock, is_w)
+#define ABSL_ANNOTATE_RWLOCK_RELEASED(lock, is_w)       \
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateRWLockReleased) \
+    (__FILE__, __LINE__, lock, is_w)
 
 // Apply ABSL_ANNOTATE_BENIGN_RACE_SIZED to a static variable `static_var`.
-#define ABSL_ANNOTATE_BENIGN_RACE_STATIC(static_var, description)      \
-  namespace {                                                          \
-  class static_var##_annotator {                                       \
-   public:                                                             \
-    static_var##_annotator() {                                         \
-      ABSL_ANNOTATE_BENIGN_RACE_SIZED(&static_var, sizeof(static_var), \
-                                      #static_var ": " description);   \
-    }                                                                  \
-  };                                                                   \
-  static static_var##_annotator the##static_var##_annotator;           \
-  }  // namespace
+#define ABSL_ANNOTATE_BENIGN_RACE_STATIC(static_var, description)                                               \
+    namespace                                                                                                   \
+    {                                                                                                           \
+        class static_var##_annotator                                                                            \
+        {                                                                                                       \
+        public:                                                                                                 \
+            static_var##_annotator()                                                                            \
+            {                                                                                                   \
+                ABSL_ANNOTATE_BENIGN_RACE_SIZED(&static_var, sizeof(static_var), #static_var ": " description); \
+            }                                                                                                   \
+        };                                                                                                      \
+        static static_var##_annotator the##static_var##_annotator;                                              \
+    }  // namespace
 
 // Function prototypes of annotations provided by the compiler-based sanitizer
 // implementation.
 ABSL_INTERNAL_BEGIN_EXTERN_C
-void AnnotateRWLockCreate(const char* file, int line,
-                          const volatile void* lock);
-void AnnotateRWLockCreateStatic(const char* file, int line,
-                                const volatile void* lock);
-void AnnotateRWLockDestroy(const char* file, int line,
-                           const volatile void* lock);
-void AnnotateRWLockAcquired(const char* file, int line,
-                            const volatile void* lock, long is_w);  // NOLINT
-void AnnotateRWLockReleased(const char* file, int line,
-                            const volatile void* lock, long is_w);  // NOLINT
-void AnnotateBenignRace(const char* file, int line,
-                        const volatile void* address, const char* description);
-void AnnotateBenignRaceSized(const char* file, int line,
-                             const volatile void* address, size_t size,
-                             const char* description);
+void AnnotateRWLockCreate(const char* file, int line, const volatile void* lock);
+void AnnotateRWLockCreateStatic(const char* file, int line, const volatile void* lock);
+void AnnotateRWLockDestroy(const char* file, int line, const volatile void* lock);
+void AnnotateRWLockAcquired(const char* file, int line, const volatile void* lock, long is_w);  // NOLINT
+void AnnotateRWLockReleased(const char* file, int line, const volatile void* lock, long is_w);  // NOLINT
+void AnnotateBenignRace(const char* file, int line, const volatile void* address, const char* description);
+void AnnotateBenignRaceSized(const char* file, int line, const volatile void* address, size_t size, const char* description);
 void AnnotateThreadName(const char* file, int line, const char* name);
 void AnnotateEnableRaceDetection(const char* file, int line, int enable);
 ABSL_INTERNAL_END_EXTERN_C
@@ -240,25 +239,27 @@ ABSL_INTERNAL_END_EXTERN_C
 #include <sanitizer/msan_interface.h>
 
 #define ABSL_ANNOTATE_MEMORY_IS_INITIALIZED(address, size) \
-  __msan_unpoison(address, size)
+    __msan_unpoison(address, size)
 
 #define ABSL_ANNOTATE_MEMORY_IS_UNINITIALIZED(address, size) \
-  __msan_allocated_memory(address, size)
+    __msan_allocated_memory(address, size)
 
 #else  // !defined(ABSL_HAVE_MEMORY_SANITIZER)
 
 // TODO(rogeeff): remove this branch
 #ifdef ABSL_HAVE_THREAD_SANITIZER
 #define ABSL_ANNOTATE_MEMORY_IS_INITIALIZED(address, size) \
-  do {                                                     \
-    (void)(address);                                       \
-    (void)(size);                                          \
-  } while (0)
+    do                                                     \
+    {                                                      \
+        (void)(address);                                   \
+        (void)(size);                                      \
+    } while (0)
 #define ABSL_ANNOTATE_MEMORY_IS_UNINITIALIZED(address, size) \
-  do {                                                       \
-    (void)(address);                                         \
-    (void)(size);                                            \
-  } while (0)
+    do                                                       \
+    {                                                        \
+        (void)(address);                                     \
+        (void)(size);                                        \
+    } while (0)
 #else
 
 #define ABSL_ANNOTATE_MEMORY_IS_INITIALIZED(address, size)    // empty
@@ -274,9 +275,9 @@ ABSL_INTERNAL_END_EXTERN_C
 #if defined(ABSL_INTERNAL_IGNORE_READS_ATTRIBUTE_ENABLED)
 
 #define ABSL_INTERNAL_IGNORE_READS_BEGIN_ATTRIBUTE \
-  __attribute((exclusive_lock_function("*")))
+    __attribute((exclusive_lock_function("*")))
 #define ABSL_INTERNAL_IGNORE_READS_END_ATTRIBUTE \
-  __attribute((unlock_function("*")))
+    __attribute((unlock_function("*")))
 
 #else  // !defined(ABSL_INTERNAL_IGNORE_READS_ATTRIBUTE_ENABLED)
 
@@ -297,22 +298,21 @@ ABSL_INTERNAL_END_EXTERN_C
 // ABSL_ANNOTATE_IGNORE_READS_END is called. Useful to ignore intentional racey
 // reads, while still checking other reads and all writes.
 // See also ABSL_ANNOTATE_UNPROTECTED_READ.
-#define ABSL_ANNOTATE_IGNORE_READS_BEGIN()              \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateIgnoreReadsBegin) \
-  (__FILE__, __LINE__)
+#define ABSL_ANNOTATE_IGNORE_READS_BEGIN()                \
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateIgnoreReadsBegin) \
+    (__FILE__, __LINE__)
 
 // Stop ignoring reads.
-#define ABSL_ANNOTATE_IGNORE_READS_END()              \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateIgnoreReadsEnd) \
-  (__FILE__, __LINE__)
+#define ABSL_ANNOTATE_IGNORE_READS_END()                \
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateIgnoreReadsEnd) \
+    (__FILE__, __LINE__)
 
 // Function prototypes of annotations provided by the compiler-based sanitizer
 // implementation.
 ABSL_INTERNAL_BEGIN_EXTERN_C
 void AnnotateIgnoreReadsBegin(const char* file, int line)
     ABSL_INTERNAL_IGNORE_READS_BEGIN_ATTRIBUTE;
-void AnnotateIgnoreReadsEnd(const char* file,
-                            int line) ABSL_INTERNAL_IGNORE_READS_END_ATTRIBUTE;
+void AnnotateIgnoreReadsEnd(const char* file, int line) ABSL_INTERNAL_IGNORE_READS_END_ATTRIBUTE;
 ABSL_INTERNAL_END_EXTERN_C
 
 #elif defined(ABSL_INTERNAL_ANNOTALYSIS_ENABLED)
@@ -324,23 +324,31 @@ ABSL_INTERNAL_END_EXTERN_C
 // TODO(delesley) -- The exclusive lock here ignores writes as well, but
 // allows IGNORE_READS_AND_WRITES to work properly.
 
-#define ABSL_ANNOTATE_IGNORE_READS_BEGIN()                          \
-  ABSL_INTERNAL_GLOBAL_SCOPED(                                      \
-      ABSL_INTERNAL_C_SYMBOL(AbslInternalAnnotateIgnoreReadsBegin)) \
-  ()
+#define ABSL_ANNOTATE_IGNORE_READS_BEGIN()                           \
+    ABSL_INTERNAL_GLOBAL_SCOPED(                                     \
+        ABSL_INTERNAL_C_SYMBOL(AbslInternalAnnotateIgnoreReadsBegin) \
+    )                                                                \
+    ()
 
-#define ABSL_ANNOTATE_IGNORE_READS_END()                          \
-  ABSL_INTERNAL_GLOBAL_SCOPED(                                    \
-      ABSL_INTERNAL_C_SYMBOL(AbslInternalAnnotateIgnoreReadsEnd)) \
-  ()
-
-ABSL_INTERNAL_STATIC_INLINE void ABSL_INTERNAL_C_SYMBOL(
-    AbslInternalAnnotateIgnoreReadsBegin)()
-    ABSL_INTERNAL_IGNORE_READS_BEGIN_ATTRIBUTE {}
+#define ABSL_ANNOTATE_IGNORE_READS_END()                           \
+    ABSL_INTERNAL_GLOBAL_SCOPED(                                   \
+        ABSL_INTERNAL_C_SYMBOL(AbslInternalAnnotateIgnoreReadsEnd) \
+    )                                                              \
+    ()
 
 ABSL_INTERNAL_STATIC_INLINE void ABSL_INTERNAL_C_SYMBOL(
-    AbslInternalAnnotateIgnoreReadsEnd)()
-    ABSL_INTERNAL_IGNORE_READS_END_ATTRIBUTE {}
+    AbslInternalAnnotateIgnoreReadsBegin
+)()
+    ABSL_INTERNAL_IGNORE_READS_BEGIN_ATTRIBUTE
+{
+}
+
+ABSL_INTERNAL_STATIC_INLINE void ABSL_INTERNAL_C_SYMBOL(
+    AbslInternalAnnotateIgnoreReadsEnd
+)()
+    ABSL_INTERNAL_IGNORE_READS_END_ATTRIBUTE
+{
+}
 
 #else
 
@@ -355,12 +363,14 @@ ABSL_INTERNAL_STATIC_INLINE void ABSL_INTERNAL_C_SYMBOL(
 #if ABSL_INTERNAL_WRITES_ANNOTATIONS_ENABLED == 1
 
 // Similar to ABSL_ANNOTATE_IGNORE_READS_BEGIN, but ignore writes instead.
-#define ABSL_ANNOTATE_IGNORE_WRITES_BEGIN() \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateIgnoreWritesBegin)(__FILE__, __LINE__)
+#define ABSL_ANNOTATE_IGNORE_WRITES_BEGIN()                \
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateIgnoreWritesBegin) \
+    (__FILE__, __LINE__)
 
 // Stop ignoring writes.
-#define ABSL_ANNOTATE_IGNORE_WRITES_END() \
-  ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateIgnoreWritesEnd)(__FILE__, __LINE__)
+#define ABSL_ANNOTATE_IGNORE_WRITES_END()                \
+    ABSL_INTERNAL_GLOBAL_SCOPED(AnnotateIgnoreWritesEnd) \
+    (__FILE__, __LINE__)
 
 // Function prototypes of annotations provided by the compiler-based sanitizer
 // implementation.
@@ -391,37 +401,42 @@ ABSL_INTERNAL_END_EXTERN_C
 
 // Start ignoring all memory accesses (both reads and writes).
 #define ABSL_ANNOTATE_IGNORE_READS_AND_WRITES_BEGIN() \
-  do {                                                \
-    ABSL_ANNOTATE_IGNORE_READS_BEGIN();               \
-    ABSL_ANNOTATE_IGNORE_WRITES_BEGIN();              \
-  } while (0)
+    do                                                \
+    {                                                 \
+        ABSL_ANNOTATE_IGNORE_READS_BEGIN();           \
+        ABSL_ANNOTATE_IGNORE_WRITES_BEGIN();          \
+    } while (0)
 
 // Stop ignoring both reads and writes.
 #define ABSL_ANNOTATE_IGNORE_READS_AND_WRITES_END() \
-  do {                                              \
-    ABSL_ANNOTATE_IGNORE_WRITES_END();              \
-    ABSL_ANNOTATE_IGNORE_READS_END();               \
-  } while (0)
+    do                                              \
+    {                                               \
+        ABSL_ANNOTATE_IGNORE_WRITES_END();          \
+        ABSL_ANNOTATE_IGNORE_READS_END();           \
+    } while (0)
 
 #ifdef __cplusplus
 // ABSL_ANNOTATE_UNPROTECTED_READ is the preferred way to annotate racey reads.
 #define ABSL_ANNOTATE_UNPROTECTED_READ(x) \
-  absl::base_internal::AnnotateUnprotectedRead(x)
+    absl::base_internal::AnnotateUnprotectedRead(x)
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
-namespace base_internal {
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
+    namespace base_internal
+    {
 
-template <typename T>
-inline T AnnotateUnprotectedRead(const volatile T& x) {  // NOLINT
-  ABSL_ANNOTATE_IGNORE_READS_BEGIN();
-  T res = x;
-  ABSL_ANNOTATE_IGNORE_READS_END();
-  return res;
-}
+        template<typename T>
+        inline T AnnotateUnprotectedRead(const volatile T& x)
+        {  // NOLINT
+            ABSL_ANNOTATE_IGNORE_READS_BEGIN();
+            T res = x;
+            ABSL_ANNOTATE_IGNORE_READS_END();
+            return res;
+        }
 
-}  // namespace base_internal
-ABSL_NAMESPACE_END
+    }  // namespace base_internal
+    ABSL_NAMESPACE_END
 }  // namespace absl
 #endif
 
@@ -443,11 +458,12 @@ ABSL_NAMESPACE_END
 #include <sanitizer/common_interface_defs.h>
 
 #define ABSL_ANNOTATE_CONTIGUOUS_CONTAINER(beg, end, old_mid, new_mid) \
-  __sanitizer_annotate_contiguous_container(beg, end, old_mid, new_mid)
+    __sanitizer_annotate_contiguous_container(beg, end, old_mid, new_mid)
 #define ABSL_ADDRESS_SANITIZER_REDZONE(name) \
-  struct {                                   \
-    alignas(8) char x[8];                    \
-  } name
+    struct                                   \
+    {                                        \
+        alignas(8) char x[8];                \
+    } name
 
 #else
 

@@ -47,7 +47,7 @@ typedef struct grpc_slice grpc_slice;
 #define GRPC_SLICE_INLINE_EXTRA_SIZE sizeof(void*)
 
 #define GRPC_SLICE_INLINED_SIZE \
-  (sizeof(size_t) + sizeof(uint8_t*) - 1 + GRPC_SLICE_INLINE_EXTRA_SIZE)
+    (sizeof(size_t) + sizeof(uint8_t*) - 1 + GRPC_SLICE_INLINE_EXTRA_SIZE)
 
 struct grpc_slice_refcount;
 /** A grpc_slice s, if initialized, represents the byte range
@@ -62,69 +62,68 @@ struct grpc_slice_refcount;
 
    As a special case, a slice can be given refcount == uintptr_t(1), meaning
    that the slice represents external data that is not refcounted. */
-struct grpc_slice {
-  struct grpc_slice_refcount* refcount;
-  union grpc_slice_data {
-    struct grpc_slice_refcounted {
-      size_t length;
-      uint8_t* bytes;
-    } refcounted;
-    struct grpc_slice_inlined {
-      uint8_t length;
-      uint8_t bytes[GRPC_SLICE_INLINED_SIZE];
-    } inlined;
-  } data;
+struct grpc_slice
+{
+    struct grpc_slice_refcount* refcount;
+    union grpc_slice_data
+    {
+        struct grpc_slice_refcounted
+        {
+            size_t length;
+            uint8_t* bytes;
+        } refcounted;
+        struct grpc_slice_inlined
+        {
+            uint8_t length;
+            uint8_t bytes[GRPC_SLICE_INLINED_SIZE];
+        } inlined;
+    } data;
 };
 
 #define GRPC_SLICE_BUFFER_INLINE_ELEMENTS 8
 
 /** Represents an expandable array of slices, to be interpreted as a
    single item. */
-typedef struct grpc_slice_buffer {
-  /** This is for internal use only. External users (i.e any code outside grpc
-   * core) MUST NOT use this field */
-  grpc_slice* base_slices;
+typedef struct grpc_slice_buffer
+{
+    /** This is for internal use only. External users (i.e any code outside grpc
+     * core) MUST NOT use this field */
+    grpc_slice* base_slices;
 
-  /** slices in the array (Points to the first valid grpc_slice in the array) */
-  grpc_slice* slices;
-  /** the number of slices in the array */
-  size_t count;
-  /** the number of slices allocated in the array. External users (i.e any code
-   * outside grpc core) MUST NOT use this field */
-  size_t capacity;
-  /** the combined length of all slices in the array */
-  size_t length;
-  /** inlined elements to avoid allocations */
-  grpc_slice inlined[GRPC_SLICE_BUFFER_INLINE_ELEMENTS];
+    /** slices in the array (Points to the first valid grpc_slice in the array) */
+    grpc_slice* slices;
+    /** the number of slices in the array */
+    size_t count;
+    /** the number of slices allocated in the array. External users (i.e any code
+     * outside grpc core) MUST NOT use this field */
+    size_t capacity;
+    /** the combined length of all slices in the array */
+    size_t length;
+    /** inlined elements to avoid allocations */
+    grpc_slice inlined[GRPC_SLICE_BUFFER_INLINE_ELEMENTS];
 } grpc_slice_buffer;
 
-#define GRPC_SLICE_START_PTR(slice)                 \
-  ((slice).refcount ? (slice).data.refcounted.bytes \
-                    : (slice).data.inlined.bytes)
-#define GRPC_SLICE_LENGTH(slice)                     \
-  ((slice).refcount ? (slice).data.refcounted.length \
-                    : (slice).data.inlined.length)
-#define GRPC_SLICE_SET_LENGTH(slice, newlen)                              \
-  ((slice).refcount ? ((slice).data.refcounted.length = (size_t)(newlen)) \
-                    : ((slice).data.inlined.length = (uint8_t)(newlen)))
+#define GRPC_SLICE_START_PTR(slice) \
+    ((slice).refcount ? (slice).data.refcounted.bytes : (slice).data.inlined.bytes)
+#define GRPC_SLICE_LENGTH(slice) \
+    ((slice).refcount ? (slice).data.refcounted.length : (slice).data.inlined.length)
+#define GRPC_SLICE_SET_LENGTH(slice, newlen) \
+    ((slice).refcount ? ((slice).data.refcounted.length = (size_t)(newlen)) : ((slice).data.inlined.length = (uint8_t)(newlen)))
 #define GRPC_SLICE_END_PTR(slice) \
-  GRPC_SLICE_START_PTR(slice) + GRPC_SLICE_LENGTH(slice)
+    GRPC_SLICE_START_PTR(slice) + GRPC_SLICE_LENGTH(slice)
 #define GRPC_SLICE_IS_EMPTY(slice) (GRPC_SLICE_LENGTH(slice) == 0)
 
 #ifdef GRPC_ALLOW_GPR_SLICE_FUNCTIONS
 
 /* Duplicate GPR_* definitions */
-#define GPR_SLICE_START_PTR(slice)                  \
-  ((slice).refcount ? (slice).data.refcounted.bytes \
-                    : (slice).data.inlined.bytes)
-#define GPR_SLICE_LENGTH(slice)                      \
-  ((slice).refcount ? (slice).data.refcounted.length \
-                    : (slice).data.inlined.length)
-#define GPR_SLICE_SET_LENGTH(slice, newlen)                               \
-  ((slice).refcount ? ((slice).data.refcounted.length = (size_t)(newlen)) \
-                    : ((slice).data.inlined.length = (uint8_t)(newlen)))
+#define GPR_SLICE_START_PTR(slice) \
+    ((slice).refcount ? (slice).data.refcounted.bytes : (slice).data.inlined.bytes)
+#define GPR_SLICE_LENGTH(slice) \
+    ((slice).refcount ? (slice).data.refcounted.length : (slice).data.inlined.length)
+#define GPR_SLICE_SET_LENGTH(slice, newlen) \
+    ((slice).refcount ? ((slice).data.refcounted.length = (size_t)(newlen)) : ((slice).data.inlined.length = (uint8_t)(newlen)))
 #define GPR_SLICE_END_PTR(slice) \
-  GRPC_SLICE_START_PTR(slice) + GRPC_SLICE_LENGTH(slice)
+    GRPC_SLICE_START_PTR(slice) + GRPC_SLICE_LENGTH(slice)
 #define GPR_SLICE_IS_EMPTY(slice) (GRPC_SLICE_LENGTH(slice) == 0)
 
 #endif /* GRPC_ALLOW_GPR_SLICE_FUNCTIONS */

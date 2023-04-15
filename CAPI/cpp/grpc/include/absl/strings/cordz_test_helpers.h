@@ -29,123 +29,146 @@
 #include "absl/strings/internal/cordz_update_tracker.h"
 #include "absl/strings/str_cat.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
 
-// Returns the CordzInfo for the cord, or nullptr if the cord is not sampled.
-inline const cord_internal::CordzInfo* GetCordzInfoForTesting(
-    const Cord& cord) {
-  if (!cord.contents_.is_tree()) return nullptr;
-  return cord.contents_.cordz_info();
-}
+    // Returns the CordzInfo for the cord, or nullptr if the cord is not sampled.
+    inline const cord_internal::CordzInfo* GetCordzInfoForTesting(
+        const Cord& cord
+    )
+    {
+        if (!cord.contents_.is_tree())
+            return nullptr;
+        return cord.contents_.cordz_info();
+    }
 
-// Returns true if the provided cordz_info is in the list of sampled cords.
-inline bool CordzInfoIsListed(const cord_internal::CordzInfo* cordz_info,
-                              cord_internal::CordzSampleToken token = {}) {
-  for (const cord_internal::CordzInfo& info : token) {
-    if (cordz_info == &info) return true;
-  }
-  return false;
-}
+    // Returns true if the provided cordz_info is in the list of sampled cords.
+    inline bool CordzInfoIsListed(const cord_internal::CordzInfo* cordz_info, cord_internal::CordzSampleToken token = {})
+    {
+        for (const cord_internal::CordzInfo& info : token)
+        {
+            if (cordz_info == &info)
+                return true;
+        }
+        return false;
+    }
 
-// Matcher on Cord that verifies all of:
-// - the cord is sampled
-// - the CordzInfo of the cord is listed / discoverable.
-// - the reported CordzStatistics match the cord's actual properties
-// - the cord has an (initial) UpdateTracker count of 1 for `method`
-MATCHER_P(HasValidCordzInfoOf, method, "CordzInfo matches cord") {
-  const cord_internal::CordzInfo* cord_info = GetCordzInfoForTesting(arg);
-  if (cord_info == nullptr) {
-    *result_listener << "cord is not sampled";
-    return false;
-  }
-  if (!CordzInfoIsListed(cord_info)) {
-    *result_listener << "cord is sampled, but not listed";
-    return false;
-  }
-  cord_internal::CordzStatistics stat = cord_info->GetCordzStatistics();
-  if (stat.size != arg.size()) {
-    *result_listener << "cordz size " << stat.size
-                     << " does not match cord size " << arg.size();
-    return false;
-  }
-  if (stat.update_tracker.Value(method) != 1) {
-    *result_listener << "Expected method count 1 for " << method << ", found "
-                     << stat.update_tracker.Value(method);
-    return false;
-  }
-  return true;
-}
+    // Matcher on Cord that verifies all of:
+    // - the cord is sampled
+    // - the CordzInfo of the cord is listed / discoverable.
+    // - the reported CordzStatistics match the cord's actual properties
+    // - the cord has an (initial) UpdateTracker count of 1 for `method`
+    MATCHER_P(HasValidCordzInfoOf, method, "CordzInfo matches cord")
+    {
+        const cord_internal::CordzInfo* cord_info = GetCordzInfoForTesting(arg);
+        if (cord_info == nullptr)
+        {
+            *result_listener << "cord is not sampled";
+            return false;
+        }
+        if (!CordzInfoIsListed(cord_info))
+        {
+            *result_listener << "cord is sampled, but not listed";
+            return false;
+        }
+        cord_internal::CordzStatistics stat = cord_info->GetCordzStatistics();
+        if (stat.size != arg.size())
+        {
+            *result_listener << "cordz size " << stat.size
+                             << " does not match cord size " << arg.size();
+            return false;
+        }
+        if (stat.update_tracker.Value(method) != 1)
+        {
+            *result_listener << "Expected method count 1 for " << method << ", found "
+                             << stat.update_tracker.Value(method);
+            return false;
+        }
+        return true;
+    }
 
-// Matcher on Cord that verifies that the cord is sampled and that the CordzInfo
-// update tracker has 'method' with a call count of 'n'
-MATCHER_P2(CordzMethodCountEq, method, n,
-           absl::StrCat("CordzInfo method count equals ", n)) {
-  const cord_internal::CordzInfo* cord_info = GetCordzInfoForTesting(arg);
-  if (cord_info == nullptr) {
-    *result_listener << "cord is not sampled";
-    return false;
-  }
-  cord_internal::CordzStatistics stat = cord_info->GetCordzStatistics();
-  if (stat.update_tracker.Value(method) != n) {
-    *result_listener << "Expected method count " << n << " for " << method
-                     << ", found " << stat.update_tracker.Value(method);
-    return false;
-  }
-  return true;
-}
+    // Matcher on Cord that verifies that the cord is sampled and that the CordzInfo
+    // update tracker has 'method' with a call count of 'n'
+    MATCHER_P2(CordzMethodCountEq, method, n, absl::StrCat("CordzInfo method count equals ", n))
+    {
+        const cord_internal::CordzInfo* cord_info = GetCordzInfoForTesting(arg);
+        if (cord_info == nullptr)
+        {
+            *result_listener << "cord is not sampled";
+            return false;
+        }
+        cord_internal::CordzStatistics stat = cord_info->GetCordzStatistics();
+        if (stat.update_tracker.Value(method) != n)
+        {
+            *result_listener << "Expected method count " << n << " for " << method
+                             << ", found " << stat.update_tracker.Value(method);
+            return false;
+        }
+        return true;
+    }
 
-// Cordz will only update with a new rate once the previously scheduled event
-// has fired. When we disable Cordz, a long delay takes place where we won't
-// consider profiling new Cords. CordzSampleIntervalHelper will burn through
-// that interval and allow for testing that assumes that the average sampling
-// interval is a particular value.
-class CordzSamplingIntervalHelper {
- public:
-  explicit CordzSamplingIntervalHelper(int32_t interval)
-      : orig_mean_interval_(absl::cord_internal::get_cordz_mean_interval()) {
-    absl::cord_internal::set_cordz_mean_interval(interval);
-    absl::cord_internal::cordz_set_next_sample_for_testing(interval);
-  }
+    // Cordz will only update with a new rate once the previously scheduled event
+    // has fired. When we disable Cordz, a long delay takes place where we won't
+    // consider profiling new Cords. CordzSampleIntervalHelper will burn through
+    // that interval and allow for testing that assumes that the average sampling
+    // interval is a particular value.
+    class CordzSamplingIntervalHelper
+    {
+    public:
+        explicit CordzSamplingIntervalHelper(int32_t interval) :
+            orig_mean_interval_(absl::cord_internal::get_cordz_mean_interval())
+        {
+            absl::cord_internal::set_cordz_mean_interval(interval);
+            absl::cord_internal::cordz_set_next_sample_for_testing(interval);
+        }
 
-  ~CordzSamplingIntervalHelper() {
-    absl::cord_internal::set_cordz_mean_interval(orig_mean_interval_);
-    absl::cord_internal::cordz_set_next_sample_for_testing(orig_mean_interval_);
-  }
+        ~CordzSamplingIntervalHelper()
+        {
+            absl::cord_internal::set_cordz_mean_interval(orig_mean_interval_);
+            absl::cord_internal::cordz_set_next_sample_for_testing(orig_mean_interval_);
+        }
 
- private:
-  int32_t orig_mean_interval_;
-};
+    private:
+        int32_t orig_mean_interval_;
+    };
 
-// Wrapper struct managing a small CordRep `rep`
-struct TestCordRep {
-  cord_internal::CordRepFlat* rep;
+    // Wrapper struct managing a small CordRep `rep`
+    struct TestCordRep
+    {
+        cord_internal::CordRepFlat* rep;
 
-  TestCordRep() {
-    rep = cord_internal::CordRepFlat::New(100);
-    rep->length = 100;
-    memset(rep->Data(), 1, 100);
-  }
-  ~TestCordRep() { cord_internal::CordRep::Unref(rep); }
-};
+        TestCordRep()
+        {
+            rep = cord_internal::CordRepFlat::New(100);
+            rep->length = 100;
+            memset(rep->Data(), 1, 100);
+        }
+        ~TestCordRep()
+        {
+            cord_internal::CordRep::Unref(rep);
+        }
+    };
 
-// Wrapper struct managing a small CordRep `rep`, and
-// an InlineData `data` initialized with that CordRep.
-struct TestCordData {
-  TestCordRep rep;
-  cord_internal::InlineData data{rep.rep};
-};
+    // Wrapper struct managing a small CordRep `rep`, and
+    // an InlineData `data` initialized with that CordRep.
+    struct TestCordData
+    {
+        TestCordRep rep;
+        cord_internal::InlineData data{rep.rep};
+    };
 
-// Creates a Cord that is not sampled
-template <typename... Args>
-Cord UnsampledCord(Args... args) {
-  CordzSamplingIntervalHelper never(9999);
-  Cord cord(std::forward<Args>(args)...);
-  ABSL_ASSERT(GetCordzInfoForTesting(cord) == nullptr);
-  return cord;
-}
+    // Creates a Cord that is not sampled
+    template<typename... Args>
+    Cord UnsampledCord(Args... args)
+    {
+        CordzSamplingIntervalHelper never(9999);
+        Cord cord(std::forward<Args>(args)...);
+        ABSL_ASSERT(GetCordzInfoForTesting(cord) == nullptr);
+        return cord;
+    }
 
-ABSL_NAMESPACE_END
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_STRINGS_CORDZ_TEST_HELPERS_H_

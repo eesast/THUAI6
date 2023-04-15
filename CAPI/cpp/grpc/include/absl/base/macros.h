@@ -42,17 +42,19 @@
 // can be used in defining new arrays. If you use this macro on a pointer by
 // mistake, you will get a compile-time error.
 #define ABSL_ARRAYSIZE(array) \
-  (sizeof(::absl::macros_internal::ArraySizeHelper(array)))
+    (sizeof(::absl::macros_internal::ArraySizeHelper(array)))
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
-namespace macros_internal {
-// Note: this internal template function declaration is used by ABSL_ARRAYSIZE.
-// The function doesn't need a definition, as we only use its type.
-template <typename T, size_t N>
-auto ArraySizeHelper(const T (&array)[N]) -> char (&)[N];
-}  // namespace macros_internal
-ABSL_NAMESPACE_END
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
+    namespace macros_internal
+    {
+        // Note: this internal template function declaration is used by ABSL_ARRAYSIZE.
+        // The function doesn't need a definition, as we only use its type.
+        template<typename T, size_t N>
+        auto ArraySizeHelper(const T (&array)[N]) -> char (&)[N];
+    }  // namespace macros_internal
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 // ABSL_BAD_CALL_IF()
@@ -75,7 +77,7 @@ ABSL_NAMESPACE_END
 //   #endif // ABSL_BAD_CALL_IF
 #if ABSL_HAVE_ATTRIBUTE(enable_if)
 #define ABSL_BAD_CALL_IF(expr, msg) \
-  __attribute__((enable_if(expr, "Bad call trap"), unavailable(msg)))
+    __attribute__((enable_if(expr, "Bad call trap"), unavailable(msg)))
 #endif
 
 // ABSL_ASSERT()
@@ -92,25 +94,24 @@ ABSL_NAMESPACE_END
 // https://akrzemi1.wordpress.com/2017/05/18/asserts-in-constexpr-functions/
 #if defined(NDEBUG)
 #define ABSL_ASSERT(expr) \
-  (false ? static_cast<void>(expr) : static_cast<void>(0))
+    (false ? static_cast<void>(expr) : static_cast<void>(0))
 #else
-#define ABSL_ASSERT(expr)                           \
-  (ABSL_PREDICT_TRUE((expr)) ? static_cast<void>(0) \
-                             : [] { assert(false && #expr); }())  // NOLINT
+#define ABSL_ASSERT(expr) \
+    (ABSL_PREDICT_TRUE((expr)) ? static_cast<void>(0) : [] { assert(false && #expr); }())  // NOLINT
 #endif
 
 // `ABSL_INTERNAL_HARDENING_ABORT()` controls how `ABSL_HARDENING_ASSERT()`
 // aborts the program in release mode (when NDEBUG is defined). The
 // implementation should abort the program as quickly as possible and ideally it
 // should not be possible to ignore the abort request.
-#if (ABSL_HAVE_BUILTIN(__builtin_trap) &&         \
-     ABSL_HAVE_BUILTIN(__builtin_unreachable)) || \
+#if (ABSL_HAVE_BUILTIN(__builtin_trap) && ABSL_HAVE_BUILTIN(__builtin_unreachable)) || \
     (defined(__GNUC__) && !defined(__clang__))
 #define ABSL_INTERNAL_HARDENING_ABORT() \
-  do {                                  \
-    __builtin_trap();                   \
-    __builtin_unreachable();            \
-  } while (false)
+    do                                  \
+    {                                   \
+        __builtin_trap();               \
+        __builtin_unreachable();        \
+    } while (false)
 #else
 #define ABSL_INTERNAL_HARDENING_ABORT() abort()
 #endif
@@ -127,9 +128,8 @@ ABSL_NAMESPACE_END
 // See `ABSL_OPTION_HARDENED` in `absl/base/options.h` for more information on
 // hardened mode.
 #if ABSL_OPTION_HARDENED == 1 && defined(NDEBUG)
-#define ABSL_HARDENING_ASSERT(expr)                 \
-  (ABSL_PREDICT_TRUE((expr)) ? static_cast<void>(0) \
-                             : [] { ABSL_INTERNAL_HARDENING_ABORT(); }())
+#define ABSL_HARDENING_ASSERT(expr) \
+    (ABSL_PREDICT_TRUE((expr)) ? static_cast<void>(0) : [] { ABSL_INTERNAL_HARDENING_ABORT(); }())
 #else
 #define ABSL_HARDENING_ASSERT(expr) ABSL_ASSERT(expr)
 #endif
@@ -137,11 +137,18 @@ ABSL_NAMESPACE_END
 #ifdef ABSL_HAVE_EXCEPTIONS
 #define ABSL_INTERNAL_TRY try
 #define ABSL_INTERNAL_CATCH_ANY catch (...)
-#define ABSL_INTERNAL_RETHROW do { throw; } while (false)
+#define ABSL_INTERNAL_RETHROW \
+    do                        \
+    {                         \
+        throw;                \
+    } while (false)
 #else  // ABSL_HAVE_EXCEPTIONS
 #define ABSL_INTERNAL_TRY if (true)
 #define ABSL_INTERNAL_CATCH_ANY else if (false)
-#define ABSL_INTERNAL_RETHROW do {} while (false)
+#define ABSL_INTERNAL_RETHROW \
+    do                        \
+    {                         \
+    } while (false)
 #endif  // ABSL_HAVE_EXCEPTIONS
 
 // `ABSL_INTERNAL_UNREACHABLE` is an unreachable statement.  A program which

@@ -33,17 +33,19 @@
 // Must be last.
 #include "upb/port_def.inc"
 
-UPB_INLINE int _upb_vsnprintf(char* buf, size_t size, const char* fmt,
-                              va_list ap) {
+UPB_INLINE int _upb_vsnprintf(char* buf, size_t size, const char* fmt, va_list ap)
+{
 #if defined(__MINGW64__) || defined(__MINGW32__) || defined(_MSC_VER)
-  // The msvc runtime has a non-conforming vsnprintf() that requires the
-  // following compatibility code to become conformant.
-  int n = -1;
-  if (size != 0) n = _vsnprintf_s(buf, size, _TRUNCATE, fmt, ap);
-  if (n == -1) n = _vscprintf(fmt, ap);
-  return n;
+    // The msvc runtime has a non-conforming vsnprintf() that requires the
+    // following compatibility code to become conformant.
+    int n = -1;
+    if (size != 0)
+        n = _vsnprintf_s(buf, size, _TRUNCATE, fmt, ap);
+    if (n == -1)
+        n = _vscprintf(fmt, ap);
+    return n;
 #else
-  return vsnprintf(buf, size, fmt, ap);
+    return vsnprintf(buf, size, fmt, ap);
 #endif
 }
 

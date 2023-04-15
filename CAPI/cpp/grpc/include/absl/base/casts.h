@@ -31,68 +31,70 @@
 
 #if defined(__cpp_lib_bit_cast) && __cpp_lib_bit_cast >= 201806L
 #include <bit>  // For std::bit_cast.
-#endif  // defined(__cpp_lib_bit_cast) && __cpp_lib_bit_cast >= 201806L
+#endif          // defined(__cpp_lib_bit_cast) && __cpp_lib_bit_cast >= 201806L
 
 #include "absl/base/internal/identity.h"
 #include "absl/base/macros.h"
 #include "absl/meta/type_traits.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
 
-// implicit_cast()
-//
-// Performs an implicit conversion between types following the language
-// rules for implicit conversion; if an implicit conversion is otherwise
-// allowed by the language in the given context, this function performs such an
-// implicit conversion.
-//
-// Example:
-//
-//   // If the context allows implicit conversion:
-//   From from;
-//   To to = from;
-//
-//   // Such code can be replaced by:
-//   implicit_cast<To>(from);
-//
-// An `implicit_cast()` may also be used to annotate numeric type conversions
-// that, although safe, may produce compiler warnings (such as `long` to `int`).
-// Additionally, an `implicit_cast()` is also useful within return statements to
-// indicate a specific implicit conversion is being undertaken.
-//
-// Example:
-//
-//   return implicit_cast<double>(size_in_bytes) / capacity_;
-//
-// Annotating code with `implicit_cast()` allows you to explicitly select
-// particular overloads and template instantiations, while providing a safer
-// cast than `reinterpret_cast()` or `static_cast()`.
-//
-// Additionally, an `implicit_cast()` can be used to allow upcasting within a
-// type hierarchy where incorrect use of `static_cast()` could accidentally
-// allow downcasting.
-//
-// Finally, an `implicit_cast()` can be used to perform implicit conversions
-// from unrelated types that otherwise couldn't be implicitly cast directly;
-// C++ will normally only implicitly cast "one step" in such conversions.
-//
-// That is, if C is a type which can be implicitly converted to B, with B being
-// a type that can be implicitly converted to A, an `implicit_cast()` can be
-// used to convert C to B (which the compiler can then implicitly convert to A
-// using language rules).
-//
-// Example:
-//
-//   // Assume an object C is convertible to B, which is implicitly convertible
-//   // to A
-//   A a = implicit_cast<B>(C);
-//
-// Such implicit cast chaining may be useful within template logic.
-template <typename To>
-constexpr To implicit_cast(typename absl::internal::identity_t<To> to) {
-  return to;
-}
+    // implicit_cast()
+    //
+    // Performs an implicit conversion between types following the language
+    // rules for implicit conversion; if an implicit conversion is otherwise
+    // allowed by the language in the given context, this function performs such an
+    // implicit conversion.
+    //
+    // Example:
+    //
+    //   // If the context allows implicit conversion:
+    //   From from;
+    //   To to = from;
+    //
+    //   // Such code can be replaced by:
+    //   implicit_cast<To>(from);
+    //
+    // An `implicit_cast()` may also be used to annotate numeric type conversions
+    // that, although safe, may produce compiler warnings (such as `long` to `int`).
+    // Additionally, an `implicit_cast()` is also useful within return statements to
+    // indicate a specific implicit conversion is being undertaken.
+    //
+    // Example:
+    //
+    //   return implicit_cast<double>(size_in_bytes) / capacity_;
+    //
+    // Annotating code with `implicit_cast()` allows you to explicitly select
+    // particular overloads and template instantiations, while providing a safer
+    // cast than `reinterpret_cast()` or `static_cast()`.
+    //
+    // Additionally, an `implicit_cast()` can be used to allow upcasting within a
+    // type hierarchy where incorrect use of `static_cast()` could accidentally
+    // allow downcasting.
+    //
+    // Finally, an `implicit_cast()` can be used to perform implicit conversions
+    // from unrelated types that otherwise couldn't be implicitly cast directly;
+    // C++ will normally only implicitly cast "one step" in such conversions.
+    //
+    // That is, if C is a type which can be implicitly converted to B, with B being
+    // a type that can be implicitly converted to A, an `implicit_cast()` can be
+    // used to convert C to B (which the compiler can then implicitly convert to A
+    // using language rules).
+    //
+    // Example:
+    //
+    //   // Assume an object C is convertible to B, which is implicitly convertible
+    //   // to A
+    //   A a = implicit_cast<B>(C);
+    //
+    // Such implicit cast chaining may be useful within template logic.
+    template<typename To>
+    constexpr To implicit_cast(typename absl::internal::identity_t<To> to)
+    {
+        return to;
+    }
 
 // bit_cast()
 //
@@ -145,36 +147,33 @@ constexpr To implicit_cast(typename absl::internal::identity_t<To> to) {
 // `std::bit_cast`.
 #if defined(__cpp_lib_bit_cast) && __cpp_lib_bit_cast >= 201806L
 
-using std::bit_cast;
+    using std::bit_cast;
 
 #else  // defined(__cpp_lib_bit_cast) && __cpp_lib_bit_cast >= 201806L
 
-template <typename Dest, typename Source,
-          typename std::enable_if<
-              sizeof(Dest) == sizeof(Source) &&
-                  type_traits_internal::is_trivially_copyable<Source>::value &&
-                  type_traits_internal::is_trivially_copyable<Dest>::value
+    template<typename Dest, typename Source, typename std::enable_if<sizeof(Dest) == sizeof(Source) && type_traits_internal::is_trivially_copyable<Source>::value && type_traits_internal::is_trivially_copyable<Dest>::value
 #if !ABSL_HAVE_BUILTIN(__builtin_bit_cast)
-                  && std::is_default_constructible<Dest>::value
+                                                                         && std::is_default_constructible<Dest>::value
 #endif  // !ABSL_HAVE_BUILTIN(__builtin_bit_cast)
-              ,
-              int>::type = 0>
+                                                                     ,
+                                                                     int>::type = 0>
 #if ABSL_HAVE_BUILTIN(__builtin_bit_cast)
-inline constexpr Dest bit_cast(const Source& source) {
-  return __builtin_bit_cast(Dest, source);
-}
-#else  // ABSL_HAVE_BUILTIN(__builtin_bit_cast)
-inline Dest bit_cast(const Source& source) {
-  Dest dest;
-  memcpy(static_cast<void*>(std::addressof(dest)),
-         static_cast<const void*>(std::addressof(source)), sizeof(dest));
-  return dest;
-}
+    inline constexpr Dest bit_cast(const Source& source)
+    {
+        return __builtin_bit_cast(Dest, source);
+    }
+#else   // ABSL_HAVE_BUILTIN(__builtin_bit_cast)
+    inline Dest bit_cast(const Source& source)
+    {
+        Dest dest;
+        memcpy(static_cast<void*>(std::addressof(dest)), static_cast<const void*>(std::addressof(source)), sizeof(dest));
+        return dest;
+    }
 #endif  // ABSL_HAVE_BUILTIN(__builtin_bit_cast)
 
 #endif  // defined(__cpp_lib_bit_cast) && __cpp_lib_bit_cast >= 201806L
 
-ABSL_NAMESPACE_END
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_BASE_CASTS_H_

@@ -8,23 +8,24 @@
  */
 
 #ifndef OPENSSL_SSL2_H
-# define OPENSSL_SSL2_H
-# pragma once
+#define OPENSSL_SSL2_H
+#pragma once
 
-# include <openssl/macros.h>
-# ifndef OPENSSL_NO_DEPRECATED_3_0
-#  define HEADER_SSL2_H
-# endif
-
-#ifdef  __cplusplus
-extern "C" {
+#include <openssl/macros.h>
+#ifndef OPENSSL_NO_DEPRECATED_3_0
+#define HEADER_SSL2_H
 #endif
 
-# define SSL2_VERSION            0x0002
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-# define SSL2_MT_CLIENT_HELLO            1
+#define SSL2_VERSION 0x0002
 
-#ifdef  __cplusplus
+#define SSL2_MT_CLIENT_HELLO 1
+
+#ifdef __cplusplus
 }
 #endif
 #endif

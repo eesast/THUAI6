@@ -20,24 +20,27 @@
 #include <grpcpp/security/binder_security_policy.h>
 #include <grpcpp/security/server_credentials.h>
 
-namespace grpc {
+namespace grpc
+{
 
-class ChannelCredentials;
+    class ChannelCredentials;
 
-namespace experimental {
+    namespace experimental
+    {
 
-/// EXPERIMENTAL Builds Binder ServerCredentials.
-///
-/// This should be used along with `binder:` URI scheme. The path in the URI can
-/// later be used to access the server's endpoint binder.
-/// Note that calling \a ServerBuilder::AddListeningPort() with Binder
-/// ServerCredentials in a non-supported environment will make the subsequent
-/// call to \a ServerBuilder::BuildAndStart() return a null pointer.
-std::shared_ptr<grpc::ServerCredentials> BinderServerCredentials(
-    std::shared_ptr<grpc::experimental::binder::SecurityPolicy>
-        security_policy);
+        /// EXPERIMENTAL Builds Binder ServerCredentials.
+        ///
+        /// This should be used along with `binder:` URI scheme. The path in the URI can
+        /// later be used to access the server's endpoint binder.
+        /// Note that calling \a ServerBuilder::AddListeningPort() with Binder
+        /// ServerCredentials in a non-supported environment will make the subsequent
+        /// call to \a ServerBuilder::BuildAndStart() return a null pointer.
+        std::shared_ptr<grpc::ServerCredentials> BinderServerCredentials(
+            std::shared_ptr<grpc::experimental::binder::SecurityPolicy>
+                security_policy
+        );
 
-}  // namespace experimental
+    }  // namespace experimental
 }  // namespace grpc
 
 #endif  // GRPCPP_SECURITY_BINDER_CREDENTIALS_H

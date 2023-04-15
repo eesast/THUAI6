@@ -40,157 +40,166 @@
 // Must be included last.
 #include <google/protobuf/port_def.inc>
 
-namespace google {
-namespace protobuf {
-namespace internal {
+namespace google
+{
+    namespace protobuf
+    {
+        namespace internal
+        {
 
-inline uint64_t BSwap64(uint64_t host_int) {
+            inline uint64_t BSwap64(uint64_t host_int)
+            {
 #if defined(PROTOBUF_BUILTIN_BSWAP64)
-  return PROTOBUF_BUILTIN_BSWAP64(host_int);
+                return PROTOBUF_BUILTIN_BSWAP64(host_int);
 #elif defined(_MSC_VER)
-  return _byteswap_uint64(host_int);
+                return _byteswap_uint64(host_int);
 #else
-  return (((host_int & uint64_t{0xFF}) << 56) |
-          ((host_int & uint64_t{0xFF00}) << 40) |
-          ((host_int & uint64_t{0xFF0000}) << 24) |
-          ((host_int & uint64_t{0xFF000000}) << 8) |
-          ((host_int & uint64_t{0xFF00000000}) >> 8) |
-          ((host_int & uint64_t{0xFF0000000000}) >> 24) |
-          ((host_int & uint64_t{0xFF000000000000}) >> 40) |
-          ((host_int & uint64_t{0xFF00000000000000}) >> 56));
+                return (((host_int & uint64_t{0xFF}) << 56) | ((host_int & uint64_t{0xFF00}) << 40) | ((host_int & uint64_t{0xFF0000}) << 24) | ((host_int & uint64_t{0xFF000000}) << 8) | ((host_int & uint64_t{0xFF00000000}) >> 8) | ((host_int & uint64_t{0xFF0000000000}) >> 24) | ((host_int & uint64_t{0xFF000000000000}) >> 40) | ((host_int & uint64_t{0xFF00000000000000}) >> 56));
 #endif
-}
+            }
 
-inline uint32_t BSwap32(uint32_t host_int) {
+            inline uint32_t BSwap32(uint32_t host_int)
+            {
 #if defined(PROTOBUF_BUILTIN_BSWAP32)
-  return PROTOBUF_BUILTIN_BSWAP32(host_int);
+                return PROTOBUF_BUILTIN_BSWAP32(host_int);
 #elif defined(_MSC_VER)
-  return _byteswap_ulong(host_int);
+                return _byteswap_ulong(host_int);
 #else
-  return (((host_int & uint32_t{0xFF}) << 24) |
-          ((host_int & uint32_t{0xFF00}) << 8) |
-          ((host_int & uint32_t{0xFF0000}) >> 8) |
-          ((host_int & uint32_t{0xFF000000}) >> 24));
+                return (((host_int & uint32_t{0xFF}) << 24) | ((host_int & uint32_t{0xFF00}) << 8) | ((host_int & uint32_t{0xFF0000}) >> 8) | ((host_int & uint32_t{0xFF000000}) >> 24));
 #endif
-}
+            }
 
-inline uint16_t BSwap16(uint16_t host_int) {
+            inline uint16_t BSwap16(uint16_t host_int)
+            {
 #if defined(PROTOBUF_BUILTIN_BSWAP16)
-  return PROTOBUF_BUILTIN_BSWAP16(host_int);
+                return PROTOBUF_BUILTIN_BSWAP16(host_int);
 #elif defined(_MSC_VER)
-  return _byteswap_ushort(host_int);
+                return _byteswap_ushort(host_int);
 #else
-  return (((host_int & uint16_t{0xFF}) << 8) |
-          ((host_int & uint16_t{0xFF00}) >> 8));
+                return (((host_int & uint16_t{0xFF}) << 8) | ((host_int & uint16_t{0xFF00}) >> 8));
 #endif
-}
+            }
 
-namespace little_endian {
+            namespace little_endian
+            {
 
-inline uint16_t FromHost(uint16_t value) {
+                inline uint16_t FromHost(uint16_t value)
+                {
 #if defined(PROTOBUF_BIG_ENDIAN)
-  return BSwap16(value);
+                    return BSwap16(value);
 #else
-  return value;
+                    return value;
 #endif
-}
+                }
 
-inline uint32_t FromHost(uint32_t value) {
+                inline uint32_t FromHost(uint32_t value)
+                {
 #if defined(PROTOBUF_BIG_ENDIAN)
-  return BSwap32(value);
+                    return BSwap32(value);
 #else
-  return value;
+                    return value;
 #endif
-}
+                }
 
-inline uint64_t FromHost(uint64_t value) {
+                inline uint64_t FromHost(uint64_t value)
+                {
 #if defined(PROTOBUF_BIG_ENDIAN)
-  return BSwap64(value);
+                    return BSwap64(value);
 #else
-  return value;
+                    return value;
 #endif
-}
+                }
 
-inline uint16_t ToHost(uint16_t value) {
+                inline uint16_t ToHost(uint16_t value)
+                {
 #if defined(PROTOBUF_BIG_ENDIAN)
-  return BSwap16(value);
+                    return BSwap16(value);
 #else
-  return value;
+                    return value;
 #endif
-}
+                }
 
-inline uint32_t ToHost(uint32_t value) {
+                inline uint32_t ToHost(uint32_t value)
+                {
 #if defined(PROTOBUF_BIG_ENDIAN)
-  return BSwap32(value);
+                    return BSwap32(value);
 #else
-  return value;
+                    return value;
 #endif
-}
+                }
 
-inline uint64_t ToHost(uint64_t value) {
+                inline uint64_t ToHost(uint64_t value)
+                {
 #if defined(PROTOBUF_BIG_ENDIAN)
-  return BSwap64(value);
+                    return BSwap64(value);
 #else
-  return value;
+                    return value;
 #endif
-}
+                }
 
-}  // namespace little_endian
+            }  // namespace little_endian
 
-namespace big_endian {
+            namespace big_endian
+            {
 
-inline uint16_t FromHost(uint16_t value) {
+                inline uint16_t FromHost(uint16_t value)
+                {
 #if defined(PROTOBUF_BIG_ENDIAN)
-  return value;
+                    return value;
 #else
-  return BSwap16(value);
+                    return BSwap16(value);
 #endif
-}
+                }
 
-inline uint32_t FromHost(uint32_t value) {
+                inline uint32_t FromHost(uint32_t value)
+                {
 #if defined(PROTOBUF_BIG_ENDIAN)
-  return value;
+                    return value;
 #else
-  return BSwap32(value);
+                    return BSwap32(value);
 #endif
-}
+                }
 
-inline uint64_t FromHost(uint64_t value) {
+                inline uint64_t FromHost(uint64_t value)
+                {
 #if defined(PROTOBUF_BIG_ENDIAN)
-  return value;
+                    return value;
 #else
-  return BSwap64(value);
+                    return BSwap64(value);
 #endif
-}
+                }
 
-inline uint16_t ToHost(uint16_t value) {
+                inline uint16_t ToHost(uint16_t value)
+                {
 #if defined(PROTOBUF_BIG_ENDIAN)
-  return value;
+                    return value;
 #else
-  return BSwap16(value);
+                    return BSwap16(value);
 #endif
-}
+                }
 
-inline uint32_t ToHost(uint32_t value) {
+                inline uint32_t ToHost(uint32_t value)
+                {
 #if defined(PROTOBUF_BIG_ENDIAN)
-  return value;
+                    return value;
 #else
-  return BSwap32(value);
+                    return BSwap32(value);
 #endif
-}
+                }
 
-inline uint64_t ToHost(uint64_t value) {
+                inline uint64_t ToHost(uint64_t value)
+                {
 #if defined(PROTOBUF_BIG_ENDIAN)
-  return value;
+                    return value;
 #else
-  return BSwap64(value);
+                    return BSwap64(value);
 #endif
-}
+                }
 
-}  // namespace big_endian
+            }  // namespace big_endian
 
-}  // namespace internal
-}  // namespace protobuf
+        }  // namespace internal
+    }      // namespace protobuf
 }  // namespace google
 
 #include <google/protobuf/port_undef.inc>

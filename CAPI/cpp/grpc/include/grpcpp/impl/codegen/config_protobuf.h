@@ -52,16 +52,16 @@
 #include <google/protobuf/descriptor_database.h>
 #define GRPC_CUSTOM_DESCRIPTORDATABASE ::google::protobuf::DescriptorDatabase
 #define GRPC_CUSTOM_SIMPLEDESCRIPTORDATABASE \
-  ::google::protobuf::SimpleDescriptorDatabase
+    ::google::protobuf::SimpleDescriptorDatabase
 #endif
 
 #ifndef GRPC_CUSTOM_ZEROCOPYOUTPUTSTREAM
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/io/zero_copy_stream.h>
 #define GRPC_CUSTOM_ZEROCOPYOUTPUTSTREAM \
-  ::google::protobuf::io::ZeroCopyOutputStream
+    ::google::protobuf::io::ZeroCopyOutputStream
 #define GRPC_CUSTOM_ZEROCOPYINPUTSTREAM \
-  ::google::protobuf::io::ZeroCopyInputStream
+    ::google::protobuf::io::ZeroCopyInputStream
 #define GRPC_CUSTOM_CODEDINPUTSTREAM ::google::protobuf::io::CodedInputStream
 #endif
 
@@ -72,37 +72,41 @@
 #define GRPC_CUSTOM_UTIL_STATUS ::google::protobuf::util::Status
 #endif
 
-namespace grpc {
-namespace protobuf {
+namespace grpc
+{
+    namespace protobuf
+    {
 
-typedef GRPC_CUSTOM_MESSAGE Message;
-typedef GRPC_CUSTOM_MESSAGELITE MessageLite;
+        typedef GRPC_CUSTOM_MESSAGE Message;
+        typedef GRPC_CUSTOM_MESSAGELITE MessageLite;
 
-typedef GRPC_CUSTOM_DESCRIPTOR Descriptor;
-typedef GRPC_CUSTOM_DESCRIPTORPOOL DescriptorPool;
-typedef GRPC_CUSTOM_DESCRIPTORDATABASE DescriptorDatabase;
-typedef GRPC_CUSTOM_FIELDDESCRIPTOR FieldDescriptor;
-typedef GRPC_CUSTOM_FILEDESCRIPTOR FileDescriptor;
-typedef GRPC_CUSTOM_FILEDESCRIPTORPROTO FileDescriptorProto;
-typedef GRPC_CUSTOM_METHODDESCRIPTOR MethodDescriptor;
-typedef GRPC_CUSTOM_SERVICEDESCRIPTOR ServiceDescriptor;
-typedef GRPC_CUSTOM_SIMPLEDESCRIPTORDATABASE SimpleDescriptorDatabase;
-typedef GRPC_CUSTOM_SOURCELOCATION SourceLocation;
+        typedef GRPC_CUSTOM_DESCRIPTOR Descriptor;
+        typedef GRPC_CUSTOM_DESCRIPTORPOOL DescriptorPool;
+        typedef GRPC_CUSTOM_DESCRIPTORDATABASE DescriptorDatabase;
+        typedef GRPC_CUSTOM_FIELDDESCRIPTOR FieldDescriptor;
+        typedef GRPC_CUSTOM_FILEDESCRIPTOR FileDescriptor;
+        typedef GRPC_CUSTOM_FILEDESCRIPTORPROTO FileDescriptorProto;
+        typedef GRPC_CUSTOM_METHODDESCRIPTOR MethodDescriptor;
+        typedef GRPC_CUSTOM_SERVICEDESCRIPTOR ServiceDescriptor;
+        typedef GRPC_CUSTOM_SIMPLEDESCRIPTORDATABASE SimpleDescriptorDatabase;
+        typedef GRPC_CUSTOM_SOURCELOCATION SourceLocation;
 
-namespace util {
-typedef GRPC_CUSTOM_UTIL_STATUS Status;
-}  // namespace util
+        namespace util
+        {
+            typedef GRPC_CUSTOM_UTIL_STATUS Status;
+        }  // namespace util
 
-// NOLINTNEXTLINE(misc-unused-alias-decls)
-namespace json = GRPC_CUSTOM_JSONUTIL;
+        // NOLINTNEXTLINE(misc-unused-alias-decls)
+        namespace json = GRPC_CUSTOM_JSONUTIL;
 
-namespace io {
-typedef GRPC_CUSTOM_ZEROCOPYOUTPUTSTREAM ZeroCopyOutputStream;
-typedef GRPC_CUSTOM_ZEROCOPYINPUTSTREAM ZeroCopyInputStream;
-typedef GRPC_CUSTOM_CODEDINPUTSTREAM CodedInputStream;
-}  // namespace io
+        namespace io
+        {
+            typedef GRPC_CUSTOM_ZEROCOPYOUTPUTSTREAM ZeroCopyOutputStream;
+            typedef GRPC_CUSTOM_ZEROCOPYINPUTSTREAM ZeroCopyInputStream;
+            typedef GRPC_CUSTOM_CODEDINPUTSTREAM CodedInputStream;
+        }  // namespace io
 
-}  // namespace protobuf
+    }  // namespace protobuf
 }  // namespace grpc
 
 #endif  // GRPCPP_IMPL_CODEGEN_CONFIG_PROTOBUF_H

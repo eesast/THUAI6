@@ -35,172 +35,210 @@
 #include <cstddef>
 #include <cstdint>
 
-
 // Must be included last.
 #include <google/protobuf/port_def.inc>
 
-namespace google {
-namespace protobuf {
-namespace internal {
+namespace google
+{
+    namespace protobuf
+    {
+        namespace internal
+        {
 
 #if defined(PROTOBUF_ARENAZ_SAMPLE)
-struct ThreadSafeArenaStats;
-void RecordResetSlow(ThreadSafeArenaStats* info);
-void RecordAllocateSlow(ThreadSafeArenaStats* info, size_t requested,
-                        size_t allocated, size_t wasted);
-// Stores information about a sampled thread safe arena.  All mutations to this
-// *must* be made through `Record*` functions below.  All reads from this *must*
-// only occur in the callback to `ThreadSafeArenazSampler::Iterate`.
-struct ThreadSafeArenaStats
-    : public absl::profiling_internal::Sample<ThreadSafeArenaStats> {
-  // Constructs the object but does not fill in any fields.
-  ThreadSafeArenaStats();
-  ~ThreadSafeArenaStats();
+            struct ThreadSafeArenaStats;
+            void RecordResetSlow(ThreadSafeArenaStats* info);
+            void RecordAllocateSlow(ThreadSafeArenaStats* info, size_t requested, size_t allocated, size_t wasted);
+            // Stores information about a sampled thread safe arena.  All mutations to this
+            // *must* be made through `Record*` functions below.  All reads from this *must*
+            // only occur in the callback to `ThreadSafeArenazSampler::Iterate`.
+            struct ThreadSafeArenaStats : public absl::profiling_internal::Sample<ThreadSafeArenaStats>
+            {
+                // Constructs the object but does not fill in any fields.
+                ThreadSafeArenaStats();
+                ~ThreadSafeArenaStats();
 
-  // Puts the object into a clean state, fills in the logically `const` members,
-  // blocking for any readers that are currently sampling the object.
-  void PrepareForSampling() ABSL_EXCLUSIVE_LOCKS_REQUIRED(init_mu);
+                // Puts the object into a clean state, fills in the logically `const` members,
+                // blocking for any readers that are currently sampling the object.
+                void PrepareForSampling() ABSL_EXCLUSIVE_LOCKS_REQUIRED(init_mu);
 
-  // These fields are mutated by the various Record* APIs and need to be
-  // thread-safe.
-  std::atomic<int> num_allocations;
-  std::atomic<int> num_resets;
-  std::atomic<size_t> bytes_requested;
-  std::atomic<size_t> bytes_allocated;
-  std::atomic<size_t> bytes_wasted;
-  // Records the largest size an arena ever had.  Maintained across resets.
-  std::atomic<size_t> max_bytes_allocated;
-  // Bit i when set to 1 indicates that a thread with tid % 63 = i accessed the
-  // underlying arena.  The field is maintained across resets.
-  std::atomic<uint64_t> thread_ids;
+                // These fields are mutated by the various Record* APIs and need to be
+                // thread-safe.
+                std::atomic<int> num_allocations;
+                std::atomic<int> num_resets;
+                std::atomic<size_t> bytes_requested;
+                std::atomic<size_t> bytes_allocated;
+                std::atomic<size_t> bytes_wasted;
+                // Records the largest size an arena ever had.  Maintained across resets.
+                std::atomic<size_t> max_bytes_allocated;
+                // Bit i when set to 1 indicates that a thread with tid % 63 = i accessed the
+                // underlying arena.  The field is maintained across resets.
+                std::atomic<uint64_t> thread_ids;
 
-  // All of the fields below are set by `PrepareForSampling`, they must not
-  // be mutated in `Record*` functions.  They are logically `const` in that
-  // sense. These are guarded by init_mu, but that is not externalized to
-  // clients, who can only read them during
-  // `ThreadSafeArenazSampler::Iterate` which will hold the lock.
-  static constexpr int kMaxStackDepth = 64;
-  int32_t depth;
-  void* stack[kMaxStackDepth];
-  static void RecordAllocateStats(ThreadSafeArenaStats* info, size_t requested,
-                                  size_t allocated, size_t wasted) {
-    if (PROTOBUF_PREDICT_TRUE(info == nullptr)) return;
-    RecordAllocateSlow(info, requested, allocated, wasted);
-  }
-};
+                // All of the fields below are set by `PrepareForSampling`, they must not
+                // be mutated in `Record*` functions.  They are logically `const` in that
+                // sense. These are guarded by init_mu, but that is not externalized to
+                // clients, who can only read them during
+                // `ThreadSafeArenazSampler::Iterate` which will hold the lock.
+                static constexpr int kMaxStackDepth = 64;
+                int32_t depth;
+                void* stack[kMaxStackDepth];
+                static void RecordAllocateStats(ThreadSafeArenaStats* info, size_t requested, size_t allocated, size_t wasted)
+                {
+                    if (PROTOBUF_PREDICT_TRUE(info == nullptr))
+                        return;
+                    RecordAllocateSlow(info, requested, allocated, wasted);
+                }
+            };
 
-ThreadSafeArenaStats* SampleSlow(int64_t* next_sample);
-void UnsampleSlow(ThreadSafeArenaStats* info);
+            ThreadSafeArenaStats* SampleSlow(int64_t* next_sample);
+            void UnsampleSlow(ThreadSafeArenaStats* info);
 
-class ThreadSafeArenaStatsHandle {
- public:
-  explicit ThreadSafeArenaStatsHandle() = default;
-  explicit ThreadSafeArenaStatsHandle(ThreadSafeArenaStats* info)
-      : info_(info) {}
+            class ThreadSafeArenaStatsHandle
+            {
+            public:
+                explicit ThreadSafeArenaStatsHandle() = default;
+                explicit ThreadSafeArenaStatsHandle(ThreadSafeArenaStats* info) :
+                    info_(info)
+                {
+                }
 
-  ~ThreadSafeArenaStatsHandle() {
-    if (PROTOBUF_PREDICT_TRUE(info_ == nullptr)) return;
-    UnsampleSlow(info_);
-  }
+                ~ThreadSafeArenaStatsHandle()
+                {
+                    if (PROTOBUF_PREDICT_TRUE(info_ == nullptr))
+                        return;
+                    UnsampleSlow(info_);
+                }
 
-  ThreadSafeArenaStatsHandle(ThreadSafeArenaStatsHandle&& other) noexcept
-      : info_(absl::exchange(other.info_, nullptr)) {}
+                ThreadSafeArenaStatsHandle(ThreadSafeArenaStatsHandle&& other) noexcept
+                    :
+                    info_(absl::exchange(other.info_, nullptr))
+                {
+                }
 
-  ThreadSafeArenaStatsHandle& operator=(
-      ThreadSafeArenaStatsHandle&& other) noexcept {
-    if (PROTOBUF_PREDICT_FALSE(info_ != nullptr)) {
-      UnsampleSlow(info_);
-    }
-    info_ = absl::exchange(other.info_, nullptr);
-    return *this;
-  }
+                ThreadSafeArenaStatsHandle& operator=(
+                    ThreadSafeArenaStatsHandle&& other
+                ) noexcept
+                {
+                    if (PROTOBUF_PREDICT_FALSE(info_ != nullptr))
+                    {
+                        UnsampleSlow(info_);
+                    }
+                    info_ = absl::exchange(other.info_, nullptr);
+                    return *this;
+                }
 
-  void RecordReset() {
-    if (PROTOBUF_PREDICT_TRUE(info_ == nullptr)) return;
-    RecordResetSlow(info_);
-  }
+                void RecordReset()
+                {
+                    if (PROTOBUF_PREDICT_TRUE(info_ == nullptr))
+                        return;
+                    RecordResetSlow(info_);
+                }
 
-  ThreadSafeArenaStats* MutableStats() { return info_; }
+                ThreadSafeArenaStats* MutableStats()
+                {
+                    return info_;
+                }
 
-  friend void swap(ThreadSafeArenaStatsHandle& lhs,
-                   ThreadSafeArenaStatsHandle& rhs) {
-    std::swap(lhs.info_, rhs.info_);
-  }
+                friend void swap(ThreadSafeArenaStatsHandle& lhs, ThreadSafeArenaStatsHandle& rhs)
+                {
+                    std::swap(lhs.info_, rhs.info_);
+                }
 
-  friend class ThreadSafeArenaStatsHandlePeer;
+                friend class ThreadSafeArenaStatsHandlePeer;
 
- private:
-  ThreadSafeArenaStats* info_ = nullptr;
-};
+            private:
+                ThreadSafeArenaStats* info_ = nullptr;
+            };
 
-using ThreadSafeArenazSampler =
-    ::absl::profiling_internal::SampleRecorder<ThreadSafeArenaStats>;
+            using ThreadSafeArenazSampler =
+                ::absl::profiling_internal::SampleRecorder<ThreadSafeArenaStats>;
 
-extern PROTOBUF_THREAD_LOCAL int64_t global_next_sample;
+            extern PROTOBUF_THREAD_LOCAL int64_t global_next_sample;
 
-// Returns an RAII sampling handle that manages registration and unregistation
-// with the global sampler.
-inline ThreadSafeArenaStatsHandle Sample() {
-  if (PROTOBUF_PREDICT_TRUE(--global_next_sample > 0)) {
-    return ThreadSafeArenaStatsHandle(nullptr);
-  }
-  return ThreadSafeArenaStatsHandle(SampleSlow(&global_next_sample));
-}
+            // Returns an RAII sampling handle that manages registration and unregistation
+            // with the global sampler.
+            inline ThreadSafeArenaStatsHandle Sample()
+            {
+                if (PROTOBUF_PREDICT_TRUE(--global_next_sample > 0))
+                {
+                    return ThreadSafeArenaStatsHandle(nullptr);
+                }
+                return ThreadSafeArenaStatsHandle(SampleSlow(&global_next_sample));
+            }
 
 #else
-struct ThreadSafeArenaStats {
-  static void RecordAllocateStats(ThreadSafeArenaStats*, size_t /*requested*/,
-                                  size_t /*allocated*/, size_t /*wasted*/) {}
-};
+            struct ThreadSafeArenaStats
+            {
+                static void RecordAllocateStats(ThreadSafeArenaStats*, size_t /*requested*/, size_t /*allocated*/, size_t /*wasted*/)
+                {
+                }
+            };
 
-ThreadSafeArenaStats* SampleSlow(int64_t* next_sample);
-void UnsampleSlow(ThreadSafeArenaStats* info);
+            ThreadSafeArenaStats* SampleSlow(int64_t* next_sample);
+            void UnsampleSlow(ThreadSafeArenaStats* info);
 
-class ThreadSafeArenaStatsHandle {
- public:
-  explicit ThreadSafeArenaStatsHandle() = default;
-  explicit ThreadSafeArenaStatsHandle(ThreadSafeArenaStats*) {}
+            class ThreadSafeArenaStatsHandle
+            {
+            public:
+                explicit ThreadSafeArenaStatsHandle() = default;
+                explicit ThreadSafeArenaStatsHandle(ThreadSafeArenaStats*)
+                {
+                }
 
-  void RecordReset() {}
+                void RecordReset()
+                {
+                }
 
-  ThreadSafeArenaStats* MutableStats() { return nullptr; }
+                ThreadSafeArenaStats* MutableStats()
+                {
+                    return nullptr;
+                }
 
-  friend void swap(ThreadSafeArenaStatsHandle&, ThreadSafeArenaStatsHandle&) {}
+                friend void swap(ThreadSafeArenaStatsHandle&, ThreadSafeArenaStatsHandle&)
+                {
+                }
 
- private:
-  friend class ThreadSafeArenaStatsHandlePeer;
-};
+            private:
+                friend class ThreadSafeArenaStatsHandlePeer;
+            };
 
-class ThreadSafeArenazSampler {
- public:
-  void Unregister(ThreadSafeArenaStats*) {}
-  void SetMaxSamples(int32_t) {}
-};
+            class ThreadSafeArenazSampler
+            {
+            public:
+                void Unregister(ThreadSafeArenaStats*)
+                {
+                }
+                void SetMaxSamples(int32_t)
+                {
+                }
+            };
 
-// Returns an RAII sampling handle that manages registration and unregistation
-// with the global sampler.
-inline ThreadSafeArenaStatsHandle Sample() {
-  return ThreadSafeArenaStatsHandle(nullptr);
-}
+            // Returns an RAII sampling handle that manages registration and unregistation
+            // with the global sampler.
+            inline ThreadSafeArenaStatsHandle Sample()
+            {
+                return ThreadSafeArenaStatsHandle(nullptr);
+            }
 #endif  // defined(PROTOBUF_ARENAZ_SAMPLE)
 
-// Returns a global Sampler.
-ThreadSafeArenazSampler& GlobalThreadSafeArenazSampler();
+            // Returns a global Sampler.
+            ThreadSafeArenazSampler& GlobalThreadSafeArenazSampler();
 
-// Enables or disables sampling for thread safe arenas.
-void SetThreadSafeArenazEnabled(bool enabled);
+            // Enables or disables sampling for thread safe arenas.
+            void SetThreadSafeArenazEnabled(bool enabled);
 
-// Sets the rate at which thread safe arena will be sampled.
-void SetThreadSafeArenazSampleParameter(int32_t rate);
+            // Sets the rate at which thread safe arena will be sampled.
+            void SetThreadSafeArenazSampleParameter(int32_t rate);
 
-// Sets a soft max for the number of samples that will be kept.
-void SetThreadSafeArenazMaxSamples(int32_t max);
+            // Sets a soft max for the number of samples that will be kept.
+            void SetThreadSafeArenazMaxSamples(int32_t max);
 
-// Sets the current value for when arenas should be next sampled.
-void SetThreadSafeArenazGlobalNextSample(int64_t next_sample);
+            // Sets the current value for when arenas should be next sampled.
+            void SetThreadSafeArenazGlobalNextSample(int64_t next_sample);
 
-}  // namespace internal
-}  // namespace protobuf
+        }  // namespace internal
+    }      // namespace protobuf
 }  // namespace google
 
 #include <google/protobuf/port_undef.inc>

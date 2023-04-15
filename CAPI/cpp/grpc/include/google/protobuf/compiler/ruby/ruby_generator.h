@@ -39,27 +39,31 @@
 
 #include <google/protobuf/port_def.inc>
 
-namespace google {
-namespace protobuf {
-namespace compiler {
-namespace ruby {
+namespace google
+{
+    namespace protobuf
+    {
+        namespace compiler
+        {
+            namespace ruby
+            {
 
-// CodeGenerator implementation for generated Ruby protocol buffer classes.
-// If you create your own protocol compiler binary and you want it to support
-// Ruby output, you can do so by registering an instance of this
-// CodeGenerator with the CommandLineInterface in your main() function.
-class PROTOC_EXPORT Generator : public CodeGenerator {
-  bool Generate(const FileDescriptor* file, const std::string& parameter,
-                GeneratorContext* generator_context,
-                std::string* error) const override;
-  uint64_t GetSupportedFeatures() const override {
-    return FEATURE_PROTO3_OPTIONAL;
-  }
-};
+                // CodeGenerator implementation for generated Ruby protocol buffer classes.
+                // If you create your own protocol compiler binary and you want it to support
+                // Ruby output, you can do so by registering an instance of this
+                // CodeGenerator with the CommandLineInterface in your main() function.
+                class PROTOC_EXPORT Generator : public CodeGenerator
+                {
+                    bool Generate(const FileDescriptor* file, const std::string& parameter, GeneratorContext* generator_context, std::string* error) const override;
+                    uint64_t GetSupportedFeatures() const override
+                    {
+                        return FEATURE_PROTO3_OPTIONAL;
+                    }
+                };
 
-}  // namespace ruby
-}  // namespace compiler
-}  // namespace protobuf
+            }  // namespace ruby
+        }      // namespace compiler
+    }          // namespace protobuf
 }  // namespace google
 
 #include <google/protobuf/port_undef.inc>

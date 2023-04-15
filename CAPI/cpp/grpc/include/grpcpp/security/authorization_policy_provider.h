@@ -21,68 +21,80 @@
 #include <grpc/status.h>
 #include <grpcpp/impl/codegen/grpc_library.h>
 
-namespace grpc {
-namespace experimental {
+namespace grpc
+{
+    namespace experimental
+    {
 
-// Wrapper around C-core grpc_authorization_policy_provider. Internally, it
-// handles creating and updating authorization engine objects, using SDK
-// authorization policy.
-class AuthorizationPolicyProviderInterface {
- public:
-  virtual ~AuthorizationPolicyProviderInterface() = default;
-  virtual grpc_authorization_policy_provider* c_provider() = 0;
-};
+        // Wrapper around C-core grpc_authorization_policy_provider. Internally, it
+        // handles creating and updating authorization engine objects, using SDK
+        // authorization policy.
+        class AuthorizationPolicyProviderInterface
+        {
+        public:
+            virtual ~AuthorizationPolicyProviderInterface() = default;
+            virtual grpc_authorization_policy_provider* c_provider() = 0;
+        };
 
-// Implementation obtains authorization policy from static string. This provider
-// will always return the same authorization engines.
-class StaticDataAuthorizationPolicyProvider
-    : public AuthorizationPolicyProviderInterface {
- public:
-  static std::shared_ptr<StaticDataAuthorizationPolicyProvider> Create(
-      const std::string& authz_policy, grpc::Status* status);
+        // Implementation obtains authorization policy from static string. This provider
+        // will always return the same authorization engines.
+        class StaticDataAuthorizationPolicyProvider : public AuthorizationPolicyProviderInterface
+        {
+        public:
+            static std::shared_ptr<StaticDataAuthorizationPolicyProvider> Create(
+                const std::string& authz_policy, grpc::Status* status
+            );
 
-  // Use factory method "Create" to create an instance of
-  // StaticDataAuthorizationPolicyProvider.
-  explicit StaticDataAuthorizationPolicyProvider(
-      grpc_authorization_policy_provider* provider)
-      : c_provider_(provider) {}
+            // Use factory method "Create" to create an instance of
+            // StaticDataAuthorizationPolicyProvider.
+            explicit StaticDataAuthorizationPolicyProvider(
+                grpc_authorization_policy_provider* provider
+            ) :
+                c_provider_(provider)
+            {
+            }
 
-  ~StaticDataAuthorizationPolicyProvider() override;
+            ~StaticDataAuthorizationPolicyProvider() override;
 
-  grpc_authorization_policy_provider* c_provider() override {
-    return c_provider_;
-  }
+            grpc_authorization_policy_provider* c_provider() override
+            {
+                return c_provider_;
+            }
 
- private:
-  grpc_authorization_policy_provider* c_provider_ = nullptr;
-};
+        private:
+            grpc_authorization_policy_provider* c_provider_ = nullptr;
+        };
 
-// Implementation obtains authorization policy by watching for changes in
-// filesystem.
-class FileWatcherAuthorizationPolicyProvider
-    : public AuthorizationPolicyProviderInterface {
- public:
-  static std::shared_ptr<FileWatcherAuthorizationPolicyProvider> Create(
-      const std::string& authz_policy_path, unsigned int refresh_interval_sec,
-      grpc::Status* status);
+        // Implementation obtains authorization policy by watching for changes in
+        // filesystem.
+        class FileWatcherAuthorizationPolicyProvider : public AuthorizationPolicyProviderInterface
+        {
+        public:
+            static std::shared_ptr<FileWatcherAuthorizationPolicyProvider> Create(
+                const std::string& authz_policy_path, unsigned int refresh_interval_sec, grpc::Status* status
+            );
 
-  // Use factory method "Create" to create an instance of
-  // FileWatcherAuthorizationPolicyProvider.
-  explicit FileWatcherAuthorizationPolicyProvider(
-      grpc_authorization_policy_provider* provider)
-      : c_provider_(provider) {}
+            // Use factory method "Create" to create an instance of
+            // FileWatcherAuthorizationPolicyProvider.
+            explicit FileWatcherAuthorizationPolicyProvider(
+                grpc_authorization_policy_provider* provider
+            ) :
+                c_provider_(provider)
+            {
+            }
 
-  ~FileWatcherAuthorizationPolicyProvider() override;
+            ~FileWatcherAuthorizationPolicyProvider() override;
 
-  grpc_authorization_policy_provider* c_provider() override {
-    return c_provider_;
-  }
+            grpc_authorization_policy_provider* c_provider() override
+            {
+                return c_provider_;
+            }
 
- private:
-  grpc_authorization_policy_provider* c_provider_ = nullptr;
-};
+        private:
+            grpc_authorization_policy_provider* c_provider_ = nullptr;
+        };
 
-}  // namespace experimental
+    }  // namespace experimental
 }  // namespace grpc
 
 #endif  // GRPCPP_SECURITY_AUTHORIZATION_POLICY_PROVIDER_H

@@ -151,18 +151,12 @@
 #if defined(__cplusplus) && ABSL_OPTION_USE_INLINE_NAMESPACE == 1
 
 #define ABSL_INTERNAL_INLINE_NAMESPACE_STR \
-  ABSL_INTERNAL_TOKEN_STR(ABSL_OPTION_INLINE_NAMESPACE_NAME)
+    ABSL_INTERNAL_TOKEN_STR(ABSL_OPTION_INLINE_NAMESPACE_NAME)
 
-static_assert(ABSL_INTERNAL_INLINE_NAMESPACE_STR[0] != '\0',
-              "options.h misconfigured: ABSL_OPTION_INLINE_NAMESPACE_NAME must "
-              "not be empty.");
-static_assert(ABSL_INTERNAL_INLINE_NAMESPACE_STR[0] != 'h' ||
-                  ABSL_INTERNAL_INLINE_NAMESPACE_STR[1] != 'e' ||
-                  ABSL_INTERNAL_INLINE_NAMESPACE_STR[2] != 'a' ||
-                  ABSL_INTERNAL_INLINE_NAMESPACE_STR[3] != 'd' ||
-                  ABSL_INTERNAL_INLINE_NAMESPACE_STR[4] != '\0',
-              "options.h misconfigured: ABSL_OPTION_INLINE_NAMESPACE_NAME must "
-              "be changed to a new, unique identifier name.");
+static_assert(ABSL_INTERNAL_INLINE_NAMESPACE_STR[0] != '\0', "options.h misconfigured: ABSL_OPTION_INLINE_NAMESPACE_NAME must "
+                                                             "not be empty.");
+static_assert(ABSL_INTERNAL_INLINE_NAMESPACE_STR[0] != 'h' || ABSL_INTERNAL_INLINE_NAMESPACE_STR[1] != 'e' || ABSL_INTERNAL_INLINE_NAMESPACE_STR[2] != 'a' || ABSL_INTERNAL_INLINE_NAMESPACE_STR[3] != 'd' || ABSL_INTERNAL_INLINE_NAMESPACE_STR[4] != '\0', "options.h misconfigured: ABSL_OPTION_INLINE_NAMESPACE_NAME must "
+                                                                                                                                                                                                                                                             "be changed to a new, unique identifier name.");
 
 #endif
 
@@ -171,14 +165,15 @@ static_assert(ABSL_INTERNAL_INLINE_NAMESPACE_STR[0] != 'h' ||
 #define ABSL_NAMESPACE_END
 #define ABSL_INTERNAL_C_SYMBOL(x) x
 #elif ABSL_OPTION_USE_INLINE_NAMESPACE == 1
-#define ABSL_NAMESPACE_BEGIN \
-  inline namespace ABSL_OPTION_INLINE_NAMESPACE_NAME {
+#define ABSL_NAMESPACE_BEGIN                           \
+    inline namespace ABSL_OPTION_INLINE_NAMESPACE_NAME \
+    {
 #define ABSL_NAMESPACE_END }
 #define ABSL_INTERNAL_C_SYMBOL_HELPER_2(x, v) x##_##v
 #define ABSL_INTERNAL_C_SYMBOL_HELPER_1(x, v) \
-  ABSL_INTERNAL_C_SYMBOL_HELPER_2(x, v)
+    ABSL_INTERNAL_C_SYMBOL_HELPER_2(x, v)
 #define ABSL_INTERNAL_C_SYMBOL(x) \
-  ABSL_INTERNAL_C_SYMBOL_HELPER_1(x, ABSL_OPTION_INLINE_NAMESPACE_NAME)
+    ABSL_INTERNAL_C_SYMBOL_HELPER_1(x, ABSL_OPTION_INLINE_NAMESPACE_NAME)
 #else
 #error options.h is misconfigured.
 #endif
@@ -212,14 +207,14 @@ static_assert(ABSL_INTERNAL_INLINE_NAMESPACE_STR[0] != 'h' ||
 // https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html
 #if defined(__GNUC__) && defined(__GNUC_MINOR__)
 #define ABSL_INTERNAL_HAVE_MIN_GNUC_VERSION(x, y) \
-  (__GNUC__ > (x) || __GNUC__ == (x) && __GNUC_MINOR__ >= (y))
+    (__GNUC__ > (x) || __GNUC__ == (x) && __GNUC_MINOR__ >= (y))
 #else
 #define ABSL_INTERNAL_HAVE_MIN_GNUC_VERSION(x, y) 0
 #endif
 
 #if defined(__clang__) && defined(__clang_major__) && defined(__clang_minor__)
 #define ABSL_INTERNAL_HAVE_MIN_CLANG_VERSION(x, y) \
-  (__clang_major__ > (x) || __clang_major__ == (x) && __clang_minor__ >= (y))
+    (__clang_major__ > (x) || __clang_major__ == (x) && __clang_minor__ >= (y))
 #else
 #define ABSL_INTERNAL_HAVE_MIN_CLANG_VERSION(x, y) 0
 #endif
@@ -336,8 +331,8 @@ static_assert(ABSL_INTERNAL_INLINE_NAMESPACE_STR[0] != 'h' ||
 #ifdef ABSL_HAVE_INTRINSIC_INT128
 #error ABSL_HAVE_INTRINSIC_INT128 cannot be directly set
 #elif defined(__SIZEOF_INT128__)
-#if (defined(__clang__) && !defined(_WIN32)) || \
-    (defined(__CUDACC__) && __CUDACC_VER_MAJOR__ >= 9) ||                \
+#if (defined(__clang__) && !defined(_WIN32)) ||           \
+    (defined(__CUDACC__) && __CUDACC_VER_MAJOR__ >= 9) || \
     (defined(__GNUC__) && !defined(__clang__) && !defined(__CUDACC__))
 #define ABSL_HAVE_INTRINSIC_INT128 1
 #elif defined(__CUDACC__)
@@ -511,8 +506,7 @@ static_assert(ABSL_INTERNAL_INLINE_NAMESPACE_STR[0] != 'h' ||
 #error "ABSL_IS_LITTLE_ENDIAN cannot be directly set."
 #endif
 
-#if (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && \
-     __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+#if (defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
 #define ABSL_IS_LITTLE_ENDIAN 1
 #elif defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && \
     __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
@@ -721,8 +715,9 @@ static_assert(ABSL_INTERNAL_INLINE_NAMESPACE_STR[0] != 'h' ||
 #define ABSL_INTERNAL_MANGLED_NS "absl"
 #define ABSL_INTERNAL_MANGLED_BACKREFERENCE "5"
 #else
-#define ABSL_INTERNAL_MANGLED_NS \
-  ABSL_INTERNAL_TOKEN_STR(ABSL_OPTION_INLINE_NAMESPACE_NAME) "@absl"
+#define ABSL_INTERNAL_MANGLED_NS                               \
+    ABSL_INTERNAL_TOKEN_STR(ABSL_OPTION_INLINE_NAMESPACE_NAME) \
+    "@absl"
 #define ABSL_INTERNAL_MANGLED_BACKREFERENCE "6"
 #endif
 #endif

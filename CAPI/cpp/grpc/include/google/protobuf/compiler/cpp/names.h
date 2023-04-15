@@ -36,60 +36,64 @@
 // Must be included last.
 #include <google/protobuf/port_def.inc>
 
-namespace google {
-namespace protobuf {
+namespace google
+{
+    namespace protobuf
+    {
 
-class Descriptor;
-class EnumDescriptor;
-class EnumValueDescriptor;
-class FieldDescriptor;
+        class Descriptor;
+        class EnumDescriptor;
+        class EnumValueDescriptor;
+        class FieldDescriptor;
 
-namespace compiler {
-namespace cpp {
+        namespace compiler
+        {
+            namespace cpp
+            {
 
-// Returns the unqualified C++ name.
-//
-// For example, if you had:
-//   package foo.bar;
-//   message Baz { message Moo {} }
-// Then the non-qualified version would be:
-//   Baz_Moo
-std::string ClassName(const Descriptor* descriptor);
-std::string ClassName(const EnumDescriptor* enum_descriptor);
+                // Returns the unqualified C++ name.
+                //
+                // For example, if you had:
+                //   package foo.bar;
+                //   message Baz { message Moo {} }
+                // Then the non-qualified version would be:
+                //   Baz_Moo
+                std::string ClassName(const Descriptor* descriptor);
+                std::string ClassName(const EnumDescriptor* enum_descriptor);
 
-// Returns the fully qualified C++ name.
-//
-// For example, if you had:
-//   package foo.bar;
-//   message Baz { message Moo {} }
-// Then the qualified ClassName for Moo would be:
-//   ::foo::bar::Baz_Moo
-std::string QualifiedClassName(const Descriptor* d);
-std::string QualifiedClassName(const EnumDescriptor* d);
-std::string QualifiedExtensionName(const FieldDescriptor* d);
+                // Returns the fully qualified C++ name.
+                //
+                // For example, if you had:
+                //   package foo.bar;
+                //   message Baz { message Moo {} }
+                // Then the qualified ClassName for Moo would be:
+                //   ::foo::bar::Baz_Moo
+                std::string QualifiedClassName(const Descriptor* d);
+                std::string QualifiedClassName(const EnumDescriptor* d);
+                std::string QualifiedExtensionName(const FieldDescriptor* d);
 
-// Get the (unqualified) name that should be used for this field in C++ code.
-// The name is coerced to lower-case to emulate proto1 behavior.  People
-// should be using lowercase-with-underscores style for proto field names
-// anyway, so normally this just returns field->name().
-std::string FieldName(const FieldDescriptor* field);
+                // Get the (unqualified) name that should be used for this field in C++ code.
+                // The name is coerced to lower-case to emulate proto1 behavior.  People
+                // should be using lowercase-with-underscores style for proto field names
+                // anyway, so normally this just returns field->name().
+                std::string FieldName(const FieldDescriptor* field);
 
-// Requires that this field is in a oneof. Returns the (unqualified) case
-// constant for this field.
-std::string OneofCaseConstantName(const FieldDescriptor* field);
-// Returns the quafilied case constant for this field.
-std::string QualifiedOneofCaseConstantName(const FieldDescriptor* field);
+                // Requires that this field is in a oneof. Returns the (unqualified) case
+                // constant for this field.
+                std::string OneofCaseConstantName(const FieldDescriptor* field);
+                // Returns the quafilied case constant for this field.
+                std::string QualifiedOneofCaseConstantName(const FieldDescriptor* field);
 
-// Get the (unqualified) name that should be used for this enum value in C++
-// code.
-std::string EnumValueName(const EnumValueDescriptor* enum_value);
+                // Get the (unqualified) name that should be used for this enum value in C++
+                // code.
+                std::string EnumValueName(const EnumValueDescriptor* enum_value);
 
-// Strips ".proto" or ".protodevel" from the end of a filename.
-PROTOC_EXPORT std::string StripProto(const std::string& filename);
+                // Strips ".proto" or ".protodevel" from the end of a filename.
+                PROTOC_EXPORT std::string StripProto(const std::string& filename);
 
-}  // namespace cpp
-}  // namespace compiler
-}  // namespace protobuf
+            }  // namespace cpp
+        }      // namespace compiler
+    }          // namespace protobuf
 }  // namespace google
 
 #include <google/protobuf/port_undef.inc>

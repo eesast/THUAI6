@@ -30,71 +30,82 @@
 #include <grpcpp/impl/codegen/time.h>
 #include <grpcpp/impl/grpc_library.h>
 
-namespace grpc {
+namespace grpc
+{
 
-class Alarm : private grpc::GrpcLibraryCodegen {
- public:
-  /// Create an unset completion queue alarm
-  Alarm();
+    class Alarm : private grpc::GrpcLibraryCodegen
+    {
+    public:
+        /// Create an unset completion queue alarm
+        Alarm();
 
-  /// Destroy the given completion queue alarm, cancelling it in the process.
-  ~Alarm() override;
+        /// Destroy the given completion queue alarm, cancelling it in the process.
+        ~Alarm() override;
 
-  /// DEPRECATED: Create and set a completion queue alarm instance associated to
-  /// \a cq.
-  /// This form is deprecated because it is inherently racy.
-  /// \internal We rely on the presence of \a cq for grpc initialization. If \a
-  /// cq were ever to be removed, a reference to a static
-  /// internal::GrpcLibraryInitializer instance would need to be introduced
-  /// here. \endinternal.
-  template <typename T>
-  Alarm(grpc::CompletionQueue* cq, const T& deadline, void* tag) : Alarm() {
-    SetInternal(cq, grpc::TimePoint<T>(deadline).raw_time(), tag);
-  }
+        /// DEPRECATED: Create and set a completion queue alarm instance associated to
+        /// \a cq.
+        /// This form is deprecated because it is inherently racy.
+        /// \internal We rely on the presence of \a cq for grpc initialization. If \a
+        /// cq were ever to be removed, a reference to a static
+        /// internal::GrpcLibraryInitializer instance would need to be introduced
+        /// here. \endinternal.
+        template<typename T>
+        Alarm(grpc::CompletionQueue* cq, const T& deadline, void* tag) :
+            Alarm()
+        {
+            SetInternal(cq, grpc::TimePoint<T>(deadline).raw_time(), tag);
+        }
 
-  /// Trigger an alarm instance on completion queue \a cq at the specified time.
-  /// Once the alarm expires (at \a deadline) or it's cancelled (see \a Cancel),
-  /// an event with tag \a tag will be added to \a cq. If the alarm expired, the
-  /// event's success bit will be true, false otherwise (ie, upon cancellation).
-  //
-  // USAGE NOTE: This is frequently used to inject arbitrary tags into \a cq by
-  // setting an immediate deadline. Such usage allows synchronizing an external
-  // event with an application's \a grpc::CompletionQueue::Next loop.
-  template <typename T>
-  void Set(grpc::CompletionQueue* cq, const T& deadline, void* tag) {
-    SetInternal(cq, grpc::TimePoint<T>(deadline).raw_time(), tag);
-  }
+        /// Trigger an alarm instance on completion queue \a cq at the specified time.
+        /// Once the alarm expires (at \a deadline) or it's cancelled (see \a Cancel),
+        /// an event with tag \a tag will be added to \a cq. If the alarm expired, the
+        /// event's success bit will be true, false otherwise (ie, upon cancellation).
+        //
+        // USAGE NOTE: This is frequently used to inject arbitrary tags into \a cq by
+        // setting an immediate deadline. Such usage allows synchronizing an external
+        // event with an application's \a grpc::CompletionQueue::Next loop.
+        template<typename T>
+        void Set(grpc::CompletionQueue* cq, const T& deadline, void* tag)
+        {
+            SetInternal(cq, grpc::TimePoint<T>(deadline).raw_time(), tag);
+        }
 
-  /// Alarms aren't copyable.
-  Alarm(const Alarm&) = delete;
-  Alarm& operator=(const Alarm&) = delete;
+        /// Alarms aren't copyable.
+        Alarm(const Alarm&) = delete;
+        Alarm& operator=(const Alarm&) = delete;
 
-  /// Alarms are movable.
-  Alarm(Alarm&& rhs) noexcept : alarm_(rhs.alarm_) { rhs.alarm_ = nullptr; }
-  Alarm& operator=(Alarm&& rhs) noexcept {
-    alarm_ = rhs.alarm_;
-    rhs.alarm_ = nullptr;
-    return *this;
-  }
+        /// Alarms are movable.
+        Alarm(Alarm&& rhs) noexcept :
+            alarm_(rhs.alarm_)
+        {
+            rhs.alarm_ = nullptr;
+        }
+        Alarm& operator=(Alarm&& rhs) noexcept
+        {
+            alarm_ = rhs.alarm_;
+            rhs.alarm_ = nullptr;
+            return *this;
+        }
 
-  /// Cancel a completion queue alarm. Calling this function over an alarm that
-  /// has already fired has no effect.
-  void Cancel();
+        /// Cancel a completion queue alarm. Calling this function over an alarm that
+        /// has already fired has no effect.
+        void Cancel();
 
-  /// Set an alarm to invoke callback \a f. The argument to the callback
-  /// states whether the alarm expired at \a deadline (true) or was cancelled
-  /// (false)
-  template <typename T>
-  void Set(const T& deadline, std::function<void(bool)> f) {
-    SetInternal(grpc::TimePoint<T>(deadline).raw_time(), std::move(f));
-  }
+        /// Set an alarm to invoke callback \a f. The argument to the callback
+        /// states whether the alarm expired at \a deadline (true) or was cancelled
+        /// (false)
+        template<typename T>
+        void Set(const T& deadline, std::function<void(bool)> f)
+        {
+            SetInternal(grpc::TimePoint<T>(deadline).raw_time(), std::move(f));
+        }
 
- private:
-  void SetInternal(grpc::CompletionQueue* cq, gpr_timespec deadline, void* tag);
-  void SetInternal(gpr_timespec deadline, std::function<void(bool)> f);
+    private:
+        void SetInternal(grpc::CompletionQueue* cq, gpr_timespec deadline, void* tag);
+        void SetInternal(gpr_timespec deadline, std::function<void(bool)> f);
 
-  grpc::internal::CompletionQueueTag* alarm_;
-};
+        grpc::internal::CompletionQueueTag* alarm_;
+    };
 
 }  // namespace grpc
 

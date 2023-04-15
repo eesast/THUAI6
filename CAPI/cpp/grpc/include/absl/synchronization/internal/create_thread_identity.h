@@ -28,29 +28,33 @@
 #include "absl/base/internal/thread_identity.h"
 #include "absl/base/port.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
-namespace synchronization_internal {
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
+    namespace synchronization_internal
+    {
 
-// Allocates and attaches a ThreadIdentity object for the calling thread.
-// For private use only.
-base_internal::ThreadIdentity* CreateThreadIdentity();
+        // Allocates and attaches a ThreadIdentity object for the calling thread.
+        // For private use only.
+        base_internal::ThreadIdentity* CreateThreadIdentity();
 
-// Returns the ThreadIdentity object representing the calling thread; guaranteed
-// to be unique for its lifetime.  The returned object will remain valid for the
-// program's lifetime; although it may be re-assigned to a subsequent thread.
-// If one does not exist for the calling thread, allocate it now.
-inline base_internal::ThreadIdentity* GetOrCreateCurrentThreadIdentity() {
-  base_internal::ThreadIdentity* identity =
-      base_internal::CurrentThreadIdentityIfPresent();
-  if (ABSL_PREDICT_FALSE(identity == nullptr)) {
-    return CreateThreadIdentity();
-  }
-  return identity;
-}
+        // Returns the ThreadIdentity object representing the calling thread; guaranteed
+        // to be unique for its lifetime.  The returned object will remain valid for the
+        // program's lifetime; although it may be re-assigned to a subsequent thread.
+        // If one does not exist for the calling thread, allocate it now.
+        inline base_internal::ThreadIdentity* GetOrCreateCurrentThreadIdentity()
+        {
+            base_internal::ThreadIdentity* identity =
+                base_internal::CurrentThreadIdentityIfPresent();
+            if (ABSL_PREDICT_FALSE(identity == nullptr))
+            {
+                return CreateThreadIdentity();
+            }
+            return identity;
+        }
 
-}  // namespace synchronization_internal
-ABSL_NAMESPACE_END
+    }  // namespace synchronization_internal
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_SYNCHRONIZATION_INTERNAL_CREATE_THREAD_IDENTITY_H_

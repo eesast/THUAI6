@@ -63,8 +63,7 @@ int lua_getiuservalue(lua_State* L, int index, int n);
 #endif
 
 /* Registers a type with the given name, methods, and metamethods. */
-void lupb_register_type(lua_State* L, const char* name, const luaL_Reg* m,
-                        const luaL_Reg* mm);
+void lupb_register_type(lua_State* L, const char* name, const luaL_Reg* m, const luaL_Reg* mm);
 
 /* Checks the given upb_Status and throws a Lua error if it is not ok. */
 void lupb_checkstatus(lua_State* L, upb_Status* s);
@@ -103,30 +102,31 @@ void lupb_def_registertypes(lua_State* L);
 
 /** From msg.c. ***************************************************************/
 
-void lupb_pushmsgval(lua_State* L, int container, upb_CType type,
-                     upb_MessageValue val);
+void lupb_pushmsgval(lua_State* L, int container, upb_CType type, upb_MessageValue val);
 int lupb_MessageDef_call(lua_State* L);
 upb_Arena* lupb_Arena_pushnew(lua_State* L);
 
 void lupb_msg_registertypes(lua_State* L);
 
 #define lupb_assert(L, predicate) \
-  if (!(predicate))               \
-    luaL_error(L, "internal error: %s, %s:%d ", #predicate, __FILE__, __LINE__);
+    if (!(predicate))             \
+        luaL_error(L, "internal error: %s, %s:%d ", #predicate, __FILE__, __LINE__);
 
 #define LUPB_UNUSED(var) (void)var
 
 #if defined(__GNUC__) || defined(__clang__)
-#define LUPB_UNREACHABLE()   \
-  do {                       \
-    assert(0);               \
-    __builtin_unreachable(); \
-  } while (0)
+#define LUPB_UNREACHABLE()       \
+    do                           \
+    {                            \
+        assert(0);               \
+        __builtin_unreachable(); \
+    } while (0)
 #else
 #define LUPB_UNREACHABLE() \
-  do {                     \
-    assert(0);             \
-  } while (0)
+    do                     \
+    {                      \
+        assert(0);         \
+    } while (0)
 #endif
 
 #endif /* UPB_LUA_UPB_H_ */

@@ -24,25 +24,26 @@
 #include <grpc/impl/codegen/gpr_types.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/** String utility functions */
+    /** String utility functions */
 
-/** Returns a copy of src that can be passed to gpr_free().
-   If allocation fails or if src is NULL, returns NULL. */
-GPRAPI char* gpr_strdup(const char* src);
+    /** Returns a copy of src that can be passed to gpr_free().
+       If allocation fails or if src is NULL, returns NULL. */
+    GPRAPI char* gpr_strdup(const char* src);
 
-/** printf to a newly-allocated string.  The set of supported formats may vary
-   between platforms.
+    /** printf to a newly-allocated string.  The set of supported formats may vary
+       between platforms.
 
-   On success, returns the number of bytes printed (excluding the final '\0'),
-   and *strp points to a string which must later be destroyed with gpr_free().
+       On success, returns the number of bytes printed (excluding the final '\0'),
+       and *strp points to a string which must later be destroyed with gpr_free().
 
-   On error, returns -1 and sets *strp to NULL. If the format string is bad,
-   the result is undefined. */
-GPRAPI int gpr_asprintf(char** strp, const char* format, ...)
-    GPR_PRINT_FORMAT_CHECK(2, 3);
+       On error, returns -1 and sets *strp to NULL. If the format string is bad,
+       the result is undefined. */
+    GPRAPI int gpr_asprintf(char** strp, const char* format, ...)
+        GPR_PRINT_FORMAT_CHECK(2, 3);
 
 #ifdef __cplusplus
 }

@@ -40,8 +40,9 @@
 #include "absl/flags/internal/registry.h"
 #include "absl/strings/string_view.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
 
 // Flag
 //
@@ -72,72 +73,75 @@ ABSL_NAMESPACE_BEGIN
 // discusses supported standard types, optional flags, and additional Abseil
 // type support.
 #if !defined(_MSC_VER) || defined(__clang__)
-template <typename T>
-using Flag = flags_internal::Flag<T>;
+    template<typename T>
+    using Flag = flags_internal::Flag<T>;
 #else
 #include "absl/flags/internal/flag_msvc.inc"
 #endif
 
-// GetFlag()
-//
-// Returns the value (of type `T`) of an `absl::Flag<T>` instance, by value. Do
-// not construct an `absl::Flag<T>` directly and call `absl::GetFlag()`;
-// instead, refer to flag's constructed variable name (e.g. `FLAGS_name`).
-// Because this function returns by value and not by reference, it is
-// thread-safe, but note that the operation may be expensive; as a result, avoid
-// `absl::GetFlag()` within any tight loops.
-//
-// Example:
-//
-//   // FLAGS_count is a Flag of type `int`
-//   int my_count = absl::GetFlag(FLAGS_count);
-//
-//   // FLAGS_firstname is a Flag of type `std::string`
-//   std::string first_name = absl::GetFlag(FLAGS_firstname);
-template <typename T>
-ABSL_MUST_USE_RESULT T GetFlag(const absl::Flag<T>& flag) {
-  return flags_internal::FlagImplPeer::InvokeGet<T>(flag);
-}
+    // GetFlag()
+    //
+    // Returns the value (of type `T`) of an `absl::Flag<T>` instance, by value. Do
+    // not construct an `absl::Flag<T>` directly and call `absl::GetFlag()`;
+    // instead, refer to flag's constructed variable name (e.g. `FLAGS_name`).
+    // Because this function returns by value and not by reference, it is
+    // thread-safe, but note that the operation may be expensive; as a result, avoid
+    // `absl::GetFlag()` within any tight loops.
+    //
+    // Example:
+    //
+    //   // FLAGS_count is a Flag of type `int`
+    //   int my_count = absl::GetFlag(FLAGS_count);
+    //
+    //   // FLAGS_firstname is a Flag of type `std::string`
+    //   std::string first_name = absl::GetFlag(FLAGS_firstname);
+    template<typename T>
+    ABSL_MUST_USE_RESULT T GetFlag(const absl::Flag<T>& flag)
+    {
+        return flags_internal::FlagImplPeer::InvokeGet<T>(flag);
+    }
 
-// SetFlag()
-//
-// Sets the value of an `absl::Flag` to the value `v`. Do not construct an
-// `absl::Flag<T>` directly and call `absl::SetFlag()`; instead, use the
-// flag's variable name (e.g. `FLAGS_name`). This function is
-// thread-safe, but is potentially expensive. Avoid setting flags in general,
-// but especially within performance-critical code.
-template <typename T>
-void SetFlag(absl::Flag<T>* flag, const T& v) {
-  flags_internal::FlagImplPeer::InvokeSet(*flag, v);
-}
+    // SetFlag()
+    //
+    // Sets the value of an `absl::Flag` to the value `v`. Do not construct an
+    // `absl::Flag<T>` directly and call `absl::SetFlag()`; instead, use the
+    // flag's variable name (e.g. `FLAGS_name`). This function is
+    // thread-safe, but is potentially expensive. Avoid setting flags in general,
+    // but especially within performance-critical code.
+    template<typename T>
+    void SetFlag(absl::Flag<T>* flag, const T& v)
+    {
+        flags_internal::FlagImplPeer::InvokeSet(*flag, v);
+    }
 
-// Overload of `SetFlag()` to allow callers to pass in a value that is
-// convertible to `T`. E.g., use this overload to pass a "const char*" when `T`
-// is `std::string`.
-template <typename T, typename V>
-void SetFlag(absl::Flag<T>* flag, const V& v) {
-  T value(v);
-  flags_internal::FlagImplPeer::InvokeSet(*flag, value);
-}
+    // Overload of `SetFlag()` to allow callers to pass in a value that is
+    // convertible to `T`. E.g., use this overload to pass a "const char*" when `T`
+    // is `std::string`.
+    template<typename T, typename V>
+    void SetFlag(absl::Flag<T>* flag, const V& v)
+    {
+        T value(v);
+        flags_internal::FlagImplPeer::InvokeSet(*flag, value);
+    }
 
-// GetFlagReflectionHandle()
-//
-// Returns the reflection handle corresponding to specified Abseil Flag
-// instance. Use this handle to access flag's reflection information, like name,
-// location, default value etc.
-//
-// Example:
-//
-//   std::string = absl::GetFlagReflectionHandle(FLAGS_count).DefaultValue();
+    // GetFlagReflectionHandle()
+    //
+    // Returns the reflection handle corresponding to specified Abseil Flag
+    // instance. Use this handle to access flag's reflection information, like name,
+    // location, default value etc.
+    //
+    // Example:
+    //
+    //   std::string = absl::GetFlagReflectionHandle(FLAGS_count).DefaultValue();
 
-template <typename T>
-const CommandLineFlag& GetFlagReflectionHandle(const absl::Flag<T>& f) {
-  return flags_internal::FlagImplPeer::InvokeReflect(f);
-}
+    template<typename T>
+    const CommandLineFlag& GetFlagReflectionHandle(const absl::Flag<T>& f)
+    {
+        return flags_internal::FlagImplPeer::InvokeReflect(f);
+    }
 
-ABSL_NAMESPACE_END
+    ABSL_NAMESPACE_END
 }  // namespace absl
-
 
 // ABSL_FLAG()
 //
@@ -167,7 +171,7 @@ ABSL_NAMESPACE_END
 // Note: do not construct objects of type `absl::Flag<T>` directly. Only use the
 // `ABSL_FLAG()` macro for such construction.
 #define ABSL_FLAG(Type, name, default_value, help) \
-  ABSL_FLAG_IMPL(Type, name, default_value, help)
+    ABSL_FLAG_IMPL(Type, name, default_value, help)
 
 // ABSL_FLAG().OnUpdate()
 //
@@ -198,11 +202,12 @@ ABSL_NAMESPACE_END
 // ABSL_FLAG_IMPL macro definition conditional on ABSL_FLAGS_STRIP_NAMES
 #if !defined(_MSC_VER) || defined(__clang__)
 #define ABSL_FLAG_IMPL_FLAG_PTR(flag) flag
-#define ABSL_FLAG_IMPL_HELP_ARG(name)                      \
-  absl::flags_internal::HelpArg<AbslFlagHelpGenFor##name>( \
-      FLAGS_help_storage_##name)
+#define ABSL_FLAG_IMPL_HELP_ARG(name)                        \
+    absl::flags_internal::HelpArg<AbslFlagHelpGenFor##name>( \
+        FLAGS_help_storage_##name                            \
+    )
 #define ABSL_FLAG_IMPL_DEFAULT_ARG(Type, name) \
-  absl::flags_internal::DefaultArg<Type, AbslFlagDefaultGenFor##name>(0)
+    absl::flags_internal::DefaultArg<Type, AbslFlagDefaultGenFor##name>(0)
 #else
 #define ABSL_FLAG_IMPL_FLAG_PTR(flag) flag.GetImpl()
 #define ABSL_FLAG_IMPL_HELP_ARG(name) &AbslFlagHelpGenFor##name::NonConst
@@ -212,15 +217,13 @@ ABSL_NAMESPACE_END
 #if ABSL_FLAGS_STRIP_NAMES
 #define ABSL_FLAG_IMPL_FLAGNAME(txt) ""
 #define ABSL_FLAG_IMPL_FILENAME() ""
-#define ABSL_FLAG_IMPL_REGISTRAR(T, flag)                                      \
-  absl::flags_internal::FlagRegistrar<T, false>(ABSL_FLAG_IMPL_FLAG_PTR(flag), \
-                                                nullptr)
+#define ABSL_FLAG_IMPL_REGISTRAR(T, flag) \
+    absl::flags_internal::FlagRegistrar<T, false>(ABSL_FLAG_IMPL_FLAG_PTR(flag), nullptr)
 #else
 #define ABSL_FLAG_IMPL_FLAGNAME(txt) txt
 #define ABSL_FLAG_IMPL_FILENAME() __FILE__
-#define ABSL_FLAG_IMPL_REGISTRAR(T, flag)                                     \
-  absl::flags_internal::FlagRegistrar<T, true>(ABSL_FLAG_IMPL_FLAG_PTR(flag), \
-                                               __FILE__)
+#define ABSL_FLAG_IMPL_REGISTRAR(T, flag) \
+    absl::flags_internal::FlagRegistrar<T, true>(ABSL_FLAG_IMPL_FLAG_PTR(flag), __FILE__)
 #endif
 
 // ABSL_FLAG_IMPL macro definition conditional on ABSL_FLAGS_STRIP_HELP
@@ -239,46 +242,56 @@ ABSL_NAMESPACE_END
 // TODO(rogeeff): place these generated structs into local namespace and apply
 // ABSL_INTERNAL_UNIQUE_SHORT_NAME.
 // TODO(rogeeff): Apply __attribute__((nodebug)) to FLAGS_help_storage_##name
-#define ABSL_FLAG_IMPL_DECLARE_HELP_WRAPPER(name, txt)                       \
-  struct AbslFlagHelpGenFor##name {                                          \
-    /* The expression is run in the caller as part of the   */               \
-    /* default value argument. That keeps temporaries alive */               \
-    /* long enough for NonConst to work correctly.          */               \
-    static constexpr absl::string_view Value(                                \
-        absl::string_view absl_flag_help = ABSL_FLAG_IMPL_FLAGHELP(txt)) {   \
-      return absl_flag_help;                                                 \
-    }                                                                        \
-    static std::string NonConst() { return std::string(Value()); }           \
-  };                                                                         \
-  constexpr auto FLAGS_help_storage_##name ABSL_INTERNAL_UNIQUE_SMALL_NAME() \
-      ABSL_ATTRIBUTE_SECTION_VARIABLE(flags_help_cold) =                     \
-          absl::flags_internal::HelpStringAsArray<AbslFlagHelpGenFor##name>( \
-              0);
+#define ABSL_FLAG_IMPL_DECLARE_HELP_WRAPPER(name, txt)                         \
+    struct AbslFlagHelpGenFor##name                                            \
+    {                                                                          \
+        /* The expression is run in the caller as part of the   */             \
+        /* default value argument. That keeps temporaries alive */             \
+        /* long enough for NonConst to work correctly.          */             \
+        static constexpr absl::string_view Value(                              \
+            absl::string_view absl_flag_help = ABSL_FLAG_IMPL_FLAGHELP(txt)    \
+        )                                                                      \
+        {                                                                      \
+            return absl_flag_help;                                             \
+        }                                                                      \
+        static std::string NonConst()                                          \
+        {                                                                      \
+            return std::string(Value());                                       \
+        }                                                                      \
+    };                                                                         \
+    constexpr auto FLAGS_help_storage_##name ABSL_INTERNAL_UNIQUE_SMALL_NAME() \
+        ABSL_ATTRIBUTE_SECTION_VARIABLE(flags_help_cold) =                     \
+            absl::flags_internal::HelpStringAsArray<AbslFlagHelpGenFor##name>( \
+                0                                                              \
+            );
 
-#define ABSL_FLAG_IMPL_DECLARE_DEF_VAL_WRAPPER(name, Type, default_value)     \
-  struct AbslFlagDefaultGenFor##name {                                        \
-    Type value = absl::flags_internal::InitDefaultValue<Type>(default_value); \
-    static void Gen(void* absl_flag_default_loc) {                            \
-      new (absl_flag_default_loc) Type(AbslFlagDefaultGenFor##name{}.value);  \
-    }                                                                         \
-  };
+#define ABSL_FLAG_IMPL_DECLARE_DEF_VAL_WRAPPER(name, Type, default_value)          \
+    struct AbslFlagDefaultGenFor##name                                             \
+    {                                                                              \
+        Type value = absl::flags_internal::InitDefaultValue<Type>(default_value);  \
+        static void Gen(void* absl_flag_default_loc)                               \
+        {                                                                          \
+            new (absl_flag_default_loc) Type(AbslFlagDefaultGenFor##name{}.value); \
+        }                                                                          \
+    };
 
 // ABSL_FLAG_IMPL
 //
 // Note: Name of registrar object is not arbitrary. It is used to "grab"
 // global name for FLAGS_no<flag_name> symbol, thus preventing the possibility
 // of defining two flags with names foo and nofoo.
-#define ABSL_FLAG_IMPL(Type, name, default_value, help)                       \
-  extern ::absl::Flag<Type> FLAGS_##name;                                     \
-  namespace absl /* block flags in namespaces */ {}                           \
-  ABSL_FLAG_IMPL_DECLARE_DEF_VAL_WRAPPER(name, Type, default_value)           \
-  ABSL_FLAG_IMPL_DECLARE_HELP_WRAPPER(name, help)                             \
-  ABSL_CONST_INIT absl::Flag<Type> FLAGS_##name{                              \
-      ABSL_FLAG_IMPL_FLAGNAME(#name), ABSL_FLAG_IMPL_FILENAME(),              \
-      ABSL_FLAG_IMPL_HELP_ARG(name), ABSL_FLAG_IMPL_DEFAULT_ARG(Type, name)}; \
-  extern absl::flags_internal::FlagRegistrarEmpty FLAGS_no##name;             \
-  absl::flags_internal::FlagRegistrarEmpty FLAGS_no##name =                   \
-      ABSL_FLAG_IMPL_REGISTRAR(Type, FLAGS_##name)
+#define ABSL_FLAG_IMPL(Type, name, default_value, help)                                                                                    \
+    extern ::absl::Flag<Type> FLAGS_##name;                                                                                                \
+    namespace absl /* block flags in namespaces */                                                                                         \
+    {                                                                                                                                      \
+    }                                                                                                                                      \
+    ABSL_FLAG_IMPL_DECLARE_DEF_VAL_WRAPPER(name, Type, default_value)                                                                      \
+    ABSL_FLAG_IMPL_DECLARE_HELP_WRAPPER(name, help)                                                                                        \
+    ABSL_CONST_INIT absl::Flag<Type> FLAGS_##name{                                                                                         \
+        ABSL_FLAG_IMPL_FLAGNAME(#name), ABSL_FLAG_IMPL_FILENAME(), ABSL_FLAG_IMPL_HELP_ARG(name), ABSL_FLAG_IMPL_DEFAULT_ARG(Type, name)}; \
+    extern absl::flags_internal::FlagRegistrarEmpty FLAGS_no##name;                                                                        \
+    absl::flags_internal::FlagRegistrarEmpty FLAGS_no##name =                                                                              \
+        ABSL_FLAG_IMPL_REGISTRAR(Type, FLAGS_##name)
 
 // ABSL_RETIRED_FLAG
 //
@@ -301,10 +314,10 @@ ABSL_NAMESPACE_END
 // unused.
 // TODO(rogeeff): replace RETIRED_FLAGS with FLAGS once forward declarations of
 // retired flags are cleaned up.
-#define ABSL_RETIRED_FLAG(type, name, default_value, explanation)      \
-  static absl::flags_internal::RetiredFlag<type> RETIRED_FLAGS_##name; \
-  ABSL_ATTRIBUTE_UNUSED static const auto RETIRED_FLAGS_REG_##name =   \
-      (RETIRED_FLAGS_##name.Retire(#name),                             \
-       ::absl::flags_internal::FlagRegistrarEmpty{})
+#define ABSL_RETIRED_FLAG(type, name, default_value, explanation)        \
+    static absl::flags_internal::RetiredFlag<type> RETIRED_FLAGS_##name; \
+    ABSL_ATTRIBUTE_UNUSED static const auto RETIRED_FLAGS_REG_##name =   \
+        (RETIRED_FLAGS_##name.Retire(#name),                             \
+         ::absl::flags_internal::FlagRegistrarEmpty{})
 
 #endif  // ABSL_FLAGS_FLAG_H_

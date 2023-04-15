@@ -21,15 +21,17 @@
 
 #include <grpcpp/support/config.h>
 
-namespace grpc {
+namespace grpc
+{
 
-namespace experimental {
-/// Validates \a service_config_json. If valid, returns an empty string.
-/// Otherwise, returns the validation error.
-/// TODO(yashykt): Promote it to out of experimental once it is proved useful
-/// and gRFC is accepted.
-std::string ValidateServiceConfigJSON(const std::string& service_config_json);
-}  // namespace experimental
+    namespace experimental
+    {
+        /// Validates \a service_config_json. If valid, returns an empty string.
+        /// Otherwise, returns the validation error.
+        /// TODO(yashykt): Promote it to out of experimental once it is proved useful
+        /// and gRFC is accepted.
+        std::string ValidateServiceConfigJSON(const std::string& service_config_json);
+    }  // namespace experimental
 
 }  // namespace grpc
 

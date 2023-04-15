@@ -69,7 +69,6 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
         std::cerr << "Parsing error: " << e.error() << " for arg " << e.argId() << std::endl;
         return 1;
     }
-    std::cout << file << std::endl;
     try
     {
         Logic logic(playerType, pID, trickerType, studentType);

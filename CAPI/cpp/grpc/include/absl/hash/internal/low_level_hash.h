@@ -30,21 +30,22 @@
 
 #include "absl/base/config.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
-namespace hash_internal {
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
+    namespace hash_internal
+    {
 
-// Hash function for a byte array. A 64-bit seed and a set of five 64-bit
-// integers are hashed into the result.
-//
-// To allow all hashable types (including string_view and Span) to depend on
-// this algorithm, we keep the API low-level, with as few dependencies as
-// possible.
-uint64_t LowLevelHash(const void* data, size_t len, uint64_t seed,
-                      const uint64_t salt[5]);
+        // Hash function for a byte array. A 64-bit seed and a set of five 64-bit
+        // integers are hashed into the result.
+        //
+        // To allow all hashable types (including string_view and Span) to depend on
+        // this algorithm, we keep the API low-level, with as few dependencies as
+        // possible.
+        uint64_t LowLevelHash(const void* data, size_t len, uint64_t seed, const uint64_t salt[5]);
 
-}  // namespace hash_internal
-ABSL_NAMESPACE_END
+    }  // namespace hash_internal
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_HASH_INTERNAL_LOW_LEVEL_HASH_H_

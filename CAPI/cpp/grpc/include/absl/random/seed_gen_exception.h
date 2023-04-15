@@ -30,26 +30,29 @@
 
 #include "absl/base/config.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
 
-//------------------------------------------------------------------------------
-// SeedGenException
-//------------------------------------------------------------------------------
-class SeedGenException : public std::exception {
- public:
-  SeedGenException() = default;
-  ~SeedGenException() override;
-  const char* what() const noexcept override;
-};
+    //------------------------------------------------------------------------------
+    // SeedGenException
+    //------------------------------------------------------------------------------
+    class SeedGenException : public std::exception
+    {
+    public:
+        SeedGenException() = default;
+        ~SeedGenException() override;
+        const char* what() const noexcept override;
+    };
 
-namespace random_internal {
+    namespace random_internal
+    {
 
-// throw delegator
-[[noreturn]] void ThrowSeedGenException();
+        // throw delegator
+        [[noreturn]] void ThrowSeedGenException();
 
-}  // namespace random_internal
-ABSL_NAMESPACE_END
+    }  // namespace random_internal
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_RANDOM_SEED_GEN_EXCEPTION_H_

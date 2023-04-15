@@ -41,7 +41,8 @@
  */
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* Platform-specific type declarations of gpr_mu and gpr_cv.   */

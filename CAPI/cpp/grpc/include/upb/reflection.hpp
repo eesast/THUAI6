@@ -28,9 +28,10 @@
 
 #include "upb/reflection.h"
 
-namespace upb {
+namespace upb
+{
 
-typedef upb_MessageValue MessageValue;
+    typedef upb_MessageValue MessageValue;
 
 }  // namespace upb
 

@@ -25,22 +25,28 @@
 #include <grpcpp/impl/server_builder_option.h>
 #include <grpcpp/support/config.h>
 
-namespace grpc {
+namespace grpc
+{
 
-class HealthCheckServiceServerBuilderOption : public ServerBuilderOption {
- public:
-  /// The ownership of \a hc will be taken and transferred to the grpc server.
-  /// To explicitly disable default service, pass in a nullptr.
-  explicit HealthCheckServiceServerBuilderOption(
-      std::unique_ptr<HealthCheckServiceInterface> hc);
-  ~HealthCheckServiceServerBuilderOption() override {}
-  void UpdateArguments(ChannelArguments* args) override;
-  void UpdatePlugins(
-      std::vector<std::unique_ptr<ServerBuilderPlugin>>* plugins) override;
+    class HealthCheckServiceServerBuilderOption : public ServerBuilderOption
+    {
+    public:
+        /// The ownership of \a hc will be taken and transferred to the grpc server.
+        /// To explicitly disable default service, pass in a nullptr.
+        explicit HealthCheckServiceServerBuilderOption(
+            std::unique_ptr<HealthCheckServiceInterface> hc
+        );
+        ~HealthCheckServiceServerBuilderOption() override
+        {
+        }
+        void UpdateArguments(ChannelArguments* args) override;
+        void UpdatePlugins(
+            std::vector<std::unique_ptr<ServerBuilderPlugin>>* plugins
+        ) override;
 
- private:
-  std::unique_ptr<HealthCheckServiceInterface> hc_;
-};
+    private:
+        std::unique_ptr<HealthCheckServiceInterface> hc_;
+    };
 
 }  // namespace grpc
 

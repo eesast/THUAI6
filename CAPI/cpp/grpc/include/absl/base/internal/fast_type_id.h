@@ -19,32 +19,36 @@
 
 #include "absl/base/config.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
-namespace base_internal {
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
+    namespace base_internal
+    {
 
-template <typename Type>
-struct FastTypeTag {
-  constexpr static char dummy_var = 0;
-};
+        template<typename Type>
+        struct FastTypeTag
+        {
+            constexpr static char dummy_var = 0;
+        };
 
 #ifdef ABSL_INTERNAL_NEED_REDUNDANT_CONSTEXPR_DECL
-template <typename Type>
-constexpr char FastTypeTag<Type>::dummy_var;
+        template<typename Type>
+        constexpr char FastTypeTag<Type>::dummy_var;
 #endif
 
-// FastTypeId<Type>() evaluates at compile/link-time to a unique pointer for the
-// passed-in type. These are meant to be good match for keys into maps or
-// straight up comparisons.
-using FastTypeIdType = const void*;
+        // FastTypeId<Type>() evaluates at compile/link-time to a unique pointer for the
+        // passed-in type. These are meant to be good match for keys into maps or
+        // straight up comparisons.
+        using FastTypeIdType = const void*;
 
-template <typename Type>
-constexpr inline FastTypeIdType FastTypeId() {
-  return &FastTypeTag<Type>::dummy_var;
-}
+        template<typename Type>
+        constexpr inline FastTypeIdType FastTypeId()
+        {
+            return &FastTypeTag<Type>::dummy_var;
+        }
 
-}  // namespace base_internal
-ABSL_NAMESPACE_END
+    }  // namespace base_internal
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_BASE_INTERNAL_FAST_TYPE_ID_H_

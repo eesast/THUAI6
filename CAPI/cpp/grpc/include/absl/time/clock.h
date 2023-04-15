@@ -25,32 +25,33 @@
 #include "absl/base/macros.h"
 #include "absl/time/time.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
 
-// Now()
-//
-// Returns the current time, expressed as an `absl::Time` absolute time value.
-absl::Time Now();
+    // Now()
+    //
+    // Returns the current time, expressed as an `absl::Time` absolute time value.
+    absl::Time Now();
 
-// GetCurrentTimeNanos()
-//
-// Returns the current time, expressed as a count of nanoseconds since the Unix
-// Epoch (https://en.wikipedia.org/wiki/Unix_time). Prefer `absl::Now()` instead
-// for all but the most performance-sensitive cases (i.e. when you are calling
-// this function hundreds of thousands of times per second).
-int64_t GetCurrentTimeNanos();
+    // GetCurrentTimeNanos()
+    //
+    // Returns the current time, expressed as a count of nanoseconds since the Unix
+    // Epoch (https://en.wikipedia.org/wiki/Unix_time). Prefer `absl::Now()` instead
+    // for all but the most performance-sensitive cases (i.e. when you are calling
+    // this function hundreds of thousands of times per second).
+    int64_t GetCurrentTimeNanos();
 
-// SleepFor()
-//
-// Sleeps for the specified duration, expressed as an `absl::Duration`.
-//
-// Notes:
-// * Signal interruptions will not reduce the sleep duration.
-// * Returns immediately when passed a nonpositive duration.
-void SleepFor(absl::Duration duration);
+    // SleepFor()
+    //
+    // Sleeps for the specified duration, expressed as an `absl::Duration`.
+    //
+    // Notes:
+    // * Signal interruptions will not reduce the sleep duration.
+    // * Returns immediately when passed a nonpositive duration.
+    void SleepFor(absl::Duration duration);
 
-ABSL_NAMESPACE_END
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 // -----------------------------------------------------------------------------
@@ -63,12 +64,15 @@ ABSL_NAMESPACE_END
 // --detect-odr-violations ignores symbols not mangled with C++ names.
 // By changing our extension points to be extern "C", we dodge this
 // check.
-extern "C" {
-void ABSL_INTERNAL_C_SYMBOL(AbslInternalSleepFor)(absl::Duration duration);
+extern "C"
+{
+    void ABSL_INTERNAL_C_SYMBOL(AbslInternalSleepFor)(absl::Duration duration);
 }  // extern "C"
 
-inline void absl::SleepFor(absl::Duration duration) {
-  ABSL_INTERNAL_C_SYMBOL(AbslInternalSleepFor)(duration);
+inline void absl::SleepFor(absl::Duration duration)
+{
+    ABSL_INTERNAL_C_SYMBOL(AbslInternalSleepFor)
+    (duration);
 }
 
 #endif  // ABSL_TIME_CLOCK_H_

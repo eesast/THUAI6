@@ -44,7 +44,7 @@ namespace Constants
     SCCI int basicStudentAlertnessRadius = 15 * numOfGridPerCell;
     SCCI int basicTrickerAlertnessRadius = 17 * numOfGridPerCell;
     SCCI int basicStudentViewRange = 10 * numOfGridPerCell;
-    SCCI int basicTrickerViewRange = 15 * numOfGridPerCell;
+    SCCI int basicTrickerViewRange = 13 * numOfGridPerCell;
     SCCI int PinningDownRange = 5 * numOfGridPerCell;
 
     SCCI int maxNumOfProp = 3;  // 人物道具栏容量
@@ -218,8 +218,13 @@ namespace Constants
 
     SCCI int timeOfStunnedWhenJumpyDumpty = 3070;
 
-    SCCI double addedTimeOfSpeedWhenInspire = 0.6;
+    SCCI double addedTimeOfSpeedWhenInspire = 1.6;
     SCCI int timeOfAddingSpeedWhenInspire = 6000;
+
+    SCCI int addHpWhenEncourage = basicHp / 4;
+
+    SCCI int checkIntervalWhenShowTime = 200;
+    SCCI int addAddictionPer100msWhenShowTime = 300;
     struct CanBeginToCharge
     {
         SCCI int skillCD = commonSkillCD * 2;

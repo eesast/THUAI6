@@ -19,25 +19,37 @@
 
 #include "absl/base/config.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
-namespace base_internal {
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
+    namespace base_internal
+    {
 
-// `ErrnoSaver` captures the value of `errno` upon construction and restores it
-// upon deletion.  It is used in low-level code and must be super fast.  Do not
-// add instrumentation, even in debug modes.
-class ErrnoSaver {
- public:
-  ErrnoSaver() : saved_errno_(errno) {}
-  ~ErrnoSaver() { errno = saved_errno_; }
-  int operator()() const { return saved_errno_; }
+        // `ErrnoSaver` captures the value of `errno` upon construction and restores it
+        // upon deletion.  It is used in low-level code and must be super fast.  Do not
+        // add instrumentation, even in debug modes.
+        class ErrnoSaver
+        {
+        public:
+            ErrnoSaver() :
+                saved_errno_(errno)
+            {
+            }
+            ~ErrnoSaver()
+            {
+                errno = saved_errno_;
+            }
+            int operator()() const
+            {
+                return saved_errno_;
+            }
 
- private:
-  const int saved_errno_;
-};
+        private:
+            const int saved_errno_;
+        };
 
-}  // namespace base_internal
-ABSL_NAMESPACE_END
+    }  // namespace base_internal
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_BASE_INTERNAL_ERRNO_SAVER_H_

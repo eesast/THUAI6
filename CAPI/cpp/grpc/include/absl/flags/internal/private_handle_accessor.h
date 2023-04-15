@@ -24,38 +24,38 @@
 #include "absl/flags/internal/commandlineflag.h"
 #include "absl/strings/string_view.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
-namespace flags_internal {
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
+    namespace flags_internal
+    {
 
-// This class serves as a trampoline to access private methods of
-// CommandLineFlag. This class is intended for use exclusively internally inside
-// of the Abseil Flags implementation.
-class PrivateHandleAccessor {
- public:
-  // Access to CommandLineFlag::TypeId.
-  static FlagFastTypeId TypeId(const CommandLineFlag& flag);
+        // This class serves as a trampoline to access private methods of
+        // CommandLineFlag. This class is intended for use exclusively internally inside
+        // of the Abseil Flags implementation.
+        class PrivateHandleAccessor
+        {
+        public:
+            // Access to CommandLineFlag::TypeId.
+            static FlagFastTypeId TypeId(const CommandLineFlag& flag);
 
-  // Access to CommandLineFlag::SaveState.
-  static std::unique_ptr<FlagStateInterface> SaveState(CommandLineFlag& flag);
+            // Access to CommandLineFlag::SaveState.
+            static std::unique_ptr<FlagStateInterface> SaveState(CommandLineFlag& flag);
 
-  // Access to CommandLineFlag::IsSpecifiedOnCommandLine.
-  static bool IsSpecifiedOnCommandLine(const CommandLineFlag& flag);
+            // Access to CommandLineFlag::IsSpecifiedOnCommandLine.
+            static bool IsSpecifiedOnCommandLine(const CommandLineFlag& flag);
 
-  // Access to CommandLineFlag::ValidateInputValue.
-  static bool ValidateInputValue(const CommandLineFlag& flag,
-                                 absl::string_view value);
+            // Access to CommandLineFlag::ValidateInputValue.
+            static bool ValidateInputValue(const CommandLineFlag& flag, absl::string_view value);
 
-  // Access to CommandLineFlag::CheckDefaultValueParsingRoundtrip.
-  static void CheckDefaultValueParsingRoundtrip(const CommandLineFlag& flag);
+            // Access to CommandLineFlag::CheckDefaultValueParsingRoundtrip.
+            static void CheckDefaultValueParsingRoundtrip(const CommandLineFlag& flag);
 
-  static bool ParseFrom(CommandLineFlag& flag, absl::string_view value,
-                        flags_internal::FlagSettingMode set_mode,
-                        flags_internal::ValueSource source, std::string& error);
-};
+            static bool ParseFrom(CommandLineFlag& flag, absl::string_view value, flags_internal::FlagSettingMode set_mode, flags_internal::ValueSource source, std::string& error);
+        };
 
-}  // namespace flags_internal
-ABSL_NAMESPACE_END
+    }  // namespace flags_internal
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_FLAGS_INTERNAL_PRIVATE_HANDLE_ACCESSOR_H_

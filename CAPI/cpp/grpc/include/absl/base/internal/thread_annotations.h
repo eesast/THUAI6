@@ -39,9 +39,9 @@
 #define ABSL_BASE_INTERNAL_THREAD_ANNOTATIONS_H_
 
 #if defined(__clang__)
-#define THREAD_ANNOTATION_ATTRIBUTE__(x)   __attribute__((x))
+#define THREAD_ANNOTATION_ATTRIBUTE__(x) __attribute__((x))
 #else
-#define THREAD_ANNOTATION_ATTRIBUTE__(x)   // no-op
+#define THREAD_ANNOTATION_ATTRIBUTE__(x)  // no-op
 #endif
 
 // GUARDED_BY()
@@ -101,10 +101,10 @@
 //   Mutex m1_;
 //   Mutex m2_ ACQUIRED_AFTER(m1_);
 #define ACQUIRED_AFTER(...) \
-  THREAD_ANNOTATION_ATTRIBUTE__(acquired_after(__VA_ARGS__))
+    THREAD_ANNOTATION_ATTRIBUTE__(acquired_after(__VA_ARGS__))
 
 #define ACQUIRED_BEFORE(...) \
-  THREAD_ANNOTATION_ATTRIBUTE__(acquired_before(__VA_ARGS__))
+    THREAD_ANNOTATION_ATTRIBUTE__(acquired_before(__VA_ARGS__))
 
 // EXCLUSIVE_LOCKS_REQUIRED() / SHARED_LOCKS_REQUIRED()
 //
@@ -130,10 +130,10 @@
 //   void foo() EXCLUSIVE_LOCKS_REQUIRED(mu1, mu2) { ... }
 //   void bar() const SHARED_LOCKS_REQUIRED(mu1, mu2) { ... }
 #define EXCLUSIVE_LOCKS_REQUIRED(...) \
-  THREAD_ANNOTATION_ATTRIBUTE__(exclusive_locks_required(__VA_ARGS__))
+    THREAD_ANNOTATION_ATTRIBUTE__(exclusive_locks_required(__VA_ARGS__))
 
 #define SHARED_LOCKS_REQUIRED(...) \
-  THREAD_ANNOTATION_ATTRIBUTE__(shared_locks_required(__VA_ARGS__))
+    THREAD_ANNOTATION_ATTRIBUTE__(shared_locks_required(__VA_ARGS__))
 
 // LOCKS_EXCLUDED()
 //
@@ -141,7 +141,7 @@
 // cannot be held when calling this function (as Abseil's `Mutex` locks are
 // non-reentrant).
 #define LOCKS_EXCLUDED(...) \
-  THREAD_ANNOTATION_ATTRIBUTE__(locks_excluded(__VA_ARGS__))
+    THREAD_ANNOTATION_ATTRIBUTE__(locks_excluded(__VA_ARGS__))
 
 // LOCK_RETURNED()
 //
@@ -149,13 +149,13 @@
 // a public getter method that returns a pointer to a private mutex should
 // be annotated with LOCK_RETURNED.
 #define LOCK_RETURNED(x) \
-  THREAD_ANNOTATION_ATTRIBUTE__(lock_returned(x))
+    THREAD_ANNOTATION_ATTRIBUTE__(lock_returned(x))
 
 // LOCKABLE
 //
 // Documents if a class/type is a lockable type (such as the `Mutex` class).
 #define LOCKABLE \
-  THREAD_ANNOTATION_ATTRIBUTE__(lockable)
+    THREAD_ANNOTATION_ATTRIBUTE__(lockable)
 
 // SCOPED_LOCKABLE
 //
@@ -165,28 +165,28 @@
 // arguments; the analysis will assume that the destructor unlocks whatever the
 // constructor locked.
 #define SCOPED_LOCKABLE \
-  THREAD_ANNOTATION_ATTRIBUTE__(scoped_lockable)
+    THREAD_ANNOTATION_ATTRIBUTE__(scoped_lockable)
 
 // EXCLUSIVE_LOCK_FUNCTION()
 //
 // Documents functions that acquire a lock in the body of a function, and do
 // not release it.
 #define EXCLUSIVE_LOCK_FUNCTION(...) \
-  THREAD_ANNOTATION_ATTRIBUTE__(exclusive_lock_function(__VA_ARGS__))
+    THREAD_ANNOTATION_ATTRIBUTE__(exclusive_lock_function(__VA_ARGS__))
 
 // SHARED_LOCK_FUNCTION()
 //
 // Documents functions that acquire a shared (reader) lock in the body of a
 // function, and do not release it.
 #define SHARED_LOCK_FUNCTION(...) \
-  THREAD_ANNOTATION_ATTRIBUTE__(shared_lock_function(__VA_ARGS__))
+    THREAD_ANNOTATION_ATTRIBUTE__(shared_lock_function(__VA_ARGS__))
 
 // UNLOCK_FUNCTION()
 //
 // Documents functions that expect a lock to be held on entry to the function,
 // and release it in the body of the function.
 #define UNLOCK_FUNCTION(...) \
-  THREAD_ANNOTATION_ATTRIBUTE__(unlock_function(__VA_ARGS__))
+    THREAD_ANNOTATION_ATTRIBUTE__(unlock_function(__VA_ARGS__))
 
 // EXCLUSIVE_TRYLOCK_FUNCTION() / SHARED_TRYLOCK_FUNCTION()
 //
@@ -197,20 +197,20 @@
 // argument specifies the mutex that is locked on success. If unspecified, this
 // mutex is assumed to be `this`.
 #define EXCLUSIVE_TRYLOCK_FUNCTION(...) \
-  THREAD_ANNOTATION_ATTRIBUTE__(exclusive_trylock_function(__VA_ARGS__))
+    THREAD_ANNOTATION_ATTRIBUTE__(exclusive_trylock_function(__VA_ARGS__))
 
 #define SHARED_TRYLOCK_FUNCTION(...) \
-  THREAD_ANNOTATION_ATTRIBUTE__(shared_trylock_function(__VA_ARGS__))
+    THREAD_ANNOTATION_ATTRIBUTE__(shared_trylock_function(__VA_ARGS__))
 
 // ASSERT_EXCLUSIVE_LOCK() / ASSERT_SHARED_LOCK()
 //
 // Documents functions that dynamically check to see if a lock is held, and fail
 // if it is not held.
 #define ASSERT_EXCLUSIVE_LOCK(...) \
-  THREAD_ANNOTATION_ATTRIBUTE__(assert_exclusive_lock(__VA_ARGS__))
+    THREAD_ANNOTATION_ATTRIBUTE__(assert_exclusive_lock(__VA_ARGS__))
 
 #define ASSERT_SHARED_LOCK(...) \
-  THREAD_ANNOTATION_ATTRIBUTE__(assert_shared_lock(__VA_ARGS__))
+    THREAD_ANNOTATION_ATTRIBUTE__(assert_shared_lock(__VA_ARGS__))
 
 // NO_THREAD_SAFETY_ANALYSIS
 //
@@ -218,7 +218,7 @@
 // This annotation is used to mark functions that are known to be correct, but
 // the locking behavior is more complicated than the analyzer can handle.
 #define NO_THREAD_SAFETY_ANALYSIS \
-  THREAD_ANNOTATION_ATTRIBUTE__(no_thread_safety_analysis)
+    THREAD_ANNOTATION_ATTRIBUTE__(no_thread_safety_analysis)
 
 //------------------------------------------------------------------------------
 // Tool-Supplied Annotations
@@ -239,7 +239,7 @@
 // that are incorrect and need to be fixed.  It is used by automated tools to
 // avoid breaking the build when the analysis is updated.
 // Code owners are expected to eventually fix the routine.
-#define NO_THREAD_SAFETY_ANALYSIS_FIXME  NO_THREAD_SAFETY_ANALYSIS
+#define NO_THREAD_SAFETY_ANALYSIS_FIXME NO_THREAD_SAFETY_ANALYSIS
 
 // Similar to NO_THREAD_SAFETY_ANALYSIS_FIXME, this macro marks a GUARDED_BY
 // annotation that needs to be fixed, because it is producing thread safety
@@ -251,20 +251,22 @@
 // but the compiler cannot confirm that.
 #define TS_UNCHECKED_READ(x) thread_safety_analysis::ts_unchecked_read(x)
 
+namespace thread_safety_analysis
+{
 
-namespace thread_safety_analysis {
+    // Takes a reference to a guarded data member, and returns an unguarded
+    // reference.
+    template<typename T>
+    inline const T& ts_unchecked_read(const T& v) NO_THREAD_SAFETY_ANALYSIS
+    {
+        return v;
+    }
 
-// Takes a reference to a guarded data member, and returns an unguarded
-// reference.
-template <typename T>
-inline const T& ts_unchecked_read(const T& v) NO_THREAD_SAFETY_ANALYSIS {
-  return v;
-}
-
-template <typename T>
-inline T& ts_unchecked_read(T& v) NO_THREAD_SAFETY_ANALYSIS {
-  return v;
-}
+    template<typename T>
+    inline T& ts_unchecked_read(T& v) NO_THREAD_SAFETY_ANALYSIS
+    {
+        return v;
+    }
 
 }  // namespace thread_safety_analysis
 

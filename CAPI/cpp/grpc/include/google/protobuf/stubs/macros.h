@@ -31,63 +31,65 @@
 #ifndef GOOGLE_PROTOBUF_MACROS_H__
 #define GOOGLE_PROTOBUF_MACROS_H__
 
-namespace google {
-namespace protobuf {
+namespace google
+{
+    namespace protobuf
+    {
 
 #undef GOOGLE_DISALLOW_EVIL_CONSTRUCTORS
 #define GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(TypeName) \
-  TypeName(const TypeName&) = delete;               \
-  void operator=(const TypeName&) = delete
+    TypeName(const TypeName&) = delete;             \
+    void operator=(const TypeName&) = delete
 
 #undef GOOGLE_DISALLOW_IMPLICIT_CONSTRUCTORS
 #define GOOGLE_DISALLOW_IMPLICIT_CONSTRUCTORS(TypeName) \
-  TypeName() = delete;                                  \
-  TypeName(const TypeName&) = delete;                   \
-  void operator=(const TypeName&) = delete
+    TypeName() = delete;                                \
+    TypeName(const TypeName&) = delete;                 \
+    void operator=(const TypeName&) = delete
 
-// ===================================================================
-// from google3/base/basictypes.h
+        // ===================================================================
+        // from google3/base/basictypes.h
 
-// The GOOGLE_ARRAYSIZE(arr) macro returns the # of elements in an array arr.
-// The expression is a compile-time constant, and therefore can be
-// used in defining new arrays, for example.
-//
-// GOOGLE_ARRAYSIZE catches a few type errors.  If you see a compiler error
-//
-//   "warning: division by zero in ..."
-//
-// when using GOOGLE_ARRAYSIZE, you are (wrongfully) giving it a pointer.
-// You should only use GOOGLE_ARRAYSIZE on statically allocated arrays.
-//
-// The following comments are on the implementation details, and can
-// be ignored by the users.
-//
-// ARRAYSIZE(arr) works by inspecting sizeof(arr) (the # of bytes in
-// the array) and sizeof(*(arr)) (the # of bytes in one array
-// element).  If the former is divisible by the latter, perhaps arr is
-// indeed an array, in which case the division result is the # of
-// elements in the array.  Otherwise, arr cannot possibly be an array,
-// and we generate a compiler error to prevent the code from
-// compiling.
-//
-// Since the size of bool is implementation-defined, we need to cast
-// !(sizeof(a) & sizeof(*(a))) to size_t in order to ensure the final
-// result has type size_t.
-//
-// This macro is not perfect as it wrongfully accepts certain
-// pointers, namely where the pointer size is divisible by the pointee
-// size.  Since all our code has to go through a 32-bit compiler,
-// where a pointer is 4 bytes, this means all pointers to a type whose
-// size is 3 or greater than 4 will be (righteously) rejected.
-//
-// Kudos to Jorg Brown for this simple and elegant implementation.
+        // The GOOGLE_ARRAYSIZE(arr) macro returns the # of elements in an array arr.
+        // The expression is a compile-time constant, and therefore can be
+        // used in defining new arrays, for example.
+        //
+        // GOOGLE_ARRAYSIZE catches a few type errors.  If you see a compiler error
+        //
+        //   "warning: division by zero in ..."
+        //
+        // when using GOOGLE_ARRAYSIZE, you are (wrongfully) giving it a pointer.
+        // You should only use GOOGLE_ARRAYSIZE on statically allocated arrays.
+        //
+        // The following comments are on the implementation details, and can
+        // be ignored by the users.
+        //
+        // ARRAYSIZE(arr) works by inspecting sizeof(arr) (the # of bytes in
+        // the array) and sizeof(*(arr)) (the # of bytes in one array
+        // element).  If the former is divisible by the latter, perhaps arr is
+        // indeed an array, in which case the division result is the # of
+        // elements in the array.  Otherwise, arr cannot possibly be an array,
+        // and we generate a compiler error to prevent the code from
+        // compiling.
+        //
+        // Since the size of bool is implementation-defined, we need to cast
+        // !(sizeof(a) & sizeof(*(a))) to size_t in order to ensure the final
+        // result has type size_t.
+        //
+        // This macro is not perfect as it wrongfully accepts certain
+        // pointers, namely where the pointer size is divisible by the pointee
+        // size.  Since all our code has to go through a 32-bit compiler,
+        // where a pointer is 4 bytes, this means all pointers to a type whose
+        // size is 3 or greater than 4 will be (righteously) rejected.
+        //
+        // Kudos to Jorg Brown for this simple and elegant implementation.
 
 #undef GOOGLE_ARRAYSIZE
-#define GOOGLE_ARRAYSIZE(a) \
-  ((sizeof(a) / sizeof(*(a))) / \
-   static_cast<size_t>(!(sizeof(a) % sizeof(*(a)))))
+#define GOOGLE_ARRAYSIZE(a)       \
+    ((sizeof(a) / sizeof(*(a))) / \
+     static_cast<size_t>(!(sizeof(a) % sizeof(*(a)))))
 
-}  // namespace protobuf
+    }  // namespace protobuf
 }  // namespace google
 
 #endif  // GOOGLE_PROTOBUF_MACROS_H__

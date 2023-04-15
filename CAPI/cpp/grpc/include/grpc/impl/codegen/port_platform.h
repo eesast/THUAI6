@@ -602,7 +602,7 @@ typedef unsigned __int64 uint64_t;
 #ifndef GPR_PRINT_FORMAT_CHECK
 #ifdef __GNUC__
 #define GPR_PRINT_FORMAT_CHECK(FORMAT_STR, ARGS) \
-  __attribute__((format(printf, FORMAT_STR, ARGS)))
+    __attribute__((format(printf, FORMAT_STR, ARGS)))
 #else
 #define GPR_PRINT_FORMAT_CHECK(FORMAT_STR, ARGS)
 #endif
@@ -634,18 +634,19 @@ typedef unsigned __int64 uint64_t;
 #define GPR_UNREACHABLE_CODE(STATEMENT)
 #else
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
-extern void gpr_unreachable_code(const char* reason, const char* file,
-                                 int line) GPR_ATTRIBUTE_NORETURN;
+    extern void gpr_unreachable_code(const char* reason, const char* file, int line) GPR_ATTRIBUTE_NORETURN;
 #ifdef __cplusplus
 }
 #endif
-#define GPR_UNREACHABLE_CODE(STATEMENT)                   \
-  do {                                                    \
-    gpr_unreachable_code(#STATEMENT, __FILE__, __LINE__); \
-    STATEMENT;                                            \
-  } while (0)
+#define GPR_UNREACHABLE_CODE(STATEMENT)                       \
+    do                                                        \
+    {                                                         \
+        gpr_unreachable_code(#STATEMENT, __FILE__, __LINE__); \
+        STATEMENT;                                            \
+    } while (0)
 #endif /* GPR_FORBID_UNREACHABLE_CODE */
 
 #ifndef GPRAPI

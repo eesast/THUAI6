@@ -39,42 +39,48 @@
 #include <cstddef>
 #include <new>
 
-
-namespace google {
-namespace protobuf {
-namespace internal {
-inline void SizedDelete(void* p, size_t size) {
+namespace google
+{
+    namespace protobuf
+    {
+        namespace internal
+        {
+            inline void SizedDelete(void* p, size_t size)
+            {
 #if defined(__cpp_sized_deallocation)
-  ::operator delete(p, size);
+                ::operator delete(p, size);
 #else
-  ::operator delete(p);
+                ::operator delete(p);
 #endif
-}
-inline void SizedArrayDelete(void* p, size_t size) {
+            }
+            inline void SizedArrayDelete(void* p, size_t size)
+            {
 #if defined(__cpp_sized_deallocation)
-  ::operator delete[](p, size);
+                ::operator delete[](p, size);
 #else
-  ::operator delete[](p);
+                ::operator delete[](p);
 #endif
-}
+            }
 
-// Tag type used to invoke the constinit constructor overload of classes
-// such as ArenaStringPtr and MapFieldBase. Such constructors are internal
-// implementation details of the library.
-struct ConstantInitialized {
-  explicit ConstantInitialized() = default;
-};
+            // Tag type used to invoke the constinit constructor overload of classes
+            // such as ArenaStringPtr and MapFieldBase. Such constructors are internal
+            // implementation details of the library.
+            struct ConstantInitialized
+            {
+                explicit ConstantInitialized() = default;
+            };
 
-// Tag type used to invoke the arena constructor overload of classes such
-// as ExtensionSet and MapFieldLite in aggregate initialization. These
-// classes typically don't have move/copy constructors, which rules out
-// explicit initialization in pre-C++17.
-struct ArenaInitialized {
-  explicit ArenaInitialized() = default;
-};
+            // Tag type used to invoke the arena constructor overload of classes such
+            // as ExtensionSet and MapFieldLite in aggregate initialization. These
+            // classes typically don't have move/copy constructors, which rules out
+            // explicit initialization in pre-C++17.
+            struct ArenaInitialized
+            {
+                explicit ArenaInitialized() = default;
+            };
 
-}  // namespace internal
-}  // namespace protobuf
+        }  // namespace internal
+    }      // namespace protobuf
 }  // namespace google
 
 #endif  // GOOGLE_PROTOBUF_PORT_H__

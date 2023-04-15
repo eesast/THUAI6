@@ -21,43 +21,43 @@
 
 // IWYU pragma: private, include <grpcpp/impl/serialization_traits.h>
 
-namespace grpc {
+namespace grpc
+{
 
-/// Defines how to serialize and deserialize some type.
-///
-/// Used for hooking different message serialization API's into GRPC.
-/// Each SerializationTraits<Message> implementation must provide the
-/// following functions:
-/// 1.  static Status Serialize(const Message& msg,
-///                             ByteBuffer* buffer,
-///                             bool* own_buffer);
-///     OR
-///     static Status Serialize(const Message& msg,
-///                             grpc_byte_buffer** buffer,
-///                             bool* own_buffer);
-///     The former is preferred; the latter is deprecated
-///
-/// 2.  static Status Deserialize(ByteBuffer* buffer,
-///                               Message* msg);
-///     OR
-///     static Status Deserialize(grpc_byte_buffer* buffer,
-///                               Message* msg);
-///     The former is preferred; the latter is deprecated
-///
-/// Serialize is required to convert message to a ByteBuffer, and
-/// return that byte buffer through *buffer. *own_buffer should
-/// be set to true if the caller owns said byte buffer, or false if
-/// ownership is retained elsewhere.
-///
-/// Deserialize is required to convert buffer into the message stored at
-/// msg. max_receive_message_size is passed in as a bound on the maximum
-/// number of message bytes Deserialize should accept.
-///
-/// Both functions return a Status, allowing them to explain what went
-/// wrong if required.
-template <class Message,
-          class UnusedButHereForPartialTemplateSpecialization = void>
-class SerializationTraits;
+    /// Defines how to serialize and deserialize some type.
+    ///
+    /// Used for hooking different message serialization API's into GRPC.
+    /// Each SerializationTraits<Message> implementation must provide the
+    /// following functions:
+    /// 1.  static Status Serialize(const Message& msg,
+    ///                             ByteBuffer* buffer,
+    ///                             bool* own_buffer);
+    ///     OR
+    ///     static Status Serialize(const Message& msg,
+    ///                             grpc_byte_buffer** buffer,
+    ///                             bool* own_buffer);
+    ///     The former is preferred; the latter is deprecated
+    ///
+    /// 2.  static Status Deserialize(ByteBuffer* buffer,
+    ///                               Message* msg);
+    ///     OR
+    ///     static Status Deserialize(grpc_byte_buffer* buffer,
+    ///                               Message* msg);
+    ///     The former is preferred; the latter is deprecated
+    ///
+    /// Serialize is required to convert message to a ByteBuffer, and
+    /// return that byte buffer through *buffer. *own_buffer should
+    /// be set to true if the caller owns said byte buffer, or false if
+    /// ownership is retained elsewhere.
+    ///
+    /// Deserialize is required to convert buffer into the message stored at
+    /// msg. max_receive_message_size is passed in as a bound on the maximum
+    /// number of message bytes Deserialize should accept.
+    ///
+    /// Both functions return a Status, allowing them to explain what went
+    /// wrong if required.
+    template<class Message, class UnusedButHereForPartialTemplateSpecialization = void>
+    class SerializationTraits;
 
 }  // namespace grpc
 

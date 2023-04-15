@@ -19,7 +19,6 @@ bool Communication::Move(int64_t time, double angle, int64_t playerID)
     protobuf::MoveRes moveResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufMove(time, angle, playerID);
-    std::cout << "Move request sent" << std::endl;
     auto status = THUAI6Stub->Move(&context, request, &moveResult);
     if (status.ok())
         return moveResult.act_success();

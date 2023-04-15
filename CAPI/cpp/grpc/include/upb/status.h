@@ -34,28 +34,28 @@
 #include "upb/port_def.inc"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #define _kUpb_Status_MaxMessage 127
 
-typedef struct {
-  bool ok;
-  char msg[_kUpb_Status_MaxMessage]; /* Error message; NULL-terminated. */
-} upb_Status;
+    typedef struct
+    {
+        bool ok;
+        char msg[_kUpb_Status_MaxMessage]; /* Error message; NULL-terminated. */
+    } upb_Status;
 
-const char* upb_Status_ErrorMessage(const upb_Status* status);
-bool upb_Status_IsOk(const upb_Status* status);
+    const char* upb_Status_ErrorMessage(const upb_Status* status);
+    bool upb_Status_IsOk(const upb_Status* status);
 
-/* These are no-op if |status| is NULL. */
-void upb_Status_Clear(upb_Status* status);
-void upb_Status_SetErrorMessage(upb_Status* status, const char* msg);
-void upb_Status_SetErrorFormat(upb_Status* status, const char* fmt, ...)
-    UPB_PRINTF(2, 3);
-void upb_Status_VSetErrorFormat(upb_Status* status, const char* fmt,
-                                va_list args) UPB_PRINTF(2, 0);
-void upb_Status_VAppendErrorFormat(upb_Status* status, const char* fmt,
-                                   va_list args) UPB_PRINTF(2, 0);
+    /* These are no-op if |status| is NULL. */
+    void upb_Status_Clear(upb_Status* status);
+    void upb_Status_SetErrorMessage(upb_Status* status, const char* msg);
+    void upb_Status_SetErrorFormat(upb_Status* status, const char* fmt, ...)
+        UPB_PRINTF(2, 3);
+    void upb_Status_VSetErrorFormat(upb_Status* status, const char* fmt, va_list args) UPB_PRINTF(2, 0);
+    void upb_Status_VAppendErrorFormat(upb_Status* status, const char* fmt, va_list args) UPB_PRINTF(2, 0);
 
 #include "upb/port_undef.inc"
 

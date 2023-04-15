@@ -49,111 +49,120 @@
 #include "absl/base/config.h"
 #include "absl/base/internal/unscaledcycleclock.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
-namespace base_internal {
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
+    namespace base_internal
+    {
 
-using CycleClockSourceFunc = int64_t (*)();
+        using CycleClockSourceFunc = int64_t (*)();
 
-// -----------------------------------------------------------------------------
-// CycleClock
-// -----------------------------------------------------------------------------
-class CycleClock {
- public:
-  // CycleClock::Now()
-  //
-  // Returns the value of a cycle counter that counts at a rate that is
-  // approximately constant.
-  static int64_t Now();
+        // -----------------------------------------------------------------------------
+        // CycleClock
+        // -----------------------------------------------------------------------------
+        class CycleClock
+        {
+        public:
+            // CycleClock::Now()
+            //
+            // Returns the value of a cycle counter that counts at a rate that is
+            // approximately constant.
+            static int64_t Now();
 
-  // CycleClock::Frequency()
-  //
-  // Returns the amount by which `CycleClock::Now()` increases per second. Note
-  // that this value may not necessarily match the core CPU clock frequency.
-  static double Frequency();
+            // CycleClock::Frequency()
+            //
+            // Returns the amount by which `CycleClock::Now()` increases per second. Note
+            // that this value may not necessarily match the core CPU clock frequency.
+            static double Frequency();
 
- private:
+        private:
 #if ABSL_USE_UNSCALED_CYCLECLOCK
-  static CycleClockSourceFunc LoadCycleClockSource();
+            static CycleClockSourceFunc LoadCycleClockSource();
 
 #ifdef NDEBUG
 #ifdef ABSL_INTERNAL_UNSCALED_CYCLECLOCK_FREQUENCY_IS_CPU_FREQUENCY
-  // Not debug mode and the UnscaledCycleClock frequency is the CPU
-  // frequency.  Scale the CycleClock to prevent overflow if someone
-  // tries to represent the time as cycles since the Unix epoch.
-  static constexpr int32_t kShift = 1;
+            // Not debug mode and the UnscaledCycleClock frequency is the CPU
+            // frequency.  Scale the CycleClock to prevent overflow if someone
+            // tries to represent the time as cycles since the Unix epoch.
+            static constexpr int32_t kShift = 1;
 #else
-  // Not debug mode and the UnscaledCycleClock isn't operating at the
-  // raw CPU frequency. There is no need to do any scaling, so don't
-  // needlessly sacrifice precision.
-  static constexpr int32_t kShift = 0;
+            // Not debug mode and the UnscaledCycleClock isn't operating at the
+            // raw CPU frequency. There is no need to do any scaling, so don't
+            // needlessly sacrifice precision.
+            static constexpr int32_t kShift = 0;
 #endif
 #else   // NDEBUG
-  // In debug mode use a different shift to discourage depending on a
-  // particular shift value.
-  static constexpr int32_t kShift = 2;
+        // In debug mode use a different shift to discourage depending on a
+        // particular shift value.
+            static constexpr int32_t kShift = 2;
 #endif  // NDEBUG
 
-  static constexpr double kFrequencyScale = 1.0 / (1 << kShift);
-  ABSL_CONST_INIT static std::atomic<CycleClockSourceFunc> cycle_clock_source_;
+            static constexpr double kFrequencyScale = 1.0 / (1 << kShift);
+            ABSL_CONST_INIT static std::atomic<CycleClockSourceFunc> cycle_clock_source_;
 #endif  //  ABSL_USE_UNSCALED_CYCLECLOC
 
-  CycleClock() = delete;  // no instances
-  CycleClock(const CycleClock&) = delete;
-  CycleClock& operator=(const CycleClock&) = delete;
+            CycleClock() = delete;  // no instances
+            CycleClock(const CycleClock&) = delete;
+            CycleClock& operator=(const CycleClock&) = delete;
 
-  friend class CycleClockSource;
-};
+            friend class CycleClockSource;
+        };
 
-class CycleClockSource {
- private:
-  // CycleClockSource::Register()
-  //
-  // Register a function that provides an alternate source for the unscaled CPU
-  // cycle count value. The source function must be async signal safe, must not
-  // call CycleClock::Now(), and must have a frequency that matches that of the
-  // unscaled clock used by CycleClock. A nullptr value resets CycleClock to use
-  // the default source.
-  static void Register(CycleClockSourceFunc source);
-};
+        class CycleClockSource
+        {
+        private:
+            // CycleClockSource::Register()
+            //
+            // Register a function that provides an alternate source for the unscaled CPU
+            // cycle count value. The source function must be async signal safe, must not
+            // call CycleClock::Now(), and must have a frequency that matches that of the
+            // unscaled clock used by CycleClock. A nullptr value resets CycleClock to use
+            // the default source.
+            static void Register(CycleClockSourceFunc source);
+        };
 
 #if ABSL_USE_UNSCALED_CYCLECLOCK
 
-inline CycleClockSourceFunc CycleClock::LoadCycleClockSource() {
+        inline CycleClockSourceFunc CycleClock::LoadCycleClockSource()
+        {
 #if !defined(__x86_64__)
-  // Optimize for the common case (no callback) by first doing a relaxed load;
-  // this is significantly faster on non-x86 platforms.
-  if (cycle_clock_source_.load(std::memory_order_relaxed) == nullptr) {
-    return nullptr;
-  }
+            // Optimize for the common case (no callback) by first doing a relaxed load;
+            // this is significantly faster on non-x86 platforms.
+            if (cycle_clock_source_.load(std::memory_order_relaxed) == nullptr)
+            {
+                return nullptr;
+            }
 #endif  // !defined(__x86_64__)
 
-  // This corresponds to the store(std::memory_order_release) in
-  // CycleClockSource::Register, and makes sure that any updates made prior to
-  // registering the callback are visible to this thread before the callback
-  // is invoked.
-  return cycle_clock_source_.load(std::memory_order_acquire);
-}
+            // This corresponds to the store(std::memory_order_release) in
+            // CycleClockSource::Register, and makes sure that any updates made prior to
+            // registering the callback are visible to this thread before the callback
+            // is invoked.
+            return cycle_clock_source_.load(std::memory_order_acquire);
+        }
 
 // Accessing globals in inlined code in Window DLLs is problematic.
 #ifndef _WIN32
-inline int64_t CycleClock::Now() {
-  auto fn = LoadCycleClockSource();
-  if (fn == nullptr) {
-    return base_internal::UnscaledCycleClock::Now() >> kShift;
-  }
-  return fn() >> kShift;
-}
+        inline int64_t CycleClock::Now()
+        {
+            auto fn = LoadCycleClockSource();
+            if (fn == nullptr)
+            {
+                return base_internal::UnscaledCycleClock::Now() >> kShift;
+            }
+            return fn() >> kShift;
+        }
 #endif
 
-inline double CycleClock::Frequency() {
-  return kFrequencyScale * base_internal::UnscaledCycleClock::Frequency();
-}
+        inline double CycleClock::Frequency()
+        {
+            return kFrequencyScale * base_internal::UnscaledCycleClock::Frequency();
+        }
 
 #endif  // ABSL_USE_UNSCALED_CYCLECLOCK
 
-}  // namespace base_internal
-ABSL_NAMESPACE_END
+    }  // namespace base_internal
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_BASE_INTERNAL_CYCLECLOCK_H_

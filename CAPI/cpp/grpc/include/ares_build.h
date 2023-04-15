@@ -17,25 +17,24 @@
 /* #undef CARES_HAVE_ARPA_NAMESER_COMPAT_H */
 
 #ifdef CARES_HAVE_SYS_TYPES_H
-#  include <sys/types.h>
+#include <sys/types.h>
 #endif
 
 #ifdef CARES_HAVE_SYS_SOCKET_H
-#  include <sys/socket.h>
+#include <sys/socket.h>
 #endif
 
 #ifdef CARES_HAVE_WINSOCK2_H
-#  include <winsock2.h>
+#include <winsock2.h>
 #endif
 
 #ifdef CARES_HAVE_WS2TCPIP_H
-#  include <ws2tcpip.h>
+#include <ws2tcpip.h>
 #endif
 
 #ifdef CARES_HAVE_WINDOWS_H
-#  include <windows.h>
+#include <windows.h>
 #endif
-
 
 typedef CARES_TYPEOF_ARES_SOCKLEN_T ares_socklen_t;
 typedef CARES_TYPEOF_ARES_SSIZE_T ares_ssize_t;

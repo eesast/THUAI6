@@ -21,23 +21,26 @@
 #include "absl/strings/string_view.h"
 #include "absl/types/variant.h"
 
-namespace grpc_event_engine {
-namespace experimental {
+namespace grpc_event_engine
+{
+    namespace experimental
+    {
 
-/// Collection of parameters used to configure client and server endpoints. The
-/// \a EndpointConfig maps string-valued keys to values of type int,
-/// string_view, or void pointer. Each EventEngine implementation should
-/// document its set of supported configuration options.
-class EndpointConfig {
- public:
-  virtual ~EndpointConfig() = default;
-  using Setting = absl::variant<absl::monostate, int, absl::string_view, void*>;
-  /// Returns the Setting for a specified key, or \a absl::monostate if there is
-  /// no such entry. Caller does not take ownership of the resulting value.
-  virtual Setting Get(absl::string_view key) const = 0;
-};
+        /// Collection of parameters used to configure client and server endpoints. The
+        /// \a EndpointConfig maps string-valued keys to values of type int,
+        /// string_view, or void pointer. Each EventEngine implementation should
+        /// document its set of supported configuration options.
+        class EndpointConfig
+        {
+        public:
+            virtual ~EndpointConfig() = default;
+            using Setting = absl::variant<absl::monostate, int, absl::string_view, void*>;
+            /// Returns the Setting for a specified key, or \a absl::monostate if there is
+            /// no such entry. Caller does not take ownership of the resulting value.
+            virtual Setting Get(absl::string_view key) const = 0;
+        };
 
-}  // namespace experimental
+    }  // namespace experimental
 }  // namespace grpc_event_engine
 
 #endif  // GRPC_EVENT_ENGINE_ENDPOINT_CONFIG_H

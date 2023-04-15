@@ -40,7 +40,11 @@
 //     return result;
 //   }
 #if defined(__pnacl__)
-#define ABSL_BLOCK_TAIL_CALL_OPTIMIZATION() if (volatile int x = 0) { (void)x; }
+#define ABSL_BLOCK_TAIL_CALL_OPTIMIZATION() \
+    if (volatile int x = 0)                 \
+    {                                       \
+        (void)x;                            \
+    }
 #elif defined(__clang__)
 // Clang will not tail call given inline volatile assembly.
 #define ABSL_BLOCK_TAIL_CALL_OPTIMIZATION() __asm__ __volatile__("")
@@ -52,7 +56,11 @@
 // The __nop() intrinsic blocks the optimisation.
 #define ABSL_BLOCK_TAIL_CALL_OPTIMIZATION() __nop()
 #else
-#define ABSL_BLOCK_TAIL_CALL_OPTIMIZATION() if (volatile int x = 0) { (void)x; }
+#define ABSL_BLOCK_TAIL_CALL_OPTIMIZATION() \
+    if (volatile int x = 0)                 \
+    {                                       \
+        (void)x;                            \
+    }
 #endif
 
 // ABSL_CACHELINE_SIZE
@@ -210,17 +218,20 @@
 #elif ABSL_HAVE_BUILTIN(__builtin_assume)
 #define ABSL_ASSUME(cond) __builtin_assume(cond)
 #elif defined(__GNUC__) || ABSL_HAVE_BUILTIN(__builtin_unreachable)
-#define ABSL_ASSUME(cond)                 \
-  do {                                    \
-    if (!(cond)) __builtin_unreachable(); \
-  } while (0)
+#define ABSL_ASSUME(cond)            \
+    do                               \
+    {                                \
+        if (!(cond))                 \
+            __builtin_unreachable(); \
+    } while (0)
 #elif defined(_MSC_VER)
 #define ABSL_ASSUME(cond) __assume(cond)
 #else
-#define ABSL_ASSUME(cond)               \
-  do {                                  \
-    static_cast<void>(false && (cond)); \
-  } while (0)
+#define ABSL_ASSUME(cond)                   \
+    do                                      \
+    {                                       \
+        static_cast<void>(false && (cond)); \
+    } while (0)
 #endif
 
 // ABSL_INTERNAL_UNIQUE_SMALL_NAME(cond)
@@ -244,7 +255,7 @@
 #define ABSL_INTERNAL_UNIQUE_SMALL_NAME2(x) #x
 #define ABSL_INTERNAL_UNIQUE_SMALL_NAME1(x) ABSL_INTERNAL_UNIQUE_SMALL_NAME2(x)
 #define ABSL_INTERNAL_UNIQUE_SMALL_NAME() \
-  asm(ABSL_INTERNAL_UNIQUE_SMALL_NAME1(.absl.__COUNTER__))
+    asm(ABSL_INTERNAL_UNIQUE_SMALL_NAME1(.absl.__COUNTER__))
 #else
 #define ABSL_INTERNAL_UNIQUE_SMALL_NAME()
 #endif

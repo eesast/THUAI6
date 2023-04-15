@@ -25,69 +25,82 @@
 #include "absl/base/thread_annotations.h"
 #include "absl/synchronization/mutex.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
-namespace synchronization_internal {
-
-// A simple ThreadPool implementation for tests.
-class ThreadPool {
- public:
-  explicit ThreadPool(int num_threads) {
-    for (int i = 0; i < num_threads; ++i) {
-      threads_.push_back(std::thread(&ThreadPool::WorkLoop, this));
-    }
-  }
-
-  ThreadPool(const ThreadPool &) = delete;
-  ThreadPool &operator=(const ThreadPool &) = delete;
-
-  ~ThreadPool() {
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
+    namespace synchronization_internal
     {
-      absl::MutexLock l(&mu_);
-      for (size_t i = 0; i < threads_.size(); i++) {
-        queue_.push(nullptr);  // Shutdown signal.
-      }
-    }
-    for (auto &t : threads_) {
-      t.join();
-    }
-  }
 
-  // Schedule a function to be run on a ThreadPool thread immediately.
-  void Schedule(std::function<void()> func) {
-    assert(func != nullptr);
-    absl::MutexLock l(&mu_);
-    queue_.push(std::move(func));
-  }
+        // A simple ThreadPool implementation for tests.
+        class ThreadPool
+        {
+        public:
+            explicit ThreadPool(int num_threads)
+            {
+                for (int i = 0; i < num_threads; ++i)
+                {
+                    threads_.push_back(std::thread(&ThreadPool::WorkLoop, this));
+                }
+            }
 
- private:
-  bool WorkAvailable() const ABSL_EXCLUSIVE_LOCKS_REQUIRED(mu_) {
-    return !queue_.empty();
-  }
+            ThreadPool(const ThreadPool&) = delete;
+            ThreadPool& operator=(const ThreadPool&) = delete;
 
-  void WorkLoop() {
-    while (true) {
-      std::function<void()> func;
-      {
-        absl::MutexLock l(&mu_);
-        mu_.Await(absl::Condition(this, &ThreadPool::WorkAvailable));
-        func = std::move(queue_.front());
-        queue_.pop();
-      }
-      if (func == nullptr) {  // Shutdown signal.
-        break;
-      }
-      func();
-    }
-  }
+            ~ThreadPool()
+            {
+                {
+                    absl::MutexLock l(&mu_);
+                    for (size_t i = 0; i < threads_.size(); i++)
+                    {
+                        queue_.push(nullptr);  // Shutdown signal.
+                    }
+                }
+                for (auto& t : threads_)
+                {
+                    t.join();
+                }
+            }
 
-  absl::Mutex mu_;
-  std::queue<std::function<void()>> queue_ ABSL_GUARDED_BY(mu_);
-  std::vector<std::thread> threads_;
-};
+            // Schedule a function to be run on a ThreadPool thread immediately.
+            void Schedule(std::function<void()> func)
+            {
+                assert(func != nullptr);
+                absl::MutexLock l(&mu_);
+                queue_.push(std::move(func));
+            }
 
-}  // namespace synchronization_internal
-ABSL_NAMESPACE_END
+        private:
+            bool WorkAvailable() const ABSL_EXCLUSIVE_LOCKS_REQUIRED(mu_)
+            {
+                return !queue_.empty();
+            }
+
+            void WorkLoop()
+            {
+                while (true)
+                {
+                    std::function<void()> func;
+                    {
+                        absl::MutexLock l(&mu_);
+                        mu_.Await(absl::Condition(this, &ThreadPool::WorkAvailable));
+                        func = std::move(queue_.front());
+                        queue_.pop();
+                    }
+                    if (func == nullptr)
+                    {  // Shutdown signal.
+                        break;
+                    }
+                    func();
+                }
+            }
+
+            absl::Mutex mu_;
+            std::queue<std::function<void()>> queue_ ABSL_GUARDED_BY(mu_);
+            std::vector<std::thread> threads_;
+        };
+
+    }  // namespace synchronization_internal
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_SYNCHRONIZATION_INTERNAL_THREAD_POOL_H_

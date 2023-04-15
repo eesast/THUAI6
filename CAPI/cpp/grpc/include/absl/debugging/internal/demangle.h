@@ -55,17 +55,19 @@
 
 #include "absl/base/config.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
-namespace debugging_internal {
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
+    namespace debugging_internal
+    {
 
-// Demangle `mangled`.  On success, return true and write the
-// demangled symbol name to `out`.  Otherwise, return false.
-// `out` is modified even if demangling is unsuccessful.
-bool Demangle(const char *mangled, char *out, int out_size);
+        // Demangle `mangled`.  On success, return true and write the
+        // demangled symbol name to `out`.  Otherwise, return false.
+        // `out` is modified even if demangling is unsuccessful.
+        bool Demangle(const char* mangled, char* out, int out_size);
 
-}  // namespace debugging_internal
-ABSL_NAMESPACE_END
+    }  // namespace debugging_internal
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_DEBUGGING_INTERNAL_DEMANGLE_H_

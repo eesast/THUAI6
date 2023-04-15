@@ -63,14 +63,16 @@
 // The absl::kConstInit tag should only be used to define objects with static
 // or thread_local storage duration.
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
 
-enum ConstInitType {
-  kConstInit,
-};
+    enum ConstInitType
+    {
+        kConstInit,
+    };
 
-ABSL_NAMESPACE_END
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_BASE_CONST_INIT_H_

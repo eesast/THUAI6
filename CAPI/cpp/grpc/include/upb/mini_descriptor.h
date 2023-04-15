@@ -35,19 +35,19 @@
 #include "upb/port_def.inc"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/** upb_MiniDescriptor ********************************************************/
+    /** upb_MiniDescriptor ********************************************************/
 
-upb_StringView upb_MiniDescriptor_EncodeEnum(const upb_EnumDef* enum_def,
-                                             upb_Arena* a);
+    upb_StringView upb_MiniDescriptor_EncodeEnum(const upb_EnumDef* enum_def, upb_Arena* a);
 
-upb_StringView upb_MiniDescriptor_EncodeExtension(const upb_FieldDef* field_def,
-                                                  upb_Arena* a);
+    upb_StringView upb_MiniDescriptor_EncodeExtension(const upb_FieldDef* field_def, upb_Arena* a);
 
-upb_StringView upb_MiniDescriptor_EncodeMessage(
-    const upb_MessageDef* message_def, upb_Arena* a);
+    upb_StringView upb_MiniDescriptor_EncodeMessage(
+        const upb_MessageDef* message_def, upb_Arena* a
+    );
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -85,9 +85,9 @@
 // should be counted from two, not one."
 #if ABSL_HAVE_ATTRIBUTE(format) || (defined(__GNUC__) && !defined(__clang__))
 #define ABSL_PRINTF_ATTRIBUTE(string_index, first_to_check) \
-  __attribute__((__format__(__printf__, string_index, first_to_check)))
+    __attribute__((__format__(__printf__, string_index, first_to_check)))
 #define ABSL_SCANF_ATTRIBUTE(string_index, first_to_check) \
-  __attribute__((__format__(__scanf__, string_index, first_to_check)))
+    __attribute__((__format__(__scanf__, string_index, first_to_check)))
 #else
 #define ABSL_PRINTF_ATTRIBUTE(string_index, first_to_check)
 #define ABSL_SCANF_ATTRIBUTE(string_index, first_to_check)
@@ -122,7 +122,7 @@
 #elif defined(__GNUC__) && !defined(__clang__) && !defined(__e2k__)
 #define ABSL_HAVE_ATTRIBUTE_NO_TAIL_CALL 1
 #define ABSL_ATTRIBUTE_NO_TAIL_CALL \
-  __attribute__((optimize("no-optimize-sibling-calls")))
+    __attribute__((optimize("no-optimize-sibling-calls")))
 #else
 #define ABSL_ATTRIBUTE_NO_TAIL_CALL
 #define ABSL_HAVE_ATTRIBUTE_NO_TAIL_CALL 0
@@ -136,9 +136,8 @@
 // for further information.
 // The MinGW compiler doesn't complain about the weak attribute until the link
 // step, presumably because Windows doesn't use ELF binaries.
-#if (ABSL_HAVE_ATTRIBUTE(weak) ||                                         \
-     (defined(__GNUC__) && !defined(__clang__))) &&                       \
-    (!defined(_WIN32) || (defined(__clang__) && __clang_major__ >= 9)) && \
+#if (ABSL_HAVE_ATTRIBUTE(weak) || (defined(__GNUC__) && !defined(__clang__))) && \
+    (!defined(_WIN32) || (defined(__clang__) && __clang_major__ >= 9)) &&        \
     !defined(__MINGW32__)
 #undef ABSL_ATTRIBUTE_WEAK
 #define ABSL_ATTRIBUTE_WEAK __attribute__((weak))
@@ -253,10 +252,10 @@
 // https://gcc.gnu.org/gcc-4.9/changes.html
 #if ABSL_HAVE_ATTRIBUTE(no_sanitize_undefined)
 #define ABSL_ATTRIBUTE_NO_SANITIZE_UNDEFINED \
-  __attribute__((no_sanitize_undefined))
+    __attribute__((no_sanitize_undefined))
 #elif ABSL_HAVE_ATTRIBUTE(no_sanitize)
 #define ABSL_ATTRIBUTE_NO_SANITIZE_UNDEFINED \
-  __attribute__((no_sanitize("undefined")))
+    __attribute__((no_sanitize("undefined")))
 #else
 #define ABSL_ATTRIBUTE_NO_SANITIZE_UNDEFINED
 #endif
@@ -277,7 +276,7 @@
 // See https://clang.llvm.org/docs/SafeStack.html for details.
 #if ABSL_HAVE_ATTRIBUTE(no_sanitize)
 #define ABSL_ATTRIBUTE_NO_SANITIZE_SAFESTACK \
-  __attribute__((no_sanitize("safe-stack")))
+    __attribute__((no_sanitize("safe-stack")))
 #else
 #define ABSL_ATTRIBUTE_NO_SANITIZE_SAFESTACK
 #endif
@@ -297,8 +296,7 @@
 // a prerequisite. Labeled sections are not supported on Darwin/iOS.
 #ifdef ABSL_HAVE_ATTRIBUTE_SECTION
 #error ABSL_HAVE_ATTRIBUTE_SECTION cannot be directly set
-#elif (ABSL_HAVE_ATTRIBUTE(section) ||                \
-       (defined(__GNUC__) && !defined(__clang__))) && \
+#elif (ABSL_HAVE_ATTRIBUTE(section) || (defined(__GNUC__) && !defined(__clang__))) && \
     !defined(__APPLE__) && ABSL_HAVE_ATTRIBUTE_WEAK
 #define ABSL_HAVE_ATTRIBUTE_SECTION 1
 
@@ -312,7 +310,7 @@
 //
 #ifndef ABSL_ATTRIBUTE_SECTION
 #define ABSL_ATTRIBUTE_SECTION(name) \
-  __attribute__((section(#name))) __attribute__((noinline))
+    __attribute__((section(#name))) __attribute__((noinline))
 #endif
 
 // ABSL_ATTRIBUTE_SECTION_VARIABLE
@@ -341,9 +339,9 @@
 // a no-op on ELF but not on Mach-O.
 //
 #ifndef ABSL_DECLARE_ATTRIBUTE_SECTION_VARS
-#define ABSL_DECLARE_ATTRIBUTE_SECTION_VARS(name)   \
-  extern char __start_##name[] ABSL_ATTRIBUTE_WEAK; \
-  extern char __stop_##name[] ABSL_ATTRIBUTE_WEAK
+#define ABSL_DECLARE_ATTRIBUTE_SECTION_VARS(name)     \
+    extern char __start_##name[] ABSL_ATTRIBUTE_WEAK; \
+    extern char __stop_##name[] ABSL_ATTRIBUTE_WEAK
 #endif
 #ifndef ABSL_DEFINE_ATTRIBUTE_SECTION_VARS
 #define ABSL_INIT_ATTRIBUTE_SECTION_VARS(name)
@@ -359,9 +357,9 @@
 // link.
 //
 #define ABSL_ATTRIBUTE_SECTION_START(name) \
-  (reinterpret_cast<void *>(__start_##name))
+    (reinterpret_cast<void*>(__start_##name))
 #define ABSL_ATTRIBUTE_SECTION_STOP(name) \
-  (reinterpret_cast<void *>(__stop_##name))
+    (reinterpret_cast<void*>(__stop_##name))
 
 #else  // !ABSL_HAVE_ATTRIBUTE_SECTION
 
@@ -373,8 +371,8 @@
 #define ABSL_INIT_ATTRIBUTE_SECTION_VARS(name)
 #define ABSL_DEFINE_ATTRIBUTE_SECTION_VARS(name)
 #define ABSL_DECLARE_ATTRIBUTE_SECTION_VARS(name)
-#define ABSL_ATTRIBUTE_SECTION_START(name) (reinterpret_cast<void *>(0))
-#define ABSL_ATTRIBUTE_SECTION_STOP(name) (reinterpret_cast<void *>(0))
+#define ABSL_ATTRIBUTE_SECTION_START(name) (reinterpret_cast<void*>(0))
+#define ABSL_ATTRIBUTE_SECTION_STOP(name) (reinterpret_cast<void*>(0))
 
 #endif  // ABSL_ATTRIBUTE_SECTION
 
@@ -385,7 +383,7 @@
     (defined(__GNUC__) && !defined(__clang__))
 #if defined(__i386__)
 #define ABSL_ATTRIBUTE_STACK_ALIGN_FOR_OLD_LIBC \
-  __attribute__((force_align_arg_pointer))
+    __attribute__((force_align_arg_pointer))
 #define ABSL_REQUIRE_STACK_ALIGN_TRAMPOLINE (0)
 #elif defined(__x86_64__)
 #define ABSL_REQUIRE_STACK_ALIGN_TRAMPOLINE (1)
@@ -505,7 +503,7 @@
 #define ABSL_XRAY_NEVER_INSTRUMENT [[clang::xray_never_instrument]]
 #if ABSL_HAVE_CPP_ATTRIBUTE(clang::xray_log_args)
 #define ABSL_XRAY_LOG_ARGS(N) \
-  [[clang::xray_always_instrument, clang::xray_log_args(N)]]
+    [[clang::xray_always_instrument, clang::xray_log_args(N)]]
 #else
 #define ABSL_XRAY_LOG_ARGS(N) [[clang::xray_always_instrument]]
 #endif
@@ -639,8 +637,9 @@
 #define ABSL_FALLTHROUGH_INTENDED [[gnu::fallthrough]]
 #else
 #define ABSL_FALLTHROUGH_INTENDED \
-  do {                            \
-  } while (0)
+    do                            \
+    {                             \
+    } while (0)
 #endif
 
 // ABSL_DEPRECATED()

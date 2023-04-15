@@ -378,12 +378,12 @@ namespace Gaming
                 return true;
             }
 
-            private void Die(Character player)
+            public void Die(Student player)
             {
 #if DEBUG
                 Debugger.Output(player, "die.");
 #endif
-                player.Die(PlayerStateType.Deceased);
+                player.RemoveFromGame(PlayerStateType.Deceased);
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {

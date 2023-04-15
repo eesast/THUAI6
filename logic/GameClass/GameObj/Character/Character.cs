@@ -584,7 +584,7 @@ namespace GameClass.GameObj
                      this.Vampire = this.OriVampire;
                  }
              }*/
-        public void Die(PlayerStateType playerStateType)
+        public void RemoveFromGame(PlayerStateType playerStateType)
         {
             lock (gameObjLock)
             {

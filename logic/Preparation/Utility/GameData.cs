@@ -117,7 +117,7 @@ namespace Preparation.Utility
         public const int basicStudentAlertnessRadius = 15 * numOfPosGridPerCell;
         public const int basicGhostAlertnessRadius = 17 * numOfPosGridPerCell;
         public const int basicStudentViewRange = 10 * numOfPosGridPerCell;
-        public const int basicGhostViewRange = 15 * numOfPosGridPerCell;
+        public const int basicGhostViewRange = 13 * numOfPosGridPerCell;
         public const int PinningDownRange = 5 * numOfPosGridPerCell;
 
         public const int maxNumOfPropInPropInventory = 3;
@@ -210,22 +210,24 @@ namespace Preparation.Utility
         public const int commonSkillCD = 30000;                      // 普通技能标准冷却时间
         public const int commonSkillTime = 10000;                    // 普通技能标准持续时间
 
-        public const int TimeOfGhostStunnedWhenCharge = 7220;
-        public const int TimeOfStudentStunnedWhenCharge = 2090;
+        public const int timeOfGhostStunnedWhenCharge = 7220;
+        public const int timeOfStudentStunnedWhenCharge = 2090;
 
-        public const int TimeOfGhostStunnedWhenPunish = 3070;
+        public const int timeOfGhostStunnedWhenPunish = 3070;
         public const int factorOfTimeStunnedWhenPunish = 300 / basicApOfGhost;
 
-        public const int TimeOfGhostSwingingAfterHowl = 800;
-        public const int TimeOfStudentStunnedWhenHowl = 5500;
+        public const int timeOfGhostSwingingAfterHowl = 800;
+        public const int timeOfStudentStunnedWhenHowl = 5500;
 
-        public const int TimeOfStunnedWhenJumpyDumpty = 3070;
+        public const int timeOfStunnedWhenJumpyDumpty = 3070;
 
-        public const double AddedTimeOfSpeedWhenInspire = 0.6;
-        public const int TimeOfAddingSpeedWhenInspire = 6000;
+        public const double addedTimeOfSpeedWhenInspire = 1.6;
+        public const int timeOfAddingSpeedWhenInspire = 6000;
 
-        public const int AddHpWhenEncourage = basicHp / 4;
+        public const int addHpWhenEncourage = basicHp / 4;
 
+        public const int checkIntervalWhenShowTime = 200;
+        public const int addAddictionPer100msWhenShowTime = 300;
         #endregion
         #region 道具相关
         public const int PropRadius = numOfPosGridPerCell / 2;

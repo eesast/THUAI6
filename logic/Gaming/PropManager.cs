@@ -42,7 +42,7 @@ namespace Gaming
                         break;
                     case PropType.AddSpeed:
                         player.AddScore(GameData.ScorePropAddSpeed);
-                        player.AddMoveSpeed(GameData.PropDuration);
+                        player.AddMoveSpeed(GameData.PropDuration, 2.0);
                         break;
                     case PropType.AddHpOrAp:
                         if (!player.IsGhost())

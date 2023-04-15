@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <array>
 #include <map>
+#include <vector>
+#include <string>
 
 namespace THUAI6
 {
@@ -175,7 +177,7 @@ namespace THUAI6
         int32_t viewRange;  // 视野范围
         int64_t playerID;   // 玩家ID
         int64_t guid;       // 全局唯一ID
-        int16_t radius;     // 圆形物体的半径或正方形物体的内切圆半径
+        int32_t radius;     // 圆形物体的半径或正方形物体的内切圆半径
         int32_t score;      // 分数
 
         double facingDirection;  // 朝向

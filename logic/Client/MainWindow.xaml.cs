@@ -221,6 +221,9 @@ namespace Client
                             case 5:
                                 playerMsg.StudentType = StudentType.TechOtaku;
                                 break;
+                            case 6:
+                                playerMsg.StudentType = StudentType.Sunshine;
+                                break;
                             case 0:
                             default:
                                 playerMsg.StudentType = StudentType.NullStudentType;
@@ -560,7 +563,7 @@ namespace Client
         {
             if (msg.PlayerState == PlayerState.Quit || msg.PlayerState == PlayerState.Graduated)
                 return false;
-            if (isSpectatorMode)
+            if (isSpectatorMode || isPlaybackMode)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -579,7 +582,7 @@ namespace Client
 
         private bool CanSee(MessageOfTricker msg)
         {
-            if (isSpectatorMode)
+            if (isSpectatorMode || isPlaybackMode)
                 return true;
             if (!humanOrButcher && butcher != null)
             {
@@ -606,7 +609,7 @@ namespace Client
 
         private bool CanSee(MessageOfProp msg)
         {
-            if (isSpectatorMode)
+            if (isSpectatorMode || isPlaybackMode)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -625,7 +628,7 @@ namespace Client
 
         private bool CanSee(MessageOfBullet msg)
         {
-            if (isSpectatorMode)
+            if (isSpectatorMode || isPlaybackMode)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -644,7 +647,7 @@ namespace Client
 
         private bool CanSee(MessageOfBombedBullet msg)
         {
-            if (isSpectatorMode)
+            if (isSpectatorMode || isPlaybackMode)
                 return true;
             //if (humanOrButcher && human != null)
             //{
@@ -672,7 +675,7 @@ namespace Client
                     MaxButton.Content = "🗖";
                 foreach (var obj in listOfHuman)
                 {
-                    if (obj.PlayerId < GameData.numOfStudent)
+                    if (obj.PlayerId < GameData.numOfStudent && obj.StudentType != StudentType.Robot)
                     {
                         IStudentType occupation = (IStudentType)OccupationFactory.FindIOccupation(Transformation.ToStudentType(obj.StudentType));
                         totalLife[obj.PlayerId] = occupation.MaxHp;
@@ -746,7 +749,8 @@ namespace Client
                             DrawMap();
                         foreach (var data in listOfHuman)
                         {
-                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data, data.PlayerId);
+                            if (data.StudentType != StudentType.Robot)
+                                StatusBarsOfSurvivor[data.PlayerId].SetValue(data, data.PlayerId);
                             if (CanSee(data))
                             {
                                 Ellipse icon = new()
@@ -758,6 +762,8 @@ namespace Client
                                     Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * radiusTimes, data.X * unitHeight / 1000.0 - unitHeight * radiusTimes, 0, 0),
                                     Fill = Brushes.BlueViolet,
                                 };
+                                if (data.StudentType == StudentType.Robot)
+                                    icon.Fill = Brushes.Gray;
                                 TextBox num = new()
                                 {
                                     FontSize = 7 * UpperLayerOfMap.ActualHeight / 650,
@@ -772,6 +778,8 @@ namespace Client
                                     IsReadOnly = true,
                                     Foreground = Brushes.White,
                                 };
+                                if (data.StudentType == StudentType.Robot)
+                                    num.Text = Convert.ToString(data.PlayerId - Preparation.Utility.GameData.numOfPeople);
                                 UpperLayerOfMap.Children.Add(icon);
                                 UpperLayerOfMap.Children.Add(num);
                             }

@@ -53,6 +53,9 @@ namespace Client
                 case StudentType.TechOtaku:
                     serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nTechOtaku";
                     break;
+                case StudentType.Sunshine:
+                    serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nSunshine";
+                    break;
                 case StudentType.NullStudentType:
                     serial.Text = "👥" + Convert.ToString(2) + "🧓" + Convert.ToString(obj.PlayerId) + "\nNullStudentType";
                     break;

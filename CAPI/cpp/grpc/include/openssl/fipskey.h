@@ -11,12 +11,13 @@
  */
 
 #ifndef OPENSSL_FIPSKEY_H
-# define OPENSSL_FIPSKEY_H
-# pragma once
+#define OPENSSL_FIPSKEY_H
+#pragma once
 
-# ifdef  __cplusplus
-extern "C" {
-# endif
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 /*
  * The FIPS validation HMAC key, usable as an array initializer.
@@ -29,8 +30,8 @@ extern "C" {
  */
 #define FIPS_KEY_STRING "f4556650ac31d35461610bac4ed81b1a181b2d8a43ea2854cbae22ca74560813"
 
-# ifdef  __cplusplus
+#ifdef __cplusplus
 }
-# endif
+#endif
 
 #endif

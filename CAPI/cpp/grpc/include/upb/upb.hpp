@@ -30,85 +30,121 @@
 
 #include "upb/upb.h"
 
-namespace upb {
+namespace upb
+{
 
-class Status {
- public:
-  Status() { upb_Status_Clear(&status_); }
+    class Status
+    {
+    public:
+        Status()
+        {
+            upb_Status_Clear(&status_);
+        }
 
-  upb_Status* ptr() { return &status_; }
+        upb_Status* ptr()
+        {
+            return &status_;
+        }
 
-  // Returns true if there is no error.
-  bool ok() const { return upb_Status_IsOk(&status_); }
+        // Returns true if there is no error.
+        bool ok() const
+        {
+            return upb_Status_IsOk(&status_);
+        }
 
-  // Guaranteed to be NULL-terminated.
-  const char* error_message() const {
-    return upb_Status_ErrorMessage(&status_);
-  }
+        // Guaranteed to be NULL-terminated.
+        const char* error_message() const
+        {
+            return upb_Status_ErrorMessage(&status_);
+        }
 
-  // The error message will be truncated if it is longer than
-  // _kUpb_Status_MaxMessage-4.
-  void SetErrorMessage(const char* msg) {
-    upb_Status_SetErrorMessage(&status_, msg);
-  }
-  void SetFormattedErrorMessage(const char* fmt, ...) {
-    va_list args;
-    va_start(args, fmt);
-    upb_Status_VSetErrorFormat(&status_, fmt, args);
-    va_end(args);
-  }
+        // The error message will be truncated if it is longer than
+        // _kUpb_Status_MaxMessage-4.
+        void SetErrorMessage(const char* msg)
+        {
+            upb_Status_SetErrorMessage(&status_, msg);
+        }
+        void SetFormattedErrorMessage(const char* fmt, ...)
+        {
+            va_list args;
+            va_start(args, fmt);
+            upb_Status_VSetErrorFormat(&status_, fmt, args);
+            va_end(args);
+        }
 
-  // Resets the status to a successful state with no message.
-  void Clear() { upb_Status_Clear(&status_); }
+        // Resets the status to a successful state with no message.
+        void Clear()
+        {
+            upb_Status_Clear(&status_);
+        }
 
- private:
-  upb_Status status_;
-};
+    private:
+        upb_Status status_;
+    };
 
-class Arena {
- public:
-  // A simple arena with no initial memory block and the default allocator.
-  Arena() : ptr_(upb_Arena_New(), upb_Arena_Free) {}
-  Arena(char* initial_block, size_t size)
-      : ptr_(upb_Arena_Init(initial_block, size, &upb_alloc_global),
-             upb_Arena_Free) {}
+    class Arena
+    {
+    public:
+        // A simple arena with no initial memory block and the default allocator.
+        Arena() :
+            ptr_(upb_Arena_New(), upb_Arena_Free)
+        {
+        }
+        Arena(char* initial_block, size_t size) :
+            ptr_(upb_Arena_Init(initial_block, size, &upb_alloc_global), upb_Arena_Free)
+        {
+        }
 
-  upb_Arena* ptr() { return ptr_.get(); }
+        upb_Arena* ptr()
+        {
+            return ptr_.get();
+        }
 
-  // Allows this arena to be used as a generic allocator.
-  //
-  // The arena does not need free() calls so when using Arena as an allocator
-  // it is safe to skip them.  However they are no-ops so there is no harm in
-  // calling free() either.
-  upb_alloc* allocator() { return upb_Arena_Alloc(ptr_.get()); }
+        // Allows this arena to be used as a generic allocator.
+        //
+        // The arena does not need free() calls so when using Arena as an allocator
+        // it is safe to skip them.  However they are no-ops so there is no harm in
+        // calling free() either.
+        upb_alloc* allocator()
+        {
+            return upb_Arena_Alloc(ptr_.get());
+        }
 
-  // Add a cleanup function to run when the arena is destroyed.
-  // Returns false on out-of-memory.
-  template <class T>
-  bool Own(T* obj) {
-    return upb_Arena_AddCleanup(ptr_.get(), obj,
-                                [](void* obj) { delete static_cast<T*>(obj); });
-  }
+        // Add a cleanup function to run when the arena is destroyed.
+        // Returns false on out-of-memory.
+        template<class T>
+        bool Own(T* obj)
+        {
+            return upb_Arena_AddCleanup(ptr_.get(), obj, [](void* obj)
+                                        { delete static_cast<T*>(obj); });
+        }
 
-  void Fuse(Arena& other) { upb_Arena_Fuse(ptr(), other.ptr()); }
+        void Fuse(Arena& other)
+        {
+            upb_Arena_Fuse(ptr(), other.ptr());
+        }
 
- private:
-  std::unique_ptr<upb_Arena, decltype(&upb_Arena_Free)> ptr_;
-};
+    private:
+        std::unique_ptr<upb_Arena, decltype(&upb_Arena_Free)> ptr_;
+    };
 
-// InlinedArena seeds the arenas with a predefined amount of memory.  No
-// heap memory will be allocated until the initial block is exceeded.
-template <int N>
-class InlinedArena : public Arena {
- public:
-  InlinedArena() : Arena(initial_block_, N) {}
+    // InlinedArena seeds the arenas with a predefined amount of memory.  No
+    // heap memory will be allocated until the initial block is exceeded.
+    template<int N>
+    class InlinedArena : public Arena
+    {
+    public:
+        InlinedArena() :
+            Arena(initial_block_, N)
+        {
+        }
 
- private:
-  InlinedArena(const InlinedArena*) = delete;
-  InlinedArena& operator=(const InlinedArena*) = delete;
+    private:
+        InlinedArena(const InlinedArena*) = delete;
+        InlinedArena& operator=(const InlinedArena*) = delete;
 
-  char initial_block_[N];
-};
+        char initial_block_[N];
+    };
 
 }  // namespace upb
 

@@ -24,30 +24,38 @@
 
 #include <grpcpp/server.h>
 
-namespace grpc {
-class Server;
-class Service;
+namespace grpc
+{
+    class Server;
+    class Service;
 
-class ServerInitializer {
- public:
-  explicit ServerInitializer(grpc::Server* server) : server_(server) {}
+    class ServerInitializer
+    {
+    public:
+        explicit ServerInitializer(grpc::Server* server) :
+            server_(server)
+        {
+        }
 
-  bool RegisterService(std::shared_ptr<grpc::Service> service) {
-    if (!server_->RegisterService(nullptr, service.get())) {
-      return false;
-    }
-    default_services_.push_back(service);
-    return true;
-  }
+        bool RegisterService(std::shared_ptr<grpc::Service> service)
+        {
+            if (!server_->RegisterService(nullptr, service.get()))
+            {
+                return false;
+            }
+            default_services_.push_back(service);
+            return true;
+        }
 
-  const std::vector<std::string>* GetServiceList() {
-    return &server_->services_;
-  }
+        const std::vector<std::string>* GetServiceList()
+        {
+            return &server_->services_;
+        }
 
- private:
-  grpc::Server* server_;
-  std::vector<std::shared_ptr<grpc::Service> > default_services_;
-};
+    private:
+        grpc::Server* server_;
+        std::vector<std::shared_ptr<grpc::Service>> default_services_;
+    };
 
 }  // namespace grpc
 

@@ -32,30 +32,33 @@
 #include "upb/port_def.inc"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-// Definitions commn to both upb_Array and upb_Map.
+    // Definitions commn to both upb_Array and upb_Map.
 
-typedef union {
-  bool bool_val;
-  float float_val;
-  double double_val;
-  int32_t int32_val;
-  int64_t int64_val;
-  uint32_t uint32_val;
-  uint64_t uint64_val;
-  const upb_Map* map_val;
-  const upb_Message* msg_val;
-  const upb_Array* array_val;
-  upb_StringView str_val;
-} upb_MessageValue;
+    typedef union
+    {
+        bool bool_val;
+        float float_val;
+        double double_val;
+        int32_t int32_val;
+        int64_t int64_val;
+        uint32_t uint32_val;
+        uint64_t uint64_val;
+        const upb_Map* map_val;
+        const upb_Message* msg_val;
+        const upb_Array* array_val;
+        upb_StringView str_val;
+    } upb_MessageValue;
 
-typedef union {
-  upb_Map* map;
-  upb_Message* msg;
-  upb_Array* array;
-} upb_MutableMessageValue;
+    typedef union
+    {
+        upb_Map* map;
+        upb_Message* msg;
+        upb_Array* array;
+    } upb_MutableMessageValue;
 
 #ifdef __cplusplus
 } /* extern "C" */

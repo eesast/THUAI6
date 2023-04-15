@@ -34,78 +34,100 @@
 
 #include "upb/mini_table.h"
 
-namespace upb {
+namespace upb
+{
 
-class MtDataEncoder {
- public:
-  MtDataEncoder() : appender_(&encoder_) {}
+    class MtDataEncoder
+    {
+    public:
+        MtDataEncoder() :
+            appender_(&encoder_)
+        {
+        }
 
-  bool StartMessage(uint64_t msg_mod) {
-    return appender_([=](char* buf) {
-      return upb_MtDataEncoder_StartMessage(&encoder_, buf, msg_mod);
-    });
-  }
+        bool StartMessage(uint64_t msg_mod)
+        {
+            return appender_([=](char* buf)
+                             { return upb_MtDataEncoder_StartMessage(&encoder_, buf, msg_mod); });
+        }
 
-  bool PutField(upb_FieldType type, uint32_t field_num, uint64_t field_mod) {
-    return appender_([=](char* buf) {
-      return upb_MtDataEncoder_PutField(&encoder_, buf, type, field_num,
-                                        field_mod);
-    });
-  }
+        bool PutField(upb_FieldType type, uint32_t field_num, uint64_t field_mod)
+        {
+            return appender_([=](char* buf)
+                             { return upb_MtDataEncoder_PutField(&encoder_, buf, type, field_num, field_mod); });
+        }
 
-  bool StartOneof() {
-    return appender_([=](char* buf) {
-      return upb_MtDataEncoder_StartOneof(&encoder_, buf);
-    });
-  }
+        bool StartOneof()
+        {
+            return appender_([=](char* buf)
+                             { return upb_MtDataEncoder_StartOneof(&encoder_, buf); });
+        }
 
-  bool PutOneofField(uint32_t field_num) {
-    return appender_([=](char* buf) {
-      return upb_MtDataEncoder_PutOneofField(&encoder_, buf, field_num);
-    });
-  }
+        bool PutOneofField(uint32_t field_num)
+        {
+            return appender_([=](char* buf)
+                             { return upb_MtDataEncoder_PutOneofField(&encoder_, buf, field_num); });
+        }
 
-  void StartEnum() { upb_MtDataEncoder_StartEnum(&encoder_); }
+        void StartEnum()
+        {
+            upb_MtDataEncoder_StartEnum(&encoder_);
+        }
 
-  bool PutEnumValue(uint32_t enum_value) {
-    return appender_([=](char* buf) {
-      return upb_MtDataEncoder_PutEnumValue(&encoder_, buf, enum_value);
-    });
-  }
+        bool PutEnumValue(uint32_t enum_value)
+        {
+            return appender_([=](char* buf)
+                             { return upb_MtDataEncoder_PutEnumValue(&encoder_, buf, enum_value); });
+        }
 
-  bool EndEnum() {
-    return appender_(
-        [=](char* buf) { return upb_MtDataEncoder_EndEnum(&encoder_, buf); });
-  }
+        bool EndEnum()
+        {
+            return appender_(
+                [=](char* buf)
+                { return upb_MtDataEncoder_EndEnum(&encoder_, buf); }
+            );
+        }
 
-  const std::string& data() const { return appender_.data(); }
+        const std::string& data() const
+        {
+            return appender_.data();
+        }
 
- private:
-  class StringAppender {
-   public:
-    StringAppender(upb_MtDataEncoder* e) { e->end = buf_ + sizeof(buf_); }
+    private:
+        class StringAppender
+        {
+        public:
+            StringAppender(upb_MtDataEncoder* e)
+            {
+                e->end = buf_ + sizeof(buf_);
+            }
 
-    template <class T>
-    bool operator()(T&& func) {
-      char* end = func(buf_);
-      if (!end) return false;
-      // C++ does not guarantee that string has doubling growth behavior, but
-      // we need it to avoid O(n^2).
-      str_.reserve(_upb_Log2CeilingSize(str_.size() + (end - buf_)));
-      str_.append(buf_, end - buf_);
-      return true;
-    }
+            template<class T>
+            bool operator()(T&& func)
+            {
+                char* end = func(buf_);
+                if (!end)
+                    return false;
+                // C++ does not guarantee that string has doubling growth behavior, but
+                // we need it to avoid O(n^2).
+                str_.reserve(_upb_Log2CeilingSize(str_.size() + (end - buf_)));
+                str_.append(buf_, end - buf_);
+                return true;
+            }
 
-    const std::string& data() const { return str_; }
+            const std::string& data() const
+            {
+                return str_;
+            }
 
-   private:
-    char buf_[kUpb_MtDataEncoder_MinSize];
-    std::string str_;
-  };
+        private:
+            char buf_[kUpb_MtDataEncoder_MinSize];
+            std::string str_;
+        };
 
-  upb_MtDataEncoder encoder_;
-  StringAppender appender_;
-};
+        upb_MtDataEncoder encoder_;
+        StringAppender appender_;
+    };
 
 }  // namespace upb
 

@@ -24,45 +24,52 @@
 #include <grpc/event_engine/memory_request.h>
 #include <grpc/slice.h>
 
-namespace grpc_event_engine {
-namespace experimental {
+namespace grpc_event_engine
+{
+    namespace experimental
+    {
 
-namespace internal {
+        namespace internal
+        {
 
-/// Underlying memory allocation interface.
-/// This is an internal interface, not intended to be used by users.
-/// Its interface is subject to change at any time.
-class MemoryAllocatorImpl
-    : public std::enable_shared_from_this<MemoryAllocatorImpl> {
- public:
-  MemoryAllocatorImpl() {}
-  virtual ~MemoryAllocatorImpl() {}
+            /// Underlying memory allocation interface.
+            /// This is an internal interface, not intended to be used by users.
+            /// Its interface is subject to change at any time.
+            class MemoryAllocatorImpl : public std::enable_shared_from_this<MemoryAllocatorImpl>
+            {
+            public:
+                MemoryAllocatorImpl()
+                {
+                }
+                virtual ~MemoryAllocatorImpl()
+                {
+                }
 
-  MemoryAllocatorImpl(const MemoryAllocatorImpl&) = delete;
-  MemoryAllocatorImpl& operator=(const MemoryAllocatorImpl&) = delete;
+                MemoryAllocatorImpl(const MemoryAllocatorImpl&) = delete;
+                MemoryAllocatorImpl& operator=(const MemoryAllocatorImpl&) = delete;
 
-  /// Reserve bytes from the quota.
-  /// If we enter overcommit, reclamation will begin concurrently.
-  /// Returns the number of bytes reserved.
-  /// If MemoryRequest is invalid, this function will abort.
-  /// If MemoryRequest is valid, this function is infallible, and will always
-  /// succeed at reserving the some number of bytes between request.min() and
-  /// request.max() inclusively.
-  virtual size_t Reserve(MemoryRequest request) = 0;
+                /// Reserve bytes from the quota.
+                /// If we enter overcommit, reclamation will begin concurrently.
+                /// Returns the number of bytes reserved.
+                /// If MemoryRequest is invalid, this function will abort.
+                /// If MemoryRequest is valid, this function is infallible, and will always
+                /// succeed at reserving the some number of bytes between request.min() and
+                /// request.max() inclusively.
+                virtual size_t Reserve(MemoryRequest request) = 0;
 
-  /// Release some bytes that were previously reserved.
-  /// If more bytes are released than were reserved, we will have undefined
-  /// behavior.
-  virtual void Release(size_t n) = 0;
+                /// Release some bytes that were previously reserved.
+                /// If more bytes are released than were reserved, we will have undefined
+                /// behavior.
+                virtual void Release(size_t n) = 0;
 
-  /// Shutdown this allocator.
-  /// Further usage of Reserve() is undefined behavior.
-  virtual void Shutdown() = 0;
-};
+                /// Shutdown this allocator.
+                /// Further usage of Reserve() is undefined behavior.
+                virtual void Shutdown() = 0;
+            };
 
-}  // namespace internal
+        }  // namespace internal
 
-}  // namespace experimental
+    }  // namespace experimental
 }  // namespace grpc_event_engine
 
 #endif  // GRPC_EVENT_ENGINE_INTERNAL_MEMORY_ALLOCATOR_IMPL_H

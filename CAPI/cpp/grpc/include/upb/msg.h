@@ -43,26 +43,26 @@
 #include "upb/upb.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-typedef void upb_Message;
+    typedef void upb_Message;
 
-/* For users these are opaque. They can be obtained from
- * upb_MessageDef_MiniTable() but users cannot access any of the members. */
-struct upb_MiniTable;
-typedef struct upb_MiniTable upb_MiniTable;
+    /* For users these are opaque. They can be obtained from
+     * upb_MessageDef_MiniTable() but users cannot access any of the members. */
+    struct upb_MiniTable;
+    typedef struct upb_MiniTable upb_MiniTable;
 
-/* Adds unknown data (serialized protobuf data) to the given message.  The data
- * is copied into the message instance. */
-void upb_Message_AddUnknown(upb_Message* msg, const char* data, size_t len,
-                            upb_Arena* arena);
+    /* Adds unknown data (serialized protobuf data) to the given message.  The data
+     * is copied into the message instance. */
+    void upb_Message_AddUnknown(upb_Message* msg, const char* data, size_t len, upb_Arena* arena);
 
-/* Returns a reference to the message's unknown data. */
-const char* upb_Message_GetUnknown(const upb_Message* msg, size_t* len);
+    /* Returns a reference to the message's unknown data. */
+    const char* upb_Message_GetUnknown(const upb_Message* msg, size_t* len);
 
-/* Returns the number of extensions present in this message. */
-size_t upb_Message_ExtensionCount(const upb_Message* msg);
+    /* Returns the number of extensions present in this message. */
+    size_t upb_Message_ExtensionCount(const upb_Message* msg);
 
 #ifdef __cplusplus
 } /* extern "C" */

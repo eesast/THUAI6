@@ -34,21 +34,26 @@
 #include "upb/port_def.inc"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-UPB_INLINE bool _upb_MiniTable_Field_InOneOf(const upb_MiniTable_Field* field) {
-  return field->presence < 0;
-}
+    UPB_INLINE bool _upb_MiniTable_Field_InOneOf(const upb_MiniTable_Field* field)
+    {
+        return field->presence < 0;
+    }
 
-UPB_INLINE void _upb_MiniTable_SetPresence(upb_Message* msg,
-                                           const upb_MiniTable_Field* field) {
-  if (field->presence > 0) {
-    _upb_sethas_field(msg, field);
-  } else if (_upb_MiniTable_Field_InOneOf(field)) {
-    *_upb_oneofcase_field(msg, field) = field->number;
-  }
-}
+    UPB_INLINE void _upb_MiniTable_SetPresence(upb_Message* msg, const upb_MiniTable_Field* field)
+    {
+        if (field->presence > 0)
+        {
+            _upb_sethas_field(msg, field);
+        }
+        else if (_upb_MiniTable_Field_InOneOf(field))
+        {
+            *_upb_oneofcase_field(msg, field) = field->number;
+        }
+    }
 
 #ifdef __cplusplus
 } /* extern "C" */

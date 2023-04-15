@@ -8,55 +8,55 @@
  */
 
 #ifndef OPENSSL_BUFFER_H
-# define OPENSSL_BUFFER_H
-# pragma once
+#define OPENSSL_BUFFER_H
+#pragma once
 
-# include <openssl/macros.h>
-# ifndef OPENSSL_NO_DEPRECATED_3_0
-#  define HEADER_BUFFER_H
-# endif
-
-# include <openssl/types.h>
-# ifndef OPENSSL_CRYPTO_H
-#  include <openssl/crypto.h>
-# endif
-# include <openssl/buffererr.h>
-
-
-#ifdef  __cplusplus
-extern "C" {
+#include <openssl/macros.h>
+#ifndef OPENSSL_NO_DEPRECATED_3_0
+#define HEADER_BUFFER_H
 #endif
 
-# include <stddef.h>
-# include <sys/types.h>
+#include <openssl/types.h>
+#ifndef OPENSSL_CRYPTO_H
+#include <openssl/crypto.h>
+#endif
+#include <openssl/buffererr.h>
 
-# ifndef OPENSSL_NO_DEPRECATED_3_0
-#  define BUF_strdup(s) OPENSSL_strdup(s)
-#  define BUF_strndup(s, size) OPENSSL_strndup(s, size)
-#  define BUF_memdup(data, size) OPENSSL_memdup(data, size)
-#  define BUF_strlcpy(dst, src, size)  OPENSSL_strlcpy(dst, src, size)
-#  define BUF_strlcat(dst, src, size) OPENSSL_strlcat(dst, src, size)
-#  define BUF_strnlen(str, maxlen) OPENSSL_strnlen(str, maxlen)
-# endif
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-struct buf_mem_st {
-    size_t length;              /* current number of bytes */
-    char *data;
-    size_t max;                 /* size of buffer */
-    unsigned long flags;
-};
+#include <stddef.h>
+#include <sys/types.h>
 
-# define BUF_MEM_FLAG_SECURE  0x01
+#ifndef OPENSSL_NO_DEPRECATED_3_0
+#define BUF_strdup(s) OPENSSL_strdup(s)
+#define BUF_strndup(s, size) OPENSSL_strndup(s, size)
+#define BUF_memdup(data, size) OPENSSL_memdup(data, size)
+#define BUF_strlcpy(dst, src, size) OPENSSL_strlcpy(dst, src, size)
+#define BUF_strlcat(dst, src, size) OPENSSL_strlcat(dst, src, size)
+#define BUF_strnlen(str, maxlen) OPENSSL_strnlen(str, maxlen)
+#endif
 
-BUF_MEM *BUF_MEM_new(void);
-BUF_MEM *BUF_MEM_new_ex(unsigned long flags);
-void BUF_MEM_free(BUF_MEM *a);
-size_t BUF_MEM_grow(BUF_MEM *str, size_t len);
-size_t BUF_MEM_grow_clean(BUF_MEM *str, size_t len);
-void BUF_reverse(unsigned char *out, const unsigned char *in, size_t siz);
+    struct buf_mem_st
+    {
+        size_t length; /* current number of bytes */
+        char* data;
+        size_t max; /* size of buffer */
+        unsigned long flags;
+    };
 
+#define BUF_MEM_FLAG_SECURE 0x01
 
-# ifdef  __cplusplus
+    BUF_MEM* BUF_MEM_new(void);
+    BUF_MEM* BUF_MEM_new_ex(unsigned long flags);
+    void BUF_MEM_free(BUF_MEM* a);
+    size_t BUF_MEM_grow(BUF_MEM* str, size_t len);
+    size_t BUF_MEM_grow_clean(BUF_MEM* str, size_t len);
+    void BUF_reverse(unsigned char* out, const unsigned char* in, size_t siz);
+
+#ifdef __cplusplus
 }
-# endif
+#endif
 #endif

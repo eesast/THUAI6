@@ -43,141 +43,138 @@
 // Must be included last.
 #include <google/protobuf/port_def.inc>
 
-namespace google {
-namespace protobuf {
+namespace google
+{
+    namespace protobuf
+    {
 
-class Descriptor;
-class EnumDescriptor;
-class EnumValueDescriptor;
-class FieldDescriptor;
-class OneofDescriptor;
-class ServiceDescriptor;
+        class Descriptor;
+        class EnumDescriptor;
+        class EnumValueDescriptor;
+        class FieldDescriptor;
+        class OneofDescriptor;
+        class ServiceDescriptor;
 
-namespace io {
-class Printer;
-}
+        namespace io
+        {
+            class Printer;
+        }
 
-namespace compiler {
-namespace python {
+        namespace compiler
+        {
+            namespace python
+            {
 
-// CodeGenerator implementation for generated Python protocol buffer classes.
-// If you create your own protocol compiler binary and you want it to support
-// Python output, you can do so by registering an instance of this
-// CodeGenerator with the CommandLineInterface in your main() function.
-class PROTOC_EXPORT Generator : public CodeGenerator {
- public:
-  Generator();
-  ~Generator() override;
+                // CodeGenerator implementation for generated Python protocol buffer classes.
+                // If you create your own protocol compiler binary and you want it to support
+                // Python output, you can do so by registering an instance of this
+                // CodeGenerator with the CommandLineInterface in your main() function.
+                class PROTOC_EXPORT Generator : public CodeGenerator
+                {
+                public:
+                    Generator();
+                    ~Generator() override;
 
-  // CodeGenerator methods.
-  bool Generate(const FileDescriptor* file, const std::string& parameter,
-                GeneratorContext* generator_context,
-                std::string* error) const override;
+                    // CodeGenerator methods.
+                    bool Generate(const FileDescriptor* file, const std::string& parameter, GeneratorContext* generator_context, std::string* error) const override;
 
-  uint64_t GetSupportedFeatures() const override;
+                    uint64_t GetSupportedFeatures() const override;
 
- private:
-  void PrintImports() const;
-  void PrintFileDescriptor() const;
-  void PrintAllNestedEnumsInFile() const;
-  void PrintNestedEnums(const Descriptor& descriptor) const;
-  void PrintEnum(const EnumDescriptor& enum_descriptor) const;
+                private:
+                    void PrintImports() const;
+                    void PrintFileDescriptor() const;
+                    void PrintAllNestedEnumsInFile() const;
+                    void PrintNestedEnums(const Descriptor& descriptor) const;
+                    void PrintEnum(const EnumDescriptor& enum_descriptor) const;
 
-  void PrintFieldDescriptor(const FieldDescriptor& field,
-                            bool is_extension) const;
-  void PrintFieldDescriptorsInDescriptor(
-      const Descriptor& message_descriptor, bool is_extension,
-      const std::string& list_variable_name, int (Descriptor::*CountFn)() const,
-      const FieldDescriptor* (Descriptor::*GetterFn)(int)const) const;
-  void PrintFieldsInDescriptor(const Descriptor& message_descriptor) const;
-  void PrintExtensionsInDescriptor(const Descriptor& message_descriptor) const;
-  void PrintMessageDescriptors() const;
-  void PrintDescriptor(const Descriptor& message_descriptor) const;
-  void PrintNestedDescriptors(const Descriptor& containing_descriptor) const;
+                    void PrintFieldDescriptor(const FieldDescriptor& field, bool is_extension) const;
+                    void PrintFieldDescriptorsInDescriptor(
+                        const Descriptor& message_descriptor, bool is_extension, const std::string& list_variable_name, int (Descriptor::*CountFn)() const, const FieldDescriptor* (Descriptor::*GetterFn)(int) const
+                    ) const;
+                    void PrintFieldsInDescriptor(const Descriptor& message_descriptor) const;
+                    void PrintExtensionsInDescriptor(const Descriptor& message_descriptor) const;
+                    void PrintMessageDescriptors() const;
+                    void PrintDescriptor(const Descriptor& message_descriptor) const;
+                    void PrintNestedDescriptors(const Descriptor& containing_descriptor) const;
 
-  void PrintMessages() const;
-  void PrintMessage(const Descriptor& message_descriptor,
-                    const std::string& prefix,
-                    std::vector<std::string>* to_register,
-                    bool is_nested) const;
-  void PrintNestedMessages(const Descriptor& containing_descriptor,
-                           const std::string& prefix,
-                           std::vector<std::string>* to_register) const;
+                    void PrintMessages() const;
+                    void PrintMessage(const Descriptor& message_descriptor, const std::string& prefix, std::vector<std::string>* to_register, bool is_nested) const;
+                    void PrintNestedMessages(const Descriptor& containing_descriptor, const std::string& prefix, std::vector<std::string>* to_register) const;
 
-  void FixForeignFieldsInDescriptors() const;
-  void FixForeignFieldsInDescriptor(
-      const Descriptor& descriptor,
-      const Descriptor* containing_descriptor) const;
-  void FixForeignFieldsInField(const Descriptor* containing_type,
-                               const FieldDescriptor& field,
-                               const std::string& python_dict_name) const;
-  void AddMessageToFileDescriptor(const Descriptor& descriptor) const;
-  void AddEnumToFileDescriptor(const EnumDescriptor& descriptor) const;
-  void AddExtensionToFileDescriptor(const FieldDescriptor& descriptor) const;
-  void AddServiceToFileDescriptor(const ServiceDescriptor& descriptor) const;
-  std::string FieldReferencingExpression(
-      const Descriptor* containing_type, const FieldDescriptor& field,
-      const std::string& python_dict_name) const;
-  template <typename DescriptorT>
-  void FixContainingTypeInDescriptor(
-      const DescriptorT& descriptor,
-      const Descriptor* containing_descriptor) const;
+                    void FixForeignFieldsInDescriptors() const;
+                    void FixForeignFieldsInDescriptor(
+                        const Descriptor& descriptor,
+                        const Descriptor* containing_descriptor
+                    ) const;
+                    void FixForeignFieldsInField(const Descriptor* containing_type, const FieldDescriptor& field, const std::string& python_dict_name) const;
+                    void AddMessageToFileDescriptor(const Descriptor& descriptor) const;
+                    void AddEnumToFileDescriptor(const EnumDescriptor& descriptor) const;
+                    void AddExtensionToFileDescriptor(const FieldDescriptor& descriptor) const;
+                    void AddServiceToFileDescriptor(const ServiceDescriptor& descriptor) const;
+                    std::string FieldReferencingExpression(
+                        const Descriptor* containing_type, const FieldDescriptor& field, const std::string& python_dict_name
+                    ) const;
+                    template<typename DescriptorT>
+                    void FixContainingTypeInDescriptor(
+                        const DescriptorT& descriptor,
+                        const Descriptor* containing_descriptor
+                    ) const;
 
-  void FixForeignFieldsInExtensions() const;
-  void FixForeignFieldsInExtension(
-      const FieldDescriptor& extension_field) const;
-  void FixForeignFieldsInNestedExtensions(const Descriptor& descriptor) const;
+                    void FixForeignFieldsInExtensions() const;
+                    void FixForeignFieldsInExtension(
+                        const FieldDescriptor& extension_field
+                    ) const;
+                    void FixForeignFieldsInNestedExtensions(const Descriptor& descriptor) const;
 
-  void PrintServices() const;
-  void PrintServiceDescriptors() const;
-  void PrintServiceDescriptor(const ServiceDescriptor& descriptor) const;
-  void PrintServiceClass(const ServiceDescriptor& descriptor) const;
-  void PrintServiceStub(const ServiceDescriptor& descriptor) const;
-  void PrintDescriptorKeyAndModuleName(
-      const ServiceDescriptor& descriptor) const;
+                    void PrintServices() const;
+                    void PrintServiceDescriptors() const;
+                    void PrintServiceDescriptor(const ServiceDescriptor& descriptor) const;
+                    void PrintServiceClass(const ServiceDescriptor& descriptor) const;
+                    void PrintServiceStub(const ServiceDescriptor& descriptor) const;
+                    void PrintDescriptorKeyAndModuleName(
+                        const ServiceDescriptor& descriptor
+                    ) const;
 
-  void PrintEnumValueDescriptor(const EnumValueDescriptor& descriptor) const;
-  std::string OptionsValue(const std::string& serialized_options) const;
-  bool GeneratingDescriptorProto() const;
+                    void PrintEnumValueDescriptor(const EnumValueDescriptor& descriptor) const;
+                    std::string OptionsValue(const std::string& serialized_options) const;
+                    bool GeneratingDescriptorProto() const;
 
-  template <typename DescriptorT>
-  std::string ModuleLevelDescriptorName(const DescriptorT& descriptor) const;
-  std::string ModuleLevelMessageName(const Descriptor& descriptor) const;
-  std::string ModuleLevelServiceDescriptorName(
-      const ServiceDescriptor& descriptor) const;
+                    template<typename DescriptorT>
+                    std::string ModuleLevelDescriptorName(const DescriptorT& descriptor) const;
+                    std::string ModuleLevelMessageName(const Descriptor& descriptor) const;
+                    std::string ModuleLevelServiceDescriptorName(
+                        const ServiceDescriptor& descriptor
+                    ) const;
 
-  template <typename DescriptorT, typename DescriptorProtoT>
-  void PrintSerializedPbInterval(const DescriptorT& descriptor,
-                                 DescriptorProtoT& proto,
-                                 const std::string& name) const;
+                    template<typename DescriptorT, typename DescriptorProtoT>
+                    void PrintSerializedPbInterval(const DescriptorT& descriptor, DescriptorProtoT& proto, const std::string& name) const;
 
-  void FixAllDescriptorOptions() const;
-  void FixOptionsForField(const FieldDescriptor& field) const;
-  void FixOptionsForOneof(const OneofDescriptor& oneof) const;
-  void FixOptionsForEnum(const EnumDescriptor& descriptor) const;
-  void FixOptionsForService(const ServiceDescriptor& descriptor) const;
-  void FixOptionsForMessage(const Descriptor& descriptor) const;
+                    void FixAllDescriptorOptions() const;
+                    void FixOptionsForField(const FieldDescriptor& field) const;
+                    void FixOptionsForOneof(const OneofDescriptor& oneof) const;
+                    void FixOptionsForEnum(const EnumDescriptor& descriptor) const;
+                    void FixOptionsForService(const ServiceDescriptor& descriptor) const;
+                    void FixOptionsForMessage(const Descriptor& descriptor) const;
 
-  void SetSerializedPbInterval() const;
-  void SetMessagePbInterval(const Descriptor& descriptor) const;
+                    void SetSerializedPbInterval() const;
+                    void SetMessagePbInterval(const Descriptor& descriptor) const;
 
-  void CopyPublicDependenciesAliases(const std::string& copy_from,
-                                     const FileDescriptor* file) const;
+                    void CopyPublicDependenciesAliases(const std::string& copy_from, const FileDescriptor* file) const;
 
-  // Very coarse-grained lock to ensure that Generate() is reentrant.
-  // Guards file_, printer_ and file_descriptor_serialized_.
-  mutable Mutex mutex_;
-  mutable const FileDescriptor* file_;  // Set in Generate().  Under mutex_.
-  mutable std::string file_descriptor_serialized_;
-  mutable io::Printer* printer_;  // Set in Generate().  Under mutex_.
-  mutable bool pure_python_workable_;
+                    // Very coarse-grained lock to ensure that Generate() is reentrant.
+                    // Guards file_, printer_ and file_descriptor_serialized_.
+                    mutable Mutex mutex_;
+                    mutable const FileDescriptor* file_;  // Set in Generate().  Under mutex_.
+                    mutable std::string file_descriptor_serialized_;
+                    mutable io::Printer* printer_;  // Set in Generate().  Under mutex_.
+                    mutable bool pure_python_workable_;
 
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(Generator);
-};
+                    GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(Generator);
+                };
 
-}  // namespace python
-}  // namespace compiler
-}  // namespace protobuf
+            }  // namespace python
+        }      // namespace compiler
+    }          // namespace protobuf
 }  // namespace google
 
 #include <google/protobuf/port_undef.inc>

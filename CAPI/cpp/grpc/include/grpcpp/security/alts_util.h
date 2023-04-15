@@ -28,23 +28,27 @@
 
 struct grpc_gcp_AltsContext;
 
-namespace grpc {
-namespace experimental {
+namespace grpc
+{
+    namespace experimental
+    {
 
-// GetAltsContextFromAuthContext helps to get the AltsContext from AuthContext.
-// If ALTS is not the transport security protocol used to establish the
-// connection, this function will return nullptr.
-std::unique_ptr<AltsContext> GetAltsContextFromAuthContext(
-    const std::shared_ptr<const AuthContext>& auth_context);
+        // GetAltsContextFromAuthContext helps to get the AltsContext from AuthContext.
+        // If ALTS is not the transport security protocol used to establish the
+        // connection, this function will return nullptr.
+        std::unique_ptr<AltsContext> GetAltsContextFromAuthContext(
+            const std::shared_ptr<const AuthContext>& auth_context
+        );
 
-// This utility function performs ALTS client authorization check on server
-// side, i.e., checks if the client identity matches one of the expected service
-// accounts. It returns OK if client is authorized and an error otherwise.
-grpc::Status AltsClientAuthzCheck(
-    const std::shared_ptr<const AuthContext>& auth_context,
-    const std::vector<std::string>& expected_service_accounts);
+        // This utility function performs ALTS client authorization check on server
+        // side, i.e., checks if the client identity matches one of the expected service
+        // accounts. It returns OK if client is authorized and an error otherwise.
+        grpc::Status AltsClientAuthzCheck(
+            const std::shared_ptr<const AuthContext>& auth_context,
+            const std::vector<std::string>& expected_service_accounts
+        );
 
-}  // namespace experimental
+    }  // namespace experimental
 }  // namespace grpc
 
 #endif  // GRPCPP_SECURITY_ALTS_UTIL_H

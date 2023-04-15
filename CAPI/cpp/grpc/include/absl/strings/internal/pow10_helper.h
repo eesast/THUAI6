@@ -24,17 +24,19 @@
 
 #include "absl/base/config.h"
 
-namespace absl {
-ABSL_NAMESPACE_BEGIN
-namespace strings_internal {
+namespace absl
+{
+    ABSL_NAMESPACE_BEGIN
+    namespace strings_internal
+    {
 
-// Computes the precise value of 10^exp. (I.e. the nearest representable
-// double to the exact value, rounding to nearest-even in the (single) case of
-// being exactly halfway between.)
-double Pow10(int exp);
+        // Computes the precise value of 10^exp. (I.e. the nearest representable
+        // double to the exact value, rounding to nearest-even in the (single) case of
+        // being exactly halfway between.)
+        double Pow10(int exp);
 
-}  // namespace strings_internal
-ABSL_NAMESPACE_END
+    }  // namespace strings_internal
+    ABSL_NAMESPACE_END
 }  // namespace absl
 
 #endif  // ABSL_STRINGS_INTERNAL_POW10_HELPER_H_

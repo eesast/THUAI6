@@ -31,14 +31,16 @@
 #include "upb/def.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-enum { upb_JsonDecode_IgnoreUnknown = 1 };
+    enum
+    {
+        upb_JsonDecode_IgnoreUnknown = 1
+    };
 
-bool upb_JsonDecode(const char* buf, size_t size, upb_Message* msg,
-                    const upb_MessageDef* m, const upb_DefPool* symtab,
-                    int options, upb_Arena* arena, upb_Status* status);
+    bool upb_JsonDecode(const char* buf, size_t size, upb_Message* msg, const upb_MessageDef* m, const upb_DefPool* symtab, int options, upb_Arena* arena, upb_Status* status);
 
 #ifdef __cplusplus
 } /* extern "C" */

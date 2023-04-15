@@ -43,33 +43,37 @@
 // Must be included last.
 #include <google/protobuf/port_def.inc>
 
-namespace google {
-namespace protobuf {
-namespace compiler {
-namespace java {
+namespace google
+{
+    namespace protobuf
+    {
+        namespace compiler
+        {
+            namespace java
+            {
 
-// CodeGenerator implementation which generates Java code.  If you create your
-// own protocol compiler binary and you want it to support Java output, you
-// can do so by registering an instance of this CodeGenerator with the
-// CommandLineInterface in your main() function.
-class PROTOC_EXPORT JavaGenerator : public CodeGenerator {
- public:
-  JavaGenerator();
-  ~JavaGenerator() override;
+                // CodeGenerator implementation which generates Java code.  If you create your
+                // own protocol compiler binary and you want it to support Java output, you
+                // can do so by registering an instance of this CodeGenerator with the
+                // CommandLineInterface in your main() function.
+                class PROTOC_EXPORT JavaGenerator : public CodeGenerator
+                {
+                public:
+                    JavaGenerator();
+                    ~JavaGenerator() override;
 
-  // implements CodeGenerator ----------------------------------------
-  bool Generate(const FileDescriptor* file, const std::string& parameter,
-                GeneratorContext* context, std::string* error) const override;
+                    // implements CodeGenerator ----------------------------------------
+                    bool Generate(const FileDescriptor* file, const std::string& parameter, GeneratorContext* context, std::string* error) const override;
 
-  uint64_t GetSupportedFeatures() const override;
+                    uint64_t GetSupportedFeatures() const override;
 
- private:
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(JavaGenerator);
-};
+                private:
+                    GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(JavaGenerator);
+                };
 
-}  // namespace java
-}  // namespace compiler
-}  // namespace protobuf
+            }  // namespace java
+        }      // namespace compiler
+    }          // namespace protobuf
 }  // namespace google
 
 #include <google/protobuf/port_undef.inc>

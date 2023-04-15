@@ -44,42 +44,57 @@
 // Must come last:
 #include <google/protobuf/port_def.inc>
 
-namespace google {
-namespace protobuf {
-namespace internal {
+namespace google
+{
+    namespace protobuf
+    {
+        namespace internal
+        {
 
-// To save code size, protos without any fields are derived from ZeroFieldsBase
-// rather than Message.
-class PROTOBUF_EXPORT ZeroFieldsBase : public Message {
- public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final { return true; }
-  size_t ByteSizeLong() const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-  const char* _InternalParse(const char* ptr,
-                             internal::ParseContext* ctx) final;
-  ::uint8_t* _InternalSerialize(::uint8_t* target,
-                                io::EpsCopyOutputStream* stream) const final;
+            // To save code size, protos without any fields are derived from ZeroFieldsBase
+            // rather than Message.
+            class PROTOBUF_EXPORT ZeroFieldsBase : public Message
+            {
+            public:
+                PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+                bool IsInitialized() const final
+                {
+                    return true;
+                }
+                size_t ByteSizeLong() const final;
+                int GetCachedSize() const final
+                {
+                    return _cached_size_.Get();
+                }
+                const char* _InternalParse(const char* ptr, internal::ParseContext* ctx) final;
+                ::uint8_t* _InternalSerialize(::uint8_t* target, io::EpsCopyOutputStream* stream) const final;
 
- protected:
-  constexpr ZeroFieldsBase() {}
-  explicit ZeroFieldsBase(Arena* arena, bool is_message_owned)
-      : Message(arena, is_message_owned) {}
-  ZeroFieldsBase(const ZeroFieldsBase&) = delete;
-  ZeroFieldsBase& operator=(const ZeroFieldsBase&) = delete;
-  ~ZeroFieldsBase() override;
+            protected:
+                constexpr ZeroFieldsBase()
+                {
+                }
+                explicit ZeroFieldsBase(Arena* arena, bool is_message_owned) :
+                    Message(arena, is_message_owned)
+                {
+                }
+                ZeroFieldsBase(const ZeroFieldsBase&) = delete;
+                ZeroFieldsBase& operator=(const ZeroFieldsBase&) = delete;
+                ~ZeroFieldsBase() override;
 
-  void SetCachedSize(int size) const final { _cached_size_.Set(size); }
+                void SetCachedSize(int size) const final
+                {
+                    _cached_size_.Set(size);
+                }
 
-  static void MergeImpl(Message& to, const Message& from);
-  static void CopyImpl(Message& to, const Message& from);
-  void InternalSwap(ZeroFieldsBase* other);
+                static void MergeImpl(Message& to, const Message& from);
+                static void CopyImpl(Message& to, const Message& from);
+                void InternalSwap(ZeroFieldsBase* other);
 
-  mutable internal::CachedSize _cached_size_;
-};
+                mutable internal::CachedSize _cached_size_;
+            };
 
-}  // namespace internal
-}  // namespace protobuf
+        }  // namespace internal
+    }      // namespace protobuf
 }  // namespace google
 
 #include <google/protobuf/port_undef.inc>

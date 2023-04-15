@@ -60,9 +60,10 @@
 #include <grpcpp/server_posix.h>
 // IWYU pragma: end_exports
 
-namespace grpc {
-/// Return gRPC library version.
-std::string Version();
+namespace grpc
+{
+    /// Return gRPC library version.
+    std::string Version();
 }  // namespace grpc
 
 #endif  // GRPCPP_GRPCPP_H

@@ -25,16 +25,17 @@
 
 #include <grpcpp/server.h>
 
-namespace grpc {
+namespace grpc
+{
 
 #ifdef GPR_SUPPORT_CHANNELS_FROM_FD
 
-/// Add a new client to a \a Server communicating over the given
-/// file descriptor.
-///
-/// \param server The server to add the client to.
-/// \param fd The file descriptor representing a socket.
-void AddInsecureChannelFromFd(Server* server, int fd);
+    /// Add a new client to a \a Server communicating over the given
+    /// file descriptor.
+    ///
+    /// \param server The server to add the client to.
+    /// \param fd The file descriptor representing a socket.
+    void AddInsecureChannelFromFd(Server* server, int fd);
 
 #endif  // GPR_SUPPORT_CHANNELS_FROM_FD
 

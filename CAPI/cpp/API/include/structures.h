@@ -85,6 +85,7 @@ namespace THUAI6
         StraightAStudent = 3,
         Robot = 4,
         TechOtaku = 5,
+        Sunshine = 6,
     };
 
     // 捣蛋鬼类型
@@ -285,6 +286,7 @@ namespace THUAI6
         {StudentType::StraightAStudent, "StraightAStudent"},
         {StudentType::Robot, "Robot"},
         {StudentType::TechOtaku, "TechOtaku"},
+        {StudentType::Sunshine, "Sunshine"},
     };
 
     inline std::map<TrickerType, std::string> trickerTypeDict{

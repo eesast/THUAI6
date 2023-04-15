@@ -112,6 +112,7 @@ namespace Proto2THUAI6
         {protobuf::StudentType::STRAIGHT_A_STUDENT, THUAI6::StudentType::StraightAStudent},
         {protobuf::StudentType::ROBOT, THUAI6::StudentType::Robot},
         {protobuf::StudentType::TECH_OTAKU, THUAI6::StudentType::TechOtaku},
+        {protobuf::StudentType::SUNSHINE, THUAI6::StudentType::Sunshine},
     };
 
     inline std::map<protobuf::TrickerType, THUAI6::TrickerType> trickerTypeDict{
@@ -370,6 +371,7 @@ namespace THUAI62Proto
         {THUAI6::StudentType::StraightAStudent, protobuf::StudentType::STRAIGHT_A_STUDENT},
         {THUAI6::StudentType::Robot, protobuf::StudentType::ROBOT},
         {THUAI6::StudentType::TechOtaku, protobuf::StudentType::TECH_OTAKU},
+        {THUAI6::StudentType::Sunshine, protobuf::StudentType::SUNSHINE},
     };
 
     // inline std::map<THUAI6::StudentBuffType, protobuf::StudentBuffType> studentBuffTypeDict{

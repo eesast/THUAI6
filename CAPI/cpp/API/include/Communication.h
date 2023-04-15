@@ -26,6 +26,7 @@ public:
     bool Move(int64_t time, double angle, int64_t playerID);
     bool PickProp(THUAI6::PropType prop, int64_t playerID);
     bool UseProp(THUAI6::PropType prop, int64_t playerID);
+    bool ThrowProp(THUAI6::PropType prop, int64_t playerID);
     bool UseSkill(int32_t skillID, int64_t playerID);
     bool SendMessage(int64_t toID, std::string message, int64_t playerID);
     bool OpenDoor(int64_t playerID);
@@ -38,8 +39,8 @@ public:
     bool Graduate(int64_t playerID);
 
     bool StartLearning(int64_t playerID);
-    bool StartTreatMate(int64_t playerID, int64_t mateID);
-    bool StartRescueMate(int64_t playerID, int64_t mateID);
+    bool StartEncourageMate(int64_t playerID, int64_t mateID);
+    bool StartRouseMate(int64_t playerID, int64_t mateID);
 
     bool Attack(double angle, int64_t playerID);
 

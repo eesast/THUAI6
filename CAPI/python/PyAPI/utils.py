@@ -111,7 +111,8 @@ class Proto2THUAI6(NoInstance):
         MessageType.NULL_TRICKER_TYPE: THUAI6.TrickerType.NullTrickerType,
         MessageType.ASSASSIN: THUAI6.TrickerType.Assassin,
         MessageType.KLEE: THUAI6.TrickerType.Klee,
-        MessageType.A_NOISY_PERSON: THUAI6.TrickerType.ANoisyPerson, }
+        MessageType.A_NOISY_PERSON: THUAI6.TrickerType.ANoisyPerson,
+        MessageType.IDOL: THUAI6.TrickerType.Idol, }
 
     studentBuffTypeDict: Final[dict] = {
         MessageType.NULL_SBUFF_TYPE: THUAI6.StudentBuffType.NullStudentBuffType,
@@ -135,11 +136,11 @@ class Proto2THUAI6(NoInstance):
         MessageType.ADDICTED: THUAI6.PlayerState.Addicted,
         MessageType.QUIT: THUAI6.PlayerState.Quit,
         MessageType.GRADUATED: THUAI6.PlayerState.Graduated,
-        MessageType.RESCUED: THUAI6.PlayerState.Rescued,
-        MessageType.TREATED: THUAI6.PlayerState.Treated,
+        MessageType.RESCUED: THUAI6.PlayerState.Roused,
+        MessageType.TREATED: THUAI6.PlayerState.Encouraged,
         MessageType.STUNNED: THUAI6.PlayerState.Stunned,
-        MessageType.RESCUING: THUAI6.PlayerState.Rescuing,
-        MessageType.TREATING: THUAI6.PlayerState.Treating,
+        MessageType.RESCUING: THUAI6.PlayerState.Rousing,
+        MessageType.TREATING: THUAI6.PlayerState.Encouraging,
         MessageType.SWINGING: THUAI6.PlayerState.Swinging,
         MessageType.ATTACKING: THUAI6.PlayerState.Attacking,
         MessageType.LOCKING: THUAI6.PlayerState.Locking,
@@ -206,9 +207,9 @@ class Proto2THUAI6(NoInstance):
         student.facingDirection = studentMsg.facing_direction
         student.bulletType = Proto2THUAI6.bulletTypeDict[studentMsg.bullet_type]
         student.learningSpeed = studentMsg.learning_speed
-        student.treatSpeed = studentMsg.treat_speed
-        student.treatProgress = studentMsg.treat_progress
-        student.rescueProgress = studentMsg.rescue_progress
+        student.encourageSpeed = studentMsg.treat_speed
+        student.encourageProgress = studentMsg.treat_progress
+        student.rouseProgress = studentMsg.rescue_progress
         student.dangerAlert = studentMsg.danger_alert
         student.timeUntilSkillAvailable.clear()
         for time in studentMsg.time_until_skill_available:
@@ -314,7 +315,8 @@ class THUAI62Proto(NoInstance):
         THUAI6.TrickerType.NullTrickerType: MessageType.NULL_TRICKER_TYPE,
         THUAI6.TrickerType.Assassin: MessageType.ASSASSIN,
         THUAI6.TrickerType.Klee: MessageType.KLEE,
-        THUAI6.TrickerType.ANoisyPerson: MessageType.A_NOISY_PERSON, }
+        THUAI6.TrickerType.ANoisyPerson: MessageType.A_NOISY_PERSON,
+        THUAI6.TrickerType.Idol: MessageType.IDOL, }
 
     propTypeDict: Final[dict] = {
         THUAI6.PropType.NullPropType: MessageType.NULL_PROP_TYPE,

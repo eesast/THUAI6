@@ -89,6 +89,18 @@ std::future<bool> TrickerAPI::UseProp(THUAI6::PropType prop)
                       { return logic.UseProp(prop); });
 }
 
+std::future<bool> StudentAPI::ThrowProp(THUAI6::PropType prop)
+{
+    return std::async(std::launch::async, [=]()
+                      { return logic.ThrowProp(prop); });
+}
+
+std::future<bool> TrickerAPI::ThrowProp(THUAI6::PropType prop)
+{
+    return std::async(std::launch::async, [=]()
+                      { return logic.ThrowProp(prop); });
+}
+
 std::future<bool> StudentAPI::UseSkill(int32_t skillID)
 {
     return std::async(std::launch::async, [=]()
@@ -255,6 +267,16 @@ std::vector<std::shared_ptr<const THUAI6::Prop>> TrickerAPI::GetProps() const
     return logic.GetProps();
 }
 
+std::vector<std::shared_ptr<const THUAI6::Bullet>> StudentAPI::GetBullets() const
+{
+    return logic.GetBullets();
+}
+
+std::vector<std::shared_ptr<const THUAI6::Bullet>> TrickerAPI::GetBullets() const
+{
+    return logic.GetBullets();
+}
+
 std::vector<std::vector<THUAI6::PlaceType>> StudentAPI::GetFullMap() const
 {
     return logic.GetFullMap();
@@ -361,16 +383,16 @@ std::future<bool> StudentAPI::StartLearning()
                       { return logic.StartLearning(); });
 }
 
-std::future<bool> StudentAPI::StartTreatMate(int64_t mateID)
+std::future<bool> StudentAPI::StartEncourageMate(int64_t mateID)
 {
     return std::async(std::launch::async, [=]()
-                      { return logic.StartTreatMate(mateID); });
+                      { return logic.StartEncourageMate(mateID); });
 }
 
-std::future<bool> StudentAPI::StartRescueMate(int64_t mateID)
+std::future<bool> StudentAPI::StartRouseMate(int64_t mateID)
 {
     return std::async(std::launch::async, [=]()
-                      { return logic.StartRescueMate(mateID); });
+                      { return logic.StartRouseMate(mateID); });
 }
 
 std::future<bool> StudentAPI::Graduate()

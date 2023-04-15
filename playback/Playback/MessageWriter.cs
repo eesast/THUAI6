@@ -12,7 +12,7 @@ namespace Playback
         private CodedOutputStream cos;
         private MemoryStream ms;
         private GZipStream gzs;
-        private const int memoryCapacity = 1024 * 1024;    // 1M
+        private const int memoryCapacity = 10 * 1024 * 1024;    // 10M
 
         private static void ClearMemoryStream(MemoryStream msToClear)
         {
@@ -50,6 +50,7 @@ namespace Playback
             {
                 cos.Flush();
                 gzs.Write(ms.GetBuffer(), 0, (int)ms.Length);
+                gzs.Flush();
                 ClearMemoryStream(ms);
                 fs.Flush();
             }

@@ -16,6 +16,22 @@ namespace Server
 {
     public partial class GameServer : AvailableService.AvailableServiceBase
     {
+        protected object spectatorLock = new object();
+        protected bool isSpectatorJoin = false;
+        protected bool IsSpectatorJoin
+        {
+            get
+            {
+                lock (spectatorLock)
+                    return isSpectatorJoin;
+            }
+
+            set
+            {
+                lock (spectatorLock)
+                    isSpectatorJoin = value;
+            }
+        }
         public override Task<BoolRes> TryConnection(IDMsg request, ServerCallContext context)
         {
 #if DEBUG
@@ -53,6 +69,7 @@ namespace Server
                     {
                         semaDict.Add(request.PlayerId, temp);
                     }
+                    IsSpectatorJoin = true;
                 }
                 do
                 {
@@ -147,8 +164,7 @@ namespace Server
                 return Task.FromResult(boolRes);
             }
             var gameID = communicationToGameID[request.PlayerId];
-            game.Attack(gameID, request.Angle);
-            boolRes.ActSuccess = true;
+            boolRes.ActSuccess = game.Attack(gameID, request.Angle);
             return Task.FromResult(boolRes);
         }
 
@@ -170,8 +186,7 @@ namespace Server
                 return Task.FromResult(moveRes);
             }
             var gameID = communicationToGameID[request.PlayerId];
-            game.MovePlayer(gameID, (int)request.TimeInMilliseconds, request.Angle);
-            moveRes.ActSuccess = true;
+            moveRes.ActSuccess = game.MovePlayer(gameID, (int)request.TimeInMilliseconds, request.Angle);
             if (!game.GameMap.Timer.IsGaming) moveRes.ActSuccess = false;
             return Task.FromResult(moveRes);
         }

@@ -41,6 +41,9 @@ class StudentAPI(IStudentAPI, IGameTimer):
     def UseProp(self, propType: THUAI6.PropType) -> Future[bool]:
         return self.__pool.submit(self.__logic.UseProp, propType)
 
+    def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
+        return self.__pool.submit(self.__logic.ThrowProp, propType)
+
     def UseSkill(self, skillID: int) -> Future[bool]:
         return self.__pool.submit(self.__logic.UseSkill, skillID)
 
@@ -98,6 +101,9 @@ class StudentAPI(IStudentAPI, IGameTimer):
 
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
+
+    def GetBullets(self) -> List[THUAI6.Bullet]:
+        return self.__logic.GetBullets()
 
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         return self.__logic.GetFullMap()
@@ -151,11 +157,11 @@ class StudentAPI(IStudentAPI, IGameTimer):
     def StartLearning(self) -> Future[bool]:
         return self.__pool.submit(self.__logic.StartLearning)
 
-    def StartTreatMate(self, mateID: int) -> Future[bool]:
-        return self.__pool.submit(self.__logic.StartTreatMate, mateID)
+    def StartEncourageMate(self, mateID: int) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartEncourageMate, mateID)
 
-    def StartRescueMate(self, mateID: int) -> Future[bool]:
-        return self.__pool.submit(self.__logic.StartRescueMate, mateID)
+    def StartRouseMate(self, mateID: int) -> Future[bool]:
+        return self.__pool.submit(self.__logic.StartRouseMate, mateID)
 
     def GetSelfInfo(self) -> THUAI6.Student:
         return cast(THUAI6.Student, self.__logic.GetSelfInfo())
@@ -207,6 +213,9 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
 
     def UseProp(self, propType: THUAI6.PropType) -> Future[bool]:
         return self.__pool.submit(self.__logic.UseProp, propType)
+
+    def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
+        return self.__pool.submit(self.__logic.ThrowProp, propType)
 
     def UseSkill(self, skillID: int) -> Future[bool]:
         return self.__pool.submit(self.__logic.UseSkill, skillID)
@@ -265,6 +274,9 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
 
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
+
+    def GetBullets(self) -> List[THUAI6.Bullet]:
+        return self.__logic.GetBullets()
 
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         return self.__logic.GetFullMap()

@@ -94,6 +94,7 @@ private:
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const override;
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Student> StudentGetSelfInfo() const override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> TrickerGetSelfInfo() const override;
     [[nodiscard]] THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const override;
@@ -113,6 +114,7 @@ private:
     bool Move(int64_t time, double angle) override;
     bool PickProp(THUAI6::PropType prop) override;
     bool UseProp(THUAI6::PropType prop) override;
+    bool ThrowProp(THUAI6::PropType prop) override;
     bool UseSkill(int32_t skillID) override;
 
     bool SendMessage(int64_t toID, std::string message) override;
@@ -123,8 +125,8 @@ private:
 
     bool StartLearning() override;
 
-    bool StartTreatMate(int64_t mateID) override;
-    bool StartRescueMate(int64_t mateID) override;
+    bool StartEncourageMate(int64_t mateID) override;
+    bool StartRouseMate(int64_t mateID) override;
 
     bool Attack(double angle) override;
 

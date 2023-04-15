@@ -94,7 +94,7 @@ namespace THUAI6
         Assassin = 1,
         Klee = 2,
         ANoisyPerson = 3,
-        TrickerType4 = 4,
+        Idol = 4,
     };
 
     // 学生Buff类型
@@ -126,11 +126,11 @@ namespace THUAI6
         Addicted = 3,
         Quit = 4,
         Graduated = 5,
-        Treated = 6,
-        Rescued = 7,
+        Encouraged = 6,
+        Roused = 7,
         Stunned = 8,
-        Treating = 9,
-        Rescuing = 10,
+        Encouraging = 9,
+        Rousing = 10,
         Swinging = 11,
         Attacking = 12,
         Locking = 13,
@@ -195,9 +195,9 @@ namespace THUAI6
         int32_t determination;  // 剩余毅力
         int32_t addiction;      // 沉迷程度
         int32_t learningSpeed;
-        int32_t treatSpeed;
-        int32_t treatProgress;
-        int32_t rescueProgress;
+        int32_t encourageSpeed;
+        int32_t encourageProgress;
+        int32_t rouseProgress;
         double dangerAlert;
         std::vector<StudentBuffType> buff;  // buff
     };
@@ -292,6 +292,7 @@ namespace THUAI6
         {TrickerType::Assassin, "Assassin"},
         {TrickerType::Klee, "Klee"},
         {TrickerType::ANoisyPerson, "ANoisyPerson"},
+        {TrickerType::Idol, "Idol"},
     };
 
     inline std::map<PlayerState, std::string> playerStateDict{
@@ -301,11 +302,11 @@ namespace THUAI6
         {PlayerState::Addicted, "Addicted"},
         {PlayerState::Quit, "Quit"},
         {PlayerState::Graduated, "Graduated"},
-        {PlayerState::Treated, "Treated"},
-        {PlayerState::Rescued, "Rescued"},
+        {PlayerState::Encouraged, "Encouraged"},
+        {PlayerState::Roused, "Roused"},
         {PlayerState::Stunned, "Stunned"},
-        {PlayerState::Treating, "Treating"},
-        {PlayerState::Rescuing, "Rescuing"},
+        {PlayerState::Encouraging, "Encouraging"},
+        {PlayerState::Rousing, "Rousing"},
         {PlayerState::Swinging, "Swinging"},
         {PlayerState::Attacking, "Attacking"},
         {PlayerState::Locking, "Locking"},

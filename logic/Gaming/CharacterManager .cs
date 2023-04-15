@@ -7,6 +7,7 @@ using GameEngine;
 using Preparation.Interface;
 using Timothy.FrameRateTask;
 using System.Numerics;
+using System.Timers;
 
 namespace Gaming
 {
@@ -21,6 +22,23 @@ namespace Gaming
                 this.gameMap = gameMap;
             }
 
+            public void SetPlayerState(Character player, PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+            {
+                switch (player.PlayerState)
+                {
+                    case PlayerStateType.OpeningTheChest:
+                        ((Chest)player.WhatInteractingWith).StopOpen();
+                        break;
+                    case PlayerStateType.OpeningTheDoorway:
+                        Doorway doorway = (Doorway)player.WhatInteractingWith;
+                        doorway.OpenDegree += gameMap.Timer.nowTime() - doorway.OpenStartTime;
+                        doorway.OpenStartTime = 0;
+                        break;
+                    default:
+                        break;
+                }
+                player.ChangePlayerState(value, gameObj);
+            }
 
             public Character? AddPlayer(XY pos, int teamID, int playerID, CharacterType characterType, Character? parent = null)
             {
@@ -123,8 +141,7 @@ namespace Gaming
                                                 bgmVolume = newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position);
                                         }
                                     }
-                                    if (bgmVolume > 0)
-                                        newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
+                                    newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
                                 }
                                 else
                                 {
@@ -132,9 +149,13 @@ namespace Gaming
                                     {
                                         if (person.IsGhost())
                                         {
-                                            if (!noise && XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                                newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
-                                            if (newPlayer.CharacterType != CharacterType.Teacher && XY.Distance(newPlayer.Position, person.Position) <= newPlayer.ViewRange)
+                                            if (!noise)
+                                            {
+                                                if (XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
+                                                    newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
+                                                else newPlayer.AddBgm(BgmType.GhostIsComing, 0);
+                                            }
+                                            if (newPlayer.CharacterType != CharacterType.Teacher && !newPlayer.NoHp() && newPlayer.PlayerState != PlayerStateType.Stunned && XY.Distance(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
                                             {
                                                 TimePinningDown += GameData.checkInterval;
                                                 newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
@@ -165,8 +186,7 @@ namespace Gaming
                                                 bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position);
                                         }
                                     }
-                                    if (bgmVolume > 0)
-                                        newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, bgmVolume);
+                                    newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, bgmVolume);
                                 }
                                 finally
                                 {
@@ -216,7 +236,7 @@ namespace Gaming
                         return;
                     }
                 }
-                player.PlayerState = PlayerStateType.Addicted;
+                SetPlayerState(player, PlayerStateType.Addicted);
                 new Thread
                     (() =>
                     {
@@ -246,23 +266,23 @@ namespace Gaming
                 { IsBackground = true }.Start();
             }
 
-            public static bool BeStunned(Character player, int time)
+            public bool BeStunned(Character player, int time)
             {
                 if (player.PlayerState == PlayerStateType.Stunned || player.NoHp() || player.CharacterType == CharacterType.Robot) return false;
                 new Thread
                     (() =>
                     {
-                        player.PlayerState = PlayerStateType.Stunned;
+                        SetPlayerState(player, PlayerStateType.Stunned);
                         Thread.Sleep(time);
                         if (player.PlayerState == PlayerStateType.Stunned)
-                            player.PlayerState = PlayerStateType.Null;
+                            SetPlayerState(player);
                     }
                     )
                 { IsBackground = true }.Start();
                 return true;
             }
 
-            public static bool TryBeAwed(Student character, Bullet bullet)
+            public bool TryBeAwed(Student character, Bullet bullet)
             {
                 if (character.CanBeAwed())
                 {
@@ -292,6 +312,7 @@ namespace Gaming
                 {
                     ((WriteAnswers)student.FindIActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
                 }
+                student.SetDegreeOfTreatment0();
 #if DEBUG
                 Debugger.Output(bullet, " 's AP is " + bullet.AP.ToString());
 #endif
@@ -328,7 +349,6 @@ namespace Gaming
                     bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
                     bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                 }
-                student.SetDegreeOfTreatment0();
                 if (student.HP <= 0)
                     student.TryActivatingLIFE();  // 如果有复活甲
 
@@ -337,11 +357,11 @@ namespace Gaming
                 else TryBeAwed(student, bullet);
             }
 
-            public static bool BackSwing(Character? player, int time)
+            public bool BackSwing(Character player, int time)
             {
-                if (player == null || time <= 0) return false;
+                if (time <= 0) return false;
                 if (player.PlayerState == PlayerStateType.Swinging || (!player.Commandable() && player.PlayerState != PlayerStateType.TryingToAttack)) return false;
-                player.PlayerState = PlayerStateType.Swinging;
+                SetPlayerState(player, PlayerStateType.Swinging);
 
                 new Thread
                         (() =>
@@ -350,7 +370,7 @@ namespace Gaming
 
                             if (player.PlayerState == PlayerStateType.Swinging)
                             {
-                                player.PlayerState = PlayerStateType.Null;
+                                SetPlayerState(player);
                             }
                         }
                         )

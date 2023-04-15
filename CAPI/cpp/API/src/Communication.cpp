@@ -51,6 +51,18 @@ bool Communication::UseProp(THUAI6::PropType prop, int64_t playerID)
         return false;
 }
 
+bool Communication::ThrowProp(THUAI6::PropType prop, int64_t playerID)
+{
+    protobuf::BoolRes throwPropResult;
+    ClientContext context;
+    auto request = THUAI62Proto::THUAI62ProtobufProp(prop, playerID);
+    auto status = THUAI6Stub->ThrowProp(&context, request, &throwPropResult);
+    if (status.ok())
+        return throwPropResult.act_success();
+    else
+        return false;
+}
+
 bool Communication::UseSkill(int32_t skillID, int64_t playerID)
 {
     protobuf::BoolRes useSkillResult;
@@ -171,7 +183,7 @@ bool Communication::StartLearning(int64_t playerID)
         return false;
 }
 
-bool Communication::StartRescueMate(int64_t playerID, int64_t mateID)
+bool Communication::StartRouseMate(int64_t playerID, int64_t mateID)
 {
     protobuf::BoolRes saveStudentResult;
     ClientContext context;
@@ -183,7 +195,7 @@ bool Communication::StartRescueMate(int64_t playerID, int64_t mateID)
         return false;
 }
 
-bool Communication::StartTreatMate(int64_t playerID, int64_t mateID)
+bool Communication::StartEncourageMate(int64_t playerID, int64_t mateID)
 {
     protobuf::BoolRes healStudentResult;
     ClientContext context;

@@ -28,6 +28,50 @@ namespace Gaming
                                                       { });
             }
 
+            public bool ShowTime(Character player)
+            {
+                if ((!player.Commandable())) return false;
+                IActiveSkill skill = player.FindIActiveSkill(ActiveSkillType.ShowTime);
+
+                return ActiveSkillEffect(skill, player, () =>
+                {
+                    new Thread
+                    (
+                   () =>
+                   {
+                       new FrameRateTaskExecutor<int>(
+                       loopCondition: () => player.Commandable() && gameMap.Timer.IsGaming,
+                             loopToDo: () =>
+                             {
+                                 gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+                                 try
+                                 {
+                                     foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
+                                     {
+                                         if (!person.IsGhost())
+                                             actionManager.MovePlayer(person, GameData.frameDuration, (player.Position - person.Position).Angle());
+                                     }
+                                 }
+                                 finally
+                                 {
+                                     gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                                 }
+                             },
+                             timeInterval: GameData.frameDuration,
+                             finallyReturn: () => 0
+                         )
+
+                             .Start();
+                   }
+                    )
+                    { IsBackground = true }.Start();
+                },
+                                                      () =>
+                                                      {
+                                                      }
+                                                      );
+            }
+
             public static bool BecomeInvisible(Character player)
             {
                 if ((!player.Commandable())) return false;
@@ -120,8 +164,8 @@ namespace Gaming
                         {
                             if (!character.IsGhost() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
                             {
-                                if (CharacterManager.BeStunned(character, GameData.TimeOfStudentFaintingWhenHowl))
-                                    player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStudentFaintingWhenHowl));
+                                if (characterManager.BeStunned(character, GameData.TimeOfStudentStunnedWhenHowl))
+                                    player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStudentStunnedWhenHowl));
                                 break;
                             }
                         }
@@ -130,7 +174,7 @@ namespace Gaming
                     {
                         gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
-                    CharacterManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl);
+                    characterManager.BackSwing(player, GameData.TimeOfGhostSwingingAfterHowl);
                     Debugger.Output(player, "howled!");
                 },
                                                       () =>
@@ -149,11 +193,11 @@ namespace Gaming
                         {
                             if (character.IsGhost() &&
                                 (character.PlayerState == PlayerStateType.TryingToAttack || character.PlayerState == PlayerStateType.Swinging
-                                || character.PlayerState == PlayerStateType.UsingSkill)
+                                || character.PlayerState == PlayerStateType.UsingSkill || character.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || character.PlayerState == PlayerStateType.ClimbingThroughWindows)
                                 && gameMap.CanSee(player, character))
                             {
-                                if (CharacterManager.BeStunned(character, GameData.TimeOfGhostFaintingWhenPunish))
-                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenPunish));
+                                if (characterManager.BeStunned(character, GameData.TimeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)))
+                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)));
                                 break;
                             }
                         }
@@ -180,7 +224,7 @@ namespace Gaming
                         {
                             if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
                             {
-                                character.PlayerState = PlayerStateType.Null;
+                                characterManager.SetPlayerState(character);
                                 character.HP = GameData.RemainHpWhenAddLife;
                                 ((Student)character).TimeOfRescue = 0;
                                 player.AddScore(GameData.StudentScoreRescue);
@@ -210,8 +254,8 @@ namespace Gaming
                         {
                             if ((character.HP < character.MaxHp) && gameMap.CanSee(player, character))
                             {
-                                player.AddScore(GameData.StudentScoreTreat(character.MaxHp - character.HP));
-                                character.HP = character.MaxHp;
+                                player.AddScore(GameData.StudentScoreTreat(GameData.AddHpWhenEncourage));
+                                character.HP += GameData.AddHpWhenEncourage;
                                 ((Student)character).SetDegreeOfTreatment0();
                                 break;
                             }

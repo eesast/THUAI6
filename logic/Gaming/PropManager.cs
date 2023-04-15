@@ -16,10 +16,10 @@ namespace Gaming
         private class PropManager
         {
             private readonly Map gameMap;
-
+            private readonly CharacterManager characterManager;
             private readonly List<XY> availableCellForGenerateProp;
 
-            public static void UseProp(Character player, PropType propType)
+            public void UseProp(Character player, PropType propType)
             {
                 if (player.IsResetting || player.CharacterType == CharacterType.Robot)
                     return;
@@ -48,7 +48,7 @@ namespace Gaming
                         if (!player.IsGhost())
                             if (player.HP < player.MaxHp)
                             {
-                                player.HP += GameData.basicTreatmentDegree;
+                                player.HP += GameData.basicTreatmentDegree / 2;
                                 player.AddScore(GameData.ScorePropAddHp);
                             }
                             else player.AddAp(GameData.PropDuration);
@@ -57,7 +57,7 @@ namespace Gaming
                         if (player.PlayerState == PlayerStateType.Stunned)
                         {
                             player.AddScore(GameData.ScorePropRecoverFromDizziness);
-                            player.PlayerState = PlayerStateType.Null;
+                            player.SetPlayerStateNaturally();
                         }
                         break;
                     default:
@@ -210,8 +210,9 @@ namespace Gaming
                 { IsBackground = true }.Start();
             */
             }
-            public PropManager(Map gameMap)  // 道具不能扔过墙
+            public PropManager(Map gameMap, CharacterManager characterManager)  // 道具不能扔过墙
             {
+                this.characterManager = characterManager;
                 this.gameMap = gameMap;
                 /*            this.moveEngine = new MoveEngine(
                                 gameMap: gameMap,

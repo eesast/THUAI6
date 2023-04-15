@@ -118,7 +118,7 @@ enum TrickerType
     ASSASSIN = 1;
     KLEE = 2;
     A_NOISY_PERSON = 3;
-    TRICKERTYPE4 = 4;
+    IDOL = 4;
 }
 
 // 游戏进行状态

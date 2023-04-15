@@ -109,6 +109,19 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
         return self.__pool.submit(logUse)
 
+    def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
+        self.__logger.info(
+            f"ThrowProp: prop = {propType.name}, called at {self.__GetTime()}ms")
+
+        def logThrow() -> bool:
+            result = self.__logic.ThrowProp(propType)
+            if not result:
+                self.__logger.warning(
+                    f"ThrowProp: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logThrow)
+
     def UseSkill(self, skillID: int) -> Future[bool]:
         self.__logger.info(
             f"UseSkill: skillID = {skillID}, called at {self.__GetTime()}ms")
@@ -261,6 +274,9 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
 
+    def GetBullets(self) -> List[THUAI6.Bullet]:
+        return self.__logic.GetBullets()
+
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         return self.__logic.GetFullMap()
 
@@ -310,7 +326,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
             self.__logger.info(
                 f"type={student.studentType.name}, determination={student.determination}, addiction={student.addiction}, danger alert={student.dangerAlert}")
             self.__logger.info(
-                f"learning speed={student.learningSpeed}, treat speed={student.treatSpeed}, treat progress={student.treatProgress}, rescue progress={student.rescueProgress}")
+                f"learning speed={student.learningSpeed}, encourage speed={student.encourageSpeed}, encourage progress={student.encourageProgress}, rouse progress={student.rouseProgress}")
             studentBuff = ""
             for buff in student.buff:
                 studentBuff += buff.name + ", "
@@ -363,7 +379,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
         self.__logger.info(
             f"type={student.studentType.name}, determination={student.determination}, addiction={student.addiction}, danger alert={student.dangerAlert}")
         self.__logger.info(
-            f"learning speed={student.learningSpeed}, treat speed={student.treatSpeed}, treat progress={student.treatProgress}, rescue progress={student.rescueProgress}")
+            f"learning speed={student.learningSpeed}, encourage speed={student.encourageSpeed}, encourage progress={student.encourageProgress}, rouse progress={student.rouseProgress}")
         studentBuff = ""
         for buff in student.buff:
             studentBuff += buff.name + ", "
@@ -398,31 +414,31 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
         return self.__pool.submit(logStart)
 
-    def StartTreatMate(self, mateID: int) -> Future[bool]:
+    def StartEncourageMate(self, mateID: int) -> Future[bool]:
         self.__logger.info(
-            f"StartTreatMate: called at {self.__GetTime()}ms")
+            f"StartEncourageMate: called at {self.__GetTime()}ms")
 
-        def logStartTreatMate() -> bool:
-            result = self.__logic.StartTreatMate(mateID)
+        def logStartEncourageMate() -> bool:
+            result = self.__logic.StartEncourageMate(mateID)
             if not result:
                 self.__logger.warning(
-                    f"StartTreatMate: failed at {self.__GetTime()}ms")
+                    f"StartEncourageMate: failed at {self.__GetTime()}ms")
             return result
 
-        return self.__pool.submit(logStartTreatMate)
+        return self.__pool.submit(logStartEncourageMate)
 
-    def StartRescueMate(self, mateID: int) -> Future[bool]:
+    def StartRouseMate(self, mateID: int) -> Future[bool]:
         self.__logger.info(
-            f"StartRescueMate: called at {self.__GetTime()}ms")
+            f"StartRouseMate: called at {self.__GetTime()}ms")
 
-        def logStartRescueMate() -> bool:
-            result = self.__logic.StartRescueMate(mateID)
+        def logStartRouseMate() -> bool:
+            result = self.__logic.StartRouseMate(mateID)
             if not result:
                 self.__logger.warning(
-                    f"StartRescueMate: failed at {self.__GetTime()}ms")
+                    f"StartRouseMate: failed at {self.__GetTime()}ms")
             return result
 
-        return self.__pool.submit(logStartRescueMate)
+        return self.__pool.submit(logStartRouseMate)
 
     def GetSelfInfo(self) -> THUAI6.Student:
         return cast(THUAI6.Student, self.__logic.GetSelfInfo())
@@ -545,6 +561,19 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
         return self.__pool.submit(logUse)
 
+    def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
+        self.__logger.info(
+            f"ThrowProp: prop = {propType.name}, called at {self.__GetTime()}ms")
+
+        def logThrow() -> bool:
+            result = self.__logic.ThrowProp(propType)
+            if not result:
+                self.__logger.warning(
+                    f"ThrowProp: failed at {self.__GetTime()}ms")
+            return result
+
+        return self.__pool.submit(logThrow)
+
     def UseSkill(self, skillID: int) -> Future[bool]:
         self.__logger.info(
             f"UseSkill: skillID = {skillID}, called at {self.__GetTime()}ms")
@@ -697,6 +726,9 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
     def GetProps(self) -> List[THUAI6.Prop]:
         return self.__logic.GetProps()
 
+    def GetBullets(self) -> List[THUAI6.Bullet]:
+        return self.__logic.GetBullets()
+
     def GetFullMap(self) -> List[List[THUAI6.PlaceType]]:
         return self.__logic.GetFullMap()
 
@@ -746,7 +778,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
             self.__logger.info(
                 f"type={student.studentType.name}, determination={student.determination}, addiction={student.addiction}, danger alert={student.dangerAlert}")
             self.__logger.info(
-                f"learning speed={student.learningSpeed}, treat speed={student.treatSpeed}, treat progress={student.treatProgress}, rescue progress={student.rescueProgress}")
+                f"learning speed={student.learningSpeed}, encourage speed={student.encourageSpeed}, encourage progress={student.encourageProgress}, rouse progress={student.rouseProgress}")
             studentBuff = ""
             for buff in student.buff:
                 studentBuff += buff.name + ", "

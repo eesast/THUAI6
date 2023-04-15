@@ -400,3 +400,5 @@ FodyWeavers.xsd
 #THUAI playback file
 *.thuaipb
 
+#private cmd
+cmd/gameServerOfSanford.cmd

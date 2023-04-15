@@ -35,6 +35,7 @@ public:
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> StudentGetSelfInfo() const = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Tricker> TrickerGetSelfInfo() const = 0;
 
@@ -54,6 +55,7 @@ public:
     virtual bool Move(int64_t time, double angle) = 0;
     virtual bool PickProp(THUAI6::PropType prop) = 0;
     virtual bool UseProp(THUAI6::PropType prop) = 0;
+    virtual bool ThrowProp(THUAI6::PropType prop) = 0;
     virtual bool UseSkill(int32_t skillID) = 0;
     virtual bool SendMessage(int64_t toID, std::string message) = 0;
     virtual bool HaveMessage() = 0;
@@ -67,8 +69,8 @@ public:
     virtual bool Graduate() = 0;
 
     virtual bool StartLearning() = 0;
-    virtual bool StartTreatMate(int64_t mateID) = 0;
-    virtual bool StartRescueMate(int64_t mateID) = 0;
+    virtual bool StartEncourageMate(int64_t mateID) = 0;
+    virtual bool StartRouseMate(int64_t mateID) = 0;
 
     virtual bool OpenDoor() = 0;
     virtual bool CloseDoor() = 0;
@@ -99,6 +101,7 @@ public:
     // 捡道具、使用技能
     virtual std::future<bool> PickProp(THUAI6::PropType prop) = 0;
     virtual std::future<bool> UseProp(THUAI6::PropType prop) = 0;
+    virtual std::future<bool> ThrowProp(THUAI6::PropType prop) = 0;
     virtual std::future<bool> UseSkill(int32_t skillID) = 0;
     virtual std::future<bool> Attack(double angleInRadian) = 0;
 
@@ -124,7 +127,9 @@ public:
     // 获取视野内可见的道具信息
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
 
-    // 获取地图信息，视野外的地图统一为Land
+    // 获取视野内可见的子弹信息
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const = 0;
+
     [[nodiscard]] virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
     [[nodiscard]] virtual THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const = 0;
 
@@ -172,8 +177,8 @@ public:
     /*****学生阵营的特定函数*****/
 
     virtual std::future<bool> StartLearning() = 0;
-    virtual std::future<bool> StartTreatMate(int64_t mateID) = 0;
-    virtual std::future<bool> StartRescueMate(int64_t mateID) = 0;
+    virtual std::future<bool> StartEncourageMate(int64_t mateID) = 0;
+    virtual std::future<bool> StartRouseMate(int64_t mateID) = 0;
     virtual std::future<bool> Graduate() = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const = 0;
 };
@@ -221,6 +226,7 @@ public:
 
     std::future<bool> PickProp(THUAI6::PropType prop) override;
     std::future<bool> UseProp(THUAI6::PropType prop) override;
+    std::future<bool> ThrowProp(THUAI6::PropType prop) override;
     std::future<bool> UseSkill(int32_t skillID) override;
 
     std::future<bool> Attack(double angleInRadian) override;
@@ -243,6 +249,8 @@ public:
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const override;
+
     [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
     [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const override;
 
@@ -258,8 +266,8 @@ public:
     [[nodiscard]] std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> StartLearning() override;
-    std::future<bool> StartTreatMate(int64_t mateID) override;
-    std::future<bool> StartRescueMate(int64_t mateID) override;
+    std::future<bool> StartEncourageMate(int64_t mateID) override;
+    std::future<bool> StartRouseMate(int64_t mateID) override;
     std::future<bool> Graduate() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
@@ -308,6 +316,7 @@ public:
 
     std::future<bool> PickProp(THUAI6::PropType prop) override;
     std::future<bool> UseProp(THUAI6::PropType prop) override;
+    std::future<bool> ThrowProp(THUAI6::PropType prop) override;
     std::future<bool> UseSkill(int32_t skillID) override;
 
     std::future<bool> OpenDoor() override;
@@ -327,6 +336,8 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
+
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const override;
 
     [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
     [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const override;
@@ -383,6 +394,7 @@ public:
 
     std::future<bool> PickProp(THUAI6::PropType prop) override;
     std::future<bool> UseProp(THUAI6::PropType prop) override;
+    std::future<bool> ThrowProp(THUAI6::PropType prop) override;
     std::future<bool> UseSkill(int32_t skillID) override;
 
     std::future<bool> Attack(double angleInRadian) override;
@@ -405,6 +417,8 @@ public:
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
 
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const override;
+
     [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
     [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const override;
 
@@ -420,8 +434,8 @@ public:
     [[nodiscard]] std::vector<int64_t> GetPlayerGUIDs() const override;
 
     std::future<bool> StartLearning() override;
-    std::future<bool> StartTreatMate(int64_t mateID) override;
-    std::future<bool> StartRescueMate(int64_t mateID) override;
+    std::future<bool> StartEncourageMate(int64_t mateID) override;
+    std::future<bool> StartRouseMate(int64_t mateID) override;
     std::future<bool> Graduate() override;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
@@ -455,6 +469,7 @@ public:
 
     std::future<bool> PickProp(THUAI6::PropType prop) override;
     std::future<bool> UseProp(THUAI6::PropType prop) override;
+    std::future<bool> ThrowProp(THUAI6::PropType prop) override;
     std::future<bool> UseSkill(int32_t skillID) override;
 
     std::future<bool> OpenDoor() override;
@@ -474,6 +489,8 @@ public:
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const override;
+
+    [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const override;
 
     [[nodiscard]] std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const override;
     [[nodiscard]] THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const override;

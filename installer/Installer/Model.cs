@@ -124,7 +124,7 @@ namespace starter.viewmodel.settings
             }
         }
 
-        public async Task<bool> Login()
+        public async Task<int> Login()
         {
             return await web.LoginToEEsast(client, Username, Password);
         }
@@ -1058,43 +1058,50 @@ namespace WebConnect
     {
         public enum language { cpp, py };
         public static string logintoken = "";
-        async public Task<bool> LoginToEEsast(HttpClient client, string useremail, string password)
+        async public Task<int> LoginToEEsast(HttpClient client, string useremail, string password)
         {
             string token = "";
-            using (var response = await client.PostAsync("https://api.eesast.com/users/login", JsonContent.Create(new
+            try
             {
-                email = useremail,
-                password = password,
-            })))
-            {
-                switch (response.StatusCode)
+                using (var response = await client.PostAsync("https://api.eesast.com/users/login", JsonContent.Create(new
                 {
-                    case System.Net.HttpStatusCode.OK:
-                        Console.WriteLine("Success login");
-                        token = (System.Text.Json.JsonSerializer.Deserialize(await response.Content.ReadAsStreamAsync(), typeof(LoginResponse), new JsonSerializerOptions()
-                        {
-                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                        }) as LoginResponse)
-                                    ?.Token ??
-                                throw new Exception("no token!");
-                        logintoken = token;
-                        SaveToken();
-                        var info = JsonConvert.DeserializeObject<Dictionary<string, string>>(await response.Content.ReadAsStringAsync());
-                        Downloader.UserInfo._id = info["_id"];
-                        Downloader.UserInfo.email = info["email"];
-                        break;
+                    email = useremail,
+                    password = password,
+                })))
+                {
+                    switch (response.StatusCode)
+                    {
+                        case System.Net.HttpStatusCode.OK:
+                            Console.WriteLine("Success login");
+                            token = (System.Text.Json.JsonSerializer.Deserialize(await response.Content.ReadAsStreamAsync(), typeof(LoginResponse), new JsonSerializerOptions()
+                            {
+                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                            }) as LoginResponse)
+                                        ?.Token ??
+                                    throw new Exception("no token!");
+                            logintoken = token;
+                            SaveToken();
+                            var info = JsonConvert.DeserializeObject<Dictionary<string, string>>(await response.Content.ReadAsStringAsync());
+                            Downloader.UserInfo._id = info["_id"];
+                            Downloader.UserInfo.email = info["email"];
+                            break;
 
-                    default:
-                        int code = ((int)response.StatusCode);
-                        Console.WriteLine(code);
-                        if (code == 401)
-                        {
-                            //Console.WriteLine("邮箱或密码错误！");
-                            return false;
-                        }
-                        break;
+                        default:
+                            int code = ((int)response.StatusCode);
+                            Console.WriteLine(code);
+                            if (code == 401)
+                            {
+                                //Console.WriteLine("邮箱或密码错误！");
+                                return -1;
+                            }
+                            break;
+                    }
+                    return 0;
                 }
-                return true;
+            }
+            catch
+            {
+                return -2;
             }
         }
         /// <summary>

@@ -91,6 +91,37 @@ namespace Preparation.Interface
         public int speedOfOpenChest = (int)(GameData.basicSpeedOfOpenChest * 1.1);
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
+    public class Idol : IGhostType
+    {
+        private const int moveSpeed = GameData.basicGhostMoveSpeed;
+        public int MoveSpeed => moveSpeed;
+
+        private const int maxHp = GameData.basicHp;
+        public int MaxHp => maxHp;
+
+        public BulletType InitBullet => BulletType.CommonAttackOfGhost;
+
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.ShowTime });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+
+        public double concealment = GameData.basicConcealment * 3 / 4;
+        public double Concealment => concealment;
+
+        public int alertnessRadius = GameData.basicGhostAlertnessRadius;
+        public int AlertnessRadius => alertnessRadius;
+
+        public int viewRange = GameData.basicGhostViewRange * 11 / 10;
+        public int ViewRange => viewRange;
+
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
+
+        public int speedOfClimbingThroughWindows = GameData.basicGhostSpeedOfClimbingThroughWindows;
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
+
+        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
+        public int SpeedOfOpenChest => speedOfOpenChest;
+    }
     public class ANoisyPerson : IGhostType
     {
         private const int moveSpeed = (int)(GameData.basicGhostMoveSpeed * 1.07);
@@ -124,7 +155,7 @@ namespace Preparation.Interface
     }
     public class Teacher : IStudentType
     {
-        private const int moveSpeed = GameData.basicStudentMoveSpeed * 3 / 4;
+        private const int moveSpeed = GameData.basicStudentMoveSpeed * 9 / 10;
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp * 10;
@@ -141,7 +172,7 @@ namespace Preparation.Interface
         public const int fixSpeed = 0;
         public int FixSpeed => fixSpeed;
 
-        public const int treatSpeed = (int)(GameData.basicTreatSpeed * 0.7);
+        public const int treatSpeed = (int)(GameData.basicTreatSpeed * 0.8);
         public int TreatSpeed => treatSpeed;
 
         public const double concealment = GameData.basicConcealment * 0.5;
@@ -164,7 +195,7 @@ namespace Preparation.Interface
     }
     public class Athlete : IStudentType
     {
-        private const int moveSpeed = GameData.basicStudentMoveSpeed * 11 / 10;
+        private const int moveSpeed = GameData.basicStudentMoveSpeed * 105 / 100;
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp;
@@ -181,7 +212,7 @@ namespace Preparation.Interface
         public const int fixSpeed = GameData.basicFixSpeed * 6 / 10;
         public int FixSpeed => fixSpeed;
 
-        public const int treatSpeed = GameData.basicTreatSpeed * 8 / 10;
+        public const int treatSpeed = GameData.basicTreatSpeed * 9 / 10;
         public int TreatSpeed => treatSpeed;
 
         public const double concealment = GameData.basicConcealment * 0.9;
@@ -204,7 +235,7 @@ namespace Preparation.Interface
     }
     public class StraightAStudent : IStudentType
     {
-        private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed * 0.8);
+        private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed * 0.96);
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = (int)(GameData.basicHp * 1.1);
@@ -221,7 +252,7 @@ namespace Preparation.Interface
         public const int fixSpeed = GameData.basicFixSpeed * 11 / 10;
         public int FixSpeed => fixSpeed;
 
-        public const int treatSpeed = GameData.basicTreatSpeed * 8 / 10;
+        public const int treatSpeed = GameData.basicTreatSpeed;
         public int TreatSpeed => treatSpeed;
 
         public const double concealment = GameData.basicConcealment * 0.9;
@@ -261,7 +292,7 @@ namespace Preparation.Interface
         public const int fixSpeed = GameData.basicFixSpeed;
         public int FixSpeed => fixSpeed;
 
-        public const int treatSpeed = GameData.basicTreatSpeed * 8 / 10;
+        public const int treatSpeed = 0;
         public int TreatSpeed => treatSpeed;
 
         public const double concealment = GameData.basicConcealment;
@@ -341,7 +372,7 @@ namespace Preparation.Interface
         public const int fixSpeed = GameData.basicFixSpeed;
         public int FixSpeed => fixSpeed;
 
-        public const int treatSpeed = GameData.basicTreatSpeed * 2;
+        public const int treatSpeed = GameData.basicTreatSpeed * 12 / 10;
         public int TreatSpeed => treatSpeed;
 
         public const double concealment = GameData.basicConcealment;
@@ -353,13 +384,13 @@ namespace Preparation.Interface
         public int viewRange = GameData.basicStudentViewRange;
         public int ViewRange => viewRange;
 
-        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking * 7 / 10;
         public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = GameData.basicStudentSpeedOfClimbingThroughWindows;
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
-        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
+        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest * 9 / 10;
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
 
@@ -383,6 +414,8 @@ namespace Preparation.Interface
                     return new ANoisyPerson();
                 case CharacterType.TechOtaku:
                     return new TechOtaku();
+                case CharacterType.Idol:
+                    return new Idol();
                 case CharacterType.Athlete:
                 default:
                     return new Athlete();

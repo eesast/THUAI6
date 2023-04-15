@@ -18,8 +18,8 @@ namespace Preparation.Interface
     }
     public class CanBeginToCharge : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 24 / 30;
-        public int DurationTime => GameData.commonSkillTime * 5 / 10;
+        public int SkillCD => GameData.commonSkillCD * 2;
+        public int DurationTime => GameData.commonSkillTime * 3 / 10;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
@@ -33,8 +33,8 @@ namespace Preparation.Interface
 
     public class BecomeInvisible : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => GameData.commonSkillTime * 6 / 10;
+        public int SkillCD => GameData.commonSkillCD * 4 / 3;
+        public int DurationTime => GameData.commonSkillTime;
 
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
@@ -63,7 +63,7 @@ namespace Preparation.Interface
 
     public class Rouse : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 2;
+        public int SkillCD => GameData.commonSkillCD * 4;
         public int DurationTime => 0;
 
         private readonly object commonSkillLock = new object();
@@ -78,7 +78,7 @@ namespace Preparation.Interface
 
     public class Encourage : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 2;
+        public int SkillCD => GameData.commonSkillCD * 4;
         public int DurationTime => 0;
 
         private readonly object commonSkillLock = new object();
@@ -93,7 +93,7 @@ namespace Preparation.Interface
 
     public class Inspire : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 2;
+        public int SkillCD => GameData.commonSkillCD * 4;
         public int DurationTime => 0;
 
         private readonly object commonSkillLock = new object();
@@ -121,6 +121,21 @@ namespace Preparation.Interface
         }
     }
 
+    public class ShowTime : IActiveSkill
+    {
+        public int SkillCD => GameData.commonSkillCD * 3;
+        public int DurationTime => GameData.commonSkillTime;
+
+        private readonly object commonSkillLock = new();
+        public object ActiveSkillLock => commonSkillLock;
+
+        public bool isBeingUsed = false;
+        public bool IsBeingUsed
+        {
+            get => isBeingUsed; set => isBeingUsed = value;
+        }
+    }
+
     public class JumpyBomb : IActiveSkill
     {
         public int SkillCD => GameData.commonSkillCD / 2;
@@ -137,7 +152,7 @@ namespace Preparation.Interface
 
     public class UseKnife : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 2 / 3;
+        public int SkillCD => GameData.commonSkillCD;
         public int DurationTime => GameData.commonSkillTime / 10;
         private readonly object commonSkillLock = new object();
         public object ActiveSkillLock => commonSkillLock;
@@ -151,9 +166,9 @@ namespace Preparation.Interface
 
     public class UseRobot : IActiveSkill
     {
-        public int SkillCD => GameData.frameDuration;
+        public int SkillCD => GameData.commonSkillCD / 300;
         public int DurationTime => 0;
-        private readonly object commonSkillLock = new object();
+        private readonly object commonSkillLock = new();
         public object ActiveSkillLock => commonSkillLock;
 
         public bool isBeingUsed = false;
@@ -260,6 +275,8 @@ namespace Preparation.Interface
                     return new Rouse();
                 case ActiveSkillType.Inspire:
                     return new Inspire();
+                case ActiveSkillType.ShowTime:
+                    return new ShowTime();
                 default:
                     return new NullSkill();
             }
@@ -293,6 +310,8 @@ namespace Preparation.Interface
                     return ActiveSkillType.UseRobot;
                 case Rouse:
                     return ActiveSkillType.Rouse;
+                case ShowTime:
+                    return ActiveSkillType.ShowTime;
                 default:
                     return ActiveSkillType.Null;
             }

@@ -130,30 +130,34 @@ namespace Server
                     case GameState.GameRunning:
                     case GameState.GameEnd:
                     case GameState.GameStart:
-                        currentGameInfo.ObjMessage.Add(currentMapMsg);
+                        if (gameState == GameState.GameStart || IsSpectatorJoin)
+                        {
+                            currentGameInfo.ObjMessage.Add(currentMapMsg);
+                            IsSpectatorJoin = false;
+                        }
+                        int time = game.GameMap.Timer.nowTime();
                         foreach (GameObj gameObj in gameObjList)
                         {
-                            MessageOfObj? msg = CopyInfo.Auto(gameObj);
-                            if (msg != null) currentGameInfo.ObjMessage.Add(CopyInfo.Auto(gameObj));
+                            MessageOfObj? msg = CopyInfo.Auto(gameObj, time);
+                            if (msg != null) currentGameInfo.ObjMessage.Add(msg);
                         }
                         lock (newsLock)
                         {
                             foreach (var news in currentNews)
                             {
                                 MessageOfObj? msg = CopyInfo.Auto(news);
-                                if (msg != null) currentGameInfo.ObjMessage.Add(CopyInfo.Auto(news));
+                                if (msg != null) currentGameInfo.ObjMessage.Add(msg);
                             }
                             currentNews.Clear();
                         }
                         currentGameInfo.GameState = gameState;
-                        currentGameInfo.AllMessage = GetMessageOfAll();
+                        currentGameInfo.AllMessage = GetMessageOfAll(time);
                         mwr?.WriteOne(currentGameInfo);
                         break;
                     default:
                         break;
                 }
             }
-
             foreach (var kvp in semaDict)
             {
                 kvp.Value.Item1.Release();
@@ -208,10 +212,10 @@ namespace Server
             return false;
         }
 
-        private MessageOfAll GetMessageOfAll()
+        private MessageOfAll GetMessageOfAll(int time)
         {
             MessageOfAll msg = new MessageOfAll();
-            msg.GameTime = game.GameMap.Timer.nowTime();
+            msg.GameTime = time;
             msg.SubjectFinished = (int)game.GameMap.NumOfRepairedGenerators;
             msg.StudentGraduated = (int)game.GameMap.NumOfEscapedStudent;
             msg.StudentQuited = (int)game.GameMap.NumOfDeceasedStudent;

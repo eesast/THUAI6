@@ -23,31 +23,31 @@ namespace Gaming
                 {
                     if (((Bullet)collisionObj).Parent != player && ((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
                     {
-                        if (CharacterManager.BeStunned((Character)player, GameData.TimeOfStunnedWhenJumpyDumpty))
+                        if (characterManager.BeStunned((Character)player, GameData.TimeOfStunnedWhenJumpyDumpty))
                             player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.TimeOfStunnedWhenJumpyDumpty));
                         gameMap.Remove((GameObj)collisionObj);
                     }
                 }
                 if (player.FindIActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
                 {
-                    if (CharacterManager.BeStunned((Character)collisionObj, GameData.TimeOfGhostFaintingWhenCharge))
-                        player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostFaintingWhenCharge));
-                    CharacterManager.BeStunned(player, GameData.TimeOfStudentFaintingWhenCharge);
+                    if (characterManager.BeStunned((Character)collisionObj, GameData.TimeOfGhostStunnedWhenCharge))
+                        player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.TimeOfGhostStunnedWhenCharge));
+                    characterManager.BeStunned(player, GameData.TimeOfStudentStunnedWhenCharge);
                 }
             }
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
-                if (!playerToMove.Commandable()) return false;
-                playerToMove.PlayerState = PlayerStateType.Moving;
+                if (!playerToMove.Commandable() || !TryToStop()) return false;
+                characterManager.SetPlayerState(playerToMove, PlayerStateType.Moving);
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
                 return true;
             }
 
-            public static bool Stop(Character player)
+            public bool Stop(Character player)
             {
-                if (player.Commandable())
+                if (player.Commandable() || !TryToStop())
                 {
-                    player.PlayerState = PlayerStateType.Null;
+                    characterManager.SetPlayerState(player);
                     return true;
                 }
                 return false;
@@ -63,7 +63,7 @@ namespace Gaming
                     return false;
 
                 ++generatorForFix.NumOfFixing;
-                player.PlayerState = PlayerStateType.Fixing;
+                characterManager.SetPlayerState(player, PlayerStateType.Fixing);
                 new Thread
           (
               () =>
@@ -74,7 +74,7 @@ namespace Gaming
                       {
                           if (generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player))
                           {
-                              player.PlayerState = PlayerStateType.Null;
+                              characterManager.SetPlayerState(player);
                               gameMap.NumOfRepairedGenerators++;
                           }
                       },
@@ -96,31 +96,21 @@ namespace Gaming
                 if (!(player.Commandable()) || player.PlayerState == PlayerStateType.OpeningTheDoorway)
                     return false;
                 Doorway? doorwayToOpen = (Doorway?)gameMap.OneForInteract(player.Position, GameObjType.Doorway);
-                if (doorwayToOpen == null || doorwayToOpen.IsOpening || !doorwayToOpen.PowerSupply)
+                if (doorwayToOpen == null || doorwayToOpen.OpenStartTime > 0 || !doorwayToOpen.PowerSupply)
                     return false;
 
-                player.PlayerState = PlayerStateType.OpeningTheDoorway;
-                doorwayToOpen.IsOpening = true;
+                characterManager.SetPlayerState(player, PlayerStateType.OpeningTheDoorway, doorwayToOpen);
+                int startTime = doorwayToOpen.OpenStartTime = gameMap.Timer.nowTime();
                 new Thread
           (
               () =>
               {
-                  new FrameRateTaskExecutor<int>(
-                      loopCondition: () => player.PlayerState == PlayerStateType.OpeningTheDoorway && gameMap.Timer.IsGaming && doorwayToOpen.OpenDegree < GameData.degreeOfOpenedDoorway,
-                      loopToDo: () =>
-                      {
-                          doorwayToOpen.OpenDegree += GameData.frameDuration;
-                      },
-                      timeInterval: GameData.frameDuration,
-                      finallyReturn: () => 0
-                  )
+                  Thread.Sleep(GameData.degreeOfOpenedDoorway - doorwayToOpen.OpenDegree);
 
-                      .Start();
-                  doorwayToOpen.IsOpening = false;
-                  if (doorwayToOpen.OpenDegree >= GameData.degreeOfOpenedDoorway)
+                  if (doorwayToOpen.OpenStartTime == startTime)
                   {
-                      if (player.PlayerState == PlayerStateType.OpeningTheDoorway)
-                          player.PlayerState = PlayerStateType.Null;
+                      doorwayToOpen.OpenDegree = GameData.degreeOfOpenedDoorway;
+                      player.SetPlayerStateNaturally();
                   }
               }
 
@@ -132,7 +122,7 @@ namespace Gaming
 
             public bool Escape(Student player)
             {
-                if (!(player.Commandable()) || player.CharacterType == CharacterType.Robot)
+                if (!(player.Commandable()) || player.CharacterType == CharacterType.Robot || player.CharacterType == CharacterType.Teacher)
                     return false;
                 Doorway? doorwayForEscape = (Doorway?)gameMap.OneForInteract(player.Position, GameObjType.Doorway);
                 if (doorwayForEscape != null && doorwayForEscape.IsOpen())
@@ -163,7 +153,7 @@ namespace Gaming
                     playerTreated = gameMap.StudentForInteract(player.Position);
                     if (playerTreated == null) return false;
                 }
-                if (player == playerTreated || (!player.Commandable()) || player.PlayerState == PlayerStateType.Treating ||
+                if (player == playerTreated || (!player.Commandable()) || playerTreated.PlayerState == PlayerStateType.Treated ||
                     (!playerTreated.Commandable()) ||
                     playerTreated.HP == playerTreated.MaxHp || !GameData.ApproachToInteract(playerTreated.Position, player.Position))
                     return false;
@@ -172,22 +162,22 @@ namespace Gaming
            (
                () =>
                {
-                   playerTreated.PlayerState = PlayerStateType.Treated;
-                   player.PlayerState = PlayerStateType.Treating;
+                   characterManager.SetPlayerState(playerTreated, PlayerStateType.Treated);
+                   characterManager.SetPlayerState(player, PlayerStateType.Treating);
                    new FrameRateTaskExecutor<int>(
                        loopCondition: () => playerTreated.PlayerState == PlayerStateType.Treated && player.PlayerState == PlayerStateType.Treating && gameMap.Timer.IsGaming,
                        loopToDo: () =>
                        {
                            if (playerTreated.AddDegreeOfTreatment(GameData.frameDuration * player.TreatSpeed, player))
-                               playerTreated.PlayerState = PlayerStateType.Null;
+                               characterManager.SetPlayerState(playerTreated);
                        },
                        timeInterval: GameData.frameDuration,
                        finallyReturn: () => 0
                    )
                        .Start();
 
-                   if (player.PlayerState == PlayerStateType.Treating) player.PlayerState = PlayerStateType.Null;
-                   else if (playerTreated.PlayerState == PlayerStateType.Treated) playerTreated.PlayerState = PlayerStateType.Null;
+                   if (player.PlayerState == PlayerStateType.Treating) characterManager.SetPlayerState(player);
+                   else if (playerTreated.PlayerState == PlayerStateType.Treated) characterManager.SetPlayerState(playerTreated);
                }
            )
                 { IsBackground = true }.Start();
@@ -200,11 +190,10 @@ namespace Gaming
                     playerRescued = gameMap.StudentForInteract(player.Position);
                     if (playerRescued == null) return false;
                 }
-                if ((!player.Commandable()) || playerRescued.PlayerState != PlayerStateType.Addicted || player == playerRescued
-                    || !GameData.ApproachToInteract(playerRescued.Position, player.Position) || playerRescued.TimeOfRescue > 0)
+                if ((!player.Commandable()) || playerRescued.PlayerState != PlayerStateType.Addicted || !GameData.ApproachToInteract(playerRescued.Position, player.Position))
                     return false;
-                player.PlayerState = PlayerStateType.Rescuing;
-                playerRescued.PlayerState = PlayerStateType.Rescued;
+                characterManager.SetPlayerState(player, PlayerStateType.Rescuing);
+                characterManager.SetPlayerState(playerRescued, PlayerStateType.Rescued);
 
                 new Thread
            (
@@ -226,14 +215,14 @@ namespace Gaming
                    {
                        if (playerRescued.TimeOfRescue >= GameData.basicTimeOfRescue)
                        {
-                           playerRescued.PlayerState = PlayerStateType.Null;
+                           characterManager.SetPlayerState(playerRescued);
                            playerRescued.HP = playerRescued.MaxHp / 2;
                            player.AddScore(GameData.StudentScoreRescue);
                        }
                        else
-                           playerRescued.PlayerState = PlayerStateType.Addicted;
+                           characterManager.SetPlayerState(playerRescued, PlayerStateType.Addicted);
                    }
-                   if (player.PlayerState == PlayerStateType.Rescuing) player.PlayerState = PlayerStateType.Null;
+                   if (player.PlayerState == PlayerStateType.Rescuing) characterManager.SetPlayerState(player);
                    playerRescued.TimeOfRescue = 0;
                }
            )
@@ -247,30 +236,21 @@ namespace Gaming
                     return false;
                 Chest? chestToOpen = (Chest?)gameMap.OneForInteract(player.Position, GameObjType.Chest);
 
-                if (chestToOpen == null || chestToOpen.OpenDegree > 0)
+                if (chestToOpen == null || chestToOpen.OpenStartTime > 0)
                     return false;
 
-                player.PlayerState = PlayerStateType.OpeningTheChest;
+                characterManager.SetPlayerState(player, PlayerStateType.OpeningTheChest, chestToOpen);
+                int startTime = gameMap.Timer.nowTime();
+                chestToOpen.Open(startTime, player);
                 new Thread
           (
               () =>
               {
-                  new FrameRateTaskExecutor<int>(
-                      loopCondition: () => player.PlayerState == PlayerStateType.OpeningTheChest && gameMap.Timer.IsGaming && (!chestToOpen.IsOpen()),
-                      loopToDo: () =>
-                      {
-                          chestToOpen.OpenDegree += GameData.frameDuration * player.SpeedOfOpenChest;
-                      },
-                      timeInterval: GameData.frameDuration,
-                      finallyReturn: () => 0
-                  )
+                  Thread.Sleep(GameData.degreeOfOpenedChest / player.SpeedOfOpenChest);
 
-                      .Start();
-
-                  if (chestToOpen.IsOpen())
+                  if (chestToOpen.OpenStartTime == startTime)
                   {
-                      if (player.PlayerState == PlayerStateType.OpeningTheChest)
-                          player.PlayerState = PlayerStateType.Null;
+                      player.SetPlayerStateNaturally();
                       for (int i = 0; i < GameData.maxNumOfPropInChest; ++i)
                       {
                           Prop prop = chestToOpen.PropInChest[i];
@@ -279,8 +259,6 @@ namespace Gaming
                           gameMap.Add(prop);
                       }
                   }
-                  else chestToOpen.OpenDegree = 0;
-
               }
 
           )
@@ -312,7 +290,7 @@ namespace Gaming
                 //Wall addWall = new Wall(windowForClimb.Position - 2 * windowToPlayer);
                 // gameMap.Add(addWall);
 
-                player.PlayerState = PlayerStateType.ClimbingThroughWindows;
+                characterManager.SetPlayerState(player, PlayerStateType.ClimbingThroughWindows);
                 windowForClimb.WhoIsClimbing = player;
                 new Thread
           (
@@ -354,7 +332,7 @@ namespace Gaming
                   //  gameMap.Remove(addWall);
                   if (player.PlayerState == PlayerStateType.ClimbingThroughWindows)
                   {
-                      player.PlayerState = PlayerStateType.Null;
+                      characterManager.SetPlayerState(player);
                   }
               }
 
@@ -394,7 +372,7 @@ namespace Gaming
                 }
                 if (!flag) return false;
 
-                player.PlayerState = PlayerStateType.LockingOrOpeningTheDoor;
+                characterManager.SetPlayerState(player, PlayerStateType.LockingOrOpeningTheDoor);
                 new Thread
           (
               () =>
@@ -404,7 +382,6 @@ namespace Gaming
                       loopToDo: () =>
                       {
                           flag = ((gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character)) == null);
-                          Preparation.Utility.Debugger.Output(doorToLock, flag.ToString());
                           doorToLock.OpenOrLockDegree += GameData.frameDuration * player.SpeedOfOpeningOrLocking;
                       },
                       timeInterval: GameData.frameDuration,
@@ -417,7 +394,7 @@ namespace Gaming
                       doorToLock.IsOpen = (!doorToLock.IsOpen);
                   }
                   if (player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor)
-                      player.PlayerState = PlayerStateType.Null;
+                      characterManager.SetPlayerState(player);
                   doorToLock.OpenOrLockDegree = 0;
               }
 
@@ -449,6 +426,33 @@ namespace Gaming
                 }
             }
             */
+            private object numLock = new object();
+            private int lastTime = 0;
+            private int numStop = 0;
+            private int NumStop => numStop;
+            private bool TryToStop()
+            {
+                lock (numLock)
+                {
+                    int time = gameMap.Timer.nowTime();
+                    if (time / GameData.frameDuration > lastTime)
+                    {
+                        lastTime = time / GameData.frameDuration;
+                        numStop = 1;
+                        return true;
+                    }
+                    else
+                    {
+                        if (numStop == GameData.LimitOfStopAndMove)
+                            return false;
+                        else
+                        {
+                            ++numStop;
+                            return true;
+                        }
+                    }
+                }
+            }
 
             private readonly Map gameMap;
             private readonly CharacterManager characterManager;

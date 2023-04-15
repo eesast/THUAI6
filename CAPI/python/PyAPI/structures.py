@@ -7,6 +7,7 @@ if sys.version_info < (3, 9):
 else:
     Tuple = tuple
 
+
 class GameState(Enum):
     NullGameState = 0
     GameStart = 1
@@ -76,6 +77,7 @@ class TrickerType(Enum):
     Assassin = 1
     Klee = 2
     ANoisyPerson = 3
+    Idol = 4
 
 
 class StudentBuffType(Enum):
@@ -102,11 +104,11 @@ class PlayerState(Enum):
     Addicted = 3
     Quit = 4
     Graduated = 5
-    Treated = 6
-    Rescued = 7
+    Encouraged = 6
+    Roused = 7
     Stunned = 8
-    Treating = 9
-    Rescuing = 10
+    Encouraging = 9
+    Rousing = 10
     Swinging = 11
     Attacking = 12
     Locking = 13
@@ -161,10 +163,10 @@ class Student(Player):
     studentType: StudentType
     determination: int
     addiction: int
-    treatProgress: int
-    rescueProgress: int
+    encourageProgress: int
+    rouseProgress: int
     learningSpeed: int
-    treatSpeed: int
+    encourageSpeed: int
     dangerAlert: float
     buff: List[StudentBuffType] = []
 

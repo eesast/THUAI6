@@ -35,14 +35,14 @@ namespace GameClass.GameObj
             }
         }
 
-        private bool isOpening = false;
-        public bool IsOpening
+        private int openStartTime = 0;
+        public int OpenStartTime
         {
-            get => isOpening;
+            get => openStartTime;
             set
             {
                 lock (gameObjLock)
-                    isOpening = value;
+                    openStartTime = value;
             }
         }
 
@@ -61,6 +61,6 @@ namespace GameClass.GameObj
             }
         }
 
-        public bool IsOpen() => (OpenDegree == GameData.degreeOfOpenedDoorway);
+        public bool IsOpen() => (openDegree == GameData.degreeOfOpenedDoorway);
     }
 }

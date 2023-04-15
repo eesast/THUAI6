@@ -119,7 +119,7 @@ namespace Proto2THUAI6
         {protobuf::TrickerType::ASSASSIN, THUAI6::TrickerType::Assassin},
         {protobuf::TrickerType::KLEE, THUAI6::TrickerType::Klee},
         {protobuf::TrickerType::A_NOISY_PERSON, THUAI6::TrickerType::ANoisyPerson},
-        {protobuf::TrickerType::TRICKERTYPE4, THUAI6::TrickerType::TrickerType4},
+        {protobuf::TrickerType::IDOL, THUAI6::TrickerType::Idol},
     };
 
     inline std::map<protobuf::StudentBuffType, THUAI6::StudentBuffType> studentBuffTypeDict{
@@ -146,11 +146,11 @@ namespace Proto2THUAI6
         {protobuf::PlayerState::ADDICTED, THUAI6::PlayerState::Addicted},
         {protobuf::PlayerState::QUIT, THUAI6::PlayerState::Quit},
         {protobuf::PlayerState::GRADUATED, THUAI6::PlayerState::Graduated},
-        {protobuf::PlayerState::RESCUED, THUAI6::PlayerState::Rescued},
-        {protobuf::PlayerState::TREATED, THUAI6::PlayerState::Treated},
+        {protobuf::PlayerState::RESCUED, THUAI6::PlayerState::Roused},
+        {protobuf::PlayerState::TREATED, THUAI6::PlayerState::Encouraged},
         {protobuf::PlayerState::STUNNED, THUAI6::PlayerState::Stunned},
-        {protobuf::PlayerState::RESCUING, THUAI6::PlayerState::Rescuing},
-        {protobuf::PlayerState::TREATING, THUAI6::PlayerState::Treating},
+        {protobuf::PlayerState::RESCUING, THUAI6::PlayerState::Rousing},
+        {protobuf::PlayerState::TREATING, THUAI6::PlayerState::Encouraging},
         {protobuf::PlayerState::SWINGING, THUAI6::PlayerState::Swinging},
         {protobuf::PlayerState::ATTACKING, THUAI6::PlayerState::Attacking},
         {protobuf::PlayerState::LOCKING, THUAI6::PlayerState::Locking},
@@ -240,9 +240,9 @@ namespace Proto2THUAI6
         student->facingDirection = studentMsg.facing_direction();
         student->bulletType = bulletTypeDict[studentMsg.bullet_type()];
         student->learningSpeed = studentMsg.learning_speed();
-        student->treatSpeed = studentMsg.treat_speed();
-        student->treatProgress = studentMsg.treat_progress();
-        student->rescueProgress = studentMsg.rescue_progress();
+        student->encourageSpeed = studentMsg.treat_speed();
+        student->encourageProgress = studentMsg.treat_progress();
+        student->rouseProgress = studentMsg.rescue_progress();
         student->dangerAlert = studentMsg.danger_alert();
         student->timeUntilSkillAvailable.clear();
         for (int i = 0; i < studentMsg.time_until_skill_available().size(); i++)
@@ -385,7 +385,7 @@ namespace THUAI62Proto
         {THUAI6::TrickerType::Assassin, protobuf::TrickerType::ASSASSIN},
         {THUAI6::TrickerType::Klee, protobuf::TrickerType::KLEE},
         {THUAI6::TrickerType::ANoisyPerson, protobuf::TrickerType::A_NOISY_PERSON},
-        {THUAI6::TrickerType::TrickerType4, protobuf::TrickerType::TRICKERTYPE4},
+        {THUAI6::TrickerType::Idol, protobuf::TrickerType::IDOL},
     };
 
     // inline std::map<THUAI6::TrickerBuffType, protobuf::TrickerBuffType> trickerBuffTypeDict{

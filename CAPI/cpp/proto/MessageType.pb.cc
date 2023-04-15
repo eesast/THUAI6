@@ -62,17 +62,16 @@ const char descriptor_table_protodef_MessageType_2eproto[] PROTOBUF_SECTION_VARI
     "\016TRICKER_PLAYER\020\002*q\n\013StudentType\022\025\n\021NULL"
     "_STUDENT_TYPE\020\000\022\013\n\007ATHLETE\020\001\022\013\n\007TEACHER\020"
     "\002\022\026\n\022STRAIGHT_A_STUDENT\020\003\022\t\n\005ROBOT\020\004\022\016\n\n"
-    "TECH_OTAKU\020\005*b\n\013TrickerType\022\025\n\021NULL_TRIC"
+    "TECH_OTAKU\020\005*Z\n\013TrickerType\022\025\n\021NULL_TRIC"
     "KER_TYPE\020\000\022\014\n\010ASSASSIN\020\001\022\010\n\004KLEE\020\002\022\022\n\016A_"
-    "NOISY_PERSON\020\003\022\020\n\014TRICKERTYPE4\020\004*P\n\tGame"
-    "State\022\023\n\017NULL_GAME_STATE\020\000\022\016\n\nGAME_START"
-    "\020\001\022\020\n\014GAME_RUNNING\020\002\022\014\n\010GAME_END\020\003b\006prot"
-    "o3";
+    "NOISY_PERSON\020\003\022\010\n\004IDOL\020\004*P\n\tGameState\022\023\n"
+    "\017NULL_GAME_STATE\020\000\022\016\n\nGAME_START\020\001\022\020\n\014GA"
+    "ME_RUNNING\020\002\022\014\n\010GAME_END\020\003b\006proto3";
 static ::_pbi::once_flag descriptor_table_MessageType_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_MessageType_2eproto = {
     false,
     false,
-    1482,
+    1474,
     descriptor_table_protodef_MessageType_2eproto,
     "MessageType.proto",
     &descriptor_table_MessageType_2eproto_once,

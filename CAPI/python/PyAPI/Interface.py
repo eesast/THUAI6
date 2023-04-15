@@ -21,6 +21,10 @@ class ILogic(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def GetBullets(self) -> List[THUAI6.Bullet]:
+        pass
+
+    @abstractmethod
     def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]:
         pass
 
@@ -70,6 +74,10 @@ class ILogic(metaclass=ABCMeta):
 
     @abstractmethod
     def UseProp(self, propType: THUAI6.PropType) -> bool:
+        pass
+
+    @abstractmethod
+    def ThrowProp(self, propType: THUAI6.PropType) -> bool:
         pass
 
     @abstractmethod
@@ -139,11 +147,11 @@ class ILogic(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def StartTreatMate(self, mateID: int) -> bool:
+    def StartEncourageMate(self, mateID: int) -> bool:
         pass
 
     @abstractmethod
-    def StartRescueMate(self, mateID: int) -> bool:
+    def StartRouseMate(self, mateID: int) -> bool:
         pass
 
 
@@ -182,6 +190,10 @@ class IAPI(metaclass=ABCMeta):
 
     @abstractmethod
     def UseProp(self, propType: THUAI6.PropType) -> Future[bool]:
+        pass
+
+    @abstractmethod
+    def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
         pass
 
     @abstractmethod
@@ -256,6 +268,10 @@ class IAPI(metaclass=ABCMeta):
 
     @abstractmethod
     def GetProps(self) -> List[THUAI6.Prop]:
+        pass
+
+    @abstractmethod
+    def GetBullets(self) -> List[THUAI6.Bullet]:
         pass
 
     @abstractmethod
@@ -334,11 +350,11 @@ class IStudentAPI(IAPI, metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def StartTreatMate(self, mateID: int) -> Future[bool]:
+    def StartEncourageMate(self, mateID: int) -> Future[bool]:
         pass
 
     @abstractmethod
-    def StartRescueMate(self, mateID: int) -> Future[bool]:
+    def StartRouseMate(self, mateID: int) -> Future[bool]:
         pass
 
     @abstractmethod

@@ -15,6 +15,8 @@ namespace Preparation.Utility
         public const int checkInterval = 50;  // 检查位置标志、补充子弹的帧时长
         public const long gameDuration = 600000;      // 游戏时长600000ms = 10min
 
+        public const int LimitOfStopAndMove = 15;
+
         public const int MinSpeed = 1;             // 最小速度
         public const int MaxSpeed = int.MaxValue;  // 最大速度
 
@@ -90,7 +92,7 @@ namespace Preparation.Utility
 
         public const int basicTreatSpeed = 100;
         public const int basicFixSpeed = 123;
-        public const int basicSpeedOfOpeningOrLocking = 4130;
+        public const int basicSpeedOfOpeningOrLocking = 4000;
         public const int basicStudentSpeedOfClimbingThroughWindows = 611;
         public const int basicGhostSpeedOfClimbingThroughWindows = 1270;
         public const int basicSpeedOfOpenChest = 1000;
@@ -105,9 +107,9 @@ namespace Preparation.Utility
 #if DEBUG
         public const int basicStudentMoveSpeed = 9000;// 基本移动速度，单位：s-1
 #else
-        public const int basicStudentMoveSpeed = 1270;
+        public const int basicStudentMoveSpeed = 1500;
 #endif
-        public const int basicGhostMoveSpeed = (int)(basicStudentMoveSpeed * 45.0 / 38);
+        public const int basicGhostMoveSpeed = (int)(basicStudentMoveSpeed * 1.2);
 
         public const int characterMaxSpeed = 12000;                  // 最大速度
 
@@ -116,6 +118,8 @@ namespace Preparation.Utility
         public const int basicGhostAlertnessRadius = 17 * numOfPosGridPerCell;
         public const int basicStudentViewRange = 10 * numOfPosGridPerCell;
         public const int basicGhostViewRange = 15 * numOfPosGridPerCell;
+        public const int PinningDownRange = 5 * numOfPosGridPerCell;
+
         public const int maxNumOfPropInPropInventory = 3;
 
         public static XY PosWhoDie = new XY(1, 1);
@@ -127,6 +131,7 @@ namespace Preparation.Utility
                 CharacterType.Assassin => true,
                 CharacterType.Klee => true,
                 CharacterType.ANoisyPerson => true,
+                CharacterType.Idol => true,
                 _ => false,
             };
         }
@@ -137,47 +142,47 @@ namespace Preparation.Utility
             return damage * 100 / basicApOfGhost;
         }
         public const int TrickerScoreStudentBeAddicted = 50;
-        public const int TrickerScoreDestroyRobot = 20;
+        public const int TrickerScoreDestroyRobot = 30;
         public const int TrickerScoreStudentDie = 1000;
         public static int TrickerScoreStudentBeStunned(int time)
         {
-            return time;
+            return time * 20 / 1000;
         }
         public static int TrickerScoreDamageGenerator(int degree)
         {
-            return degree * 200 / degreeOfFixedGenerator;
+            return degree * 100 / degreeOfFixedGenerator;
         }
 
         public static int StudentScoreFix(int degreeOfFix)
         {
             return degreeOfFix * 200 / degreeOfFixedGenerator;
         }
-        public const int StudentScoreFixed = 25;
+        //public const int StudentScoreFixed = 25;
         public static int StudentScorePinDown(int timeOfPinningDown)
         {
-            return 0;
+            return (int)(timeOfPinningDown * 0.00246);
         }
         public static int StudentScoreTrickerBeStunned(int time)
         {
-            return time;
+            return time * 20 / 1000;
         }
         public const int StudentScoreRescue = 100;
         public static int StudentScoreTreat(int degree)
         {
-            return degree;
+            return degree * 50 / basicTreatmentDegree;
         }
         public const int StudentScoreEscape = 1000;
 
-        public const int ScorePropRemainHp = 20;
-        public const int ScorePropUseShield = 20;
-        public const int ScorePropUseSpear = 20;
-        public const int ScorePropAddAp = 10;
+        public const int ScorePropRemainHp = 100;
+        public const int ScorePropUseShield = 50;
+        public const int ScorePropUseSpear = 50;
+        public const int ScorePropAddAp = 0;
         public const int ScorePropAddSpeed = 10;
         public const int ScorePropClairaudience = 10;
-        public const int ScorePropAddHp = 20;
-        public const int ScorePropRecoverFromDizziness = 20;
+        public const int ScorePropAddHp = 10;
+        public const int ScorePropRecoverFromDizziness = 30;
 
-        public const int ScoreBecomeInvisible = 10;
+        public const int ScoreBecomeInvisible = 15;
         public const int ScoreInspire = ScorePropAddSpeed;
         #endregion
         #region 攻击与子弹相关
@@ -185,7 +190,7 @@ namespace Preparation.Utility
         public const int MinAP = 0;                                  // 最小攻击力
         public const int MaxAP = int.MaxValue;                       // 最大攻击力
 
-        public const int factorDamageGenerator = 2;//子弹对电机的破坏=factorDamageGenerator*AP;
+        public const int factorDamageGenerator = 1;//子弹对电机的破坏=factorDamageGenerator*AP;
         public const int bulletRadius = 200;                         // 默认子弹半径
         public const int basicBulletNum = 3;                         // 基本初始子弹量
 
@@ -205,18 +210,21 @@ namespace Preparation.Utility
         public const int commonSkillCD = 30000;                      // 普通技能标准冷却时间
         public const int commonSkillTime = 10000;                    // 普通技能标准持续时间
 
-        public const int TimeOfGhostFaintingWhenCharge = 7220;
-        public const int TimeOfStudentFaintingWhenCharge = 2090;
+        public const int TimeOfGhostStunnedWhenCharge = 7220;
+        public const int TimeOfStudentStunnedWhenCharge = 2090;
 
-        public const int TimeOfGhostFaintingWhenPunish = 3070;
+        public const int TimeOfGhostStunnedWhenPunish = 3070;
+        public const int factorOfTimeStunnedWhenPunish = 300 / basicApOfGhost;
 
-        public const int TimeOfGhostSwingingAfterHowl = 3070;
-        public const int TimeOfStudentFaintingWhenHowl = 6110;
+        public const int TimeOfGhostSwingingAfterHowl = 800;
+        public const int TimeOfStudentStunnedWhenHowl = 5500;
 
         public const int TimeOfStunnedWhenJumpyDumpty = 3070;
 
         public const double AddedTimeOfSpeedWhenInspire = 0.6;
         public const int TimeOfAddingSpeedWhenInspire = 6000;
+
+        public const int AddHpWhenEncourage = basicHp / 4;
 
         #endregion
         #region 道具相关

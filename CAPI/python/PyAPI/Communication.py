@@ -48,7 +48,7 @@ class Communication:
         else:
             return pickResult.act_success
 
-    def UseProp(self, propType: THUAI6.PropType, playerID: int):
+    def UseProp(self, propType: THUAI6.PropType, playerID: int) -> bool:
         try:
             useResult = self.__THUAI6Stub.UseProp(
                 THUAI62Proto.THUAI62ProtobufProp(propType, playerID))
@@ -56,6 +56,15 @@ class Communication:
             return False
         else:
             return useResult.act_success
+
+    def ThrowProp(self, propType: THUAI6.PropType, playerID: int) -> bool:
+        try:
+            throwResult = self.__THUAI6Stub.ThrowProp(
+                THUAI62Proto.THUAI62ProtobufProp(propType, playerID))
+        except grpc.RpcError as e:
+            return False
+        else:
+            return throwResult.act_success
 
     def UseSkill(self, skillID: int, playerID: int) -> bool:
         try:
@@ -93,7 +102,7 @@ class Communication:
         else:
             return learnResult.act_success
 
-    def StartTreatMate(self, playerID: int, mateID: int) -> bool:
+    def StartEncourageMate(self, playerID: int, mateID: int) -> bool:
         try:
             helpResult = self.__THUAI6Stub.StartTreatMate(
                 THUAI62Proto.THUAI62ProtobufTreatAndRescue(playerID, mateID))
@@ -102,7 +111,7 @@ class Communication:
         else:
             return helpResult.act_success
 
-    def StartRescueMate(self, playerID: int, mateID: int) -> bool:
+    def StartRouseMate(self, playerID: int, mateID: int) -> bool:
         try:
             helpResult = self.__THUAI6Stub.StartRescueMate(
                 THUAI62Proto.THUAI62ProtobufTreatAndRescue(playerID, mateID))

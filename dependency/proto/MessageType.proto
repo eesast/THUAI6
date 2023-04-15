@@ -110,6 +110,7 @@ enum StudentType
     STRAIGHT_A_STUDENT = 3;
     ROBOT = 4;
     TECH_OTAKU =5;
+    SUNSHINE = 6;
 }
 
 enum TrickerType

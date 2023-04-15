@@ -398,7 +398,7 @@ namespace Gaming
                 {
                     if (((Golem)player).Parent != null && ((Golem)player).Parent.CharacterType == CharacterType.TechOtaku)
                     {
-                        ((SummonGolem)player.FindIActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned = null;
+                        ((SummonGolem)(((Golem)player).Parent.FindIActiveSkill(ActiveSkillType.SummonGolem))).GolemSummoned = null;
                         player.FindIActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed = false;
                     }
                     return;

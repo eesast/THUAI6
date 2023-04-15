@@ -12,7 +12,7 @@ namespace Client
     public class ArgumentOptions
     {
         [Option('u', "cl", Required = false, HelpText = "Whether to use command line")]
-        public bool cl { get; set; } = false;
+        public bool cl { get; set; } = true;
 
         [Option('i', "ip", Required = false, HelpText = "Client connected ip")]
         public string Ip { get; set; } = "127.0.0.1";

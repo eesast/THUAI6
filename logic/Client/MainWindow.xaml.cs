@@ -102,14 +102,9 @@ namespace Client
         private void ReactToCommandline()
         {
             string[] args = Environment.GetCommandLineArgs();
-            if (args.Length == 2)
-            {
-                Playback(args[1]);
-                return;
-            }
             _ = Parser.Default.ParseArguments<ArgumentOptions>(args).WithParsed(o =>
             { options = o; });
-            if ((args.Length == 3 || args.Length == 4) && options != null && Convert.ToInt64(options.PlayerID) > 2023)
+            if (options != null && Convert.ToInt64(options.PlayerID) > 2023)
             {
                 isSpectatorMode = true;
                 string[] comInfo = new string[3];
@@ -158,6 +153,7 @@ namespace Client
             if ((map = pbClient.ReadDataFromFile(listOfProp, listOfHuman, listOfButcher, listOfBullet, listOfBombedBullet, listOfAll, listOfChest, listOfClassroom, listOfDoor, listOfHiddenGate, listOfGate, drawPicLock)) != null)
             {
                 isClientStocked = false;
+                PorC.Content = "⏸";
                 isPlaybackMode = true;
                 defaultMap = map;
                 mapFlag = true;
@@ -166,6 +162,7 @@ namespace Client
             {
                 MessageBox.Show("Failed to read the playback file!");
                 isClientStocked = true;
+                PorC.Content = "▶";
             }
         }
 
@@ -1265,7 +1262,7 @@ namespace Client
                 isClientStocked = true;
                 PorC.Content = "▶";
             }
-            else if (!isPlaybackMode)
+            else
             {
                 try
                 {

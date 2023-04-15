@@ -84,7 +84,7 @@ std::vector<std::vector<THUAI6::PlaceType>> Logic::GetFullMap() const
 THUAI6::PlaceType Logic::GetPlaceType(int32_t cellX, int32_t cellY) const
 {
     std::unique_lock<std::mutex> lock(mtxState);
-    if (cellX < 0 || cellX >= currentState->gameMap.size() || cellY < 0 || cellY >= currentState->gameMap[0].size())
+    if (cellX < 0 || uint64_t(cellX) >= currentState->gameMap.size() || cellY < 0 || uint64_t(cellY) >= currentState->gameMap[0].size())
     {
         logger->warn("Invalid position!");
         return THUAI6::PlaceType::NullPlaceType;

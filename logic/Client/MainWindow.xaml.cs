@@ -221,6 +221,9 @@ namespace Client
                             case 5:
                                 playerMsg.StudentType = StudentType.TechOtaku;
                                 break;
+                            case 6:
+                                playerMsg.StudentType = StudentType.Sunshine;
+                                break;
                             case 0:
                             default:
                                 playerMsg.StudentType = StudentType.NullStudentType;
@@ -560,7 +563,7 @@ namespace Client
         {
             if (msg.PlayerState == PlayerState.Quit || msg.PlayerState == PlayerState.Graduated)
                 return false;
-            if (isSpectatorMode)
+            if (isSpectatorMode || isPlaybackMode)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -579,7 +582,7 @@ namespace Client
 
         private bool CanSee(MessageOfTricker msg)
         {
-            if (isSpectatorMode)
+            if (isSpectatorMode || isPlaybackMode)
                 return true;
             if (!humanOrButcher && butcher != null)
             {
@@ -606,7 +609,7 @@ namespace Client
 
         private bool CanSee(MessageOfProp msg)
         {
-            if (isSpectatorMode)
+            if (isSpectatorMode || isPlaybackMode)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -625,7 +628,7 @@ namespace Client
 
         private bool CanSee(MessageOfBullet msg)
         {
-            if (isSpectatorMode)
+            if (isSpectatorMode || isPlaybackMode)
                 return true;
             if (humanOrButcher && human != null)
             {
@@ -644,7 +647,7 @@ namespace Client
 
         private bool CanSee(MessageOfBombedBullet msg)
         {
-            if (isSpectatorMode)
+            if (isSpectatorMode || isPlaybackMode)
                 return true;
             //if (humanOrButcher && human != null)
             //{

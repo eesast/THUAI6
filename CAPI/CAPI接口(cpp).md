@@ -1,22 +1,6 @@
-- [CAPI接口](#capi接口)
-  - [接口解释](#接口解释)
-    - [主动指令](#主动指令)
-      - [移动](#移动)
-      - [使用技能](#使用技能)
-      - [人物](#人物)
-      - [攻击](#攻击)
-      - [学习与毕业](#学习与毕业)
-      - [勉励与唤醒](#勉励与唤醒)
-      - [地图互动](#地图互动)
-      - [道具](#道具)
-    - [信息获取](#信息获取)
-      - [队内信息](#队内信息)
-      - [查询可视范围内的信息](#查询可视范围内的信息)
-      - [查询特定位置物体的信息，下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。](#查询特定位置物体的信息下面的-cellx-和-celly-指的是地图格数而非绝对坐标)
-      - [其他](#其他)
-    - [辅助函数](#辅助函数)
-  - [接口一览](#接口一览)
-# CAPI接口
+[toc]
+
+# CAPI接口(cpp)
 ## 接口解释
 
 ### 主动指令
@@ -66,7 +50,10 @@
   - `std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const` ：返回所有可视道具的信息。
   - `std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const` ：返回所有可视子弹（攻击）的信息。
 
-#### 查询特定位置物体的信息，下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。
+#### 查询特定位置物体的信息
+
+下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。
+
   - `THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY)` ：返回某一位置场地种类信息。场地种类详见 structure.h 。
   - `bool IsDoorOpen(int32_t cellX, int32_t cellY) const`:查询特定位置门是否开启
   - `int32_t GetChestProgress(int32_t cellX, int32_t cellY) const`:查询特定位置箱子开启进度
@@ -88,7 +75,7 @@
 `static inline int GridToCell(int grid) noexcept`:将绝对坐标 grid 转换为地图格数cell。
 
 下面为用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
-~~~c
+~~~c++
     void Print(std::string str) const；
     void PrintStudent() const；
     void PrintTricker() const；
@@ -97,7 +84,7 @@
 ~~~
 
 ## 接口一览
-~~~csharp
+~~~c++
     // 指挥本角色进行移动，`timeInMilliseconds` 为移动时间，单位为毫秒；`angleInRadian` 表示移动的方向，单位是弧度，使用极坐标——竖直向下方向为 x 轴，水平向右方向为 y 轴
     virtual std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) = 0;
 

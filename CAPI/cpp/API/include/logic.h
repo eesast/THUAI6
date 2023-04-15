@@ -42,12 +42,12 @@ private:
     std::unique_ptr<Communication> pComm;
 
     // ID、阵营记录
-    int64_t playerID;
     THUAI6::PlayerType playerType;
+    int64_t playerID;
 
     // 类型记录
-    THUAI6::StudentType studentType;
     THUAI6::TrickerType trickerType;
+    THUAI6::StudentType studentType;
 
     // GUID信息
     std::vector<int64_t> playerGUIDs;

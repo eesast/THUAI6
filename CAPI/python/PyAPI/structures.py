@@ -70,6 +70,7 @@ class StudentType(Enum):
     StraightAStudent = 3
     Robot = 4
     TechOtaku = 5
+    Sunshine = 6
 
 
 class TrickerType(Enum):

@@ -27,8 +27,8 @@ class Constants(NoInstance):
     basicEncourageSpeed = 100
     basicLearnSpeed = 123
     basicSpeedOfOpeningOrLocking = 4000
-    basicStudentSpeedOfClimbingThroughWindows = 611
-    basicTrickerSpeedOfClimbingThroughWindows = 1270
+    basicStudentSpeedOfClimbingThroughWindows = 1222
+    basicTrickerSpeedOfClimbingThroughWindows = 2540
     basicSpeedOfOpenChest = 1000
 
     basicHp = 3000000

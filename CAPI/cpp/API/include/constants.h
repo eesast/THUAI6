@@ -28,8 +28,8 @@ namespace Constants
     SCCI int basicEncourageSpeed = 100;
     SCCI int basicFixSpeed = 123;
     SCCI int basicSpeedOfOpeningOrLocking = 4000;
-    SCCI int basicStudentSpeedOfClimbingThroughWindows = 611;
-    SCCI int basicTrickerSpeedOfClimbingThroughWindows = 1270;
+    SCCI int basicStudentSpeedOfClimbingThroughWindows = 1222;
+    SCCI int basicTrickerSpeedOfClimbingThroughWindows = 2540;
     SCCI int basicSpeedOfOpenChest = 1000;
 
     SCCI int basicHp = 3000000;

@@ -675,7 +675,7 @@ namespace Client
                     MaxButton.Content = "🗖";
                 foreach (var obj in listOfHuman)
                 {
-                    if (obj.PlayerId < GameData.numOfStudent)
+                    if (obj.PlayerId < GameData.numOfStudent && obj.StudentType != StudentType.Robot)
                     {
                         IStudentType occupation = (IStudentType)OccupationFactory.FindIOccupation(Transformation.ToStudentType(obj.StudentType));
                         totalLife[obj.PlayerId] = occupation.MaxHp;
@@ -749,7 +749,8 @@ namespace Client
                             DrawMap();
                         foreach (var data in listOfHuman)
                         {
-                            StatusBarsOfSurvivor[data.PlayerId].SetValue(data, data.PlayerId);
+                            if (data.StudentType != StudentType.Robot)
+                                StatusBarsOfSurvivor[data.PlayerId].SetValue(data, data.PlayerId);
                             if (CanSee(data))
                             {
                                 Ellipse icon = new()
@@ -761,6 +762,8 @@ namespace Client
                                     Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth * radiusTimes, data.X * unitHeight / 1000.0 - unitHeight * radiusTimes, 0, 0),
                                     Fill = Brushes.BlueViolet,
                                 };
+                                if (data.StudentType == StudentType.Robot)
+                                    icon.Fill = Brushes.Gray;
                                 TextBox num = new()
                                 {
                                     FontSize = 7 * UpperLayerOfMap.ActualHeight / 650,
@@ -775,6 +778,8 @@ namespace Client
                                     IsReadOnly = true,
                                     Foreground = Brushes.White,
                                 };
+                                if (data.StudentType == StudentType.Robot)
+                                    num.Text = Convert.ToString(data.PlayerId - Preparation.Utility.GameData.numOfPeople);
                                 UpperLayerOfMap.Children.Add(icon);
                                 UpperLayerOfMap.Children.Add(num);
                             }

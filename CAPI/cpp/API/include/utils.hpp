@@ -162,7 +162,7 @@ namespace Proto2THUAI6
         {protobuf::PlayerState::SWINGING, THUAI6::PlayerState::Swinging},
         {protobuf::PlayerState::ATTACKING, THUAI6::PlayerState::Attacking},
         {protobuf::PlayerState::LOCKING, THUAI6::PlayerState::Locking},
-        {protobuf::PlayerState::RUMMAGING, THUAI6::PlayerState::Rummaging},
+        // {protobuf::PlayerState::RUMMAGING, THUAI6::PlayerState::Rummaging},
         {protobuf::PlayerState::CLIMBING, THUAI6::PlayerState::Climbing},
         {protobuf::PlayerState::OPENING_A_CHEST, THUAI6::PlayerState::OpeningAChest},
         {protobuf::PlayerState::USING_SPECIAL_SKILL, THUAI6::PlayerState::UsingSpecialSkill},

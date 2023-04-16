@@ -2,36 +2,6 @@
 
 [toc]
 
-## Windows接口使用
-
-### C++接口使用说明
-
-* 首先把`lib`文件夹复制到`.\win\CAPI\cpp\`文件夹下
-* 然后在`CAPI\cpp\API\src\AI.cpp`中编写代码
-* 然后用Visual Studio打开`CAPI\cpp\CAPI.sln`编译，注意使用Debug模式
-* 最后使用`RunCpp.cmd`执行比赛代码
-
-### Python接口使用说明
-
-* 首先在Python环境下运行`GeneratePythonProto.cmd`，以安装必要的包、并生成对应的grpc python文件
-* 然后在`CAPI\python\PyAPI\AI.py`中编写代码
-* 最后通过运行`RunPython.cmd`执行比赛代码
-
-## Linux接口使用
-
-### C++使用说明
-
-* 首先自行安装`gRPC`，具体方法可以参考官方教程https://grpc.io/docs/languages/cpp/quickstart/。
-* 然后在`CAPI\cpp\API\src\AI.cpp`中编写代码
-* 接下来用`cmake`，对`CAPI\cpp\CMakeLists.txt`进行编译
-* 最后使用`RunCpp.sh`执行比赛代码
-
-### Python使用说明
-
-* 首先在Python环境下运行`GeneratePythonProto.cmd`，以安装必要的包、并生成对应的grpc python文件
-* 然后在`CAPI\python\PyAPI\AI.py`中编写代码
-* 最后通过运行`RunPython.cmd`执行比赛代码
-
 ## Visual Studio使用说明
 
 比赛**只保证！！！支持**VS2022，选手使用其他版本后果自负。

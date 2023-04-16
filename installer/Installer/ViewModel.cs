@@ -35,7 +35,7 @@ namespace starter.viewmodel.settings
 
             //实例化BackgroundWorker
             asyncDownloader = new BackgroundWorker();
-            asyncUpdater= new BackgroundWorker();
+            asyncUpdater = new BackgroundWorker();
             //指示BackgroundWorker是否可以报告进度更新
             //当该属性值为True是，将可以成功调用ReportProgress方法，否则将引发InvalidOperationException异常。
             asyncDownloader.WorkerReportsProgress = true;
@@ -419,7 +419,7 @@ namespace starter.viewmodel.settings
 
         public Visibility UpdateInfoVis
         {
-            get;set;
+            get; set;
         }
 
         public Visibility LaunchVis
@@ -665,7 +665,7 @@ namespace starter.viewmodel.settings
                                 break;
 
                         }
-                        
+
                     }));
                 }
                 return clickUninstCommand;

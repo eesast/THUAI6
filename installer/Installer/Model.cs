@@ -170,7 +170,7 @@ namespace starter.viewmodel.settings
         }
         public int Uninst()
         {
-           return Tencent_cos_download.DeleteAll();
+            return Tencent_cos_download.DeleteAll();
         }
 
         public bool Launch()
@@ -292,12 +292,12 @@ namespace starter.viewmodel.settings
         }
         public bool RememberMe
         {
-            get;set;
+            get; set;
         }
-        public enum LaunchLanguage { cpp,python };
+        public enum LaunchLanguage { cpp, python };
         public LaunchLanguage launchLanguage
         {
-            get;set;
+            get; set;
         }
     }
 }
@@ -633,7 +633,7 @@ namespace Downloader
                 int newFile = 0, updateFile = 0;
                 int totalnew = newFileName.Count, totalupdate = updateFileName.Count;
                 filenum = totalnew + totalupdate;
-                
+
                 if (newFileName.Count > 0 || updateFileName.Count > 0)
                 {
                     try

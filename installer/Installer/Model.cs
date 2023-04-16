@@ -25,6 +25,9 @@ using System.Windows.Shapes;
 using MessageBox = System.Windows.MessageBox;
 using Downloader;
 using COSXML.Transfer;
+using System.IO.Compression;
+using ICSharpCode.SharpZipLib.Tar;
+using ICSharpCode.SharpZipLib.GZip;
 
 namespace starter.viewmodel.settings
 {
@@ -397,8 +400,8 @@ namespace Downloader
                                           .Build();           // 创建 CosXmlConfig 对象
 
                 // 永久密钥访问凭证
-                string secretId = "***"; //"云 API 密钥 SecretId";
-                string secretKey = "***"; //"云 API 密钥 SecretKey";
+                string secretId = "AKIDvhEVXN4cv0ugIlFYiniV6Wk1McfkplYA"; //"云 API 密钥 SecretId";
+                string secretKey = "YyGLGCJG4f5VsEUddnz9JSRPSSK8sYBo"; //"云 API 密钥 SecretKey";
 
 
                 long durationSecond = 1000;  // 每次请求签名有效时长，单位为秒
@@ -700,12 +703,35 @@ namespace Downloader
 
                 newFileName.Clear();
                 updateFileName.Clear();
-                foreach (KeyValuePair<string, string> pair in jsonDict)
-                {
-                    newFileName.Add(pair.Key);
-                }
+                newFileName.Add("THUAI6.tar.gz");
                 Download();
-
+                Stream inStream = null;
+                Stream gzipStream = null;
+                TarArchive tarArchive = null;
+                try
+                {
+                    using (inStream = File.OpenRead(System.IO.Path.Combine(Data.FilePath, "THUAI6.tar.gz")))
+                    {
+                        using (gzipStream = new GZipInputStream(inStream))
+                        {
+                            tarArchive = TarArchive.CreateInputTarArchive(gzipStream);
+                            tarArchive.ExtractContents(Data.FilePath);
+                            tarArchive.Close();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //出错
+                }
+                finally
+                {
+                    if (null != tarArchive) tarArchive.Close();
+                    if (null != gzipStream) gzipStream.Close();
+                    if (null != inStream) inStream.Close();
+                }
+                FileInfo fileInfo = new FileInfo(System.IO.Path.Combine(Data.FilePath, "THUAI6.tar.gz"));
+                fileInfo.Delete();
                 string json2;
                 Dictionary<string, string> dict = new Dictionary<string, string>();
                 string existpath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
@@ -732,6 +758,8 @@ namespace Downloader
                 using StreamWriter sw = new StreamWriter(fs2);
                 fs2.SetLength(0);
                 sw.Write(JsonConvert.SerializeObject(dict));
+                Check();
+                Download();
             }
 
             public static void Change_all_hash(string topDir, Dictionary<string, string> jsonDict)  // 更改HASH
@@ -812,21 +840,19 @@ namespace Downloader
             public static int DeleteAll()
             {
                 DirectoryInfo di = new DirectoryInfo(Data.FilePath);
-                DirectoryInfo player = new DirectoryInfo(System.IO.Path.GetFullPath(System.IO.Path.Combine(Data.FilePath, playerFolder)));
+                //DirectoryInfo player = new DirectoryInfo(System.IO.Path.GetFullPath(System.IO.Path.Combine(Data.FilePath, playerFolder)));
+                FileInfo[] allfile = di.GetFiles();
                 try
                 {
-                    foreach (FileInfo file in di.GetFiles())
+                    foreach (FileInfo file in allfile)
                     {
+                        //if(file.Name == "AI.cpp" || file.Name == "AI.py")
+                        //{
+                        //    string filename = System.IO.Path.GetFileName(file.FullName);
+                        //    file.MoveTo(System.IO.Path.Combine(Data.FilePath, filename));
+                        //    continue;
+                        //}
                         file.Delete();
-                    }
-                    foreach (FileInfo file in player.GetFiles())
-                    {
-                        if (file.Name == "AI.cpp" || file.Name == "AI.py")
-                        {
-                            continue;
-                        }
-                        string filename = System.IO.Path.GetFileName(file.FullName);
-                        file.MoveTo(System.IO.Path.Combine(Data.FilePath, filename));
                     }
                     foreach (DirectoryInfo subdi in di.GetDirectories())
                     {

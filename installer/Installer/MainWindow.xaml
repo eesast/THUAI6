@@ -39,7 +39,7 @@
         <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="5" Name="RouteTxtBox" Text="{Binding Route}" Visibility="{Binding RouteBoxVis}"/>
         <Button Grid.Row="3" Grid.Column="6" Name="GetRouteBtn" Content="选择文件夹" Command="{Binding ClickBrowseCommand}" Visibility="{Binding RouteBoxVis}" />
         <Button Grid.Row="3" Grid.Column="7" Name="SetBtm" Content="{Binding ConfirmBtnCont}" Command="{Binding ClickConfirmCommand}" Visibility="{Binding RouteBoxVis}"/>
-        <Button Grid.Row="4" Grid.Column="6" Grid.ColumnSpan="2" Name="ReadExsisted" Content="从所选文件夹直接读取" Command="{Binding ClickReadCommand}" Visibility="{Binding NewUserVis}"/>
+        <Button Grid.Row="4" Grid.Column="6" Grid.ColumnSpan="2" Name="ReadExsisted" Content="所选文件夹即为选手包" Command="{Binding ClickReadCommand}" Visibility="{Binding NewUserVis}"/>
         
         <Button Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Name="UpdateBtn" Content="{Binding UpdateBtnCont}" Command="{Binding ClickUpdateCommand}" Visibility="{Binding MenuVis}" />
         <TextBlock Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" FontSize="10" Text="{Binding UpdateInfo}" Visibility="{Binding UpdateInfoVis}" />
@@ -88,7 +88,7 @@
         <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Text="你有已完成的比赛！" Visibility="{Binding MatchFinishedVis}"/>
         <Button Grid.Row="3" Grid.Column="1" Name ="Upload" Content="{Binding UploadBtnCont}" Command="{Binding ClickUploadCommand}" Visibility="{Binding WebVis}"/>
         <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding CodeName}" Visibility="{Binding UploadReadyVis}" />
-        <Button Grid.Row="3" Grid.Column="2" Name="ReUpload" Content="放弃上传" Command="{Binding ClickReselectCommand}" Visibility="{Binding UploadReadyVis}" />
+        <Button Grid.Row="3" Grid.Column="2" Name="ReUpload" Content="{Binding AbortOrSelLanguage}" Command="{Binding ClickAboutUploadCommand}" Visibility="{Binding WebVis}" />
         <Button Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Content="退出登录" Command="{Binding ClickBackCommand}" Visibility="{Binding WebVis}" />
         <StackPanel Grid.Row="5" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2">
             <Grid>

@@ -12,6 +12,7 @@ using System.ComponentModel;
 using Installer;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.IO;
+using System.Windows.Automation.Provider;
 
 namespace starter.viewmodel.settings
 {
@@ -248,6 +249,20 @@ namespace starter.viewmodel.settings
                     default:
                         return "";
                 }
+            }
+        }
+        public string AbortOrSelLanguage
+        {
+            get
+            {
+                string ans = "";
+                if (obj.UploadReady)
+                    ans = "放弃上传";
+                else if (obj.launchLanguage == SettingsModel.LaunchLanguage.cpp)
+                    ans = "语言:c++";
+                else if (obj.launchLanguage == SettingsModel.LaunchLanguage.python)
+                    ans = "语言:python";
+                return ans;
             }
         }
         public int PlayerNum
@@ -504,10 +519,18 @@ namespace starter.viewmodel.settings
             }
             else if (type == "File")
             {
-                var openFileDialog = new Microsoft.Win32.OpenFileDialog()
+
+                var openFileDialog = new Microsoft.Win32.OpenFileDialog();
+                if (obj.launchLanguage == SettingsModel.LaunchLanguage.cpp)
                 {
-                    Filter = "c++ Source Files (.cpp)|*.cpp|c++ Header File (.h)|*.h|python Source File (.py)|*.py"
-                };
+                    openFileDialog.InitialDirectory = (Route + "/THUAI6/win/CAPI/cpp/API/src/").Replace("/", "\\");
+                    openFileDialog.Filter = "c++ Source Files (.cpp)|*.cpp|c++ Header File (.h)|*.h|python Source File (.py)|*.py";
+                }
+                else if (obj.launchLanguage == SettingsModel.LaunchLanguage.python)
+                {
+                    openFileDialog.InitialDirectory = (Route + "/THUAI6/win/CAPI/python/PyAPI/").Replace("/", "\\");
+                    openFileDialog.Filter = "python Source File (.py)|*.py|c++ Source Files (.cpp)|*.cpp|c++ Header File (.h)|*.h";
+                }
                 var result = openFileDialog.ShowDialog();
                 if (result == true)
                 {
@@ -658,7 +681,7 @@ namespace starter.viewmodel.settings
                                 break;
                             case 0:
                                 Status = SettingsModel.Status.newUser;
-                                MessageBox.Show($"删除成功！player文件夹中的文件已经放在{Downloader.Program.ProgramName}的根目录下", "", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+                                MessageBox.Show($"删除成功！player文件夹中的文件已经放在{Downloader.Program.Data.FilePath}/{Downloader.Program.ProgramName}的根目录下", "", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
                                 break;
                             default:
                                 Status = SettingsModel.Status.error;
@@ -833,6 +856,7 @@ namespace starter.viewmodel.settings
                                 this.RaisePropertyChanged("UploadBtnCont");
                                 this.RaisePropertyChanged("UploadReadyVis");
                                 this.RaisePropertyChanged("CoverVis");
+                                this.RaisePropertyChanged("AbortOrSelLanguage");
                             }
                         }
                         else
@@ -845,6 +869,7 @@ namespace starter.viewmodel.settings
                                 this.RaisePropertyChanged("UploadReadyVis");
                                 this.RaisePropertyChanged("CodeName");
                                 this.RaisePropertyChanged("CoverVis");
+                                this.RaisePropertyChanged("AbortOrSelLanguage");
                             }
                             else
                             {
@@ -856,24 +881,38 @@ namespace starter.viewmodel.settings
                 return clickUploadCommand;
             }
         }
-        private BaseCommand clickReselectCommand;
-        public BaseCommand ClickReselectCommand
+        private BaseCommand clickAboutUploadCommand;
+        public BaseCommand ClickAboutUploadCommand
         {
             get
             {
-                if (clickReselectCommand == null)
+                if (clickAboutUploadCommand == null)
                 {
-                    clickReselectCommand = new BaseCommand(new Action<object>(o =>
+                    clickAboutUploadCommand = new BaseCommand(new Action<object>(o =>
                     {
-                        obj.CodeRoute = "";
-                        obj.UploadReady = false;
-                        this.RaisePropertyChanged("UploadBtnCont");
-                        this.RaisePropertyChanged("UploadReadyVis");
-                        this.RaisePropertyChanged("CodeName");
-                        this.RaisePropertyChanged("CoverVis");
+                        if (obj.UploadReady)
+                        {
+                            obj.CodeRoute = "";
+                            obj.UploadReady = false;
+                            this.RaisePropertyChanged("UploadBtnCont");
+                            this.RaisePropertyChanged("UploadReadyVis");
+                            this.RaisePropertyChanged("CodeName");
+                            this.RaisePropertyChanged("CoverVis");
+                            this.RaisePropertyChanged("AbortOrSelLanguage");
+                        }
+                        else
+                        {
+                            if (obj.launchLanguage == SettingsModel.LaunchLanguage.cpp)
+                                obj.launchLanguage = SettingsModel.LaunchLanguage.python;
+                            else
+                                obj.launchLanguage = SettingsModel.LaunchLanguage.cpp;
+                            this.RaisePropertyChanged("AbortOrSelLanguage");
+                            this.RaisePropertyChanged("ShiftLanguageBtnCont");
+                            this.RaisePropertyChanged("LaunchBtnCont");
+                        }
                     }));
                 }
-                return clickReselectCommand;
+                return clickAboutUploadCommand;
             }
         }
         private BaseCommand clickExitCommand;
@@ -906,6 +945,7 @@ namespace starter.viewmodel.settings
                             obj.launchLanguage = SettingsModel.LaunchLanguage.cpp;
                         this.RaisePropertyChanged("ShiftLanguageBtnCont");
                         this.RaisePropertyChanged("LaunchBtnCont");
+                        this.RaisePropertyChanged("AbortOrSelLanguage");
                     }));
                 }
                 return clickShiftLanguageCommand;

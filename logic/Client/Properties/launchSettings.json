@@ -2,7 +2,7 @@
   "profiles": {
     "Client": {
       "commandName": "Project",
-      "commandLineArgs": "--port 8888 --characterID 3 --type 1 --occupation 5"
+      "commandLineArgs": "D:\\2_autumn\\thuai6\\THUAI6\\logic\\cmd\\test.thuaipb"
     }
   }
 }

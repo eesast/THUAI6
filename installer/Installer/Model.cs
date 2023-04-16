@@ -21,10 +21,13 @@ using System.Net.Http;
 using System.Windows;
 using System.Windows.Shapes;
 //using System.Windows.Forms;
+using System.Threading.Tasks;
+using System.Threading;
 
 using MessageBox = System.Windows.MessageBox;
 using Downloader;
 using COSXML.Transfer;
+using WebConnect;
 
 namespace starter.viewmodel.settings
 {
@@ -52,6 +55,7 @@ namespace starter.viewmodel.settings
             PlayerNum = "nSelect";
             UploadReady = false;
             LoginFailed = false;
+            launchLanguage = LaunchLanguage.cpp;
         }
 
         /// <summary>
@@ -118,7 +122,7 @@ namespace starter.viewmodel.settings
             {
                 if (updateInfo.changedFileCount != 0 || updateInfo.newFileCount != 0)
                 {
-                    Updates = "发现新版本";
+                    Updates = $"{updateInfo.newFileCount}个新文件，{updateInfo.changedFileCount}个文件变化";
                 }
                 return Status.menu;
             }
@@ -128,6 +132,38 @@ namespace starter.viewmodel.settings
         {
             return await web.LoginToEEsast(client, Username, Password);
         }
+
+        public bool RememberUser()
+        {
+            int result = 0;
+            result |= Web.WriteUserEmail(Username);
+            result |= Web.WriteUserPassword(Password);
+            return result == 0;
+        }
+        public bool RecallUser()
+        {
+            Username = Web.ReadUserEmail();
+            if (Username == null || Username.Equals(""))
+            {
+                Username = "";
+                return false;
+            }
+            Password = Web.ReadUserPassword();
+            if (Password == null || Username.Equals(""))
+            {
+                Password = "";
+                return false;
+            }
+            return true;
+        }
+        public bool ForgetUser()
+        {
+            int result = 0;
+            result |= Web.WriteUserEmail("");
+            result |= Web.WriteUserPassword("");
+            return result == 0;
+        }
+
         public bool Update()
         {
             return Tencent_cos_download.Update();
@@ -251,6 +287,15 @@ namespace starter.viewmodel.settings
         }
 
         public bool UploadReady
+        {
+            get; set;
+        }
+        public bool RememberMe
+        {
+            get; set;
+        }
+        public enum LaunchLanguage { cpp, python };
+        public LaunchLanguage launchLanguage
         {
             get; set;
         }
@@ -397,8 +442,8 @@ namespace Downloader
                                           .Build();           // 创建 CosXmlConfig 对象
 
                 // 永久密钥访问凭证
-                string secretId = "***"; //"云 API 密钥 SecretId";
-                string secretKey = "***"; //"云 API 密钥 SecretKey";
+                string secretId = "AKIDvhEVXN4cv0ugIlFYiniV6Wk1McfkplYA"; //"云 API 密钥 SecretId";
+                string secretKey = "YyGLGCJG4f5VsEUddnz9JSRPSSK8sYBo"; //"云 API 密钥 SecretKey";
 
 
                 long durationSecond = 1000;  // 每次请求签名有效时长，单位为秒
@@ -419,7 +464,7 @@ namespace Downloader
                     Dictionary<string, string> test = request.GetRequestHeaders();
                     request.SetCosProgressCallback(delegate (long completed, long total)
                     {
-                        Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
+                        //Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
                     });
                     // 执行请求
                     GetObjectResult result = cosXml.GetObject(request);
@@ -463,6 +508,8 @@ namespace Downloader
                 {
                     if (fst != null)
                         fst.Close();
+                    if (File.Exists(strFileFullPath))
+                        return "conflict";
                     return "";
                 }
                 finally
@@ -521,6 +568,8 @@ namespace Downloader
                         MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key));
                         if (MD5.Length == 0)  // 文档不存在
                             newFileName.Add(pair.Key);
+                        else if (MD5.Equals("conflict"))
+                            MessageBox.Show($"文件{pair.Key}已打开，无法检查是否为最新，若需要，请关闭文件稍后手动检查更新", "文件正在使用", MessageBoxButton.OK, MessageBoxImage.Warning);
                         else if (MD5 != pair.Value)  // MD5不匹配
                             updateFileName.Add(pair.Key);
                     }
@@ -581,7 +630,6 @@ namespace Downloader
             private static void Download()
             {
                 Tencent_cos_download Downloader = new Tencent_cos_download();
-
                 int newFile = 0, updateFile = 0;
                 int totalnew = newFileName.Count, totalupdate = updateFileName.Count;
                 filenum = totalnew + totalupdate;
@@ -592,17 +640,17 @@ namespace Downloader
                     {
                         foreach (string filename in newFileName)
                         {
-                            Console.WriteLine(newFile + 1 + "/" + totalnew + ":开始下载" + filename);
+                            //Console.WriteLine(newFile + 1 + "/" + totalnew + ":开始下载" + filename);
                             Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename);
-                            Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
+                            //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
                             newFile++;
                         }
                         foreach (string filename in updateFileName)
                         {
-                            Console.WriteLine(updateFile + 1 + "/" + totalupdate + ":开始下载" + filename);
+                            //Console.WriteLine(updateFile + 1 + "/" + totalupdate + ":开始下载" + filename);
                             File.Delete(System.IO.Path.Combine(@Data.FilePath, filename));
                             Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename);
-                            Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
+                            //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
                             updateFile++;
                         }
                     }
@@ -743,7 +791,7 @@ namespace Downloader
                 foreach (FileInfo NextFile in theFolder.GetFiles())
                 {
                     string filepath = topDir + @"/" + NextFile.Name;  // 文件路径
-                    Console.WriteLine(filepath);
+                    //Console.WriteLine(filepath);
                     foreach (KeyValuePair<string, string> pair in jsonDict)
                     {
                         if (System.IO.Path.Equals(filepath, System.IO.Path.Combine(Data.FilePath, pair.Key).Replace('\\', '/')))
@@ -819,14 +867,17 @@ namespace Downloader
                     {
                         file.Delete();
                     }
-                    foreach (FileInfo file in player.GetFiles())
+                    if (Directory.Exists(Data.FilePath + playerFolder))
                     {
-                        if (file.Name == "AI.cpp" || file.Name == "AI.py")
+                        foreach (FileInfo file in player.GetFiles())
                         {
-                            continue;
+                            if (file.Name == "AI.cpp" || file.Name == "AI.py")
+                            {
+                                continue;
+                            }
+                            string filename = System.IO.Path.GetFileName(file.FullName);
+                            file.MoveTo(System.IO.Path.Combine(Data.FilePath, filename));
                         }
-                        string filename = System.IO.Path.GetFileName(file.FullName);
-                        file.MoveTo(System.IO.Path.Combine(Data.FilePath, filename));
                     }
                     foreach (DirectoryInfo subdi in di.GetDirectories())
                     {
@@ -895,7 +946,6 @@ namespace Downloader
                     Console.WriteLine("文件已经打开，请关闭后再删除");
                     return -1;
                 }
-                Console.WriteLine($"删除成功！player文件夹中的文件已经放在{ProgramName}的根目录下");
                 return 0;
             }
 
@@ -1075,7 +1125,7 @@ namespace WebConnect
                     switch (response.StatusCode)
                     {
                         case System.Net.HttpStatusCode.OK:
-                            Console.WriteLine("Success login");
+                            //Console.WriteLine("Success login");
                             token = (System.Text.Json.JsonSerializer.Deserialize(await response.Content.ReadAsStreamAsync(), typeof(LoginResponse), new JsonSerializerOptions()
                             {
                                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -1091,7 +1141,7 @@ namespace WebConnect
 
                         default:
                             int code = ((int)response.StatusCode);
-                            Console.WriteLine(code);
+                            //Console.WriteLine(code);
                             if (code == 401)
                             {
                                 //Console.WriteLine("邮箱或密码错误！");
@@ -1175,13 +1225,13 @@ namespace WebConnect
 
                             uploadTask.progressCallback = delegate (long completed, long total)
                             {
-                                Console.WriteLine(string.Format("progress = {0:##.##}%", completed * 100.0 / total));
+                                //Console.WriteLine(string.Format("progress = {0:##.##}%", completed * 100.0 / total));
                             };
 
                             try
                             {
                                 COSXMLUploadTask.UploadTaskResult result = await transferManager.UploadAsync(uploadTask);
-                                Console.WriteLine(result.GetResultInfo());
+                                //Console.WriteLine(result.GetResultInfo());
                                 string eTag = result.eTag;
                                 //到这里应该是成功了，但是因为我没有试过，也不知道具体情况，可能还要根据result的内容判断
                             }

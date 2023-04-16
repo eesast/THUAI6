@@ -31,6 +31,8 @@ using WebConnect;
 using System.IO.Compression;
 using ICSharpCode.SharpZipLib.Tar;
 using ICSharpCode.SharpZipLib.GZip;
+using static System.Net.WebRequestMethods;
+using File = System.IO.File;
 
 namespace starter.viewmodel.settings
 {
@@ -656,6 +658,7 @@ namespace Downloader
                             //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
                             updateFile++;
                         }
+                        UpdatePlanned = false;
                     }
                     catch (CosClientException clientEx)
                     {
@@ -808,6 +811,16 @@ namespace Downloader
                 sw.Write(JsonConvert.SerializeObject(dict));
                 Check();
                 Download();
+                if (File.Exists(Data.FilePath + "/THUAI6/AI.cpp"))
+                {
+                    FileInfo userCpp = new FileInfo((Data.FilePath + "/THUAI6/AI.cpp").Replace("/", "\\"));
+                    userCpp.MoveTo(Data.FilePath + "/THUAI6/win/CAPI/cpp/API/src/AI.cpp", true);
+                }
+                if (File.Exists(Data.FilePath + "/THUAI6/AI.py"))
+                {
+                    FileInfo userCpp = new FileInfo((Data.FilePath + "/THUAI6/AI.py").Replace("/", "\\"));
+                    userCpp.MoveTo(Data.FilePath + "/THUAI6/win/CAPI/python/PyAPI/AI.cpp", true);
+                }
             }
 
             public static void Change_all_hash(string topDir, Dictionary<string, string> jsonDict)  // 更改HASH
@@ -887,7 +900,7 @@ namespace Downloader
 
             public static int DeleteAll()
             {
-                DirectoryInfo di = new DirectoryInfo(Data.FilePath);
+                DirectoryInfo di = new DirectoryInfo(Data.FilePath + "/THUAI6");
                 //DirectoryInfo player = new DirectoryInfo(System.IO.Path.GetFullPath(System.IO.Path.Combine(Data.FilePath, playerFolder)));
                 FileInfo[] allfile = di.GetFiles();
                 try
@@ -902,10 +915,16 @@ namespace Downloader
                         //}
                         file.Delete();
                     }
+                    FileInfo userFileCpp = new FileInfo(Data.FilePath + "/THUAI6/win/CAPI/cpp/API/src/AI.cpp");
+                    FileInfo userFilePy = new FileInfo(Data.FilePath + "/THUAI6/win/CAPI/python/PyAPI/AI.py");
+                    userFileCpp.MoveTo(System.IO.Path.Combine(Data.FilePath + "/THUAI6", System.IO.Path.GetFileName(userFileCpp.FullName)));
+                    userFilePy.MoveTo(System.IO.Path.Combine(Data.FilePath + "/THUAI6", System.IO.Path.GetFileName(userFilePy.FullName)));
                     foreach (DirectoryInfo subdi in di.GetDirectories())
                     {
                         subdi.Delete(true);
                     }
+                    FileInfo hashFile = new FileInfo(Data.FilePath + "/hash.json");
+                    hashFile.Delete();
                 }
                 catch (UnauthorizedAccessException)
                 {

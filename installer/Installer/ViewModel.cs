@@ -19,9 +19,11 @@ namespace starter.viewmodel.settings
         /// <summary>
         /// initializer
         /// </summary>
+
         public SettingsViewModel()
         {
             //Program.Tencent_cos_download.UpdateHash();
+            //WebConnect.Web.WriteUserEmail("wangsk21@mails.tsinghua.edu.cn");
             if (Downloader.Program.Tencent_cos_download.CheckAlreadyDownload())
             {
                 obj.checkUpdate();
@@ -558,7 +560,10 @@ namespace starter.viewmodel.settings
                 {
                     clickBackCommand = new BaseCommand(new Action<object>(o =>
                     {
-                        Status = SettingsModel.Status.login;
+                        if (Downloader.Program.Tencent_cos_download.CheckAlreadyDownload())
+                            Status = SettingsModel.Status.login;
+                        else
+                            Status = SettingsModel.Status.newUser;
                     }));
                 }
                 return clickBackCommand;
@@ -655,6 +660,21 @@ namespace starter.viewmodel.settings
                     }));
                 }
                 return clickReselectCommand;
+            }
+        }
+        private BaseCommand clickExitCommand;
+        public BaseCommand ClickExitCommand
+        {
+            get
+            {
+                if (clickExitCommand == null)
+                {
+                    clickExitCommand = new BaseCommand(new Action<object>(o =>
+                    {
+                        System.Windows.Application.Current.Shutdown();
+                    }));
+                }
+                return clickExitCommand;
             }
         }
     }

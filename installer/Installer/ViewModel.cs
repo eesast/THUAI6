@@ -23,6 +23,7 @@ namespace starter.viewmodel.settings
         public SettingsViewModel()
         {
             //Program.Tencent_cos_download.UpdateHash();
+            //WebConnect.Web.WriteUserEmail("wangsk21@mails.tsinghua.edu.cn");
             if (Downloader.Program.Tencent_cos_download.CheckAlreadyDownload())
             {
                 obj.checkUpdate();

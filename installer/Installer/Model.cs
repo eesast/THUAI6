@@ -1318,10 +1318,12 @@ namespace WebConnect
                     dict["email"] = email;
                 }
                 sr.Close();
-                StreamWriter sw = new StreamWriter(fs);
+                fs.Close();
+                FileStream fs2 = new FileStream(savepath, FileMode.Open, FileAccess.ReadWrite);
+                StreamWriter sw = new StreamWriter(fs2);
                 sw.WriteLine(JsonConvert.SerializeObject(dict));
                 sw.Close();
-                fs.Close();
+                fs2.Close();
                 return 0;//成功
             }
             catch
@@ -1353,10 +1355,12 @@ namespace WebConnect
                     dict["password"] = password;
                 }
                 sr.Close();
-                StreamWriter sw = new StreamWriter(fs);
+                fs.Close();
+                FileStream fs2 = new FileStream(savepath, FileMode.Open, FileAccess.ReadWrite);
+                StreamWriter sw = new StreamWriter(fs2);
                 sw.WriteLine(JsonConvert.SerializeObject(dict));
                 sw.Close();
-                fs.Close();
+                fs2.Close();
                 return 0;//成功
             }
             catch

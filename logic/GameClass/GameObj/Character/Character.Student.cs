@@ -141,6 +141,12 @@ namespace GameClass.GameObj
                 }
             }
         }
+        public override void AddScore(int add)
+        {
+            if (parent == null)
+                base.AddScore(add);
+            else parent.AddScore(add);
+        }
         public Golem(XY initPos, int initRadius, Character? parent) : base(initPos, initRadius, CharacterType.Robot)
         {
             this.parent = parent;

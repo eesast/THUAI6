@@ -516,7 +516,7 @@ namespace Downloader
                 Dictionary<string, string> jsonDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
                 foreach (KeyValuePair<string, string> pair in jsonDict)
                 {
-                    if (System.IO.Path.GetFileName(pair.Key) != "AI.cpp" && System.IO.Path.GetFileName(pair.))
+                    if (System.IO.Path.GetFileName(pair.Key) != "AI.cpp" && System.IO.Path.GetFileName(pair.Key) != "AI.py")
                     {
                         MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key));
                         if (MD5.Length == 0)  // 文档不存在

@@ -19,6 +19,7 @@ namespace starter.viewmodel.settings
         /// <summary>
         /// initializer
         /// </summary>
+
         public SettingsViewModel()
         {
             //Program.Tencent_cos_download.UpdateHash();

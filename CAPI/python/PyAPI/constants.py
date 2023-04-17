@@ -8,6 +8,7 @@ class NoInstance:
 
 
 class Constants(NoInstance):
+    frameDuration = 50 #每帧毫秒数
     numOfGridPerCell = 1000  # 单位坐标数
     rows = 50        # 地图行数
     cols = 50        # 地图列数

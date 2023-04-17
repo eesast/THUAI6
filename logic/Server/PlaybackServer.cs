@@ -192,7 +192,7 @@ namespace Server
                                         if (item.StudentMessage != null)
                                             teamScore[0, item.StudentMessage.PlayerId] = item.StudentMessage.Score;
                                         if (item.TrickerMessage != null)
-                                            teamScore[1, item.TrickerMessage.PlayerId - mr.playerCount] = item.TrickerMessage.Score;
+                                            teamScore[1, item.TrickerMessage.PlayerId - options.MaxStudentCount] = item.TrickerMessage.Score; // 这里默认 Tricker 的 PlayerId 从 MaxStudentCount = 4 开始
                                     }
                                 }
 

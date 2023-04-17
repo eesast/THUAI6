@@ -40,10 +40,10 @@ namespace Server
         public void StartGame()
         {
             if (game.GameMap.Timer.IsGaming) return;
-            /*foreach (var id in communicationToGameID)
+            foreach (var id in communicationToGameID)
             {
                 if (id == GameObj.invalidID) return;     //如果有未初始化的玩家，不开始游戏
-            }*/ //测试时人数不够
+            }
             Console.WriteLine("Game starts!");
             game.StartGame((int)options.GameTimeInSecond * 1000);
             Thread.Sleep(1);
@@ -319,7 +319,11 @@ namespace Server
             currentMapMsg = MapMsg(game.GameMap.ProtoGameMap);
             communicationToGameID = new long[options.MaxStudentCount + options.TrickerCount];
             //创建server时先设定待加入人物都是invalid
-            for (int i = 0; i < communicationToGameID.GetLength(0); i++)
+            for (int i = 0; i < options.StudentCount; i++)
+            {
+                communicationToGameID[i] = GameObj.invalidID;
+            }
+            for (int i = options.MaxStudentCount; i < options.MaxStudentCount + options.TrickerCount; i++)
             {
                 communicationToGameID[i] = GameObj.invalidID;
             }

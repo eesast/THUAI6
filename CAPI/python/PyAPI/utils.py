@@ -145,7 +145,7 @@ class Proto2THUAI6(NoInstance):
         MessageType.SWINGING: THUAI6.PlayerState.Swinging,
         MessageType.ATTACKING: THUAI6.PlayerState.Attacking,
         MessageType.LOCKING: THUAI6.PlayerState.Locking,
-        MessageType.RUMMAGING: THUAI6.PlayerState.Rummaging,
+        # MessageType.RUMMAGING: THUAI6.PlayerState.Rummaging,
         MessageType.CLIMBING: THUAI6.PlayerState.Climbing,
         MessageType.OPENING_A_CHEST: THUAI6.PlayerState.OpeningAChest,
         MessageType.USING_SPECIAL_SKILL: THUAI6.PlayerState.UsingSpecialSkill,

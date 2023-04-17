@@ -1,6 +1,6 @@
 import PyAPI.structures as THUAI6
 from PyAPI.Interface import IStudentAPI, ITrickerAPI, IAI
-from typing import Union, Final, cast
+from typing import Union, Final, cast, List
 from PyAPI.constants import Constants
 import queue
 
@@ -13,15 +13,10 @@ class Setting:
     def asynchronous() -> bool:
         return True
 
-    # 选手必须修改该函数的返回值来选择自己的阵营
+    # 选手需要依次将player0到player4的职业都定义
     @staticmethod
-    def playerType() -> THUAI6.PlayerType:
-        return THUAI6.PlayerType.StudentPlayer
-
-    # 选手需要将两个都定义，本份代码中不选择的阵营任意定义即可
-    @staticmethod
-    def studentType() -> THUAI6.StudentType:
-        return THUAI6.StudentType.Athlete
+    def studentType() -> List[THUAI6.StudentType]:
+        return [THUAI6.StudentType.Athlete, THUAI6.StudentType.Teacher, THUAI6.StudentType.StraightAStudent, THUAI6.StudentType.Sunshine]
 
     @staticmethod
     def trickerType() -> THUAI6.TrickerType:
@@ -43,112 +38,29 @@ class AssistFunction:
         return grid // numOfGridPerCell
 
 
-path = []
-cur = 0
-fixedclass = []
-
-
 class AI(IAI):
-    # 选手在这里实现自己的逻辑，要求和上面选择的阵营保持一致
+    def __init__(self, pID: int):
+        self.__playerID = pID
+
     def StudentPlay(self, api: IStudentAPI) -> None:
-        # global fixedclass
-        # selfInfo = api.GetSelfInfo()
-        # available = [THUAI6.PlaceType.Land,
-        #              THUAI6.PlaceType.Grass, THUAI6.PlaceType.Door3, THUAI6.PlaceType.Door6, THUAI6.PlaceType.Door5, THUAI6.PlaceType.Gate]
-
-        # def bfs(x, y):
-        #     if api.GetPlaceType(x, y) not in available:
-        #         return []
-
-        #     def GetSuccessors(x, y):
-        #         successors = []
-        #         if x > 0 and api.GetPlaceType(x - 1, y) in available:
-        #             successors.append((x - 1, y))
-        #         if x < 49 and api.GetPlaceType(x + 1, y) in available:
-        #             successors.append((x + 1, y))
-        #         if y > 0 and api.GetPlaceType(x, y - 1) in available:
-        #             successors.append((x, y - 1))
-        #         if y < 49 and api.GetPlaceType(x, y + 1) in available:
-        #             successors.append((x, y + 1))
-        #         return successors
-        #     selfX = AssistFunction.GridToCell(api.GetSelfInfo().x)
-        #     selfY = AssistFunction.GridToCell(api.GetSelfInfo().y)
-        #     frontier = queue.Queue()
-        #     frontier.put((selfX, selfY, []))
-        #     visited = []
-        #     while not frontier.empty():
-        #         currentX, currentY, path = frontier.get()
-        #         if currentX == x and currentY == y:
-        #             return path
-        #         for nextX, nextY in GetSuccessors(currentX, currentY):
-        #             if (nextX, nextY) not in visited:
-        #                 visited.append((nextX, nextY))
-        #                 frontier.put((nextX, nextY, path + [(nextX, nextY)]))
-        #     return []
-
-        # def GoTo(x, y):
-        #     global path, cur
-        #     if path != [] and cur < len(path):
-        #         selfX = api.GetSelfInfo().x
-        #         selfY = api.GetSelfInfo().y
-        #         nextX, nextY = path[cur]
-        #         nextX = AssistFunction.CellToGrid(nextX)
-        #         nextY = AssistFunction.CellToGrid(nextY)
-        #         if selfX < nextX - 100:
-        #             api.MoveDown(10)
-        #             time.sleep(0.01)
-        #             return
-        #         if selfX > nextX + 100:
-        #             api.MoveUp(10)
-        #             time.sleep(0.01)
-        #             return
-        #         if selfY < nextY - 100:
-        #             api.MoveRight(10)
-        #             time.sleep(0.01)
-        #             return
-        #         if selfY > nextY + 100:
-        #             api.MoveLeft(10)
-        #             time.sleep(0.01)
-        #             return
-        #         cur += 1
-        #         return
-        #     else:
-        #         path = bfs(x, y)
-        #         cur = 0
-        #         return
-
-        # if (AssistFunction.GridToCell(api.GetSelfInfo().x), AssistFunction.GridToCell(api.GetSelfInfo().y)) == (6, 6) and api.GetGateProgress(5, 6) < 18000:
-        #     api.StartOpenGate()
-        #     return
-
-        # if (AssistFunction.GridToCell(api.GetSelfInfo().x), AssistFunction.GridToCell(api.GetSelfInfo().y)) == (6, 6) and api.GetGateProgress(5, 6) >= 18000:
-        #     api.Graduate()
-        #     return
-
-        # if len(fixedclass) == 7:
-        #     GoTo(6, 6)
-        #     return
-
-        # if api.GetPlaceType(AssistFunction.GridToCell(api.GetSelfInfo().x) + 1, AssistFunction.GridToCell(api.GetSelfInfo().y)) == THUAI6.PlaceType.ClassRoom:
-        #     api.Print("Trying to fix!")
-        #     if api.GetClassroomProgress(AssistFunction.GridToCell(api.GetSelfInfo().x) + 1, AssistFunction.GridToCell(api.GetSelfInfo().y)) < 103000:
-        #         api.StartLearning()
-        #         return
-        #     else:
-        #         if (AssistFunction.GridToCell(api.GetSelfInfo().x) + 1, AssistFunction.GridToCell(api.GetSelfInfo().y)) not in fixedclass:
-        #             fixedclass.append(
-        #                 (AssistFunction.GridToCell(api.GetSelfInfo().x) + 1, AssistFunction.GridToCell(api.GetSelfInfo().y)))
-
-        # for i in range(50):
-        #     for j in range(50):
-        #         if api.GetPlaceType(i, j) == THUAI6.PlaceType.ClassRoom and (i, j) not in fixedclass:
-        #             if api.GetPlaceType(i - 1, j) in available:
-        #                 GoTo(i - 1, j)
-        #                 return
-        api.PrintTricker()
+        #公共操作
+        if self.__playerID == 0:
+            # 玩家0执行操作
+            return
+        elif self.__playerID == 1:
+            # 玩家1执行操作
+            return
+        elif self.__playerID == 2:
+            # 玩家2执行操作
+            return
+        elif self.__playerID == 3:
+            # 玩家3执行操作
+            return
+        #可以写成if self.__playerID<2之类的写法
+        #公共操作
+        return
 
     def TrickerPlay(self, api: ITrickerAPI) -> None:
-        api.UseSkill(0)
-        api.UseSkill(1)
+        selfInfo = api.GetSelfInfo()
         api.PrintSelfInfo()
         return

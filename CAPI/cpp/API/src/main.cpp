@@ -2,6 +2,7 @@
 #include "logic.h"
 #include "structures.h"
 #include <tclap/CmdLine.h>
+#include <array>
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4996)
@@ -15,9 +16,8 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     bool file = false;
     bool print = false;
     bool warnOnly = false;
-    extern const THUAI6::PlayerType playerType;
     extern const THUAI6::TrickerType trickerType;
-    extern const THUAI6::StudentType studentType;
+    extern const std::array<THUAI6::StudentType, 4> studentType;
     // {
     //     file = true;
     //     print = true;
@@ -71,7 +71,16 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     }
     try
     {
-        Logic logic(playerType, pID, trickerType, studentType);
+        THUAI6::PlayerType playerType;
+        THUAI6::StudentType stuType = THUAI6::StudentType::NullStudentType;
+        if (pID == 4)
+            playerType = THUAI6::PlayerType::TrickerPlayer;
+        else
+        {
+            playerType = THUAI6::PlayerType::StudentPlayer;
+            stuType = studentType[pID];
+        }
+        Logic logic(playerType, pID, trickerType, stuType);
         logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);
     }
     catch (const std::exception& e)
@@ -81,9 +90,9 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     return 0;
 }
 
-std::unique_ptr<IAI> CreateAI()
+std::unique_ptr<IAI> CreateAI(int64_t pID)
 {
-    return std::make_unique<AI>();
+    return std::make_unique<AI>(pID);
 }
 
 int main(int argc, char* argv[])

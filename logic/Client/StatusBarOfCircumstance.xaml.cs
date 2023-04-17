@@ -41,7 +41,7 @@ namespace Client
             }
         }
 
-        public void SetValue(MessageOfAll obj, bool gateOpened, bool hiddenGateRefreshed, bool hiddenGateOpened, long playerId)
+        public void SetValue(MessageOfAll obj, bool gateOpened, bool hiddenGateRefreshed, bool hiddenGateOpened, long playerId, bool isPlaybackMode)
         {
             int min, sec;
             sec = obj.GameTime / 1000;
@@ -57,17 +57,22 @@ namespace Client
             {
                 time.Text += Convert.ToString(sec);
             }
-            if (playerId == GameData.numOfStudent)
-            {
-                name.Text = "🚀 Tricker's";
-            }
-            else if (playerId < GameData.numOfStudent)
-            {
-                name.Text = "🚀 Student" + Convert.ToString(playerId) + "'s";
-            }
+            if (isPlaybackMode)
+                name.Text = "🚀 Playback";
             else
             {
-                name.Text = "🚀 Spectator's";
+                if (playerId == GameData.numOfStudent)
+                {
+                    name.Text = "🚀 Tricker's";
+                }
+                else if (playerId < GameData.numOfStudent)
+                {
+                    name.Text = "🚀 Student" + Convert.ToString(playerId) + "'s";
+                }
+                else
+                {
+                    name.Text = "🚀 Spectator's";
+                }
             }
             if (obj.SubjectFinished < Preparation.Utility.GameData.numOfGeneratorRequiredForRepair)
             {

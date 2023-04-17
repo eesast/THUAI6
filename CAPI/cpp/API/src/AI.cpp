@@ -1,31 +1,49 @@
 #include <vector>
 #include <thread>
+#include <array>
 #include "AI.h"
 #include "constants.h"
 
 // 为假则play()期间确保游戏状态不更新，为真则只保证游戏状态在调用相关方法时不更新
 extern const bool asynchronous = false;
 
-// 选手必须定义该变量来选择自己的阵营
-extern const THUAI6::PlayerType playerType = THUAI6::PlayerType::TrickerPlayer;
+// 选手需要依次将player0到player4的职业在这里定义
 
-// 选手需要将两个都定义，本份代码中不选择的阵营任意定义即可
+extern const std::array<THUAI6::StudentType, 4> studentType = {
+    THUAI6::StudentType::Athlete,
+    THUAI6::StudentType::Teacher,
+    THUAI6::StudentType::StraightAStudent,
+    THUAI6::StudentType::Sunshine};
+
 extern const THUAI6::TrickerType trickerType = THUAI6::TrickerType::Assassin;
 
-extern const THUAI6::StudentType studentType = THUAI6::StudentType::Athlete;
-
-// 选手只需写一个即可，为了调试方便写了两个的话也不会有影响
+//可以在AI.cpp内部声明变量与函数
 
 void AI::play(IStudentAPI& api)
 {
-    api.PrintTricker();
+    // 公共操作
+    if (this->playerID == 0)
+    {
+        // 玩家0执行操作
+    }
+    else if (this->playerID == 1)
+    {
+        // 玩家1执行操作
+    }
+    else if (this->playerID == 2)
+    {
+        // 玩家2执行操作
+    }
+    else if (this->playerID == 3)
+    {
+        // 玩家3执行操作
+    }
+    //当然可以写成if (this->playerID == 2||this->playerID == 3)之类的操作
+    // 公共操作
 }
 
 void AI::play(ITrickerAPI& api)
 {
-    if (api.HaveMessage())
-    {
-        auto msg = api.GetMessage();
-        api.Print("Message from " + std::to_string(msg.first) + ": " + msg.second);
-    }
+    auto self = api.GetSelfInfo();
+    api.PrintSelfInfo();
 }

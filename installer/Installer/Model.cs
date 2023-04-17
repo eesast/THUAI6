@@ -21,10 +21,18 @@ using System.Net.Http;
 using System.Windows;
 using System.Windows.Shapes;
 //using System.Windows.Forms;
+using System.Threading.Tasks;
+using System.Threading;
 
 using MessageBox = System.Windows.MessageBox;
 using Downloader;
 using COSXML.Transfer;
+using WebConnect;
+using System.IO.Compression;
+using ICSharpCode.SharpZipLib.Tar;
+using ICSharpCode.SharpZipLib.GZip;
+using static System.Net.WebRequestMethods;
+using File = System.IO.File;
 
 namespace starter.viewmodel.settings
 {
@@ -52,6 +60,7 @@ namespace starter.viewmodel.settings
             PlayerNum = "nSelect";
             UploadReady = false;
             LoginFailed = false;
+            launchLanguage = LaunchLanguage.cpp;
         }
 
         /// <summary>
@@ -118,7 +127,7 @@ namespace starter.viewmodel.settings
             {
                 if (updateInfo.changedFileCount != 0 || updateInfo.newFileCount != 0)
                 {
-                    Updates = "发现新版本";
+                    Updates = $"{updateInfo.newFileCount}个新文件，{updateInfo.changedFileCount}个文件变化";
                 }
                 return Status.menu;
             }
@@ -128,6 +137,38 @@ namespace starter.viewmodel.settings
         {
             return await web.LoginToEEsast(client, Username, Password);
         }
+
+        public bool RememberUser()
+        {
+            int result = 0;
+            result |= Web.WriteUserEmail(Username);
+            result |= Web.WriteUserPassword(Password);
+            return result == 0;
+        }
+        public bool RecallUser()
+        {
+            Username = Web.ReadUserEmail();
+            if (Username == null || Username.Equals(""))
+            {
+                Username = "";
+                return false;
+            }
+            Password = Web.ReadUserPassword();
+            if (Password == null || Username.Equals(""))
+            {
+                Password = "";
+                return false;
+            }
+            return true;
+        }
+        public bool ForgetUser()
+        {
+            int result = 0;
+            result |= Web.WriteUserEmail("");
+            result |= Web.WriteUserPassword("");
+            return result == 0;
+        }
+
         public bool Update()
         {
             return Tencent_cos_download.Update();
@@ -254,6 +295,15 @@ namespace starter.viewmodel.settings
         {
             get; set;
         }
+        public bool RememberMe
+        {
+            get; set;
+        }
+        public enum LaunchLanguage { cpp, python };
+        public LaunchLanguage launchLanguage
+        {
+            get; set;
+        }
     }
 }
 namespace Downloader
@@ -292,8 +342,8 @@ namespace Downloader
             public static string dataPath = "";  // C盘的文档文件夹
             public Data(string path)
             {
-                // dataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                dataPath = new DirectoryInfo(".").FullName;
+                dataPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                //dataPath = new DirectoryInfo(".").FullName;
                 Data.path = System.IO.Path.Combine(dataPath, "THUAI6.json");
                 if (File.Exists(Data.path))
                 {
@@ -397,8 +447,9 @@ namespace Downloader
                                           .Build();           // 创建 CosXmlConfig 对象
 
                 // 永久密钥访问凭证
-                string secretId = "***";    //"云 API 密钥 SecretId";
-                string secretKey = "***";   //"云 API 密钥 SecretKey";
+                string secretId = "***"; //"云 API 密钥 SecretId";
+                string secretKey = "***"; //"云 API 密钥 SecretKey";
+
 
                 long durationSecond = 1000;  // 每次请求签名有效时长，单位为秒
                 QCloudCredentialProvider cosCredentialProvider = new DefaultQCloudCredentialProvider(
@@ -418,7 +469,7 @@ namespace Downloader
                     Dictionary<string, string> test = request.GetRequestHeaders();
                     request.SetCosProgressCallback(delegate (long completed, long total)
                     {
-                        Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
+                        //Console.WriteLine(String.Format("progress = {0:##.##}%", completed * 100.0 / total));
                     });
                     // 执行请求
                     GetObjectResult result = cosXml.GetObject(request);
@@ -462,6 +513,8 @@ namespace Downloader
                 {
                     if (fst != null)
                         fst.Close();
+                    if (File.Exists(strFileFullPath))
+                        return "conflict";
                     return "";
                 }
                 finally
@@ -515,11 +568,16 @@ namespace Downloader
                 Dictionary<string, string> jsonDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
                 foreach (KeyValuePair<string, string> pair in jsonDict)
                 {
-                    MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key));
-                    if (MD5.Length == 0)  // 文档不存在
-                        newFileName.Add(pair.Key);
-                    else if (MD5 != pair.Value)  // MD5不匹配
-                        updateFileName.Add(pair.Key);
+                    if (System.IO.Path.GetFileName(pair.Key) != "AI.cpp" && System.IO.Path.GetFileName(pair.Key) != "AI.py")
+                    {
+                        MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key));
+                        if (MD5.Length == 0)  // 文档不存在
+                            newFileName.Add(pair.Key);
+                        else if (MD5.Equals("conflict"))
+                            MessageBox.Show($"文件{pair.Key}已打开，无法检查是否为最新，若需要，请关闭文件稍后手动检查更新", "文件正在使用", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        else if (MD5 != pair.Value)  // MD5不匹配
+                            updateFileName.Add(pair.Key);
+                    }
                 }
 
                 newFile = newFileName.Count;
@@ -577,7 +635,6 @@ namespace Downloader
             private static void Download()
             {
                 Tencent_cos_download Downloader = new Tencent_cos_download();
-
                 int newFile = 0, updateFile = 0;
                 int totalnew = newFileName.Count, totalupdate = updateFileName.Count;
                 filenum = totalnew + totalupdate;
@@ -588,19 +645,20 @@ namespace Downloader
                     {
                         foreach (string filename in newFileName)
                         {
-                            Console.WriteLine(newFile + 1 + "/" + totalnew + ":开始下载" + filename);
+                            //Console.WriteLine(newFile + 1 + "/" + totalnew + ":开始下载" + filename);
                             Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename);
-                            Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
+                            //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
                             newFile++;
                         }
                         foreach (string filename in updateFileName)
                         {
-                            Console.WriteLine(updateFile + 1 + "/" + totalupdate + ":开始下载" + filename);
+                            //Console.WriteLine(updateFile + 1 + "/" + totalupdate + ":开始下载" + filename);
                             File.Delete(System.IO.Path.Combine(@Data.FilePath, filename));
                             Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename);
-                            Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
+                            //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
                             updateFile++;
                         }
+                        UpdatePlanned = false;
                     }
                     catch (CosClientException clientEx)
                     {
@@ -696,12 +754,35 @@ namespace Downloader
 
                 newFileName.Clear();
                 updateFileName.Clear();
-                foreach (KeyValuePair<string, string> pair in jsonDict)
-                {
-                    newFileName.Add(pair.Key);
-                }
+                newFileName.Add("THUAI6.tar.gz");
                 Download();
-
+                Stream inStream = null;
+                Stream gzipStream = null;
+                TarArchive tarArchive = null;
+                try
+                {
+                    using (inStream = File.OpenRead(System.IO.Path.Combine(Data.FilePath, "THUAI6.tar.gz")))
+                    {
+                        using (gzipStream = new GZipInputStream(inStream))
+                        {
+                            tarArchive = TarArchive.CreateInputTarArchive(gzipStream);
+                            tarArchive.ExtractContents(Data.FilePath);
+                            tarArchive.Close();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //出错
+                }
+                finally
+                {
+                    if (null != tarArchive) tarArchive.Close();
+                    if (null != gzipStream) gzipStream.Close();
+                    if (null != inStream) inStream.Close();
+                }
+                FileInfo fileInfo = new FileInfo(System.IO.Path.Combine(Data.FilePath, "THUAI6.tar.gz"));
+                fileInfo.Delete();
                 string json2;
                 Dictionary<string, string> dict = new Dictionary<string, string>();
                 string existpath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
@@ -728,6 +809,18 @@ namespace Downloader
                 using StreamWriter sw = new StreamWriter(fs2);
                 fs2.SetLength(0);
                 sw.Write(JsonConvert.SerializeObject(dict));
+                Check();
+                Download();
+                if (File.Exists(Data.FilePath + "/THUAI6/AI.cpp"))
+                {
+                    FileInfo userCpp = new FileInfo((Data.FilePath + "/THUAI6/AI.cpp").Replace("/", "\\"));
+                    userCpp.MoveTo(Data.FilePath + "/THUAI6/win/CAPI/cpp/API/src/AI.cpp", true);
+                }
+                if (File.Exists(Data.FilePath + "/THUAI6/AI.py"))
+                {
+                    FileInfo userCpp = new FileInfo((Data.FilePath + "/THUAI6/AI.py").Replace("/", "\\"));
+                    userCpp.MoveTo(Data.FilePath + "/THUAI6/win/CAPI/python/PyAPI/AI.cpp", true);
+                }
             }
 
             public static void Change_all_hash(string topDir, Dictionary<string, string> jsonDict)  // 更改HASH
@@ -739,7 +832,7 @@ namespace Downloader
                 foreach (FileInfo NextFile in theFolder.GetFiles())
                 {
                     string filepath = topDir + @"/" + NextFile.Name;  // 文件路径
-                    Console.WriteLine(filepath);
+                    //Console.WriteLine(filepath);
                     foreach (KeyValuePair<string, string> pair in jsonDict)
                     {
                         if (System.IO.Path.Equals(filepath, System.IO.Path.Combine(Data.FilePath, pair.Key).Replace('\\', '/')))
@@ -807,27 +900,31 @@ namespace Downloader
 
             public static int DeleteAll()
             {
-                DirectoryInfo di = new DirectoryInfo(Data.FilePath);
-                DirectoryInfo player = new DirectoryInfo(System.IO.Path.GetFullPath(System.IO.Path.Combine(Data.FilePath, playerFolder)));
+                DirectoryInfo di = new DirectoryInfo(Data.FilePath + "/THUAI6");
+                //DirectoryInfo player = new DirectoryInfo(System.IO.Path.GetFullPath(System.IO.Path.Combine(Data.FilePath, playerFolder)));
+                FileInfo[] allfile = di.GetFiles();
                 try
                 {
-                    foreach (FileInfo file in di.GetFiles())
+                    foreach (FileInfo file in allfile)
                     {
+                        //if(file.Name == "AI.cpp" || file.Name == "AI.py")
+                        //{
+                        //    string filename = System.IO.Path.GetFileName(file.FullName);
+                        //    file.MoveTo(System.IO.Path.Combine(Data.FilePath, filename));
+                        //    continue;
+                        //}
                         file.Delete();
                     }
-                    foreach (FileInfo file in player.GetFiles())
-                    {
-                        if (file.Name == "README.md")
-                        {
-                            continue;
-                        }
-                        string filename = System.IO.Path.GetFileName(file.FullName);
-                        file.MoveTo(System.IO.Path.Combine(Data.FilePath, filename));
-                    }
+                    FileInfo userFileCpp = new FileInfo(Data.FilePath + "/THUAI6/win/CAPI/cpp/API/src/AI.cpp");
+                    FileInfo userFilePy = new FileInfo(Data.FilePath + "/THUAI6/win/CAPI/python/PyAPI/AI.py");
+                    userFileCpp.MoveTo(System.IO.Path.Combine(Data.FilePath + "/THUAI6", System.IO.Path.GetFileName(userFileCpp.FullName)));
+                    userFilePy.MoveTo(System.IO.Path.Combine(Data.FilePath + "/THUAI6", System.IO.Path.GetFileName(userFilePy.FullName)));
                     foreach (DirectoryInfo subdi in di.GetDirectories())
                     {
                         subdi.Delete(true);
                     }
+                    FileInfo hashFile = new FileInfo(Data.FilePath + "/hash.json");
+                    hashFile.Delete();
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -891,7 +988,6 @@ namespace Downloader
                     Console.WriteLine("文件已经打开，请关闭后再删除");
                     return -1;
                 }
-                Console.WriteLine($"删除成功！player文件夹中的文件已经放在{ProgramName}的根目录下");
                 return 0;
             }
 
@@ -1071,7 +1167,7 @@ namespace WebConnect
                     switch (response.StatusCode)
                     {
                         case System.Net.HttpStatusCode.OK:
-                            Console.WriteLine("Success login");
+                            //Console.WriteLine("Success login");
                             token = (System.Text.Json.JsonSerializer.Deserialize(await response.Content.ReadAsStreamAsync(), typeof(LoginResponse), new JsonSerializerOptions()
                             {
                                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -1087,7 +1183,7 @@ namespace WebConnect
 
                         default:
                             int code = ((int)response.StatusCode);
-                            Console.WriteLine(code);
+                            //Console.WriteLine(code);
                             if (code == 401)
                             {
                                 //Console.WriteLine("邮箱或密码错误！");
@@ -1120,7 +1216,7 @@ namespace WebConnect
             try
             {
                 string content;
-                client.DefaultRequestHeaders.Authorization = new("bearertoken", logintoken);
+                client.DefaultRequestHeaders.Authorization = new("Bearer", logintoken);
                 if (!File.Exists(tarfile))
                 {
                     //Console.WriteLine("文件不存在！");
@@ -1171,13 +1267,13 @@ namespace WebConnect
 
                             uploadTask.progressCallback = delegate (long completed, long total)
                             {
-                                Console.WriteLine(string.Format("progress = {0:##.##}%", completed * 100.0 / total));
+                                //Console.WriteLine(string.Format("progress = {0:##.##}%", completed * 100.0 / total));
                             };
 
                             try
                             {
                                 COSXMLUploadTask.UploadTaskResult result = await transferManager.UploadAsync(uploadTask);
-                                Console.WriteLine(result.GetResultInfo());
+                                //Console.WriteLine(result.GetResultInfo());
                                 string eTag = result.eTag;
                                 //到这里应该是成功了，但是因为我没有试过，也不知道具体情况，可能还要根据result的内容判断
                             }
@@ -1288,6 +1384,125 @@ namespace WebConnect
             catch (IOException)
             {
                 Console.WriteLine("写入token.dat发生冲突！请检查token.dat是否被其它程序占用！");
+            }
+        }
+
+        public static int WriteUserEmail(string email)
+        {
+            try
+            {
+                string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
+                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.ReadWrite);
+                StreamReader sr = new StreamReader(fs);
+                string json = sr.ReadToEnd();
+                if (json == null || json == "")
+                {
+                    json += @"{""THUAI6""" + ":" + @"""2023""}";
+                }
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                if (!dict.ContainsKey("email"))
+                {
+                    dict.Add("email", email);
+                }
+                else
+                {
+                    dict["email"] = email;
+                }
+                sr.Close();
+                fs.Close();
+                FileStream fs2 = new FileStream(savepath, FileMode.Open, FileAccess.ReadWrite);
+                StreamWriter sw = new StreamWriter(fs2);
+                sw.WriteLine(JsonConvert.SerializeObject(dict));
+                sw.Close();
+                fs2.Close();
+                return 0;//成功
+            }
+            catch
+            {
+                return -1;//失败
+            }
+        }
+
+        public static int WriteUserPassword(string password)
+        {
+            try
+            {
+                string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
+                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.ReadWrite);
+                StreamReader sr = new StreamReader(fs);
+                string json = sr.ReadToEnd();
+                if (json == null || json == "")
+                {
+                    json += @"{""THUAI6""" + ":" + @"""2023""}";
+                }
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                if (!dict.ContainsKey("password"))
+                {
+                    dict.Add("password", password);
+                }
+                else
+                {
+                    dict["password"] = password;
+                }
+                sr.Close();
+                fs.Close();
+                FileStream fs2 = new FileStream(savepath, FileMode.Open, FileAccess.ReadWrite);
+                StreamWriter sw = new StreamWriter(fs2);
+                sw.WriteLine(JsonConvert.SerializeObject(dict));
+                sw.Close();
+                fs2.Close();
+                return 0;//成功
+            }
+            catch
+            {
+                return -1;//失败,THUAI6.json 文件不存在或者已被占用
+            }
+        }
+
+        public static string ReadUserPassword()
+        {
+            try
+            {
+                string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
+                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.Read);
+                StreamReader sr = new StreamReader(fs);
+                string json = sr.ReadToEnd();
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                if (json == null || json == "")
+                {
+                    json += @"{""THUAI6""" + ":" + @"""2023""}";
+                }
+                dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                return dict["password"];
+
+            }
+            catch
+            {
+                return null;  //文件不存在或者已被占用
+            }
+        }
+
+        public static string ReadUserEmail()
+        {
+            try
+            {
+                string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
+                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.Read);
+                StreamReader sr = new StreamReader(fs);
+                string json = sr.ReadToEnd();
+                Dictionary<string, string> dict = new Dictionary<string, string>();
+                if (json == null || json == "")
+                {
+                    json += @"{""THUAI6""" + ":" + @"""2023""}";
+                }
+                dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                return dict["email"];
+            }
+            catch
+            {
+                return null;
             }
         }
         public bool ReadToken()  // 读取token

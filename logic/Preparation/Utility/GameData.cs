@@ -93,8 +93,8 @@ namespace Preparation.Utility
         public const int basicTreatSpeed = 100;
         public const int basicFixSpeed = 123;
         public const int basicSpeedOfOpeningOrLocking = 4000;
-        public const int basicStudentSpeedOfClimbingThroughWindows = 611;
-        public const int basicGhostSpeedOfClimbingThroughWindows = 1270;
+        public const int basicStudentSpeedOfClimbingThroughWindows = 1222;
+        public const int basicGhostSpeedOfClimbingThroughWindows = 2540;
         public const int basicSpeedOfOpenChest = 1000;
 
         public const int basicHp = 3000000;                             // 初始血量
@@ -105,9 +105,9 @@ namespace Preparation.Utility
         public const int basicTimeOfRescue = 1000;
 
 #if DEBUG
-        public const int basicStudentMoveSpeed = 9000;// 基本移动速度，单位：s-1
+        public const int basicStudentMoveSpeed = 3000;// 基本移动速度，单位：s-1
 #else
-        public const int basicStudentMoveSpeed = 1500;
+        public const int basicStudentMoveSpeed = 3000;
 #endif
         public const int basicGhostMoveSpeed = (int)(basicStudentMoveSpeed * 1.2);
 
@@ -200,10 +200,10 @@ namespace Preparation.Utility
         public const int basicRecoveryFromHit = 3700;//基本命中攻击恢复时长
         public const int basicStunnedTimeOfStudent = 4300;
 
-        public const int basicBulletMoveSpeed = 3700;                // 基本子弹移动速度，单位：s-1
-        public const double basicRemoteAttackRange = 3000;  // 基本远程攻击范围
-        public const double basicAttackShortRange = 1100;                 // 基本近程攻击范围
-        public const double basicBulletBombRange = 1000;             // 基本子弹爆炸范围
+        public const int basicBulletMoveSpeed = 7400;                // 基本子弹移动速度，单位：s-1
+        public const double basicRemoteAttackRange = 6000;  // 基本远程攻击范围
+        public const double basicAttackShortRange = 2200;                 // 基本近程攻击范围
+        public const double basicBulletBombRange = 2000;             // 基本子弹爆炸范围
         #endregion
         #region 技能相关
         public const int maxNumOfSkill = 3;

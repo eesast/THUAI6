@@ -7,11 +7,20 @@ using Downloader;
 using MessageBox = System.Windows.MessageBox;
 using System.Configuration;
 using System.Drawing.Design;
+using Application = System.Windows.Application;
+using System.ComponentModel;
+using Installer;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.IO;
+using System.Windows.Automation.Provider;
 
 namespace starter.viewmodel.settings
 {
     public class SettingsViewModel : NotificationObject
     {
+        //定义BackgroundWorker
+        BackgroundWorker asyncDownloader;
+        BackgroundWorker asyncUpdater;
         /// <summary>
         /// Model object
         /// </summary>
@@ -19,24 +28,128 @@ namespace starter.viewmodel.settings
         /// <summary>
         /// initializer
         /// </summary>
+
         public SettingsViewModel()
         {
+
             //Program.Tencent_cos_download.UpdateHash();
+
+            //实例化BackgroundWorker
+            asyncDownloader = new BackgroundWorker();
+            asyncUpdater = new BackgroundWorker();
+            //指示BackgroundWorker是否可以报告进度更新
+            //当该属性值为True是，将可以成功调用ReportProgress方法，否则将引发InvalidOperationException异常。
+            asyncDownloader.WorkerReportsProgress = true;
+            asyncUpdater.WorkerReportsProgress = true;
+            //挂载方法：
+            asyncDownloader.DoWork += AsyncDownloader_DoWork;
+            asyncUpdater.DoWork += AsyncUpdater_DoWork;
+            //完成通知器：
+            asyncDownloader.RunWorkerCompleted += AsyncDownloader_RunWorkerCompleted;
+            asyncUpdater.RunWorkerCompleted += AsyncUpdater_RunWorkerCompleted;
+
+            UpdateInfoVis = Visibility.Collapsed;
+
             if (Downloader.Program.Tencent_cos_download.CheckAlreadyDownload())
             {
                 obj.checkUpdate();
                 Status = SettingsModel.Status.login;
                 this.RaisePropertyChanged("WindowWidth");
-                //TODO:在启动时立刻检查更新，确保选手启动最新版选手包
-                //TODO:若有更新，将启动键改为更新键；
-                //TODO:相应地，使用login界面启动；
-                //TODO:结构：上方为登录框架，下方有“修改选手包”按钮
+                this.RaisePropertyChanged("LaunchVis");
+                if (obj.RecallUser())
+                    RememberMe = true;
+                else
+                    RememberMe = false;
+                this.RaisePropertyChanged("RememberMe");
+                //在启动时立刻检查更新，确保选手启动最新版选手包
+                //若有更新，将启动键改为更新键；
+                //相应地，使用login界面启动；
+                //结构：上方为登录框架，下方有“修改选手包”按钮
             }
             else
             {
                 Route = Environment.GetEnvironmentVariable("USERPROFILE") + "\\THUAI6";
                 Status = SettingsModel.Status.newUser;
                 this.RaisePropertyChanged("WindowWidth");
+            }
+        }
+
+        private void AsyncDownloader_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result == null)
+            {
+                Status = SettingsModel.Status.error;
+            }
+            else if ((bool)e.Result)
+            {
+                Status = SettingsModel.Status.successful;
+            }
+            else
+            {
+                Status = SettingsModel.Status.newUser;
+            }
+        }
+
+        private void AsyncUpdater_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result == null)
+            {
+                Status = SettingsModel.Status.error;
+            }
+            else
+            {
+                this.RaisePropertyChanged("LaunchVis");
+                if ((int)e.Result == 1)
+                {
+                    Status = SettingsModel.Status.successful;
+                    this.RaisePropertyChanged("UpdateBtnCont");
+                    this.RaisePropertyChanged("UpdateInfo");
+                    this.RaisePropertyChanged("LaunchBtnCont");
+                }
+                else if ((int)e.Result == 2)
+                {
+                    Status = SettingsModel.Status.login;
+                    this.RaisePropertyChanged("UpdateBtnCont");
+                    this.RaisePropertyChanged("LaunchBtnCont");
+                    this.RaisePropertyChanged("UpdateInfo");
+                }
+            }
+        }
+
+        private void AsyncUpdater_DoWork(object? sender, DoWorkEventArgs e)
+        {
+            if (asyncUpdater.CancellationPending)
+            {
+                e.Cancel = true;
+                return;
+            }
+            else
+            {
+                if (obj.Update())
+                    if (e.Argument.ToString().Equals("Manual"))
+                    {
+                        e.Result = 1;
+                    }
+                    else
+                        e.Result = 2;
+                else
+                    e.Result = -1;
+            }
+        }
+
+        private void AsyncDownloader_DoWork(object? sender, DoWorkEventArgs e)
+        {
+            if (asyncDownloader.CancellationPending)
+            {
+                e.Cancel = true;
+                return;
+            }
+            else
+            {
+                if (obj.install())
+                    e.Result = true;
+                else
+                    e.Result = false;
             }
         }
 
@@ -93,6 +206,10 @@ namespace starter.viewmodel.settings
                 this.RaisePropertyChanged("CompleteVis");
                 this.RaisePropertyChanged("WindowWidth");
                 this.RaisePropertyChanged("WebVis");
+                this.RaisePropertyChanged("CoverVis");
+                this.RaisePropertyChanged("LaunchVis");
+                this.RaisePropertyChanged("NewUserVis");
+                this.RaisePropertyChanged("ConfirmBtnCont");
             }
         }
         public string Intro
@@ -126,12 +243,26 @@ namespace starter.viewmodel.settings
                 {
 
                     case SettingsModel.Status.newUser:
-                        return "将主体程序安装在：";
+                        return "将选手包安装在（将创建THUAI6文件夹）：";
                     case SettingsModel.Status.move:
-                        return "将主体程序移动到：";
+                        return "将选手包移动到（THUAI6文件夹将会被整体移动）：";
                     default:
                         return "";
                 }
+            }
+        }
+        public string AbortOrSelLanguage
+        {
+            get
+            {
+                string ans = "";
+                if (obj.UploadReady)
+                    ans = "放弃上传";
+                else if (obj.launchLanguage == SettingsModel.LaunchLanguage.cpp)
+                    ans = "语言:c++";
+                else if (obj.launchLanguage == SettingsModel.LaunchLanguage.python)
+                    ans = "语言:python";
+                return ans;
             }
         }
         public int PlayerNum
@@ -177,7 +308,10 @@ namespace starter.viewmodel.settings
 
         public string Route
         {
-            get => obj.Route;
+            get
+            {
+                return obj.Route;
+            }
             set
             {
                 obj.Route = value;
@@ -207,6 +341,27 @@ namespace starter.viewmodel.settings
             get
             {
                 return obj.CodeRoute.Substring(obj.CodeRoute.LastIndexOf('/') == -1 ? obj.CodeRoute.LastIndexOf('\\') + 1 : obj.CodeRoute.LastIndexOf('/') + 1);
+            }
+        }
+
+        public bool RememberMe
+        {
+            get
+            {
+                return obj.RememberMe;
+            }
+            set
+            {
+                obj.RememberMe = value;
+                this.RaisePropertyChanged("RememberMe");
+            }
+        }
+
+        public Visibility NewUserVis
+        {
+            get
+            {
+                return Status == SettingsModel.Status.newUser ? Visibility.Visible : Visibility.Collapsed;
             }
         }
         public Visibility MenuVis
@@ -277,6 +432,19 @@ namespace starter.viewmodel.settings
             get { return obj.UploadReady ? Visibility.Visible : Visibility.Collapsed; }
         }
 
+        public Visibility UpdateInfoVis
+        {
+            get; set;
+        }
+
+        public Visibility LaunchVis
+        {
+            get
+            {
+                return obj.status == SettingsModel.Status.login && (!obj.UpdatePlanned) ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
         public string UpdateBtnCont
         {
             get
@@ -291,14 +459,21 @@ namespace starter.viewmodel.settings
                 if (obj.UpdatePlanned)
                     return obj.Updates;
                 else
-                    return "";
+                    return "已是最新版本";
             }
         }
         public string LaunchBtnCont
         {
             get
             {
-                return obj.UpdatePlanned ? "更新" : "启动";
+                string ans;
+                if (obj.UpdatePlanned)
+                    ans = "更新";
+                else if (obj.launchLanguage == SettingsModel.LaunchLanguage.cpp)
+                    ans = "启动c++包";
+                else
+                    ans = "启动python包";
+                return ans;
             }
         }
         public string UploadBtnCont
@@ -306,6 +481,28 @@ namespace starter.viewmodel.settings
             get
             {
                 return obj.UploadReady ? "上传代码" : "选择代码上传";
+            }
+        }
+        public string ShiftLanguageBtnCont
+        {
+            get
+            {
+                return obj.launchLanguage == SettingsModel.LaunchLanguage.cpp ? "改为python" : "改为c++";
+            }
+        }
+        public string ConfirmBtnCont
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case SettingsModel.Status.newUser:
+                        return "确认并安装";
+                    case SettingsModel.Status.move:
+                        return "确认并移动";
+                    default:
+                        return "";
+                }
             }
         }
 
@@ -322,10 +519,18 @@ namespace starter.viewmodel.settings
             }
             else if (type == "File")
             {
-                var openFileDialog = new Microsoft.Win32.OpenFileDialog()
+
+                var openFileDialog = new Microsoft.Win32.OpenFileDialog();
+                if (obj.launchLanguage == SettingsModel.LaunchLanguage.cpp)
                 {
-                    Filter = "c++ Source Files (.cpp)|*.cpp|c++ Header File (.h)|*.h|python Source File (.py)|*.py"
-                };
+                    openFileDialog.InitialDirectory = (Route + "/THUAI6/win/CAPI/cpp/API/src/").Replace("/", "\\");
+                    openFileDialog.Filter = "c++ Source Files (.cpp)|*.cpp|c++ Header File (.h)|*.h|python Source File (.py)|*.py";
+                }
+                else if (obj.launchLanguage == SettingsModel.LaunchLanguage.python)
+                {
+                    openFileDialog.InitialDirectory = (Route + "/THUAI6/win/CAPI/python/PyAPI/").Replace("/", "\\");
+                    openFileDialog.Filter = "python Source File (.py)|*.py|c++ Source Files (.cpp)|*.cpp|c++ Header File (.h)|*.h";
+                }
                 var result = openFileDialog.ShowDialog();
                 if (result == true)
                 {
@@ -363,16 +568,22 @@ namespace starter.viewmodel.settings
                         {
                             Status = SettingsModel.Status.working;
                             this.RaisePropertyChanged("ProgressVis");
-                            if (obj.install())
+                            /*if (obj.install())
                             {
                                 Status = SettingsModel.Status.successful;
+                            }*/
+                            if (asyncDownloader.IsBusy)
+                                return;
+                            else
+                            {
+                                asyncDownloader.RunWorkerAsync();
                             }
 
                         }
                         else if (Status == SettingsModel.Status.move)
                         {
-                            Status = SettingsModel.Status.working;
-                            this.RaisePropertyChanged("ProgressVis");
+                            //Status = SettingsModel.Status.working;
+                            //this.RaisePropertyChanged("ProgressVis");
                             switch (obj.move())
                             {
                                 case -1:
@@ -398,11 +609,14 @@ namespace starter.viewmodel.settings
                 {
                     clickUpdateCommand = new BaseCommand(new Action<object>(o =>
                     {
+                        this.RaisePropertyChanged("UpdateInfoVis");
                         if (obj.UpdatePlanned)
                         {
+                            UpdateInfoVis = Visibility.Collapsed;
+                            this.RaisePropertyChanged("UpdateInfoVis");
                             Status = SettingsModel.Status.working;
                             this.RaisePropertyChanged("ProgressVis");
-                            if (obj.Update())
+                            /*if (obj.Update())
                             {
 
                                 Status = SettingsModel.Status.successful;
@@ -411,15 +625,22 @@ namespace starter.viewmodel.settings
 
                             }
                             else
-                                Status = SettingsModel.Status.error;
+                                Status = SettingsModel.Status.error;*/
+                            if (asyncUpdater.IsBusy)
+                                return;
+                            else
+                                asyncUpdater.RunWorkerAsync("Manual");
                         }
                         else
                         {
+                            UpdateInfoVis = Visibility.Visible;
+                            this.RaisePropertyChanged("UpdateInfoVis");
                             Status = SettingsModel.Status.working;
                             this.RaisePropertyChanged("ProgressVis");
                             Status = obj.checkUpdate();
                             this.RaisePropertyChanged("UpdateBtnCont");
                             this.RaisePropertyChanged("UpdateInfo");
+                            this.RaisePropertyChanged("LaunchVis");
                         }
                     }));
                 }
@@ -450,8 +671,8 @@ namespace starter.viewmodel.settings
                 {
                     clickUninstCommand = new BaseCommand(new Action<object>(o =>
                     {
-                        Status = SettingsModel.Status.working;
-                        this.RaisePropertyChanged("ProgressVis");
+                        UpdateInfoVis = Visibility.Collapsed;
+                        this.RaisePropertyChanged("UpdateInfoVis");
                         switch (obj.Uninst())
                         {
                             case -1:
@@ -459,13 +680,15 @@ namespace starter.viewmodel.settings
                                 MessageBox.Show("文件已经打开，请关闭后再删除", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
                                 break;
                             case 0:
-                                Status = SettingsModel.Status.successful;
+                                Status = SettingsModel.Status.newUser;
+                                MessageBox.Show($"删除成功！player文件夹中的文件已经放在{Downloader.Program.Data.FilePath}/{Downloader.Program.ProgramName}的根目录下", "", MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
                                 break;
                             default:
                                 Status = SettingsModel.Status.error;
                                 break;
 
                         }
+
                     }));
                 }
                 return clickUninstCommand;
@@ -489,6 +712,22 @@ namespace starter.viewmodel.settings
                             case 0:
                                 obj.LoginFailed = false;
                                 Status = SettingsModel.Status.web;
+                                if (obj.RememberMe)
+                                {
+                                    obj.RememberUser();
+                                    RememberMe = true;
+                                    this.RaisePropertyChanged("RememberMe");
+                                }
+                                else
+                                {
+                                    obj.ForgetUser();
+                                    RememberMe = false;
+                                    this.RaisePropertyChanged("RememberMe");
+                                    Username = "";
+                                    Password = "";
+                                    this.RaisePropertyChanged("Username");
+                                    this.RaisePropertyChanged("Password");
+                                }
                                 this.RaisePropertyChanged("CoverVis");
                                 break;
                             case -2:
@@ -515,15 +754,10 @@ namespace starter.viewmodel.settings
                         {
                             Status = SettingsModel.Status.working;
                             this.RaisePropertyChanged("ProgressVis");
-                            if (obj.Update())
-                            {
-                                this.RaisePropertyChanged("UpdateBtnCont");
-                                this.RaisePropertyChanged("LaunchBtnCont");
-                                Status = SettingsModel.Status.login;
-                                this.RaisePropertyChanged("UpdateInfo");
-                            }
+                            if (asyncUpdater.IsBusy)
+                                return;
                             else
-                                Status = SettingsModel.Status.error;
+                                asyncUpdater.RunWorkerAsync("Auto");
                         }
                         else if (!obj.Launch())
                         {
@@ -544,6 +778,9 @@ namespace starter.viewmodel.settings
                     clickEditCommand = new BaseCommand(new Action<object>(o =>
                     {
                         Status = SettingsModel.Status.menu;
+                        if (obj.UpdatePlanned)
+                            UpdateInfoVis = Visibility.Visible;
+                        this.RaisePropertyChanged("UpdateInfoVis");
                     }));
                 }
                 return clickEditCommand;
@@ -558,7 +795,12 @@ namespace starter.viewmodel.settings
                 {
                     clickBackCommand = new BaseCommand(new Action<object>(o =>
                     {
-                        Status = SettingsModel.Status.login;
+                        UpdateInfoVis = Visibility.Collapsed;
+                        this.RaisePropertyChanged("UpdateInfoVis");
+                        if (Downloader.Program.Tencent_cos_download.CheckAlreadyDownload())
+                            Status = SettingsModel.Status.login;
+                        else
+                            Status = SettingsModel.Status.newUser;
                     }));
                 }
                 return clickBackCommand;
@@ -614,6 +856,7 @@ namespace starter.viewmodel.settings
                                 this.RaisePropertyChanged("UploadBtnCont");
                                 this.RaisePropertyChanged("UploadReadyVis");
                                 this.RaisePropertyChanged("CoverVis");
+                                this.RaisePropertyChanged("AbortOrSelLanguage");
                             }
                         }
                         else
@@ -626,6 +869,7 @@ namespace starter.viewmodel.settings
                                 this.RaisePropertyChanged("UploadReadyVis");
                                 this.RaisePropertyChanged("CodeName");
                                 this.RaisePropertyChanged("CoverVis");
+                                this.RaisePropertyChanged("AbortOrSelLanguage");
                             }
                             else
                             {
@@ -637,24 +881,93 @@ namespace starter.viewmodel.settings
                 return clickUploadCommand;
             }
         }
-        private BaseCommand clickReselectCommand;
-        public BaseCommand ClickReselectCommand
+        private BaseCommand clickAboutUploadCommand;
+        public BaseCommand ClickAboutUploadCommand
         {
             get
             {
-                if (clickReselectCommand == null)
+                if (clickAboutUploadCommand == null)
                 {
-                    clickReselectCommand = new BaseCommand(new Action<object>(o =>
+                    clickAboutUploadCommand = new BaseCommand(new Action<object>(o =>
                     {
-                        obj.CodeRoute = "";
-                        obj.UploadReady = false;
-                        this.RaisePropertyChanged("UploadBtnCont");
-                        this.RaisePropertyChanged("UploadReadyVis");
-                        this.RaisePropertyChanged("CodeName");
-                        this.RaisePropertyChanged("CoverVis");
+                        if (obj.UploadReady)
+                        {
+                            obj.CodeRoute = "";
+                            obj.UploadReady = false;
+                            this.RaisePropertyChanged("UploadBtnCont");
+                            this.RaisePropertyChanged("UploadReadyVis");
+                            this.RaisePropertyChanged("CodeName");
+                            this.RaisePropertyChanged("CoverVis");
+                            this.RaisePropertyChanged("AbortOrSelLanguage");
+                        }
+                        else
+                        {
+                            if (obj.launchLanguage == SettingsModel.LaunchLanguage.cpp)
+                                obj.launchLanguage = SettingsModel.LaunchLanguage.python;
+                            else
+                                obj.launchLanguage = SettingsModel.LaunchLanguage.cpp;
+                            this.RaisePropertyChanged("AbortOrSelLanguage");
+                            this.RaisePropertyChanged("ShiftLanguageBtnCont");
+                            this.RaisePropertyChanged("LaunchBtnCont");
+                        }
                     }));
                 }
-                return clickReselectCommand;
+                return clickAboutUploadCommand;
+            }
+        }
+        private BaseCommand clickExitCommand;
+        public BaseCommand ClickExitCommand
+        {
+            get
+            {
+                if (clickExitCommand == null)
+                {
+                    clickExitCommand = new BaseCommand(new Action<object>(o =>
+                    {
+                        Application.Current.Shutdown();
+                    }));
+                }
+                return clickExitCommand;
+            }
+        }
+        private BaseCommand clickShiftLanguageCommand;
+        public BaseCommand ClickShiftLanguageCommand
+        {
+            get
+            {
+                if (clickShiftLanguageCommand == null)
+                {
+                    clickShiftLanguageCommand = new BaseCommand(new Action<object>(o =>
+                    {
+                        if (obj.launchLanguage == SettingsModel.LaunchLanguage.cpp)
+                            obj.launchLanguage = SettingsModel.LaunchLanguage.python;
+                        else
+                            obj.launchLanguage = SettingsModel.LaunchLanguage.cpp;
+                        this.RaisePropertyChanged("ShiftLanguageBtnCont");
+                        this.RaisePropertyChanged("LaunchBtnCont");
+                        this.RaisePropertyChanged("AbortOrSelLanguage");
+                    }));
+                }
+                return clickShiftLanguageCommand;
+            }
+        }
+        private BaseCommand clickReadCommand;
+        public BaseCommand ClickReadCommand
+        {
+            get
+            {
+                if (clickReadCommand == null)
+                {
+                    clickReadCommand = new BaseCommand(new Action<object>(o =>
+                    {
+                        if (!Directory.Exists(Route + "/THUAI6"))
+                            Route = Route.Substring(0, Route.Length - 7);
+                        Program.Data.ResetFilepath(Route);
+                        if (Program.Tencent_cos_download.CheckAlreadyDownload())
+                            Status = SettingsModel.Status.login;
+                    }));
+                }
+                return clickReadCommand;
             }
         }
     }

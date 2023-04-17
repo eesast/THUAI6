@@ -123,7 +123,7 @@ namespace Preparation.Interface
 
     public class ShowTime : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD * 3;
+        public int SkillCD => GameData.commonSkillCD * 8 / 3;
         public int DurationTime => GameData.commonSkillTime;
 
         private readonly object commonSkillLock = new();

@@ -8,6 +8,7 @@ class NoInstance:
 
 
 class Constants(NoInstance):
+    frameDuration = 50  # 每帧毫秒数
     numOfGridPerCell = 1000  # 单位坐标数
     rows = 50        # 地图行数
     cols = 50        # 地图列数
@@ -27,8 +28,8 @@ class Constants(NoInstance):
     basicEncourageSpeed = 100
     basicLearnSpeed = 123
     basicSpeedOfOpeningOrLocking = 4000
-    basicStudentSpeedOfClimbingThroughWindows = 611
-    basicTrickerSpeedOfClimbingThroughWindows = 1270
+    basicStudentSpeedOfClimbingThroughWindows = 1222
+    basicTrickerSpeedOfClimbingThroughWindows = 2540
     basicSpeedOfOpenChest = 1000
 
     basicHp = 3000000
@@ -36,8 +37,8 @@ class Constants(NoInstance):
     basicEncouragementDegree = 1500000
     basicTimeOfRouse = 1000
 
-    basicStudentSpeed = 1270
-    basicTrickerSpeed = 1504
+    basicStudentSpeed = 3000
+    basicTrickerSpeed = 3600
 
     basicConcealment = 1.0
     basicStudentAlertnessRadius = 15 * numOfGridPerCell
@@ -57,10 +58,10 @@ class Constants(NoInstance):
     basicRecoveryFromHit = 3700  # 基本命中攻击恢复时长
     basicStunnedTimeOfStudent = 4300
 
-    basicBulletmoveSpeed = 3700       # 基本子弹移动速度
-    basicRemoteAttackRange = 3000  # 基本远程攻击范围
-    basicAttackShortRange = 1100   # 基本近程攻击范围
-    basicBulletBombRange = 1000    # 基本子弹爆炸范围
+    basicBulletmoveSpeed = 7400       # 基本子弹移动速度
+    basicRemoteAttackRange = 6000  # 基本远程攻击范围
+    basicAttackShortRange = 2200   # 基本近程攻击范围
+    basicBulletBombRange = 2000    # 基本子弹爆炸范围
 
     # 道具相关
 
@@ -84,10 +85,10 @@ class Constants(NoInstance):
 
     addedTimeOfSpeedWhenInspire = 1.6
     timeOfAddingSpeedWhenInspire = 6000
-    addHpWhenEncourage = basicHp / 4;
+    addHpWhenEncourage = basicHp / 4
 
-    checkIntervalWhenShowTime = 200;
-    addAddictionPer100msWhenShowTime = 300;
+    checkIntervalWhenShowTime = 200
+    addAddictionPer100msWhenShowTime = 300
 
 
 class Assassin:
@@ -270,7 +271,7 @@ class Howl:
 
 
 class ShowTime:
-    skillCD = (int)(3.0 * Constants.commonSkillCD)
+    skillCD = (int)(8 * Constants.commonSkillCD / 3)
     durationTime = (int)(1.0 * Constants.commonSkillTime)
 
 

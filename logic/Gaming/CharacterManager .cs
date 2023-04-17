@@ -155,7 +155,7 @@ namespace Gaming
                                                     newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
                                                 else newPlayer.AddBgm(BgmType.GhostIsComing, 0);
                                             }
-                                            if (newPlayer.CharacterType != CharacterType.Teacher && !newPlayer.NoHp() && newPlayer.PlayerState != PlayerStateType.Stunned && XY.Distance(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
+                                            if (newPlayer.CharacterType != CharacterType.Teacher && newPlayer.CharacterType != CharacterType.Robot && !newPlayer.NoHp() && newPlayer.PlayerState != PlayerStateType.Stunned && XY.Distance(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
                                             {
                                                 TimePinningDown += GameData.checkInterval;
                                                 newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
@@ -378,12 +378,12 @@ namespace Gaming
                 return true;
             }
 
-            private void Die(Character player)
+            public void Die(Student player)
             {
 #if DEBUG
                 Debugger.Output(player, "die.");
 #endif
-                player.Die(PlayerStateType.Deceased);
+                player.RemoveFromGame(PlayerStateType.Deceased);
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {

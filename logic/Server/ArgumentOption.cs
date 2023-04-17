@@ -39,8 +39,8 @@ namespace Server
         [Option('f', "fileName", Required = false, HelpText = "The file to store playback file or to read file.")]
         public string FileName { get; set; } = DefaultArgumentOptions.FileName;
 
-        [Option('s', "spectator", Required = false, HelpText = "Whether allow a spectator to watch the game.")]
-        public bool spectator { get; set; } = true;
+        [Option('s', "allowSpectator", Required = false, HelpText = "Whether to allow a spectator to watch the game.")]
+        public bool AllowSpectator { get; set; } = true;
 
         [Option('b', "playback", Required = false, HelpText = "Whether open the server in a playback mode.")]
         public bool Playback { get; set; } = false;

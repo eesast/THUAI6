@@ -1,20 +1,5 @@
 # Q&A
-
-## Python 
-
-### grpc版本更新失败
-
-Q：运行GeneratePythonProto.cmd报错
-![grpcUpdate](.\resource\Q&A_grpc.png)
-
-A：
-- 可能措施1.
-        首先保证Python版本在3.9及以上
-- 可能措施2. 更换为国内镜像源
-        在终端输入 
-        `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
-- 可能措施3. 更新pip
-        `python -m pip install --upgrade pip` （pip 版本最好为23.1）
+[TOC]
 
 ## 常见简单问题
 
@@ -41,3 +26,29 @@ Q: Mac怎么用？
 A:
 安装Windows虚拟机
 
+## C++ 
+
+Q:CAPI.sln编译不通过
+![std_find_trivial](.\resource\std_find_trivial.jpg)
+
+A:
+出现_std_find_trivial_1的报错就是没更新到VS2022，
+对于VS2022依旧报错_std_find_trivial_1的，先考虑是否版本过旧
+![项目属性](.\resource\项目属性.png)
+确保上图项目属性中平台工具集在V143及以上，C++17标准
+
+## Python 
+
+### grpc版本更新失败
+
+Q：运行GeneratePythonProto.cmd报错
+![grpcUpdate](.\resource\Q&A_grpc.png)
+
+A：
+- 可能措施1.
+        首先保证Python版本在3.9及以上
+- 可能措施2. 更换为国内镜像源
+        在终端输入 
+        `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
+- 可能措施3. 更新pip
+        `python -m pip install --upgrade pip` （pip 版本最好为23.1）

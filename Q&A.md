@@ -28,6 +28,11 @@ A:
 
 ## C++ 
 
+Q:显示API项目已卸载
+![Nocplus](.\resource\Nocplus.png)
+
+A:可能是没有安装C++
+
 Q:CAPI.sln编译不通过
 ![std_find_trivial](.\resource\std_find_trivial.jpg)
 
@@ -52,3 +57,8 @@ A：
         `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
 - 可能措施3. 更新pip
         `python -m pip install --upgrade pip` （pip 版本最好为23.1）
+
+## 比赛相关
+Q：职业数值会修改吗？
+
+A：初赛结束会调数值及机制，增加新角色

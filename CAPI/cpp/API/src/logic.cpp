@@ -863,7 +863,7 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
             cvAI.wait(lock, [this]()
                       { return AIStart; });
         }
-        auto ai = createAI();
+        auto ai = createAI(playerID);
 
         while (AILoop)
         {

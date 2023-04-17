@@ -198,11 +198,15 @@ class Communication:
             self.__haveNewMessage = False
             return self.__message2Client
 
-    def AddPlayer(self, playerID: int) -> None:
+    def AddPlayer(self, playerID: int, playerType: THUAI6.PlayerType) -> None:
         def tMessage():
             try:
+                if playerType == THUAI6.PlayerType.StudentPlayer:
+                    studentType = Setting.studentType()[playerID]
+                else:
+                    studentType = THUAI6.StudentType.NullStudentType
                 playerMsg = THUAI62Proto.THUAI62ProtobufPlayer(
-                    playerID, Setting.playerType(), Setting.studentType(), Setting.trickerType())
+                    playerID, playerType, studentType, Setting.trickerType())
                 for msg in self.__THUAI6Stub.AddPlayer(playerMsg):
                     with self.__cvMessage:
                         self.__haveNewMessage = True

@@ -1,6 +1,6 @@
 import PyAPI.structures as THUAI6
 from PyAPI.Interface import IStudentAPI, ITrickerAPI, IAI
-from typing import Union, Final, cast
+from typing import Union, Final, cast, List
 from PyAPI.constants import Constants
 import queue
 
@@ -13,15 +13,10 @@ class Setting:
     def asynchronous() -> bool:
         return True
 
-    # 选手必须修改该函数的返回值来选择自己的阵营
+    # 选手需要依次将player0到player4的职业都定义
     @staticmethod
-    def playerType() -> THUAI6.PlayerType:
-        return THUAI6.PlayerType.StudentPlayer
-
-    # 选手需要将两个都定义，本份代码中不选择的阵营任意定义即可
-    @staticmethod
-    def studentType() -> THUAI6.StudentType:
-        return THUAI6.StudentType.Athlete
+    def studentType() -> List[THUAI6.StudentType]:
+        return [THUAI6.StudentType.Athlete, THUAI6.StudentType.Teacher, THUAI6.StudentType.StraightAStudent, THUAI6.StudentType.Sunshine]
 
     @staticmethod
     def trickerType() -> THUAI6.TrickerType:
@@ -44,10 +39,23 @@ class AssistFunction:
 
 
 class AI(IAI):
+    def __init__(self, pID: int):
+        self.__playerID = pID
     # 选手在这里实现自己的逻辑，要求和上面选择的阵营保持一致
+
     def StudentPlay(self, api: IStudentAPI) -> None:
-        selfInfo = api.GetSelfInfo()
-        api.PrintSelfInfo()
+        if self.__playerID == 0:
+            # 玩家0执行操作
+            return
+        elif self.__playerID == 1:
+            # 玩家1执行操作
+            return
+        elif self.__playerID == 2:
+            # 玩家2执行操作
+            return
+        elif self.__playerID == 3:
+            # 玩家3执行操作
+            return
         return
 
     def TrickerPlay(self, api: ITrickerAPI) -> None:

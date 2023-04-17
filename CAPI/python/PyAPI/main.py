@@ -9,6 +9,7 @@ from PyAPI.AI import AI
 from PyAPI.logic import Logic
 from typing import List, Callable
 import argparse
+import PyAPI.structures as THUAI6
 
 
 def THUAI6Main(argv: List[str], AIBuilder: Callable) -> None:
@@ -39,12 +40,17 @@ def THUAI6Main(argv: List[str], AIBuilder: Callable) -> None:
     file = args.file
     screen = args.screen
     warnOnly = args.warnOnly
-    logic = Logic(pID)
+    playerType = THUAI6.PlayerType.NullPlayerType
+    if pID == 4:
+        playerType = THUAI6.PlayerType.TrickerPlayer
+    else:
+        playerType = THUAI6.PlayerType.StudentPlayer
+    logic = Logic(pID, playerType)
     logic.Main(AIBuilder, sIP, sPort, file, screen, warnOnly)
 
 
-def CreateAI() -> IAI:
-    return AI()
+def CreateAI(pID: int) -> IAI:
+    return AI(pID)
 
 
 if __name__ == '__main__':

@@ -6,13 +6,13 @@
 Q: Windows找不到文件：\CAPI\cpp\x64\Debug\APl.exe？
 
 A: 
-解决办法：打开CAPI\cpp目录，在里面打开CAPI.sln，然后点击生成，对代码进行编译
+应该是还没有编译，打开CAPI\cpp目录，在里面打开CAPI.sln，然后点击生成，对代码进行编译
 
 
 Q: 怎么修改.cmd参数？
 
 A:
- 见选手包中的使用文档部分
+见选手包中的使用文档部分
 
 
 Q: 怎么开始游戏？
@@ -51,12 +51,12 @@ Q：运行GeneratePythonProto.cmd报错
 
 A：
 - 可能措施1.
-        首先保证Python版本在3.9及以上
+首先保证Python版本在3.9及以上
 - 可能措施2. 更换为国内镜像源
-        在终端输入 
+在终端输入 
         `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
 - 可能措施3. 更新pip
-        `python -m pip install --upgrade pip` （pip 版本最好为23.1）
+`python -m pip install --upgrade pip` （pip 版本最好为23.1）
 
 ## 比赛相关
 Q：职业数值会修改吗？

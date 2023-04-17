@@ -56,7 +56,7 @@ namespace Server
         {
 
             Console.WriteLine($"AddPlayer: {request.PlayerId}");
-            if (request.PlayerId >= spectatorMinPlayerID && options.spectator == true)
+            if (request.PlayerId >= spectatorMinPlayerID && options.AllowSpectator == true)
             {
                 // 观战模式
                 uint tp = (uint)request.PlayerId;

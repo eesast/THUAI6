@@ -72,11 +72,15 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     try
     {
         THUAI6::PlayerType playerType;
+        THUAI6::StudentType stuType = THUAI6::StudentType::NullStudentType;
         if (pID == 4)
             playerType = THUAI6::PlayerType::TrickerPlayer;
         else
+        {
             playerType = THUAI6::PlayerType::StudentPlayer;
-        Logic logic(playerType, pID, trickerType, studentType[pID]);
+            stuType = studentType[pID];
+        }
+        Logic logic(playerType, pID, trickerType, stuType);
         logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);
     }
     catch (const std::exception& e)

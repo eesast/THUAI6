@@ -30,11 +30,17 @@ namespace Server
         [Option("maxStudentCount", Required = false, HelpText = "The max number of students, 4 by default")]
         public ushort MaxStudentCount { get; set; } = 4;
 
+        [Option("maxTrickerCount", Required = false, HelpText = "The max number of trickers, 1 by default")]
+        public ushort MaxTrickerCount { get; set; } = 1;
+
         [Option('g', "gameTimeInSecond", Required = false, HelpText = "The time of the game in second, 10 minutes by default")]
         public uint GameTimeInSecond { get; set; } = 10 * 60;
 
         [Option('f', "fileName", Required = false, HelpText = "The file to store playback file or to read file.")]
         public string FileName { get; set; } = DefaultArgumentOptions.FileName;
+
+        [Option('s', "allowSpectator", Required = false, HelpText = "Whether to allow a spectator to watch the game.")]
+        public bool AllowSpectator { get; set; } = true;
 
         [Option('b', "playback", Required = false, HelpText = "Whether open the server in a playback mode.")]
         public bool Playback { get; set; } = false;

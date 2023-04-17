@@ -41,9 +41,9 @@ class AssistFunction:
 class AI(IAI):
     def __init__(self, pID: int):
         self.__playerID = pID
-    # 选手在这里实现自己的逻辑，要求和上面选择的阵营保持一致
 
     def StudentPlay(self, api: IStudentAPI) -> None:
+        #公共操作
         if self.__playerID == 0:
             # 玩家0执行操作
             return
@@ -56,6 +56,8 @@ class AI(IAI):
         elif self.__playerID == 3:
             # 玩家3执行操作
             return
+        #可以写成if self.__playerID<2之类的写法
+        #公共操作
         return
 
     def TrickerPlay(self, api: ITrickerAPI) -> None:

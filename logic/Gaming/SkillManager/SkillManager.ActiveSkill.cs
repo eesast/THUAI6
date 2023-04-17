@@ -103,14 +103,15 @@ namespace Gaming
                                                       { });
             }
 
-            public static bool UseRobot(Character player)
+            public bool UseRobot(Character player)
             {
                 IGolem? golem = (IGolem?)(((SummonGolem)player.FindIActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned);
-                Debugger.Output(player, (golem != null).ToString());
                 if ((!player.Commandable()) || ((SummonGolem)player.FindIActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned == null) return false;
-                Debugger.Output(player, player.PlayerID.ToString());
+                Debugger.Output(player, "use robot!");
                 IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.UseRobot);
                 activeSkill.IsBeingUsed = (activeSkill.IsBeingUsed) ? false : true;
+                if (activeSkill.IsBeingUsed) characterManager.SetPlayerState(player, PlayerStateType.UsingSkill);
+                else characterManager.SetPlayerState(player);
                 return true;
             }
 

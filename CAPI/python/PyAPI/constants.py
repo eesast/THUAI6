@@ -8,7 +8,7 @@ class NoInstance:
 
 
 class Constants(NoInstance):
-    frameDuration = 50 #每帧毫秒数
+    frameDuration = 50  # 每帧毫秒数
     numOfGridPerCell = 1000  # 单位坐标数
     rows = 50        # 地图行数
     cols = 50        # 地图列数
@@ -271,7 +271,7 @@ class Howl:
 
 
 class ShowTime:
-    skillCD = (int)(8 * Constants.commonSkillCD/3)
+    skillCD = (int)(8 * Constants.commonSkillCD / 3)
     durationTime = (int)(1.0 * Constants.commonSkillTime)
 
 

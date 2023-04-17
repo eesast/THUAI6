@@ -8,7 +8,7 @@
 
 namespace Constants
 {
-    SCCI int frameDuration = 50;//每帧毫秒数
+    SCCI int frameDuration = 50;  // 每帧毫秒数
     // 地图相关
     SCCI int numOfGridPerCell = 1000;  // 单位坐标数
     SCCI int rows = 50;                // 地图行数

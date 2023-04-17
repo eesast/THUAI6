@@ -39,7 +39,8 @@ COPY ./CAPI /usr/local/PlayerCode/CAPI
 COPY ./dependency /usr/local/PlayerCode/dependency
 WORKDIR /usr/local/PlayerCode/dependency/proto
 RUN ./cpp_output.sh
-WORKDIR /usr/local/PlayerCode/dependency/shell
+WORKDIR /usr/local/PlayerCode/CAPI/cpp
+COPY ./dependency/shell/compile.sh .
 ENTRYPOINT ["bash","./compile.sh"]
 #WORKDIR /usr/local/PlayerCode/CAPI/cpp
 #RUN cmake ./CMakeLists.txt

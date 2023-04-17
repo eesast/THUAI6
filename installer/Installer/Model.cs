@@ -447,9 +447,8 @@ namespace Downloader
                                           .Build();           // 创建 CosXmlConfig 对象
 
                 // 永久密钥访问凭证
-                string secretId = "***"; //"云 API 密钥 SecretId";
-                string secretKey = "***"; //"云 API 密钥 SecretKey";
-
+                string secretId = "AKIDVpzdDcmhS0KNAj5FLG0WnpcBconY9UYN"; //"云 API 密钥 SecretId";
+                string secretKey = "f2FDyVnpgNr67urZ3HF4f5KL8i2DCzY2"; //"云 API 密钥 SecretKey";
 
                 long durationSecond = 1000;  // 每次请求签名有效时长，单位为秒
                 QCloudCredentialProvider cosCredentialProvider = new DefaultQCloudCredentialProvider(
@@ -568,16 +567,13 @@ namespace Downloader
                 Dictionary<string, string> jsonDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
                 foreach (KeyValuePair<string, string> pair in jsonDict)
                 {
-                    if (System.IO.Path.GetFileName(pair.Key) != "AI.cpp" && System.IO.Path.GetFileName(pair.Key) != "AI.py")
-                    {
-                        MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key));
-                        if (MD5.Length == 0)  // 文档不存在
-                            newFileName.Add(pair.Key);
-                        else if (MD5.Equals("conflict"))
-                            MessageBox.Show($"文件{pair.Key}已打开，无法检查是否为最新，若需要，请关闭文件稍后手动检查更新", "文件正在使用", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        else if (MD5 != pair.Value)  // MD5不匹配
-                            updateFileName.Add(pair.Key);
-                    }
+                    MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key));
+                    if (MD5.Length == 0)  // 文档不存在
+                        newFileName.Add(pair.Key);
+                    else if (MD5.Equals("conflict"))
+                        MessageBox.Show($"文件{pair.Key}已打开，无法检查是否为最新，若需要，请关闭文件稍后手动检查更新", "文件正在使用", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    else if (MD5 != pair.Value && System.IO.Path.GetFileName(pair.Key) != "AI.cpp" && System.IO.Path.GetFileName(pair.Key) != "AI.py")  // MD5不匹配
+                        updateFileName.Add(pair.Key);
                 }
 
                 newFile = newFileName.Count;
@@ -858,7 +854,7 @@ namespace Downloader
                     {
                         foreach (FileInfo NextFile in NextFolder.GetFiles())
                         {
-                            if (NextFile.Name == "README.md")
+                            if (NextFile.Name == "AI.cpp" || NextFile.Name == "AI.py")
                             {
                                 string MD5 = GetFileMd5Hash(NextFile.FullName);
                                 string relapath = NextFile.FullName.Replace('\\', '/').Replace(Data.FilePath + '/', string.Empty);
@@ -1000,18 +996,21 @@ namespace Downloader
 
             public static int MoveProgram(string newPath)
             {
-                DirectoryInfo newdi = new DirectoryInfo(newPath);
-                DirectoryInfo olddi = new DirectoryInfo(Data.FilePath);
+                DirectoryInfo newdi = new DirectoryInfo(newPath + "/THUAI6");
+                DirectoryInfo olddi = new DirectoryInfo(Data.FilePath + "/THUAI6");
                 try
                 {
+                    if (!Directory.Exists(newPath + "/THUAI6"))
+                        Directory.CreateDirectory(newPath + "/THUAI6");
                     foreach (DirectoryInfo direct in olddi.GetDirectories())
                     {
-                        direct.MoveTo(System.IO.Path.Combine(newPath, direct.Name));
+                        direct.MoveTo(System.IO.Path.Combine(newPath + "/THUAI6", direct.Name));
                     }
                     foreach (FileInfo file in olddi.GetFiles())
                     {
-                        file.MoveTo(System.IO.Path.Combine(newPath, file.Name));
+                        file.MoveTo(System.IO.Path.Combine(newPath + "/THUAI6", file.Name));
                     }
+                    olddi.Delete();
                 }
                 catch (DirectoryNotFoundException)
                 {
@@ -1025,6 +1024,7 @@ namespace Downloader
                         file.MoveTo(System.IO.Path.Combine(Data.FilePath, file.Name));
                     }
                     Console.WriteLine("移动失败！");
+                    newdi.Delete();
                     return -2;
                 }
                 catch (IOException)
@@ -1041,6 +1041,8 @@ namespace Downloader
                     Console.WriteLine("移动失败！");
                     return -1;
                 }
+                FileInfo hashFile = new FileInfo(Data.FilePath + "/hash.json");
+                hashFile.MoveTo(newPath + "/hash.json");
                 Data.ResetFilepath(newPath);
                 Console.WriteLine("更改路径成功!");
                 return 0;

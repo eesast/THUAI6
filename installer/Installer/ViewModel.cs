@@ -566,17 +566,24 @@ namespace starter.viewmodel.settings
                     {
                         if (Status == SettingsModel.Status.newUser)
                         {
-                            Status = SettingsModel.Status.working;
-                            this.RaisePropertyChanged("ProgressVis");
-                            /*if (obj.install())
+                            if (Directory.Exists(Route))
                             {
-                                Status = SettingsModel.Status.successful;
-                            }*/
-                            if (asyncDownloader.IsBusy)
-                                return;
+                                Status = SettingsModel.Status.working;
+                                this.RaisePropertyChanged("ProgressVis");
+                                /*if (obj.install())
+                                {
+                                    Status = SettingsModel.Status.successful;
+                                }*/
+                                if (asyncDownloader.IsBusy)
+                                    return;
+                                else
+                                {
+                                    asyncDownloader.RunWorkerAsync();
+                                }
+                            }
                             else
                             {
-                                asyncDownloader.RunWorkerAsync();
+                                MessageBox.Show("所选的路径不存在，请重新选择", "路径不存在", MessageBoxButton.OK, MessageBoxImage.Warning);
                             }
 
                         }
@@ -584,16 +591,23 @@ namespace starter.viewmodel.settings
                         {
                             //Status = SettingsModel.Status.working;
                             //this.RaisePropertyChanged("ProgressVis");
-                            switch (obj.move())
+                            if (Directory.Exists(Route))
                             {
-                                case -1:
-                                    MessageBox.Show("文件已打开或者目标路径下有同名文件！", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
-                                    break;
-                                case -2:
-                                    Status = SettingsModel.Status.error;
-                                    break;
+                                switch (obj.move())
+                                {
+                                    case -1:
+                                        MessageBox.Show("文件已打开或者目标路径下有同名文件！", "", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                                        break;
+                                    case -2:
+                                        Status = SettingsModel.Status.error;
+                                        break;
+                                }
+                                Status = SettingsModel.Status.successful;
                             }
-                            Status = SettingsModel.Status.successful;
+                            else
+                            {
+                                MessageBox.Show("所选的路径不存在，请重新选择", "路径不存在", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            }
                         }
                     }));
                 }
@@ -960,8 +974,16 @@ namespace starter.viewmodel.settings
                 {
                     clickReadCommand = new BaseCommand(new Action<object>(o =>
                     {
-                        if (!Directory.Exists(Route + "/THUAI6"))
-                            Route = Route.Substring(0, Route.Length - 7);
+                        if (!Directory.Exists(Route + "/THUAI6/win"))
+                        {
+                            if (Directory.Exists(Route.Substring(0, Route.Length - 7) + "/THUAI6/win"))
+                                Route = Route.Substring(0, Route.Length - 7);
+                            else
+                            {
+                                MessageBox.Show("请选择名为THUAI6的完整选手包文件夹，这可能意味着你需要对选手包文件夹进行重命名");
+                                return;
+                            }
+                        }
                         Program.Data.ResetFilepath(Route);
                         if (Program.Tencent_cos_download.CheckAlreadyDownload())
                             Status = SettingsModel.Status.login;

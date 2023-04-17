@@ -1015,29 +1015,44 @@ namespace Downloader
                 catch (DirectoryNotFoundException)
                 {
                     Console.WriteLine("原路径未找到！请检查文件是否损坏");
-                    foreach (DirectoryInfo newdirect in newdi.GetDirectories())
+                    if (newdi.GetDirectories().Length != 0)
                     {
-                        newdirect.MoveTo(System.IO.Path.Combine(Data.FilePath, newdirect.Name));
+                        foreach (DirectoryInfo newdirect in newdi.GetDirectories())
+                        {
+                            newdirect.MoveTo(System.IO.Path.Combine(Data.FilePath + "/THUAI6", newdirect.Name));
+                        }
                     }
-                    foreach (FileInfo file in newdi.GetFiles())
+                    if (newdi.GetFiles().Length != 0)
                     {
-                        file.MoveTo(System.IO.Path.Combine(Data.FilePath, file.Name));
+                        foreach (FileInfo file in newdi.GetFiles())
+                        {
+                            file.MoveTo(System.IO.Path.Combine(Data.FilePath + "/THUAI6", file.Name));
+                        }
                     }
                     Console.WriteLine("移动失败！");
-                    newdi.Delete();
+                    if (newdi.Exists)
+                        newdi.Delete();
                     return -2;
                 }
                 catch (IOException)
                 {
                     Console.WriteLine("文件已打开或者目标路径下有同名文件！");
-                    foreach (DirectoryInfo newdirect in newdi.GetDirectories())
+                    if (newdi.GetDirectories().Length != 0)
                     {
-                        newdirect.MoveTo(System.IO.Path.Combine(Data.FilePath, newdirect.Name));
+                        foreach (DirectoryInfo newdirect in newdi.GetDirectories())
+                        {
+                            newdirect.MoveTo(System.IO.Path.Combine(Data.FilePath + "/THUAI6", newdirect.Name));
+                        }
                     }
-                    foreach (FileInfo file in newdi.GetFiles())
+                    if (newdi.GetFiles().Length != 0)
                     {
-                        file.MoveTo(System.IO.Path.Combine(Data.FilePath, file.Name));
+                        foreach (FileInfo file in newdi.GetFiles())
+                        {
+                            file.MoveTo(System.IO.Path.Combine(Data.FilePath + "/THUAI6", file.Name));
+                        }
                     }
+                    if (newdi.Exists)
+                        newdi.Delete();
                     Console.WriteLine("移动失败！");
                     return -1;
                 }

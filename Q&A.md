@@ -45,7 +45,7 @@ Q:CAPI.sln编译不通过
 
 A:
 1. 应该是没使用VS2022
-2. 对于VS2022依旧报错，先考虑是否版本过旧（应当在17.5.x版本以上）
+2. 对于VS2022依旧报错，先考虑是否版本过旧（应当在 17.5.x 版本）
    用Visual Studio Installer（在开始菜单搜索）更新
    ![VsUpdate](.\resource\VsUpdate.png)
 3. 

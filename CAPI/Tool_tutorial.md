@@ -707,7 +707,7 @@ int main()
 
 ##### 概览
 
-`shared_ptr` 可以说是最常用的智能指针了。它的用法最为灵活，内部实现方式是**引用计数**。即，它会记录有多少个 `shared_ptr` 正在指向某个资源，并当指向该资源的智能指针数为零时，调用相应的释放函数（默认为 `delete` 操作符）释放该资源。  
+`shared_ptr` 的用法最为灵活，内部实现方式是**引用计数**。即，它会记录有多少个 `shared_ptr` 正在指向某个资源，并当指向该资源的智能指针数为零时，调用相应的释放函数（默认为 `delete` 操作符）释放该资源。不过也需要注意，使用 `std::shared_ptr` 会比传统的指针带来额外的引用计数的开销，因此只有当后面将会介绍的 `std::unique_ptr` 无法满足要求时方可考虑 `std::shared_ptr`。  
 
 像 `new` 会在自由存储区动态获取一块内存并返回其一样，如果要动态分配一块内存并得到其智能指针，可以使用 `std::make_shared` 模板，例如：  
 
@@ -935,7 +935,7 @@ else
 
 #### `std::unique_ptr`
 
-`std::unique_ptr` 顾名思义，独有的指针，即资源只能同时为一个 `unique_ptr` 所占有。它部分涉及到 `xvalue` 、右值引用与移动语义的问题，在此不做过多展开。  
+`std::unique_ptr` 顾名思义，独有的指针，即资源只能同时为一个 `unique_ptr` 所占有，是基于 RAII 的思想设计的智能指针，并且相比于原始指针并不会带来任何额外开销，是智能指针的首选。它部分涉及到对象的生命期、右值引用与移动语义的问题，在此不做过多展开。  
 
 
 
@@ -943,5 +943,4 @@ else
 
 + [cppreference_shared_ptr](https://zh.cppreference.com/w/cpp/memory/shared_ptr)
 + [cppreference_weak_ptr](https://zh.cppreference.com/w/cpp/memory/weak_ptr)
-
 + [cppreference_unique_ptr](https://zh.cppreference.com/w/cpp/memory/unique_ptr)

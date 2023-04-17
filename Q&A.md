@@ -8,6 +8,10 @@ Q: Windows找不到文件：\CAPI\cpp\x64\Debug\APl.exe？
 A: 
 应该是还没有编译，打开CAPI\cpp目录，在里面打开CAPI.sln，然后点击生成，对代码进行编译
 
+Q：为什么CAPI.sln打开后会找不到项目
+![zip](.\resource\zip.png)
+
+A:要先解压
 
 Q: 怎么修改.cmd参数？
 
@@ -34,13 +38,19 @@ Q:显示API项目已卸载
 A:可能是没有安装C++
 
 Q:CAPI.sln编译不通过
+情况1：
 ![std_find_trivial](.\resource\std_find_trivial.jpg)
+情况2：
+![LNK1000](.\resource\LNK1000.png)
 
 A:
-出现_std_find_trivial_1的报错就是没更新到VS2022，
-对于VS2022依旧报错_std_find_trivial_1的，先考虑是否版本过旧
-![项目属性](.\resource\项目属性.png)
-确保上图项目属性中平台工具集在V143及以上，C++17标准
+1. 应该是没使用VS2022
+2. 对于VS2022依旧报错，先考虑是否版本过旧（应当在17.5.x版本以上）
+   用Visual Studio Installer（在开始菜单搜索）更新
+   ![VsUpdate](.\resource\VsUpdate.png)
+3. 
+   ![项目属性](.\resource\项目属性.png)
+   确保上图项目属性中平台工具集在V143及以上，C++17标准
 
 ## Python 
 

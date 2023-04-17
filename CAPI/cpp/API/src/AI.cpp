@@ -17,7 +17,7 @@ extern const std::array<THUAI6::StudentType, 4> studentType = {
 
 extern const THUAI6::TrickerType trickerType = THUAI6::TrickerType::Assassin;
 
-// 选手只需写一个即可，为了调试方便写了两个的话也不会有影响
+//可以在AI.cpp内部声明变量与函数
 
 void AI::play(IStudentAPI& api)
 {
@@ -38,6 +38,7 @@ void AI::play(IStudentAPI& api)
     {
         // 玩家3执行操作
     }
+    //当然可以写成if (this->playerID == 2||this->playerID == 3)之类的操作
     // 公共操作
 }
 

@@ -28,10 +28,10 @@ namespace Server
         public ushort TrickerCount { get; set; } = 1;
 
         [Option("maxStudentCount", Required = false, HelpText = "The max number of students, 4 by default")]
-        public ushort MaxStudentCount { get; } = 4;
+        public ushort MaxStudentCount { get; set; } = 4;
 
         [Option("maxTrickerCount", Required = false, HelpText = "The max number of trickers, 1 by default")]
-        public ushort MaxTrickerCount { get; } = 1;
+        public ushort MaxTrickerCount { get; set; } = 1;
 
         [Option('g', "gameTimeInSecond", Required = false, HelpText = "The time of the game in second, 10 minutes by default")]
         public uint GameTimeInSecond { get; set; } = 10 * 60;

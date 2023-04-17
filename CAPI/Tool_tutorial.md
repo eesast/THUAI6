@@ -4,13 +4,25 @@
 
 ## Visual Studio使用说明
 
-选手开始编写代码之前，要先编译好服务器（logic）。具体方法是进入logic文件夹，分别编译`logic.sln`和client文件夹里的`client.sln`，然后就可以开始编写自己的代码。需要注意，选手需要分别在Debug和Release模式下编译，然后才可以分别运行`gameServer_dbg.cmd`和`gameServer_rls.cmd`
+比赛**只保证！！！支持**VS2022最新版本，选手使用其他版本后果自负（实际上应该不能编译）。
 
-## Python使用说明
+### 生成模式的设置
 
-选手编写Python代码之前需要安装必要的Python包，具体方法为：Windows下运行（需要在有Python环境的情况下运行）`generate_proto.cmd`，Linux下运行`generate_proto.sh`，然后可以开始进行代码编写。
+菜单栏下方一行
 
-## cmd脚本的参数修改
+![image-20230416010705076](src/image-20230416010705076.png)
+
+可以更改生成模式为`Debug`或`Release`
+
+### 命令行参数的设置
+
+左上方菜单栏 `调试->调试属性`
+
+![image-20230416010816392](src/image-20230416010816392.png)
+
+在命令参数一栏中加入命令行参数进行调试
+
+### cmd脚本的参数修改
 
 右键点击`.cmd`或`.bat`文件之后，选择编辑就可以开始修改文件。通过在一行的开头加上`::`，可以注释掉该行。
 
@@ -234,7 +246,7 @@ for (auto itr = begin(arr); itr != end(arr); ++itr)
 
 ## Python接口必看
 
-
+比赛**只保证！！**支持Python3.9，不保证支持其他版本
 
 比赛中的Python接口大多使用异步接口，即返回一个类似于 `Future[bool]` 的值。为了获取实际的值，需要调用 `result()` 方法。
 
@@ -695,7 +707,7 @@ int main()
 
 ##### 概览
 
-`shared_ptr` 可以说是最常用的智能指针了。它的用法最为灵活，内部实现方式是**引用计数**。即，它会记录有多少个 `shared_ptr` 正在指向某个资源，并当指向该资源的智能指针数为零时，调用相应的释放函数（默认为 `delete` 操作符）释放该资源。  
+`shared_ptr` 的用法最为灵活，内部实现方式是**引用计数**。即，它会记录有多少个 `shared_ptr` 正在指向某个资源，并当指向该资源的智能指针数为零时，调用相应的释放函数（默认为 `delete` 操作符）释放该资源。不过也需要注意，使用 `std::shared_ptr` 会比传统的指针带来额外的引用计数的开销，因此只有当后面将会介绍的 `std::unique_ptr` 无法满足要求时方可考虑 `std::shared_ptr`。  
 
 像 `new` 会在自由存储区动态获取一块内存并返回其一样，如果要动态分配一块内存并得到其智能指针，可以使用 `std::make_shared` 模板，例如：  
 
@@ -923,7 +935,7 @@ else
 
 #### `std::unique_ptr`
 
-`std::unique_ptr` 顾名思义，独有的指针，即资源只能同时为一个 `unique_ptr` 所占有。它部分涉及到 `xvalue` 、右值引用与移动语义的问题，在此不做过多展开。  
+`std::unique_ptr` 顾名思义，独有的指针，即资源只能同时为一个 `unique_ptr` 所占有，是基于 RAII 的思想设计的智能指针，并且相比于原始指针并不会带来任何额外开销，是智能指针的首选。它部分涉及到对象的生命期、右值引用与移动语义的问题，在此不做过多展开。  
 
 
 
@@ -931,5 +943,4 @@ else
 
 + [cppreference_shared_ptr](https://zh.cppreference.com/w/cpp/memory/shared_ptr)
 + [cppreference_weak_ptr](https://zh.cppreference.com/w/cpp/memory/weak_ptr)
-
 + [cppreference_unique_ptr](https://zh.cppreference.com/w/cpp/memory/unique_ptr)

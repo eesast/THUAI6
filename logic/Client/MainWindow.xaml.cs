@@ -571,7 +571,7 @@ namespace Client
             {
                 if (msg.Place == human.Place)
                     return true;
-                if (human.StudentType == StudentType.TechOtaku && msg.PlayerId == playerID + Preparation.Utility.GameData.numOfPeople)
+                if (msg.PlayerId == playerID + Preparation.Utility.GameData.numOfPeople)//robot and its owner
                     return true;
             }
             else if (!humanOrButcher && butcher != null)
@@ -747,7 +747,7 @@ namespace Client
 
                         foreach (var data in listOfAll)
                         {
-                            StatusBarsOfCircumstance.SetValue(data, gateOpened, isEmergencyDrawed, isEmergencyOpened, playerID);
+                            StatusBarsOfCircumstance.SetValue(data, gateOpened, isEmergencyDrawed, isEmergencyOpened, playerID, isPlaybackMode);
                         }
                         if (!hasDrawed && mapFlag)
                             DrawMap();

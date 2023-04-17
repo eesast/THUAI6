@@ -18,11 +18,13 @@ from PyAPI.Interface import ILogic, IGameTimer
 
 
 class Logic(ILogic):
-    def __init__(self, playerID: int) -> None:
+    def __init__(self, playerID: int, playerType: THUAI6.PlayerType) -> None:
 
         # ID
         self.__playerID: int = playerID
         self.__playerGUIDs: List[int] = []
+
+        self.__playerType: THUAI6.PlayerType = playerType
 
         # 通信
         self.__comm: Communication
@@ -268,7 +270,7 @@ class Logic(ILogic):
     def __ProcessMessage(self) -> None:
         def messageThread():
             self.__logger.info("Message thread start!")
-            self.__comm.AddPlayer(self.__playerID)
+            self.__comm.AddPlayer(self.__playerID, self.__playerType)
             self.__logger.info("Join the player!")
 
             while self.__gameState != THUAI6.GameState.GameEnd:
@@ -344,7 +346,7 @@ class Logic(ILogic):
             self.__logger.debug("Buffer cleared!")
             self.__bufferState.gameInfo = Proto2THUAI6.Protobuf2THUAI6GameInfo(
                 message.all_message)
-            if Setting.playerType() == THUAI6.PlayerType.StudentPlayer:
+            if self.__playerType == THUAI6.PlayerType.StudentPlayer:
                 for item in message.obj_message:
                     if item.WhichOneof("message_of_obj") == "student_message":
                         if item.student_message.player_id == self.__playerID:
@@ -590,20 +592,20 @@ class Logic(ILogic):
         self.__logger.info("asynchronous: %s", Setting.asynchronous())
         self.__logger.info("server: %s:%s", IP, port)
         self.__logger.info("playerID: %s", self.__playerID)
-        self.__logger.info("player type: %s", Setting.playerType().name)
+        self.__logger.info("player type: %s", self.__playerType.name)
         self.__logger.info("****************************")
 
         # 建立通信组件
         self.__comm = Communication(IP, port)
 
         # 构造timer
-        if Setting.playerType() == THUAI6.PlayerType.StudentPlayer:
+        if self.__playerType == THUAI6.PlayerType.StudentPlayer:
             if not file and not screen:
                 self.__timer = StudentAPI(self)
             else:
                 self.__timer = StudentDebugAPI(
                     self, file, screen, warnOnly, self.__playerID)
-        elif Setting.playerType() == THUAI6.PlayerType.TrickerPlayer:
+        elif self.__playerType == THUAI6.PlayerType.TrickerPlayer:
             if not file and not screen:
                 self.__timer = TrickerAPI(self)
             else:
@@ -615,7 +617,7 @@ class Logic(ILogic):
             with self.__cvAI:
                 self.__cvAI.wait_for(lambda: self.__AIStart)
 
-            ai = createAI()
+            ai = createAI(self.__playerID)
             while self.__AILoop:
                 if Setting.asynchronous():
                     self.__Wait()

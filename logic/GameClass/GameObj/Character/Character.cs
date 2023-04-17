@@ -349,24 +349,12 @@ namespace GameClass.GameObj
         /// 加分
         /// </summary>
         /// <param name="add">增加量</param>
-        public void AddScore(int add)
+        public virtual void AddScore(int add)
         {
             lock (gameObjLock)
             {
                 score += add;
                 //Debugger.Output(this, " 's score has been added to: " + score.ToString());
-            }
-        }
-        /// <summary>
-        /// 减分
-        /// </summary>
-        /// <param name="sub">减少量</param>
-        public void SubScore(int sub)
-        {
-            lock (gameObjLock)
-            {
-                score -= sub;
-                Debugger.Output(this, " 's score has been subed to: " + score.ToString());
             }
         }
 

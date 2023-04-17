@@ -50,7 +50,7 @@ A:
    ![VsUpdate](.\resource\VsUpdate.png)
 3. 
    ![项目属性](.\resource\项目属性.png)
-   确保上图项目属性中平台工具集在V143及以上，C++17标准
+   确保上图项目属性中平台工具集在 v143，C++17 标准
 
 ## Python 
 

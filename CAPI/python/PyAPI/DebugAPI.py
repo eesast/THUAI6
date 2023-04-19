@@ -249,13 +249,13 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
     # 等待下一帧
 
-    def Wait(self) -> Future[bool]:
+    def Wait(self) -> bool:
         self.__logger.info(
             f"Wait: called at {self.__GetTime()}ms")
         if self.__logic.GetCounter() == -1:
-            return self.__pool.submit(lambda: False)
+            return False
         else:
-            return self.__pool.submit(self.__logic.WaitThread)
+            return self.__logic.WaitThread()
 
     # 获取各类游戏中的消息
 
@@ -701,13 +701,13 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
     # 等待下一帧
 
-    def Wait(self) -> Future[bool]:
+    def Wait(self) -> bool:
         self.__logger.info(
             f"Wait: called at {self.__GetTime()}ms")
         if self.__logic.GetCounter() == -1:
-            return self.__pool.submit(lambda: False)
+            return False
         else:
-            return self.__pool.submit(self.__logic.WaitThread)
+            return self.__logic.WaitThread()
 
     # 获取各类游戏中的消息
 

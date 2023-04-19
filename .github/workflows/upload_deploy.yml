@@ -12,7 +12,7 @@ on:
 
 jobs:
   build_upload:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     
@@ -25,14 +25,12 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.9.2'
-        architecture: 'x64'
 
     - name: Pip Install paramiko
       run: pip install paramiko
 
     - name: Publish
       run: |
-        New-Item -Path . -Name "THUAI6" -ItemType "directory"
         mkdir -p THUAI6/win/win64
         mkdir -p THUAI6/linux/linux64
         mkdir -p THUAI6/win/win64/Debug
@@ -61,13 +59,13 @@ jobs:
     
     - name: Copy Markdown
       run: |
-        New-Item -Path . -Name "Md" -ItemType "directory"
-        cp ./CAPI/CAPI接口(cpp).md ./Md/
-        cp ./CAPI/CAPI接口(python).md ./Md/
+        mkdir -p ./Md/
+        cp ./CAPI/CAPI接口（cpp）.md ./Md/
+        cp ./CAPI/CAPI接口（python）.md ./Md/
         cp ./CAPI/Tool_tutorial.md ./Md/
-        cp Q&A.md ./Md/
-        cp 使用文档.md ./Md/
-        cp GameRules.md ./Md/
+        cp ./QandA.md ./Md/
+        cp ./使用文档.md ./Md/
+        cp ./logic/GameRules.md ./Md/
     
     - name: Markdown to PDF and HTML
       uses: BaileyJM02/markdown-to-pdf@v1.2.0

@@ -62,8 +62,8 @@ jobs:
     - name: Copy Markdown
       run: |
         New-Item -Path . -Name "Md" -ItemType "directory"
-        cp ./CAPI/CAPI接口(cpp).md ./Md/
-        cp ./CAPI/CAPI接口(python).md ./Md/
+        cp ./CAPI/CAPI接口（cpp）.md ./Md/
+        cp ./CAPI/CAPI接口（python）.md ./Md/
         cp ./CAPI/Tool_tutorial.md ./Md/
         cp Q&A.md ./Md/
         cp 使用文档.md ./Md/

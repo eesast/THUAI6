@@ -46,7 +46,7 @@ namespace Gaming
             public bool MovePlayerWhenStunned(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
                 if (!playerToMove.Commandable() && playerToMove.PlayerState != PlayerStateType.Stunned) return false;
-                characterManager.SetPlayerState(playerToMove, PlayerStateType.Stunned);
+                characterManager.BeStunned(playerToMove, moveTimeInMilliseconds);
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
                 return true;
             }

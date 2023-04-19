@@ -63,9 +63,9 @@
   - `int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const`:查询特定位置门开启状态
 
 #### 其他
-  - `std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const`:查询当前游戏状态\
-  - `std::vector<int64_t> GetPlayerGUIDs() const`:获取所有玩家的GUID\
-  - `int GetFrameCount() const`:获取目前所进行的帧数\
+  - `std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const`:查询当前游戏状态
+  - `std::vector<int64_t> GetPlayerGUIDs() const`:获取所有玩家的GUID
+  - `int GetFrameCount() const`:获取目前所进行的帧数
   - `std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const`或`std::shared_ptr<const THUAI6::Student> GetSelfInfo() const`：获取自己的信息
   - `std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const`：返回整张地图的地形信息。
 

@@ -245,7 +245,7 @@ class IAPI(metaclass=ABCMeta):
     # 等待下一帧
 
     @abstractmethod
-    def Wait(self) -> Future[bool]:
+    def Wait(self) -> bool:
         pass
 
     # 获取各类游戏中的消息

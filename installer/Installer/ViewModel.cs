@@ -33,7 +33,7 @@ namespace starter.viewmodel.settings
         public SettingsViewModel()
         {
 
-            //Program.Tencent_cos_download.UpdateHash();
+            Program.Tencent_cos_download.UpdateHash();
 
             Status = SettingsModel.Status.working;
 
@@ -152,6 +152,13 @@ namespace starter.viewmodel.settings
             if (asyncUpdater.CancellationPending)
             {
                 e.Cancel = true;
+                MessageBox.Show("下载取消");
+                if (e.Argument.ToString().Equals("Manual"))
+                {
+                    Status = SettingsModel.Status.menu;
+                }
+                else
+                    Status = SettingsModel.Status.login;
                 return;
             }
             else

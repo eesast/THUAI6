@@ -217,24 +217,20 @@ std::pair<int64_t, std::string> TrickerAPI::GetMessage()
     return logic.GetMessage();
 }
 
-std::future<bool> StudentAPI::Wait()
+bool StudentAPI::Wait()
 {
     if (logic.GetCounter() == -1)
-        return std::async(std::launch::async, [this]()
-                          { return false; });
+        return false;
     else
-        return std::async(std::launch::async, [this]()
-                          { return logic.WaitThread(); });
+        return logic.WaitThread();
 }
 
-std::future<bool> TrickerAPI::Wait()
+bool TrickerAPI::Wait()
 {
     if (logic.GetCounter() == -1)
-        return std::async(std::launch::async, [this]()
-                          { return false; });
+        return false;
     else
-        return std::async(std::launch::async, [this]()
-                          { return logic.WaitThread(); });
+        return logic.WaitThread();
 }
 
 std::vector<std::shared_ptr<const THUAI6::Tricker>> StudentAPI::GetTrickers() const

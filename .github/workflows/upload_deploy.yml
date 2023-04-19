@@ -61,13 +61,13 @@ jobs:
     
     - name: Copy Markdown
       run: |
-        New-Item -Path . -Name "Md" -ItemType "directory"
-        cp ./CAPI/CAPI接口(cpp).md ./Md/
-        cp ./CAPI/CAPI接口(python).md ./Md/
+        mkdir -p ./Md/
+        cp ./CAPI/CAPI接口（cpp）.md ./Md/
+        cp ./CAPI/CAPI接口（python）.md ./Md/
         cp ./CAPI/Tool_tutorial.md ./Md/
-        cp Q&A.md ./Md/
-        cp 使用文档.md ./Md/
-        cp GameRules.md ./Md/
+        cp ./QandA.md ./Md/
+        cp ./使用文档.md ./Md/
+        cp ./logic/GameRules.md ./Md/
     
     - name: Markdown to PDF and HTML
       uses: BaileyJM02/markdown-to-pdf@v1.2.0

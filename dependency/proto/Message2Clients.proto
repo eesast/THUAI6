@@ -1,0 +1,204 @@
+// Message2Client
+syntax = "proto3";
+package protobuf;
+
+import "MessageType.proto";
+
+message MessageOfStudent
+{
+    int32 x = 1;
+    int32 y = 2;
+    int32 speed = 3;
+    int32 determination = 4; // 剩余的学习毅力，相当于血量
+    int32 addiction = 5; // 沉迷程度，相当于淘汰进度
+    repeated double time_until_skill_available = 6;
+    PlaceType place = 7;
+    repeated PropType prop = 8;
+    PlayerState player_state = 9;
+    int64 guid = 10;
+    BulletType bullet_type = 12;
+    int32 learning_speed = 13; // 修理电机的速度
+    int32 treat_speed = 14; // 治疗的速度
+    int64 player_id = 15;
+    int32 view_range = 16; // 视野距离
+    int32 radius = 17; // 半径
+    double danger_alert = 19; // 危险警报，在捣蛋鬼靠近时会有预警
+    int32 score = 20;
+    int32 treat_progress = 21; // 治疗进度
+    int32 rescue_progress = 22; // 救援进度
+    StudentType student_type = 23;
+    double facing_direction = 24;
+    repeated StudentBuffType buff = 25;
+}
+
+message MessageOfTricker
+{
+    int32 x = 1;
+    int32 y = 2;
+    int32 speed = 3;
+    repeated double time_until_skill_available = 5;
+    PlaceType place = 6;
+    repeated PropType prop = 7;
+    TrickerType tricker_type = 8;
+    int64 guid = 9;
+    int32 score = 10;
+    int64 player_id = 11;
+    int32 view_range = 12; // 视野距离
+    int32 radius = 13; // 半径
+    PlayerState player_state = 14;
+    double trick_desire = 15;//bgm
+    double class_volume = 16;//bgm
+    double facing_direction = 17;
+    BulletType bullet_type = 18;
+    repeated TrickerBuffType buff = 19;
+}
+
+message MessageOfBullet
+{
+    BulletType type = 1;
+    int32 x = 2;
+    int32 y = 3;
+    double facing_direction = 4;
+    int64 guid = 5;
+    PlayerType team = 6;
+    PlaceType place = 7;
+    double bomb_range = 8;
+    int32 speed = 9;
+}
+
+message MessageOfBombedBullet  //for Unity，直接继承自THUAI5
+{
+    BulletType type = 1;
+    int32 x = 2;
+    int32 y = 3;
+    double facing_direction = 4;
+    int64 mapping_id = 5;
+    double bomb_range = 6; 
+}
+
+message MessageOfProp // 可拾取道具的信息
+{
+    PropType type = 1;
+    int32 x = 2;
+    int32 y = 3;
+    double facing_direction = 4;
+    int64 guid = 5;
+    PlaceType place = 6;
+}
+
+
+message MessageOfPickedProp  //for Unity，直接继承自THUAI5
+{
+    PropType type = 1;
+    int32 x = 2;
+    int32 y = 3;
+    double facing_direction = 4;
+    int64 mapping_id = 5;
+}
+
+message MessageOfClassroom
+{
+    int32 x = 1;
+    int32 y = 2;
+    int32 progress = 3;
+}
+
+message MessageOfGate
+{
+    int32 x = 1;
+    int32 y = 2;
+    int32 progress = 3;
+}
+
+message MessageOfHiddenGate
+{
+    int32 x = 1;
+    int32 y = 2;
+    bool opened = 3;
+}
+
+message MessageOfDoor
+{
+    int32 x = 1;
+    int32 y = 2;
+    bool is_open = 3;
+    int32 progress = 4;
+}
+
+message MessageOfChest
+{
+    int32 x = 1;
+    int32 y = 2;
+    int32 progress = 3;
+}
+
+message MessageOfMap
+{
+    message Row
+    {
+        repeated PlaceType col = 1;
+    }
+    repeated Row row = 2;
+}
+
+message MessageOfNews
+{
+    string news = 1;
+    int64 from_id = 2;
+    int64 to_id = 3;
+}
+
+message MessageOfObj
+{
+    oneof message_of_obj
+    {
+        MessageOfStudent student_message = 1;
+        MessageOfTricker tricker_message = 2;
+        MessageOfProp prop_message = 3;
+        MessageOfBullet bullet_message = 4;
+        MessageOfBombedBullet bombed_bullet_message = 5;
+        MessageOfClassroom classroom_message = 6;
+        MessageOfDoor door_message = 7;
+        MessageOfGate gate_message = 8;
+        MessageOfChest chest_message = 9;
+        MessageOfHiddenGate hidden_gate_message = 10;
+        MessageOfNews news_message = 11;
+        MessageOfMap map_message = 12;
+    }
+}
+
+message MessageOfAll
+{
+    int32 game_time = 1;
+    int32 subject_finished = 2; // 完成的科目数
+    int32 student_graduated = 3; // 已经毕业的学生数
+    int32 student_quited = 4; // 已经退学的学生数
+    int32 student_score = 5;
+    int32 tricker_score = 6;
+}
+
+message MessageToClient
+{
+    repeated MessageOfObj obj_message = 1;
+    GameState game_state = 2;
+    MessageOfAll all_message = 3;
+}
+
+message MoveRes // 如果打算设计撞墙保留平行速度分量，且需要返回值则可用这个（大概没啥用）
+{
+    int64 actual_speed = 1;
+    double actual_angle = 2;
+    bool act_success = 3;
+}
+
+message BoolRes // 用于只需要判断执行操作是否成功的行为，如捡起道具、使用道具
+{
+    bool act_success = 1;
+}
+
+// message MsgRes // 用于获取队友发来的消息
+// {
+//     bool have_message = 1; // 是否有待接收的消息
+//     int64 from_player_id = 2;
+//     string message_received = 3;
+// }

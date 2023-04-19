@@ -1,0 +1,24 @@
+name: build
+on: [push, pull_request]
+jobs:
+  dotnet-build:
+    if: true
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+        
+    - name: Build Logic
+      run: dotnet build "./logic/logic.sln" -c Release
+      
+    - name: Build Installer
+      run: dotnet build "./installer/installer.sln" -c Release
+      
+    - name: Build Launcher
+      run: dotnet build "./launcher/launcher.sln" -c Release
+      
+    - name: Build Playback
+      run: dotnet build "./playback/playback.sln" -c Release

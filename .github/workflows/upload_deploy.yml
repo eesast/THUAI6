@@ -70,7 +70,6 @@ jobs:
 
     - name: Create PDF
       uses: mkrakowitzer/actions-makepdfs@v1.3
-      if: github.ref == 'refs/heads/master'
       with:
         markdown_dir: ./Md
         output_dir: ./THUAI6/

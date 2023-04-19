@@ -12,7 +12,7 @@ on:
 
 jobs:
   build_upload:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     
@@ -32,7 +32,6 @@ jobs:
 
     - name: Publish
       run: |
-        New-Item -Path . -Name "THUAI6" -ItemType "directory"
         mkdir -p THUAI6/win/win64
         mkdir -p THUAI6/linux/linux64
         mkdir -p THUAI6/win/win64/Debug

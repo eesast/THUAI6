@@ -458,8 +458,8 @@ namespace Downloader
                                           .Build();           // 创建 CosXmlConfig 对象
 
                 // 永久密钥访问凭证
-                string secretId = "***"; //"云 API 密钥 SecretId";
-                string secretKey = "***"; //"云 API 密钥 SecretKey";
+                string secretId = "AKIDVpzdDcmhS0KNAj5FLG0WnpcBconY9UYN"; //"云 API 密钥 SecretId";
+                string secretKey = "f2FDyVnpgNr67urZ3HF4f5KL8i2DCzY2"; //"云 API 密钥 SecretKey";
 
                 long durationSecond = 1000;  // 每次请求签名有效时长，单位为秒
                 QCloudCredentialProvider cosCredentialProvider = new DefaultQCloudCredentialProvider(
@@ -691,12 +691,14 @@ namespace Downloader
                     catch (CosClientException clientEx)
                     {
                         // 请求失败
+                        MessageBox.Show("网络错误");
                         Console.WriteLine("CosClientException: " + clientEx.ToString() + Environment.NewLine);
                         return;
                     }
                     catch (CosServerException serverEx)
                     {
                         // 请求失败
+                        MessageBox.Show("网络错误");
                         Console.WriteLine("CosClientException: " + serverEx.ToString() + Environment.NewLine);
                         return;
                     }
@@ -1195,9 +1197,11 @@ namespace Downloader
 
             public static int CheckSelfVersion()
             {
+                string keyHead = "Installer/";
                 Tencent_cos_download downloader = new Tencent_cos_download();
                 string hashName = "installerHash.json";
                 string dir = Directory.GetCurrentDirectory();
+                int result = 0;
                 try
                 {
                     if (File.Exists(System.IO.Path.Combine(dir, hashName)))
@@ -1213,28 +1217,42 @@ namespace Downloader
                     json = r.ReadToEnd();
                 json = json.Replace("\r", string.Empty).Replace("\n", string.Empty);
                 Dictionary<string, string> jsonDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                string md5 = "";
+                List<string> awaitUpdate = new List<string>();
                 if (jsonDict != null)
                 {
-                    if (jsonDict.ContainsKey("InstallerUpdater.exe"))
+                    foreach (KeyValuePair<string, string> pair in jsonDict)
                     {
-                        string updaterHash = GetFileMd5Hash(System.IO.Path.Combine(dir, "InstallerUpdater.exe"));
-                        if (updaterHash != null && !jsonDict["InstallerUpdater.exe"].Equals(updaterHash))
-                            downloader.download(System.IO.Path.Combine(dir, "InstallerUpdater.exe"), "InstallerUpdater.exe");
+                        md5 = GetFileMd5Hash(System.IO.Path.Combine(dir, pair.Key));
+                        if (md5.Length == 0)  // 文档不存在
+                        {
+                            downloader.download(System.IO.Path.Combine(dir, pair.Key), keyHead + pair.Key);
+                        }
+                        else if (md5.Equals("conflict"))
+                        {
+                            MessageBox.Show($"检查{pair.Key}更新时遇到问题，请反馈", "读取出错", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                        else if (md5 != pair.Value)  // MD5不匹配
+                        {
+                            if (pair.Key.Substring(0, 12).Equals("InstallerUpd"))
+                            {
+                                File.Delete(System.IO.Path.Combine(dir, pair.Key));
+                                downloader.download(System.IO.Path.Combine(dir, pair.Key), keyHead + pair.Key);
+                            }
+                            else
+                            {
+                                result = 1;
+                                awaitUpdate.Append(pair.Key);
+                            }
+                        }
                     }
-                    else
-                        return -1;
-                    if (jsonDict.ContainsKey("Installer.exe"))
-                    {
-                        string selfHash = GetFileMd5Hash(System.IO.Path.Combine(dir, "Installer.exe"));
-                        if (selfHash != null && !jsonDict["Installer.exe"].Equals(selfHash))
-                            return 1;
-                    }
-                    else
-                        return -1;
                 }
                 else
                     return -1;
-                return 0;
+                string Contentjson = JsonConvert.SerializeObject(awaitUpdate);
+                Contentjson = Contentjson.Replace("\r", String.Empty).Replace("\n", String.Empty).Replace(@"\\", "/");
+                File.WriteAllText(@System.IO.Path.Combine(dir, "updateList.json"), Contentjson);
+                return result;
             }
         }
     }

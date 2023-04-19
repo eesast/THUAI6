@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Installer", "Installer\Installer.csproj", "{C10AF177-0883-4D9D-B2DC-3516BE04DF81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallerUpdater", "InstallerUpdater\InstallerUpdater.csproj", "{B2E61AB9-F7BF-4C48-ABFC-60F7F214BB14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C10AF177-0883-4D9D-B2DC-3516BE04DF81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C10AF177-0883-4D9D-B2DC-3516BE04DF81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C10AF177-0883-4D9D-B2DC-3516BE04DF81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2E61AB9-F7BF-4C48-ABFC-60F7F214BB14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2E61AB9-F7BF-4C48-ABFC-60F7F214BB14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2E61AB9-F7BF-4C48-ABFC-60F7F214BB14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2E61AB9-F7BF-4C48-ABFC-60F7F214BB14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -57,8 +57,8 @@ namespace Program
                                       .Build();           // 创建 CosXmlConfig 对象
 
             // 永久密钥访问凭证
-            string secretId = "AKIDVpzdDcmhS0KNAj5FLG0WnpcBconY9UYN"; //"云 API 密钥 SecretId";
-            string secretKey = "f2FDyVnpgNr67urZ3HF4f5KL8i2DCzY2"; //"云 API 密钥 SecretKey";
+            string secretId = "***"; //"云 API 密钥 SecretId";
+            string secretKey = "***"; //"云 API 密钥 SecretKey";
 
             long durationSecond = 1000;  // 每次请求签名有效时长，单位为秒
             QCloudCredentialProvider cosCredentialProvider = new DefaultQCloudCredentialProvider(

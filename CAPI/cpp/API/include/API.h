@@ -118,7 +118,7 @@ public:
     [[nodiscard]] virtual std::pair<int64_t, std::string> GetMessage() = 0;
 
     // 等待下一帧
-    virtual std::future<bool> Wait() = 0;
+    virtual bool Wait() = 0;
 
     // 获取视野内可见的学生/捣蛋鬼的信息
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const = 0;
@@ -242,7 +242,7 @@ public:
     [[nodiscard]] bool HaveMessage() override;
     [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
-    std::future<bool> Wait() override;
+    bool Wait() override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const override;
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
@@ -330,7 +330,7 @@ public:
     [[nodiscard]] bool HaveMessage() override;
     [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
-    std::future<bool> Wait() override;
+    bool Wait() override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const override;
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
@@ -410,7 +410,7 @@ public:
     [[nodiscard]] bool HaveMessage() override;
     [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
-    std::future<bool> Wait() override;
+    bool Wait() override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const override;
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;
@@ -483,7 +483,7 @@ public:
     [[nodiscard]] bool HaveMessage() override;
     [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
-    std::future<bool> Wait() override;
+    bool Wait() override;
 
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const override;
     [[nodiscard]] std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const override;

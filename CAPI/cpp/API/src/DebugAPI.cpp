@@ -403,26 +403,22 @@ std::pair<int64_t, std::string> TrickerDebugAPI::GetMessage()
     return result;
 }
 
-std::future<bool> StudentDebugAPI::Wait()
+bool StudentDebugAPI::Wait()
 {
     logger->info("Wait: called at {}ms", Time::TimeSinceStart(startPoint));
     if (logic.GetCounter() == -1)
-        return std::async(std::launch::async, []()
-                          { return false; });
+        return false;
     else
-        return std::async(std::launch::async, [this]()
-                          { return logic.WaitThread(); });
+        return logic.WaitThread();
 }
 
-std::future<bool> TrickerDebugAPI::Wait()
+bool TrickerDebugAPI::Wait()
 {
     logger->info("Wait: called at {}ms", Time::TimeSinceStart(startPoint));
     if (logic.GetCounter() == -1)
-        return std::async(std::launch::async, []()
-                          { return false; });
+        return false;
     else
-        return std::async(std::launch::async, [this]()
-                          { return logic.WaitThread(); });
+        return logic.WaitThread();
 }
 
 std::vector<std::shared_ptr<const THUAI6::Tricker>> StudentDebugAPI::GetTrickers() const

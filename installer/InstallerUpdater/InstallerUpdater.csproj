@@ -5,16 +5,15 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-	<UseWindowsForms>true</UseWindowsForms>
 	<AppHostDotNetRoot>dotNetRuntime</AppHostDotNetRoot>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="dotnetCampus.AppHost" Version="1.0.0-alpha10" />
-    <PackageReference Include="ICSharpCode.SharpZipLib.dll" Version="0.85.4.369" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Tencent.QCloud.Cos.Sdk" Version="5.4.34" />
+    <PackageReference Include="Tencent.QCloud.Cos.Sdk" Version="5.4.34">
+      <TreatAsUsed>true</TreatAsUsed>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

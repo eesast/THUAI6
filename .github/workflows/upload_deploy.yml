@@ -24,7 +24,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9.2'
+        python-version: '3.10'
 
     - name: Pip Install paramiko
       run: pip install paramiko
@@ -66,15 +66,13 @@ jobs:
         cp ./QandA.md ./Md/
         cp ./使用文档.md ./Md/
         cp ./logic/GameRules.md ./Md/
-    
-    - name: Markdown to PDF and HTML
-      uses: BaileyJM02/markdown-to-pdf@v1.2.0
+
+    - name: Create PDF
+      uses: mkrakowitzer/actions-makepdfs@v1.3
+      if: github.ref == 'refs/heads/master'
       with:
-          input_dir: ./Md
-          output_dir: ./THUAI6/
-          images_dir: ./resource
-          image_import: ./images
-          build_html: false
+        markdown_dir: ./Md
+        output_dir: ./THUAI6/
 
     - name: Tencent Cloud COS Action
       uses: TencentCloud/cos-action@v1

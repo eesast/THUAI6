@@ -79,11 +79,11 @@ class StudentAPI(IStudentAPI, IGameTimer):
 
     # 等待下一帧
 
-    def Wait(self) -> Future[bool]:
+    def Wait(self) -> bool:
         if self.__logic.GetCounter() == -1:
-            return self.__pool.submit(lambda: False)
+            return False
         else:
-            return self.__pool.submit(self.__logic.WaitThread)
+            return self.__logic.WaitThread()
 
     # 获取各类游戏中的消息
 
@@ -252,11 +252,11 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
 
     # 等待下一帧
 
-    def Wait(self) -> Future[bool]:
+    def Wait(self) -> bool:
         if self.__logic.GetCounter() == -1:
-            return self.__pool.submit(lambda: False)
+            return False
         else:
-            return self.__pool.submit(self.__logic.WaitThread)
+            return self.__logic.WaitThread()
 
     # 获取各类游戏中的消息
 

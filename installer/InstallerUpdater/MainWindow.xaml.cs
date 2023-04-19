@@ -28,6 +28,7 @@ namespace InstallerUpdater
         public MainWindow()
         {
             InitializeComponent();
+            MessageBox.Show("这是旧版");
             asyncDownloader.DoWork += AsyncDownloader_DoWork;
             asyncDownloader.RunWorkerCompleted += AsyncDownloader_RunWorkerCompleted;
             if (asyncDownloader.IsBusy)

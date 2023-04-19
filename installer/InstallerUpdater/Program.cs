@@ -19,14 +19,22 @@ namespace Program
         public static string Dir = Directory.GetCurrentDirectory();
         public static string InstallerName = "Installer.exe";
         public static string jsonKey = "installerHash.json";
+        public static string KeyHead = "Installer/";
 
         public static bool UpdateInstaller()
         {
+            string json;
             try
             {
-                download(Path.Combine(Dir, "newInstaller.exe"), InstallerName);
-                File.Delete(Path.Combine(Dir, InstallerName));
-                File.Move(Path.Combine(Dir, "newInstaller.exe"), Path.Combine(Dir, InstallerName));
+                using (StreamReader r = new StreamReader(System.IO.Path.Combine(Dir, "updateList.json")))
+                    json = r.ReadToEnd();
+                json = json.Replace("\r", string.Empty).Replace("\n", string.Empty);
+                List<string> jsonList = JsonConvert.DeserializeObject<List<string>>(json);
+                foreach (string todo in jsonList)
+                {
+                    File.Delete(Path.Combine(Dir, todo));
+                    download(Path.Combine(Dir, todo), KeyHead + todo);
+                }
             }
             catch
             {

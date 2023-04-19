@@ -13,7 +13,6 @@ on:
 jobs:
   build_upload:
     runs-on: windows-latest
-    if: false        # Skip this job
     steps:
     - uses: actions/checkout@v3
     
@@ -54,6 +53,11 @@ jobs:
         cp -r ./CAPI/cpp ./THUAI6/win/CAPI/
         cp -r ./CAPI/python ./THUAI6/win/CAPI/
         cp -r ./THUAI6/win/CAPI ./THUAI6/linux/
+
+    - name: Copy shell
+      run: |
+        cp -r ./CAPI/cmd/* ./THUAI6/win/
+        cp -r ./CAPI/shell/* ./THUAI6/linux/
     
     - name: Copy Markdown
       run: |

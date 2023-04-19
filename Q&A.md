@@ -52,6 +52,11 @@ A:
    ![项目属性](.\resource\项目属性.png)
    确保上图项目属性中平台工具集在 v143，C++17 标准
 
+Q:CAPI编译不通过
+![lib](.\resource\lib.png)
+
+A:查看`.\win\CAPI\cpp\`文件夹下是否有`lib`文件夹，没有则https://cloud.tsinghua.edu.cn/d/6972138f641d4e81a446/ 下载并复制粘贴
+
 ## Python 
 
 ### grpc版本更新失败

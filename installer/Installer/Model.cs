@@ -33,6 +33,8 @@ using ICSharpCode.SharpZipLib.Tar;
 using ICSharpCode.SharpZipLib.GZip;
 using static System.Net.WebRequestMethods;
 using File = System.IO.File;
+using System.Linq;
+using Installer;
 
 namespace starter.viewmodel.settings
 {
@@ -318,6 +320,15 @@ namespace Downloader
     {
         static List<string> newFileName = new List<string>();     // 新文件名
         static List<string> updateFileName = new List<string>();  // 更新文件名
+        static List<string> updateFailed = new List<string>();    //更新失败的文件名
+        static public List<string> UpdateFailed
+        {
+            get { return updateFailed; }
+        }
+        static public void ResetUpdateFailedInfo()
+        {
+            updateFailed.Clear();
+        }
         public static string ProgramName = "THUAI6";                     // 要运行或下载的程序名称
         public static string playerFolder = "player";                    // 选手代码保存文件夹路径
         public static string startName = "maintest.exe";          // 启动的程序名
@@ -495,7 +506,7 @@ namespace Downloader
                 FileStream fst = null;
                 try
                 {
-                    fst = new FileStream(strFileFullPath, FileMode.Open);
+                    fst = new FileStream(strFileFullPath, FileMode.Open, FileAccess.Read);
                     byte[] data = MD5.Create().ComputeHash(fst);
 
                     StringBuilder sBuilder = new StringBuilder();
@@ -571,7 +582,19 @@ namespace Downloader
                     if (MD5.Length == 0)  // 文档不存在
                         newFileName.Add(pair.Key);
                     else if (MD5.Equals("conflict"))
-                        MessageBox.Show($"文件{pair.Key}已打开，无法检查是否为最新，若需要，请关闭文件稍后手动检查更新", "文件正在使用", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    {
+                        if (pair.Key.Equals("THUAI6/win/CAPI/cpp/.vs/CAPI/v17/Browse.VC.db"))
+                        {
+                            MessageBox.Show($"visual studio未关闭：\n" +
+                            $"对于visual studio 2022，可以更新，更新会覆盖visual studio中已经打开的选手包；\n" +
+                            $"若使用其他版本的visual studio是继续更新出现问题，请汇报；\n" +
+                            $"若您自行修改了选手包，请注意备份；\n" +
+                            $"若关闭visual studio后仍弹出，请汇报。\n\n",
+                            "visual studio未关闭", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else
+                            MessageBox.Show($"检查{pair.Key}更新时遇到问题，请反馈", "读取出错", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                     else if (MD5 != pair.Value && System.IO.Path.GetFileName(pair.Key) != "AI.cpp" && System.IO.Path.GetFileName(pair.Key) != "AI.py")  // MD5不匹配
                         updateFileName.Add(pair.Key);
                 }
@@ -622,19 +645,20 @@ namespace Downloader
                 if (UpdatePlanned)
                 {
                     Download();
-                    UpdatePlanned = false;
-                    return true;
+                    if (updateFailed.Count == 0)
+                        return true;
+                    else
+                        Check();
                 }
                 return false;
             }
-
             private static void Download()
             {
                 Tencent_cos_download Downloader = new Tencent_cos_download();
                 int newFile = 0, updateFile = 0;
                 int totalnew = newFileName.Count, totalupdate = updateFileName.Count;
                 filenum = totalnew + totalupdate;
-
+                updateFailed.Clear();
                 if (newFileName.Count > 0 || updateFileName.Count > 0)
                 {
                     try
@@ -649,12 +673,20 @@ namespace Downloader
                         foreach (string filename in updateFileName)
                         {
                             //Console.WriteLine(updateFile + 1 + "/" + totalupdate + ":开始下载" + filename);
-                            File.Delete(System.IO.Path.Combine(@Data.FilePath, filename));
-                            Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename);
+                            try
+                            {
+                                File.Delete(System.IO.Path.Combine(@Data.FilePath, filename));
+                                Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename);
+                            }
+                            catch (System.IO.IOException)
+                            {
+                                updateFailed = updateFailed.Append(filename).ToList();
+                            }
                             //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
                             updateFile++;
                         }
-                        UpdatePlanned = false;
+                        if (updateFailed.Count == 0)
+                            UpdatePlanned = false;
                     }
                     catch (CosClientException clientEx)
                     {
@@ -1159,6 +1191,50 @@ namespace Downloader
                         return;
                     }
                 }
+            }
+
+            public static int CheckSelfVersion()
+            {
+                Tencent_cos_download downloader = new Tencent_cos_download();
+                string hashName = "installerHash.json";
+                string dir = Directory.GetCurrentDirectory();
+                try
+                {
+                    if (File.Exists(System.IO.Path.Combine(dir, hashName)))
+                        File.Delete(System.IO.Path.Combine(dir, hashName));
+                    downloader.download(System.IO.Path.Combine(dir, hashName), hashName);
+                }
+                catch
+                {
+                    return -1;
+                }
+                string json;
+                using (StreamReader r = new StreamReader(System.IO.Path.Combine(dir, hashName)))
+                    json = r.ReadToEnd();
+                json = json.Replace("\r", string.Empty).Replace("\n", string.Empty);
+                Dictionary<string, string> jsonDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                if (jsonDict != null)
+                {
+                    if (jsonDict.ContainsKey("InstallerUpdater.exe"))
+                    {
+                        string updaterHash = GetFileMd5Hash(System.IO.Path.Combine(dir, "InstallerUpdater.exe"));
+                        if (updaterHash != null && !jsonDict["InstallerUpdater.exe"].Equals(updaterHash))
+                            downloader.download(System.IO.Path.Combine(dir, "InstallerUpdater.exe"), "InstallerUpdater.exe");
+                    }
+                    else
+                        return -1;
+                    if (jsonDict.ContainsKey("Installer.exe"))
+                    {
+                        string selfHash = GetFileMd5Hash(System.IO.Path.Combine(dir, "Installer.exe"));
+                        if (selfHash != null && !jsonDict["Installer.exe"].Equals(selfHash))
+                            return 1;
+                    }
+                    else
+                        return -1;
+                }
+                else
+                    return -1;
+                return 0;
             }
         }
     }

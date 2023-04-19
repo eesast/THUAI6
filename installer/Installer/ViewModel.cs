@@ -13,6 +13,7 @@ using Installer;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.IO;
 using System.Windows.Automation.Provider;
+using System.Diagnostics;
 
 namespace starter.viewmodel.settings
 {
@@ -33,6 +34,22 @@ namespace starter.viewmodel.settings
         {
 
             //Program.Tencent_cos_download.UpdateHash();
+
+            Status = SettingsModel.Status.working;
+
+            switch (Program.Tencent_cos_download.CheckSelfVersion())
+            {
+                case 1:
+                    if (MessageBoxResult.Yes == MessageBox.Show("下载器需要更新，是否现在更新", "需要更新", MessageBoxButton.YesNo))
+                    {
+                        Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "InstallerUpdater.exe"));
+                        Environment.Exit(0);
+                    }
+                    break;
+                case -1:
+                    MessageBox.Show("下载器更新检查出错，将继续启动现有下载器");
+                    break;
+            }
 
             //实例化BackgroundWorker
             asyncDownloader = new BackgroundWorker();
@@ -112,6 +129,20 @@ namespace starter.viewmodel.settings
                     this.RaisePropertyChanged("UpdateBtnCont");
                     this.RaisePropertyChanged("LaunchBtnCont");
                     this.RaisePropertyChanged("UpdateInfo");
+                }
+                else
+                {
+                    string updateFailList = "";
+                    foreach (var Filename in Program.UpdateFailed)
+                    {
+                        updateFailList += Filename + "\n";
+                    }
+                    MessageBox.Show($"以下文件因被占用而未能成功更新：\n{updateFailList}请关闭它们，并再试一次");
+                    Program.ResetUpdateFailedInfo();
+                    Status = SettingsModel.Status.successful;
+                    this.RaisePropertyChanged("UpdateBtnCont");
+                    this.RaisePropertyChanged("UpdateInfo");
+                    this.RaisePropertyChanged("LaunchBtnCont");
                 }
             }
         }
@@ -649,8 +680,8 @@ namespace starter.viewmodel.settings
                         {
                             UpdateInfoVis = Visibility.Visible;
                             this.RaisePropertyChanged("UpdateInfoVis");
-                            Status = SettingsModel.Status.working;
-                            this.RaisePropertyChanged("ProgressVis");
+                            //Status = SettingsModel.Status.working;
+                            //this.RaisePropertyChanged("ProgressVis");
                             Status = obj.checkUpdate();
                             this.RaisePropertyChanged("UpdateBtnCont");
                             this.RaisePropertyChanged("UpdateInfo");

@@ -5,7 +5,7 @@
 
 ### 主动指令
 #### 移动
-- `std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian)`:移动，`timeInMilliseconds` 为移动时间，单位毫秒；`angleInRadian` 表示移动方向，单位弧度，使用极坐标，**竖直向下方向为x轴，水平向右方向为y轴**  
+- `std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian)`:移动，`timeInMilliseconds` 为移动时间，单位毫秒；`angleInRadian` 表示移动方向，单位弧度，使用极坐标，**竖直向下方向为x轴，水平向右方向为y轴**。因为移动过程中你会受到多种干扰使得移动结果不符合你的预期；因此建议小步移动，边移动边考虑之后的行为。  
 - `std::future<bool> MoveRight(uint32_t timeInMilliseconds)`即向右移动,`MoveLeft`、`MoveDown`、`MoveUp`同理  
 
 #### 使用技能
@@ -42,7 +42,7 @@
 #### 队内信息
   - `std::future<bool> SendMessage(int64_t, std::string)`：给同队的队友发送消息。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
   - `bool HaveMessage()`:是否有队友发来的尚未接收的信息。
-  - `std::pair<int64_t, std::string> GetMessage()`:从玩家ID为第一个参数的队友获取信息。
+  - `std::pair<int64_t, std::string> GetMessage()`:按照消息发送顺序获取来自队友的信息，第一个参数为发送该消息的PlayerID。
 
 #### 查询可视范围内的信息
   - `std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const` ：返回所有可视学生的信息。

@@ -11,7 +11,7 @@ on:
 
 jobs:
   build_upload:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     
@@ -23,27 +23,25 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9.2'
-        architecture: 'x64'
+        python-version: '3.9'
 
     - name: Pip Install paramiko
       run: pip install paramiko
 
-    # mkdir -p THUAI6\linux\linux64
-    # mkdir -p THUAI6\linux\linux64\Debug
-    # dotnet publish ".\logic\Server\Server.csproj" -c Release -r linux-x64 -o .\THUAI6\linux\linux64 --self-contained true
-    # dotnet publish ".\logic\Server\Server.csproj" -c Debug -r linux-x64 -o .\THUAI6\linux\linux64\Debug --self-contained true
+    # 
+    # dotnet publish ".\logic\Client\Client.csproj" -c Release -r win-x64 -o .\THUAI6\win\win64 --self-contained true
 
     - name: Publish
       run: |
         mkdir -p THUAI6\win\win64        
         mkdir -p THUAI6\win\win64\Debug
+        mkdir -p THUAI6\linux\linux64
+        mkdir -p THUAI6\linux\linux64\Debug
         
         dotnet publish ".\logic\Server\Server.csproj" -c Release -r win-x64 -o .\THUAI6\win\win64 --self-contained true
         dotnet publish ".\logic\Server\Server.csproj" -c Debug -r win-x64 -o .\THUAI6\win\win64\Debug --self-contained true
-        dotnet publish ".\logic\Client\Client.csproj" -c Release -r win-x64 -o .\THUAI6\win\win64 --self-contained true
-    
-    # cp -r .\THUAI6\win\CAPI .\THUAI6\linux\
+        dotnet publish ".\logic\Server\Server.csproj" -c Release -r linux-x64 -o .\THUAI6\linux\linux64 --self-contained true
+        dotnet publish ".\logic\Server\Server.csproj" -c Debug -r linux-x64 -o .\THUAI6\linux\linux64\Debug --self-contained true
 
     - name: Copy CAPI
       run: |
@@ -54,12 +52,12 @@ jobs:
         cp .\dependency\proto\MessageType.proto .\THUAI6\win\CAPI\proto\
         cp -r .\CAPI\cpp .\THUAI6\win\CAPI\
         cp -r .\CAPI\python .\THUAI6\win\CAPI\
-        
-    # cp -r .\CAPI\shell\* .\THUAI6\linux\
+        cp -r .\THUAI6\win\CAPI .\THUAI6\linux\
 
     - name: Copy shell
       run: |
         cp -r .\CAPI\cmd\* .\THUAI6\win\
+        cp -r .\CAPI\shell\* .\THUAI6\linux\
 
     - name: Upload COS
       uses: zkqiang/tencent-cos-action@v0.1.0

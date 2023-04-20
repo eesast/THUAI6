@@ -416,6 +416,8 @@ namespace Preparation.Interface
                     return new TechOtaku();
                 case CharacterType.Idol:
                     return new Idol();
+                case CharacterType.Sunshine:
+                    return new Sunshine();
                 case CharacterType.Athlete:
                 default:
                     return new Athlete();

@@ -16,7 +16,7 @@ def generateHashFile():
             path = os.path.join(root, file)
             with open(path, 'rb') as f:
                     data = f.read()
-                    if data.find('\r\n')!=-1 :
+                    if data.find('\r\n') != -1 :
                         hashlist[path.replace('\\','/')]=hashlib.md5(data.replace('\n','\r\n')).hexdigest()
                     else :
                         hashlist[path.replace('\\','/')]=hashlib.md5(data).hexdigest()

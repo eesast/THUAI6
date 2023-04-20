@@ -9,7 +9,7 @@ do
                 lsdir
                 popd
         else
-                sed -i 's/$/\r/g' $i
+                unix2dos $i
         fi
 done
 }

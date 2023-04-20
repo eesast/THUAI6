@@ -10,7 +10,7 @@ on:
     branches: [ main, dev ]
 
 jobs:
-  build_upload:
+  win_build_upload:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -28,23 +28,64 @@ jobs:
     - name: Pip Install paramiko
       run: pip install paramiko
 
-    # 
-    # dotnet publish "./logic/Client/Client.csproj" -c Release -r win-x64 -o ./THUAI6/win/win64 --self-contained true
-
     - name: Publish
-      run: |
-        mkdir -p THUAI6/win/win64        
+      run: | 
         mkdir -p THUAI6/win/win64/Debug
-        mkdir -p THUAI6/linux/linux64
-        mkdir -p THUAI6/linux/linux64/Debug
         
         dotnet publish "./logic/Server/Server.csproj" -c Release -r win-x64 -o ./THUAI6/win/win64 --self-contained true
         dotnet publish "./logic/Server/Server.csproj" -c Debug -r win-x64 -o ./THUAI6/win/win64/Debug --self-contained true
+
+    - name: Upload COS
+      uses: zkqiang/tencent-cos-action@v0.1.0
+      with:
+        args: upload -r ./THUAI6/ /THUAI6/
+        secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
+        secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
+        bucket: ${{ secrets.COS_BUCKET }}
+        region: ${{ secrets.COS_REGION }}
+
+  linux_build_upload:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup dotnet Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Pip Install paramiko
+      run: pip install paramiko
+
+    - name: Publish
+      run: |
+        mkdir -p THUAI6/linux/linux64/Debug
+        
         dotnet publish "./logic/Server/Server.csproj" -c Release -r linux-x64 -o ./THUAI6/linux/linux64 --self-contained true
         dotnet publish "./logic/Server/Server.csproj" -c Debug -r linux-x64 -o ./THUAI6/linux/linux64/Debug --self-contained true
 
+    - name: Upload COS
+      uses: zkqiang/tencent-cos-action@v0.1.0
+      with:
+        args: upload -r ./THUAI6/ /THUAI6/
+        secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
+        secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
+        bucket: ${{ secrets.COS_BUCKET }}
+        region: ${{ secrets.COS_REGION }}
+
+  capi_build_upload:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
     - name: Copy CAPI
       run: |
+        mkdir -p THUAI6/linux
         mkdir -p THUAI6/win/CAPI/proto
         cp ./dependency/proto/Message2Clients.proto ./THUAI6/win/CAPI/proto/
         cp ./dependency/proto/Message2Server.proto ./THUAI6/win/CAPI/proto/
@@ -62,7 +103,7 @@ jobs:
     - name: Upload COS
       uses: zkqiang/tencent-cos-action@v0.1.0
       with:
-        args: upload -r ./THUAI6/ /
+        args: upload -r ./THUAI6/ /THUAI6/
         secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
         secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
         bucket: ${{ secrets.COS_BUCKET }}

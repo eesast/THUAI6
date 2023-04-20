@@ -7,7 +7,7 @@ name: "upload_COS"
 
 on:
   push:
-    branches: [ main, dev , new]
+    branches: [ main, dev ]
 
 jobs:
   client_build:
@@ -125,21 +125,10 @@ jobs:
         cp -r ./CAPI/cmd/* ./THUAI6/win/
         cp -r ./CAPI/shell/* ./THUAI6/linux/
 
-    
-    - name: Copy Markdown
-      run: |
-        mkdir -p ./Md/
-        cp ./CAPI/CAPI接口（cpp）.md ./Md/
-        cp ./CAPI/CAPI接口（python）.md ./Md/
-        cp ./CAPI/Tool_tutorial.md ./Md/
-        cp ./QandA.md ./Md/
-        cp ./使用文档.md ./Md/
-        cp ./logic/GameRules.md ./Md/
-
     - name: Markdown to PDF and HTML
       uses: BaileyJM02/markdown-to-pdf@v1.2.0
       with:
-          input_dir: ./Md
+          input_dir: ./docs
           output_dir: ./THUAI6/
           images_dir: ./resource
           image_import: ./images

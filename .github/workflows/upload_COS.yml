@@ -67,11 +67,11 @@ jobs:
         cp .\使用文档.md .\Md\
         cp .\logic\GameRules.md .\Md\
 
-    - name: Create PDF
-      uses: mkrakowitzer/actions-makepdfs@v1.3
-      with:
-        markdown_dir: ./Md
-        output_dir: ./THUAI6/
+    #- name: Create PDF
+    #  uses: mkrakowitzer/actions-makepdfs@v1.3
+    #  with:
+    #    markdown_dir: ./Md
+    #    output_dir: ./THUAI6/
 
     - name: Tencent Cloud COS Action
       uses: TencentCloud/cos-action@v1

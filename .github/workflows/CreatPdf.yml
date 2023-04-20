@@ -1,0 +1,48 @@
+name: "upload_COS"
+
+###############################################################################
+# This ci packages the repository files and uploads them to 
+# the Tencent cloud storage bucket
+###############################################################################
+
+on:
+  push:
+    branches: [ new ]
+
+jobs:
+  build_upload:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup dotnet Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Pip Install paramiko
+      run: pip install paramiko
+
+    - name: Copy Markdown
+      run: |
+        mkdir -p ./Md/
+        cp ./CAPI/CAPI接口（cpp）.md ./Md/
+        cp ./CAPI/CAPI接口（python）.md ./Md/
+        cp ./CAPI/Tool_tutorial.md ./Md/
+        cp ./QandA.md ./Md/
+        cp ./使用文档.md ./Md/
+        cp ./logic/GameRules.md ./Md/
+
+    - name: Markdown to PDF and HTML
+      uses: BaileyJM02/markdown-to-pdf@v1.2.0
+      with:
+          input_dir: ./Md
+          output_dir: ./THUAI6/
+          images_dir: ./resource
+          image_import: ./images
+          build_html: false

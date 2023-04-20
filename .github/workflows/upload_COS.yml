@@ -54,7 +54,7 @@ jobs:
     - uses: actions/checkout@v3
     
     - name: Unix to docs
-      run: sh ./dependency/shell/Unix2dox.sh
+      run: sh ./dependency/shell/Unix2doc.sh
 
     - name: Hash THUAI6
       run: |

@@ -7,10 +7,50 @@ name: "upload_COS"
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, dev , new]
 
 jobs:
+  client_build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup dotnet Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9.2'
+        architecture: 'x64'
+
+
+    - name: Pip Install paramiko
+      run: pip install paramiko
+
+    - name: Publish
+      run: |
+        mkdir -p ./THUAI6/win/win64
+        
+        dotnet publish "./logic/Client/Client.csproj" -c Release -r win-x64 -o ./THUAI6/win/win64 --self-contained true
+        rm ./THUAI6/win/win64/System.*.dll
+
+    - name: Hash Files
+      run: |
+        python ./dependency/py/HashFiles.py -t ./THUAI6/
+
+    - name: Save Primes
+      id: cache-primes-save
+      uses: actions/cache/save@v3
+      with:
+        path: |
+          ./THUAI6
+        key: ${{ runner.os }}-${{ hashFiles('./THUAI6/hash.json') }}
+
   build_upload:
+    needs: client_build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -28,8 +68,13 @@ jobs:
     - name: Pip Install paramiko
       run: pip install paramiko
 
-    # 
-    # dotnet publish "./logic/Client/Client.csproj" -c Release -r win-x64 -o ./THUAI6/win/win64 --self-contained true
+    - name: Restore cached Primes
+      id: cache-primes-restore
+      uses: actions/cache/restore@v3
+      with:
+        path: |
+          ./THUAI6
+        key: ${{ client_build.steps.cache-primes-save.outputs.cache-primary-key }}
 
     - name: Publish
       run: |
@@ -105,31 +150,3 @@ jobs:
         secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
         bucket: ${{ secrets.COS_BUCKET }}
         region: ${{ secrets.COS_REGION }}
-
-  client_build:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup dotnet Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
-      
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9.2'
-        architecture: 'x64'
-
-
-    - name: Pip Install paramiko
-      run: pip install paramiko
-
-    - name: Publish
-      run: |
-        mkdir -p THUAI6/win/win64
-        
-        dotnet publish "./logic/Client/Client.csproj" -c Release -r win-x64 -o ./THUAI6/win/win64 --self-contained true
-        rm ./THUAI6/win/win64/System.*.dll
-        rm ./THUAI6/win/win64/Debug/System.*.dll

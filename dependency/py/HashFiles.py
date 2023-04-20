@@ -5,6 +5,8 @@ import argparse
 import getopt
 import hashlib
 import json
+import mimetypes
+        
 
 def generateHashFile():
     file = targetfolder
@@ -12,8 +14,13 @@ def generateHashFile():
     for root, dirs, files in os.walk(file):
         for file in files:
             path = os.path.join(root, file)
-            with open(path, 'rb') as f:
-                data = f.read()
+            if mimetypes.guess_type(file)[0] == 'text/plain':
+                with open(path, 'rU') as f:
+                    data = f.read()
+                    hashlist[path.replace('\\','/')]=hashlib.md5(data).hexdigest()
+            else:
+                with open(path, 'rb') as f:
+                    data = f.read()
                 hashlist[path.replace('\\','/')]=hashlib.md5(data).hexdigest()
     targetFile=os.path.join(targetfolder,'hash.json')
     with open(targetFile, 'w') as fp:

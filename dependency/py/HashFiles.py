@@ -15,7 +15,7 @@ def generateHashFile():
         for file in files:
             path = os.path.join(root, file)
             if mimetypes.guess_type(file)[0] == 'text/plain':
-                with open(path, 'r') as f:
+                with open(path, 'r', errors='ignore') as f:
                     data = f.read()
                     if data.find('\r\n') == -1 :
                         data.replace('\n','\r\n')

@@ -74,7 +74,7 @@ jobs:
       with:
         path: |
           ./THUAI6
-        key: ${{ client_build.steps.cache-primes-save.outputs.cache-primary-key }}
+        key: ${{ steps.cache-primes-save.outputs.cache-primary-key }}
 
     - name: Publish
       run: |

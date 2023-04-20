@@ -7,7 +7,7 @@ name: "upload_COS"
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, dev , new]
 
 jobs:
   client_build:
@@ -15,6 +15,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
+    - name: Hash THUAI6
+      run: |
+        python ./dependency/py/HashFiles.py -t ../THUAI6
+
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v3
       with:
@@ -25,10 +29,6 @@ jobs:
       with:
         python-version: '3.9.2'
         architecture: 'x64'
-
-    - name: Hash THUAI6
-      run: |
-        python ./dependency/py/HashFiles.py -t ../THUAI6
 
     - name: Pip Install paramiko
       run: pip install paramiko
@@ -46,7 +46,7 @@ jobs:
       with:
         path: |
           ./THUAI6
-        key: ${{ runner.os }}-${{ hashFiles('./hash.json') }}
+        key: ${{ hashFiles('./hash.json') }}
 
   build_upload:
     needs: client_build
@@ -54,6 +54,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
+    - name: Hash THUAI6
+      run: |
+        python ./dependency/py/HashFiles.py -t ../THUAI6
+
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v3
       with:
@@ -66,10 +70,6 @@ jobs:
 
     - name: Pip Install paramiko
       run: pip install paramiko
-
-    - name: Hash THUAI6
-      run: |
-        python ./dependency/py/HashFiles.py -t ../THUAI6
 
     - name: Restore cached Primes
       id: cache-primes-restore

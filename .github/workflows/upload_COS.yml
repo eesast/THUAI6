@@ -53,8 +53,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Unix to docs
-      run: bash ./dependency/shell/Unix2doc.sh
+    - name: Unix to dos
+      run: bash ./dependency/shell/Unix2dos.sh
 
     - name: Hash THUAI6
       run: |

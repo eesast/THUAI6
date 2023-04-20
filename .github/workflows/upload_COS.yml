@@ -39,7 +39,7 @@ jobs:
 
     - name: Hash Files
       run: |
-        python ./dependency/py/HashFiles.py -t ./THUAI6/
+        python ./dependency/py/HashFiles.py -t ../THUAI6
 
     - name: Save Primes
       id: cache-primes-save
@@ -47,7 +47,7 @@ jobs:
       with:
         path: |
           ./THUAI6
-        key: ${{ runner.os }}-${{ hashFiles('./THUAI6/hash.json') }}
+        key: ${{ runner.os }}-${{ hashFiles('./hash.json') }}
 
   build_upload:
     needs: client_build
@@ -68,13 +68,17 @@ jobs:
     - name: Pip Install paramiko
       run: pip install paramiko
 
+    - name: Hash Files
+      run: |
+        python ./dependency/py/HashFiles.py -t ../THUAI6
+
     - name: Restore cached Primes
       id: cache-primes-restore
       uses: actions/cache/restore@v3
       with:
         path: |
           ./THUAI6
-        key: ${{ steps.cache-primes-save.outputs.cache-primary-key }}
+        key: ${{ hashFiles('./hash.json') }}
 
     - name: Publish
       run: |

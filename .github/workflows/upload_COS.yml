@@ -61,13 +61,11 @@ jobs:
       run: |
         cp -r .\CAPI\cmd\* .\THUAI6\win\
 
-    - name: Tencent Cloud COS Action
-      uses: TencentCloud/cos-action@v1
+    - name: Upload COS
+      uses: zkqiang/tencent-cos-action@v0.1.0
       with:
+        args: upload -r ./THUAI6/ /
         secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
         secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
-        cos_bucket: ${{ secrets.COS_BUCKET }}
-        cos_region: ${{ secrets.COS_REGION }}
-        local_path: .\THUAI6
-        remote_path: THUAI6
-        clean: true
+        bucket: ${{ secrets.COS_BUCKET }}
+        region: ${{ secrets.COS_REGION }}

@@ -53,6 +53,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
+    - name: Unix to docs
+      run: sh ./dependency/shell/Unix2dox.sh
+
     - name: Hash THUAI6
       run: |
         python ./dependency/py/HashFiles.py -t ../THUAI6

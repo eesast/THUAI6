@@ -552,9 +552,10 @@ class Logic(ILogic):
         if not Setting.asynchronous():
             with self.__cvBuffer:
                 self.__cvBuffer.wait_for(lambda: self.__bufferUpdated)
-                self.__bufferState, self.__currentState = self.__currentState, self.__bufferState
+                with self.__mtxState:
+                    self.__bufferState, self.__currentState = self.__currentState, self.__bufferState
+                    self.__counterState = self.__counterBuffer
                 self.__bufferUpdated = False
-                self.__counterState = self.__counterBuffer
                 self.__logger.info("Update state!")
 
     def __Wait(self) -> None:

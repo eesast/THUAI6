@@ -27,8 +27,7 @@ Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::TrickerType tricker, T
 std::vector<std::shared_ptr<const THUAI6::Tricker>> Logic::GetTrickers() const
 {
     std::lock_guard<std::mutex> lock(mtxState);
-    std::vector<std::shared_ptr<const THUAI6::Tricker>> temp;
-    temp.assign(currentState->trickers.begin(), currentState->trickers.end());
+    std::vector<std::shared_ptr<const THUAI6::Tricker>> temp(currentState->trickers.begin(), currentState->trickers.end());
     logger->debug("Called GetTrickers");
     return temp;
 }
@@ -36,8 +35,7 @@ std::vector<std::shared_ptr<const THUAI6::Tricker>> Logic::GetTrickers() const
 std::vector<std::shared_ptr<const THUAI6::Student>> Logic::GetStudents() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
-    std::vector<std::shared_ptr<const THUAI6::Student>> temp;
-    temp.assign(currentState->students.begin(), currentState->students.end());
+    std::vector<std::shared_ptr<const THUAI6::Student>> temp(currentState->students.begin(), currentState->students.end());
     logger->debug("Called GetStudents");
     return temp;
 }
@@ -45,8 +43,7 @@ std::vector<std::shared_ptr<const THUAI6::Student>> Logic::GetStudents() const
 std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
-    std::vector<std::shared_ptr<const THUAI6::Prop>> temp;
-    temp.assign(currentState->props.begin(), currentState->props.end());
+    std::vector<std::shared_ptr<const THUAI6::Prop>> temp(currentState->props.begin(), currentState->props.end());
     logger->debug("Called GetProps");
     return temp;
 }
@@ -54,8 +51,7 @@ std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
 std::vector<std::shared_ptr<const THUAI6::Bullet>> Logic::GetBullets() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
-    std::vector<std::shared_ptr<const THUAI6::Bullet>> temp;
-    temp.assign(currentState->bullets.begin(), currentState->bullets.end());
+    std::vector<std::shared_ptr<const THUAI6::Bullet>> temp(currentState->bullets.begin(), currentState->bullets.end());
     logger->debug("Called GetBullets");
     return temp;
 }
@@ -436,14 +432,14 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                 switch (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()])
                 {
                     case THUAI6::MessageOfObj::PropMessage:
-                        if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.prop_message().x(), item.prop_message().y(), currentState->gameMap))
+                        if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.prop_message().x(), item.prop_message().y(), bufferState->gameMap))
                         {
                             bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item.prop_message()));
                             logger->debug("Add Prop!");
                         }
                         break;
                     case THUAI6::MessageOfObj::BulletMessage:
-                        if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.prop_message().x(), item.prop_message().y(), currentState->gameMap))
+                        if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.prop_message().x(), item.prop_message().y(), bufferState->gameMap))
                         {
                             bufferState->bullets.push_back(Proto2THUAI6::Protobuf2THUAI6Bullet(item.bullet_message()));
                             logger->debug("Add Bullet!");
@@ -451,7 +447,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         break;
                     case THUAI6::MessageOfObj::ClassroomMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.classroom_message().x(), item.classroom_message().y(), currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.classroom_message().x(), item.classroom_message().y(), bufferState->gameMap))
                             {
                                 auto pos = std::make_pair(AssistFunction::GridToCell(item.classroom_message().x()), AssistFunction::GridToCell(item.classroom_message().y()));
                                 if (bufferState->mapInfo->classRoomState.count(pos) == 0)
@@ -469,7 +465,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::ChestMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.chest_message().x(), item.chest_message().y(), currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.chest_message().x(), item.chest_message().y(), bufferState->gameMap))
                             {
                                 auto pos = std::make_pair(AssistFunction::GridToCell(item.chest_message().x()), AssistFunction::GridToCell(item.chest_message().y()));
                                 if (bufferState->mapInfo->chestState.count(pos) == 0)
@@ -487,7 +483,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::DoorMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.door_message().x(), item.door_message().y(), currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.door_message().x(), item.door_message().y(), bufferState->gameMap))
                             {
                                 auto pos = std::make_pair(AssistFunction::GridToCell(item.door_message().x()), AssistFunction::GridToCell(item.door_message().y()));
                                 if (bufferState->mapInfo->doorState.count(pos) == 0)
@@ -507,7 +503,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::HiddenGateMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.hidden_gate_message().x(), item.hidden_gate_message().y(), currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.hidden_gate_message().x(), item.hidden_gate_message().y(), bufferState->gameMap))
                             {
                                 auto pos = std::make_pair(AssistFunction::GridToCell(item.hidden_gate_message().x()), AssistFunction::GridToCell(item.hidden_gate_message().y()));
                                 if (bufferState->mapInfo->hiddenGateState.count(pos) == 0)
@@ -525,7 +521,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::GateMessage:
                         {
-                            if (!AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.gate_message().x(), item.gate_message().y(), currentState->gameMap))
+                            if (!AssistFunction::HaveView(bufferState->studentSelf->viewRange, bufferState->studentSelf->x, bufferState->studentSelf->y, item.gate_message().x(), item.gate_message().y(), bufferState->gameMap))
                             {
                                 auto pos = std::make_pair(AssistFunction::GridToCell(item.gate_message().x()), AssistFunction::GridToCell(item.gate_message().y()));
                                 if (bufferState->mapInfo->gateState.count(pos) == 0)
@@ -591,7 +587,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                 switch (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()])
                 {
                     case THUAI6::MessageOfObj::PropMessage:
-                        if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.prop_message().x(), item.prop_message().y(), currentState->gameMap))
+                        if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.prop_message().x(), item.prop_message().y(), bufferState->gameMap))
                         {
                             bufferState->props.push_back(Proto2THUAI6::Protobuf2THUAI6Prop(item.prop_message()));
                             logger->debug("Add Prop!");
@@ -606,7 +602,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         break;
                     case THUAI6::MessageOfObj::ClassroomMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.classroom_message().x(), item.classroom_message().y(), currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.classroom_message().x(), item.classroom_message().y(), bufferState->gameMap))
                             {
                                 auto pos = std::make_pair(AssistFunction::GridToCell(item.classroom_message().x()), AssistFunction::GridToCell(item.classroom_message().y()));
                                 if (bufferState->mapInfo->classRoomState.count(pos) == 0)
@@ -624,7 +620,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::ChestMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.chest_message().x(), item.chest_message().y(), currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.chest_message().x(), item.chest_message().y(), bufferState->gameMap))
                             {
                                 auto pos = std::make_pair(AssistFunction::GridToCell(item.chest_message().x()), AssistFunction::GridToCell(item.chest_message().y()));
                                 if (bufferState->mapInfo->chestState.count(pos) == 0)
@@ -642,7 +638,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::DoorMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.door_message().x(), item.door_message().y(), currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.door_message().x(), item.door_message().y(), bufferState->gameMap))
                             {
                                 auto pos = std::make_pair(AssistFunction::GridToCell(item.door_message().x()), AssistFunction::GridToCell(item.door_message().y()));
                                 if (bufferState->mapInfo->doorState.count(pos) == 0)
@@ -662,7 +658,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::HiddenGateMessage:
                         {
-                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.hidden_gate_message().x(), item.hidden_gate_message().y(), currentState->gameMap))
+                            if (AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.hidden_gate_message().x(), item.hidden_gate_message().y(), bufferState->gameMap))
                             {
                                 auto pos = std::make_pair(AssistFunction::GridToCell(item.hidden_gate_message().x()), AssistFunction::GridToCell(item.hidden_gate_message().y()));
                                 if (bufferState->mapInfo->hiddenGateState.count(pos) == 0)
@@ -680,7 +676,7 @@ void Logic::LoadBuffer(protobuf::MessageToClient& message)
                         }
                     case THUAI6::MessageOfObj::GateMessage:
                         {
-                            if (!AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.gate_message().x(), item.gate_message().y(), currentState->gameMap))
+                            if (!AssistFunction::HaveView(bufferState->trickerSelf->viewRange, bufferState->trickerSelf->x, bufferState->trickerSelf->y, item.gate_message().x(), item.gate_message().y(), bufferState->gameMap))
                             {
                                 auto pos = std::make_pair(AssistFunction::GridToCell(item.gate_message().x()), AssistFunction::GridToCell(item.gate_message().y()));
                                 if (bufferState->mapInfo->gateState.count(pos) == 0)
@@ -760,10 +756,13 @@ void Logic::Update() noexcept
         // 缓冲区被更新之后才可以使用
         cvBuffer.wait(lock, [this]()
                       { return bufferUpdated; });
-
-        std::swap(currentState, bufferState);
+        {
+            std::lock_guard<std::mutex> stateLock(mtxState);
+            std::swap(currentState, bufferState);
+            counterState = counterBuffer;
+        }
         bufferUpdated = false;
-        counterState = counterBuffer;
+
         logger->info("Update State!");
     }
 }

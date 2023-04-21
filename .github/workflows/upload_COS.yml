@@ -93,14 +93,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup node
-      uses: actions/setup-node@v1
-      with:
-        node-version: "10.x"
-
-    - name: Build project
-      run: yarn && yarn build
-
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v3
       with:

@@ -67,12 +67,14 @@
 下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。
 
   - `def GetPlaceType(self, cellX: int, cellY: int) -> THUAI6.PlaceType` ：返回某一位置场地种类信息。场地种类详见 structure.h 。
-  - `def IsDoorOpen(self, cellX: int, cellY: int) -> bool`:查询特定位置门是否开启
-  - `def GetChestProgress(self, cellX: int, cellY: int) -> int`:查询特定位置箱子开启进度
-  - `def GetGateProgress(self, cellX: int, cellY: int) -> int`:查询特定位置校门开启进度
-  - `def GetClassroomProgress(self, cellX: int, cellY: int) -> int`:查询特定位置教室作业完成进度
-  - `def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState`：:查询特定位置隐藏校门状态
-  - `def GetDoorProgress(self, cellX: int, cellY: int) -> int`:查询特定位置门开启状态
+  - `def IsDoorOpen(self, cellX: int, cellY: int) -> bool`:查询特定位置门是否开启，没有门也返回false
+  - 以下指令特定位置没有对应物品返回-1
+    - `def GetChestProgress(self, cellX: int, cellY: int) -> int`:查询特定位置箱子开启进度
+    - `def GetGateProgress(self, cellX: int, cellY: int) -> int`:查询特定位置校门开启进度
+    - `def GetClassroomProgress(self, cellX: int, cellY: int) -> int`:查询特定位置教室作业完成进度
+    - `def GetDoorProgress(self, cellX: int, cellY: int) -> int`:查询特定位置门开启状态
+  - `def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState`：:查询特定位置隐藏校门状态,没有隐藏校门返回THUAI6::HiddenGateState::Null
+  
 
 #### 其他
 

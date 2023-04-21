@@ -7,7 +7,7 @@ name: "upload_COS"
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, dev ,new ]
 
 jobs:
   client_build:

@@ -15,12 +15,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Unix to dos
-      run: bash ./dependency/shell/Unix2dos.sh
-    
     - name: Hash THUAI6
       run: |
-        python ./dependency/py/HashFiles.py -t ../THUAI6
+        python ./dependency/py/nowHash.py
 
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v3
@@ -48,21 +45,17 @@ jobs:
       with:
         path: |
           ./THUAI6
-        key: ${{ hashFiles('./hash.json') }}
+        key: ${{ hashFiles('./hash.txt') }}
 
   build_upload:
     needs: client_build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
-    - name: Unix to dos
-      run: bash ./dependency/shell/Unix2dos.sh
 
     - name: Hash THUAI6
       run: |
-        python ./dependency/py/HashFiles.py -t ../THUAI6
-      
+        python ./dependency/py/nowHash.py
 
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v3
@@ -83,7 +76,7 @@ jobs:
       with:
         path: |
           ./THUAI6
-        key: ${{ hashFiles('./hash.json') }}
+        key: ${{ hashFiles('./hash.txt') }}
 
     - name: Publish
       run: |

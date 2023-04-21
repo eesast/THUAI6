@@ -7,7 +7,7 @@ name: "upload_COS"
 
 on:
   push:
-    branches: [ main, dev , new]
+    branches: [ main, dev ]
 
 jobs:
   client_build:
@@ -118,6 +118,9 @@ jobs:
           image_import: ./images
           build_html: false
 
+    - name: Unix to dos
+      run: bash ./dependency/shell/Unix2dos.sh ./THUAI6
+
     - name: Upload COS
       uses: zkqiang/tencent-cos-action@v0.1.0
       with:
@@ -126,9 +129,6 @@ jobs:
         secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
         bucket: ${{ secrets.COS_BUCKET }}
         region: ${{ secrets.COS_REGION }}
-
-    - name: Unix to dos
-      run: bash ./dependency/shell/Unix2dos.sh ./THUAI6
 
     - name: Hash Files
       run: |

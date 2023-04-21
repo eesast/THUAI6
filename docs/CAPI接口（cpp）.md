@@ -67,7 +67,7 @@
   - `std::vector<int64_t> GetPlayerGUIDs() const`:获取所有玩家的GUID
   - `int GetFrameCount() const`:获取目前所进行的帧数
   - `std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const`或`std::shared_ptr<const THUAI6::Student> GetSelfInfo() const`：获取自己的信息
-  - `std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const`：返回整张地图的地形信息。
+  - `std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const`：返回整张地图的地形信息。可以写成类似`api.GetFullMap()[x][y]`，其中x为地图自上到下第几行，y为自左向右第几列，注意从0开始
 
 ### 辅助函数
 `static inline int CellToGrid(int cell) noexcept`:将地图格数 cell 转换为绝对坐标grid。

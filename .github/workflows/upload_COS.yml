@@ -10,11 +10,42 @@ on:
     branches: [ main, dev ]
 
 jobs:
+  client_build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup dotnet Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9.2'
+        architecture: 'x64'
+
+    - name: Pip Install paramiko
+      run: pip install paramiko
+
+    - name: Publish
+      run: |
+        mkdir -p ./THUAI6/win/win64
+        dotnet publish "./logic/Client/Client.csproj" -c Release -r win-x64 -o ./THUAI6/win/win64 --self-contained true
+        rm ./THUAI6/win/win64/System.*.dll
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: ./THUAI6
+
   build_upload:
+    needs: client_build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v3
       with:
@@ -28,8 +59,9 @@ jobs:
     - name: Pip Install paramiko
       run: pip install paramiko
 
-    # 
-    # dotnet publish "./logic/Client/Client.csproj" -c Release -r win-x64 -o ./THUAI6/win/win64 --self-contained true
+    - uses: actions/download-artifact@v2
+      with:
+        name: my-artifact
 
     - name: Publish
       run: |
@@ -77,25 +109,17 @@ jobs:
         cp -r ./CAPI/cmd/* ./THUAI6/win/
         cp -r ./CAPI/shell/* ./THUAI6/linux/
 
-    
-    - name: Copy Markdown
-      run: |
-        mkdir -p ./Md/
-        cp ./CAPI/CAPI接口（cpp）.md ./Md/
-        cp ./CAPI/CAPI接口（python）.md ./Md/
-        cp ./CAPI/Tool_tutorial.md ./Md/
-        cp ./QandA.md ./Md/
-        cp ./使用文档.md ./Md/
-        cp ./logic/GameRules.md ./Md/
-
     - name: Markdown to PDF and HTML
       uses: BaileyJM02/markdown-to-pdf@v1.2.0
       with:
-          input_dir: ./Md
+          input_dir: ./docs
           output_dir: ./THUAI6/
           images_dir: ./resource
           image_import: ./images
           build_html: false
+
+    - name: Unix to dos
+      run: bash ./dependency/shell/Unix2dos.sh ./THUAI6
 
     - name: Upload COS
       uses: zkqiang/tencent-cos-action@v0.1.0
@@ -106,30 +130,15 @@ jobs:
         bucket: ${{ secrets.COS_BUCKET }}
         region: ${{ secrets.COS_REGION }}
 
-  client_build:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup dotnet Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
-      
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9.2'
-        architecture: 'x64'
-
-
-    - name: Pip Install paramiko
-      run: pip install paramiko
-
-    - name: Publish
+    - name: Hash Files
       run: |
-        mkdir -p THUAI6/win/win64
-        
-        dotnet publish "./logic/Client/Client.csproj" -c Release -r win-x64 -o ./THUAI6/win/win64 --self-contained true
-        rm ./THUAI6/win/win64/System.*.dll
-        rm ./THUAI6/win/win64/Debug/System.*.dll
+        python ./dependency/py/HashFiles.py -t ./THUAI6
+    
+    - name: Upload COS
+      uses: zkqiang/tencent-cos-action@v0.1.0
+      with:
+        args: upload -r ./THUAI6/hash.json /
+        secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
+        secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
+        bucket: ${{ secrets.COS_BUCKET }}
+        region: ${{ secrets.COS_REGION }}

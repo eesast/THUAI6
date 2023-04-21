@@ -55,12 +55,13 @@
 下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。
 
   - `THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY)` ：返回某一位置场地种类信息。场地种类详见 structure.h 。
-  - `bool IsDoorOpen(int32_t cellX, int32_t cellY) const`:查询特定位置门是否开启
-  - `int32_t GetChestProgress(int32_t cellX, int32_t cellY) const`:查询特定位置箱子开启进度
-  - `int32_t GetGateProgress(int32_t cellX, int32_t cellY) const`:查询特定位置校门开启进度
-  - `int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const`:查询特定位置教室作业完成进度
-  - `THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const`：:查询特定位置隐藏校门状态
-  - `int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const`:查询特定位置门开启状态
+  - `bool IsDoorOpen(int32_t cellX, int32_t cellY) const`:查询特定位置门是否开启，没有门也返回false
+  - 以下指令特定位置没有对应物品返回-1
+    - `int32_t GetChestProgress(int32_t cellX, int32_t cellY) const`:查询特定位置箱子开启进度
+    - `int32_t GetGateProgress(int32_t cellX, int32_t cellY) const`:查询特定位置校门开启进度
+    - `int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const`:查询特定位置教室作业完成进度
+    - `int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const`:查询特定位置门开启状态
+  - `THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const`：:查询特定位置隐藏校门状态，没有隐藏校门返回THUAI6::HiddenGateState::Null
 
 #### 其他
   - `std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const`:查询当前游戏状态

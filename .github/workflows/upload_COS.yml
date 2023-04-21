@@ -59,6 +59,9 @@ jobs:
         cp ./dependency/proto/MessageType.proto ./THUAI6/win/CAPI/proto/
 
         cp -r ./CAPI/cpp/API ./THUAI6/win/CAPI/cpp
+        cp -r ./CAPI/cpp/grpc ./THUAI6/win/CAPI/cpp
+        cp -r ./CAPI/cpp/spdlog ./THUAI6/win/CAPI/cpp
+        cp -r ./CAPI/cpp/tclap ./THUAI6/win/CAPI/cpp
         cp -r ./CAPI/cpp/proto ./THUAI6/win/CAPI/cpp
         cp  ./CAPI/cpp/CAPI.sln ./THUAI6/win/CAPI/cpp
         cp  ./CAPI/cpp/CMakeLists.txt ./THUAI6/win/CAPI/cpp
@@ -127,7 +130,13 @@ jobs:
     - name: Remove Files
       run: |          
         rm ./THUAI6/hash.json
+        
+        rm -r ./THUAI6/win/CAPI/cpp/grpc 
+        rm -r ./THUAI6/win/CAPI/cpp/spdlog
+        rm -r ./THUAI6/win/CAPI/cpp/tclap
         rm ./THUAI6/win/win64/PresentationCore.dll
+        rm ./THUAI6/win/win64/PresentationFramework.dll 
+        rm ./THUAI6/win/win64/Debug/Microsoft.DiaSymReader.Native.amd64.dll
         rm ./THUAI6/win/win64/WindowsBase.dll
         rm ./THUAI6/linux/linux64/System.*.dll
         rm ./THUAI6/linux/linux64/Debug/System.*.dll

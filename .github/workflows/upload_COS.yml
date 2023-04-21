@@ -18,7 +18,7 @@ jobs:
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 6.0.402
       
     - name: Setup Python
       uses: actions/setup-python@v4
@@ -35,17 +35,22 @@ jobs:
         mkdir -p THUAI6/win/win64/Debug
         mkdir -p THUAI6/linux/linux64
         mkdir -p THUAI6/linux/linux64/Debug
+        mkdir -p ./THUAI6/osx/osx64/Debug
         
         dotnet publish "./logic/Server/Server.csproj" -c Release -r win-x64 -o ./THUAI6/win/win64 --self-contained true
         dotnet publish "./logic/Server/Server.csproj" -c Debug -r win-x64 -o ./THUAI6/win/win64/Debug --self-contained true
         dotnet publish "./logic/Server/Server.csproj" -c Release -r linux-x64 -o ./THUAI6/linux/linux64 --self-contained true
         dotnet publish "./logic/Server/Server.csproj" -c Debug -r linux-x64 -o ./THUAI6/linux/linux64/Debug --self-contained true
+        dotnet publish "./logic/Server/Server.csproj" -c Release -r osx-x64 -o ./THUAI6/osx/osx64 --self-contained true
+        dotnet publish "./logic/Server/Server.csproj" -c Debug -r osx-x64 -o ./THUAI6/osx/osx64/Debug --self-contained true
         dotnet publish "./logic/Client/Client.csproj" -c Release -r win-x64 -o ./THUAI6/win/win64 --self-contained true
 
         rm ./THUAI6/linux/linux64/*.pdb
         rm ./THUAI6/linux/linux64/Debug/*.pdb
         rm ./THUAI6/win/win64/*.pdb
         rm ./THUAI6/win/win64/Debug/*.pdb
+        rm ./THUAI6/osx/osx64/*.pdb
+        rm ./THUAI6/osx/osx64/Debug/*.pdb
 
     - name: Copy CAPI
       run: |
@@ -70,11 +75,13 @@ jobs:
         cp ./CAPI/python/requirements.txt ./THUAI6/win/CAPI/python
 
         cp -r ./THUAI6/win/CAPI ./THUAI6/linux/
+        cp -r ./THUAI6/win/CAPI ./THUAI6/osx/
 
     - name: Copy shell
       run: |
         cp -r ./CAPI/cmd/* ./THUAI6/win/
         cp -r ./CAPI/shell/* ./THUAI6/linux/
+        cp -r ./CAPI/shell/* ./THUAI6/osx/
 
     - uses: actions/upload-artifact@v2
       with:
@@ -128,22 +135,33 @@ jobs:
         region: ${{ secrets.COS_REGION }}
 
     - name: Remove Files
-      run: |          
+      run: |
         rm ./THUAI6/hash.json
-        
-        rm -r ./THUAI6/win/CAPI/cpp/grpc 
-        rm -r ./THUAI6/win/CAPI/cpp/spdlog
-        rm -r ./THUAI6/win/CAPI/cpp/tclap
+
+      
         rm ./THUAI6/win/win64/PresentationCore.dll
         rm ./THUAI6/win/win64/PresentationFramework.dll 
         rm ./THUAI6/win/win64/Debug/Microsoft.DiaSymReader.Native.amd64.dll
         rm ./THUAI6/win/win64/WindowsBase.dll
-        rm ./THUAI6/linux/linux64/System.*.dll
-        rm ./THUAI6/linux/linux64/Debug/System.*.dll
-        rm ./THUAI6/win/win64/System.*.dll
-        rm ./THUAI6/win/win64/Debug/System.*.dll
         rm ./THUAI6/win/win64/Debug/grpc_csharp_ext.x64.dll
         rm ./THUAI6/win/win64/grpc_csharp_ext.x64.dll
+
+        rm -r ./THUAI6/win/CAPI/cpp/grpc 
+        rm -r ./THUAI6/win/CAPI/cpp/spdlog
+        rm -r ./THUAI6/win/CAPI/cpp/tclap
+        rm -r ./THUAI6/linux/CAPI/cpp/grpc 
+        rm -r ./THUAI6/linux/CAPI/cpp/spdlog
+        rm -r ./THUAI6/linux/CAPI/cpp/tclap
+        rm -r ./THUAI6/osx/CAPI/cpp/grpc 
+        rm -r ./THUAI6/osx/CAPI/cpp/spdlog
+        rm -r ./THUAI6/osx/CAPI/cpp/tclap
+        
+        rm ./THUAI6/linux/linux64/System.*.dll
+        rm ./THUAI6/linux/linux64/Debug/System.*.dll
+        rm ./THUAI6/osx/osx64/System.*.dll
+        rm ./THUAI6/osx/osx64/Debug/System.*.dll
+        rm ./THUAI6/win/win64/System.*.dll
+        rm ./THUAI6/win/win64/Debug/System.*.dll
 
         rm ./THUAI6/linux/linux64/*.so
         rm ./THUAI6/linux/linux64/Debug/*.so

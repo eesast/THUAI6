@@ -35,13 +35,10 @@ jobs:
         dotnet publish "./logic/Client/Client.csproj" -c Release -r win-x64 -o ./THUAI6/win/win64 --self-contained true
         rm ./THUAI6/win/win64/System.*.dll
 
-    - name: Save Primes
-      id: cache-primes-save
-      uses: actions/cache/save@v3
+    - uses: actions/upload-artifact@v2
       with:
-        path: |
-          ./THUAI6
-        key: ${{ github.event.head_commit.message }}
+        name: ${{ github.event.head_commit.message }}
+        path: ./THUAI6
 
   build_upload:
     needs: client_build
@@ -62,13 +59,9 @@ jobs:
     - name: Pip Install paramiko
       run: pip install paramiko
 
-    - name: Restore cached Primes
-      id: cache-primes-restore
-      uses: actions/cache/restore@v3
+    - uses: actions/download-artifact@v2
       with:
-        path: |
-          ./THUAI6
-        key: ${{ github.event.head_commit.message }}
+        name: ${{ github.event.head_commit.message }}
 
     - name: Publish
       run: |

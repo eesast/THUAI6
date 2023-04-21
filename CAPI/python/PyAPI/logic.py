@@ -125,7 +125,7 @@ class Logic(ILogic):
                 return copy.deepcopy(self.__currentState.mapInfo.classroomState[(x, y)])
             else:
                 self.__logger.warning("Classroom not found")
-                return 0
+                return -1
 
     def GetChestProgress(self, x: int, y: int) -> int:
         with self.__mtxState:
@@ -134,7 +134,7 @@ class Logic(ILogic):
                 return copy.deepcopy(self.__currentState.mapInfo.chestState[(x, y)])
             else:
                 self.__logger.warning("Chest not found")
-                return 0
+                return -1
 
     def GetGateProgress(self, x: int, y: int) -> int:
         with self.__mtxState:
@@ -143,7 +143,7 @@ class Logic(ILogic):
                 return copy.deepcopy(self.__currentState.mapInfo.gateState[(x, y)])
             else:
                 self.__logger.warning("Gate not found")
-                return 0
+                return -1
 
     def GetHiddenGateState(self, x: int, y: int) -> THUAI6.HiddenGateState:
         with self.__mtxState:
@@ -161,7 +161,7 @@ class Logic(ILogic):
                 return copy.deepcopy(self.__currentState.mapInfo.doorProgress[(x, y)])
             else:
                 self.__logger.warning("Door not found")
-                return 0
+                return -1
 
     def GetGameInfo(self) -> THUAI6.GameInfo:
         with self.__mtxState:

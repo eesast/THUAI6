@@ -14,10 +14,6 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v3
-    
-    - name: Hash THUAI6
-      run: |
-        python ./dependency/py/nowHash.py
 
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v3
@@ -45,17 +41,13 @@ jobs:
       with:
         path: |
           ./THUAI6
-        key: ${{ hashFiles('./hash.txt') }}
+        key: ${{ github.event.head_commit.message }}
 
   build_upload:
     needs: client_build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-
-    - name: Hash THUAI6
-      run: |
-        python ./dependency/py/nowHash.py
 
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v3
@@ -76,7 +68,7 @@ jobs:
       with:
         path: |
           ./THUAI6
-        key: ${{ hashFiles('./hash.txt') }}
+        key: ${{ github.event.head_commit.message }}
 
     - name: Publish
       run: |
@@ -141,6 +133,9 @@ jobs:
         secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
         bucket: ${{ secrets.COS_BUCKET }}
         region: ${{ secrets.COS_REGION }}
+
+    - name: Unix to dos
+      run: bash ./dependency/shell/Unix2dos.sh
 
     - name: Hash Files
       run: |

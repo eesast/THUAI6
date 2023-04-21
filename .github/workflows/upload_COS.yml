@@ -37,7 +37,7 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: ${{ github.event.head_commit.message }}
+        name: my-artifact
         path: ./THUAI6
 
   build_upload:
@@ -61,7 +61,7 @@ jobs:
 
     - uses: actions/download-artifact@v2
       with:
-        name: ${{ github.event.head_commit.message }}
+        name: my-artifact
 
     - name: Publish
       run: |
@@ -128,11 +128,11 @@ jobs:
         region: ${{ secrets.COS_REGION }}
 
     - name: Unix to dos
-      run: bash ./dependency/shell/Unix2dos.sh
+      run: bash ./dependency/shell/Unix2dos.sh ./THUAI6
 
     - name: Hash Files
       run: |
-        python ./dependency/py/HashFiles.py -t ./THUAI6/
+        python ./dependency/py/HashFiles.py -t ./THUAI6
     
     - name: Upload COS
       uses: zkqiang/tencent-cos-action@v0.1.0

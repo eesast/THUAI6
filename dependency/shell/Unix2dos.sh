@@ -13,5 +13,5 @@ do
         fi
 done
 }
-cd ../../
+cd $1
 lsdir

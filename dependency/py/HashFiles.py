@@ -16,7 +16,9 @@ def generateHashFile():
             path = os.path.join(root, file)
             with open(path, 'rb') as f:
                 data = f.read()
-                hashlist[path.replace('\\','/')]=hashlib.md5(data).hexdigest()
+                pathr = path.replace('../','') 
+                pathr = path.replace('./','') 
+                hashlist[pathr.replace('\\','/')]=hashlib.md5(data).hexdigest()
     targetFile=os.path.join(targetfolder,'hash.json')
     with open(targetFile, 'w') as fp:
         json.dump(hashlist,fp)

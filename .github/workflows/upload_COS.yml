@@ -42,19 +42,10 @@ jobs:
         dotnet publish "./logic/Server/Server.csproj" -c Debug -r linux-x64 -o ./THUAI6/linux/linux64/Debug --self-contained true
         dotnet publish "./logic/Client/Client.csproj" -c Release -r win-x64 -o ./THUAI6/win/win64 --self-contained true
 
-        rm ./THUAI6/linux/linux64/System.*.dll
-        rm ./THUAI6/linux/linux64/Debug/System.*.dll
-        rm ./THUAI6/win/win64/System.*.dll
-        rm ./THUAI6/win/win64/Debug/System.*.dll
         rm ./THUAI6/linux/linux64/*.pdb
         rm ./THUAI6/linux/linux64/Debug/*.pdb
         rm ./THUAI6/win/win64/*.pdb
         rm ./THUAI6/win/win64/Debug/*.pdb
-        rm ./THUAI6/win/win64/Debug/grpc_csharp_ext.x64.dll
-        rm ./THUAI6/win/win64/grpc_csharp_ext.x64.dll
-
-        rm ./THUAI6/linux/linux64/*.so
-        rm ./THUAI6/linux/linux64/Debug/*.so
 
     - name: Copy CAPI
       run: |
@@ -120,23 +111,38 @@ jobs:
           image_import: ./images
           build_html: false
 
+    - name: Hash Files
+      run: |
+        python ./dependency/py/HashFiles.py -t ./THUAI6
+        
     - name: Upload COS
       uses: zkqiang/tencent-cos-action@v0.1.0
       with:
-        args: upload -r ./THUAI6/ /THUAI6/
+        args: upload -r ./THUAI6/hash.json /
         secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
         secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
         bucket: ${{ secrets.COS_BUCKET }}
         region: ${{ secrets.COS_REGION }}
 
-    - name: Hash Files
-      run: |
-        python ./dependency/py/HashFiles.py -t ./THUAI6
+    - name: Remove Files
+      run: |          
+        rm ./THUAI6/hash.json
+        rm ./THUAI6/win/win64/PresentationCore.dll
+        rm ./THUAI6/win/win64/WindowsBase.dll
+        rm ./THUAI6/linux/linux64/System.*.dll
+        rm ./THUAI6/linux/linux64/Debug/System.*.dll
+        rm ./THUAI6/win/win64/System.*.dll
+        rm ./THUAI6/win/win64/Debug/System.*.dll
+        rm ./THUAI6/win/win64/Debug/grpc_csharp_ext.x64.dll
+        rm ./THUAI6/win/win64/grpc_csharp_ext.x64.dll
+
+        rm ./THUAI6/linux/linux64/*.so
+        rm ./THUAI6/linux/linux64/Debug/*.so
     
     - name: Upload COS
       uses: zkqiang/tencent-cos-action@v0.1.0
       with:
-        args: upload -r ./THUAI6/hash.json /
+        args: upload -r ./THUAI6/ /THUAI6/
         secret_id: ${{ secrets.TENCENT_CLOUD_SECRET_ID }}
         secret_key: ${{ secrets.TENCENT_CLOUD_SECRET_KEY }}
         bucket: ${{ secrets.COS_BUCKET }}

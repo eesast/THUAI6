@@ -47,7 +47,7 @@ A:
 1. 应该是没使用VS2022
 2. 对于VS2022依旧报错，先考虑是否版本过旧（应当在 17.5.x 版本）
    用Visual Studio Installer（在开始菜单搜索）更新
-   ![VsUpdate](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/VsUpdate.png)
+   ![VsUpdate](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/VSUpdate.png)
 3. 
    ![项目属性](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/项目属性.png)
    确保上图项目属性中平台工具集在 v143，C++17 标准
@@ -62,7 +62,7 @@ A:查看`.\win\CAPI\cpp\`文件夹下是否有`lib`文件夹，没有则https://
 ### grpc版本更新失败
 
 Q：运行GeneratePythonProto.cmd报错
-![grpcUpdate](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/Q&A_grpc.png)
+![grpcUpdate](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/grpc.png)
 
 A：
 - 可能措施1.

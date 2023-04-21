@@ -76,9 +76,9 @@
 
 #### 其他
 
-  - `def GetGameInfo(self) -> THUAI6.GameInfo`:查询当前游戏状态\
-  - `def GetPlayerGUIDs(self) -> List[int]`:获取所有玩家的GUID\
-  - `def GetFrameCount(self) -> int`:获取目前所进行的帧数\
+  - `def GetGameInfo(self) -> THUAI6.GameInfo`:查询当前游戏状态
+  - `def GetPlayerGUIDs(self) -> List[int]`:获取所有玩家的GUID
+  - `def GetFrameCount(self) -> int`:获取目前所进行的帧数
   - `def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]`：获取自己的信息
   - `def GetFullMap(self) -> List[List[THUAI6.PlaceType]]`：返回整张地图的地形信息。可以写成类似`self.GetFullMap()[x][y]`，其中x为地图自上到下第几行，y为自左向右第几列，注意从0开始
 

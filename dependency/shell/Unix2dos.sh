@@ -13,5 +13,6 @@ do
         fi
 done
 }
+yum -y install unix2dos
 cd $1
 lsdir

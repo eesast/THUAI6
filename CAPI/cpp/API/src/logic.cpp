@@ -27,8 +27,7 @@ Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::TrickerType tricker, T
 std::vector<std::shared_ptr<const THUAI6::Tricker>> Logic::GetTrickers() const
 {
     std::lock_guard<std::mutex> lock(mtxState);
-    std::vector<std::shared_ptr<const THUAI6::Tricker>> temp;
-    temp.assign(currentState->trickers.begin(), currentState->trickers.end());
+    std::vector<std::shared_ptr<const THUAI6::Tricker>> temp(currentState->trickers.begin(), currentState->trickers.end());
     logger->debug("Called GetTrickers");
     return temp;
 }
@@ -36,8 +35,7 @@ std::vector<std::shared_ptr<const THUAI6::Tricker>> Logic::GetTrickers() const
 std::vector<std::shared_ptr<const THUAI6::Student>> Logic::GetStudents() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
-    std::vector<std::shared_ptr<const THUAI6::Student>> temp;
-    temp.assign(currentState->students.begin(), currentState->students.end());
+    std::vector<std::shared_ptr<const THUAI6::Student>> temp(currentState->students.begin(), currentState->students.end());
     logger->debug("Called GetStudents");
     return temp;
 }
@@ -45,8 +43,7 @@ std::vector<std::shared_ptr<const THUAI6::Student>> Logic::GetStudents() const
 std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
-    std::vector<std::shared_ptr<const THUAI6::Prop>> temp;
-    temp.assign(currentState->props.begin(), currentState->props.end());
+    std::vector<std::shared_ptr<const THUAI6::Prop>> temp(currentState->props.begin(), currentState->props.end());
     logger->debug("Called GetProps");
     return temp;
 }
@@ -54,8 +51,7 @@ std::vector<std::shared_ptr<const THUAI6::Prop>> Logic::GetProps() const
 std::vector<std::shared_ptr<const THUAI6::Bullet>> Logic::GetBullets() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
-    std::vector<std::shared_ptr<const THUAI6::Bullet>> temp;
-    temp.assign(currentState->bullets.begin(), currentState->bullets.end());
+    std::vector<std::shared_ptr<const THUAI6::Bullet>> temp(currentState->bullets.begin(), currentState->bullets.end());
     logger->debug("Called GetBullets");
     return temp;
 }

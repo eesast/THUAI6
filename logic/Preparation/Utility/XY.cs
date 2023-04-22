@@ -64,7 +64,11 @@ namespace Preparation.Utility
         }
         public static double Distance(XY p1, XY p2)
         {
-            return Math.Sqrt(((long)(p1.x - p2.x) * (p1.x - p2.x)) + ((long)(p1.y - p2.y) * (p1.y - p2.y)));
+            long c = (((long)(p1.x - p2.x) * (p1.x - p2.x)) + ((long)(p1.y - p2.y) * (p1.y - p2.y))) * 1000000;
+            long t = c / 2 + 1;
+            while (t * t > c || (t + 1) * (t + 1) < c)
+                t = (c / t + t) / 2;
+            return (double)t / 1000.0;
         }
         public double Length()
         {

@@ -248,7 +248,7 @@ for (auto itr = begin(arr); itr != end(arr); ++itr)
 
 
 
-选手包中内置了`fmt`库，因此选手可以通过`fmt`库来格式化字符串，而无须自己手动格式化。
+选手包中内置了 `fmt` 库，因此选手可以通过 `fmt` 库来格式化字符串，而无须自己手动格式化。
 
 ```c++
 std::string str_std = "number: " + std::to_string(1) + teststr;

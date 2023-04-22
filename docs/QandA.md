@@ -9,7 +9,7 @@ A:
 应该是还没有编译，打开CAPI\cpp目录，在里面打开CAPI.sln，然后点击生成，对代码进行编译
 
 Q：为什么CAPI.sln打开后会找不到项目
-![zip](.\resource\zip.png)
+![zip](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/zip.png)
 
 A:要先解压
 
@@ -29,31 +29,31 @@ Q: Mac怎么用？
 
 A:
 安装Windows虚拟机
-
+try
 ## C++ 
 
 Q:显示API项目已卸载
-![Nocplus](.\resource\Nocplus.png)
+![Nocplus](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/Nocplus.png)
 
 A:可能是没有安装C++
 
 Q:CAPI.sln编译不通过
 情况1：
-![std_find_trivial](.\resource\std_find_trivial.jpg)
+![std_find_trivial](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/std_find_trivial.jpg)
 情况2：
-![LNK1000](.\resource\LNK1000.png)
+![LNK1000](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/LNK1000.png)
 
 A:
 1. 应该是没使用VS2022
 2. 对于VS2022依旧报错，先考虑是否版本过旧（应当在 17.5.x 版本）
    用Visual Studio Installer（在开始菜单搜索）更新
-   ![VsUpdate](.\resource\VsUpdate.png)
+   ![VsUpdate](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/VSUpdate.png)
 3. 
-   ![项目属性](.\resource\项目属性.png)
+   ![项目属性](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/项目属性.png)
    确保上图项目属性中平台工具集在 v143，C++17 标准
 
 Q:CAPI编译不通过
-![lib](.\resource\lib.png)
+![lib](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/lib.png)
 
 A:查看`.\win\CAPI\cpp\`文件夹下是否有`lib`文件夹，没有则https://cloud.tsinghua.edu.cn/d/6972138f641d4e81a446/ 下载并复制粘贴
 
@@ -62,7 +62,7 @@ A:查看`.\win\CAPI\cpp\`文件夹下是否有`lib`文件夹，没有则https://
 ### grpc版本更新失败
 
 Q：运行GeneratePythonProto.cmd报错
-![grpcUpdate](.\resource\Q&A_grpc.png)
+![grpcUpdate](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/grpc.png)
 
 A：
 - 可能措施1.

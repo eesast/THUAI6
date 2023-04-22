@@ -57,7 +57,7 @@
 
 #### 查询可视范围内的信息
 
-  - `std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const` ：返回所有可视学生的信息。
+  - `std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const` ：对于学生，返回所有学生的信息；对于捣蛋鬼，返回可视学生的信息。
   - `std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const` ：返回所有可视捣蛋鬼的信息。
   - `std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const` ：返回所有可视道具的信息。
   - `std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const` ：返回所有可视子弹（攻击）的信息。
@@ -67,20 +67,22 @@
 下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。
 
   - `def GetPlaceType(self, cellX: int, cellY: int) -> THUAI6.PlaceType` ：返回某一位置场地种类信息。场地种类详见 structure.h 。
-  - `def IsDoorOpen(self, cellX: int, cellY: int) -> bool`:查询特定位置门是否开启
-  - `def GetChestProgress(self, cellX: int, cellY: int) -> int`:查询特定位置箱子开启进度
-  - `def GetGateProgress(self, cellX: int, cellY: int) -> int`:查询特定位置校门开启进度
-  - `def GetClassroomProgress(self, cellX: int, cellY: int) -> int`:查询特定位置教室作业完成进度
-  - `def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState`：:查询特定位置隐藏校门状态
-  - `def GetDoorProgress(self, cellX: int, cellY: int) -> int`:查询特定位置门开启状态
+  - `def IsDoorOpen(self, cellX: int, cellY: int) -> bool`:查询特定位置门是否开启，没有门也返回false
+  - 以下指令特定位置没有对应物品返回-1
+    - `def GetChestProgress(self, cellX: int, cellY: int) -> int`:查询特定位置箱子开启进度
+    - `def GetGateProgress(self, cellX: int, cellY: int) -> int`:查询特定位置校门开启进度
+    - `def GetClassroomProgress(self, cellX: int, cellY: int) -> int`:查询特定位置教室作业完成进度
+    - `def GetDoorProgress(self, cellX: int, cellY: int) -> int`:查询特定位置门开启状态
+  - `def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState`：:查询特定位置隐藏校门状态,没有隐藏校门返回THUAI6::HiddenGateState::Null
+  
 
 #### 其他
 
-  - `def GetGameInfo(self) -> THUAI6.GameInfo`:查询当前游戏状态\
-  - `def GetPlayerGUIDs(self) -> List[int]`:获取所有玩家的GUID\
-  - `def GetFrameCount(self) -> int`:获取目前所进行的帧数\
+  - `def GetGameInfo(self) -> THUAI6.GameInfo`:查询当前游戏状态
+  - `def GetPlayerGUIDs(self) -> List[int]`:获取所有玩家的GUID
+  - `def GetFrameCount(self) -> int`:获取目前所进行的帧数
   - `def GetSelfInfo(self) -> Union[THUAI6.Student, THUAI6.Tricker]`：获取自己的信息
-  - `def GetFullMap(self) -> List[List[THUAI6.PlaceType]]`：返回整张地图的地形信息。
+  - `def GetFullMap(self) -> List[List[THUAI6.PlaceType]]`：返回整张地图的地形信息。可以写成类似`self.GetFullMap()[x][y]`，其中x为地图自上到下第几行，y为自左向右第几列，注意从0开始
 
 ### 辅助函数
 

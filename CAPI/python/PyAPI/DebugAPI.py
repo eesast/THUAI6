@@ -311,7 +311,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
     def PrintStudent(self) -> None:
         for student in self.__logic.GetStudents():
-            self.__logger.info("\n******Student Info******")
+            self.__logger.info("******Student Info******")
             self.__logger.info(
                 f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
             self.__logger.info(
@@ -335,7 +335,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
     def PrintTricker(self) -> None:
         for tricker in self.__logic.GetTrickers():
-            self.__logger.info("\n******Tricker Info******")
+            self.__logger.info("******Tricker Info******")
             self.__logger.info(
                 f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
             self.__logger.info(
@@ -364,7 +364,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
     def PrintSelfInfo(self) -> None:
         student = cast(THUAI6.Student, self.__logic.GetSelfInfo())
-        self.__logger.info("\n******Student Info******")
+        self.__logger.info("******Student Info******")
         self.__logger.info(
             f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
         self.__logger.info(
@@ -763,7 +763,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
     def PrintStudent(self) -> None:
         for student in self.__logic.GetStudents():
-            self.__logger.info("\n******Student Info******")
+            self.__logger.info("******Student Info******")
             self.__logger.info(
                 f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
             self.__logger.info(
@@ -787,7 +787,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
     def PrintTricker(self) -> None:
         for tricker in self.__logic.GetTrickers():
-            self.__logger.info("\n******Tricker Info******")
+            self.__logger.info("******Tricker Info******")
             self.__logger.info(
                 f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
             self.__logger.info(
@@ -816,7 +816,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
     def PrintSelfInfo(self) -> None:
         tricker = cast(THUAI6.Tricker, self.__logic.GetSelfInfo())
-        self.__logger.info("\n******Tricker Info******")
+        self.__logger.info("******Tricker Info******")
         self.__logger.info(
             f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
         self.__logger.info(

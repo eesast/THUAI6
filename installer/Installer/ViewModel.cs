@@ -33,22 +33,23 @@ namespace starter.viewmodel.settings
         public SettingsViewModel()
         {
 
-            Program.Tencent_cos_download.UpdateHash();
+            //Program.Tencent_cos_download.UpdateHash();
 
             Status = SettingsModel.Status.working;
-
-            switch (Program.Tencent_cos_download.CheckSelfVersion())
+            string CurrentDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            //MessageBox.Show("更新器工作正常");
+            if (!Program.Tencent_cos_download.SelfUpdateDismissed())
             {
-                case 1:
-                    if (MessageBoxResult.Yes == MessageBox.Show("下载器需要更新，是否现在更新", "需要更新", MessageBoxButton.YesNo))
-                    {
-                        Process.Start(Path.Combine(Directory.GetCurrentDirectory(), "InstallerUpdater.exe"));
+                switch (Program.Tencent_cos_download.CheckSelfVersion())
+                {
+                    case 1:
+                        Process.Start(System.IO.Path.Combine(CurrentDirectory, "InstallerUpdater.exe"));
                         Environment.Exit(0);
-                    }
-                    break;
-                case -1:
-                    MessageBox.Show("下载器更新检查出错，将继续启动现有下载器");
-                    break;
+                        break;
+                    case -1:
+                        MessageBox.Show("下载器更新检查出错，将继续启动现有下载器");
+                        break;
+                }
             }
 
             //实例化BackgroundWorker
@@ -78,6 +79,7 @@ namespace starter.viewmodel.settings
                 else
                     RememberMe = false;
                 this.RaisePropertyChanged("RememberMe");
+                this.RaisePropertyChanged("SwitchOSBtnCont");
                 //在启动时立刻检查更新，确保选手启动最新版选手包
                 //若有更新，将启动键改为更新键；
                 //相应地，使用login界面启动；
@@ -139,6 +141,7 @@ namespace starter.viewmodel.settings
                     }
                     MessageBox.Show($"以下文件因被占用而未能成功更新：\n{updateFailList}请关闭它们，并再试一次");
                     Program.ResetUpdateFailedInfo();
+                    obj.checkUpdate();
                     Status = SettingsModel.Status.successful;
                     this.RaisePropertyChanged("UpdateBtnCont");
                     this.RaisePropertyChanged("UpdateInfo");
@@ -301,6 +304,23 @@ namespace starter.viewmodel.settings
                 else if (obj.launchLanguage == SettingsModel.LaunchLanguage.python)
                     ans = "语言:python";
                 return ans;
+            }
+        }
+        public string SwitchOSBtnCont
+        {
+            get
+            {
+                switch (obj.usingOS)
+                {
+                    case SettingsModel.UsingOS.Win:
+                        return "当前系统:Windows";
+                    case SettingsModel.UsingOS.Linux:
+                        return "当前系统:Linux";
+                    case SettingsModel.UsingOS.OSX:
+                        return "当前系统:macOS";
+                    default:
+                        return "当前系统:无效的名称";
+                }
             }
         }
         public int PlayerNum
@@ -1030,6 +1050,40 @@ namespace starter.viewmodel.settings
                 return clickReadCommand;
             }
         }
+        private BaseCommand clickSwitchOSCommand;
+        public BaseCommand ClickSwitchOSCommand
+        {
+            get
+            {
+                if (clickSwitchOSCommand == null)
+                {
+                    clickSwitchOSCommand = new BaseCommand(new Action<object>(o =>
+                    {
+                        switch (obj.usingOS)
+                        {
+                            case SettingsModel.UsingOS.Win:
+                                obj.usingOS = SettingsModel.UsingOS.Linux;
+                                break;
+                            case SettingsModel.UsingOS.Linux:
+                                obj.usingOS = SettingsModel.UsingOS.OSX;
+                                break;
+                            case SettingsModel.UsingOS.OSX:
+                                obj.usingOS = SettingsModel.UsingOS.Win;
+                                break;
+                        }
+                        this.RaisePropertyChanged("SwitchOSBtnCont");
+                        obj.WriteUsingOS();
+                        obj.checkUpdate();
+                        UpdateInfoVis = Visibility.Visible;
+                        this.RaisePropertyChanged("UpdateBtnCont");
+                        this.RaisePropertyChanged("UpdateInfo");
+                        this.RaisePropertyChanged("UpdateInfoVis");
+                    }));
+                }
+                return clickSwitchOSCommand;
+            }
+        }
+
     }
 
 }

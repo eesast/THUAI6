@@ -125,7 +125,7 @@ class Logic(ILogic):
                 return copy.deepcopy(self.__currentState.mapInfo.classroomState[(x, y)])
             else:
                 self.__logger.warning("Classroom not found")
-                return 0
+                return -1
 
     def GetChestProgress(self, x: int, y: int) -> int:
         with self.__mtxState:
@@ -134,7 +134,7 @@ class Logic(ILogic):
                 return copy.deepcopy(self.__currentState.mapInfo.chestState[(x, y)])
             else:
                 self.__logger.warning("Chest not found")
-                return 0
+                return -1
 
     def GetGateProgress(self, x: int, y: int) -> int:
         with self.__mtxState:
@@ -143,7 +143,7 @@ class Logic(ILogic):
                 return copy.deepcopy(self.__currentState.mapInfo.gateState[(x, y)])
             else:
                 self.__logger.warning("Gate not found")
-                return 0
+                return -1
 
     def GetHiddenGateState(self, x: int, y: int) -> THUAI6.HiddenGateState:
         with self.__mtxState:
@@ -161,7 +161,7 @@ class Logic(ILogic):
                 return copy.deepcopy(self.__currentState.mapInfo.doorProgress[(x, y)])
             else:
                 self.__logger.warning("Door not found")
-                return 0
+                return -1
 
     def GetGameInfo(self) -> THUAI6.GameInfo:
         with self.__mtxState:
@@ -338,6 +338,127 @@ class Logic(ILogic):
 
         threading.Thread(target=messageThread).start()
 
+    def __LoadBufferSelf(self, message: Message2Clients.MessageToClient) -> None:
+        if self.__playerType == THUAI6.PlayerType.StudentPlayer:
+            for item in message.obj_message:
+                if item.WhichOneof("message_of_obj") == "student_message":
+                    if item.student_message.player_id == self.__playerID:
+                        self.__bufferState.self = Proto2THUAI6.Protobuf2THUAI6Student(
+                            item.student_message)
+                        self.__bufferState.students.append(
+                            self.__bufferState.self)
+                    else:
+                        self.__bufferState.students.append(
+                            Proto2THUAI6.Protobuf2THUAI6Student(item.student_message))
+                    self.__logger.debug("Add Student!")
+        else:
+            for item in message.obj_message:
+                if item.WhichOneof("message_of_obj") == "tricker_message":
+                    if item.tricker_message.player_id == self.__playerID:
+                        self.__bufferState.self = Proto2THUAI6.Protobuf2THUAI6Tricker(
+                            item.tricker_message)
+                        self.__bufferState.trickers.append(
+                            self.__bufferState.self)
+                    else:
+                        self.__bufferState.trickers.append(
+                            Proto2THUAI6.Protobuf2THUAI6Tricker(item.tricker_message))
+                    self.__logger.debug("Add Tricker!")
+
+    def __LoadBufferCase(self, item: Message2Clients.MessageOfObj) -> None:
+        if self.__playerType == THUAI6.PlayerType.StudentPlayer and item.WhichOneof("message_of_obj") == "tricker_message":
+            if MessageType.TRICKER_INVISIBLE in item.tricker_message.buff:
+                return
+            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.tricker_message.x, item.tricker_message.y, self.__bufferState.gameMap):
+                self.__bufferState.trickers.append(
+                    Proto2THUAI6.Protobuf2THUAI6Tricker(item.tricker_message))
+                self.__logger.debug("Add Tricker!")
+        elif self.__playerType == THUAI6.PlayerType.TrickerPlayer and item.WhichOneof("message_of_obj") == "student_message":
+            if THUAI6.TrickerBuffType.Clairaudience in self.__bufferState.self.buff:
+                self.__bufferState.students.append(
+                    Proto2THUAI6.Protobuf2THUAI6Student(item.student_message))
+                self.__logger.debug("Add Student!")
+                return
+            if MessageType.STUDENT_INVISIBLE in item.student_message.buff:
+                return
+            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.student_message.x, item.student_message.y, self.__bufferState.gameMap):
+                self.__bufferState.students.append(
+                    Proto2THUAI6.Protobuf2THUAI6Student(item.student_message))
+                self.__logger.debug("Add Student!")
+        elif item.WhichOneof("message_of_obj") == "prop_message":
+            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.prop_message.x, item.prop_message.y, self.__bufferState.gameMap):
+                self.__bufferState.props.append(
+                    Proto2THUAI6.Protobuf2THUAI6Prop(item.prop_message))
+                self.__logger.debug("Add Prop!")
+        elif item.WhichOneof("message_of_obj") == "bullet_message":
+            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.bullet_message.x, item.bullet_message.y, self.__bufferState.gameMap):
+                self.__bufferState.bullets.append(
+                    Proto2THUAI6.Protobuf2THUAI6Bullet(item.bullet_message))
+                self.__logger.debug("Add Bullet!")
+        elif item.WhichOneof("message_of_obj") == "classroom_message":
+            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.classroom_message.x, item.classroom_message.y, self.__bufferState.gameMap):
+                pos = (AssistFunction.GridToCell(
+                    item.classroom_message.x), AssistFunction.GridToCell(item.classroom_message.y))
+                if pos not in self.__bufferState.mapInfo.classroomState:
+                    self.__bufferState.mapInfo.classroomState[pos] = item.classroom_message.progress
+                    self.__logger.debug("Add Classroom!")
+                else:
+                    self.__bufferState.mapInfo.classroomState[pos] = item.classroom_message.progress
+                    self.__logger.debug("Update Classroom!")
+        elif item.WhichOneof("message_of_obj") == "chest_message":
+            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.chest_message.x, item.chest_message.y, self.__bufferState.gameMap):
+                pos = (AssistFunction.GridToCell(
+                    item.chest_message.x), AssistFunction.GridToCell(item.chest_message.y))
+                if pos not in self.__bufferState.mapInfo.chestState:
+                    self.__bufferState.mapInfo.chestState[pos] = item.chest_message.progress
+                    self.__logger.debug(
+                        f"Add Chest at {pos[0]}, {pos[1]}")
+                else:
+                    self.__bufferState.mapInfo.chestState[pos] = item.chest_message.progress
+                    self.__logger.debug(
+                        f"Update Chest at {pos[0]}, {pos[1]}")
+        elif item.WhichOneof("message_of_obj") == "door_message":
+            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.door_message.x, item.door_message.y, self.__bufferState.gameMap):
+                pos = (AssistFunction.GridToCell(
+                    item.door_message.x), AssistFunction.GridToCell(item.door_message.y))
+                if pos not in self.__bufferState.mapInfo.doorState:
+                    self.__bufferState.mapInfo.doorState[pos] = item.door_message.is_open
+                    self.__bufferState.mapInfo.doorProgress[pos] = item.door_message.progress
+                    self.__logger.debug("Add Door!")
+                else:
+                    self.__bufferState.mapInfo.doorState[pos] = item.door_message.is_open
+                    self.__bufferState.mapInfo.doorProgress[pos] = item.door_message.progress
+                    self.__logger.debug("Update Door!")
+        elif item.WhichOneof("message_of_obj") == "hidden_gate_message":
+            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.hidden_gate_message.x, item.hidden_gate_message.y, self.__bufferState.gameMap):
+                pos = (AssistFunction.GridToCell(
+                    item.hidden_gate_message.x), AssistFunction.GridToCell(item.hidden_gate_message.y))
+                if pos not in self.__bufferState.mapInfo.hiddenGateState:
+                    self.__bufferState.mapInfo.hiddenGateState[pos] = Proto2THUAI6.Bool2HiddenGateState(
+                        item.hidden_gate_message.opened)
+                    self.__logger.debug("Add HiddenGate!")
+                else:
+                    self.__bufferState.mapInfo.hiddenGateState[pos] = Proto2THUAI6.Bool2HiddenGateState(
+                        item.hidden_gate_message.opened)
+                    self.__logger.debug("Update HiddenGate!")
+        elif item.WhichOneof("message_of_obj") == "gate_message":
+            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.gate_message.x, item.gate_message.y, self.__bufferState.gameMap):
+                pos = (AssistFunction.GridToCell(
+                    item.gate_message.x), AssistFunction.GridToCell(item.gate_message.y))
+                if pos not in self.__bufferState.mapInfo.gateState:
+                    self.__bufferState.mapInfo.gateState[pos] = item.gate_message.progress
+                    self.__logger.debug("Add Gate!")
+                else:
+                    self.__bufferState.mapInfo.gateState[pos] = item.gate_message.progress
+                    self.__logger.debug("Update Gate!")
+        elif item.WhichOneof("message_of_obj") == "news_message":
+            if item.news_message.to_id == self.__playerID:
+                self.__messageQueue.put(
+                    (item.news_message.from_id, item.news_message.news))
+                self.__logger.debug("Add News!")
+        else:
+            self.__logger.debug(
+                "Unknown Message!")
+
     def __LoadBuffer(self, message: Message2Clients.MessageToClient) -> None:
         with self.__cvBuffer:
             self.__bufferState.students.clear()
@@ -346,193 +467,9 @@ class Logic(ILogic):
             self.__logger.debug("Buffer cleared!")
             self.__bufferState.gameInfo = Proto2THUAI6.Protobuf2THUAI6GameInfo(
                 message.all_message)
-            if self.__playerType == THUAI6.PlayerType.StudentPlayer:
-                for item in message.obj_message:
-                    if item.WhichOneof("message_of_obj") == "student_message":
-                        if item.student_message.player_id == self.__playerID:
-                            self.__bufferState.self = Proto2THUAI6.Protobuf2THUAI6Student(
-                                item.student_message)
-                            self.__bufferState.students.append(
-                                self.__bufferState.self)
-                        else:
-                            self.__bufferState.students.append(
-                                Proto2THUAI6.Protobuf2THUAI6Student(item.student_message))
-                        self.__logger.debug("Add Student!")
-                for item in message.obj_message:
-                    if item.WhichOneof("message_of_obj") == "tricker_message":
-                        if MessageType.TRICKER_INVISIBLE in item.tricker_message.buff:
-                            continue
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.tricker_message.x, item.tricker_message.y, self.__bufferState.gameMap):
-                            self.__bufferState.trickers.append(
-                                Proto2THUAI6.Protobuf2THUAI6Tricker(item.tricker_message))
-                            self.__logger.debug("Add Tricker!")
-                    elif item.WhichOneof("message_of_obj") == "prop_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.prop_message.x, item.prop_message.y, self.__bufferState.gameMap):
-                            self.__bufferState.props.append(
-                                Proto2THUAI6.Protobuf2THUAI6Prop(item.prop_message))
-                            self.__logger.debug("Add Prop!")
-                    elif item.WhichOneof("message_of_obj") == "bullet_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.bullet_message.x, item.bullet_message.y, self.__bufferState.gameMap):
-                            self.__bufferState.bullets.append(
-                                Proto2THUAI6.Protobuf2THUAI6Bullet(item.bullet_message))
-                            self.__logger.debug("Add Bullet!")
-                    elif item.WhichOneof("message_of_obj") == "classroom_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.classroom_message.x, item.classroom_message.y, self.__bufferState.gameMap):
-                            pos = (AssistFunction.GridToCell(
-                                item.classroom_message.x), AssistFunction.GridToCell(item.classroom_message.y))
-                            if pos not in self.__bufferState.mapInfo.classroomState:
-                                self.__bufferState.mapInfo.classroomState[pos] = item.classroom_message.progress
-                                self.__logger.debug("Add Classroom!")
-                            else:
-                                self.__bufferState.mapInfo.classroomState[pos] = item.classroom_message.progress
-                                self.__logger.debug("Update Classroom!")
-                    elif item.WhichOneof("message_of_obj") == "chest_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.chest_message.x, item.chest_message.y, self.__bufferState.gameMap):
-                            pos = (AssistFunction.GridToCell(
-                                item.chest_message.x), AssistFunction.GridToCell(item.chest_message.y))
-                            if pos not in self.__bufferState.mapInfo.chestState:
-                                self.__bufferState.mapInfo.chestState[pos] = item.chest_message.progress
-                                self.__logger.debug(
-                                    f"Add Chest at {pos[0]}, {pos[1]}")
-                            else:
-                                self.__bufferState.mapInfo.chestState[pos] = item.chest_message.progress
-                                self.__logger.debug(
-                                    f"Update Chest at {pos[0]}, {pos[1]}")
-                    elif item.WhichOneof("message_of_obj") == "door_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.door_message.x, item.door_message.y, self.__bufferState.gameMap):
-                            pos = (AssistFunction.GridToCell(
-                                item.door_message.x), AssistFunction.GridToCell(item.door_message.y))
-                            if pos not in self.__bufferState.mapInfo.doorState:
-                                self.__bufferState.mapInfo.doorState[pos] = item.door_message.is_open
-                                self.__bufferState.mapInfo.doorProgress[pos] = item.door_message.progress
-                                self.__logger.debug("Add Door!")
-                            else:
-                                self.__bufferState.mapInfo.doorState[pos] = item.door_message.is_open
-                                self.__bufferState.mapInfo.doorProgress[pos] = item.door_message.progress
-                                self.__logger.debug("Update Door!")
-                    elif item.WhichOneof("message_of_obj") == "hidden_gate_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.hidden_gate_message.x, item.hidden_gate_message.y, self.__bufferState.gameMap):
-                            pos = (AssistFunction.GridToCell(
-                                item.hidden_gate_message.x), AssistFunction.GridToCell(item.hidden_gate_message.y))
-                            if pos not in self.__bufferState.mapInfo.hiddenGateState:
-                                self.__bufferState.mapInfo.hiddenGateState[pos] = Proto2THUAI6.Bool2HiddenGateState(
-                                    item.hidden_gate_message.opened)
-                                self.__logger.debug("Add HiddenGate!")
-                            else:
-                                self.__bufferState.mapInfo.hiddenGateState[pos] = Proto2THUAI6.Bool2HiddenGateState(
-                                    item.hidden_gate_message.opened)
-                                self.__logger.debug("Update HiddenGate!")
-                    elif item.WhichOneof("message_of_obj") == "gate_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.gate_message.x, item.gate_message.y, self.__bufferState.gameMap):
-                            pos = (AssistFunction.GridToCell(
-                                item.gate_message.x), AssistFunction.GridToCell(item.gate_message.y))
-                            if pos not in self.__bufferState.mapInfo.gateState:
-                                self.__bufferState.mapInfo.gateState[pos] = item.gate_message.progress
-                                self.__logger.debug("Add Gate!")
-                            else:
-                                self.__bufferState.mapInfo.gateState[pos] = item.gate_message.progress
-                                self.__logger.debug("Update Gate!")
-                    elif item.WhichOneof("message_of_obj") == "news_message":
-                        if item.news_message.to_id == self.__playerID:
-                            self.__messageQueue.put(
-                                (item.news_message.from_id, item.news_message.news))
-                            self.__logger.debug("Add News!")
-                    else:
-                        self.__logger.debug(
-                            "Unknown Message!")
-            else:
-                for item in message.obj_message:
-                    if item.WhichOneof("message_of_obj") == "tricker_message":
-                        if item.tricker_message.player_id == self.__playerID:
-                            self.__bufferState.self = Proto2THUAI6.Protobuf2THUAI6Tricker(
-                                item.tricker_message)
-                            self.__bufferState.trickers.append(
-                                self.__bufferState.self)
-                        else:
-                            self.__bufferState.trickers.append(
-                                Proto2THUAI6.Protobuf2THUAI6Tricker(item.tricker_message))
-                        self.__logger.debug("Add Tricker!")
-                for item in message.obj_message:
-                    if item.WhichOneof("message_of_obj") == "student_message":
-                        if THUAI6.TrickerBuffType.Clairaudience in self.__bufferState.self.buff:
-                            self.__bufferState.students.append(
-                                Proto2THUAI6.Protobuf2THUAI6Student(item.student_message))
-                            self.__logger.debug("Add Student!")
-                            continue
-                        if MessageType.STUDENT_INVISIBLE in item.student_message.buff:
-                            continue
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.student_message.x, item.student_message.y, self.__bufferState.gameMap):
-                            self.__bufferState.students.append(
-                                Proto2THUAI6.Protobuf2THUAI6Student(item.student_message))
-                            self.__logger.debug("Add Student!")
-                    elif item.WhichOneof("message_of_obj") == "prop_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.prop_message.x, item.prop_message.y, self.__bufferState.gameMap):
-                            self.__bufferState.props.append(
-                                Proto2THUAI6.Protobuf2THUAI6Prop(item.prop_message))
-                            self.__logger.debug("Add Prop!")
-                    elif item.WhichOneof("message_of_obj") == "bullet_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.bullet_message.x, item.bullet_message.y, self.__bufferState.gameMap):
-                            self.__bufferState.bullets.append(
-                                Proto2THUAI6.Protobuf2THUAI6Bullet(item.bullet_message))
-                            self.__logger.debug("Add Bullet!")
-                    elif item.WhichOneof("message_of_obj") == "classroom_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.classroom_message.x, item.classroom_message.y, self.__bufferState.gameMap):
-                            pos = (AssistFunction.GridToCell(
-                                item.classroom_message.x), AssistFunction.GridToCell(item.classroom_message.y))
-                            if pos not in self.__bufferState.mapInfo.classroomState:
-                                self.__bufferState.mapInfo.classroomState[pos] = item.classroom_message.progress
-                                self.__logger.debug("Add Classroom!")
-                            else:
-                                self.__bufferState.mapInfo.classroomState[pos] = item.classroom_message.progress
-                                self.__logger.debug("Update Classroom!")
-                    elif item.WhichOneof("message_of_obj") == "chest_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.chest_message.x, item.chest_message.y, self.__bufferState.gameMap):
-                            pos = (AssistFunction.GridToCell(
-                                item.chest_message.x), AssistFunction.GridToCell(item.chest_message.y))
-                            if pos not in self.__bufferState.mapInfo.chestState:
-                                self.__bufferState.mapInfo.chestState[pos] = item.chest_message.progress
-                                self.__logger.debug(
-                                    f"Add Chest at {pos[0]}, {pos[1]}")
-                            else:
-                                self.__bufferState.mapInfo.chestState[pos] = item.chest_message.progress
-                                self.__logger.debug(
-                                    f"Update Chest at {pos[0]}, {pos[1]}")
-                    elif item.WhichOneof("message_of_obj") == "door_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.door_message.x, item.door_message.y, self.__bufferState.gameMap):
-                            pos = (AssistFunction.GridToCell(
-                                item.door_message.x), AssistFunction.GridToCell(item.door_message.y))
-                            if pos not in self.__bufferState.mapInfo.doorState:
-                                self.__bufferState.mapInfo.doorState[pos] = item.door_message.is_open
-                                self.__bufferState.mapInfo.doorProgress[pos] = item.door_message.progress
-                                self.__logger.debug("Add Door!")
-                            else:
-                                self.__bufferState.mapInfo.doorState[pos] = item.door_message.is_open
-                                self.__bufferState.mapInfo.doorProgress[pos] = item.door_message.progress
-                                self.__logger.debug("Update Door!")
-                    elif item.WhichOneof("message_of_obj") == "hidden_gate_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.hidden_gate_message.x, item.hidden_gate_message.y, self.__bufferState.gameMap):
-                            pos = (AssistFunction.GridToCell(
-                                item.hidden_gate_message.x), AssistFunction.GridToCell(item.hidden_gate_message.y))
-                            if pos not in self.__bufferState.mapInfo.hiddenGateState:
-                                self.__bufferState.mapInfo.hiddenGateState[pos] = Proto2THUAI6.Bool2HiddenGateState(
-                                    item.hidden_gate_message.opened)
-                                self.__logger.debug("Add HiddenGate!")
-                            else:
-                                self.__bufferState.mapInfo.hiddenGateState[pos] = Proto2THUAI6.Bool2HiddenGateState(
-                                    item.hidden_gate_message.opened)
-                                self.__logger.debug("Update HiddenGate!")
-                    elif item.WhichOneof("message_of_obj") == "gate_message":
-                        if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.gate_message.x, item.gate_message.y, self.__bufferState.gameMap):
-                            pos = (AssistFunction.GridToCell(
-                                item.gate_message.x), AssistFunction.GridToCell(item.gate_message.y))
-                            if pos not in self.__bufferState.mapInfo.gateState:
-                                self.__bufferState.mapInfo.gateState[pos] = item.gate_message.progress
-                                self.__logger.debug("Add Gate!")
-                            else:
-                                self.__bufferState.mapInfo.gateState[pos] = item.gate_message.progress
-                                self.__logger.debug("Update Gate!")
-                    else:
-                        self.__logger.debug("Unknown Message!")
+            self.__LoadBufferSelf(message)
+            for item in message.obj_message:
+                self.__LoadBufferCase(item)
             if Setting.asynchronous():
                 with self.__mtxState:
                     self.__currentState, self.__bufferState = self.__bufferState, self.__currentState
@@ -552,9 +489,10 @@ class Logic(ILogic):
         if not Setting.asynchronous():
             with self.__cvBuffer:
                 self.__cvBuffer.wait_for(lambda: self.__bufferUpdated)
-                self.__bufferState, self.__currentState = self.__currentState, self.__bufferState
+                with self.__mtxState:
+                    self.__bufferState, self.__currentState = self.__currentState, self.__bufferState
+                    self.__counterState = self.__counterBuffer
                 self.__bufferUpdated = False
-                self.__counterState = self.__counterBuffer
                 self.__logger.info("Update state!")
 
     def __Wait(self) -> None:

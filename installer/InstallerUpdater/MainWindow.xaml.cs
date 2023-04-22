@@ -28,17 +28,27 @@ namespace InstallerUpdater
         public MainWindow()
         {
             InitializeComponent();
-            MessageBox.Show("这是旧版");
+            //MessageBox.Show("这是旧版");
+            //MessageBox.Show("下载器更新功能正常");
             asyncDownloader.DoWork += AsyncDownloader_DoWork;
             asyncDownloader.RunWorkerCompleted += AsyncDownloader_RunWorkerCompleted;
-            if (asyncDownloader.IsBusy)
+            if (MessageBoxResult.Yes == MessageBox.Show("发现下载器更新，是否更新下载器？", "下载器更新", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes))
             {
-                MessageBox.Show("更新失败，请汇报");
+                if (asyncDownloader.IsBusy)
+                {
+                    MessageBox.Show("更新器已在运行");
+                    Process.Start(System.IO.Path.Combine(Updater.Dir, "Installer.exe"));
+                    Application.Current.Shutdown();
+                }
+                else
+                    asyncDownloader.RunWorkerAsync();
+            }
+            else
+            {
+                Updater.TellDismiss();
                 Process.Start(System.IO.Path.Combine(Updater.Dir, "Installer.exe"));
                 Application.Current.Shutdown();
             }
-            else
-                asyncDownloader.RunWorkerAsync();
         }
 
         private void AsyncDownloader_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)

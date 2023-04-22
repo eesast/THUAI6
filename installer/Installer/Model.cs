@@ -35,6 +35,9 @@ using static System.Net.WebRequestMethods;
 using File = System.IO.File;
 using System.Linq;
 using Installer;
+using starter.viewmodel.settings;
+using System.Security.Permissions;
+using System.Windows.Media;
 
 namespace starter.viewmodel.settings
 {
@@ -63,6 +66,7 @@ namespace starter.viewmodel.settings
             UploadReady = false;
             LoginFailed = false;
             launchLanguage = LaunchLanguage.cpp;
+            usingOS = ReadUsingOS();
         }
 
         /// <summary>
@@ -113,7 +117,7 @@ namespace starter.viewmodel.settings
         /// <returns></returns>
         public Status checkUpdate()
         {
-            UpdateInfo updateInfo = Tencent_cos_download.Check();
+            UpdateInfo updateInfo = Tencent_cos_download.Check(usingOS);
             if (updateInfo.newFileCount == -1)
             {
                 if (updateInfo.changedFileCount == -1)
@@ -143,19 +147,19 @@ namespace starter.viewmodel.settings
         public bool RememberUser()
         {
             int result = 0;
-            result |= Web.WriteUserEmail(Username);
-            result |= Web.WriteUserPassword(Password);
+            result |= Web.WriteJson("email", Username);
+            result |= Web.WriteJson("password", Password);
             return result == 0;
         }
         public bool RecallUser()
         {
-            Username = Web.ReadUserEmail();
+            Username = Web.ReadJson("email");
             if (Username == null || Username.Equals(""))
             {
                 Username = "";
                 return false;
             }
-            Password = Web.ReadUserPassword();
+            Password = Web.ReadJson("password");
             if (Password == null || Username.Equals(""))
             {
                 Password = "";
@@ -166,14 +170,21 @@ namespace starter.viewmodel.settings
         public bool ForgetUser()
         {
             int result = 0;
-            result |= Web.WriteUserEmail("");
-            result |= Web.WriteUserPassword("");
+            result |= Web.WriteJson("email", "");
+            result |= Web.WriteJson("password", "");
             return result == 0;
         }
 
         public bool Update()
         {
-            return Tencent_cos_download.Update();
+            try
+            {
+                return Tencent_cos_download.Update();
+            }
+            catch
+            {
+                return false;
+            }
         }
         public int Uninst()
         {
@@ -213,6 +224,35 @@ namespace starter.viewmodel.settings
             if (PlayerNum.Equals("nSelect"))
                 return -9;
             return await web.UploadFiles(client, CodeRoute, Language, PlayerNum);
+        }
+        public bool WriteUsingOS()
+        {
+            string OS = "";
+            switch (usingOS)
+            {
+                case UsingOS.Win:
+                    OS = "win";
+                    break;
+                case UsingOS.Linux:
+                    OS = "linux";
+                    break;
+                case UsingOS.OSX:
+                    OS = "osx";
+                    break;
+            }
+            return Web.WriteJson("OS", OS) == 0;
+        }
+        public UsingOS ReadUsingOS()
+        {
+            string OS = Web.ReadJson("OS");
+            if (OS == null)
+                return UsingOS.Win;
+            else if (OS.Equals("linux"))
+                return UsingOS.Linux;
+            else if (OS.Equals("osx"))
+                return UsingOS.OSX;
+            else
+                return UsingOS.Win;
         }
         /// <summary>
         /// Route of files
@@ -303,6 +343,11 @@ namespace starter.viewmodel.settings
         }
         public enum LaunchLanguage { cpp, python };
         public LaunchLanguage launchLanguage
+        {
+            get; set;
+        }
+        public enum UsingOS { Win, Linux, OSX };
+        public UsingOS usingOS
         {
             get; set;
         }
@@ -493,6 +538,10 @@ namespace Downloader
                 {
                     throw serverEx;
                 }
+                catch
+                {
+                    MessageBox.Show($"下载{download_dir}时出现未知问题，请反馈");
+                }
             }
 
             public static void GetNewHash()
@@ -532,7 +581,16 @@ namespace Downloader
                 }
             }
 
-            public static UpdateInfo Check()
+            public static bool IsUserFile(string filename)
+            {
+                if (filename.Substring(filename.Length - 3, 3).Equals(".sh") || filename.Substring(filename.Length - 4, 4).Equals(".cmd"))
+                    return true;
+                if (filename.Equals("AI.cpp") || filename.Equals("AI.py"))
+                    return true;
+                return false;
+            }
+
+            public static UpdateInfo Check(SettingsModel.UsingOS OS)
             {
                 string json, MD5, jsonName;
                 int newFile = 0, updateFile = 0;
@@ -576,27 +634,43 @@ namespace Downloader
                     json = r.ReadToEnd();
                 json = json.Replace("\r", string.Empty).Replace("\n", string.Empty);
                 Dictionary<string, string> jsonDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                string updatingFolder = "";
+                switch (OS)
+                {
+                    case SettingsModel.UsingOS.Win:
+                        updatingFolder = "THUAI6/win";
+                        break;
+                    case SettingsModel.UsingOS.Linux:
+                        updatingFolder = "THUAI6/lin";
+                        break;
+                    case SettingsModel.UsingOS.OSX:
+                        updatingFolder = "THUAI6/osx";
+                        break;
+                }
                 foreach (KeyValuePair<string, string> pair in jsonDict)
                 {
-                    MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key));
-                    if (MD5.Length == 0)  // 文档不存在
-                        newFileName.Add(pair.Key);
-                    else if (MD5.Equals("conflict"))
+                    if (pair.Key.Length > 10 && (pair.Key.Substring(0, 10).Equals(updatingFolder)) || pair.Key.Substring(pair.Key.Length - 4, 4).Equals(".pdf"))
                     {
-                        if (pair.Key.Equals("THUAI6/win/CAPI/cpp/.vs/CAPI/v17/Browse.VC.db"))
+                        MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key.TrimStart(new char[] { '.', '/' })));
+                        if (MD5.Length == 0)  // 文档不存在
+                            newFileName.Add(pair.Key);
+                        else if (MD5.Equals("conflict"))
                         {
-                            MessageBox.Show($"visual studio未关闭：\n" +
-                            $"对于visual studio 2022，可以更新，更新会覆盖visual studio中已经打开的选手包；\n" +
-                            $"若使用其他版本的visual studio是继续更新出现问题，请汇报；\n" +
-                            $"若您自行修改了选手包，请注意备份；\n" +
-                            $"若关闭visual studio后仍弹出，请汇报。\n\n",
-                            "visual studio未关闭", MessageBoxButton.OK, MessageBoxImage.Information);
+                            if (pair.Key.Equals("THUAI6/win/CAPI/cpp/.vs/CAPI/v17/Browse.VC.db"))
+                            {
+                                MessageBox.Show($"visual studio未关闭：\n" +
+                                $"对于visual studio 2022，可以更新，更新会覆盖visual studio中已经打开的选手包；\n" +
+                                $"若使用其他版本的visual studio是继续更新出现问题，请汇报；\n" +
+                                $"若您自行修改了选手包，请注意备份；\n" +
+                                $"若关闭visual studio后仍弹出，请汇报。\n\n",
+                                "visual studio未关闭", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
+                            else
+                                MessageBox.Show($"检查{pair.Key}更新时遇到问题，请反馈", "读取出错", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
-                        else
-                            MessageBox.Show($"检查{pair.Key}更新时遇到问题，请反馈", "读取出错", MessageBoxButton.OK, MessageBoxImage.Error);
+                        else if (!MD5.Equals(pair.Value) && !IsUserFile(System.IO.Path.GetFileName(pair.Key)))  // MD5不匹配
+                            updateFileName.Add(pair.Key);
                     }
-                    else if (MD5 != pair.Value && System.IO.Path.GetFileName(pair.Key) != "AI.cpp" && System.IO.Path.GetFileName(pair.Key) != "AI.py")  // MD5不匹配
-                        updateFileName.Add(pair.Key);
                 }
 
                 newFile = newFileName.Count;
@@ -647,8 +721,6 @@ namespace Downloader
                     Download();
                     if (updateFailed.Count == 0)
                         return true;
-                    else
-                        Check();
                 }
                 return false;
             }
@@ -666,7 +738,7 @@ namespace Downloader
                         foreach (string filename in newFileName)
                         {
                             //Console.WriteLine(newFile + 1 + "/" + totalnew + ":开始下载" + filename);
-                            Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename);
+                            Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename.TrimStart(new char[] { '.', '/' }));
                             //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
                             newFile++;
                         }
@@ -676,10 +748,21 @@ namespace Downloader
                             try
                             {
                                 File.Delete(System.IO.Path.Combine(@Data.FilePath, filename));
-                                Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename);
+                                Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename.TrimStart(new char[] { '.', '/' }));
                             }
                             catch (System.IO.IOException)
                             {
+                                updateFailed = updateFailed.Append(filename).ToList();
+                            }
+                            catch
+                            {
+                                if (filename.Substring(filename.Length - 4, 4).Equals(".pdf"))
+                                {
+                                    MessageBox.Show($"由于曾经发生过的访问冲突，下载器无法更新{filename}\n"
+                                        + $"请手动删除{filename}，然后再试一次。");
+                                }
+                                else
+                                    MessageBox.Show($"更新{filename}时遇到未知问题，请反馈");
                                 updateFailed = updateFailed.Append(filename).ToList();
                             }
                             //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
@@ -691,19 +774,20 @@ namespace Downloader
                     catch (CosClientException clientEx)
                     {
                         // 请求失败
-                        MessageBox.Show("网络错误");
+                        MessageBox.Show("连接错误:" + clientEx.ToString());
                         Console.WriteLine("CosClientException: " + clientEx.ToString() + Environment.NewLine);
                         return;
                     }
                     catch (CosServerException serverEx)
                     {
                         // 请求失败
-                        MessageBox.Show("网络错误");
+                        MessageBox.Show("连接错误:" + serverEx.ToString());
                         Console.WriteLine("CosClientException: " + serverEx.ToString() + Environment.NewLine);
                         return;
                     }
                     catch (Exception)
                     {
+                        MessageBox.Show("未知错误且无法定位到出错文件，请反馈");
                         throw;
                     }
                 }
@@ -839,7 +923,7 @@ namespace Downloader
                 using StreamWriter sw = new StreamWriter(fs2);
                 fs2.SetLength(0);
                 sw.Write(JsonConvert.SerializeObject(dict));
-                Check();
+                Check(SettingsModel.UsingOS.Win);
                 Download();
                 if (File.Exists(Data.FilePath + "/THUAI6/AI.cpp"))
                 {
@@ -1125,7 +1209,7 @@ namespace Downloader
                         {
                             if (Data.FilePath != null && Directory.Exists(Data.FilePath))
                             {
-                                Check();
+                                Check(SettingsModel.UsingOS.Win);
                                 break;
                             }
                             else
@@ -1200,7 +1284,7 @@ namespace Downloader
                 string keyHead = "Installer/";
                 Tencent_cos_download downloader = new Tencent_cos_download();
                 string hashName = "installerHash.json";
-                string dir = Directory.GetCurrentDirectory();
+                string dir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
                 int result = 0;
                 try
                 {
@@ -1242,7 +1326,7 @@ namespace Downloader
                             else
                             {
                                 result = 1;
-                                awaitUpdate.Append(pair.Key);
+                                awaitUpdate = awaitUpdate.Append(pair.Key).ToList();
                             }
                         }
                     }
@@ -1253,6 +1337,37 @@ namespace Downloader
                 Contentjson = Contentjson.Replace("\r", String.Empty).Replace("\n", String.Empty).Replace(@"\\", "/");
                 File.WriteAllText(@System.IO.Path.Combine(dir, "updateList.json"), Contentjson);
                 return result;
+            }
+
+            static public bool SelfUpdateDismissed()
+            {
+                string json;
+                string dir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+                if (!File.Exists(System.IO.Path.Combine(dir, "updateList.json")))
+                    return false;
+                using (StreamReader r = new StreamReader(System.IO.Path.Combine(dir, "updateList.json")))
+                    json = r.ReadToEnd();
+                json = json.Replace("\r", string.Empty).Replace("\n", string.Empty);
+                List<string> jsonList;
+                if (json != null)
+                    jsonList = JsonConvert.DeserializeObject<List<string>>(json);
+                else
+                    return false;
+                if (jsonList != null && jsonList.Contains("Dismiss"))
+                {
+                    listJsonClear(System.IO.Path.Combine(dir, "updateList.json"));
+                    return true;
+                }
+                return false;
+            }
+
+            static private void listJsonClear(string directory)
+            {
+                List<string> list = new List<string>();
+                list.Add("None");
+                StreamWriter sw = new StreamWriter(directory, false);
+                sw.WriteLine(JsonConvert.SerializeObject(list));
+                sw.Close();
             }
         }
     }
@@ -1498,7 +1613,7 @@ namespace WebConnect
             }
         }
 
-        public static int WriteUserEmail(string email)
+        public static int WriteJson(string key, string data)
         {
             try
             {
@@ -1512,13 +1627,13 @@ namespace WebConnect
                 }
                 Dictionary<string, string> dict = new Dictionary<string, string>();
                 dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-                if (!dict.ContainsKey("email"))
+                if (!dict.ContainsKey(key))
                 {
-                    dict.Add("email", email);
+                    dict.Add(key, data);
                 }
                 else
                 {
-                    dict["email"] = email;
+                    dict[key] = data;
                 }
                 sr.Close();
                 fs.Close();
@@ -1535,44 +1650,7 @@ namespace WebConnect
             }
         }
 
-        public static int WriteUserPassword(string password)
-        {
-            try
-            {
-                string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
-                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.ReadWrite);
-                StreamReader sr = new StreamReader(fs);
-                string json = sr.ReadToEnd();
-                if (json == null || json == "")
-                {
-                    json += @"{""THUAI6""" + ":" + @"""2023""}";
-                }
-                Dictionary<string, string> dict = new Dictionary<string, string>();
-                dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-                if (!dict.ContainsKey("password"))
-                {
-                    dict.Add("password", password);
-                }
-                else
-                {
-                    dict["password"] = password;
-                }
-                sr.Close();
-                fs.Close();
-                FileStream fs2 = new FileStream(savepath, FileMode.Open, FileAccess.ReadWrite);
-                StreamWriter sw = new StreamWriter(fs2);
-                sw.WriteLine(JsonConvert.SerializeObject(dict));
-                sw.Close();
-                fs2.Close();
-                return 0;//成功
-            }
-            catch
-            {
-                return -1;//失败,THUAI6.json 文件不存在或者已被占用
-            }
-        }
-
-        public static string ReadUserPassword()
+        public static string ReadJson(string key)
         {
             try
             {
@@ -1586,7 +1664,9 @@ namespace WebConnect
                     json += @"{""THUAI6""" + ":" + @"""2023""}";
                 }
                 dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-                return dict["password"];
+                fs.Close();
+                sr.Close();
+                return dict[key];
 
             }
             catch
@@ -1595,27 +1675,6 @@ namespace WebConnect
             }
         }
 
-        public static string ReadUserEmail()
-        {
-            try
-            {
-                string savepath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
-                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.Read);
-                StreamReader sr = new StreamReader(fs);
-                string json = sr.ReadToEnd();
-                Dictionary<string, string> dict = new Dictionary<string, string>();
-                if (json == null || json == "")
-                {
-                    json += @"{""THUAI6""" + ":" + @"""2023""}";
-                }
-                dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-                return dict["email"];
-            }
-            catch
-            {
-                return null;
-            }
-        }
         public bool ReadToken()  // 读取token
         {
             try

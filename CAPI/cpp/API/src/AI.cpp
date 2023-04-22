@@ -3,6 +3,7 @@
 #include <array>
 #include "AI.h"
 #include "constants.h"
+//注意不要使用conio.h，Windows.h等非标准库
 
 // 为假则play()期间确保游戏状态不更新，为真则只保证游戏状态在调用相关方法时不更新
 extern const bool asynchronous = false;

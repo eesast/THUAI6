@@ -8,6 +8,7 @@ public class MapManager : MonoBehaviour
     // Start is called before the first frame update
     private bool mapFinished;
     private MessageOfMap map;
+    private MessageOfStudent Student;
     private int rowCount = 50;
     private int colCount = 50;
 
@@ -16,6 +17,15 @@ public class MapManager : MonoBehaviour
     public GameObject land; 
     public GameObject door;
     public GameObject window;
+    public GameObject box;
+    public GameObject book;
+    public GameObject student_1;
+    public GameObject student_2;
+    public GameObject student_3;
+    public GameObject student_4;
+    public GameObject Monster_1;
+    public GameObject Monster_2;
+    public GameObject Monster_3;
     void Start()
     {
         mapFinished = false;
@@ -27,16 +37,16 @@ public class MapManager : MonoBehaviour
         if (!mapFinished && MessageReceiver.map != null)
         {
             map = MessageReceiver.map;
-            Debug.Log("valid map");
             //Debug.Log("valid map");
             mapFinished = true;
             ShowMap(map);
         }
+
     }
 
     private void ShowMap(MessageOfMap map)
     {
-        var position = new Vector3(-24.5f, 12.25f, 12.25f);
+        var position = new Vector3(-0.5f, 49.5f, 49.5f);
         var block = new GameObject();
         for (int i = 0; i < rowCount; i++)
         {
@@ -49,10 +59,9 @@ public class MapManager : MonoBehaviour
                     Instantiate(block, position, new Quaternion(0, 0, 0, 0));
                 }
             }
-            position.x = -24.5f;
-            position.z=position.y = position.y - 0.5f;
+            position.x = -0.5f;
+            position.z=position.y = position.y - 1.0f;
         }
-
     }
 
     private GameObject ShowBlock(PlaceType obj)
@@ -66,7 +75,9 @@ public class MapManager : MonoBehaviour
             case PlaceType.Door5: return door;
             case PlaceType.Door6: return door;
             case PlaceType.Window: return window;
-            default:return null;
+            case PlaceType.Chest:return box;
+            case PlaceType.Classroom:return book;
+            default:return land;
         }
     }
 }

@@ -62,6 +62,7 @@ jobs:
         cp ./dependency/proto/Message2Server.proto ./THUAI6/win/CAPI/proto/
         cp ./dependency/proto/Services.proto ./THUAI6/win/CAPI/proto/
         cp ./dependency/proto/MessageType.proto ./THUAI6/win/CAPI/proto/
+        cp ./dependency/proto/cpp_output.sh ./THUAI6/win/CAPI/proto/
 
         cp -r ./CAPI/cpp/API ./THUAI6/win/CAPI/cpp
         cp -r ./CAPI/cpp/grpc ./THUAI6/win/CAPI/cpp

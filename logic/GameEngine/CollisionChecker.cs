@@ -156,13 +156,13 @@ namespace GameEngine
                                             {
                                                 double tmp = mod - obj.Radius - listObj.Radius;
                                                 // 计算能走的最长距离，好像这么算有一点误差？
-                                                tmp = ((int)(tmp*1000 / Math.Cos(Math.Atan2(orgDeltaY, orgDeltaX) - moveVec.Angle())));
+                                                tmp = ((int)(tmp * 1000 / Math.Cos(Math.Atan2(orgDeltaY, orgDeltaX) - moveVec.Angle())));
                                                 if (tmp < 0 || tmp > uint.MaxValue || double.IsNaN(tmp))
                                                 {
                                                     tmpMax = uint.MaxValue;
                                                 }
                                                 else
-                                                    tmpMax = tmp/1000.0;
+                                                    tmpMax = tmp / 1000.0;
                                             }
                                             break;
                                         }

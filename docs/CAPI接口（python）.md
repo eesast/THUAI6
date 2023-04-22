@@ -57,7 +57,7 @@
 
 #### 查询可视范围内的信息
 
-  - `std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const` ：返回所有可视学生的信息。
+  - `std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const` ：对于学生，返回所有学生的信息；对于捣蛋鬼，返回可视学生的信息。
   - `std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const` ：返回所有可视捣蛋鬼的信息。
   - `std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const` ：返回所有可视道具的信息。
   - `std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const` ：返回所有可视子弹（攻击）的信息。

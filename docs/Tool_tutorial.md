@@ -265,7 +265,7 @@ std::string str_fmt = fmt::format("number: {}{}", 1, teststr); // 两种方法�
 
 ## Python接口必看
 
-比赛**只保证！！**支持Python3.9，不保证支持其他版本
+比赛**只保证！！**支持 Python 3.9，不保证支持其他版本
 
 比赛中的Python接口大多使用异步接口，即返回一个类似于 `Future[bool]` 的值。为了获取实际的值，需要调用 `result()` 方法。
 

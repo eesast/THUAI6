@@ -11,12 +11,14 @@ using System.Windows.Markup;
 using System;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using System.Windows;
+using System.Windows.Documents;
 
 namespace Program
 {
     class Updater
     {
-        public static string Dir = Directory.GetCurrentDirectory();
+        public static string Dir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
         public static string InstallerName = "Installer.exe";
         public static string jsonKey = "installerHash.json";
         public static string KeyHead = "Installer/";
@@ -32,15 +34,57 @@ namespace Program
                 List<string> jsonList = JsonConvert.DeserializeObject<List<string>>(json);
                 foreach (string todo in jsonList)
                 {
-                    File.Delete(Path.Combine(Dir, todo));
-                    download(Path.Combine(Dir, todo), KeyHead + todo);
+                    if (!todo.Equals("None"))
+                    {
+                        File.Delete(Path.Combine(Dir, todo));
+                        download(Path.Combine(Dir, todo), KeyHead + todo);
+                    }
                 }
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("下载器本体未能成功关闭");
+                return false;
             }
             catch
             {
+                MessageBox.Show("尝试下载时出现问题");
                 return false;
             }
             return true;
+        }
+
+        public static int TellDismiss()
+        {
+            try
+            {
+                string savepath = System.IO.Path.Combine(Dir, "updateList.json");
+                FileStream fs = new FileStream(savepath, FileMode.Open, FileAccess.ReadWrite);
+                StreamReader sr = new StreamReader(fs);
+                string json = sr.ReadToEnd();
+                if (json == null || json == "")
+                {
+                    json += @"{""None""}";
+                }
+                List<string> ls = new List<string>();
+                ls = JsonConvert.DeserializeObject<List<string>>(json);
+                if (!ls.Contains("Dismiss"))
+                {
+                    ls.Add("Dismiss");
+                }
+                sr.Close();
+                fs.Close();
+
+                StreamWriter sw = new StreamWriter(System.IO.Path.Combine(Dir, "updateList.json"), false);
+                sw.WriteLine(JsonConvert.SerializeObject(ls));
+                sw.Close();
+
+                return 0;//成功
+            }
+            catch
+            {
+                return -1;//失败
+            }
         }
 
         public static void download(string download_dir, string key)

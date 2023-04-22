@@ -1,0 +1,12 @@
+FROM ubuntu:18.04
+WORKDIR /usr/local
+RUN mkdir /usr/local/team1 && mkdir /usr/local/team2 && mkdir /usr/local/playback
+COPY ./dependency/shell/runserver.sh .
+COPY ./dependency/shell/runcpp.sh .
+RUN RUN apt-get update && apt-get install --no-install-recommends -y gcc g++ make wget ca-certificates cmake autoconf automake libtool curl unzip git
+RUN wget -P . https://cloud.tsinghua.edu.cn/f/e48940314a6d4cdb8bd0/?dl=1
+RUN mv 'index.html?dl=1' Server.tar.gz
+RUN tar -zxvf Server.tar.gz
+WORKDIR /usr/local/PlayerCode
+
+ENTRYPOINT [ "bash","./runserver.sh" ]

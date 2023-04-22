@@ -40,6 +40,7 @@ GitLink 镜像地址：[THUAI6: GitLink Mirror](https://www.gitlink.org.cn/EESAS
 | :--------: | :--------------------------------------------------------: | :----------------------------: |
 |  .github   |           CI，用于选手包同步到服务器上供选手下载           |             运维组             |
 |    CAPI    |                C++ 选手接口，生成可执行文件                |             通信组             |
+|    docs    |                      比赛的说明文档                      | 逻辑组、通信组、运维组、界面组 |
 | dependency | 项目依赖文件，如 proto、dll、lib、dockerfile、shell 脚本等 | 逻辑组、通信组、运维组、界面组 |
 | installer  |       下载器，用于选手包的下载与更新，生成可执行文件       |             运维组             |
 | interface  |                         Unity 界面                         |             界面组             |

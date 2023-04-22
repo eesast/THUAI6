@@ -5,10 +5,15 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>EESAST.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="EESAST.ico" />
   </ItemGroup>
 
   <ItemGroup>

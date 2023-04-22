@@ -40,7 +40,8 @@
         <Button Grid.Row="3" Grid.Column="6" Name="GetRouteBtn" Content="选择文件夹" Command="{Binding ClickBrowseCommand}" Visibility="{Binding RouteBoxVis}" />
         <Button Grid.Row="3" Grid.Column="7" Name="SetBtm" Content="{Binding ConfirmBtnCont}" Command="{Binding ClickConfirmCommand}" Visibility="{Binding RouteBoxVis}"/>
         <Button Grid.Row="4" Grid.Column="6" Grid.ColumnSpan="2" Name="ReadExsisted" Content="所选文件夹即为选手包" Command="{Binding ClickReadCommand}" Visibility="{Binding NewUserVis}"/>
-        
+
+        <Button Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Name="SwitchOSBtn" Content="{Binding SwitchOSBtnCont}" Command="{Binding ClickSwitchOSCommand}" Visibility="{Binding MenuVis}" />
         <Button Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Name="UpdateBtn" Content="{Binding UpdateBtnCont}" Command="{Binding ClickUpdateCommand}" Visibility="{Binding MenuVis}" />
         <TextBlock Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" FontSize="10" Text="{Binding UpdateInfo}" Visibility="{Binding UpdateInfoVis}" />
 

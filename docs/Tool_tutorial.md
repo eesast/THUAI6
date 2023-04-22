@@ -244,9 +244,28 @@ for (auto itr = begin(arr); itr != end(arr); ++itr)
 
 
 
+### fmt库的使用
+
+
+
+选手包中内置了 `fmt` 库，因此选手可以通过 `fmt` 库来格式化字符串，而无须自己手动格式化。
+
+```c++
+std::string str_std = "number: " + std::to_string(1) + teststr;
+std::string str_fmt = fmt::format("number: {}{}", 1, teststr); // 两种方法等价
+```
+
+
+
+`fmt`库还支持更多强大的操作，例如更精确的格式化、更简便的转化等。
+
+更多用法参见（点击进入）：[fmt_index](https://fmt.dev/latest/index.html)。
+
+
+
 ## Python接口必看
 
-比赛**只保证！！**支持Python3.9，不保证支持其他版本
+比赛**只保证！！**支持 Python 3.9，不保证支持其他版本
 
 比赛中的Python接口大多使用异步接口，即返回一个类似于 `Future[bool]` 的值。为了获取实际的值，需要调用 `result()` 方法。
 

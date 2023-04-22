@@ -1321,10 +1321,10 @@ namespace Client
             {
                 _ = Process.Start("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "https://eesast.com");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
-                //error.Show();
+                ErrorDisplayer error = new("发生错误。以下是系统报告\n" + ex.ToString());
+                error.Show();
             }
         }
 
@@ -1370,10 +1370,10 @@ namespace Client
             {
                 throw new Exception("敬请期待");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //ErrorDisplayer error = new(exc.Message)
-                //error.Show()
+                ErrorDisplayer error = new(ex.Message);
+                error.Show();
             }
         }
 

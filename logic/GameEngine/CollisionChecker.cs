@@ -123,12 +123,9 @@ namespace GameEngine
         /// <returns>最大可能的移动距离</returns>
         public double FindMax(IMoveable obj, XY nextPos, XY moveVec)
         {
-            double maxLen = (double)uint.MaxValue;
-            double tmpMax = maxLen;  // 暂存最大值
+            double tmpMax = uint.MaxValue;  // 暂存最大值
 
-            // 先找只考虑墙的最大距离
-            // double maxOnlyConsiderWall = FindMaxOnlyConsiderWall(obj, moveVec);
-            double maxDistance = maxLen;
+            double maxDistance = uint.MaxValue;
             foreach (var listWithLock in lists)
             {
                 var lst = listWithLock.Item1;
@@ -159,13 +156,13 @@ namespace GameEngine
                                             {
                                                 double tmp = mod - obj.Radius - listObj.Radius;
                                                 // 计算能走的最长距离，好像这么算有一点误差？
-                                                tmp = tmp / Math.Cos(Math.Atan2(orgDeltaY, orgDeltaX) - moveVec.Angle());
-                                                if (tmp < 0 || tmp > uint.MaxValue || tmp == double.NaN)
+                                                tmp = ((int)(tmp*1000 / Math.Cos(Math.Atan2(orgDeltaY, orgDeltaX) - moveVec.Angle())));
+                                                if (tmp < 0 || tmp > uint.MaxValue || double.IsNaN(tmp))
                                                 {
                                                     tmpMax = uint.MaxValue;
                                                 }
                                                 else
-                                                    tmpMax = tmp;
+                                                    tmpMax = tmp/1000.0;
                                             }
                                             break;
                                         }
@@ -207,11 +204,9 @@ namespace GameEngine
                 }
                 finally
                 {
-                    // maxLen = Math.Min(maxOnlyConsiderWall, maxDistance); //最大可能距离的最小值
                     listLock.ExitReadLock();
                 }
             }
-            // return maxLen;
             return maxDistance;
         }
 

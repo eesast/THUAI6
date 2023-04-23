@@ -44,6 +44,12 @@ namespace Server
                     playbackServer.WaitForGame();
                     Console.WriteLine("Server end!");
                     server.ShutdownAsync().Wait();
+
+                    Thread.Sleep(50);
+                    Console.WriteLine("");
+                    Console.WriteLine("===================  Final Score   ====================");
+                    Console.WriteLine($"Studnet: {playbackServer.FinalScore[0]}");
+                    Console.WriteLine($"Tricker: {playbackServer.FinalScore[1]}");
                 }
                 catch (Exception ex)
                 {

@@ -20,11 +20,20 @@ namespace Server
         public int TeamCount => options.TeamCount;
         private MessageWriter? mwr = null;
         private bool IsGaming { get; set; }
+        private int[] finalScore;
+        public int[] FinalScore
+        {
+            get
+            {
+                return finalScore;
+            }
+        }
         public PlaybackServer(ArgumentOptions options)
         {
             this.options = options;
             IsGaming = true;
             teamScore = new int[0, 0];
+            finalScore = new int[0];
         }
 
         public override async Task AddPlayer(PlayerMsg request, IServerStreamWriter<MessageToClient> responseStream, ServerCallContext context)
@@ -92,6 +101,7 @@ namespace Server
                     {
                         Console.WriteLine("Parsing playback file...");
                         teamScore = new int[mr.teamCount, mr.playerCount];
+                        finalScore = new int[mr.teamCount];
                         int infoNo = 0;
                         object cursorLock = new object();
                         var initialTop = Console.CursorTop;
@@ -137,6 +147,8 @@ namespace Server
                             if (msg.GameState == GameState.GameEnd)
                             {
                                 Console.WriteLine("Game over normally!");
+                                finalScore[0] = msg.AllMessage.StudentScore;
+                                finalScore[1] = msg.AllMessage.TrickerScore;
                                 goto endParse;
                             }
                         }
@@ -157,6 +169,7 @@ namespace Server
                     using (MessageReader mr = new MessageReader(options.FileName))
                     {
                         teamScore = new int[mr.teamCount, mr.playerCount];
+                        finalScore = new int[mr.teamCount];
                         int infoNo = 0;
                         object cursorLock = new object();
                         var msgCurTop = Console.CursorTop;
@@ -208,6 +221,8 @@ namespace Server
                                 {
                                     Console.WriteLine("Game over normally!");
                                     IsGaming = false;
+                                    finalScore[0] = msg.AllMessage.StudentScore;
+                                    finalScore[1] = msg.AllMessage.TrickerScore;
                                     ReportGame(msg);
                                     return false;
                                 }

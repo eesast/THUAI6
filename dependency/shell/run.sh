@@ -1,6 +1,6 @@
 #!/usr/local
 
-nice -10 ./Server/Server --port 8888 --studentCount 4 --trickerCount 1 --gameTimeInSecond 600
+nice -10 ./Server/Server --port 8888 --studentCount 4 --trickerCount 1 --gameTimeInSecond 600 --url $URL --token $TOKEN
 sleep 5
 for k in {1..2}
 do

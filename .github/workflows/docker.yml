@@ -1,13 +1,13 @@
 name: "docker"
 on:
   push:
-    branches: [main,dev]
+    branches: [main]
 
 jobs:
   upload_docker_images:
     runs-on: ubuntu-latest
     steps:
-    -uses: actions/checkout@v3
+    - uses: actions/checkout@v3
     - name: Log in to DockerHub
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
     - name: Build base docker image

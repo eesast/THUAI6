@@ -5,8 +5,7 @@ flag=1
 bind=/usr/local/mnt
 while (( $i <= 4 ))
 do
-    cp -f $bind/player$i.cpp ./API/src
-    mv ./API/src/player$i.cpp ./API/src/AI.cpp
+    mv -f $bind/player$i.cpp ./API/src/AI.cpp
     cmake ./CMakeLists.txt && make >compile_log$i.txt 2>&1
     mv ./capi $bind/capi$i # executable file
     if [ $? -ne 0 ]; then

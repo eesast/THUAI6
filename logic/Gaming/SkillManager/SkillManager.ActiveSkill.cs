@@ -51,7 +51,7 @@ namespace Gaming
                                      {
                                          if (!person.IsGhost() && player.CharacterType != CharacterType.Robot && !person.NoHp())
                                          {
-                                             double dis = XY.Distance(person.Position, player.Position);
+                                             double dis = XY.DistanceFloor3(person.Position, player.Position);
                                              if (dis >= player.AlertnessRadius)
                                              {
                                                  person.AddMoveSpeed(GameData.checkIntervalWhenShowTime, dis / player.AlertnessRadius);
@@ -185,7 +185,7 @@ namespace Gaming
                     {
                         foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            if (!character.IsGhost() && !character.NoHp() && XY.Distance(character.Position, player.Position) <= player.ViewRange)
+                            if (!character.IsGhost() && !character.NoHp() && XY.DistanceFloor3(character.Position, player.Position) <= player.ViewRange)
                             {
                                 if (characterManager.BeStunned(character, GameData.timeOfStudentStunnedWhenHowl))
                                     player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStudentStunnedWhenHowl));

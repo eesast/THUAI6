@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Net.NetworkInformation;
 using System.Threading;
 using GameClass.GameObj;
 using GameEngine;

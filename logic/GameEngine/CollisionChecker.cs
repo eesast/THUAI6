@@ -75,7 +75,7 @@ namespace GameEngine
         //     if (obj.WillCollideWith(square, obj.Position))
         //         tmpMax = 0;
         //     else tmpMax =
-        //         Math.Abs(XYPosition.Distance(obj.Position, square.Position) - obj.Radius -
+        //         Math.Abs(XYPosition.DistanceFloor3(obj.Position, square.Position) - obj.Radius -
         //         (square.Radius / Math.Min(Math.Abs(Math.Cos(angle)), Math.Abs(Math.Sin(angle)))));
         //     return tmpMax;
         // }
@@ -144,7 +144,7 @@ namespace GameEngine
                                     case ShapeType.Circle:
                                         {
                                             // 计算两者之间的距离
-                                            double mod = XY.Distance(listObj.Position, obj.Position);
+                                            double mod = XY.DistanceFloor3(listObj.Position, obj.Position);
                                             int orgDeltaX = listObj.Position.x - obj.Position.x;
                                             int orgDeltaY = listObj.Position.y - obj.Position.y;
 
@@ -181,7 +181,7 @@ namespace GameEngine
                                                 while (left < right - 1)
                                                 {
                                                     int mid = (right - left) / 2 + left;
-                                                    if (obj.WillCollideWith(listObj, obj.Position + new XY((int)(mid * Math.Cos(moveVec.Angle())), (int)(mid * Math.Sin(moveVec.Angle())))))
+                                                    if (obj.WillCollideWith(listObj, obj.Position + new XY(moveVec, mid)))
                                                     {
                                                         right = mid;
                                                     }

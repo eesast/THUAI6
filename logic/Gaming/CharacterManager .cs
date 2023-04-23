@@ -135,10 +135,10 @@ namespace Gaming
                                     double bgmVolume = 0;
                                     foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
                                     {
-                                        if (!person.IsGhost() && XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
+                                        if (!person.IsGhost() && XY.DistanceFloor3(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
                                         {
-                                            if ((double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position) > bgmVolume)
-                                                bgmVolume = newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position);
+                                            if ((double)newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position) > bgmVolume)
+                                                bgmVolume = newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position);
                                         }
                                     }
                                     newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
@@ -151,11 +151,11 @@ namespace Gaming
                                         {
                                             if (!noise)
                                             {
-                                                if (XY.Distance(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                                    newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.Distance(newPlayer.Position, person.Position));
+                                                if (XY.DistanceFloor3(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
+                                                    newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position));
                                                 else newPlayer.AddBgm(BgmType.GhostIsComing, 0);
                                             }
-                                            if (newPlayer.CharacterType != CharacterType.Teacher && newPlayer.CharacterType != CharacterType.Robot && !newPlayer.NoHp() && newPlayer.PlayerState != PlayerStateType.Stunned && XY.Distance(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
+                                            if (newPlayer.CharacterType != CharacterType.Teacher && newPlayer.CharacterType != CharacterType.Robot && !newPlayer.NoHp() && newPlayer.PlayerState != PlayerStateType.Stunned && XY.DistanceFloor3(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
                                             {
                                                 TimePinningDown += GameData.checkInterval;
                                                 newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
@@ -180,10 +180,10 @@ namespace Gaming
                                     double bgmVolume = 0;
                                     foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
                                     {
-                                        if (XY.Distance(newPlayer.Position, generator.Position) <= newPlayer.AlertnessRadius)
+                                        if (XY.DistanceFloor3(newPlayer.Position, generator.Position) <= newPlayer.AlertnessRadius)
                                         {
-                                            if (generator.NumOfFixing > 0 && (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position) > bgmVolume)
-                                                bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.Distance(newPlayer.Position, generator.Position);
+                                            if (generator.NumOfFixing > 0 && (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.DistanceFloor3(newPlayer.Position, generator.Position) > bgmVolume)
+                                                bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.DistanceFloor3(newPlayer.Position, generator.Position);
                                         }
                                     }
                                     newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, bgmVolume);

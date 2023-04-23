@@ -10,10 +10,11 @@ jobs:
     - uses: actions/checkout@v3
     - name: Log in to DockerHub
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-    - name: Build base docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai6_base:base -f ./dependency/Dockerfile/Dockerfile_base .
-    - name: Push base image to DockerHub
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai6_base:base
+
+    #- name: Build base docker image
+    #  run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai6_base:base -f ./dependency/Dockerfile/Dockerfile_base .
+    #- name: Push base image to DockerHub
+    #  run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai6_base:base
 
 
     - name: Build cpp_compile docker image

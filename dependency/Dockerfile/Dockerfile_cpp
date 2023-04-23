@@ -9,7 +9,9 @@ WORKDIR /usr/local/PlayerCode/dependency/proto
 RUN ./cpp_output.sh
 WORKDIR /usr/local/PlayerCode/CAPI/cpp
 COPY ./dependency/shell/compile.sh .
-ENTRYPOINT ["bash","./compile.sh"]
+COPY ./dependency/shell/docker.sh /usr/local/
+WORKDIR /usr/local
+ENTRYPOINT ["bash","./docker.sh"]
 #WORKDIR /usr/local/PlayerCode/CAPI/cpp
 #RUN cmake ./CMakeLists.txt
 #RUN make

@@ -51,16 +51,16 @@
 
 #### 队内信息
 
-  - `std::future<bool> SendMessage(int64_t, std::string)`：给同队的队友发送消息。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
-  - `bool HaveMessage()`:是否有队友发来的尚未接收的信息。
-  - `std::pair<int64_t, std::string> GetMessage()`:按照消息发送顺序获取来自队友的信息，第一个参数为发送该消息的PlayerID。
+  - `def GetMessage(self) -> Tuple[int, str]`：给同队的队友发送消息。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
+  - `def HaveMessage(self) -> bool`:是否有队友发来的尚未接收的信息。
+  - `def GetMessage(self) -> Tuple[int, str]`:按照消息发送顺序获取来自队友的信息，第一个参数为发送该消息的PlayerID。
 
 #### 查询可视范围内的信息
 
-  - `std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const` ：对于学生，返回所有学生的信息；对于捣蛋鬼，返回可视学生的信息。
-  - `std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const` ：返回所有可视捣蛋鬼的信息。
-  - `std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const` ：返回所有可视道具的信息。
-  - `std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const` ：返回所有可视子弹（攻击）的信息。
+  - `def GetStudents(self) -> List[THUAI6.Student]` ：对于学生，返回所有学生的信息；对于捣蛋鬼，返回可视学生的信息。
+  - `def GetTrickers(self) -> List[THUAI6.Tricker]` ：返回所有可视捣蛋鬼的信息。
+  - `def GetProps(self) -> List[THUAI6.Prop]` ：返回所有可视道具的信息。
+  - `def GetBullets(self) -> List[THUAI6.Bullet]` ：返回所有可视子弹（攻击）的信息。
 
 #### 查询特定位置物体的信息
 

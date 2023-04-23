@@ -24,7 +24,7 @@ namespace Preparation.Interface
 
             if (targetObj.Shape == ShapeType.Circle)
             {
-                return XY.Distance(nextPos, targetObj.Position) < targetObj.Radius + Radius;
+                return XY.DistanceCeil3(nextPos, targetObj.Position) < targetObj.Radius + Radius;
             }
             else  // Square
             {

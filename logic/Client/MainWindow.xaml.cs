@@ -288,7 +288,7 @@ namespace Client
             {
                 for (int j = 0; j < 50; j++)
                 {
-                    if (mapPatches[i, j] != null)
+                    if (mapPatches[i, j] != null && (mapPatches[i, j].Width != UpperLayerOfMap.ActualWidth / 50 || mapPatches[i, j].Height != UpperLayerOfMap.ActualHeight / 50))
                     {
                         mapPatches[i, j].Width = UpperLayerOfMap.ActualWidth / 50;
                         mapPatches[i, j].Height = UpperLayerOfMap.ActualHeight / 50;
@@ -299,6 +299,7 @@ namespace Client
                 }
             }
         }
+
         private void DrawMap()
         {
             for (int i = 0; i < defaultMap.GetLength(0); i++)
@@ -560,7 +561,6 @@ namespace Client
             }
         }
 
-        //待修改
         private bool CanSee(MessageOfStudent msg)
         {
             if (msg.PlayerState == PlayerState.Quit || msg.PlayerState == PlayerState.Graduated)
@@ -1037,7 +1037,6 @@ namespace Client
                         }
                         //}
                         ZoomMap();
-
                     }
                     catch (Exception exc)
                     {
@@ -1051,7 +1050,7 @@ namespace Client
             }
         }
 
-        // 键盘控制，未完善
+        // 键盘控制
         private void KeyBoardControl(object sender, KeyEventArgs e)
         {
             if (!isPlaybackMode && !isSpectatorMode)
@@ -1262,7 +1261,6 @@ namespace Client
             }
         }
 
-        // 之后需要修改，现在只具有修改按钮形状的功能，并不能实现暂停/继续
         private void ClickToPauseOrContinue(object sender, RoutedEventArgs e)
         {
             if (!isClientStocked)
@@ -1284,6 +1282,7 @@ namespace Client
                 }
             }
         }
+
         // 未复现
         private void ClickToConnect(object sender, RoutedEventArgs e)
         {
@@ -1297,24 +1296,28 @@ namespace Client
             else
                 WindowState = WindowState.Normal;
         }
+
         private void ClickToClose(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
+
         private void ClickToMinimize(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
         }
+
         private void DragWindow(object sender, RoutedEventArgs e)
         {
             DragMove();
         }
 
-        // 寻求帮助、访问EESAST（部分功能未复原）
+        // 寻求帮助、访问EESAST（部分功能未复现）
         private void ClickForHelp(object sender, RoutedEventArgs e)
         {
             PleaseWait();
         }
+
         private void ClickToVisitEESAST(object sender, RoutedEventArgs e)
         {
             try
@@ -1328,12 +1331,13 @@ namespace Client
             }
         }
 
-        // 配置连接（未复原）、我的AI（THUAI5未实现）、获取更新、天梯信息（可能需要网站协助）
+        // 配置连接（未复现）、我的AI（THUAI5未实现）、获取更新、天梯信息（可能需要网站协助）
         private void ClickToSetConnect(object sender, RoutedEventArgs e)
         {
             //           ConnectRegister crg = new();
             //           crg.Show();
         }
+
         private void ClickToEnterVS(object sender, RoutedEventArgs e)
         {
             // try
@@ -1354,10 +1358,12 @@ namespace Client
             // }
             PleaseWait();
         }
+
         private void ClickForUpdate(object sender, RoutedEventArgs e)
         {
             PleaseWait();
         }
+
         private void ClickToCheckLadder(object sender, RoutedEventArgs e)
         {
             PleaseWait();

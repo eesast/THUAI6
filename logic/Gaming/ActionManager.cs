@@ -88,11 +88,11 @@ namespace Gaming
                       finallyReturn: () => 0
                   )
                       .Start();
+                  --generatorForFix.NumOfFixing;
               }
 
           )
                 { IsBackground = true }.Start();
-                --generatorForFix.NumOfFixing;
 
                 return true;
             }

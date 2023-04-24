@@ -11,7 +11,7 @@ class Setting:
     # 为假则play()期间确保游戏状态不更新，为真则只保证游戏状态在调用相关方法时不更新
     @staticmethod
     def asynchronous() -> bool:
-        return True
+        return False
 
     # 选手需要依次将player0到player4的职业都定义
     @staticmethod

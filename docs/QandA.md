@@ -24,12 +24,6 @@ Q: 怎么开始游戏？
 A: 
 需要确保学生阵营和捣蛋鬼阵营的人数都达到Server.cmd中设定的值。人数不足也可以打开WPF，参考使用文档，修改RunGUIClient.cmd的参数，然后运行RunGUIClient.cmd，这样可以通过WPF运行部分客户端，来达到人数限制。
 
-
-Q: Mac怎么用？
-
-A:
-安装Windows虚拟机
-try
 ## C++ 
 
 Q:显示API项目已卸载
@@ -37,7 +31,7 @@ Q:显示API项目已卸载
 
 A:可能是没有安装C++
 
-Q:CAPI.sln编译不通过
+Q:CAPI.sln编译不通过(第一种)
 情况1：
 ![std_find_trivial](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/std_find_trivial.jpg)
 情况2：
@@ -52,7 +46,7 @@ A:
    ![项目属性](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/项目属性.png)
    确保上图项目属性中平台工具集在 v143，C++17 标准
 
-Q:CAPI编译不通过
+Q:CAPI编译不通过（第二种）
 ![lib](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/lib.png)
 
 A:查看`.\win\CAPI\cpp\`文件夹下是否有`lib`文件夹，没有则https://cloud.tsinghua.edu.cn/d/6972138f641d4e81a446/ 下载并复制粘贴

@@ -46,5 +46,5 @@ do
     ps -p $server_pid
 done
 
-echo "Finish"
 touch $playback_dir/finish.lock
+echo "Finish"

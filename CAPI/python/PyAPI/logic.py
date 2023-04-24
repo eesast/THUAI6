@@ -262,6 +262,9 @@ class Logic(ILogic):
         self.__logger.debug("Called EndAllAction")
         return self.__comm.EndAllAction(self.__playerID)
 
+    def HaveView(self, gridX: int, gridY: int, selfX: int, selfY: int, viewRange: int) -> bool:
+        return AssistFunction.HaveView(viewRange, selfX, selfY, gridX, gridY, self.__currentState.gameMap)
+
     # Logic内部逻辑
     def __TryConnection(self) -> bool:
         self.__logger.info("Try to connect to server...")

@@ -16,19 +16,13 @@ class BoolErrorHandler(IErrorHandler):
 
 
 class Communication:
-
-    __THUAI6Stub: Services.AvailableServiceStub
-    __haveNewMessage: bool
-    __message2Client: Message2Clients.MessageToClient
-    __mtxMessage: threading.Lock
-    __cvMessage: threading.Condition
-
     def __init__(self, sIP: str, sPort: str):
         aim = sIP + ':' + sPort
         channel = grpc.insecure_channel(aim)
         self.__THUAI6Stub = Services.AvailableServiceStub(channel)
         self.__haveNewMessage = False
         self.__cvMessage = threading.Condition()
+        self.__message2Client: Message2Clients.MessageToClient
 
     def Move(self, time: int, angle: float, playerID: int) -> bool:
         try:

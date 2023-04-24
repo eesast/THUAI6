@@ -118,7 +118,7 @@ mypair<int> cal(mypair<int> orgScore, mypair<int> competitionScore)
 
 今年把得分上限这个东西去掉了。理论上今年可以得很高很高分，但是我估计大部分比赛得分在400-600左右，最高估计1000左右。算法 借 鉴 了THUAI4,算法，换了个激活函数（正态CDF），感觉分数变化相对更好了一些？
 代码如下：
-~~~C++
+```cpp
 #include <iostream>
 #include <algorithm>
 #include <cmath>
@@ -238,6 +238,7 @@ int main()
     auto sco = mypair<int>(x, y);
     Print(cal(ori, sco));
 }
+```
 
 `1000 - score`（x
 `ReLU(1000 - score)`（√

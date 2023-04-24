@@ -240,6 +240,6 @@ int main()
 }
 ```
 
-`1000 - score`（x
-`ReLU(1000 - score)`（√
+`1000 - score`（x  
+`ReLU(1000 - score)`（√  
 防止真的超过了 1000）

@@ -397,8 +397,10 @@ namespace Gaming
                         ((SummonGolem)(((Golem)player).Parent.FindIActiveSkill(ActiveSkillType.SummonGolem))).GolemSummoned = null;
                         player.FindIActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed = false;
                     }
+                    gameMap.Remove(player);
                     return;
                 }
+                gameMap.Remove(player);
                 ++gameMap.NumOfDeceasedStudent;
             }
 

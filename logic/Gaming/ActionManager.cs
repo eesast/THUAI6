@@ -79,10 +79,9 @@ namespace Gaming
                       loopToDo: () =>
                       {
                           if (generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player))
-                          {
-                              characterManager.SetPlayerState(player);
                               gameMap.NumOfRepairedGenerators++;
-                          }
+                          if (generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
+                              characterManager.SetPlayerState(player);
                       },
                       timeInterval: GameData.frameDuration,
                       finallyReturn: () => 0

@@ -1,6 +1,8 @@
 #!/usr/local
 
-nice -10 ./Server/Server --port 8888 --studentCount 4 --trickerCount 1 --gameTimeInSecond 600 --url $URL --token $TOKEN
+python_dir=/usr/local/PlayerCode/CAPI/python/PyAPI
+
+nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --gameTimeInSecond 600 --url $URL --token $TOKEN
 sleep 5
 for k in {1..2}
 do
@@ -9,8 +11,9 @@ do
         for i in {1..4}
         do
             j=$((i - 1))
-            if [ -f "./python/player$i.py" ]; then
-                nice -0 python3 ./python/player$i.py -I 127.0.0.1 -P 8888 -p $j
+            if [ -f "./player$i.py" ]; then
+                cp -f ./player$i.py $python_dir/AI.py
+                nice -0 python3 $python_dir/AI.py -I 127.0.0.1 -P 8888 -p $j
             elif [ -f "./capi$i" ]; then
                 nice -0 ./capi$i -I 127.0.0.1 -P 8888 -p $j
             else
@@ -21,8 +24,9 @@ do
         for i in {5..5}
         do
             j=$((i - 1))
-            if [ -f "./python/player$i.py" ]; then
-                nice -0 python3 ./python/player$i.py -I 127.0.0.1 -P 8888 -p $j
+            if [ -f "./player$i.py" ]; then
+                cp -f ./player$i.py $python_dir/AI.py
+                nice -0 python3 $python_dir/AI.py -I 127.0.0.1 -P 8888 -p $j
             elif [ -f "./capi$i" ]; then
                 nice -0 ./capi$i -I 127.0.0.1 -P 8888 -p $j
             else

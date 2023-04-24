@@ -13,9 +13,9 @@
 
 #### 人物
 - `std::future<bool> EndAllAction()`:可以使不处在不可行动状态中的玩家终止当前行动
-- 在指令仍在进行时，重复发出同一类型的交互指令和移动指令是无效的，你需要先发出Stop指令终止进行的指令
+- 在指令仍在进行时，重复发出同一类型的交互指令和移动指令是无效的，你需要先发出 Stop 指令终止进行的指令
   - 实际上唤醒或勉励不同的人是有效的
-- EndAllAction()及Move指令调用数总和一帧内不超过10次
+- EndAllAction() 及 Move 指令调用数总和一帧内不超过 10 次
 
 #### 攻击
 - `std::future<bool> Attack(double angleInRadian)`:`angleInRadian`为攻击方向
@@ -59,7 +59,7 @@
 
   - `THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY)` ：返回某一位置场地种类信息。场地种类详见 structure.h 。
   - `bool IsDoorOpen(int32_t cellX, int32_t cellY) const`:查询特定位置门是否开启，没有门也返回false
-  - 以下指令特定位置没有对应物品返回-1
+  - 以下指令，若查询物品当前在视野内，则返回最新进度；若物品当前不在视野内、但曾经出现在视野内，则返回最后一次看到时的进度；若物品从未出现在视野内，或查询位置没有对应的物品，则返回 -1。
     - `int32_t GetChestProgress(int32_t cellX, int32_t cellY) const`:查询特定位置箱子开启进度
     - `int32_t GetGateProgress(int32_t cellX, int32_t cellY) const`:查询特定位置校门开启进度
     - `int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const`:查询特定位置教室作业完成进度
@@ -74,9 +74,9 @@
   - `std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const`：返回整张地图的地形信息。可以写成类似`api.GetFullMap()[x][y]`，其中x为地图自上到下第几行，y为自左向右第几列，注意从0开始
 
 ### 辅助函数
-`static inline int CellToGrid(int cell) noexcept`:将地图格数 cell 转换为绝对坐标grid。
+`static inline int CellToGrid(int cell) noexcept`:将地图格数 cell 转换为绝对坐标 grid。
 
-`static inline int GridToCell(int grid) noexcept`:将绝对坐标 grid 转换为地图格数cell。
+`static inline int GridToCell(int grid) noexcept`:将绝对坐标 grid 转换为地图格数 cell。
 
 下面为用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
 ~~~c++
@@ -126,7 +126,7 @@
     // 获取视野内可见的道具信息
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const = 0;
 
-    // 获取地图信息，视野外的地图统一为Land
+    // 获取地图信息
     [[nodiscard]] virtual std::vector<std::vector<THUAI6::PlaceType>> GetFullMap() const = 0;
     [[nodiscard]] virtual THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY) const = 0;
 

@@ -3,15 +3,19 @@
 i=1
 flag=1
 bind=/usr/local/mnt
-while (( $i <= 4 ))
+while (( $i <= 5 ))
 do
-    mv -f $bind/player$i.cpp ./API/src/AI.cpp
-    cmake ./CMakeLists.txt && make >compile_log$i.txt 2>&1
-    mv ./capi $bind/capi$i # executable file
-    if [ $? -ne 0 ]; then
+    if [ -f "${bind}/player${i}.cpp" ]; then
+        cp -f $bind/player$i.cpp ./API/src/AI.cpp
+        cmake ./CMakeLists.txt && make >compile_log$i.txt 2>&1
+        mv ./capi $bind/capi$i # executable file
+        if [ $? -ne 0 ]; then
+            flag=0
+        fi
+        mv ./compile_log$i.txt $bind/compile_log$i.txt
+    elif [ ! -f "${bind}/player${i}.py" ]; then
         flag=0
     fi
-    mv ./compile_log$i.txt $bind/compile_log$i.txt
     let "i++"
 done
 # HTML request to update status.

@@ -177,12 +177,10 @@ class Proto2THUAI6(NoInstance):
         tricker.trickDesire = trickerMsg.trick_desire
         tricker.classVolume = trickerMsg.class_volume
         tricker.bulletType = Proto2THUAI6.bulletTypeDict[trickerMsg.bullet_type]
-        tricker.timeUntilSkillAvailable.clear()
         for time in trickerMsg.time_until_skill_available:
             tricker.timeUntilSkillAvailable.append(time)
         tricker.place = Proto2THUAI6.placeTypeDict[trickerMsg.place]
         tricker.playerState = Proto2THUAI6.playerStateDict[trickerMsg.player_state]
-        tricker.prop.clear()
         for item in trickerMsg.prop:
             tricker.prop.append(Proto2THUAI6.propTypeDict[item])
         tricker.trickerType = Proto2THUAI6.trickerTypeDict[trickerMsg.tricker_type]
@@ -190,7 +188,6 @@ class Proto2THUAI6(NoInstance):
         tricker.playerID = trickerMsg.player_id
         tricker.viewRange = trickerMsg.view_range
         tricker.radius = trickerMsg.radius
-        tricker.buff.clear()
         for buff in trickerMsg.buff:
             tricker.buff.append(Proto2THUAI6.trickerBuffTypeDict[buff])
         tricker.playerType = THUAI6.PlayerType.TrickerPlayer
@@ -212,11 +209,9 @@ class Proto2THUAI6(NoInstance):
         student.encourageProgress = studentMsg.treat_progress
         student.rouseProgress = studentMsg.rescue_progress
         student.dangerAlert = studentMsg.danger_alert
-        student.timeUntilSkillAvailable.clear()
         for time in studentMsg.time_until_skill_available:
             student.timeUntilSkillAvailable.append(time)
         student.place = Proto2THUAI6.placeTypeDict[studentMsg.place]
-        student.prop.clear()
         for item in studentMsg.prop:
             student.prop.append(Proto2THUAI6.propTypeDict[item])
         student.studentType = Proto2THUAI6.studentTypeDict[studentMsg.student_type]
@@ -225,7 +220,6 @@ class Proto2THUAI6(NoInstance):
         student.playerID = studentMsg.player_id
         student.viewRange = studentMsg.view_range
         student.radius = studentMsg.radius
-        student.buff.clear()
         for buff in studentMsg.buff:
             student.buff.append(Proto2THUAI6.studentBuffTypeDict[buff])
         student.playerType = THUAI6.PlayerType.StudentPlayer

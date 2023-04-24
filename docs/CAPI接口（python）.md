@@ -8,7 +8,7 @@
 
 #### 移动
 
-- `def Move(self, timeInMilliseconds: int, angle: float) -> Future[bool]`:移动，`timeInMilliseconds` 为移动时间，单位毫秒；`angleInRadian` 表示移动方向，单位弧度，使用极坐标，**竖直向下方向为x轴，水平向右方向为y轴**因为移动过程中你会受到多种干扰使得移动结果不符合你的预期；因此建议小步移动，边移动边考虑之后的行为。   
+- `def Move(self, timeInMilliseconds: int, angle: float) -> Future[bool]`:移动，`timeInMilliseconds` 为移动时间，单位毫秒；`angleInRadian` 表示移动方向，单位弧度，使用极坐标，**竖直向下方向为 x 轴，水平向右方向为 y 轴**因为移动过程中你会受到多种干扰使得移动结果不符合你的预期；因此建议小步移动，边移动边考虑之后的行为。   
 - `def MoveRight(self, timeInMilliseconds: int) -> Future[bool]`即向右移动,`MoveLeft`、`MoveDown`、`MoveUp`同理  
 
 #### 使用技能
@@ -18,9 +18,9 @@
 #### 人物
 
 - `def EndAllAction(self) -> Future[bool]`:可以使不处在不可行动状态中的玩家终止当前行动
-- 在指令仍在进行时，重复发出同一类型的交互指令和移动指令是无效的，你需要先发出Stop指令终止进行的指令
+- 在指令仍在进行时，重复发出同一类型的交互指令和移动指令是无效的，你需要先发出 Stop 指令终止进行的指令
   - 实际上唤醒或勉励不同的人是有效的
-- EndAllAction()及Move指令调用数总和一帧内不超过10次
+- EndAllAction() 及 Move 指令调用数总和一帧内不超过 10 次
 
 #### 攻击
 
@@ -34,8 +34,8 @@
 
 #### 勉励与唤醒
 
-- `def StartEncourageMate(self, mateID: int) -> Future[bool]`:勉励对应玩家ID的学生。
-- `def StartRouseMate(self, mateID: int) -> Future[bool]`：唤醒对应玩家ID的沉迷的学生。
+- `def StartEncourageMate(self, mateID: int) -> Future[bool]`:勉励对应玩家 ID 的学生。
+- `def StartRouseMate(self, mateID: int) -> Future[bool]`：唤醒对应玩家 ID 的沉迷的学生。
 
 #### 地图互动
 
@@ -71,13 +71,13 @@
 
   - `def GetPlaceType(self, cellX: int, cellY: int) -> THUAI6.PlaceType` ：返回某一位置场地种类信息。场地种类详见 structure.h 。
   - `def IsDoorOpen(self, cellX: int, cellY: int) -> bool`:查询特定位置门是否开启，没有门也返回false
-  - 以下指令特定位置没有对应物品返回-1
+  - 以下指令，若查询物品当前在视野内，则返回最新进度；若物品当前不在视野内、但曾经出现在视野内，则返回最后一次看到时的进度；若物品从未出现在视野内，或查询位置没有对应的物品，则返回 -1。
     - `def GetChestProgress(self, cellX: int, cellY: int) -> int`:查询特定位置箱子开启进度
     - `def GetGateProgress(self, cellX: int, cellY: int) -> int`:查询特定位置校门开启进度
     - `def GetClassroomProgress(self, cellX: int, cellY: int) -> int`:查询特定位置教室作业完成进度
     - `def GetDoorProgress(self, cellX: int, cellY: int) -> int`:查询特定位置门开启状态
   - `def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState`：:查询特定位置隐藏校门状态,没有隐藏校门返回THUAI6::HiddenGateState::Null
-  
+
 
 #### 其他
 
@@ -89,11 +89,11 @@
 
 ### 辅助函数
 
-`def CellToGrid(cell: int) -> int`:将地图格数 cell 转换为绝对坐标grid。
+`def CellToGrid(cell: int) -> int`:将地图格数 cell 转换为绝对坐标 grid。
 
-`def GridToCell(grid: int) -> int`:将绝对坐标 grid 转换为地图格数cell。
+`def GridToCell(grid: int) -> int`:将绝对坐标 grid 转换为地图格数 cell。
 
-下面为用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
+下面为用于DEBUG的输出函数，选手仅在开启 Debug 模式的情况下可以使用
 
 ~~~python
     def Print(self, cont: str) -> None:

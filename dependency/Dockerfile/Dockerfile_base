@@ -1,5 +1,5 @@
 FROM python:3.9.16-bullseye
-MAINTAINER eesast.com
+MAINTAINER eesast
 WORKDIR /usr/local
 RUN apt-get update && apt-get install --no-install-recommends -y gcc g++ make wget ca-certificates cmake autoconf automake libtool curl unzip git
 RUN git clone -b v1.46.3 --depth 1 --shallow-submodules  https://gitee.com/mirrors/grpc.git && wget -P . https://cloud.tsinghua.edu.cn/f/1f2713efd9e44255abd6/?dl=1 && mv 'index.html?dl=1' third_party.tar.gz

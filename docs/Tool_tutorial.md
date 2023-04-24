@@ -65,8 +65,9 @@ int main()
 ### 线程睡眠
 
 
-
 由于移动过程中会阻塞人物角色，因此玩家可能要在移动后让线程休眠一段时间，直到移动结束。C++ 标准库中使线程休眠需要包含头文件：`#include <thread>`。示例用法：
+
+我们推荐小步移动，不太建议玩家使用线程睡眠超过一帧
 
 ```cpp
 std::this_thread::sleep_for(std::chrono::milliseconds(20));     // 休眠 20 毫秒

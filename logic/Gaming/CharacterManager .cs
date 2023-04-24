@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Threading;
-using System.Collections.Generic;
 using GameClass.GameObj;
 using Preparation.Utility;
-using GameEngine;
 using Preparation.Interface;
 using Timothy.FrameRateTask;
-using System.Numerics;
-using System.Timers;
 
 namespace Gaming
 {

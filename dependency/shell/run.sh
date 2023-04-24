@@ -15,7 +15,7 @@ do
             j=$((i - 1))
             if [ -f "./player$i.py" ]; then
                 cp -f ./player$i.py $python_dir/AI.py
-                nice -0 python3 $python_dir/AI.py -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log &
+                nice -0 python3 $python_dir/main.py -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log &
             elif [ -f "./capi$i" ]; then
                 nice -0 ./capi$i -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log &
             else
@@ -28,7 +28,7 @@ do
             j=$((i - 1))
             if [ -f "./player$i.py" ]; then
                 cp -f ./player$i.py $python_dir/AI.py
-                nice -0 python3 $python_dir/AI.py -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log &
+                nice -0 python3 $python_dir/main.py -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log &
             elif [ -f "./capi$i" ]; then
                 nice -0 ./capi$i -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log &
             else

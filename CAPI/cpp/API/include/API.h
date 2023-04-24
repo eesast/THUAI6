@@ -83,6 +83,8 @@ public:
     virtual bool Attack(double angle) = 0;
 
     virtual std::vector<int64_t> GetPlayerGUIDs() const = 0;
+
+    [[nodiscard]] virtual bool HaveView(int gridX, int gridY, int selfX, int selfY, int viewRange) const = 0;
 };
 
 class IAPI
@@ -161,6 +163,8 @@ public:
     {
         return grid / numOfGridPerCell;
     }
+
+    [[nodiscard]] virtual bool HaveView(int gridX, int gridY) const = 0;
 
     // 用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
 
@@ -271,6 +275,8 @@ public:
     std::future<bool> Graduate() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
+    [[nodiscard]] bool HaveView(int gridX, int gridY) const override;
+
     void Print(std::string str) const override
     {
     }
@@ -356,6 +362,8 @@ public:
     std::future<bool> Attack(double angleInRadian) override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
 
+    [[nodiscard]] bool HaveView(int gridX, int gridY) const override;
+
     void Print(std::string str) const override
     {
     }
@@ -439,6 +447,8 @@ public:
     std::future<bool> Graduate() override;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
+    [[nodiscard]] bool HaveView(int gridX, int gridY) const override;
+
     void Print(std::string str) const override;
     void PrintStudent() const override;
     void PrintTricker() const override;
@@ -508,6 +518,8 @@ public:
 
     std::future<bool> Attack(double angleInRadian) override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
+
+    [[nodiscard]] bool HaveView(int gridX, int gridY) const override;
 
     void Print(std::string str) const override;
     void PrintStudent() const override;

@@ -379,6 +379,7 @@ namespace Gaming
 #if DEBUG
                 Debugger.Output(player, "die.");
 #endif
+                if (player.PlayerState == PlayerStateType.Deceased) return;
                 player.RemoveFromGame(PlayerStateType.Deceased);
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)

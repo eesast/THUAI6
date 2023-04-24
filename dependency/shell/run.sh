@@ -9,9 +9,9 @@ do
         for i in {1..4}
         do
             j=$((i - 1))
-            if [-f "./python/player$i.py"]; then
+            if [ -f "./python/player$i.py"]; then
                 nice -0 python3 ./python/player$i.py -I 127.0.0.1 -P 8888 -p $j
-            elif [-f "./capi$i"]; then
+            elif [ -f "./capi$i"]; then
                 nice -0 ./capi$i -I 127.0.0.1 -P 8888 -p $j
             else
                 echo "ERROR. $i is not found."
@@ -21,9 +21,9 @@ do
         for i in {5..5}
         do
             j=$((i - 1))
-            if [-f "./python/player$i.py"]; then
+            if [ -f "./python/player$i.py"]; then
                 nice -0 python3 ./python/player$i.py -I 127.0.0.1 -P 8888 -p $j
-            elif [-f "./capi$i"]; then
+            elif [ -f "./capi$i"]; then
                 nice -0 ./capi$i -I 127.0.0.1 -P 8888 -p $j
             else
                 echo "ERROR. $i is not found."

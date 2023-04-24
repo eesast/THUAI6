@@ -47,3 +47,4 @@ do
 done
 
 echo "Finish"
+touch $playback_dir/finish.lock

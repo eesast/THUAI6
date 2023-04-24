@@ -4,6 +4,7 @@ python_dir=/usr/local/PlayerCode/CAPI/python/PyAPI
 playback_dir=/usr/local/playback
 
 nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --gameTimeInSecond 600 --url $URL --token $TOKEN --fileName $playback_dir/video > $playback_dir/server.log &
+server_pid=$!
 sleep 5
 for k in {1..2}
 do
@@ -37,3 +38,12 @@ do
     fi
     popd
 done
+
+ps -p $server_pid
+while [ $? -eq 0 ]
+do
+    sleep 1
+    ps -p $server_pid
+done
+
+echo "Finish"

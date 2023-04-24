@@ -87,7 +87,7 @@ namespace GameEngine
                         obj.IsMoving = true;
 
                     double moveVecLength = 0.0;
-                    XY res = new XY(direction, moveVecLength);
+                    XY res = new(direction, moveVecLength);
                     double deltaLen = moveVecLength - Math.Sqrt(obj.MovingSetPos(res, GetPlaceType(obj.Position + res)));  // 转向，并用deltaLen存储行走的误差
                     IGameObj? collisionObj = null;
                     bool isDestroyed = false;

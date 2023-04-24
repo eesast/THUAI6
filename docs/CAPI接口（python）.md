@@ -64,6 +64,7 @@
   - `def GetTrickers(self) -> List[THUAI6.Tricker]` ：返回所有可视捣蛋鬼的信息。
   - `def GetProps(self) -> List[THUAI6.Prop]` ：返回所有可视道具的信息。
   - `def GetBullets(self) -> List[THUAI6.Bullet]` ：返回所有可视子弹（攻击）的信息。
+  - `def HaveView(self, gridX: int, gridY: int) -> bool`：判断坐标是否可见
 
 #### 查询特定位置物体的信息
 
@@ -263,6 +264,10 @@ class IAPI(metaclass=ABCMeta):
 
     @abstractmethod
     def GetGameInfo(self) -> THUAI6.GameInfo:
+        pass
+        
+    @abstractmethod
+    def HaveView(self, gridX: int, gridY: int) -> bool
         pass
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效

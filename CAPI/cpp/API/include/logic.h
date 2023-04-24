@@ -161,6 +161,8 @@ private:
     // 等待
     void Wait() noexcept;
 
+    [[nodiscard]] bool HaveView(int gridX, int gridY, int selfX, int selfY, int viewRange) const override;
+
 public:
     // 构造函数还需要传更多参数，有待补充
     Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::TrickerType tricker, THUAI6::StudentType student);

@@ -154,6 +154,10 @@ class ILogic(metaclass=ABCMeta):
     def StartRouseMate(self, mateID: int) -> bool:
         pass
 
+    @abstractmethod
+    def HaveView(self, gridX: int, gridY: int, selfX: int, selfY: int, viewRange: int) -> bool:
+        pass
+
 
 class IAPI(metaclass=ABCMeta):
 
@@ -312,6 +316,10 @@ class IAPI(metaclass=ABCMeta):
 
     @abstractmethod
     def GetGameInfo(self) -> THUAI6.GameInfo:
+        pass
+
+    @abstractmethod
+    def HaveView(self, gridX: int, gridY: int) -> bool:
         pass
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效

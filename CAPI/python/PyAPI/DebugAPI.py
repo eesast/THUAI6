@@ -304,6 +304,9 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
     def GetGameInfo(self) -> THUAI6.GameInfo:
         return self.__logic.GetGameInfo()
 
+    def HaveView(self, gridX: int, gridY: int) -> bool:
+        return self.__logic.HaveView(gridX, gridY, self.GetSelfInfo().x, self.GetSelfInfo().y, self.GetSelfInfo().viewRange)
+
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
     def Print(self, cont: str) -> None:
@@ -755,6 +758,9 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
     def GetGameInfo(self) -> THUAI6.GameInfo:
         return self.__logic.GetGameInfo()
+
+    def HaveView(self, gridX: int, gridY: int) -> bool:
+        return self.__logic.HaveView(gridX, gridY, self.GetSelfInfo().x, self.GetSelfInfo().y, self.GetSelfInfo().viewRange)
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 

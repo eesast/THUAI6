@@ -686,6 +686,11 @@ bool Logic::TryConnection()
     return pComm->TryConnection(playerID);
 }
 
+bool Logic::HaveView(int gridX, int gridY, int selfX, int selfY, int viewRange) const
+{
+    return AssistFunction::HaveView(viewRange, selfX, selfY, gridX, gridY, currentState->gameMap);
+}
+
 void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool file, bool print, bool warnOnly)
 {
     // 建立日志组件

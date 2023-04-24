@@ -52,6 +52,7 @@
   - `std::vector<std::shared_ptr<const THUAI6::Tricker>> GetTrickers() const` ：返回所有可视捣蛋鬼的信息。
   - `std::vector<std::shared_ptr<const THUAI6::Prop>> GetProps() const` ：返回所有可视道具的信息。
   - `std::vector<std::shared_ptr<const THUAI6::Bullet>> GetBullets() const` ：返回所有可视子弹（攻击）的信息。
+  - `bool HaveView(int gridX, int gridY) const`：判断坐标是否可见
 
 #### 查询特定位置物体的信息
 
@@ -158,6 +159,8 @@
     {
         return grid / numOfGridPerCell;
     }
+    
+    [[nodiscard]] virtual bool HaveView(int gridX, int gridY) const = 0;
 
     // 用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
 

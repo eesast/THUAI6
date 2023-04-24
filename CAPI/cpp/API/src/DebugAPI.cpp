@@ -631,6 +631,18 @@ std::shared_ptr<const THUAI6::Tricker> TrickerDebugAPI::GetSelfInfo() const
     return logic.TrickerGetSelfInfo();
 }
 
+bool StudentDebugAPI::HaveView(int gridX, int gridY) const
+{
+    auto selfInfo = GetSelfInfo();
+    return logic.HaveView(gridX, gridY, selfInfo->x, selfInfo->y, selfInfo->viewRange);
+}
+
+bool TrickerDebugAPI::HaveView(int gridX, int gridY) const
+{
+    auto selfInfo = GetSelfInfo();
+    return logic.HaveView(gridX, gridY, selfInfo->x, selfInfo->y, selfInfo->viewRange);
+}
+
 void StudentDebugAPI::Print(std::string str) const
 {
     logger->info(str);

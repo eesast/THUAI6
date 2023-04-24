@@ -566,7 +566,6 @@ void Logic::LoadBufferCase(const protobuf::MessageOfObj& item)
             {
                 if (AssistFunction::HaveView(viewRange, x, y, item.gate_message().x(), item.gate_message().y(), bufferState->gameMap))
                 {
-                    std::cout << "x:" << item.gate_message().x() << "y:" << item.gate_message().y() << std::endl;
                     auto pos = std::make_pair(AssistFunction::GridToCell(item.gate_message().x()), AssistFunction::GridToCell(item.gate_message().y()));
                     if (bufferState->mapInfo->gateState.count(pos) == 0)
                     {
@@ -575,11 +574,6 @@ void Logic::LoadBufferCase(const protobuf::MessageOfObj& item)
                     }
                     else
                     {
-                        if (playerID == 1)
-                        {
-                            std::cout << pos.first << pos.second << std::endl;
-                            std::cout << "Update Gate!" << std::endl;
-                        }
                         bufferState->mapInfo->gateState[pos] = item.gate_message().progress();
                         logger->debug("Update Gate!");
                     }

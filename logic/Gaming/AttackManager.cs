@@ -172,6 +172,7 @@ namespace Gaming
                     return false;
                 Debugger.Output(player, player.CharacterType.ToString() + "Attack in " + player.BulletOfPlayer.ToString());
 
+                Debugger.Output(player, player.Position.ToString() + " " + player.Radius.ToString() + " " + BulletFactory.BulletRadius(player.BulletOfPlayer).ToString());
                 XY res = player.Position + new XY  // 子弹紧贴人物生成。
                     (
                         (int)(Math.Abs((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
@@ -183,7 +184,7 @@ namespace Gaming
                 if (bullet != null)
                 {
                     player.FacingDirection = new(angle, bullet.BulletAttackRange);
-                    Debugger.Output(player, "Attack in " + bullet.ToString());
+                    Debugger.Output(bullet, "Attack in " + bullet.Position.ToString());
                     bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
                     bullet.CanMove = true;
                     gameMap.Add(bullet);

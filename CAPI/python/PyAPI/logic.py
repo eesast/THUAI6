@@ -476,6 +476,7 @@ class Logic(ILogic):
             if Setting.asynchronous():
                 with self.__mtxState:
                     self.__currentState, self.__bufferState = self.__bufferState, self.__currentState
+                    self.__counterState = self.__counterBuffer
                     self.__logger.info("Update state!")
                 self.__freshed = True
             else:

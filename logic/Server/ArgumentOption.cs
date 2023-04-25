@@ -40,7 +40,7 @@ namespace Server
         public string FileName { get; set; } = DefaultArgumentOptions.FileName;
 
         [Option('s', "allowSpectator", Required = false, HelpText = "Whether to allow a spectator to watch the game.")]
-        public bool AllowSpectator { get; set; } = true;
+        public bool AllowSpectator { get; set; } = false;
 
         [Option('b', "playback", Required = false, HelpText = "Whether open the server in a playback mode.")]
         public bool Playback { get; set; } = false;

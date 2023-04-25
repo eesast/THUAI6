@@ -118,6 +118,7 @@ mypair<int> cal(mypair<int> orgScore, mypair<int> competitionScore)
 
 今年把得分上限这个东西去掉了。理论上今年可以得很高很高分，但是我估计大部分比赛得分在400-600左右，最高估计1000左右。算法 借 鉴 了THUAI4,算法，换了个激活函数（正态CDF），感觉分数变化相对更好了一些？
 代码如下：
+
 ```cpp
 #include <iostream>
 #include <algorithm>
@@ -243,3 +244,89 @@ int main()
 `1000 - score`（x  
 `ReLU(1000 - score)`（√  
 防止真的超过了 1000）
+
+## THUAI6
+
+因为今年的对局得分是两局得分之和，所以会出现一定程度的“数值膨胀”，在这里调低了胜者得分权值，同时提高了比赛分差距悬殊阈值和天梯分差距悬殊阈值。同时由于今年得分的上限不好确定，所以负者失分的基础值变为与胜者的得分之差。
+
+```c++
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+
+template <typename T>
+using mypair = pair<T, T>;
+
+// orgScore 是天梯中两队的分数；competitionScore 是这次游戏两队的得分
+
+mypair<int> cal(mypair<int> orgScore, mypair<int> competitionScore)
+{
+
+    // 调整顺序，让第一个元素成为获胜者，便于计算
+
+    bool reverse = false; // 记录是否需要调整
+
+    if (competitionScore.first < competitionScore.second)
+    {
+        reverse = true;
+    }
+    else if (competitionScore.first == competitionScore.second)
+    {
+        if (orgScore.first == orgScore.second) // 完全平局，不改变天梯分数
+        {
+            return orgScore;
+        }
+
+        if (orgScore.first > orgScore.second) // 本次游戏平局，但一方天梯分数高，另一方天梯分数低，需要将两者向中间略微靠拢，因此天梯分数低的定为获胜者
+        {
+            reverse = true;
+        }
+        else
+        {
+            reverse = false;
+        }
+    }
+
+    if (reverse) // 如果需要换，换两者的顺序
+    {
+        swap(competitionScore.first, competitionScore.second);
+        swap(orgScore.first, orgScore.second);
+    }
+
+    // 转成浮点数
+    mypair<double> orgScoreLf;
+    mypair<double> competitionScoreLf;
+    orgScoreLf.first = orgScore.first;
+    orgScoreLf.second = orgScore.second;
+    competitionScoreLf.first = competitionScore.first;
+    competitionScoreLf.second = competitionScore.second;
+    mypair<int> resScore;
+
+    const double deltaWeight = 1000.0; // 差距悬殊判断参数，比赛分差超过此值就可以认定为非常悬殊了，天梯分数增量很小，防止大佬虐菜鸡的现象造成两极分化
+
+    double delta = (orgScoreLf.first - orgScoreLf.second) / deltaWeight;
+    cout << "Tanh delta: " << tanh(delta) << endl;
+    {
+
+        const double firstnerGet = 9e-6; // 胜利者天梯得分权值
+        const double secondrGet = 5e-6;  // 失败者天梯得分权值
+
+        double deltaScore = 2100.0;                                                                                                          // 两队竞争分差超过多少时就认为非常大
+        double correctRate = (orgScoreLf.first - orgScoreLf.second) / (deltaWeight * 1.2);                                                   // 订正的幅度，该值越小，则在势均力敌时天梯分数改变越大
+        double correct = 0.5 * (tanh((competitionScoreLf.first - competitionScoreLf.second - deltaScore) / deltaScore - correctRate) + 1.0); // 一场比赛中，在双方势均力敌时，减小天梯分数的改变量
+        cout << "correct: " << correct << endl;
+        resScore.first = orgScore.first + round(competitionScoreLf.first * competitionScoreLf.first * firstnerGet * (1 - tanh(delta)) * correct);                                                              // 胜者所加天梯分
+        resScore.second = orgScore.second - round((competitionScoreLf.first - competitionScoreLf.second) * (competitionScoreLf.first - competitionScoreLf.second) * secondrGet * (1 - tanh(delta)) * correct); // 败者所扣天梯分
+    }
+
+    // 如果换过，再换回来
+    if (reverse)
+    {
+        swap(resScore.first, resScore.second);
+    }
+
+    return resScore;
+}
+```
+

@@ -300,6 +300,24 @@ namespace Client
             }
         }
 
+        private void ZoomMapAtFirst()
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                for (int j = 0; j < 50; j++)
+                {
+                    if (mapPatches[i, j] != null)
+                    {
+                        mapPatches[i, j].Width = UpperLayerOfMap.ActualWidth / 50;
+                        mapPatches[i, j].Height = UpperLayerOfMap.ActualHeight / 50;
+                        mapPatches[i, j].HorizontalAlignment = HorizontalAlignment.Left;
+                        mapPatches[i, j].VerticalAlignment = VerticalAlignment.Top;
+                        mapPatches[i, j].Margin = new Thickness(UpperLayerOfMap.ActualWidth / 50 * j, UpperLayerOfMap.ActualHeight / 50 * i, 0, 0);
+                    }
+                }
+            }
+        }
+
         private void DrawMap()
         {
             for (int i = 0; i < defaultMap.GetLength(0); i++)
@@ -750,7 +768,10 @@ namespace Client
                             StatusBarsOfCircumstance.SetValue(data, gateOpened, isEmergencyDrawed, isEmergencyOpened, playerID, isPlaybackMode);
                         }
                         if (!hasDrawed && mapFlag)
+                        {
                             DrawMap();
+                            ZoomMapAtFirst();
+                        }
                         foreach (var data in listOfHuman)
                         {
                             if (data.StudentType != StudentType.Robot)

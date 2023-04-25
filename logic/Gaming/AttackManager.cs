@@ -34,6 +34,7 @@ namespace Gaming
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                         if (obj.CanMove && ((Bullet)obj).TypeOfBullet != BulletType.JumpyDumpty)
                             BulletBomb((Bullet)obj, null);
+                        obj.CanMove = false;
                     }
                 );
                 this.characterManager = characterManager;
@@ -173,14 +174,15 @@ namespace Gaming
 
                 XY res = player.Position + new XY  // 子弹紧贴人物生成。
                     (
-                        (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Cos(angle)),
-                        (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))
+                        (int)(Math.Abs((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
+                        (int)(Math.Abs((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
                     );
 
                 Bullet? bullet = player.Attack(res, gameMap.GetPlaceType(res));
 
                 if (bullet != null)
                 {
+                    player.FacingDirection = new(angle, bullet.BulletAttackRange);
                     Debugger.Output(player, "Attack in " + bullet.ToString());
                     bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
                     bullet.CanMove = true;

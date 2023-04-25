@@ -594,7 +594,7 @@ namespace GameClass.GameObj
             {
                 return true;
             }
-            if (targetObj.Type == GameObjType.Character && XY.DistanceFloor3(targetObj.Position, this.Position) < this.Radius + targetObj.Radius)
+            if (targetObj.Type == GameObjType.Character && XY.DistanceFloor3(targetObj.Position, this.Position) < this.Radius + targetObj.Radius - GameData.adjustLength)
                 return true;
             return false;
         }

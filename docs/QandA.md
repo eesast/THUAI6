@@ -62,8 +62,7 @@ A：
 - 可能措施1.
 首先保证Python版本在3.9及以上
 - 可能措施2. 更换为国内镜像源
-在终端输入 
-        `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
+在终端输入 `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
 - 可能措施3. 更新pip
 `python -m pip install --upgrade pip` （pip 版本最好为23.1）
 
@@ -71,3 +70,7 @@ A：
 Q：职业数值会修改吗？
 
 A：初赛结束会调数值及机制，增加新角色
+
+Q:初赛后会修改什么呢？
+
+A：技能冷却时间等属性设为不可见；出生点随机性或可选性；增强教师等职业，削弱职业

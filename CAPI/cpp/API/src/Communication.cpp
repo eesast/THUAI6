@@ -249,11 +249,13 @@ void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, T
         grpc::ClientContext context;
         auto MessageReader = THUAI6Stub->AddPlayer(&context, playerMsg);
 
+        protobuf::MessageToClient buffer2Client;
+
         while (MessageReader->Read(&buffer2Client))
         {
             {
                 std::lock_guard<std::mutex> lock(mtxMessage);
-                message2Client = buffer2Client;
+                message2Client = std::move(buffer2Client);
                 haveNewMessage = true;
             }
             cvMessage.notify_one();

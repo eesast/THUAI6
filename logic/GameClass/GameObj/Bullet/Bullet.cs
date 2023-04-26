@@ -36,6 +36,7 @@ namespace GameClass.GameObj
 
         public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
+            if (targetObj == Parent && CanMove) return true;
             if (targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet)
                 return true;
             return false;

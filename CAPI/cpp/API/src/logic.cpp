@@ -618,6 +618,7 @@ void Logic::LoadBuffer(const protobuf::MessageToClient& message)
         {
             std::lock_guard<std::mutex> lock(mtxState);
             std::swap(currentState, bufferState);
+            counterState = counterBuffer;
             logger->info("Update State!");
         }
         freshed = true;

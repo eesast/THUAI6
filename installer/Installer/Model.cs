@@ -506,6 +506,7 @@ namespace Downloader
                 string secretId = "***"; //"云 API 密钥 SecretId";
                 string secretKey = "***"; //"云 API 密钥 SecretKey";
 
+
                 long durationSecond = 1000;  // 每次请求签名有效时长，单位为秒
                 QCloudCredentialProvider cosCredentialProvider = new DefaultQCloudCredentialProvider(
                     secretId, secretKey, durationSecond

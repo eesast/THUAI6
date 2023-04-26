@@ -1,0 +1,16 @@
+FROM eesast/thuai6_base:base
+MAINTAINER eesast
+WORKDIR /usr/local
+RUN mkdir /usr/local/team1 && mkdir /usr/local/team2 && mkdir /usr/local/playback
+COPY ./dependency/shell/run.sh .
+COPY ./CAPI/python /usr/local/PlayerCode/CAPI/python
+COPY ./dependency/proto /usr/local/PlayerCode/dependency/proto
+COPY ./dependency/shell /usr/local/PlayerCode/dependency/shell
+WORKDIR /usr/local/PlayerCode/CAPI/python
+RUN bash ../../dependency/shell/generate_proto.sh
+
+WORKDIR /usr/local
+RUN wget -P . https://cloud.tsinghua.edu.cn/f/e48940314a6d4cdb8bd0/?dl=1
+RUN mv 'index.html?dl=1' Server.tar.gz
+RUN tar -zxvf Server.tar.gz
+ENTRYPOINT [ "bash","./run.sh" ]

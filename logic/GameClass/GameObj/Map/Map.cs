@@ -203,7 +203,7 @@ namespace GameClass.GameObj
         }
         public bool Remove(GameObj gameObj)
         {
-            bool flag = false;
+            GameObj? ToDel = null;
             GameObjLockDict[gameObj.Type].EnterWriteLock();
             try
             {
@@ -211,8 +211,7 @@ namespace GameClass.GameObj
                 {
                     if (gameObj.ID == obj.ID)
                     {
-                        GameObjDict[gameObj.Type].Remove(obj);
-                        flag = true;
+                        ToDel = obj;
                         break;
                     }
                 }
@@ -221,7 +220,9 @@ namespace GameClass.GameObj
             {
                 GameObjLockDict[gameObj.Type].ExitWriteLock();
             }
-            return flag;
+            if (ToDel == null) return false;
+            GameObjDict[gameObj.Type].Remove(ToDel);
+            return true;
         }
         public bool RemoveJustFromMap(GameObj gameObj)
         {

@@ -20,7 +20,7 @@ extern const THUAI6::TrickerType trickerType = THUAI6::TrickerType::Assassin;
 
 // 可以在AI.cpp内部声明变量与函数
 
-void AI::play(IStudentAPI& api)//每帧执行一次AI::play(IStudentAPI& api)或AI::play(ITrickerAPI& api)（除非执行该函数超过一帧50ms），获取的信息都是这一帧的开始的状态
+void AI::play(IStudentAPI& api)  // 每帧执行一次AI::play(IStudentAPI& api)或AI::play(ITrickerAPI& api)（除非执行该函数超过一帧50ms），获取的信息都是这一帧的开始的状态
 {
     // 公共操作
     if (this->playerID == 0)

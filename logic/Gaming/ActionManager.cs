@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Net.NetworkInformation;
 using System.Threading;
 using GameClass.GameObj;
 using GameEngine;
@@ -37,6 +35,7 @@ namespace Gaming
             }
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
+                if (moveTimeInMilliseconds < 5) return false;
                 if (!playerToMove.Commandable() || !TryToStop()) return false;
                 characterManager.SetPlayerState(playerToMove, PlayerStateType.Moving);
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
@@ -81,20 +80,19 @@ namespace Gaming
                       loopToDo: () =>
                       {
                           if (generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player))
-                          {
-                              characterManager.SetPlayerState(player);
                               gameMap.NumOfRepairedGenerators++;
-                          }
+                          if (generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
+                              characterManager.SetPlayerState(player);
                       },
                       timeInterval: GameData.frameDuration,
                       finallyReturn: () => 0
                   )
                       .Start();
+                  --generatorForFix.NumOfFixing;
               }
 
           )
                 { IsBackground = true }.Start();
-                --generatorForFix.NumOfFixing;
 
                 return true;
             }

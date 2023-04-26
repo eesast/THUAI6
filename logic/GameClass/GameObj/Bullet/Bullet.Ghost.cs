@@ -130,7 +130,7 @@ namespace GameClass.GameObj
 
         public override bool CanAttack(GameObj target)
         {
-            return XY.Distance(this.Position, target.Position) <= BulletBombRange;
+            return XY.DistanceFloor3(this.Position, target.Position) <= BulletBombRange;
         }
         public override bool CanBeBombed(GameObjType gameObjType)
         {
@@ -176,7 +176,7 @@ namespace GameClass.GameObj
 
         public override bool CanAttack(GameObj target)
         {
-            return XY.Distance(this.Position, target.Position) <= BulletBombRange;
+            return XY.DistanceFloor3(this.Position, target.Position) <= BulletBombRange;
         }
         public override bool CanBeBombed(GameObjType gameObjType)
         {

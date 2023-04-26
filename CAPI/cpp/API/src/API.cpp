@@ -419,6 +419,18 @@ std::shared_ptr<const THUAI6::Tricker> TrickerAPI::GetSelfInfo() const
     return logic.TrickerGetSelfInfo();
 }
 
+bool StudentAPI::HaveView(int gridX, int gridY) const
+{
+    auto selfInfo = GetSelfInfo();
+    return logic.HaveView(gridX, gridY, selfInfo->x, selfInfo->y, selfInfo->viewRange);
+}
+
+bool TrickerAPI::HaveView(int gridX, int gridY) const
+{
+    auto selfInfo = GetSelfInfo();
+    return logic.HaveView(gridX, gridY, selfInfo->x, selfInfo->y, selfInfo->viewRange);
+}
+
 void StudentAPI::Play(IAI& ai)
 {
     ai.play(*this);

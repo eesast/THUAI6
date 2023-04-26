@@ -1,0 +1,15 @@
+FROM python:3.9.16-bullseye
+MAINTAINER eesast
+WORKDIR /usr/local
+RUN apt-get update && apt-get install --no-install-recommends -y gcc g++ make wget ca-certificates cmake autoconf automake libtool curl unzip git
+RUN git clone -b v1.46.3 --depth 1 --shallow-submodules  https://gitee.com/mirrors/grpc.git && wget -P . https://cloud.tsinghua.edu.cn/f/1f2713efd9e44255abd6/?dl=1 && mv 'index.html?dl=1' third_party.tar.gz
+WORKDIR /usr/local/grpc
+RUN rm -rf third_party && mv ../third_party.tar.gz . && tar -zxvf third_party.tar.gz && mkdir -p cmake/build
+WORKDIR /usr/local/grpc/cmake/build
+RUN cmake -DgRPC_INSTALL=ON \
+-DgRPC_BUILD_TESTS=OFF \
+../.. && make -j$(nproc) && make install
+WORKDIR /usr/local
+RUN git clone https://gitee.com/mirrors/protobuf_source.git ./protobuf
+WORKDIR /usr/local/protobuf
+RUN git checkout 3.20.x && ./autogen.sh && ./configure && make -j$(nproc) && make install && ldconfig

@@ -291,7 +291,7 @@ namespace GameClass.GameObj
             }
         }
         #endregion
-
+        #region 状态相关的基本属性与方法
         private PlayerStateType playerState = PlayerStateType.Null;
         public PlayerStateType PlayerState
         {
@@ -318,7 +318,23 @@ namespace GameClass.GameObj
         private GameObj? whatInteractingWith = null;
         public GameObj? WhatInteractingWith => whatInteractingWith;
 
+        private long threadNum = 0;
+        public long ThreadNum => threadNum;
+
         public void ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        {
+            lock (gameObjLock)
+            {
+                ++threadNum;
+                whatInteractingWith = gameObj;
+                if (value != PlayerStateType.Moving)
+                    IsMoving = false;
+                playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
+                //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
+            }
+        }
+
+        public void ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
             lock (gameObjLock)
             {
@@ -334,10 +350,25 @@ namespace GameClass.GameObj
         {
             lock (gameObjLock)
             {
+                ++threadNum;
                 whatInteractingWith = null;
+                IsMoving = false;
                 playerState = PlayerStateType.Null;
             }
         }
+
+        public void RemoveFromGame(PlayerStateType playerStateType)
+        {
+            lock (gameObjLock)
+            {
+                playerState = playerStateType;
+                CanMove = false;
+                IsResetting = true;
+                Position = GameData.PosWhoDie;
+                place = PlaceType.Grass;
+            }
+        }
+        #endregion
 
         private int score = 0;
         public int Score
@@ -572,17 +603,6 @@ namespace GameClass.GameObj
                      this.Vampire = this.OriVampire;
                  }
              }*/
-        public void RemoveFromGame(PlayerStateType playerStateType)
-        {
-            lock (gameObjLock)
-            {
-                playerState = playerStateType;
-                CanMove = false;
-                IsResetting = true;
-                Position = GameData.PosWhoDie;
-                place = PlaceType.Grass;
-            }
-        }
 
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;

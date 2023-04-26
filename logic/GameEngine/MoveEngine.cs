@@ -79,6 +79,8 @@ namespace GameEngine
                 return;
             if (!obj.IsAvailable || !gameTimer.IsGaming)
                 return;
+
+            long threadNum = (obj.Type == GameObjType.Character) ? ((ICharacter)obj).ThreadNum : 0;//对人特殊处理
             new Thread
             (
                 () =>
@@ -122,6 +124,9 @@ namespace GameEngine
                             {
                                 moveVecLength = obj.MoveSpeed / GameData.numOfStepPerSecond;
                                 res = new XY(direction, moveVecLength);
+
+                                //对人特殊处理
+                                if (threadNum > 0 && ((ICharacter)obj).ThreadNum != threadNum) return false;
 
                                 // 越界情况处理：如果越界，则与越界方块碰撞
                                 bool flag;  // 循环标志

@@ -14,6 +14,7 @@ namespace Preparation.Interface
         public BulletType BulletOfPlayer { get; set; }
         public CharacterType CharacterType { get; }
         public int BulletNum { get; }
+        public long ThreadNum { get; }
 
         public bool IsGhost();
     }

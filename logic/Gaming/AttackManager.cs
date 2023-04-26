@@ -192,12 +192,13 @@ namespace Gaming
                     if (bullet.CastTime > 0)
                     {
                         characterManager.SetPlayerState(player, PlayerStateType.TryingToAttack);
+                        long threadNum = player.ThreadNum;
 
                         new Thread
                                 (() =>
                                 {
                                     new FrameRateTaskExecutor<int>(
-                                    loopCondition: () => player.PlayerState == PlayerStateType.TryingToAttack && gameMap.Timer.IsGaming,
+                                    loopCondition: () => threadNum == player.ThreadNum && gameMap.Timer.IsGaming,
                                     loopToDo: () =>
                                     {
                                     },
@@ -209,7 +210,7 @@ namespace Gaming
 
                                     if (gameMap.Timer.IsGaming)
                                     {
-                                        if (player.PlayerState == PlayerStateType.TryingToAttack)
+                                        if (threadNum == player.ThreadNum)
                                         {
                                             characterManager.SetPlayerState(player);
                                         }

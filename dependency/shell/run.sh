@@ -3,7 +3,7 @@
 python_dir=/usr/local/PlayerCode/CAPI/python/PyAPI
 playback_dir=/usr/local/playback
 
-nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --gameTimeInSecond 600 --url $URL --token $TOKEN --fileName $playback_dir/video > $playback_dir/server.log &
+nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --gameTimeInSecond 600 --url $URL --token $TOKEN --fileName $playback_dir/video --startLockFile $playback_dir/start.lock > $playback_dir/server.log &
 server_pid=$!
 sleep 5
 for k in {1..2}
@@ -39,12 +39,20 @@ do
     popd
 done
 
-ps -p $server_pid
-while [ $? -eq 0 ]
-do
-    sleep 1
-    ps -p $server_pid
-done
+sleep 10
 
-touch $playback_dir/finish.lock
-echo "Finish"
+if [ -f $playback_dir/start.lock ]; then
+    ps -p $server_pid
+    while [ $? -eq 0 ]
+    do
+        sleep 1
+        ps -p $server_pid
+    done
+    touch $playback_dir/finish.lock
+    echo "Finish"
+else
+    echo "Failed to start game."
+    touch temp.lock
+    mv -f temp.lock $playback_dir/video.thuaipb
+    kill -9 $server_pid
+fi

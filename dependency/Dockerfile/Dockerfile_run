@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0.408-jammy-amd64 AS build
 MAINTAINER eesast
 WORKDIR /usr/local
 COPY . .
-RUN dotnet publish logic/Server/Server.csproj -c Release -o /usr/local/Server --self-contained true
+RUN dotnet publish logic/Server/Server.csproj -c Release -o /usr/local/Server --self-contained true -r linux-x64
 
 FROM eesast/thuai6_base:base
 MAINTAINER eesast

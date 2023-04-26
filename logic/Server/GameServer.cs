@@ -127,7 +127,7 @@ namespace Server
             game.ClearAllLists();
             mwr?.Flush();
             if (options.ResultFileName != DefaultArgumentOptions.FileName)
-                SaveGameResult(options.ResultFileName + ".json");
+                SaveGameResult(options.ResultFileName.EndsWith(".json") ? options.ResultFileName : options.ResultFileName + ".json");
             SendGameResult();
             this.endGameSem.Release();
         }

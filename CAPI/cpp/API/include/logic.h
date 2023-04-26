@@ -148,9 +148,9 @@ private:
     void ProcessMessage();
 
     // 将信息加载到buffer
-    void LoadBufferSelf(const protobuf::MessageToClient& message);
-    void LoadBufferCase(const protobuf::MessageOfObj& item);
-    void LoadBuffer(const protobuf::MessageToClient& message);
+    void LoadBufferSelf(protobuf::MessageToClient message);
+    void LoadBufferCase(protobuf::MessageOfObj item);
+    void LoadBuffer(protobuf::MessageToClient message);
 
     // 解锁AI线程
     void UnBlockAI();

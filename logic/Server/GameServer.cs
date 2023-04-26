@@ -45,6 +45,7 @@ namespace Server
                 if (id == GameObj.invalidID) return;     //如果有未初始化的玩家，不开始游戏
             }
             Console.WriteLine("Game starts!");
+            CreateStartFile();
             game.StartGame((int)options.GameTimeInSecond * 1000);
             Thread.Sleep(1);
             new Thread(() =>
@@ -74,6 +75,16 @@ namespace Server
             })
             { IsBackground = true }.Start();
         }
+
+        public void CreateStartFile()
+        {
+            if (options.StartLockFile != DefaultArgumentOptions.FileName)
+            {
+                using var _ = File.Create(options.StartLockFile);
+                Console.WriteLine("Successfully Created StartLockFile!");
+            }
+        }
+
         public void WaitForEnd()
         {
             this.endGameSem.Wait();

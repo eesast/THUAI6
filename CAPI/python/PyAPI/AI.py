@@ -41,7 +41,7 @@ class AssistFunction:
 class AI(IAI):
     def __init__(self, pID: int):
         self.__playerID = pID
-
+    # 每帧执行一次StudentPlay或TrickerPlay（除非执行该函数超过一帧50ms），获取的信息都是这一帧的开始的状态
     def StudentPlay(self, api: IStudentAPI) -> None:
         # 公共操作
         if self.__playerID == 0:

@@ -16,6 +16,7 @@ namespace Server
 {
     public partial class GameServer : AvailableService.AvailableServiceBase
     {
+        private int playerCountNow = 0;
         protected object spectatorLock = new object();
         protected bool isSpectatorJoin = false;
         protected bool IsSpectatorJoin
@@ -59,17 +60,18 @@ namespace Server
             if (request.PlayerId >= spectatorMinPlayerID && options.NotAllowSpectator == false)
             {
                 // 观战模式
-                uint tp = (uint)request.PlayerId;
-                if (!spectatorList.Contains(tp))
+                lock (spetatorJoinLock) // 具体原因见另一个上锁的地方
                 {
-                    spectatorList.Add(tp);
-                    Console.WriteLine("A new spectator comes to watch this game.");
-                    var temp = (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1));
-                    lock (semaDictLock)
+                    if (semaDict.TryAdd(request.PlayerId, (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1))))
                     {
-                        semaDict.Add(request.PlayerId, temp);
+                        Console.WriteLine("A new spectator comes to watch this game.");
+                        IsSpectatorJoin = true;
                     }
-                    IsSpectatorJoin = true;
+                    else
+                    {
+                        Console.WriteLine($"Duplicated Spectator ID {request.PlayerId}");
+                        return;
+                    }
                 }
                 do
                 {
@@ -82,13 +84,30 @@ namespace Server
                             //Console.WriteLine("Send!");
                         }
                     }
+                    catch (InvalidOperationException)
+                    {
+                        if (semaDict.TryRemove(request.PlayerId, out var semas))
+                        {
+                            try
+                            {
+                                semas.Item1.Release();
+                                semas.Item2.Release();
+                            }
+                            catch { }
+                            Console.WriteLine($"The spectator {request.PlayerId} exited");
+                        }
+                    }
                     catch (Exception)
                     {
-                        //Console.WriteLine(ex);
+                        // Console.WriteLine(ex);
                     }
                     finally
                     {
-                        semaDict[request.PlayerId].Item2.Release();
+                        try
+                        {
+                            semaDict[request.PlayerId].Item2.Release();
+                        }
+                        catch { }
                     }
                 } while (game.GameMap.Timer.IsGaming);
                 return;
@@ -117,10 +136,12 @@ namespace Server
                 var temp = (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1));
                 bool start = false;
                 Console.WriteLine($"Id: {request.PlayerId} joins.");
-                lock (semaDictLock)
+                // lock (semaDictLock)
                 {
-                    semaDict.Add(request.PlayerId, temp);
-                    start = (semaDict.Count - spectatorList.Count) == playerNum;
+                    if (semaDict.TryAdd(request.PlayerId, temp))
+                    {
+                        start = Interlocked.Increment(ref playerCountNow) == playerNum;
+                    }
                 }
                 if (start) StartGame();
             }

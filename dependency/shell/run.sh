@@ -4,10 +4,10 @@ python_dir=/usr/local/PlayerCode/CAPI/python/PyAPI
 playback_dir=/usr/local/playback
 
 if [ $EXPOSED -eq 1 ]; then
-    nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --gameTimeInSecond 600 --url $URL --token $TOKEN --fileName $playback_dir/video --startLockFile $playback_dir/start.lock > $playback_dir/server.log &
+    nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --resultFileName $playback_dir/result --gameTimeInSecond $TIME --url $URL --token $TOKEN --fileName $playback_dir/video --startLockFile $playback_dir/start.lock > $playback_dir/server.log &
     server_pid=$!
 else
-    nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --gameTimeInSecond 600 --notAllowSpectator --url $URL --token $TOKEN --fileName $playback_dir/video --startLockFile $playback_dir/start.lock > $playback_dir/server.log &
+    nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --resultFileName $playback_dir/result --gameTimeInSecond $TIME --notAllowSpectator --url $URL --token $TOKEN --fileName $playback_dir/video --startLockFile $playback_dir/start.lock > $playback_dir/server.log &
     server_pid=$!
 fi
 sleep 5

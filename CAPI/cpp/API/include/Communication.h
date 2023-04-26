@@ -52,6 +52,7 @@ private:
     std::unique_ptr<protobuf::AvailableService::Stub> THUAI6Stub;
     bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
+    protobuf::MessageToClient buffer2Client;
     std::mutex mtxMessage;
     std::condition_variable cvMessage;
 };

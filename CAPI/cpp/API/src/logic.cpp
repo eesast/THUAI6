@@ -398,7 +398,7 @@ void Logic::ProcessMessage()
     std::thread(messageThread).detach();
 }
 
-void Logic::LoadBufferSelf(protobuf::MessageToClient message)
+void Logic::LoadBufferSelf(const protobuf::MessageToClient& message)
 {
     if (playerType == THUAI6::PlayerType::StudentPlayer)
     {
@@ -432,7 +432,7 @@ void Logic::LoadBufferSelf(protobuf::MessageToClient message)
     }
 }
 
-void Logic::LoadBufferCase(protobuf::MessageOfObj item)
+void Logic::LoadBufferCase(const protobuf::MessageOfObj& item)
 {
     int32_t x, y, viewRange;
     if (playerType == THUAI6::PlayerType::StudentPlayer)
@@ -593,7 +593,7 @@ void Logic::LoadBufferCase(protobuf::MessageOfObj item)
     }
 }
 
-void Logic::LoadBuffer(protobuf::MessageToClient message)
+void Logic::LoadBuffer(const protobuf::MessageToClient& message)
 {
     // 将消息读入到buffer中
     {

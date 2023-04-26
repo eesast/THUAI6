@@ -7,7 +7,7 @@ RUN dotnet publish logic/Server/Server.csproj -c Release -o /usr/local/Server --
 FROM eesast/thuai6_base:base
 MAINTAINER eesast
 WORKDIR /usr/local
-COPY --from=build /usr/local/Server/* .
+COPY --from=build /usr/local/Server .
 RUN mkdir /usr/local/team1 && mkdir /usr/local/team2 && mkdir /usr/local/playback
 COPY ./dependency/shell/run.sh .
 COPY ./CAPI/python /usr/local/PlayerCode/CAPI/python

@@ -301,13 +301,13 @@ class SummonGolem:
 
 class CommonAttackOfTricker:
     BulletBombRange = 0
-    BulletAttackRange = Constants.Constants.basicAttackShortRange
+    BulletAttackRange = Constants.basicAttackShortRange
     ap = Constants.basicApOfTricker
     Speed = Constants.basicBulletMoveSpeed
     IsRemoteAttack = False
     CastTime = BulletAttackRange * 1000 / Speed
-    Backswing =Constants.basicBackswing
-    RecoveryFromHit =Constants.basicRecoveryFromHit
+    Backswing = Constants.basicBackswing
+    RecoveryFromHit = Constants.basicRecoveryFromHit
     cd = Constants.basicBackswing
     maxBulletNum = 1
     

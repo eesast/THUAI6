@@ -1,5 +1,5 @@
 # 规则
-V5.4
+V5.5
 - [规则](#规则)
   - [简则](#简则)
     - [地图](#地图)
@@ -89,10 +89,10 @@ $$
 8.  翻窗 Climbing
 
 ### 攻击
-- 攻击类型CommonAttackOfGhost攻击未写完的作业，会造成对应攻击力的损坏
+- 攻击类型CommonAttackOfTricker攻击未写完的作业，会造成对应攻击力的损坏
 - 捣蛋鬼攻击交互状态或前后摇的学生，将使学生眩晕4.3s
 
-|   攻击（子弹）类型       |搞蛋鬼的一般攻击CommonAttackOfGhost|      飞刀FlyingKnife    |      蹦蹦炸弹BombBomb        | 小炸弹JumpyDumpty      |
+|   攻击（子弹）类型       |搞蛋鬼的一般攻击CommonAttackOfTricker|      飞刀FlyingKnife    |      蹦蹦炸弹BombBomb        | 小炸弹JumpyDumpty      |
 | :------------ |  :---------------------   |  :--------------------- | :--------------------- | :--------------------- |
 |   子弹爆炸范围   |     0                  |        0                    |   2000                    |    1000      |
 |   子弹攻击距离   |     2200               |       78000                 |   2200             |    4400      |
@@ -199,7 +199,7 @@ $$
 |   翻箱速度/ms   |          1000      |   1100         |     1000      |1000|
 
 #### Assassin
-- 普通攻击为 CommonAttackOfGhost
+- 普通攻击为 CommonAttackOfTricker
 - 主动技能
   0. 隐身 BecomeInvisible
     - CD：40s 持续时间：10s
@@ -211,7 +211,7 @@ $$
     - 不直接得分
 
 #### Klee
-- 普通攻击为 CommonAttackOfGhost
+- 普通攻击为 CommonAttackOfTricker
 - 主动技能
   0. 蹦蹦炸弹 JumpyBomb
     - CD：15s 持续时间：3s
@@ -221,7 +221,7 @@ $$
     - 不直接得分，通过眩晕等获得对应得分
 
 #### 喧哗者ANoisyPerson
-- 普通攻击为 CommonAttackOfGhost
+- 普通攻击为 CommonAttackOfTricker
 - 主动技能
   0. 嚎叫 Howl
     - CD：25s 
@@ -231,7 +231,7 @@ $$
   - 在场所有学生Bgm系统被设为无用的值
 
 #### Idol
-- 普通攻击为 CommonAttackOfGhost
+- 普通攻击为 CommonAttackOfTricker
 - 主动技能
  0. ShowTime
     - CD: 80s 持续时间：10s

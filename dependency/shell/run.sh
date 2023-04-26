@@ -57,6 +57,7 @@ if [ -f $playback_dir/start.lock ]; then
     echo "Finish"
 else
     echo "Failed to start game."
+    touch $playback_dir/finish.lock
     touch temp.lock
     mv -f temp.lock $playback_dir/video.thuaipb
     kill -9 $server_pid

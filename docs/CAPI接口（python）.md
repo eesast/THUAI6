@@ -8,7 +8,8 @@
 
 #### 移动
 
-- `def Move(self, timeInMilliseconds: int, angle: float) -> Future[bool]`:移动，`timeInMilliseconds` 为移动时间，单位毫秒；`angleInRadian` 表示移动方向，单位弧度，使用极坐标，**竖直向下方向为 x 轴，水平向右方向为 y 轴**因为移动过程中你会受到多种干扰使得移动结果不符合你的预期；因此建议小步移动，边移动边考虑之后的行为。   
+- `def Move(self, timeInMilliseconds: int, angle: float) -> Future[bool]`:移动，`timeInMilliseconds` 为移动时间，单位毫秒；`angleInRadian` 表示移动方向，单位弧度，使用极坐标，**竖直向下方向为 x 轴，水平向右方向为 y 轴**因为移动过程中你会受到多种干扰使得移动结果不符合你的预期；因此建议小步移动，边移动边考虑之后的行为。
+  - 5ms以内的移动指令会被禁止，你不应当使用过小的移动指令
 - `def MoveRight(self, timeInMilliseconds: int) -> Future[bool]`即向右移动,`MoveLeft`、`MoveDown`、`MoveUp`同理  
 
 #### 使用技能

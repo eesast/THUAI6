@@ -51,22 +51,22 @@ class Constants(NoInstance):
 
     # 攻击相关
 
-    Constants.basicApOfTricker = 1500000
-    Constants.basicCD = 3000           # 初始子弹冷却
-    Constants.basicCastTime = 500      # 基本前摇时间
-    Constants.basicBackswing = 800     # 基本后摇时间
-    Constants.basicRecoveryFromHit = 3700  # 基本命中攻击恢复时长
+    basicApOfTricker = 1500000
+    basicCD = 3000           # 初始子弹冷却
+    basicCastTime = 500      # 基本前摇时间
+    basicBackswing = 800     # 基本后摇时间
+    basicRecoveryFromHit = 3700  # 基本命中攻击恢复时长
     basicStunnedTimeOfStudent = 4300
 
-    Constants.basicBulletMoveSpeed = 7400       # 基本子弹移动速度
-    Constants.basicRemoteAttackRange = 6000  # 基本远程攻击范围
-    Constants.basicAttackShortRange = 2200   # 基本近程攻击范围
-    Constants.basicBulletBombRange = 2000    # 基本子弹爆炸范围
+    basicBulletMoveSpeed = 7400       # 基本子弹移动速度
+    basicRemoteAttackRange = 6000  # 基本远程攻击范围
+    basicAttackShortRange = 2200   # 基本近程攻击范围
+    basicBulletBombRange = 2000    # 基本子弹爆炸范围
 
     # 道具相关
 
-    apPropAdd = Constants.basicApOfTricker * 12 / 10
-    apSpearAdd = Constants.basicApOfTricker * 6 / 10
+    apPropAdd = basicApOfTricker * 12 / 10
+    apSpearAdd = basicApOfTricker * 6 / 10
 
     # 技能相关
     maxNumOfSkill = 3

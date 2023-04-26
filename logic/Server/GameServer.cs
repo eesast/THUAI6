@@ -168,6 +168,23 @@ namespace Server
                 kvp.Value.Item2.Wait();
             }
         }
+        private bool playerDeceased(int playerID)
+        {
+            game.GameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+            try
+            {
+                foreach (Character character in game.GameMap.GameObjDict[GameObjType.Character])
+                {
+                    if (character.PlayerID == playerID && character.PlayerState == PlayerStateType.Deceased) return true;
+                }
+            }
+            finally
+            {
+                game.GameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+            }
+            return false;
+        }
+
         public int[] GetScore()
         {
             int[] score = new int[2]; // 0代表Student，1代表Tricker
@@ -222,9 +239,6 @@ namespace Server
             int[] score = GetScore();
             msg.StudentScore = score[0];
             msg.TrickerScore = score[1];
-            //msg.GateOpened
-            //msg.HiddenGateRefreshed
-            //msg.HiddenGateOpened
             return msg;
         }
 

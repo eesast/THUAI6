@@ -56,7 +56,7 @@ namespace Server
         {
 
             Console.WriteLine($"AddPlayer: {request.PlayerId}");
-            if (request.PlayerId >= spectatorMinPlayerID && options.AllowSpectator == true)
+            if (request.PlayerId >= spectatorMinPlayerID && options.NotAllowSpectator == false)
             {
                 // 观战模式
                 uint tp = (uint)request.PlayerId;
@@ -194,7 +194,7 @@ namespace Server
         public override Task<BoolRes> SendMessage(SendMsg request, ServerCallContext context)
         {
             var boolRes = new BoolRes();
-            if (request.PlayerId >= spectatorMinPlayerID)
+            if (request.PlayerId >= spectatorMinPlayerID || playerDeceased((int)request.PlayerId))
             {
                 boolRes.ActSuccess = false;
                 return Task.FromResult(boolRes);

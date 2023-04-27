@@ -80,7 +80,6 @@
     - `def IsDoorOpen(self, cellX: int, cellY: int) -> bool`:查询特定位置门是否开启，没有门/不在视野内也返回false
     - `def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState`：:查询特定位置隐藏校门状态,没有隐藏校门/不在视野内返回THUAI6::HiddenGateState::Null
 
-
 #### 其他
 
   - `def GetGameInfo(self) -> THUAI6.GameInfo`:查询当前游戏状态
@@ -103,6 +102,13 @@
     def PrintTricker(self) -> None:
     def PrintProp(self) -> None:
     def PrintSelfInfo(self) -> None:
+~~~
+
+### 部分属性解释 stuctures.h
+~~~python
+class Player:
+    def __init__(self, **kwargs) -> None:
+        self.prop: List[PropType] = []//大小固定为3，空的位置为NullPropType
 ~~~
 
 ## 接口一览

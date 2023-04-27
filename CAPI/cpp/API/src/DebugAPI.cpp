@@ -4,6 +4,11 @@
 #include "API.h"
 #include "utils.hpp"
 #include "structures.h"
+
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 #define PI 3.14159265358979323846
 
 StudentDebugAPI::StudentDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID) :

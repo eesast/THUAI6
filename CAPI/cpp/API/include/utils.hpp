@@ -13,6 +13,10 @@
 
 #include "structures.h"
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 namespace AssistFunction
 {
 

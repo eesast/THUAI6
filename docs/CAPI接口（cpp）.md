@@ -88,6 +88,14 @@
     void PrintSelfInfo() const；
 ~~~
 
+### 部分属性解释 stuctures.h
+~~~c++
+    struct Player
+    {
+      std::vector<PropType> props;//大小固定为3，空的位置为NullPropType
+    }
+~~~
+
 ## 接口一览
 ~~~c++
     // 指挥本角色进行移动，`timeInMilliseconds` 为移动时间，单位为毫秒；`angleInRadian` 表示移动的方向，单位是弧度，使用极坐标——竖直向下方向为 x 轴，水平向右方向为 y 轴

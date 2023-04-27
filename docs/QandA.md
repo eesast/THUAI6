@@ -22,11 +22,6 @@ Q:卡死在第一帧不动
 
 A：大概率是你的代码死循环了
 
-Q: 怎么开始游戏？
-
-A: 
-需要确保学生阵营和捣蛋鬼阵营的人数都达到Server.cmd中设定的值。人数不足也可以打开WPF，参考使用文档，修改RunGUIClient.cmd的参数，然后运行RunGUIClient.cmd，这样可以通过WPF运行部分客户端，来达到人数限制。
-
 ## C++ 
 
 Q:显示API项目已卸载
@@ -54,6 +49,15 @@ Q:CAPI编译不通过（第二种）
 
 A:查看`.\win\CAPI\cpp\`文件夹下是否有`lib`文件夹，没有则https://cloud.tsinghua.edu.cn/d/6972138f641d4e81a446/ 下载并复制粘贴
 
+Q:编译好慢啊
+
+A：
+1. 尽量不要改其他文件，甚至连点下保存都别点
+2. 不要点重新生成，要点生成
+3. 开启下图选项
+![CompileFaster](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/CompileFaster.png)
+   
+
 ## Python 
 
 ### grpc版本更新失败
@@ -76,4 +80,4 @@ A：初赛结束会调数值及机制，增加新角色
 
 Q:初赛后会修改什么呢？
 
-A：技能冷却时间等属性设为不可见；出生点随机性或可选性；增强教师等职业，削弱职业；规范Debug信息
+A：技能冷却时间等属性设为不可见；出生点随机性或可选性；增强教师等职业，削弱职业；规范Debug信息；提供不同格式的信息传递；增加职业；优化游戏结束条件

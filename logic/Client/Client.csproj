@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>EESAST.ico</ApplicationIcon>
+    <ApplicationIcon>eesast_software_trans_enlarged.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="EESAST.ico" />
+    <Content Include="eesast_software_trans_enlarged.ico" />
   </ItemGroup>
 
   <ItemGroup>

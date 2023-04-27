@@ -59,13 +59,13 @@
 下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。
 
   - `THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY)` ：返回某一位置场地种类信息。场地种类详见 structure.h 。
-  - `bool IsDoorOpen(int32_t cellX, int32_t cellY) const`:查询特定位置门是否开启，没有门也返回false
   - 以下指令，若查询物品当前在视野内，则返回最新进度；若物品当前不在视野内、但曾经出现在视野内，则返回最后一次看到时的进度；若物品从未出现在视野内，或查询位置没有对应的物品，则返回 -1。
     - `int32_t GetChestProgress(int32_t cellX, int32_t cellY) const`:查询特定位置箱子开启进度
     - `int32_t GetGateProgress(int32_t cellX, int32_t cellY) const`:查询特定位置校门开启进度
     - `int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const`:查询特定位置教室作业完成进度
     - `int32_t GetDoorProgress(int32_t cellX, int32_t cellY) const`:查询特定位置门开启状态
-  - `THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const`：:查询特定位置隐藏校门状态，没有隐藏校门返回THUAI6::HiddenGateState::Null
+    - `bool IsDoorOpen(int32_t cellX, int32_t cellY) const`:查询特定位置门是否开启，没有门/不在视野内也返回false
+    - `THUAI6::HiddenGateState GetHiddenGateState(int32_t cellX, int32_t cellY) const`：:查询特定位置隐藏校门状态，没有隐藏校门/不在视野内返回THUAI6::HiddenGateState::Null
 
 #### 其他
   - `std::shared_ptr<const THUAI6::GameInfo> GetGameInfo() const`:查询当前游戏状态
@@ -86,6 +86,14 @@
     void PrintTricker() const；
     void PrintProp() const；
     void PrintSelfInfo() const；
+~~~
+
+### 部分属性解释 stuctures.h
+~~~c++
+    struct Player
+    {
+      std::vector<PropType> props;//大小固定为3，空的位置为NullPropType
+    }
 ~~~
 
 ## 接口一览

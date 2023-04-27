@@ -6,6 +6,10 @@
 #define SCCI static const constexpr inline
 #endif
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 namespace Constants
 {
     SCCI int frameDuration = 50;  // 每帧毫秒数
@@ -302,6 +306,60 @@ namespace Constants
     {
         SCCI int skillCD = commonSkillCD * 1;
         SCCI int durationTime = commonSkillTime * 0;
+    };
+
+    struct CommonAttackOfTricker
+    {
+        SCCI double BulletBombRange = 0;
+        SCCI double BulletAttackRange = basicAttackShortRange;
+        SCCI int ap = basicApOfTricker;
+        SCCI int Speed = basicBulletMoveSpeed;
+        SCCI bool IsRemoteAttack = false;
+
+        SCCI int CastTime = (int)BulletAttackRange * 1000 / Speed;
+        SCCI int Backswing = basicBackswing;
+        SCCI int RecoveryFromHit = basicRecoveryFromHit;
+        SCCI int cd = basicBackswing;
+        SCCI int maxBulletNum = 1;
+    };
+
+    struct FlyingKnife
+    {
+        SCCI double BulletBombRange = 0;
+        SCCI double BulletAttackRange = basicRemoteAttackRange * 13;
+        SCCI int ap = basicApOfTricker * 4 / 5;
+        SCCI int Speed = basicBulletMoveSpeed * 25 / 10;
+        SCCI bool IsRemoteAttack = true;
+
+        SCCI int CastTime = basicCastTime * 4 / 5;
+        SCCI int Backswing = 0;
+        SCCI int RecoveryFromHit = 0;
+        SCCI int cd = basicBackswing / 2;
+        SCCI int maxBulletNum = 1;
+    };
+
+    struct BombBomb
+    {
+        SCCI double BulletBombRange = basicBulletBombRange;
+        SCCI double BulletAttackRange = basicAttackShortRange;
+        SCCI int ap = basicApOfTricker * 6 / 5;
+        SCCI int Speed = basicBulletMoveSpeed * 30 / 37;
+        SCCI bool IsRemoteAttack = false;
+
+        SCCI int CastTime = (int)BulletAttackRange * 1000 / Speed;
+        SCCI int Backswing = basicRecoveryFromHit;
+        SCCI int RecoveryFromHit = basicRecoveryFromHit;
+        SCCI int cd = basicCD;
+        SCCI int maxBulletNum = 1;
+    };
+
+    struct JumpyDumpty
+    {
+        SCCI double BulletBombRange = basicBulletBombRange / 2;
+        SCCI double BulletAttackRange = basicRemoteAttackRange * 2;
+        SCCI int ap = (int)(basicApOfTricker * 0.6);
+        SCCI int Speed = basicBulletMoveSpeed * 43 / 37;
+        SCCI bool IsRemoteAttack = false;
     };
 }  // namespace Constants
 #endif

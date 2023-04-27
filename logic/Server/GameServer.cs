@@ -11,14 +11,15 @@ using Playback;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Preparation.Interface;
+using System.Collections.Concurrent;
 
 
 namespace Server
 {
     public partial class GameServer : AvailableService.AvailableServiceBase
     {
-        private Dictionary<long, (SemaphoreSlim, SemaphoreSlim)> semaDict = new();
-        private object semaDictLock = new();
+        private ConcurrentDictionary<long, (SemaphoreSlim, SemaphoreSlim)> semaDict = new();
+        // private object semaDictLock = new();
         protected readonly ArgumentOptions options;
         private HttpSender? httpSender;
         private object gameLock = new();
@@ -29,13 +30,13 @@ namespace Server
         private SemaphoreSlim endGameSem = new(0);
         protected readonly Game game;
         private uint spectatorMinPlayerID = 2023;
-        private List<uint> spectatorList = new List<uint>();
         public int playerNum;
         public int TeamCount => options.TeamCount;
         protected long[] communicationToGameID;  // 通信用的ID映射到游戏内的ID，通信中0-3为Student，4为Tricker
         private readonly object messageToAllClientsLock = new();
         public static readonly long SendMessageToClientIntervalInMilliseconds = 50;
         private MessageWriter? mwr = null;
+        private object spetatorJoinLock = new();
 
         public void StartGame()
         {
@@ -45,6 +46,7 @@ namespace Server
                 if (id == GameObj.invalidID) return;     //如果有未初始化的玩家，不开始游戏
             }
             Console.WriteLine("Game starts!");
+            CreateStartFile();
             game.StartGame((int)options.GameTimeInSecond * 1000);
             Thread.Sleep(1);
             new Thread(() =>
@@ -74,6 +76,16 @@ namespace Server
             })
             { IsBackground = true }.Start();
         }
+
+        public void CreateStartFile()
+        {
+            if (options.StartLockFile != DefaultArgumentOptions.FileName)
+            {
+                using var _ = File.Create(options.StartLockFile);
+                Console.WriteLine("Successfully Created StartLockFile!");
+            }
+        }
+
         public void WaitForEnd()
         {
             this.endGameSem.Wait();
@@ -115,7 +127,7 @@ namespace Server
             game.ClearAllLists();
             mwr?.Flush();
             if (options.ResultFileName != DefaultArgumentOptions.FileName)
-                SaveGameResult(options.ResultFileName + ".json");
+                SaveGameResult(options.ResultFileName.EndsWith(".json") ? options.ResultFileName : options.ResultFileName + ".json");
             SendGameResult();
             this.endGameSem.Release();
         }
@@ -158,14 +170,19 @@ namespace Server
                         break;
                 }
             }
-            foreach (var kvp in semaDict)
+            lock (spetatorJoinLock)
             {
-                kvp.Value.Item1.Release();
-            }
+                foreach (var kvp in semaDict)
+                {
+                    kvp.Value.Item1.Release();
+                }
 
-            foreach (var kvp in semaDict)
-            {
-                kvp.Value.Item2.Wait();
+                // 若此时观战者加入，则死锁，所以需要 spetatorJoinLock
+
+                foreach (var kvp in semaDict)
+                {
+                    kvp.Value.Item2.Wait();
+                }
             }
         }
         private bool playerDeceased(int playerID)

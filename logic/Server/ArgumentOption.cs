@@ -71,5 +71,8 @@ namespace Server
 
         [Option("resultFileName", Required = false, HelpText = "Result file name, saved as .json")]
         public string ResultFileName { get; set; } = DefaultArgumentOptions.FileName;
+
+        [Option("startLockFile", Required = false, HelpText = "Whether to create a file that identifies whether the game has started")]
+        public string StartLockFile { get; set; } = DefaultArgumentOptions.FileName;
     }
 }

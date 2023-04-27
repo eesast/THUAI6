@@ -8,6 +8,10 @@
 #include <vector>
 #include <string>
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 namespace THUAI6
 {
 

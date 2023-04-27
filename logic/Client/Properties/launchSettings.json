@@ -2,7 +2,7 @@
   "profiles": {
     "Client": {
       "commandName": "Project",
-      "commandLineArgs": "--port 8888 --characterID 3 --type 1 --occupation 5"
+      "commandLineArgs": "--port 8892 --characterID 8880 --type 1 --occupation 1 --ip thuai6.eesast.com --cl"
     }
   }
 }

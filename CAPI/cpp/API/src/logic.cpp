@@ -8,6 +8,10 @@
 #include "utils.hpp"
 #include "Communication.h"
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 extern const bool asynchronous;
 
 Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::TrickerType tricker, THUAI6::StudentType student) :
@@ -323,17 +327,6 @@ void Logic::ProcessMessage()
                 case THUAI6::GameState::GameStart:
                     logger->info("Game Start!");
 
-                    // 重新读取玩家的guid，保证人类在前屠夫在后
-                    playerGUIDs.clear();
-                    for (const auto& obj : clientMsg.obj_message())
-                        if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::StudentMessage)
-                            playerGUIDs.push_back(obj.student_message().guid());
-                    for (const auto& obj : clientMsg.obj_message())
-                        if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::TrickerMessage)
-                            playerGUIDs.push_back(obj.tricker_message().guid());
-                    currentState->guids = playerGUIDs;
-                    bufferState->guids = playerGUIDs;
-
                     // 读取地图
                     for (const auto& item : clientMsg.obj_message())
                         if (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()] == THUAI6::MessageOfObj::MapMessage)
@@ -368,16 +361,6 @@ void Logic::ProcessMessage()
 
                     break;
                 case THUAI6::GameState::GameRunning:
-                    // 重新读取玩家的guid，guid确保人类在前屠夫在后
-                    playerGUIDs.clear();
-                    for (const auto& obj : clientMsg.obj_message())
-                        if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::StudentMessage)
-                            playerGUIDs.push_back(obj.student_message().guid());
-                    for (const auto& obj : clientMsg.obj_message())
-                        if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::TrickerMessage)
-                            playerGUIDs.push_back(obj.tricker_message().guid());
-                    currentState->guids = playerGUIDs;
-                    bufferState->guids = playerGUIDs;
 
                     LoadBuffer(clientMsg);
                     break;
@@ -605,9 +588,16 @@ void Logic::LoadBuffer(const protobuf::MessageToClient& message)
         bufferState->props.clear();
         bufferState->bullets.clear();
         bufferState->bombedBullets.clear();
+        bufferState->guids.clear();
 
         logger->debug("Buffer cleared!");
         // 读取新的信息
+        for (const auto& obj : message.obj_message())
+            if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::StudentMessage)
+                bufferState->guids.push_back(obj.student_message().guid());
+        for (const auto& obj : message.obj_message())
+            if (Proto2THUAI6::messageOfObjDict[obj.message_of_obj_case()] == THUAI6::MessageOfObj::TrickerMessage)
+                bufferState->guids.push_back(obj.tricker_message().guid());
         bufferState->gameInfo = Proto2THUAI6::Protobuf2THUAI6GameInfo(message.all_message());
         LoadBufferSelf(message);
         for (const auto& item : message.obj_message())
@@ -689,6 +679,7 @@ bool Logic::TryConnection()
 
 bool Logic::HaveView(int gridX, int gridY, int selfX, int selfY, int viewRange) const
 {
+    std::unique_lock<std::mutex> lock(mtxState);
     return AssistFunction::HaveView(viewRange, selfX, selfY, gridX, gridY, currentState->gameMap);
 }
 

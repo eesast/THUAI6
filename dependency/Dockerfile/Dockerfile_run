@@ -1,6 +1,13 @@
+FROM mcr.microsoft.com/dotnet/sdk:6.0.408-jammy-amd64 AS build
+MAINTAINER eesast
+WORKDIR /usr/local
+COPY . .
+RUN dotnet publish logic/Server/Server.csproj -c Release -o /usr/local/Server --self-contained true -r linux-x64
+
 FROM eesast/thuai6_base:base
 MAINTAINER eesast
 WORKDIR /usr/local
+COPY --from=build /usr/local/Server .
 RUN mkdir /usr/local/team1 && mkdir /usr/local/team2 && mkdir /usr/local/playback
 COPY ./dependency/shell/run.sh .
 COPY ./CAPI/python /usr/local/PlayerCode/CAPI/python
@@ -10,7 +17,4 @@ WORKDIR /usr/local/PlayerCode/CAPI/python
 RUN bash ../../dependency/shell/generate_proto.sh
 
 WORKDIR /usr/local
-RUN wget -P . https://cloud.tsinghua.edu.cn/f/e48940314a6d4cdb8bd0/?dl=1
-RUN mv 'index.html?dl=1' Server.tar.gz
-RUN tar -zxvf Server.tar.gz
 ENTRYPOINT [ "bash","./run.sh" ]

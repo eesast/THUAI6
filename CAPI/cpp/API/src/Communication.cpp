@@ -5,6 +5,10 @@
 #include <mutex>
 #include <condition_variable>
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 using grpc::ClientContext;
 
 Communication::Communication(std::string sIP, std::string sPort)
@@ -249,10 +253,13 @@ void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, T
         grpc::ClientContext context;
         auto MessageReader = THUAI6Stub->AddPlayer(&context, playerMsg);
 
-        while (MessageReader->Read(&message2Client))
+        protobuf::MessageToClient buffer2Client;
+
+        while (MessageReader->Read(&buffer2Client))
         {
             {
                 std::lock_guard<std::mutex> lock(mtxMessage);
+                message2Client = std::move(buffer2Client);
                 haveNewMessage = true;
             }
             cvMessage.notify_one();

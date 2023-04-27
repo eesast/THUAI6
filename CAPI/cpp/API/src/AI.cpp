@@ -5,7 +5,7 @@
 #include "constants.h"
 // 注意不要使用conio.h，Windows.h等非标准库
 
-// 为假则play()期间确保游戏状态不更新，为真则只保证游戏状态在调用相关方法时不更新
+// 为假则play()期间确保游戏状态不更新，为真则只保证游戏状态在调用相关方法时不更新，大致一帧更新一次
 extern const bool asynchronous = false;
 
 // 选手需要依次将player0到player4的职业在这里定义
@@ -20,7 +20,7 @@ extern const THUAI6::TrickerType trickerType = THUAI6::TrickerType::Assassin;
 
 // 可以在AI.cpp内部声明变量与函数
 
-void AI::play(IStudentAPI& api)
+void AI::play(IStudentAPI& api)  // 每帧执行一次AI::play(IStudentAPI& api)或AI::play(ITrickerAPI& api)（除非执行该函数超过一帧50ms），获取的信息都是这一帧的开始的状态
 {
     // 公共操作
     if (this->playerID == 0)

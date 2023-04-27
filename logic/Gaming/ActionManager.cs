@@ -71,12 +71,13 @@ namespace Gaming
 
                 ++generatorForFix.NumOfFixing;
                 characterManager.SetPlayerState(player, PlayerStateType.Fixing);
+                long threadNum = player.ThreadNum;
                 new Thread
           (
               () =>
               {
                   new FrameRateTaskExecutor<int>(
-                      loopCondition: () => gameMap.Timer.IsGaming && player.PlayerState == PlayerStateType.Fixing,
+                      loopCondition: () => gameMap.Timer.IsGaming && threadNum == player.ThreadNum,
                       loopToDo: () =>
                       {
                           if (generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player))
@@ -170,8 +171,10 @@ namespace Gaming
                {
                    characterManager.SetPlayerState(playerTreated, PlayerStateType.Treated);
                    characterManager.SetPlayerState(player, PlayerStateType.Treating);
+                   long threadNum = player.ThreadNum;
+
                    new FrameRateTaskExecutor<int>(
-                       loopCondition: () => playerTreated.PlayerState == PlayerStateType.Treated && player.PlayerState == PlayerStateType.Treating && gameMap.Timer.IsGaming,
+                       loopCondition: () => playerTreated.PlayerState == PlayerStateType.Treated && threadNum == player.ThreadNum && gameMap.Timer.IsGaming,
                        loopToDo: () =>
                        {
                            if (playerTreated.AddDegreeOfTreatment(GameData.frameDuration * player.TreatSpeed, player))
@@ -182,7 +185,7 @@ namespace Gaming
                    )
                        .Start();
 
-                   if (player.PlayerState == PlayerStateType.Treating) characterManager.SetPlayerState(player);
+                   if (threadNum == player.ThreadNum) characterManager.SetPlayerState(player);
                    else if (playerTreated.PlayerState == PlayerStateType.Treated) characterManager.SetPlayerState(playerTreated);
                }
            )
@@ -200,13 +203,14 @@ namespace Gaming
                     return false;
                 characterManager.SetPlayerState(player, PlayerStateType.Rescuing);
                 characterManager.SetPlayerState(playerRescued, PlayerStateType.Rescued);
+                long threadNum = player.ThreadNum;
 
                 new Thread
            (
                () =>
                {
                    new FrameRateTaskExecutor<int>(
-                       loopCondition: () => playerRescued.PlayerState == PlayerStateType.Rescued && player.PlayerState == PlayerStateType.Rescuing && gameMap.Timer.IsGaming,
+                       loopCondition: () => playerRescued.PlayerState == PlayerStateType.Rescued && threadNum == player.ThreadNum && gameMap.Timer.IsGaming,
                        loopToDo: () =>
                        {
                            playerRescued.TimeOfRescue += GameData.frameDuration;
@@ -228,7 +232,7 @@ namespace Gaming
                        else
                            characterManager.SetPlayerState(playerRescued, PlayerStateType.Addicted);
                    }
-                   if (player.PlayerState == PlayerStateType.Rescuing) characterManager.SetPlayerState(player);
+                   if (threadNum == player.ThreadNum) characterManager.SetPlayerState(player);
                    playerRescued.TimeOfRescue = 0;
                }
            )
@@ -297,13 +301,14 @@ namespace Gaming
                 // gameMap.Add(addWall);
 
                 characterManager.SetPlayerState(player, PlayerStateType.ClimbingThroughWindows);
+                long threadNum = player.ThreadNum;
                 windowForClimb.WhoIsClimbing = player;
                 new Thread
           (
               () =>
               {
                   new FrameRateTaskExecutor<int>(
-                  loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,
+                  loopCondition: () => threadNum == player.ThreadNum && gameMap.Timer.IsGaming,
                   loopToDo: () => { },
                   timeInterval: GameData.frameDuration,
                   finallyReturn: () => 0,
@@ -322,7 +327,7 @@ namespace Gaming
                   moveEngine.MoveObj(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
 
                   new FrameRateTaskExecutor<int>(
-                    loopCondition: () => player.PlayerState == PlayerStateType.ClimbingThroughWindows && gameMap.Timer.IsGaming,
+                    loopCondition: () => threadNum == player.ThreadNum && gameMap.Timer.IsGaming,
                     loopToDo: () =>
                     {
                     },
@@ -336,7 +341,7 @@ namespace Gaming
                   player.MoveSpeed = player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
                   windowForClimb.WhoIsClimbing = null;
                   //  gameMap.Remove(addWall);
-                  if (player.PlayerState == PlayerStateType.ClimbingThroughWindows)
+                  if (threadNum == player.ThreadNum)
                   {
                       characterManager.SetPlayerState(player);
                   }
@@ -379,12 +384,13 @@ namespace Gaming
                 if (!flag) return false;
 
                 characterManager.SetPlayerState(player, PlayerStateType.LockingOrOpeningTheDoor);
+                long threadNum = player.ThreadNum;
                 new Thread
           (
               () =>
               {
                   new FrameRateTaskExecutor<int>(
-                      loopCondition: () => flag && player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor && gameMap.Timer.IsGaming && doorToLock.OpenOrLockDegree < GameData.degreeOfLockingOrOpeningTheDoor,
+                      loopCondition: () => flag && threadNum == player.ThreadNum && gameMap.Timer.IsGaming && doorToLock.OpenOrLockDegree < GameData.degreeOfLockingOrOpeningTheDoor,
                       loopToDo: () =>
                       {
                           flag = ((gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character)) == null);
@@ -399,7 +405,7 @@ namespace Gaming
                   {
                       doorToLock.IsOpen = (!doorToLock.IsOpen);
                   }
-                  if (player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor)
+                  if (threadNum == player.ThreadNum)
                       characterManager.SetPlayerState(player);
                   doorToLock.OpenOrLockDegree = 0;
               }
@@ -472,7 +478,7 @@ namespace Gaming
                     OnCollision: (obj, collisionObj, moveVec) =>
                     {
                         SkillWhenColliding((Character)obj, collisionObj);
-                        Preparation.Utility.Debugger.Output(obj, " end move with " + collisionObj.ToString());
+                        //Preparation.Utility.Debugger.Output(obj, " end move with " + collisionObj.ToString());
                         //if (collisionObj is Mine)
                         //{
                         //    ActivateMine((Character)obj, (Mine)collisionObj);

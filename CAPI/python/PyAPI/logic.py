@@ -3,6 +3,7 @@ from typing import List, Union, Callable, Tuple
 import threading
 import logging
 import copy
+import platform
 import proto.MessageType_pb2 as MessageType
 import proto.Message2Server_pb2 as Message2Server
 import proto.Message2Clients_pb2 as Message2Clients
@@ -505,9 +506,16 @@ class Logic(ILogic):
         formatter = logging.Formatter(
             "[%(name)s] [%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s", '%H:%M:%S')
         # 确保文件存在
-        if not os.path.exists(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/logs"):
-            os.makedirs(os.path.dirname(os.path.dirname(
-                os.path.realpath(__file__))) + "/logs")
+        # if not os.path.exists(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/logs"):
+        #     os.makedirs(os.path.dirname(os.path.dirname(
+        #         os.path.realpath(__file__))) + "/logs")
+
+        if platform.system().lower() == "windows":
+            os.system(
+                f"mkdir {os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + '/logs'}")
+        else:
+            os.system(
+                f"mkdir -p {os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + '/logs'}")
 
         fileHandler = logging.FileHandler(os.path.dirname(
             os.path.dirname(os.path.realpath(__file__))) + "/logs/logic" + str(self.__playerID) + "-log.txt", "w+", encoding="utf-8")

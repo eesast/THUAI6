@@ -3,7 +3,6 @@ using System.Threading;
 using Preparation.Interface;
 using Preparation.Utility;
 using System;
-using GameClass.GameObj;
 
 namespace GameClass.GameObj
 {
@@ -28,7 +27,7 @@ namespace GameClass.GameObj
                 try
                 {
                     foreach (Character player in GameObjDict[GameObjType.Character])
-                        if (player.PlayerState==PlayerStateType.Addicted)
+                        if (player.PlayerState == PlayerStateType.Addicted)
                         {
                             Timer.IsGaming = false;
                             break;
@@ -38,7 +37,7 @@ namespace GameClass.GameObj
                 {
                     GameObjLockDict[GameObjType.Character].ExitReadLock();
                 }
-                if (!Timer.IsGaming)
+                if (Timer.IsGaming)
                 {
                     GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
                     try

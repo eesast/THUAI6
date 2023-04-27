@@ -8,7 +8,7 @@ import time
 
 
 class Setting:
-    # 为假则play()期间确保游戏状态不更新，为真则只保证游戏状态在调用相关方法时不更新
+    # 为假则play()期间确保游戏状态不更新，为真则只保证游戏状态在调用相关方法时不更新，大致一帧更新一次
     @staticmethod
     def asynchronous() -> bool:
         return False

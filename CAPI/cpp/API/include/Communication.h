@@ -14,6 +14,10 @@
 #include <queue>
 #include <atomic>
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 class Logic;
 
 class Communication

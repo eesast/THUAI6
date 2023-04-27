@@ -9,6 +9,10 @@
 
 #include "structures.h"
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 // 存储场上的状态
 struct State
 {

@@ -23,7 +23,7 @@ namespace GameClass.GameObj
 
             if (GameData.numOfStudent - NumOfDeceasedStudent - NumOfEscapedStudent == 1)
             {
-                GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
+                GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
                 try
                 {
                     foreach (EmergencyExit emergencyExit in GameObjDict[GameObjType.EmergencyExit])
@@ -35,7 +35,7 @@ namespace GameClass.GameObj
                 }
                 finally
                 {
-                    GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
+                    GameObjLockDict[GameObjType.EmergencyExit].ExitWriteLock();
                 }
             }
         }

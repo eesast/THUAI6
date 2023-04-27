@@ -31,6 +31,10 @@
 #include "Communication.h"
 #include "ConcurrentQueue.hpp"
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 // 封装了通信组件和对AI对象进行操作
 class Logic : public ILogic
 {

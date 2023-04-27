@@ -4,6 +4,10 @@
 #include <tclap/CmdLine.h>
 #include <array>
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 #ifdef _MSC_VER
 #pragma warning(disable : 4996)
 #endif

@@ -8,6 +8,10 @@
 #include "utils.hpp"
 #include "Communication.h"
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 extern const bool asynchronous;
 
 Logic::Logic(THUAI6::PlayerType type, int64_t ID, THUAI6::TrickerType tricker, THUAI6::StudentType student) :

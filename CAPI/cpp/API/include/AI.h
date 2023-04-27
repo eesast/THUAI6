@@ -4,6 +4,10 @@
 
 #include "API.h"
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 class IAI
 {
 public:

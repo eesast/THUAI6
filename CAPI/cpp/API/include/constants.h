@@ -6,6 +6,10 @@
 #define SCCI static const constexpr inline
 #endif
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 namespace Constants
 {
     SCCI int frameDuration = 50;  // 每帧毫秒数

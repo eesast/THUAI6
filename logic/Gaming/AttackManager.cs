@@ -6,7 +6,6 @@ using Preparation.Utility;
 using GameEngine;
 using Preparation.Interface;
 using Timothy.FrameRateTask;
-using System.Numerics;
 
 namespace Gaming
 {

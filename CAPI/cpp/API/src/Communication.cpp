@@ -5,6 +5,10 @@
 #include <mutex>
 #include <condition_variable>
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 using grpc::ClientContext;
 
 Communication::Communication(std::string sIP, std::string sPort)

@@ -31,6 +31,10 @@
 #include "Communication.h"
 #include "ConcurrentQueue.hpp"
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 // 封装了通信组件和对AI对象进行操作
 class Logic : public ILogic
 {
@@ -48,9 +52,6 @@ private:
     // 类型记录
     THUAI6::TrickerType trickerType;
     THUAI6::StudentType studentType;
-
-    // GUID信息
-    std::vector<int64_t> playerGUIDs;
 
     std::unique_ptr<IGameTimer> timer;
 

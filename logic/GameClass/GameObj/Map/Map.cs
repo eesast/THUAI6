@@ -3,7 +3,6 @@ using System.Threading;
 using Preparation.Interface;
 using Preparation.Utility;
 using System;
-using GameClass.GameObj;
 
 namespace GameClass.GameObj
 {
@@ -13,29 +12,47 @@ namespace GameClass.GameObj
         private readonly Dictionary<uint, XY> birthPointList;  // 出生点列表
         public Dictionary<uint, XY> BirthPointList => birthPointList;
 
-        private object lockForNum = new();
+        private readonly object lockForNum = new();
         private void WhenStudentNumChange()
         {
             if (numOfDeceasedStudent + numOfEscapedStudent == GameData.numOfStudent)
             {
                 Timer.IsGaming = false;
+                return;
             }
 
-            if (GameData.numOfStudent - NumOfDeceasedStudent - NumOfEscapedStudent == 1)
+            if (GameData.numOfStudent - numOfDeceasedStudent - numOfEscapedStudent == 1)
             {
-                GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
+                GameObjLockDict[GameObjType.Character].EnterReadLock();
                 try
                 {
-                    foreach (EmergencyExit emergencyExit in GameObjDict[GameObjType.EmergencyExit])
-                        if (emergencyExit.CanOpen)
+                    foreach (Character player in GameObjDict[GameObjType.Character])
+                        if (player.PlayerState == PlayerStateType.Addicted)
                         {
-                            emergencyExit.IsOpen = true;
+                            Timer.IsGaming = false;
                             break;
                         }
                 }
                 finally
                 {
-                    GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
+                    GameObjLockDict[GameObjType.Character].ExitReadLock();
+                }
+                if (Timer.IsGaming)
+                {
+                    GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
+                    try
+                    {
+                        foreach (EmergencyExit emergencyExit in GameObjDict[GameObjType.EmergencyExit])
+                            if (emergencyExit.CanOpen)
+                            {
+                                emergencyExit.IsOpen = true;
+                                break;
+                            }
+                    }
+                    finally
+                    {
+                        GameObjLockDict[GameObjType.EmergencyExit].ExitWriteLock();
+                    }
                 }
             }
         }

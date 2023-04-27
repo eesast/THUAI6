@@ -43,7 +43,7 @@
 ### 信息获取
 
 #### 队内信息
-  - `std::future<bool> SendMessage(int64_t, std::string)`：给同队的队友发送消息。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
+  - `std::future<bool> SendMessage(int64_t, std::string)`：给同队的队友发送消息,队友在下一帧收到。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
   - `bool HaveMessage()`:是否有队友发来的尚未接收的信息。
   - `std::pair<int64_t, std::string> GetMessage()`:按照消息发送顺序获取来自队友的信息，第一个参数为发送该消息的PlayerID。
 

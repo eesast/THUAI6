@@ -22,7 +22,6 @@ class Logic(ILogic):
 
         # ID
         self.__playerID: int = playerID
-        self.__playerGUIDs: List[int] = []
 
         self.__playerType: THUAI6.PlayerType = playerType
 
@@ -214,7 +213,7 @@ class Logic(ILogic):
 
     def GetPlayerGUIDs(self) -> List[int]:
         with self.__mtxState:
-            return copy.deepcopy(self.__playerGUIDs)
+            return copy.deepcopy(self.__currentState.guids)
 
     # IStudentAPI使用的接口
 
@@ -263,7 +262,8 @@ class Logic(ILogic):
         return self.__comm.EndAllAction(self.__playerID)
 
     def HaveView(self, gridX: int, gridY: int, selfX: int, selfY: int, viewRange: int) -> bool:
-        return AssistFunction.HaveView(viewRange, selfX, selfY, gridX, gridY, self.__currentState.gameMap)
+        with self.__mtxState:
+            return AssistFunction.HaveView(viewRange, selfX, selfY, gridX, gridY, self.__currentState.gameMap)
 
     # Logic内部逻辑
     def __TryConnection(self) -> bool:
@@ -286,15 +286,6 @@ class Logic(ILogic):
                 if self.__gameState == THUAI6.GameState.GameStart:
                     # 读取玩家的GUID
                     self.__logger.info("Game start!")
-                    self.__playerGUIDs.clear()
-                    for obj in clientMsg.obj_message:
-                        if obj.WhichOneof("message_of_obj") == "student_message":
-                            self.__playerGUIDs.append(obj.student_message.guid)
-                    for obj in clientMsg.obj_message:
-                        if obj.WhichOneof("message_of_obj") == "tricker_message":
-                            self.__playerGUIDs.append(obj.tricker_message.guid)
-                    self.__currentState.guids = self.__playerGUIDs
-                    self.__bufferState.guids = self.__playerGUIDs
 
                     for obj in clientMsg.obj_message:
                         if obj.WhichOneof("message_of_obj") == "map_message":
@@ -318,15 +309,6 @@ class Logic(ILogic):
 
                 elif self.__gameState == THUAI6.GameState.GameRunning:
                     # 读取玩家的GUID
-                    self.__playerGUIDs.clear()
-                    for obj in clientMsg.obj_message:
-                        if obj.WhichOneof("message_of_obj") == "student_message":
-                            self.__playerGUIDs.append(obj.student_message.guid)
-                    for obj in clientMsg.obj_message:
-                        if obj.WhichOneof("message_of_obj") == "tricker_message":
-                            self.__playerGUIDs.append(obj.tricker_message.guid)
-                    self.__currentState.guids = self.__playerGUIDs
-                    self.__bufferState.guids = self.__playerGUIDs
                     self.__LoadBuffer(clientMsg)
                 else:
                     self.__logger.error("Unknown GameState!")
@@ -467,9 +449,21 @@ class Logic(ILogic):
             self.__bufferState.students.clear()
             self.__bufferState.trickers.clear()
             self.__bufferState.props.clear()
+            self.__bufferState.bullets.clear()
+            self.__bufferState.bombedBullets.clear()
+            self.__bufferState.guids.clear()
             self.__logger.debug("Buffer cleared!")
+
+            for obj in message.obj_message:
+                if obj.WhichOneof("message_of_obj") == "student_message":
+                    self.__bufferState.guids.append(obj.student_message.guid)
+            for obj in message.obj_message:
+                if obj.WhichOneof("message_of_obj") == "tricker_message":
+                    self.__bufferState.guids.append(obj.tricker_message.guid)
+
             self.__bufferState.gameInfo = Proto2THUAI6.Protobuf2THUAI6GameInfo(
                 message.all_message)
+
             self.__LoadBufferSelf(message)
             for item in message.obj_message:
                 self.__LoadBufferCase(item)

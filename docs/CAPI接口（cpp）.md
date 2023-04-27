@@ -59,7 +59,7 @@
 下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。
 
   - `THUAI6::PlaceType GetPlaceType(int32_t cellX, int32_t cellY)` ：返回某一位置场地种类信息。场地种类详见 structure.h 。
-  - 以下指令，若查询物品当前在视野内，则返回最新进度；若物品当前不在视野内、但曾经出现在视野内，则返回最后一次看到时的进度；若物品从未出现在视野内，或查询位置没有对应的物品，则返回 -1。
+  - 以下指令，若查询物品当前在视野内，则返回最新进度/状态；若物品当前不在视野内、但曾经出现在视野内，则返回最后一次看到时的进度/状态；若物品从未出现在视野内，或查询位置没有对应的物品，则返回 -1。
     - `int32_t GetChestProgress(int32_t cellX, int32_t cellY) const`:查询特定位置箱子开启进度
     - `int32_t GetGateProgress(int32_t cellX, int32_t cellY) const`:查询特定位置校门开启进度
     - `int32_t GetClassroomProgress(int32_t cellX, int32_t cellY) const`:查询特定位置教室作业完成进度

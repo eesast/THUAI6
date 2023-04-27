@@ -49,9 +49,6 @@ private:
     THUAI6::TrickerType trickerType;
     THUAI6::StudentType studentType;
 
-    // GUID信息
-    std::vector<int64_t> playerGUIDs;
-
     std::unique_ptr<IGameTimer> timer;
 
     std::thread tAI;  // 用于运行AI的线程

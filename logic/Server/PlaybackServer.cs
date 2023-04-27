@@ -18,8 +18,25 @@ namespace Server
         private uint spectatorMinPlayerID = 2023;
         private List<uint> spectatorList = new List<uint>();
         public int TeamCount => options.TeamCount;
+        private MessageOfObj currentMapMsg = new();
         private MessageWriter? mwr = null;
         private bool IsGaming { get; set; }
+        protected object spectatorLock = new object();
+        protected bool isSpectatorJoin = false;
+        protected bool IsSpectatorJoin
+        {
+            get
+            {
+                lock (spectatorLock)
+                    return isSpectatorJoin;
+            }
+
+            set
+            {
+                lock (spectatorLock)
+                    isSpectatorJoin = value;
+            }
+        }
         private int[] finalScore;
         public int[] FinalScore
         {
@@ -79,6 +96,13 @@ namespace Server
         public void ReportGame(MessageToClient? msg)
         {
             currentGameInfo = msg;
+            if (currentGameInfo != null && currentGameInfo.GameState == GameState.GameStart)
+                currentMapMsg = currentGameInfo.ObjMessage[0];
+            if (IsSpectatorJoin && currentGameInfo != null)
+            {
+                currentGameInfo.ObjMessage.Add(currentMapMsg);
+                IsSpectatorJoin = false;
+            }
 
             foreach (var kvp in semaDict)
             {

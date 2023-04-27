@@ -4,10 +4,10 @@ python_dir=/usr/local/PlayerCode/CAPI/python/PyAPI
 playback_dir=/usr/local/playback
 
 if [ $EXPOSED -eq 1 ]; then
-    nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --resultFileName $playback_dir/result --gameTimeInSecond $TIME --url $URL --token $TOKEN --fileName $playback_dir/video --startLockFile $playback_dir/start.lock > $playback_dir/server.log &
+    nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --resultFileName $playback_dir/result --gameTimeInSecond $TIME --url $URL --token $TOKEN --fileName $playback_dir/video --startLockFile $playback_dir/start.lock > $playback_dir/server.log 2>&1 &
     server_pid=$!
 else
-    nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --resultFileName $playback_dir/result --gameTimeInSecond $TIME --notAllowSpectator --url $URL --token $TOKEN --fileName $playback_dir/video --startLockFile $playback_dir/start.lock > $playback_dir/server.log &
+    nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --resultFileName $playback_dir/result --gameTimeInSecond $TIME --notAllowSpectator --url $URL --token $TOKEN --fileName $playback_dir/video --startLockFile $playback_dir/start.lock > $playback_dir/server.log 2>&1 &
     server_pid=$!
 fi
 sleep 5
@@ -20,9 +20,9 @@ do
             j=$((i - 1))
             if [ -f "./player$i.py" ]; then
                 cp -f ./player$i.py $python_dir/AI.py
-                nice -0 python3 $python_dir/main.py -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log &
+                nice -0 python3 $python_dir/main.py -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log 2>&1 &
             elif [ -f "./capi$i" ]; then
-                nice -0 ./capi$i -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log &
+                nice -0 ./capi$i -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log 2>&1 &
             else
                 echo "ERROR. $i is not found."
             fi
@@ -33,9 +33,9 @@ do
             j=$((i - 1))
             if [ -f "./player$i.py" ]; then
                 cp -f ./player$i.py $python_dir/AI.py
-                nice -0 python3 $python_dir/main.py -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log &
+                nice -0 python3 $python_dir/main.py -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log 2>&1 &
             elif [ -f "./capi$i" ]; then
-                nice -0 ./capi$i -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log &
+                nice -0 ./capi$i -I 127.0.0.1 -P 8888 -p $j > $playback_dir/team$k-player$j.log 2>&1 &
             else
                 echo "ERROR. $i is not found."
             fi

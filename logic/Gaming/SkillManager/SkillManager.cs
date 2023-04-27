@@ -17,44 +17,31 @@ namespace Gaming
                     switch (activeSkillType)
                     {
                         case ActiveSkillType.BecomeInvisible:
-                            BecomeInvisible(character);
-                            break;
+                            return BecomeInvisible(character);
                         case ActiveSkillType.UseKnife:
-                            UseKnife(character);
-                            break;
+                            return UseKnife(character);
                         case ActiveSkillType.Howl:
-                            Howl(character);
-                            break;
+                            return Howl(character);
                         case ActiveSkillType.CanBeginToCharge:
-                            CanBeginToCharge(character);
-                            break;
+                            return CanBeginToCharge(character);
                         case ActiveSkillType.Inspire:
-                            Inspire(character);
-                            break;
+                            return Inspire(character);
                         case ActiveSkillType.Encourage:
-                            Encourage(character);
-                            break;
+                            return Encourage(character);
                         case ActiveSkillType.Punish:
-                            Punish(character);
-                            break;
+                            return Punish(character);
                         case ActiveSkillType.JumpyBomb:
-                            JumpyBomb(character);
-                            break;
+                            return JumpyBomb(character);
                         case ActiveSkillType.WriteAnswers:
-                            WriteAnswers(character);
-                            break;
+                            return WriteAnswers(character);
                         case ActiveSkillType.SummonGolem:
-                            SummonGolem(character);
-                            break;
+                            return SummonGolem(character);
                         case ActiveSkillType.UseRobot:
-                            UseRobot(character);
-                            break;
+                            return UseRobot(character);
                         case ActiveSkillType.Rouse:
-                            Rouse(character);
-                            break;
+                            return Rouse(character);
                         case ActiveSkillType.ShowTime:
-                            ShowTime(character);
-                            break;
+                            return ShowTime(character);
                         default:
                             return false;
                     }

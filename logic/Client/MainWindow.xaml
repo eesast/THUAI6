@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="ClientVI" Height="738" Width="850" KeyDown="KeyBoardControl" Background="White" ResizeMode="CanResizeWithGrip" WindowStyle="None" MouseLeftButtonDown="DragWindow" MouseDoubleClick="Attack" MinHeight="738" MinWidth="1100">
+        Title="ClientVI" Height="738" Width="850" KeyDown="KeyBoardControl" Background="White" ResizeMode="CanResizeWithGrip" WindowStyle="None" MouseLeftButtonDown="DragWindow" MouseDoubleClick="Attack" MinHeight="738" MinWidth="1100"
+        SizeChanged="ZoomMap">
 
     <Window.Resources>
         <ImageBrush x:Key="Logo" ImageSource="Logo.png"/>

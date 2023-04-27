@@ -1,6 +1,11 @@
 #include <optional>
 #include "AI.h"
 #include "API.h"
+
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 #define PI 3.14159265358979323846
 
 int StudentAPI::GetFrameCount() const

@@ -8,6 +8,10 @@
 #include <utility>
 #include <optional>
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 template<typename Elem>
 class ConcurrentQueue
 {

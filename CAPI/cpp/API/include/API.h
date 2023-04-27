@@ -22,6 +22,10 @@
 
 #include "structures.h"
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 const constexpr int numOfGridPerCell = 1000;
 
 class IAI;

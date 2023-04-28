@@ -981,7 +981,7 @@ else
 }
 ```
     
-需要注意的是，由于[标准委员会的疏忽~忘了~（partly an oversight）](https://herbsutter.com/gotw/_102/)，C++14 中才引进`std::make_unique`，C++11 中无法使用。因此 C++11 若想使用则需自定义 `std::make_unique`：
+需要注意的是，由于[标准委员会的疏忽~忘了~（partly an oversight）](https://herbsutter.com/gotw/_102/)，C++14 中才引进`std::make_unique`，C++11 中无法使用。因此 C++11 若想使用则需自定义 `make_unique`：
     
 ```cpp
 namespace

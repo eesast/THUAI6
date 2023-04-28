@@ -94,6 +94,7 @@ namespace Server
                             }
                             catch { }
                             Console.WriteLine($"The spectator {request.PlayerId} exited");
+                            return;
                         }
                     }
                     catch (Exception)

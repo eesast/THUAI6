@@ -7,7 +7,7 @@ while (( $i <= 5 ))
 do
     if [ -f "${bind}/player${i}.cpp" ]; then
         cp -f $bind/player$i.cpp ./API/src/AI.cpp
-        cmake ./CMakeLists.txt && make >compile_log$i.txt 2>&1
+        cmake ./CMakeLists.txt && make -j$(nproc) >compile_log$i.txt 2>&1
         mv ./capi $bind/capi$i # executable file
         if [ $? -ne 0 ]; then
             flag=0

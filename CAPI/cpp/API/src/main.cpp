@@ -3,6 +3,7 @@
 #include "structures.h"
 #include <tclap/CmdLine.h>
 #include <array>
+#include <string_view>
 
 #undef GetMessage
 #undef SendMessage
@@ -11,6 +12,24 @@
 #ifdef _MSC_VER
 #pragma warning(disable : 4996)
 #endif
+
+using namespace std::literals::string_view_literals;
+static constexpr std::string_view welcomeString = R"welcome(
+
+                  _____ _   _ _   _   _    ___ __   
+                 |_   _| | | | | | | / \  |_ _/ /_  
+                   | | | |_| | | | |/ _ \  | | '_ \ 
+                   | | |  _  | |_| / ___ \ | | (_) |
+                   |_| |_| |_|\___/_/   \_\___\___/ 
+
+    ____               _             _            ____ _      _     _ 
+   / ___|_ __ __ _  __| |_   _  __ _| |_ ___     / ___(_)_ __| |___| |
+  | |  _| '__/ _` |/ _` | | | |/ _` | __/ _ \   | |  _| | '__| / __| |
+  | |_| | | | (_| | (_| | |_| | (_| | ||  __/_  | |_| | | |  | \__ \_|
+   \____|_|  \__,_|\__,_|\__,_|\__,_|\__\___( )  \____|_|_|  |_|___(_)
+
+
+)welcome"sv;
 
 int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
 {
@@ -84,6 +103,11 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
             playerType = THUAI6::PlayerType::StudentPlayer;
             stuType = studentType[pID];
         }
+
+#ifdef _MSC_VER
+        std::cout << welcomeString << std::endl;
+#endif
+
         Logic logic(playerType, pID, trickerType, stuType);
         logic.Main(AIBuilder, sIP, sPort, file, print, warnOnly);
     }

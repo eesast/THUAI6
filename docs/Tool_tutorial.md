@@ -2,9 +2,9 @@
 
 [toc]
 
-## Visual Studio使用说明
+## Visual Studio 使用说明
 
-比赛**只保证！！！支持**VS2022最新版本，选手使用其他版本后果自负（实际上应该不能编译）。
+比赛**只保证！！！支持** VS 2022 最新版本，选手使用其他版本后果自负（实际上应该不能编译）。
 
 ### 生成模式的设置
 
@@ -12,7 +12,7 @@
 
 ![image-20230416010705076](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/image-20230416010705076.png)
 
-可以更改生成模式为`Debug`或`Release`
+可以更改生成模式为 `Debug` 或 `Release`
 
 ### 命令行参数的设置
 
@@ -22,19 +22,19 @@
 
 在命令参数一栏中加入命令行参数进行调试
 
-### cmd脚本的参数修改
+### cmd 脚本的参数修改
 
-右键点击`.cmd`或`.bat`文件之后，选择编辑就可以开始修改文件。通过在一行的开头加上`::`，可以注释掉该行。
+右键点击 `.cmd` 或 `.bat` 文件之后，选择编辑就可以开始修改文件。通过在一行的开头加上 `::`，可以注释掉该行。
 
-## C++接口必看
+## C++ 接口必看
 
 **在此鸣谢\xfgg/\xfgg/\xfgg/，看到这里的选手可以到选手群膜一膜！！！  **
 
-除非特殊指明，以下代码均在 MSVC 19.28.29913 /std:c++17 与 g++ 10.2 for linux -std=c++17 两个平台下通过。  
+除非特殊指明，以下代码均在 MSVC 19.28.29913 x64 `/std:c++17` 与 GCC 10.2 x86_64-linux-gnu `-std=c++17` 两个平台下通过。  
 
 
 
-由于我们的比赛最终会运行在Linux平台上，因此程设课上学到的一些只适用于Windows的C++操作很可能并不能正确执行。此外，代码中使用了大量Modern C++中的新特性，可能会使选手在编程过程中遇到较大困难。因此，此处介绍一些比赛中使用C++接口必须了解的知识。
+由于我们的比赛最终会运行在 Linux 平台上，因此程设课上学到的一些只适用于 Windows 的 C++ 操作很可能并不能正确执行。此外，代码中使用了大量 Modern C++ 中的新特性，可能会使选手在编程过程中遇到较大困难。因此，此处介绍一些比赛中使用 C++ 接口必须了解的知识。
 
 
 
@@ -42,7 +42,7 @@
 
 
 
-编写代码过程中，我们可能需要获取系统时间等一系列操作，C++ 标准库提供了这样的行为。尤其注意**不要**使用 Windows 平台上的 `GetTickCount` 或者 `GetTickCount64` ！！！  应当使用 `std::chrono` 
+编写代码过程中，我们可能需要获取系统时间等一系列操作，C++ 标准库提供了这样的行为。尤其注意**不要**使用 Windows 平台上的 `GetTickCount` 或者 `GetTickCount64` ！！！应当使用 `std::chrono` 
 
 头文件：`#include <chrono>`
 
@@ -127,7 +127,7 @@ int main()
 
 
 
-### `auto`类型推导
+### `auto` 类型推导
 
 
 
@@ -147,7 +147,7 @@ auto&& w = 4; // auto 被推导为 int，w 是 int&& 类型
 
 
 
-#### std::vector
+#### `std::vector`
 
 头文件：`#include <vector>`，类似于可变长的数组，支持下标运算符 `[]` 访问其元素，此时与 C 风格数组用法相似。支持 `size` 成员函数获取其中的元素数量。
 
@@ -155,7 +155,7 @@ auto&& w = 4; // auto 被推导为 int，w 是 int&& 类型
 
 ```cpp
 std::vector<int> v { 9, 1, 2, 3, 4 };   // 初始化 vector 有五个元素，v[0] = 9, ...
-v.emplace_back(10);         // 向 v 尾部添加一个元素，该元素饿构造函数的参数为 10（对于 int，只有一个语法意义上的构造函数，无真正的构造函数），即现在 v 有六个元素，v[5] 的值是10
+v.emplace_back(10);         // 向 v 尾部添加一个元素，该元素饿构造函数的参数为 10（对于 int，只有一个语法意义上的构造函数，无真正的构造函数），即现在 v 有六个元素，v[5] 的值是 10
 v.pop_back();               // 把最后一个元素删除，现在 v 还是 { 9, 1, 2, 3, 4 }
 ```
 
@@ -245,7 +245,7 @@ for (auto itr = begin(arr); itr != end(arr); ++itr)
 
 
 
-### fmt库的使用
+### fmt 库的使用
 
 
 
@@ -264,11 +264,11 @@ std::string str_fmt = fmt::format("number: {}{}", 1, teststr); // 两种方法�
 
 
 
-## Python接口必看
+## Python 接口必看
 
 比赛**只保证！！**支持 Python 3.9，不保证支持其他版本
 
-比赛中的Python接口大多使用异步接口，即返回一个类似于 `Future[bool]` 的值。为了获取实际的值，需要调用 `result()` 方法。
+比赛中的 Python 接口大多使用异步接口，即返回一个类似于 `Future[bool]` 的值。为了获取实际的值，需要调用 `result()` 方法。
 
 ```python
 from concurrent.futures import Future, ThreadPoolExecutor
@@ -297,15 +297,15 @@ if __name__ == '__main__':
 
 
 
-## C++相关小知识
+## C++ 相关小知识
 
 
 
-### lambda表达式
+### lambda 表达式
 
 
 
-#### lambda表达式概述
+#### lambda 表达式概述
 
 
 
@@ -456,7 +456,7 @@ f();        // 输出 4，而非 9
 >     []()
 >     {
 >         int y = x;            // OK, constant folding
->         int z = Func1(x); // Compile error! odr-used! x is not captured!
+>         int z = Func1(x);     // Compile error! odr-used! x is not captured!
 >     }();
 > }
 > ```
@@ -587,7 +587,7 @@ lambda 表达式还有很多有趣之处，例如泛型 lambda、返回 lambda �
 
 
 
-### std::thread
+### `std::thread`
 
 头文件：`#include <thread>`。用于开启新的线程。示例代码：
 
@@ -727,7 +727,7 @@ int main()
 
 ##### 概览
 
-`shared_ptr` 的用法最为灵活，内部实现方式是**引用计数**。即，它会记录有多少个 `shared_ptr` 正在指向某个资源，并当指向该资源的智能指针数为零时，调用相应的释放函数（默认为 `delete` 操作符）释放该资源。不过也需要注意，使用 `std::shared_ptr` 会比传统的指针带来额外的引用计数的开销，因此只有当后面将会介绍的 `std::unique_ptr` 无法满足要求时方可考虑 `std::shared_ptr`。  
+`shared_ptr` 的用法最为灵活，内部实现方式是**引用计数**。即，它会记录有多少个 `shared_ptr` 正在指向某个资源，并当指向该资源的 `std::shared_ptr` 数为零时，调用相应的释放函数（默认为 `delete` 操作符）释放该资源。不过也需要注意，使用 `std::shared_ptr` 会比传统的指针带来额外的引用计数的开销，因此只有当后面将会介绍的 `std::unique_ptr` 无法满足要求时方可考虑 `std::shared_ptr`。  
 
 像 `new` 会在自由存储区动态获取一块内存并返回其一样，如果要动态分配一块内存并得到其智能指针，可以使用 `std::make_shared` 模板，例如：  
 
@@ -759,7 +759,7 @@ void Func()
         // 上述此语句执行过后，只有一个智能指针 sp1 指向这个 int，引用计数为 1
 
         {
-            auto sp2 = sp1;                     // 构造一个智能指针 sp2，指向 sp1 指向的内存，并将引用计数+1
+            auto sp2 = sp1;                     // 构造一个 std::shared_ptr sp2，指向 sp1 指向的对象，并将引用计数+1
 
             // 故此处引用计数为2
 
@@ -769,17 +769,17 @@ void Func()
         }
 
         // 此处 sp1 生命期也已经到了，调用 sp1 析构函数，引用计数再-1，故引用计数降为0
-        // 也就是不再有智能指针指向它了，调用 delete 释放内存
+        // 也就是不再有 std::shared_ptr 指向它了，调用 delete 释放
     }
 }
 ```
 
-将普通指针交给智能指针托管：
+将裸指针交给 `std::shared_ptr` 托管：
 
 ```cpp
 int* p = new int(110);
 int* q = new int(110);
-std::shared_ptr sp(p);  // 把 p 指向的内存交给 sp 托管，此后 p 便不需要 delete，sp 析构时会自动释放
+std::shared_ptr sp(p);  // 把 p 指向的对象交给 sp 托管，此后 p 便不需要 delete，sp 析构时会自动释放
 std::shared_ptr sq;     // sq 什么也不托管
 sq.reset(q);            // 让 sq 托管 q
 
@@ -792,22 +792,38 @@ sq.reset(q);            // 让 sq 托管 q
 
 之前说过 ，默认情况下是释放内存的函数是 `delete` 运算符，但有时我们并不希望这样。比如下面的几个情况：
 
-+ 使用智能指针托管动态数组
++ 使用 `std::shared_ptr` 托管动态数组
+  + C++11 起
+    
+    ```cpp
+    #include <memory>
+    
+    void IntArrayDeleter(int* p) { delete[] p; }
+    
+    int main()
+    {
+        std::shared_ptr<int> sp(new int[10], IntArrayDeleter);    // 让 IntArrayDeleter 作为释放资源的函数
+        sp.get()[0] = 0; // 访问第 0 个元素
+        // sp 析构时自动调用 IntArrayDeleter 释放该 int 数组
+        return 0;
+    }
+    
+    // 或者利用 lambda 表达式：std::shared_ptr<int> sp(new int[10], [](int* p) { delete[] p; });
+    ```
+    
+  + C++17 起
+    
+    ```cpp
+    std::shared_ptr<int[]> sp(new int[10]);
+    sp[0] = 0; // 访问第 0 个元素
+    ```
 
-  ```cpp
-  #include <memory>
-  
-  void IntArrayDeleter(int* p) { delete[] p; }
-  
-  int main()
-  {
-      std::shared_ptr<int> sp(new int[10], IntArrayDeleter);    // 让 IntArrayDeleter 作为释放资源的函数
-      // sp 析构时自动调用 IntArrayDeleter 释放该 int 数组
-      return 0;
-  }
-  
-  // 或者利用 lambda 表达式：std::shared_ptr<int> sp(new int[10], [](int* p) { delete[] p; });
-  ```
+  + C++20 起
+    
+    ```cpp
+    auto sp = std::make_shared<int[]>(10);
+    sp[0] = 0; // 访问第 0 个元素
+    ```
 
   
 
@@ -817,12 +833,12 @@ sq.reset(q);            // 让 sq 托管 q
 
   ```c++
   HDC hdc;              // DC: Device context，一个指向 DC 的句柄（HANDLE）
-  hdc = GetDC(hWnd);        // 获取设备上下文
+  hdc = GetDC(hWnd);    // 获取设备上下文
   /*执行绘图操作*/
   ReleaseDC(hWnd, hdc); // 绘图完毕，将设备上下文资源释放，归还给 Windows 系统
   ```
 
-  使用智能指针对其进行托管，代码如下：
+  使用 `std::shared_ptr` 对其进行托管，代码如下：
 
   ```c++
   // 使用 lambda 表达式写法（推荐）
@@ -866,7 +882,7 @@ void Func()
 }
 ```
 
-这是因为，只有复制构造函数里面才有使引用计数加1的操作。即当我们写 `std::shared_ptr<int> sq = sp` 的时候，确实引用计数变成了2，但是我们都用一个外部的裸指针 `p` 去初始化 `sp` 和 `sq`，智能指针并不能感知到它们托管的内存相同。所以 `sp` 和 `sq` 所托管的内存被看做是独立的。这样，当它们析构的时候，均会释放它们所指的内存，因此同一块内存被释放了两次，导致程序出错。所以个人还是推荐使用 `make_shared` ，而不是用裸指针去获取内存。  
+这是因为，只有复制构造函数里面才有使引用计数加一的操作。即当我们写 `std::shared_ptr<int> sq = sp` 的时候，确实引用计数变成了 2，但是我们都用一个外部的裸指针 `p` 去初始化 `sp` 和 `sq`，智能指针并不能感知到它们托管的内存相同。所以 `sp` 和 `sq` 所托管的内存被看做是独立的。这样，当它们析构的时候，均会释放它们所指的内存，因此同一块内存被释放了两次，导致程序出错。所以个人还是推荐使用 `make_shared` ，而不是用裸指针去获取内存。  
 
 另一个著名的错误用法，请继续阅读 `std::weak_ptr`。  
 

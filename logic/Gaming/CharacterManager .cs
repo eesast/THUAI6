@@ -37,10 +37,14 @@ namespace Gaming
                         case PlayerStateType.Addicted:
                             if (value == PlayerStateType.Rescued)
                                 player.ChangePlayerStateInOneThread(value, gameObj);
+                            else
+                                player.ChangePlayerState(value, gameObj);
                             break;
                         case PlayerStateType.Rescued:
                             if (value == PlayerStateType.Addicted)
                                 player.ChangePlayerStateInOneThread(value, gameObj);
+                            else
+                                player.ChangePlayerState(value, gameObj);
                             break;
                         default:
                             player.ChangePlayerState(value, gameObj);

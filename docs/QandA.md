@@ -65,6 +65,8 @@ A：
 Q:这是什么错误啊
 ![vector](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/vector.png)
 
+A:调用了容量为0的vector
+
 ## Python 
 
 ### grpc版本更新失败

@@ -1,26 +1,23 @@
-﻿using Protobuf;
-using Playback;
-using System;
-using System.Threading;
-using Timothy.FrameRateTask;
-using Gaming;
+﻿using Gaming;
 using Grpc.Core;
+using Playback;
+using Protobuf;
 using System.Collections.Concurrent;
+using Timothy.FrameRateTask;
 
 namespace Server
 {
-    class PlaybackServer : AvailableService.AvailableServiceBase
+    class PlaybackServer : ServerBase
     {
         protected readonly ArgumentOptions options;
         private int[,] teamScore;
         private ConcurrentDictionary<long, (SemaphoreSlim, SemaphoreSlim)> semaDict = new();
-        private object semaDictLock = new();
+        // private object semaDictLock = new();
         private MessageToClient? currentGameInfo = new();
         private MessageOfObj currentMapMsg = new();
         private uint spectatorMinPlayerID = 2023;
-        private List<uint> spectatorList = new List<uint>();
+        // private List<uint> spectatorList = new List<uint>();
         public int TeamCount => options.TeamCount;
-        private MessageWriter? mwr = null;
         private object spetatorJoinLock = new();
         protected object spectatorLock = new object();
         protected bool isSpectatorJoin = false;
@@ -47,6 +44,7 @@ namespace Server
                 return finalScore;
             }
         }
+        public override int[] GetScore() => FinalScore;
         public PlaybackServer(ArgumentOptions options)
         {
             this.options = options;
@@ -57,6 +55,7 @@ namespace Server
 
         public override async Task AddPlayer(PlayerMsg request, IServerStreamWriter<MessageToClient> responseStream, ServerCallContext context)
         {
+            Console.WriteLine($"AddPlayer: {request.PlayerId}");
             if (request.PlayerId >= spectatorMinPlayerID && options.NotAllowSpectator == false)
             {
                 // 观战模式
@@ -95,6 +94,7 @@ namespace Server
                             }
                             catch { }
                             Console.WriteLine($"The spectator {request.PlayerId} exited");
+                            return;
                         }
                     }
                     catch (Exception)
@@ -139,7 +139,7 @@ namespace Server
             }
         }
 
-        public void WaitForGame()
+        public override void WaitForEnd()
         {
             try
             {

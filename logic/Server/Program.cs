@@ -1,15 +1,16 @@
-﻿using Grpc.Core;
+﻿using CommandLine;
+using Grpc.Core;
 using Protobuf;
-using System.Threading;
-using Timothy.FrameRateTask;
-using System;
-using System.Net.Http.Headers;
-using CommandLine;
 
 namespace Server
 {
     public class Program
     {
+        static ServerBase CreateServer(ArgumentOptions options)
+        {
+            return options.Playback ? new PlaybackServer(options) : new GameServer(options);
+        }
+
         static int Main(string[] args)
         {
             foreach (var arg in args)
@@ -28,61 +29,30 @@ namespace Server
 
             Console.WriteLine("Server begins to run: " + options.ServerPort.ToString());
 
-            if (options.Playback)
+            try
             {
-                try
+                var server = CreateServer(options);
+                Grpc.Core.Server rpcServer = new Grpc.Core.Server(new[] { new ChannelOption(ChannelOptions.SoReuseport, 0) })
                 {
-                    PlaybackServer? playbackServer = new(options);
-                    Grpc.Core.Server server = new Grpc.Core.Server(new[] { new ChannelOption(ChannelOptions.SoReuseport, 0) })
-                    {
-                        Services = { AvailableService.BindService(playbackServer) },
-                        Ports = { new ServerPort(options.ServerIP, options.ServerPort, ServerCredentials.Insecure) }
-                    };
-                    server.Start();
+                    Services = { AvailableService.BindService(server) },
+                    Ports = { new ServerPort(options.ServerIP, options.ServerPort, ServerCredentials.Insecure) }
+                };
+                rpcServer.Start();
 
-                    Console.WriteLine("Server begins to listen!");
-                    playbackServer.WaitForGame();
-                    Console.WriteLine("Server end!");
-                    server.ShutdownAsync().Wait();
+                Console.WriteLine("Server begins to listen!");
+                server.WaitForEnd();
+                Console.WriteLine("Server end!");
+                rpcServer.ShutdownAsync().Wait();
 
-                    Thread.Sleep(50);
-                    Console.WriteLine("");
-                    Console.WriteLine("===================  Final Score   ====================");
-                    Console.WriteLine($"Studnet: {playbackServer.FinalScore[0]}");
-                    Console.WriteLine($"Tricker: {playbackServer.FinalScore[1]}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
+                Thread.Sleep(50);
+                Console.WriteLine("");
+                Console.WriteLine("===================  Final Score  ====================");
+                Console.WriteLine($"Studnet: {server.GetScore()[0]}");
+                Console.WriteLine($"Tricker: {server.GetScore()[1]}");
             }
-            else
+            catch (Exception ex)
             {
-                try
-                {
-                    GameServer? gameServer = new(options);
-                    Grpc.Core.Server server = new Grpc.Core.Server(new[] { new ChannelOption(ChannelOptions.SoReuseport, 0) })
-                    {
-                        Services = { AvailableService.BindService(gameServer) },
-                        Ports = { new ServerPort(options.ServerIP, options.ServerPort, ServerCredentials.Insecure) }
-                    };
-                    server.Start();
-
-                    Console.WriteLine("Server begins to listen!");
-                    gameServer.WaitForEnd();
-                    Console.WriteLine("Server end!");
-                    server.ShutdownAsync().Wait();
-
-                    Thread.Sleep(50);
-                    Console.WriteLine("");
-                    Console.WriteLine("===================  Final Score   ====================");
-                    Console.WriteLine($"Studnet: {gameServer.GetScore()[0]}");
-                    Console.WriteLine($"Tricker: {gameServer.GetScore()[1]}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
+                Console.WriteLine(ex.ToString());
             }
             return 0;
         }

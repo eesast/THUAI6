@@ -18,7 +18,8 @@ namespace Program
 {
     class Updater
     {
-        public static string Dir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+        public static string Dir = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName)
+            ?? throw new Exception("Cannot get current directory");
         public static string InstallerName = "Installer.exe";
         public static string jsonKey = "installerHash.json";
         public static string KeyHead = "Installer/";
@@ -31,7 +32,8 @@ namespace Program
                 using (StreamReader r = new StreamReader(System.IO.Path.Combine(Dir, "updateList.json")))
                     json = r.ReadToEnd();
                 json = json.Replace("\r", string.Empty).Replace("\n", string.Empty);
-                List<string> jsonList = JsonConvert.DeserializeObject<List<string>>(json);
+                List<string> jsonList = JsonConvert.DeserializeObject<List<string>>(json)
+                    ?? throw new Exception("Failed to deserialize json!");
                 foreach (string todo in jsonList)
                 {
                     if (!todo.Equals("None"))
@@ -41,14 +43,14 @@ namespace Program
                     }
                 }
             }
-            catch (IOException)
+            catch (IOException ex)
             {
-                MessageBox.Show("下载器本体未能成功关闭");
+                MessageBox.Show($"下载器本体未能成功关闭：\n{ex}");
                 return false;
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("尝试下载时出现问题");
+                MessageBox.Show($"尝试下载时出现问题：\n{ex}\n{ex.StackTrace}");
                 return false;
             }
             return true;
@@ -67,7 +69,8 @@ namespace Program
                     json += @"{""None""}";
                 }
                 List<string> ls = new List<string>();
-                ls = JsonConvert.DeserializeObject<List<string>>(json);
+                ls = JsonConvert.DeserializeObject<List<string>>(json)
+                    ?? throw new Exception("Failed to deserialize json!");
                 if (!ls.Contains("Dismiss"))
                 {
                     ls.Add("Dismiss");
@@ -114,9 +117,10 @@ namespace Program
             // 创建存储桶
             try
             {
-                string bucket = "thuai6-1314234950";                              // 格式：BucketName-APPID
-                string localDir = System.IO.Path.GetDirectoryName(download_dir);  // 本地文件夹
-                string localFileName = System.IO.Path.GetFileName(download_dir);  // 指定本地保存的文件名
+                string bucket = "thuai6-1314234950";                                // 格式：BucketName-APPID
+                string localDir = System.IO.Path.GetDirectoryName(download_dir)     // 本地文件夹
+                    ?? throw new Exception("Failed to get directory name!");
+                string localFileName = System.IO.Path.GetFileName(download_dir);    // 指定本地保存的文件名
                 GetObjectRequest request = new GetObjectRequest(bucket, key, localDir, localFileName);
 
                 Dictionary<string, string> test = request.GetRequestHeaders();

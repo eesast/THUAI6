@@ -10,7 +10,7 @@ namespace starter.viewmodel.common
 {
     public abstract class NotificationObject : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         ///< summary>
         /// announce notification
         ///  </summary>
@@ -25,21 +25,21 @@ namespace starter.viewmodel.common
     ///  </summary>
     public class BaseCommand : ICommand
     {
-        private Func<object, bool> _canExecute;
-        private Action<object> _execute;
+        private Func<object?, bool>? _canExecute;
+        private Action<object?> _execute;
 
-        public BaseCommand(Func<object, bool> canExecute, Action<object> execute)
+        public BaseCommand(Func<object?, bool>? canExecute, Action<object?> execute)
         {
             _canExecute = canExecute;
             _execute = execute;
         }
 
-        public BaseCommand(Action<object> execute) :
+        public BaseCommand(Action<object?> execute) :
             this(null, execute)
         {
         }
 
-        public event EventHandler CanExecuteChanged
+        public event EventHandler? CanExecuteChanged
         {
             add
             {
@@ -57,12 +57,12 @@ namespace starter.viewmodel.common
             }
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             return _canExecute == null ? true : _canExecute(parameter);
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             if (_execute != null && CanExecute(parameter))
             {
@@ -79,15 +79,15 @@ namespace starter.viewmodel.common
             {
                 return false;
             }
-            string checkvalue = value.ToString();
-            string targetvalue = parameter.ToString();
+            string checkvalue = value.ToString() ?? "";
+            string targetvalue = parameter.ToString() ?? "";
             bool r = checkvalue.Equals(targetvalue);
             return r;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value == null || parameter == null)
+            if (value is null || parameter is null)
             {
                 return null;
             }
@@ -132,22 +132,22 @@ namespace starter.viewmodel.common
         static bool _isUpdating = false;
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            PasswordBox pb = d as PasswordBox;
+            PasswordBox pb = (d as PasswordBox)!;
             pb.PasswordChanged -= Pb_PasswordChanged;
             if (!_isUpdating)
-                (d as PasswordBox).Password = e.NewValue.ToString();
+                (d as PasswordBox)!.Password = e.NewValue.ToString();
             pb.PasswordChanged += Pb_PasswordChanged;
         }
 
         private static void OnAttachChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            PasswordBox pb = d as PasswordBox;
+            PasswordBox pb = (d as PasswordBox)!;
             pb.PasswordChanged += Pb_PasswordChanged;
         }
 
         private static void Pb_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            PasswordBox pb = sender as PasswordBox;
+            PasswordBox pb = (sender as PasswordBox)!;
             _isUpdating = true;
             SetPassword(pb, pb.Password);
             _isUpdating = false;

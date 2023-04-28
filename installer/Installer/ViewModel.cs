@@ -36,14 +36,15 @@ namespace starter.viewmodel.settings
             //Program.Tencent_cos_download.UpdateHash();
 
             Status = SettingsModel.Status.working;
-            string CurrentDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            string currentDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName)
+                ?? throw new Exception("Fail to get current directory");
             //MessageBox.Show("更新器工作正常");
             if (!Program.Tencent_cos_download.SelfUpdateDismissed())
             {
                 switch (Program.Tencent_cos_download.CheckSelfVersion())
                 {
                     case 1:
-                        Process.Start(System.IO.Path.Combine(CurrentDirectory, "InstallerUpdater.exe"));
+                        Process.Start(System.IO.Path.Combine(currentDirectory, "InstallerUpdater.exe"));
                         Environment.Exit(0);
                         break;
                     case -1:
@@ -156,7 +157,7 @@ namespace starter.viewmodel.settings
             {
                 e.Cancel = true;
                 MessageBox.Show("下载取消");
-                if (e.Argument.ToString().Equals("Manual"))
+                if (e.Argument?.ToString()?.Equals("Manual") ?? false)
                 {
                     Status = SettingsModel.Status.menu;
                 }
@@ -167,7 +168,7 @@ namespace starter.viewmodel.settings
             else
             {
                 if (obj.Update())
-                    if (e.Argument.ToString().Equals("Manual"))
+                    if (e.Argument?.ToString()?.Equals("Manual") ?? false)
                     {
                         e.Result = 1;
                     }
@@ -598,14 +599,14 @@ namespace starter.viewmodel.settings
             return "";
         }
 
-        private BaseCommand clickBrowseCommand;
+        private BaseCommand? clickBrowseCommand;
         public BaseCommand ClickBrowseCommand
         {
             get
             {
                 if (clickBrowseCommand == null)
                 {
-                    clickBrowseCommand = new BaseCommand(new Action<object>(o =>
+                    clickBrowseCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         Route = RouteSelectWindow("Folder");
                     }));
@@ -613,14 +614,14 @@ namespace starter.viewmodel.settings
                 return clickBrowseCommand;
             }
         }
-        private BaseCommand clickConfirmCommand;
+        private BaseCommand? clickConfirmCommand;
         public BaseCommand ClickConfirmCommand
         {
             get
             {
                 if (clickConfirmCommand == null)
                 {
-                    clickConfirmCommand = new BaseCommand(new Action<object>(o =>
+                    clickConfirmCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         if (Status == SettingsModel.Status.newUser)
                         {
@@ -672,14 +673,14 @@ namespace starter.viewmodel.settings
                 return clickConfirmCommand;
             }
         }
-        private BaseCommand clickUpdateCommand;
+        private BaseCommand? clickUpdateCommand;
         public BaseCommand ClickUpdateCommand
         {
             get
             {
                 if (clickUpdateCommand == null)
                 {
-                    clickUpdateCommand = new BaseCommand(new Action<object>(o =>
+                    clickUpdateCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         this.RaisePropertyChanged("UpdateInfoVis");
                         if (obj.UpdatePlanned)
@@ -719,14 +720,14 @@ namespace starter.viewmodel.settings
                 return clickUpdateCommand;
             }
         }
-        private BaseCommand clickMoveCommand;
+        private BaseCommand? clickMoveCommand;
         public BaseCommand ClickMoveCommand
         {
             get
             {
                 if (clickMoveCommand == null)
                 {
-                    clickMoveCommand = new BaseCommand(new Action<object>(o =>
+                    clickMoveCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         Status = SettingsModel.Status.move;
                     }));
@@ -734,14 +735,14 @@ namespace starter.viewmodel.settings
                 return clickMoveCommand;
             }
         }
-        private BaseCommand clickUninstCommand;
+        private BaseCommand? clickUninstCommand;
         public BaseCommand ClickUninstCommand
         {
             get
             {
                 if (clickUninstCommand == null)
                 {
-                    clickUninstCommand = new BaseCommand(new Action<object>(o =>
+                    clickUninstCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         UpdateInfoVis = Visibility.Collapsed;
                         this.RaisePropertyChanged("UpdateInfoVis");
@@ -767,14 +768,14 @@ namespace starter.viewmodel.settings
             }
         }
 
-        private BaseCommand clickLoginCommand;
+        private BaseCommand? clickLoginCommand;
         public BaseCommand ClickLoginCommand
         {
             get
             {
                 if (clickLoginCommand == null)
                 {
-                    clickLoginCommand = new BaseCommand(new Action<object>(async o =>
+                    clickLoginCommand = new BaseCommand(new Action<object?>(async o =>
                     {
                         switch (await obj.Login())
                         {
@@ -813,14 +814,14 @@ namespace starter.viewmodel.settings
             }
         }
 
-        private BaseCommand clickLaunchCommand;
+        private BaseCommand? clickLaunchCommand;
         public BaseCommand ClickLaunchCommand
         {
             get
             {
                 if (clickLaunchCommand == null)
                 {
-                    clickLaunchCommand = new BaseCommand(new Action<object>(o =>
+                    clickLaunchCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         if (obj.UpdatePlanned)
                         {
@@ -840,14 +841,14 @@ namespace starter.viewmodel.settings
                 return clickLaunchCommand;
             }
         }
-        private BaseCommand clickEditCommand;
+        private BaseCommand? clickEditCommand;
         public BaseCommand ClickEditCommand
         {
             get
             {
                 if (clickEditCommand == null)
                 {
-                    clickEditCommand = new BaseCommand(new Action<object>(o =>
+                    clickEditCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         Status = SettingsModel.Status.menu;
                         if (obj.UpdatePlanned)
@@ -858,14 +859,14 @@ namespace starter.viewmodel.settings
                 return clickEditCommand;
             }
         }
-        private BaseCommand clickBackCommand;
+        private BaseCommand? clickBackCommand;
         public BaseCommand ClickBackCommand
         {
             get
             {
                 if (clickBackCommand == null)
                 {
-                    clickBackCommand = new BaseCommand(new Action<object>(o =>
+                    clickBackCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         UpdateInfoVis = Visibility.Collapsed;
                         this.RaisePropertyChanged("UpdateInfoVis");
@@ -878,14 +879,14 @@ namespace starter.viewmodel.settings
                 return clickBackCommand;
             }
         }
-        private BaseCommand clickUploadCommand;
+        private BaseCommand? clickUploadCommand;
         public BaseCommand ClickUploadCommand
         {
             get
             {
                 if (clickUploadCommand == null)
                 {
-                    clickUploadCommand = new BaseCommand(new Action<object>(async o =>
+                    clickUploadCommand = new BaseCommand(new Action<object?>(async o =>
                     {
                         if (obj.UploadReady)
                         {
@@ -953,14 +954,14 @@ namespace starter.viewmodel.settings
                 return clickUploadCommand;
             }
         }
-        private BaseCommand clickAboutUploadCommand;
+        private BaseCommand? clickAboutUploadCommand;
         public BaseCommand ClickAboutUploadCommand
         {
             get
             {
                 if (clickAboutUploadCommand == null)
                 {
-                    clickAboutUploadCommand = new BaseCommand(new Action<object>(o =>
+                    clickAboutUploadCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         if (obj.UploadReady)
                         {
@@ -987,14 +988,14 @@ namespace starter.viewmodel.settings
                 return clickAboutUploadCommand;
             }
         }
-        private BaseCommand clickExitCommand;
+        private BaseCommand? clickExitCommand;
         public BaseCommand ClickExitCommand
         {
             get
             {
                 if (clickExitCommand == null)
                 {
-                    clickExitCommand = new BaseCommand(new Action<object>(o =>
+                    clickExitCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         Application.Current.Shutdown();
                     }));
@@ -1002,14 +1003,14 @@ namespace starter.viewmodel.settings
                 return clickExitCommand;
             }
         }
-        private BaseCommand clickShiftLanguageCommand;
+        private BaseCommand? clickShiftLanguageCommand;
         public BaseCommand ClickShiftLanguageCommand
         {
             get
             {
                 if (clickShiftLanguageCommand == null)
                 {
-                    clickShiftLanguageCommand = new BaseCommand(new Action<object>(o =>
+                    clickShiftLanguageCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         if (obj.launchLanguage == SettingsModel.LaunchLanguage.cpp)
                             obj.launchLanguage = SettingsModel.LaunchLanguage.python;
@@ -1023,14 +1024,14 @@ namespace starter.viewmodel.settings
                 return clickShiftLanguageCommand;
             }
         }
-        private BaseCommand clickReadCommand;
+        private BaseCommand? clickReadCommand;
         public BaseCommand ClickReadCommand
         {
             get
             {
                 if (clickReadCommand == null)
                 {
-                    clickReadCommand = new BaseCommand(new Action<object>(o =>
+                    clickReadCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         if (!Directory.Exists(Route + "/THUAI6/win"))
                         {
@@ -1050,14 +1051,14 @@ namespace starter.viewmodel.settings
                 return clickReadCommand;
             }
         }
-        private BaseCommand clickSwitchOSCommand;
+        private BaseCommand? clickSwitchOSCommand;
         public BaseCommand ClickSwitchOSCommand
         {
             get
             {
                 if (clickSwitchOSCommand == null)
                 {
-                    clickSwitchOSCommand = new BaseCommand(new Action<object>(o =>
+                    clickSwitchOSCommand = new BaseCommand(new Action<object?>(o =>
                     {
                         switch (obj.usingOS)
                         {

@@ -6,7 +6,20 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
+	<ApplicationIcon>eesast_software_trans_enlarged.ico</ApplicationIcon>
+	<PackageIcon>eesast_software_trans.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="eesast_software_trans_enlarged.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\resource\eesast_software_trans.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ICSharpCode.SharpZipLib.dll" Version="0.85.4.369" />

@@ -759,16 +759,16 @@ void Func()
         // 上述此语句执行过后，只有一个智能指针 sp1 指向这个 int，引用计数为 1
 
         {
-            auto sp2 = sp1;                     // 构造一个 std::shared_ptr sp2，指向 sp1 指向的对象，并将引用计数+1
+            auto sp2 = sp1;                     // 构造一个 std::shared_ptr sp2，指向 sp1 指向的对象，并将引用计数加一
 
             // 故此处引用计数为2
 
             std::cout << *sp2 << std::endl;     // 输出 110
 
-            // 此处 sp2 生存期已到，调用 sp2 的析构函数，使引用计数-1，因此此时引用计数为1
+            // 此处 sp2 生存期已到，调用 sp2 的析构函数，使引用计数减一，因此此时引用计数为 1
         }
 
-        // 此处 sp1 生命期也已经到了，调用 sp1 析构函数，引用计数再-1，故引用计数降为0
+        // 此处 sp1 生命期也已经到了，调用 sp1 析构函数，引用计数再减一，故引用计数降为 0
         // 也就是不再有 std::shared_ptr 指向它了，调用 delete 释放
     }
 }
@@ -971,7 +971,28 @@ else
 
 #### `std::unique_ptr`
 
-`std::unique_ptr` 顾名思义，独有的指针，即资源只能同时为一个 `unique_ptr` 所占有，是基于 RAII 的思想设计的智能指针，并且相比于原始指针并不会带来任何额外开销，是智能指针的首选。它部分涉及到对象的生命期、右值引用与移动语义的问题，在此不做过多展开。  
+`std::unique_ptr` 顾名思义，独有的指针，即资源只能同时为一个 `unique_ptr` 所占有，是基于 RAII 的思想设计的智能指针，并且相比于原始指针并不会带来任何额外开销，是智能指针的首选。它部分涉及到对象的生命期、右值引用与移动语义的问题，在此不做过多展开，仅提供一个例子作为参考：
+    
+```cpp
+{
+    auto p = std::make_unique<int>(5); // 创建一个 int 对象并初始化为 5
+    std::cout << *p << std::endl;      // 输出 5
+    // 该 int 对象随着 p 的析构而被 delete
+}
+```
+    
+需要注意的是，由于[标准委员会的疏忽~忘了~（partly an oversight）](https://herbsutter.com/gotw/_102/)，C++14 中才引进`std::make_unique`，C++11 中无法使用。因此 C++11 若想使用则需自定义 `std::make_unique`：
+    
+```cpp
+namespace
+{
+    template<typename T, typename... Args>
+    std::unique_ptr<T> make_unique( Args&&... args )
+    {
+        return std::unique_ptr<T>(new T( std::forward<Args>(args)...));
+    }
+}
+```
 
 
 

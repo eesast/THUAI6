@@ -77,6 +77,7 @@ namespace Gaming
           (
               () =>
               {
+                  Thread.Sleep(GameData.frameDuration);
                   new FrameRateTaskExecutor<int>(
                       loopCondition: () => gameMap.Timer.IsGaming && threadNum == player.ThreadNum,
                       loopToDo: () =>

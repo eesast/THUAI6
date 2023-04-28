@@ -87,19 +87,19 @@ namespace Client
                     status.Text = "💀" + "\nQuit";
                     break;
                 case PlayerState.Treated:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nTreated, " + Convert.ToString(perLife) + "%";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nEncouraged, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Rescued:
-                    status.Text = "💀: " + Convert.ToString(death) + "\nRescued, " + Convert.ToString(perDeath) + "%";
+                    status.Text = "💀: " + Convert.ToString(death) + "\nRoused, " + Convert.ToString(perDeath) + "%";
                     break;
                 case PlayerState.Stunned:
                     status.Text = "♥: " + Convert.ToString(life) + "\nStunned, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Treating:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nTreating, " + Convert.ToString(perLife) + "%";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nEncouraging, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Rescuing:
-                    status.Text = "♥: " + Convert.ToString(life) + "\nRescuing, " + Convert.ToString(perLife) + "%";
+                    status.Text = "♥: " + Convert.ToString(life) + "\nRousing, " + Convert.ToString(perLife) + "%";
                     break;
                 case PlayerState.Swinging:
                     status.Text = "♥: " + Convert.ToString(life) + "\nSwinging, " + Convert.ToString(perLife) + "%";

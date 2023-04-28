@@ -20,6 +20,7 @@ using Playback;
 using CommandLine;
 using Preparation.Utility;
 using Preparation.Interface;
+using System.Diagnostics.CodeAnalysis;
 
 // 目前MainWindow还未复现的功能：
 // private void ClickToSetMode(object sender, RoutedEventArgs e)
@@ -65,6 +66,7 @@ namespace Client
             ReactToCommandline();
         }
 
+        [MemberNotNull(nameof(StatusBarsOfSurvivor), nameof(StatusBarsOfHunter), nameof(StatusBarsOfCircumstance))]
         private void SetStatusBar()
         {
             StatusBarsOfSurvivor = new StatusBarOfSurvivor[4];
@@ -716,29 +718,21 @@ namespace Client
                         isDataFixed[obj.PlayerId] = true;
                     }
                 }
-                if (StatusBarsOfSurvivor != null)
+
+                for (int i = 0; i < GameData.numOfStudent; i++)
                 {
-                    for (int i = 0; i < GameData.numOfStudent; i++)
-                    {
-                        StatusBarsOfSurvivor[i].NewData(totalLife, totalDeath, coolTime);
-                    }
+                    StatusBarsOfSurvivor[i].NewData(totalLife, totalDeath, coolTime);
                 }
-                if (StatusBarsOfHunter != null)
+
+                StatusBarsOfHunter.NewData(totalLife, totalDeath, coolTime);
+
+                for (int i = 0; i < GameData.numOfStudent; i++)
                 {
-                    StatusBarsOfHunter.NewData(totalLife, totalDeath, coolTime);
+                    StatusBarsOfSurvivor[i].SetFontSize(12 * unitFontsize);
                 }
-                // 完成窗口信息更新
-                if (StatusBarsOfSurvivor != null)
-                {
-                    for (int i = 0; i < GameData.numOfStudent; i++)
-                    {
-                        StatusBarsOfSurvivor[i].SetFontSize(12 * unitFontsize);
-                    }
-                }
-                if (StatusBarsOfHunter != null)
-                    StatusBarsOfHunter.SetFontSize(12 * unitFontsize);
-                if (StatusBarsOfCircumstance != null)
-                    StatusBarsOfCircumstance.SetFontSize(12 * unitFontsize);
+
+                StatusBarsOfHunter.SetFontSize(12 * unitFontsize);
+                StatusBarsOfCircumstance.SetFontSize(12 * unitFontsize);
                 if (!isClientStocked)
                 {
                     try
@@ -1054,6 +1048,11 @@ namespace Client
         {
             if (!isPlaybackMode && !isSpectatorMode)
             {
+                if (client is null)
+                {
+                    return;
+                }
+
                 switch (e.Key)
                 {
                     case Key.W:
@@ -1235,6 +1234,10 @@ namespace Client
         {
             if (!isPlaybackMode && !isSpectatorMode)
             {
+                if (client is null)
+                {
+                    return;
+                }
                 if (humanOrButcher && human != null)
                 {
                     AttackMsg msgJ = new()
@@ -1385,7 +1388,7 @@ namespace Client
         // 以下为Mainwindow自定义属性
         private readonly DispatcherTimer timer;  // 定时器
         private long counter;                    // 预留的取时间变量
-        AvailableService.AvailableServiceClient client;
+        AvailableService.AvailableServiceClient? client;
         AsyncServerStreamingCall<MessageToClient>? responseStream;
         private StatusBarOfSurvivor[] StatusBarsOfSurvivor;
         private StatusBarOfHunter StatusBarsOfHunter;

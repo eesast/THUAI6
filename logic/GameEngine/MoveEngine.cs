@@ -147,14 +147,16 @@ namespace GameEngine
                                             isDestroyed = true;
                                             return false;
                                         case AfterCollision.MoveMax:
-                                            MoveMax(obj, res);
+                                            if (threadNum == 0 || ((ICharacter)obj).ThreadNum == threadNum)
+                                                MoveMax(obj, res);
                                             moveVecLength = 0;
                                             res = new XY(direction, moveVecLength);
                                             break;
                                     }
                                 } while (flag);
 
-                                deltaLen += moveVecLength - Math.Sqrt(obj.MovingSetPos(res, GetPlaceType(obj.Position + res)));
+                                if (threadNum == 0 || ((ICharacter)obj).ThreadNum == threadNum)
+                                    deltaLen += moveVecLength - Math.Sqrt(obj.MovingSetPos(res, GetPlaceType(obj.Position + res)));
 
                                 return true;
                             },
@@ -172,7 +174,8 @@ namespace GameEngine
                                         res = new XY(direction, moveVecLength);
                                         if ((collisionObj = collisionChecker.CheckCollisionWhenMoving(obj, res)) == null)
                                         {
-                                            obj.MovingSetPos(res, GetPlaceType(obj.Position + res));
+                                            if (threadNum == 0 || ((ICharacter)obj).ThreadNum == threadNum)
+                                                obj.MovingSetPos(res, GetPlaceType(obj.Position + res));
                                         }
                                         else
                                         {
@@ -186,7 +189,8 @@ namespace GameEngine
                                                     isDestroyed = true;
                                                     break;
                                                 case AfterCollision.MoveMax:
-                                                    MoveMax(obj, res);
+                                                    if (threadNum == 0 || ((ICharacter)obj).ThreadNum == threadNum)
+                                                        MoveMax(obj, res);
                                                     moveVecLength = 0;
                                                     res = new XY(direction, moveVecLength);
                                                     break;

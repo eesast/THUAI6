@@ -61,7 +61,9 @@ A：
 2. 不要点重新生成，要点生成
 3. 开启下图选项
 ![CompileFaster](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/CompileFaster.png)
-   
+
+Q:这是什么错误啊
+![vector](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/vector.png)
 
 ## Python 
 

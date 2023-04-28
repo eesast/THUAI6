@@ -232,14 +232,14 @@ namespace GameClass.GameObj
                         break;
                     }
                 }
+                if (ToDel != null)
+                    GameObjDict[gameObj.Type].Remove(ToDel);
             }
             finally
             {
                 GameObjLockDict[gameObj.Type].ExitWriteLock();
             }
-            if (ToDel == null) return false;
-            GameObjDict[gameObj.Type].Remove(ToDel);
-            return true;
+            return ToDel != null;
         }
         public bool RemoveJustFromMap(GameObj gameObj)
         {

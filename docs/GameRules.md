@@ -142,7 +142,7 @@ $$
 - Bgm （在structures.h/.py中的student类或Tricker类中作为其属性）
   1. 不详的感觉(dangerAlert)：如果捣蛋鬼进入（学生的警戒半径/捣蛋鬼的隐蔽度）的距离，则学生的dangerAlert=（警戒半径/二者距离）
   2. 期待搞事的感觉(trickDesire)：如果有学生进入（捣蛋鬼的警戒半径/学生的隐蔽度）的距离，则捣蛋鬼trickDesire=（警戒半径/可被发觉的最近的学生距离）
-  3. 学习的声音(classVolume): 警戒半径内有人学习时，捣蛋鬼classVolume=（（警戒半径x学习进度百分比）/二者距离）
+  3. 学习的声音(classVolume): 警戒半径内有人学习时，捣蛋鬼classVolume=（（警戒半径x学习进度百分比）/最近二者距离）
 - 可以向每一个队友发送不超过256字节的信息
 
 ### 可视范围

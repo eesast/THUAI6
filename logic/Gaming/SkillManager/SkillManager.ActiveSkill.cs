@@ -96,6 +96,7 @@ namespace Gaming
                 IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.BecomeInvisible);
                 return ActiveSkillEffect(activeSkill, player, () =>
                 {
+                    player.AddScore(GameData.ScoreBecomeInvisible);
                     player.AddInvisible(activeSkill.DurationTime);
                     Debugger.Output(player, "become invisible!");
                 },

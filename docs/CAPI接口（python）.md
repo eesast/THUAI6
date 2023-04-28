@@ -55,7 +55,7 @@
 
 #### 队内信息
 
-  - `def GetMessage(self) -> Tuple[int, str]`：给同队的队友发送消息。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
+  - `def GetMessage(self) -> Tuple[int, str]`：给同队的队友发送消息,队友在下一帧收到。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
   - `def HaveMessage(self) -> bool`:是否有队友发来的尚未接收的信息。
   - `def GetMessage(self) -> Tuple[int, str]`:按照消息发送顺序获取来自队友的信息，第一个参数为发送该消息的PlayerID。
 

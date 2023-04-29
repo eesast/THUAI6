@@ -4,6 +4,11 @@
 #include "API.h"
 #include "utils.hpp"
 #include "structures.h"
+
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 #define PI 3.14159265358979323846
 
 StudentDebugAPI::StudentDebugAPI(ILogic& logic, bool file, bool print, bool warnOnly, int64_t playerID) :
@@ -347,23 +352,43 @@ std::future<bool> TrickerDebugAPI::EndAllAction()
                         return result; });
 }
 
-std::future<bool> StudentDebugAPI::SendMessage(int64_t toID, std::string message)
+std::future<bool> StudentDebugAPI::SendTextMessage(int64_t toID, std::string message)
 {
-    logger->info("SendMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
+    logger->info("SendTextMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
-                      { auto result = logic.SendMessage(toID, message);
+                      { auto result = logic.SendMessage(toID, message, false);
                         if (!result)
-                            logger->warn("SendMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
+                            logger->warn("SendTextMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 
-std::future<bool> TrickerDebugAPI::SendMessage(int64_t toID, std::string message)
+std::future<bool> TrickerDebugAPI::SendTextMessage(int64_t toID, std::string message)
 {
-    logger->info("SendMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
+    logger->info("SendTextMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
-                      { auto result = logic.SendMessage(toID, message);
+                      { auto result = logic.SendMessage(toID, message, false);
                         if (!result)
-                            logger->warn("SendMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
+                            logger->warn("SendTextMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
+}
+
+std::future<bool> StudentDebugAPI::SendBinaryMessage(int64_t toID, std::string message)
+{
+    logger->info("SendBinaryMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [=]()
+                      { auto result = logic.SendMessage(toID, message, true);
+                        if (!result)
+                            logger->warn("SendBinaryMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
+                        return result; });
+}
+
+std::future<bool> TrickerDebugAPI::SendBinaryMessage(int64_t toID, std::string message)
+{
+    logger->info("SendBinaryMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
+    return std::async(std::launch::async, [=]()
+                      { auto result = logic.SendMessage(toID, message, true);
+                        if (!result)
+                            logger->warn("SendBinaryMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 
@@ -629,6 +654,18 @@ std::future<bool> StudentDebugAPI::Attack(double angleInRadian)
 std::shared_ptr<const THUAI6::Tricker> TrickerDebugAPI::GetSelfInfo() const
 {
     return logic.TrickerGetSelfInfo();
+}
+
+bool StudentDebugAPI::HaveView(int gridX, int gridY) const
+{
+    auto selfInfo = GetSelfInfo();
+    return logic.HaveView(gridX, gridY, selfInfo->x, selfInfo->y, selfInfo->viewRange);
+}
+
+bool TrickerDebugAPI::HaveView(int gridX, int gridY) const
+{
+    auto selfInfo = GetSelfInfo();
+    return logic.HaveView(gridX, gridY, selfInfo->x, selfInfo->y, selfInfo->viewRange);
 }
 
 void StudentDebugAPI::Print(std::string str) const

@@ -8,10 +8,10 @@ import time
 
 
 class Setting:
-    # 为假则play()期间确保游戏状态不更新，为真则只保证游戏状态在调用相关方法时不更新
+    # 为假则play()期间确保游戏状态不更新，为真则只保证游戏状态在调用相关方法时不更新，大致一帧更新一次
     @staticmethod
     def asynchronous() -> bool:
-        return True
+        return False
 
     # 选手需要依次将player0到player4的职业都定义
     @staticmethod
@@ -41,7 +41,7 @@ class AssistFunction:
 class AI(IAI):
     def __init__(self, pID: int):
         self.__playerID = pID
-
+    # 每帧执行一次StudentPlay或TrickerPlay（除非执行该函数超过一帧50ms），获取的信息都是这一帧的开始的状态
     def StudentPlay(self, api: IStudentAPI) -> None:
         # 公共操作
         if self.__playerID == 0:

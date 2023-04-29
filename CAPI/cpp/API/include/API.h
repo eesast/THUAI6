@@ -22,6 +22,10 @@
 
 #include "structures.h"
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 const constexpr int numOfGridPerCell = 1000;
 
 class IAI;
@@ -57,7 +61,7 @@ public:
     virtual bool UseProp(THUAI6::PropType prop) = 0;
     virtual bool ThrowProp(THUAI6::PropType prop) = 0;
     virtual bool UseSkill(int32_t skillID) = 0;
-    virtual bool SendMessage(int64_t toID, std::string message) = 0;
+    virtual bool SendMessage(int64_t toID, std::string message, bool binary) = 0;
     virtual bool HaveMessage() = 0;
     virtual std::pair<int64_t, std::string> GetMessage() = 0;
 
@@ -83,6 +87,8 @@ public:
     virtual bool Attack(double angle) = 0;
 
     virtual std::vector<int64_t> GetPlayerGUIDs() const = 0;
+
+    [[nodiscard]] virtual bool HaveView(int gridX, int gridY, int selfX, int selfY, int viewRange) const = 0;
 };
 
 class IAPI
@@ -113,7 +119,8 @@ public:
     virtual std::future<bool> EndAllAction() = 0;
 
     // 发送信息、接受信息，注意收消息时无消息则返回nullopt
-    virtual std::future<bool> SendMessage(int64_t, std::string) = 0;
+    virtual std::future<bool> SendTextMessage(int64_t, std::string) = 0;
+    virtual std::future<bool> SendBinaryMessage(int64_t, std::string) = 0;
     [[nodiscard]] virtual bool HaveMessage() = 0;
     [[nodiscard]] virtual std::pair<int64_t, std::string> GetMessage() = 0;
 
@@ -161,6 +168,8 @@ public:
     {
         return grid / numOfGridPerCell;
     }
+
+    [[nodiscard]] virtual bool HaveView(int gridX, int gridY) const = 0;
 
     // 用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
 
@@ -238,7 +247,8 @@ public:
     std::future<bool> StartOpenChest() override;
     std::future<bool> EndAllAction() override;
 
-    std::future<bool> SendMessage(int64_t, std::string) override;
+    std::future<bool> SendTextMessage(int64_t, std::string) override;
+    std::future<bool> SendBinaryMessage(int64_t, std::string) override;
     [[nodiscard]] bool HaveMessage() override;
     [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
@@ -270,6 +280,8 @@ public:
     std::future<bool> StartRouseMate(int64_t mateID) override;
     std::future<bool> Graduate() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
+
+    [[nodiscard]] bool HaveView(int gridX, int gridY) const override;
 
     void Print(std::string str) const override
     {
@@ -326,7 +338,8 @@ public:
     std::future<bool> StartOpenChest() override;
     std::future<bool> EndAllAction() override;
 
-    std::future<bool> SendMessage(int64_t, std::string) override;
+    std::future<bool> SendTextMessage(int64_t, std::string) override;
+    std::future<bool> SendBinaryMessage(int64_t, std::string) override;
     [[nodiscard]] bool HaveMessage() override;
     [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
@@ -355,6 +368,8 @@ public:
 
     std::future<bool> Attack(double angleInRadian) override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
+
+    [[nodiscard]] bool HaveView(int gridX, int gridY) const override;
 
     void Print(std::string str) const override
     {
@@ -406,7 +421,8 @@ public:
     std::future<bool> StartOpenChest() override;
     std::future<bool> EndAllAction() override;
 
-    std::future<bool> SendMessage(int64_t, std::string) override;
+    std::future<bool> SendTextMessage(int64_t, std::string) override;
+    std::future<bool> SendBinaryMessage(int64_t, std::string) override;
     [[nodiscard]] bool HaveMessage() override;
     [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
@@ -438,6 +454,8 @@ public:
     std::future<bool> StartRouseMate(int64_t mateID) override;
     std::future<bool> Graduate() override;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
+
+    [[nodiscard]] bool HaveView(int gridX, int gridY) const override;
 
     void Print(std::string str) const override;
     void PrintStudent() const override;
@@ -479,7 +497,8 @@ public:
     std::future<bool> StartOpenChest() override;
     std::future<bool> EndAllAction() override;
 
-    std::future<bool> SendMessage(int64_t, std::string) override;
+    std::future<bool> SendTextMessage(int64_t, std::string) override;
+    std::future<bool> SendBinaryMessage(int64_t, std::string) override;
     [[nodiscard]] bool HaveMessage() override;
     [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
@@ -508,6 +527,8 @@ public:
 
     std::future<bool> Attack(double angleInRadian) override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
+
+    [[nodiscard]] bool HaveView(int gridX, int gridY) const override;
 
     void Print(std::string str) const override;
     void PrintStudent() const override;

@@ -6,7 +6,6 @@ using Preparation.Utility;
 using GameEngine;
 using Preparation.Interface;
 using Timothy.FrameRateTask;
-using System.Numerics;
 
 namespace Gaming
 {
@@ -34,6 +33,7 @@ namespace Gaming
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                         if (obj.CanMove && ((Bullet)obj).TypeOfBullet != BulletType.JumpyDumpty)
                             BulletBomb((Bullet)obj, null);
+                        obj.CanMove = false;
                     }
                 );
                 this.characterManager = characterManager;
@@ -171,17 +171,19 @@ namespace Gaming
                     return false;
                 Debugger.Output(player, player.CharacterType.ToString() + "Attack in " + player.BulletOfPlayer.ToString());
 
+                Debugger.Output(player, player.Position.ToString() + " " + player.Radius.ToString() + " " + BulletFactory.BulletRadius(player.BulletOfPlayer).ToString());
                 XY res = player.Position + new XY  // 子弹紧贴人物生成。
                     (
-                        (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Cos(angle)),
-                        (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))
+                        (int)(Math.Abs((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
+                        (int)(Math.Abs((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
                     );
 
                 Bullet? bullet = player.Attack(res, gameMap.GetPlaceType(res));
 
                 if (bullet != null)
                 {
-                    Debugger.Output(player, "Attack in " + bullet.ToString());
+                    player.FacingDirection = new(angle, bullet.BulletAttackRange);
+                    Debugger.Output(bullet, "Attack in " + bullet.Position.ToString());
                     bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
                     bullet.CanMove = true;
                     gameMap.Add(bullet);
@@ -189,12 +191,13 @@ namespace Gaming
                     if (bullet.CastTime > 0)
                     {
                         characterManager.SetPlayerState(player, PlayerStateType.TryingToAttack);
+                        long threadNum = player.ThreadNum;
 
                         new Thread
                                 (() =>
                                 {
                                     new FrameRateTaskExecutor<int>(
-                                    loopCondition: () => player.PlayerState == PlayerStateType.TryingToAttack && gameMap.Timer.IsGaming,
+                                    loopCondition: () => threadNum == player.ThreadNum && gameMap.Timer.IsGaming,
                                     loopToDo: () =>
                                     {
                                     },
@@ -206,7 +209,7 @@ namespace Gaming
 
                                     if (gameMap.Timer.IsGaming)
                                     {
-                                        if (player.PlayerState == PlayerStateType.TryingToAttack)
+                                        if (threadNum == player.ThreadNum)
                                         {
                                             characterManager.SetPlayerState(player);
                                         }

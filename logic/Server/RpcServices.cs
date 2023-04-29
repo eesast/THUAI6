@@ -1,21 +1,14 @@
-﻿using Grpc.Core;
-using Protobuf;
-using System.Threading;
-using Timothy.FrameRateTask;
-using System;
-using System.Net.Http.Headers;
+﻿using GameClass.GameObj;
 using Gaming;
-using GameClass.GameObj;
+using Grpc.Core;
 using Preparation.Utility;
-using Playback;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Preparation.Interface;
+using Protobuf;
 
 namespace Server
 {
-    public partial class GameServer : AvailableService.AvailableServiceBase
+    partial class GameServer : ServerBase
     {
+        private int playerCountNow = 0;
         protected object spectatorLock = new object();
         protected bool isSpectatorJoin = false;
         protected bool IsSpectatorJoin
@@ -56,20 +49,21 @@ namespace Server
         {
 
             Console.WriteLine($"AddPlayer: {request.PlayerId}");
-            if (request.PlayerId >= spectatorMinPlayerID && options.AllowSpectator == true)
+            if (request.PlayerId >= spectatorMinPlayerID && options.NotAllowSpectator == false)
             {
                 // 观战模式
-                uint tp = (uint)request.PlayerId;
-                if (!spectatorList.Contains(tp))
+                lock (spetatorJoinLock) // 具体原因见另一个上锁的地方
                 {
-                    spectatorList.Add(tp);
-                    Console.WriteLine("A new spectator comes to watch this game.");
-                    var temp = (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1));
-                    lock (semaDictLock)
+                    if (semaDict.TryAdd(request.PlayerId, (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1))))
                     {
-                        semaDict.Add(request.PlayerId, temp);
+                        Console.WriteLine("A new spectator comes to watch this game.");
+                        IsSpectatorJoin = true;
                     }
-                    IsSpectatorJoin = true;
+                    else
+                    {
+                        Console.WriteLine($"Duplicated Spectator ID {request.PlayerId}");
+                        return;
+                    }
                 }
                 do
                 {
@@ -82,13 +76,31 @@ namespace Server
                             //Console.WriteLine("Send!");
                         }
                     }
+                    catch (InvalidOperationException)
+                    {
+                        if (semaDict.TryRemove(request.PlayerId, out var semas))
+                        {
+                            try
+                            {
+                                semas.Item1.Release();
+                                semas.Item2.Release();
+                            }
+                            catch { }
+                            Console.WriteLine($"The spectator {request.PlayerId} exited");
+                            return;
+                        }
+                    }
                     catch (Exception)
                     {
-                        //Console.WriteLine(ex);
+                        // Console.WriteLine(ex);
                     }
                     finally
                     {
-                        semaDict[request.PlayerId].Item2.Release();
+                        try
+                        {
+                            semaDict[request.PlayerId].Item2.Release();
+                        }
+                        catch { }
                     }
                 } while (game.GameMap.Timer.IsGaming);
                 return;
@@ -117,14 +129,17 @@ namespace Server
                 var temp = (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1));
                 bool start = false;
                 Console.WriteLine($"Id: {request.PlayerId} joins.");
-                lock (semaDictLock)
+                lock (spetatorJoinLock)  // 为了保证绝对安全，还是加上这个锁吧
                 {
-                    semaDict.Add(request.PlayerId, temp);
-                    start = (semaDict.Count - spectatorList.Count) == playerNum;
+                    if (semaDict.TryAdd(request.PlayerId, temp))
+                    {
+                        start = Interlocked.Increment(ref playerCountNow) == playerNum;
+                    }
                 }
                 if (start) StartGame();
             }
 
+            bool exitFlag = false;
             do
             {
                 semaDict[request.PlayerId].Item1.Wait();
@@ -138,7 +153,11 @@ namespace Server
                 }
                 catch (Exception)
                 {
-                    //Console.WriteLine(ex);
+                    if (!exitFlag)
+                    {
+                        Console.WriteLine($"The client {request.PlayerId} exited");
+                        exitFlag = true;
+                    }
                 }
                 finally
                 {
@@ -194,7 +213,7 @@ namespace Server
         public override Task<BoolRes> SendMessage(SendMsg request, ServerCallContext context)
         {
             var boolRes = new BoolRes();
-            if (request.PlayerId >= spectatorMinPlayerID)
+            if (request.PlayerId >= spectatorMinPlayerID || playerDeceased((int)request.PlayerId))
             {
                 boolRes.ActSuccess = false;
                 return Task.FromResult(boolRes);
@@ -205,30 +224,67 @@ namespace Server
                 boolRes.ActSuccess = false;
                 return Task.FromResult(boolRes);
             }
-            if (request.Message.Length > 256)
+
+            switch (request.MessageCase)
             {
+                case SendMsg.MessageOneofCase.TextMessage:
+                    {
+                        if (request.TextMessage.Length > 256)
+                        {
 #if DEBUG
-                Console.WriteLine("Message string is too long!");
+                            Console.WriteLine("Text message string is too long!");
 #endif
-                boolRes.ActSuccess = false;
-                return Task.FromResult(boolRes);
-            }
-            else
-            {
-                MessageOfNews news = new();
-                news.News = request.Message;
-                news.FromId = request.PlayerId;
-                news.ToId = request.ToPlayerId;
-                lock (newsLock)
-                {
-                    currentNews.Add(news);
-                }
+                            boolRes.ActSuccess = false;
+                            return Task.FromResult(boolRes);
+                        }
+                        MessageOfNews news = new();
+                        news.TextMessage = request.TextMessage;
+                        news.FromId = request.PlayerId;
+                        news.ToId = request.ToPlayerId;
+                        lock (newsLock)
+                        {
+                            currentNews.Add(news);
+                        }
 #if DEBUG
-                Console.WriteLine(news.News);
+                        Console.WriteLine(news.TextMessage);
 #endif
+                        boolRes.ActSuccess = true;
+                        return Task.FromResult(boolRes);
+                    }
+                case SendMsg.MessageOneofCase.BinaryMessage:
+                    {
+
+                        if (request.BinaryMessage.Length > 256)
+                        {
+#if DEBUG
+                            Console.WriteLine("Binary message string is too long!");
+#endif
+                            boolRes.ActSuccess = false;
+                            return Task.FromResult(boolRes);
+                        }
+                        MessageOfNews news = new();
+                        news.BinaryMessage = request.BinaryMessage;
+                        news.FromId = request.PlayerId;
+                        news.ToId = request.ToPlayerId;
+                        lock (newsLock)
+                        {
+                            currentNews.Add(news);
+                        }
+#if DEBUG
+                        Console.Write("BinaryMessageLength: ");
+                        Console.WriteLine(news.BinaryMessage.Length);
+#endif
+                        boolRes.ActSuccess = true;
+                        return Task.FromResult(boolRes);
+                    }
+                default:
+                    {
+                        boolRes.ActSuccess = false;
+                        return Task.FromResult(boolRes);
+                    }
             }
-            boolRes.ActSuccess = true;
-            return Task.FromResult(boolRes);
+
+
         }
         public override Task<BoolRes> PickProp(PropMsg request, ServerCallContext context)
         {

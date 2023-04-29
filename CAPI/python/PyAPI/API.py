@@ -2,7 +2,7 @@ import PyAPI.structures as THUAI6
 from PyAPI.Interface import ILogic, IStudentAPI, ITrickerAPI, IGameTimer, IAI
 from math import pi
 from concurrent.futures import ThreadPoolExecutor, Future
-from typing import List, cast, Tuple
+from typing import List, cast, Tuple, Union
 
 
 class StudentAPI(IStudentAPI, IGameTimer):
@@ -68,13 +68,13 @@ class StudentAPI(IStudentAPI, IGameTimer):
 
     # 消息相关，接收消息时无消息则返回(-1, '')
 
-    def SendMessage(self, toID: int, message: str) -> Future[bool]:
+    def SendMessage(self, toID: int, message: Union[str, bytes]) -> Future[bool]:
         return self.__pool.submit(self.__logic.SendMessage, toID, message)
 
     def HaveMessage(self) -> bool:
         return self.__logic.HaveMessage()
 
-    def GetMessage(self) -> Tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, Union[str, bytes]]:
         return self.__logic.GetMessage()
 
     # 等待下一帧
@@ -131,6 +131,9 @@ class StudentAPI(IStudentAPI, IGameTimer):
 
     def GetGameInfo(self) -> THUAI6.GameInfo:
         return self.__logic.GetGameInfo()
+
+    def HaveView(self, gridX: int, gridY: int) -> bool:
+        return self.__logic.HaveView(gridX, gridY, self.GetSelfInfo().x, self.GetSelfInfo().y, self.GetSelfInfo().viewRange)
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
@@ -241,13 +244,13 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
 
     # 消息相关，接收消息时无消息则返回(-1, '')
 
-    def SendMessage(self, toID: int, message: str) -> Future[bool]:
+    def SendMessage(self, toID: int, message: Union[str, bytes]) -> Future[bool]:
         return self.__pool.submit(self.__logic.SendMessage, toID, message)
 
     def HaveMessage(self) -> bool:
         return self.__logic.HaveMessage()
 
-    def GetMessage(self) -> Tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, Union[str, bytes]]:
         return self.__logic.GetMessage()
 
     # 等待下一帧
@@ -304,6 +307,9 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
 
     def GetGameInfo(self) -> THUAI6.GameInfo:
         return self.__logic.GetGameInfo()
+
+    def HaveView(self, gridX: int, gridY: int) -> bool:
+        return self.__logic.HaveView(gridX, gridY, self.GetSelfInfo().x, self.GetSelfInfo().y, self.GetSelfInfo().viewRange)
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 

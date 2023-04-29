@@ -5,6 +5,10 @@
 #include <mutex>
 #include <condition_variable>
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 using grpc::ClientContext;
 
 Communication::Communication(std::string sIP, std::string sPort)
@@ -74,11 +78,11 @@ bool Communication::UseSkill(int32_t skillID, int64_t playerID)
         return false;
 }
 
-bool Communication::SendMessage(int64_t toID, std::string message, int64_t playerID)
+bool Communication::SendMessage(int64_t toID, std::string message, bool binary, int64_t playerID)
 {
     protobuf::BoolRes sendMessageResult;
     ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufSend(message, toID, playerID);
+    auto request = THUAI62Proto::THUAI62ProtobufSend(message, toID, binary, playerID);
     auto status = THUAI6Stub->SendMessage(&context, request, &sendMessageResult);
     if (status.ok())
         return sendMessageResult.act_success();
@@ -249,10 +253,13 @@ void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, T
         grpc::ClientContext context;
         auto MessageReader = THUAI6Stub->AddPlayer(&context, playerMsg);
 
-        while (MessageReader->Read(&message2Client))
+        protobuf::MessageToClient buffer2Client;
+
+        while (MessageReader->Read(&buffer2Client))
         {
             {
                 std::lock_guard<std::mutex> lock(mtxMessage);
+                message2Client = std::move(buffer2Client);
                 haveNewMessage = true;
             }
             cvMessage.notify_one();

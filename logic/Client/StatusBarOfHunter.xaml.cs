@@ -82,19 +82,19 @@ namespace Client
                     state.Text = "Quit";
                     break;
                 case PlayerState.Treated:
-                    state.Text = "Treated";
+                    state.Text = "Encouraged";
                     break;
                 case PlayerState.Rescued:
-                    state.Text = "Rescued";
+                    state.Text = "Roused";
                     break;
                 case PlayerState.Stunned:
                     state.Text = "Stunned";
                     break;
                 case PlayerState.Treating:
-                    state.Text = "Treating";
+                    state.Text = "Encouraging";
                     break;
                 case PlayerState.Rescuing:
-                    state.Text = "Rescuing";
+                    state.Text = "Rousing";
                     break;
                 case PlayerState.Swinging:
                     state.Text = "Swinging";

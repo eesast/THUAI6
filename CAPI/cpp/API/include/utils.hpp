@@ -13,6 +13,10 @@
 
 #include "structures.h"
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 namespace AssistFunction
 {
 
@@ -200,6 +204,12 @@ namespace Proto2THUAI6
         {protobuf::MessageOfObj::MessageOfObjCase::kNewsMessage, THUAI6::MessageOfObj::NewsMessage},
         {protobuf::MessageOfObj::MessageOfObjCase::kHiddenGateMessage, THUAI6::MessageOfObj::HiddenGateMessage},
 
+    };
+
+    inline std::map<protobuf::MessageOfNews::NewsCase, THUAI6::NewsType> newsTypeDict{
+        {protobuf::MessageOfNews::NewsCase::NEWS_NOT_SET, THUAI6::NewsType::NullNewsType},
+        {protobuf::MessageOfNews::NewsCase::kTextMessage, THUAI6::NewsType::TextMessage},
+        {protobuf::MessageOfNews::NewsCase::kBinaryMessage, THUAI6::NewsType::BinaryMessage},
     };
 
     // 用于将Protobuf中的类转换为THUAI6的类
@@ -456,10 +466,13 @@ namespace THUAI62Proto
         return pickMsg;
     }
 
-    inline protobuf::SendMsg THUAI62ProtobufSend(std::string msg, int64_t toID, int64_t id)
+    inline protobuf::SendMsg THUAI62ProtobufSend(std::string msg, int64_t toID, bool binary, int64_t id)
     {
         protobuf::SendMsg sendMsg;
-        sendMsg.set_message(msg);
+        if (binary)
+            sendMsg.set_binary_message(msg);
+        else
+            sendMsg.set_text_message(msg);
         sendMsg.set_to_player_id(toID);
         sendMsg.set_player_id(id);
         return sendMsg;

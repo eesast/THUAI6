@@ -23,7 +23,6 @@ namespace GameClass.GameObj
         private int openStartTime = 0;
         public int OpenStartTime => openStartTime;
         private Character? whoOpen = null;
-
         public Character? WhoOpen => whoOpen;
         public void Open(int startTime, Character character)
         {

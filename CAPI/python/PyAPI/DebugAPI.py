@@ -1,6 +1,6 @@
 from math import pi
 from concurrent.futures import ThreadPoolExecutor, Future
-from typing import List, cast, Tuple
+from typing import List, cast, Tuple, Union
 import logging
 import os
 import datetime
@@ -216,7 +216,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
     # 消息相关，接收消息时无消息则返回(-1, '')
 
-    def SendMessage(self, toID: int, message: str) -> Future[bool]:
+    def SendMessage(self, toID: int, message: Union[str, bytes]) -> Future[bool]:
         self.__logger.info(
             f"SendMessage: toID = {toID}, message = {message}, called at {self.__GetTime()}ms")
 
@@ -238,7 +238,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
                 f"HaveMessage: failed at {self.__GetTime()}ms")
         return result
 
-    def GetMessage(self) -> Tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, Union[str, bytes]]:
         self.__logger.info(
             f"GetMessage: called at {self.__GetTime()}ms")
         result = self.__logic.GetMessage()
@@ -303,6 +303,9 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
     def GetGameInfo(self) -> THUAI6.GameInfo:
         return self.__logic.GetGameInfo()
+
+    def HaveView(self, gridX: int, gridY: int) -> bool:
+        return self.__logic.HaveView(gridX, gridY, self.GetSelfInfo().x, self.GetSelfInfo().y, self.GetSelfInfo().viewRange)
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
@@ -668,7 +671,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
     # 消息相关，接收消息时无消息则返回(-1, '')
 
-    def SendMessage(self, toID: int, message: str) -> Future[bool]:
+    def SendMessage(self, toID: int, message: Union[str, bytes]) -> Future[bool]:
         self.__logger.info(
             f"SendMessage: toID = {toID}, message = {message}, called at {self.__GetTime()}ms")
 
@@ -690,7 +693,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
                 f"HaveMessage: failed at {self.__GetTime()}ms")
         return result
 
-    def GetMessage(self) -> Tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, Union[str, bytes]]:
         self.__logger.info(
             f"GetMessage: called at {self.__GetTime()}ms")
         result = self.__logic.GetMessage()
@@ -755,6 +758,9 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
     def GetGameInfo(self) -> THUAI6.GameInfo:
         return self.__logic.GetGameInfo()
+
+    def HaveView(self, gridX: int, gridY: int) -> bool:
+        return self.__logic.HaveView(gridX, gridY, self.GetSelfInfo().x, self.GetSelfInfo().y, self.GetSelfInfo().viewRange)
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 

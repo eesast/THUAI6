@@ -1,6 +1,11 @@
 #include <optional>
 #include "AI.h"
 #include "API.h"
+
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 #define PI 3.14159265358979323846
 
 int StudentAPI::GetFrameCount() const
@@ -185,16 +190,28 @@ std::future<bool> TrickerAPI::EndAllAction()
                       { return logic.EndAllAction(); });
 }
 
-std::future<bool> StudentAPI::SendMessage(int64_t toID, std::string message)
+std::future<bool> StudentAPI::SendTextMessage(int64_t toID, std::string message)
 {
     return std::async(std::launch::async, [=]()
-                      { return logic.SendMessage(toID, message); });
+                      { return logic.SendMessage(toID, message, false); });
 }
 
-std::future<bool> TrickerAPI::SendMessage(int64_t toID, std::string message)
+std::future<bool> TrickerAPI::SendTextMessage(int64_t toID, std::string message)
 {
     return std::async(std::launch::async, [=]()
-                      { return logic.SendMessage(toID, message); });
+                      { return logic.SendMessage(toID, message, false); });
+}
+
+std::future<bool> StudentAPI::SendBinaryMessage(int64_t toID, std::string message)
+{
+    return std::async(std::launch::async, [=]()
+                      { return logic.SendMessage(toID, message, false); });
+}
+
+std::future<bool> TrickerAPI::SendBinaryMessage(int64_t toID, std::string message)
+{
+    return std::async(std::launch::async, [=]()
+                      { return logic.SendMessage(toID, message, false); });
 }
 
 bool StudentAPI::HaveMessage()
@@ -417,6 +434,18 @@ std::future<bool> StudentAPI::Attack(double angleInRadian)
 std::shared_ptr<const THUAI6::Tricker> TrickerAPI::GetSelfInfo() const
 {
     return logic.TrickerGetSelfInfo();
+}
+
+bool StudentAPI::HaveView(int gridX, int gridY) const
+{
+    auto selfInfo = GetSelfInfo();
+    return logic.HaveView(gridX, gridY, selfInfo->x, selfInfo->y, selfInfo->viewRange);
+}
+
+bool TrickerAPI::HaveView(int gridX, int gridY) const
+{
+    auto selfInfo = GetSelfInfo();
+    return logic.HaveView(gridX, gridY, selfInfo->x, selfInfo->y, selfInfo->viewRange);
 }
 
 void StudentAPI::Play(IAI& ai)

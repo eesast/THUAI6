@@ -143,85 +143,95 @@ class HiddenGateState(Enum):
 
 
 class Player:
-    x: int
-    y: int
-    speed: int
-    viewRange: int
-    playerID: int
-    guid: int
-    radius: int
-    score: int
-    facingDirection: float
-    timeUntilSkillAvailable: List[float] = []
-    playerType: PlayerType
-    prop: List[PropType] = []
-    place: PlaceType
-    bulletType: BulletType
-    playerState: PlayerState
+    def __init__(self, **kwargs) -> None:
+        self.x: int = 0
+        self.y: int = 0
+        self.speed: int = 0
+        self.viewRange: int = 0
+        self.playerID: int = 0
+        self.guid: int = 0
+        self.radius: int = 0
+        self.score: int = 0
+        self.facingDirection: float = 0.0
+        self.timeUntilSkillAvailable: List[float] = []
+        self.playerType: PlayerType = PlayerType.NullPlayerType
+        self.prop: List[PropType] = []
+        self.place: PlaceType = PlaceType.NullPlaceType
+        self.bulletType: BulletType = BulletType.NullBulletType
+        self.playerState: PlayerState = PlayerState.NullState
 
 
 class Student(Player):
-    studentType: StudentType
-    determination: int
-    addiction: int
-    encourageProgress: int
-    rouseProgress: int
-    learningSpeed: int
-    encourageSpeed: int
-    dangerAlert: float
-    buff: List[StudentBuffType] = []
+    def __init__(self, **kwargs) -> None:
+        super().__init__()
+        self.studentType: StudentType = StudentType.NullStudentType
+        self.determination: int = 0
+        self.addiction: int = 0
+        self.encourageProgress: int = 0
+        self.rouseProgress: int = 0
+        self.learningSpeed: int = 0
+        self.encourageSpeed: int = 0
+        self.dangerAlert: float = 0.0
+        self.buff: List[StudentBuffType] = []
 
 
 class Tricker(Player):
-    trickerType: TrickerType
-    trickDesire: float
-    classVolume: float
-    buff: List[TrickerBuffType] = []
+    def __init__(self, **kwargs) -> None:
+        super().__init__()
+        self.trickerType: TrickerType = TrickerType.NullTrickerType
+        self.trickDesire: float = 0.0
+        self.classVolume: float = 0.0
+        self.buff: List[TrickerBuffType] = []
 
 
 class Prop:
-    x: int
-    y: int
-    guid: int
-    type: PropType
-    place: PlaceType
-    facingDirection: float
+    def __init__(self, **kwargs) -> None:
+        self.x: int = 0
+        self.y: int = 0
+        self.guid: int = 0
+        self.type: PropType = PropType.NullPropType
+        self.place: PlaceType = PlaceType.NullPlaceType
+        self.facingDirection: float = 0.0
 
 
 class Bullet:
-    bulletType: BulletType
-    x: int
-    y: int
-    facingDirection: float
-    guid: int
-    team: PlayerType
-    place: PlaceType
-    bombRange: float
-    speed: int
+    def __init__(self, **kwargs) -> None:
+        self.bulletType: BulletType = BulletType.NullBulletType
+        self.x: int = 0
+        self.y: int = 0
+        self.facingDirection: float = 0.0
+        self.guid: int = 0
+        self.team: PlayerType = PlayerType.NullPlayerType
+        self.place: PlaceType = PlaceType.NullPlaceType
+        self.bombRange: float = 0.0
+        self.speed: int = 0
 
 
 class BombedBullet:
-    bulletType: BulletType
-    x: int
-    y: int
-    facingDirection: float
-    mappingID: int
-    bombRange: float
+    def __init__(self, **kwargs) -> None:
+        self.bulletType: BulletType = BulletType.NullBulletType
+        self.x: int = 0
+        self.y: int = 0
+        self.facingDirection: float = 0.0
+        self.mappingID: int = 0
+        self.bombRange: float = 0.0
 
 
 class GameMap:
-    classroomState: Dict[Tuple[int, int], int] = {}
-    gateState: Dict[Tuple[int, int], int] = {}
-    chestState: Dict[Tuple[int, int], int] = {}
-    doorState: Dict[Tuple[int, int], bool] = {}
-    doorProgress: Dict[Tuple[int, int], int] = {}
-    hiddenGateState: Dict[Tuple[int, int], HiddenGateState] = {}
+    def __init__(self, **kwargs) -> None:
+        self.classroomState: Dict[Tuple[int, int], int] = {}
+        self.gateState: Dict[Tuple[int, int], int] = {}
+        self.chestState: Dict[Tuple[int, int], int] = {}
+        self.doorState: Dict[Tuple[int, int], bool] = {}
+        self.doorProgress: Dict[Tuple[int, int], int] = {}
+        self.hiddenGateState: Dict[Tuple[int, int], HiddenGateState] = {}
 
 
 class GameInfo:
-    gameTime: int
-    subjectFinished: int
-    studentGraduated: int
-    studentQuited: int
-    studentScore: int
-    trickerScore: int
+    def __init__(self, **kwargs) -> None:
+        self.gameTime: int = 0
+        self.subjectFinished: int = 0
+        self.studentGraduated: int = 0
+        self.studentQuited: int = 0
+        self.studentScore: int = 0
+        self.trickerScore: int = 0

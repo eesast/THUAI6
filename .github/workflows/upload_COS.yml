@@ -113,6 +113,9 @@ jobs:
         name: my-artifact
         path: ./THUAI6
 
+    - name: Remove ReadMe.md
+      run: rm ./docs/README.md
+
     - name: Markdown to PDF and HTML
       uses: BaileyJM02/markdown-to-pdf@v1.2.0
       with:
@@ -145,7 +148,6 @@ jobs:
         rm ./THUAI6/win/win64/WindowsBase.dll
         rm ./THUAI6/win/win64/Debug/grpc_csharp_ext.x64.dll
         rm ./THUAI6/win/win64/grpc_csharp_ext.x64.dll
-
         rm -r ./THUAI6/win/CAPI/cpp/grpc 
         rm -r ./THUAI6/win/CAPI/cpp/spdlog
         rm -r ./THUAI6/win/CAPI/cpp/tclap
@@ -162,7 +164,6 @@ jobs:
         rm ./THUAI6/osx/osx64/Debug/System.*.dll
         rm ./THUAI6/win/win64/System.*.dll
         rm ./THUAI6/win/win64/Debug/System.*.dll
-
         rm ./THUAI6/linux/linux64/*.so
         rm ./THUAI6/linux/linux64/Debug/*.so
     

@@ -1,24 +1,40 @@
-﻿using Protobuf;
-using Playback;
-using System;
-using System.Threading;
-using Timothy.FrameRateTask;
-using Gaming;
+﻿using Gaming;
 using Grpc.Core;
+using Playback;
+using Protobuf;
+using System.Collections.Concurrent;
+using Timothy.FrameRateTask;
 
 namespace Server
 {
-    class PlaybackServer : AvailableService.AvailableServiceBase
+    class PlaybackServer : ServerBase
     {
         protected readonly ArgumentOptions options;
         private int[,] teamScore;
-        private Dictionary<long, (SemaphoreSlim, SemaphoreSlim)> semaDict = new();
-        private object semaDictLock = new();
+        private ConcurrentDictionary<long, (SemaphoreSlim, SemaphoreSlim)> semaDict = new();
+        // private object semaDictLock = new();
         private MessageToClient? currentGameInfo = new();
+        private MessageOfObj currentMapMsg = new();
         private uint spectatorMinPlayerID = 2023;
-        private List<uint> spectatorList = new List<uint>();
+        // private List<uint> spectatorList = new List<uint>();
         public int TeamCount => options.TeamCount;
-        private MessageWriter? mwr = null;
+        private object spetatorJoinLock = new();
+        protected object spectatorLock = new object();
+        protected bool isSpectatorJoin = false;
+        protected bool IsSpectatorJoin
+        {
+            get
+            {
+                lock (spectatorLock)
+                    return isSpectatorJoin;
+            }
+
+            set
+            {
+                lock (spectatorLock)
+                    isSpectatorJoin = value;
+            }
+        }
         private bool IsGaming { get; set; }
         private int[] finalScore;
         public int[] FinalScore
@@ -28,6 +44,7 @@ namespace Server
                 return finalScore;
             }
         }
+        public override int[] GetScore() => FinalScore;
         public PlaybackServer(ArgumentOptions options)
         {
             this.options = options;
@@ -38,18 +55,21 @@ namespace Server
 
         public override async Task AddPlayer(PlayerMsg request, IServerStreamWriter<MessageToClient> responseStream, ServerCallContext context)
         {
-            if (request.PlayerId >= spectatorMinPlayerID)
+            Console.WriteLine($"AddPlayer: {request.PlayerId}");
+            if (request.PlayerId >= spectatorMinPlayerID && options.NotAllowSpectator == false)
             {
                 // 观战模式
-                uint tp = (uint)request.PlayerId;
-                if (!spectatorList.Contains(tp))
+                lock (spetatorJoinLock) // 具体原因见另一个上锁的地方
                 {
-                    spectatorList.Add(tp);
-                    Console.WriteLine("A new spectator comes to watch this game.");
-                    var temp = (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1));
-                    lock (semaDictLock)
+                    if (semaDict.TryAdd(request.PlayerId, (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1))))
                     {
-                        semaDict.Add(request.PlayerId, temp);
+                        Console.WriteLine("A new spectator comes to watch this game.");
+                        IsSpectatorJoin = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Duplicated Spectator ID {request.PlayerId}");
+                        return;
                     }
                 }
                 do
@@ -63,15 +83,33 @@ namespace Server
                             //Console.WriteLine("Send!");
                         }
                     }
+                    catch (InvalidOperationException)
+                    {
+                        if (semaDict.TryRemove(request.PlayerId, out var semas))
+                        {
+                            try
+                            {
+                                semas.Item1.Release();
+                                semas.Item2.Release();
+                            }
+                            catch { }
+                            Console.WriteLine($"The spectator {request.PlayerId} exited");
+                            return;
+                        }
+                    }
                     catch (Exception)
                     {
-                        //Console.WriteLine(ex);
+                        // Console.WriteLine(ex);
                     }
                     finally
                     {
-                        semaDict[request.PlayerId].Item2.Release();
+                        try
+                        {
+                            semaDict[request.PlayerId].Item2.Release();
+                        }
+                        catch { }
                     }
-                } while (IsGaming == true);
+                } while (IsGaming);
                 return;
             }
         }
@@ -79,6 +117,16 @@ namespace Server
         public void ReportGame(MessageToClient? msg)
         {
             currentGameInfo = msg;
+            if (currentGameInfo != null && currentGameInfo.GameState == GameState.GameStart)
+            {
+                currentMapMsg = currentGameInfo.ObjMessage[0];
+            }
+
+            if (currentGameInfo != null && IsSpectatorJoin)
+            {
+                currentGameInfo.ObjMessage.Add(currentMapMsg);
+                IsSpectatorJoin = false;
+            }
 
             foreach (var kvp in semaDict)
             {
@@ -91,7 +139,7 @@ namespace Server
             }
         }
 
-        public void WaitForGame()
+        public override void WaitForEnd()
         {
             try
             {

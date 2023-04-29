@@ -31,6 +31,10 @@
 #include "Communication.h"
 #include "ConcurrentQueue.hpp"
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 // 封装了通信组件和对AI对象进行操作
 class Logic : public ILogic
 {
@@ -48,9 +52,6 @@ private:
     // 类型记录
     THUAI6::TrickerType trickerType;
     THUAI6::StudentType studentType;
-
-    // GUID信息
-    std::vector<int64_t> playerGUIDs;
 
     std::unique_ptr<IGameTimer> timer;
 
@@ -117,7 +118,7 @@ private:
     bool ThrowProp(THUAI6::PropType prop) override;
     bool UseSkill(int32_t skillID) override;
 
-    bool SendMessage(int64_t toID, std::string message) override;
+    bool SendMessage(int64_t toID, std::string message, bool binary) override;
     bool HaveMessage() override;
     std::pair<int64_t, std::string> GetMessage() override;
 
@@ -160,6 +161,8 @@ private:
 
     // 等待
     void Wait() noexcept;
+
+    [[nodiscard]] bool HaveView(int gridX, int gridY, int selfX, int selfY, int viewRange) const override;
 
 public:
     // 构造函数还需要传更多参数，有待补充

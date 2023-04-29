@@ -80,12 +80,7 @@ namespace Gaming
             Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
-                bool res = actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
-#if DEBUG
-                Console.WriteLine($"PlayerID:{playerID} move to ({player.Position.x},{player.Position.y})!");
-#endif
-                return res;
-
+                return actionManager.MovePlayer(player, moveTimeInMilliseconds, angle);
             }
             else
             {

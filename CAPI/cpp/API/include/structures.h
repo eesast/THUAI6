@@ -8,6 +8,10 @@
 #include <vector>
 #include <string>
 
+#undef GetMessage
+#undef SendMessage
+#undef PeekMessage
+
 namespace THUAI6
 {
 
@@ -166,6 +170,13 @@ namespace THUAI6
         Null = 0,
         Refreshed = 1,
         Opened = 2,
+    };
+
+    enum class NewsType : unsigned char
+    {
+        NullNewsType = 0,
+        TextMessage = 1,
+        BinaryMessage = 2,
     };
 
     // 玩家类

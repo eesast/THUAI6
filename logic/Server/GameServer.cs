@@ -1,24 +1,20 @@
-﻿using Grpc.Core;
-using Protobuf;
-using System.Threading;
-using Timothy.FrameRateTask;
-using System;
-using System.Net.Http.Headers;
+﻿using GameClass.GameObj;
 using Gaming;
-using GameClass.GameObj;
-using Preparation.Utility;
-using Playback;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Preparation.Interface;
+using Playback;
+using Preparation.Utility;
+using Protobuf;
+using System.Collections.Concurrent;
+using Timothy.FrameRateTask;
 
 
 namespace Server
 {
-    public partial class GameServer : AvailableService.AvailableServiceBase
+    partial class GameServer : ServerBase
     {
-        private Dictionary<long, (SemaphoreSlim, SemaphoreSlim)> semaDict = new();
-        private object semaDictLock = new();
+        private ConcurrentDictionary<long, (SemaphoreSlim, SemaphoreSlim)> semaDict = new();
+        // private object semaDictLock = new();
         protected readonly ArgumentOptions options;
         private HttpSender? httpSender;
         private object gameLock = new();
@@ -29,13 +25,13 @@ namespace Server
         private SemaphoreSlim endGameSem = new(0);
         protected readonly Game game;
         private uint spectatorMinPlayerID = 2023;
-        private List<uint> spectatorList = new List<uint>();
         public int playerNum;
         public int TeamCount => options.TeamCount;
         protected long[] communicationToGameID;  // 通信用的ID映射到游戏内的ID，通信中0-3为Student，4为Tricker
         private readonly object messageToAllClientsLock = new();
         public static readonly long SendMessageToClientIntervalInMilliseconds = 50;
         private MessageWriter? mwr = null;
+        private object spetatorJoinLock = new();
 
         public void StartGame()
         {
@@ -45,6 +41,7 @@ namespace Server
                 if (id == GameObj.invalidID) return;     //如果有未初始化的玩家，不开始游戏
             }
             Console.WriteLine("Game starts!");
+            CreateStartFile();
             game.StartGame((int)options.GameTimeInSecond * 1000);
             Thread.Sleep(1);
             new Thread(() =>
@@ -74,7 +71,17 @@ namespace Server
             })
             { IsBackground = true }.Start();
         }
-        public void WaitForEnd()
+
+        public void CreateStartFile()
+        {
+            if (options.StartLockFile != DefaultArgumentOptions.FileName)
+            {
+                using var _ = File.Create(options.StartLockFile);
+                Console.WriteLine("Successfully Created StartLockFile!");
+            }
+        }
+
+        public override void WaitForEnd()
         {
             this.endGameSem.Wait();
             mwr?.Dispose();
@@ -115,7 +122,7 @@ namespace Server
             game.ClearAllLists();
             mwr?.Flush();
             if (options.ResultFileName != DefaultArgumentOptions.FileName)
-                SaveGameResult(options.ResultFileName + ".json");
+                SaveGameResult(options.ResultFileName.EndsWith(".json") ? options.ResultFileName : options.ResultFileName + ".json");
             SendGameResult();
             this.endGameSem.Release();
         }
@@ -158,17 +165,39 @@ namespace Server
                         break;
                 }
             }
-            foreach (var kvp in semaDict)
+            lock (spetatorJoinLock)
             {
-                kvp.Value.Item1.Release();
-            }
+                foreach (var kvp in semaDict)
+                {
+                    kvp.Value.Item1.Release();
+                }
 
-            foreach (var kvp in semaDict)
-            {
-                kvp.Value.Item2.Wait();
+                // 若此时观战者加入，则死锁，所以需要 spetatorJoinLock
+
+                foreach (var kvp in semaDict)
+                {
+                    kvp.Value.Item2.Wait();
+                }
             }
         }
-        public int[] GetScore()
+        private bool playerDeceased(int playerID)
+        {
+            game.GameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
+            try
+            {
+                foreach (Character character in game.GameMap.GameObjDict[GameObjType.Character])
+                {
+                    if (character.PlayerID == playerID && character.PlayerState == PlayerStateType.Deceased) return true;
+                }
+            }
+            finally
+            {
+                game.GameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+            }
+            return false;
+        }
+
+        public override int[] GetScore()
         {
             int[] score = new int[2]; // 0代表Student，1代表Tricker
             game.GameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
@@ -222,9 +251,6 @@ namespace Server
             int[] score = GetScore();
             msg.StudentScore = score[0];
             msg.TrickerScore = score[1];
-            //msg.GateOpened
-            //msg.HiddenGateRefreshed
-            //msg.HiddenGateOpened
             return msg;
         }
 

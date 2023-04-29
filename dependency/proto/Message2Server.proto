@@ -32,7 +32,12 @@ message SendMsg
 {
     int64 player_id = 1;
     int64 to_player_id = 2;
-    string message = 3;
+    oneof message
+    {
+        string text_message = 3;
+        bytes binary_message = 4;
+    }
+    
 }
 
 message AttackMsg // 相当于攻击

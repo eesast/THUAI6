@@ -3,6 +3,7 @@ from typing import List, Union, Callable, Tuple
 import threading
 import logging
 import copy
+import platform
 import proto.MessageType_pb2 as MessageType
 import proto.Message2Server_pb2 as Message2Server
 import proto.Message2Clients_pb2 as Message2Clients
@@ -22,7 +23,6 @@ class Logic(ILogic):
 
         # ID
         self.__playerID: int = playerID
-        self.__playerGUIDs: List[int] = []
 
         self.__playerType: THUAI6.PlayerType = playerType
 
@@ -188,7 +188,7 @@ class Logic(ILogic):
         self.__logger.debug("Called UseSkill")
         return self.__comm.UseSkill(skillID, self.__playerID)
 
-    def SendMessage(self, toID: int, message: str) -> bool:
+    def SendMessage(self, toID: int, message: Union[str, bytes]) -> bool:
         self.__logger.debug("Called SendMessage")
         return self.__comm.SendMessage(toID, message, self.__playerID)
 
@@ -196,7 +196,7 @@ class Logic(ILogic):
         self.__logger.debug("Called HaveMessage")
         return not self.__messageQueue.empty()
 
-    def GetMessage(self) -> Tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, Union[str, bytes]]:
         self.__logger.debug("Called GetMessage")
         if self.__messageQueue.empty():
             self.__logger.warning("Message queue is empty!")
@@ -214,7 +214,7 @@ class Logic(ILogic):
 
     def GetPlayerGUIDs(self) -> List[int]:
         with self.__mtxState:
-            return copy.deepcopy(self.__playerGUIDs)
+            return copy.deepcopy(self.__currentState.guids)
 
     # IStudentAPI使用的接口
 
@@ -262,6 +262,10 @@ class Logic(ILogic):
         self.__logger.debug("Called EndAllAction")
         return self.__comm.EndAllAction(self.__playerID)
 
+    def HaveView(self, gridX: int, gridY: int, selfX: int, selfY: int, viewRange: int) -> bool:
+        with self.__mtxState:
+            return AssistFunction.HaveView(viewRange, selfX, selfY, gridX, gridY, self.__currentState.gameMap)
+
     # Logic内部逻辑
     def __TryConnection(self) -> bool:
         self.__logger.info("Try to connect to server...")
@@ -283,15 +287,6 @@ class Logic(ILogic):
                 if self.__gameState == THUAI6.GameState.GameStart:
                     # 读取玩家的GUID
                     self.__logger.info("Game start!")
-                    self.__playerGUIDs.clear()
-                    for obj in clientMsg.obj_message:
-                        if obj.WhichOneof("message_of_obj") == "student_message":
-                            self.__playerGUIDs.append(obj.student_message.guid)
-                    for obj in clientMsg.obj_message:
-                        if obj.WhichOneof("message_of_obj") == "tricker_message":
-                            self.__playerGUIDs.append(obj.tricker_message.guid)
-                    self.__currentState.guids = self.__playerGUIDs
-                    self.__bufferState.guids = self.__playerGUIDs
 
                     for obj in clientMsg.obj_message:
                         if obj.WhichOneof("message_of_obj") == "map_message":
@@ -315,26 +310,17 @@ class Logic(ILogic):
 
                 elif self.__gameState == THUAI6.GameState.GameRunning:
                     # 读取玩家的GUID
-                    self.__playerGUIDs.clear()
-                    for obj in clientMsg.obj_message:
-                        if obj.WhichOneof("message_of_obj") == "student_message":
-                            self.__playerGUIDs.append(obj.student_message.guid)
-                    for obj in clientMsg.obj_message:
-                        if obj.WhichOneof("message_of_obj") == "tricker_message":
-                            self.__playerGUIDs.append(obj.tricker_message.guid)
-                    self.__currentState.guids = self.__playerGUIDs
-                    self.__bufferState.guids = self.__playerGUIDs
                     self.__LoadBuffer(clientMsg)
                 else:
                     self.__logger.error("Unknown GameState!")
                     continue
-            self.__AILoop = False
             with self.__cvBuffer:
                 self.__bufferUpdated = True
                 self.__counterBuffer = -1
                 self.__cvBuffer.notify()
                 self.__logger.info("Game End!")
             self.__logger.info("Message thread end!")
+            self.__AILoop = False
 
         threading.Thread(target=messageThread).start()
 
@@ -452,9 +438,16 @@ class Logic(ILogic):
                     self.__logger.debug("Update Gate!")
         elif item.WhichOneof("message_of_obj") == "news_message":
             if item.news_message.to_id == self.__playerID:
-                self.__messageQueue.put(
-                    (item.news_message.from_id, item.news_message.news))
-                self.__logger.debug("Add News!")
+                if item.news_message.WhichOneof("news") == "text_message":
+                    self.__messageQueue.put(
+                        (item.news_message.from_id, item.news_message.text_message))
+                    self.__logger.debug("Add News!")
+                elif item.news_message.WhichOneof("news") == "binary_message":
+                    self.__messageQueue.put(
+                        (item.news_message.from_id, item.news_message.binary_message))
+                    self.__logger.debug("Add News!")
+                else:
+                    self.__logger.error("Unknown News!")
         else:
             self.__logger.debug(
                 "Unknown Message!")
@@ -464,15 +457,28 @@ class Logic(ILogic):
             self.__bufferState.students.clear()
             self.__bufferState.trickers.clear()
             self.__bufferState.props.clear()
+            self.__bufferState.bullets.clear()
+            self.__bufferState.bombedBullets.clear()
+            self.__bufferState.guids.clear()
             self.__logger.debug("Buffer cleared!")
+
+            for obj in message.obj_message:
+                if obj.WhichOneof("message_of_obj") == "student_message":
+                    self.__bufferState.guids.append(obj.student_message.guid)
+            for obj in message.obj_message:
+                if obj.WhichOneof("message_of_obj") == "tricker_message":
+                    self.__bufferState.guids.append(obj.tricker_message.guid)
+
             self.__bufferState.gameInfo = Proto2THUAI6.Protobuf2THUAI6GameInfo(
                 message.all_message)
+
             self.__LoadBufferSelf(message)
             for item in message.obj_message:
                 self.__LoadBufferCase(item)
             if Setting.asynchronous():
                 with self.__mtxState:
                     self.__currentState, self.__bufferState = self.__bufferState, self.__currentState
+                    self.__counterState = self.__counterBuffer
                     self.__logger.info("Update state!")
                 self.__freshed = True
             else:
@@ -507,9 +513,16 @@ class Logic(ILogic):
         formatter = logging.Formatter(
             "[%(name)s] [%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s", '%H:%M:%S')
         # 确保文件存在
-        if not os.path.exists(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/logs"):
-            os.makedirs(os.path.dirname(os.path.dirname(
-                os.path.realpath(__file__))) + "/logs")
+        # if not os.path.exists(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/logs"):
+        #     os.makedirs(os.path.dirname(os.path.dirname(
+        #         os.path.realpath(__file__))) + "/logs")
+
+        if platform.system().lower() == "windows":
+            os.system(
+                f"mkdir \"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}\\logs\"")
+        else:
+            os.system(
+                f"mkdir -p \"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/logs\"")
 
         fileHandler = logging.FileHandler(os.path.dirname(
             os.path.dirname(os.path.realpath(__file__))) + "/logs/logic" + str(self.__playerID) + "-log.txt", "w+", encoding="utf-8")

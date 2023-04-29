@@ -20,6 +20,7 @@ using Playback;
 using CommandLine;
 using Preparation.Utility;
 using Preparation.Interface;
+using System.Diagnostics.CodeAnalysis;
 
 // 目前MainWindow还未复现的功能：
 // private void ClickToSetMode(object sender, RoutedEventArgs e)
@@ -34,8 +35,6 @@ namespace Client
     {
         public MainWindow()
         {
-            unitHeight = unitWidth = unit = 13;
-            bonusflag = true;
             timer = new DispatcherTimer
             {
                 Interval = new TimeSpan(50000)  // 每50ms刷新一次
@@ -60,9 +59,14 @@ namespace Client
             listOfGate = new List<MessageOfGate>();
             listOfHiddenGate = new List<MessageOfHiddenGate>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            unit = Math.Sqrt(UpperLayerOfMap.ActualHeight * UpperLayerOfMap.ActualWidth) / 50;
+            unitFontsize = unit / 13;
+            unitHeight = UpperLayerOfMap.ActualHeight / 50;
+            unitWidth = UpperLayerOfMap.ActualWidth / 50;
             ReactToCommandline();
         }
 
+        [MemberNotNull(nameof(StatusBarsOfSurvivor), nameof(StatusBarsOfHunter), nameof(StatusBarsOfCircumstance))]
         private void SetStatusBar()
         {
             StatusBarsOfSurvivor = new StatusBarOfSurvivor[4];
@@ -194,6 +198,7 @@ namespace Client
                         0 => PlayerType.NullPlayerType,
                         1 => PlayerType.StudentPlayer,
                         2 => PlayerType.TrickerPlayer,
+                        _ => PlayerType.NullPlayerType
                     };
                     playerMsg.PlayerType = playerType;
                     if (Convert.ToInt64(comInfo[3]) == 1)
@@ -268,9 +273,9 @@ namespace Client
         {
             TextBox icon = new()
             {
-                FontSize = 10,
-                Width = 20,
-                Height = 20,
+                FontSize = 7 * unitFontsize,
+                Width = unitWidth,
+                Height = unitHeight,
                 Text = text,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
@@ -282,19 +287,23 @@ namespace Client
             UpperLayerOfMap.Children.Add(icon);
         }
 
-        private void ZoomMap()
+        private void ZoomMap(object sender, SizeChangedEventArgs e)
         {
+            unit = Math.Sqrt(UpperLayerOfMap.ActualHeight * UpperLayerOfMap.ActualWidth) / 50;
+            unitFontsize = unit / 13;
+            unitHeight = UpperLayerOfMap.ActualHeight / 50;
+            unitWidth = UpperLayerOfMap.ActualWidth / 50;
             for (int i = 0; i < 50; i++)
             {
                 for (int j = 0; j < 50; j++)
                 {
-                    if (mapPatches[i, j] != null && (mapPatches[i, j].Width != UpperLayerOfMap.ActualWidth / 50 || mapPatches[i, j].Height != UpperLayerOfMap.ActualHeight / 50))
+                    if (mapPatches[i, j] != null)
                     {
-                        mapPatches[i, j].Width = UpperLayerOfMap.ActualWidth / 50;
-                        mapPatches[i, j].Height = UpperLayerOfMap.ActualHeight / 50;
+                        mapPatches[i, j].Width = unitWidth;
+                        mapPatches[i, j].Height = unitHeight;
                         mapPatches[i, j].HorizontalAlignment = HorizontalAlignment.Left;
                         mapPatches[i, j].VerticalAlignment = VerticalAlignment.Top;
-                        mapPatches[i, j].Margin = new Thickness(UpperLayerOfMap.ActualWidth / 50 * j, UpperLayerOfMap.ActualHeight / 50 * i, 0, 0);
+                        mapPatches[i, j].Margin = new Thickness(unitWidth * j, unitHeight * i, 0, 0);
                     }
                 }
             }
@@ -312,7 +321,7 @@ namespace Client
                         Height = unitHeight,
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Top,
-                        Margin = new Thickness(Width * (j), Height * (i), 0, 0)
+                        Margin = new Thickness(unitWidth * j, unitHeight * i, 0, 0)//unitWidth cannot be replaced by Width
                     };
                     switch (defaultMap[i, j])
                     {
@@ -679,7 +688,7 @@ namespace Client
                     MaxButton.Content = "🗖";
                 foreach (var obj in listOfHuman)
                 {
-                    if (obj.PlayerId < GameData.numOfStudent && obj.StudentType != StudentType.Robot)
+                    if (!isDataFixed[obj.PlayerId] && obj.PlayerId < GameData.numOfStudent && obj.StudentType != StudentType.Robot)
                     {
                         IStudentType occupation = (IStudentType)OccupationFactory.FindIOccupation(Transformation.ToStudentType(obj.StudentType));
                         totalLife[obj.PlayerId] = occupation.MaxHp;
@@ -691,66 +700,52 @@ namespace Client
                             coolTime[i, obj.PlayerId] = iActiveSkill.SkillCD;
                             ++i;
                         }
+                        isDataFixed[obj.PlayerId] = true;
                     }
                 }
                 foreach (var obj in listOfButcher)
                 {
-                    IGhostType occupation1 = (IGhostType)OccupationFactory.FindIOccupation(Transformation.ToTrickerType(obj.TrickerType));
-                    int j = 0;
-                    foreach (var skill in occupation1.ListOfIActiveSkill)
+                    if (!isDataFixed[obj.PlayerId])
                     {
-                        var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
-                        coolTime[j, GameData.numOfStudent] = iActiveSkill.SkillCD;
-                        ++j;
+                        IGhostType occupation1 = (IGhostType)OccupationFactory.FindIOccupation(Transformation.ToTrickerType(obj.TrickerType));
+                        int j = 0;
+                        foreach (var skill in occupation1.ListOfIActiveSkill)
+                        {
+                            var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
+                            coolTime[j, GameData.numOfStudent] = iActiveSkill.SkillCD;
+                            ++j;
+                        }
+                        isDataFixed[obj.PlayerId] = true;
                     }
                 }
-                if (StatusBarsOfSurvivor != null)
+
+                for (int i = 0; i < GameData.numOfStudent; i++)
                 {
-                    for (int i = 0; i < GameData.numOfStudent; i++)
-                    {
-                        StatusBarsOfSurvivor[i].SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
-                        StatusBarsOfSurvivor[i].NewData(totalLife, totalDeath, coolTime);
-                    }
+                    StatusBarsOfSurvivor[i].NewData(totalLife, totalDeath, coolTime);
                 }
-                if (StatusBarsOfHunter != null)
+
+                StatusBarsOfHunter.NewData(totalLife, totalDeath, coolTime);
+
+                for (int i = 0; i < GameData.numOfStudent; i++)
                 {
-                    StatusBarsOfHunter.SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
-                    StatusBarsOfHunter.NewData(totalLife, totalDeath, coolTime);
+                    StatusBarsOfSurvivor[i].SetFontSize(12 * unitFontsize);
                 }
-                if (StatusBarsOfCircumstance != null)
-                    StatusBarsOfCircumstance.SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
-                // 完成窗口信息更新
+
+                StatusBarsOfHunter.SetFontSize(12 * unitFontsize);
+                StatusBarsOfCircumstance.SetFontSize(12 * unitFontsize);
                 if (!isClientStocked)
                 {
-                    unit = Math.Sqrt(UpperLayerOfMap.ActualHeight * UpperLayerOfMap.ActualWidth) / 50;
-                    unitHeight = UpperLayerOfMap.ActualHeight / 50;
-                    unitWidth = UpperLayerOfMap.ActualWidth / 50;
                     try
                     {
-                        // if (log != null)
-                        //{
-                        //     string temp = "";
-                        //     for (int i = 0; i < dataDict[GameObjType.Character].Count; i++)
-                        //     {
-                        //         temp += Convert.ToString(dataDict[GameObjType.Character][i].MessageOfCharacter.TeamID) + "\n";
-                        //     }
-                        //     log.Content = temp;
-                        // }
                         UpperLayerOfMap.Children.Clear();
-                        // if ((communicator == null || !communicator.Client.IsConnected) && !isPlaybackMode)
-                        //{
-                        //     UnderLayerOfMap.Children.Clear();
-                        //     throw new Exception("Client is unconnected.");
-                        // }
-                        // else
-                        //{
-
                         foreach (var data in listOfAll)
                         {
                             StatusBarsOfCircumstance.SetValue(data, gateOpened, isEmergencyDrawed, isEmergencyOpened, playerID, isPlaybackMode);
                         }
                         if (!hasDrawed && mapFlag)
+                        {
                             DrawMap();
+                        }
                         foreach (var data in listOfHuman)
                         {
                             if (data.StudentType != StudentType.Robot)
@@ -770,7 +765,7 @@ namespace Client
                                     icon.Fill = Brushes.Gray;
                                 TextBox num = new()
                                 {
-                                    FontSize = 7 * UpperLayerOfMap.ActualHeight / 650,
+                                    FontSize = 7 * unitFontsize,
                                     Width = 2 * radiusTimes * unitWidth,
                                     Height = 2 * radiusTimes * unitHeight,
                                     Text = Convert.ToString(data.PlayerId),
@@ -922,7 +917,7 @@ namespace Client
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfFixedGenerator);
                             TextBox icon = new()
                             {
-                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 8 * unitFontsize,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 Text = Convert.ToString(deg),
@@ -944,7 +939,7 @@ namespace Client
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedChest);
                             TextBox icon = new()
                             {
-                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 8 * unitFontsize,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 Text = Convert.ToString(deg),
@@ -966,7 +961,7 @@ namespace Client
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedDoorway);
                             TextBox icon = new()
                             {
-                                FontSize = 8 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 8 * unitFontsize,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 Text = Convert.ToString(deg),
@@ -988,7 +983,7 @@ namespace Client
                         {
                             TextBox icon = new()
                             {
-                                FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
+                                FontSize = 9 * unitFontsize,
                                 Width = unitWidth,
                                 Height = unitHeight,
                                 HorizontalAlignment = HorizontalAlignment.Left,
@@ -1021,7 +1016,7 @@ namespace Client
                                 isEmergencyOpened = true;
                                 TextBox icon = new()
                                 {
-                                    FontSize = 9 * UpperLayerOfMap.ActualHeight / 650,
+                                    FontSize = 9 * unitFontsize,
                                     Width = unitWidth,
                                     Height = unitHeight,
                                     Text = Convert.ToString("🔓"),
@@ -1035,8 +1030,6 @@ namespace Client
                                 UpperLayerOfMap.Children.Add(icon);
                             }
                         }
-                        //}
-                        ZoomMap();
                     }
                     catch (Exception exc)
                     {
@@ -1055,6 +1048,11 @@ namespace Client
         {
             if (!isPlaybackMode && !isSpectatorMode)
             {
+                if (client is null)
+                {
+                    return;
+                }
+
                 switch (e.Key)
                 {
                     case Key.W:
@@ -1236,6 +1234,10 @@ namespace Client
         {
             if (!isPlaybackMode && !isSpectatorMode)
             {
+                if (client is null)
+                {
+                    return;
+                }
                 if (humanOrButcher && human != null)
                 {
                     AttackMsg msgJ = new()
@@ -1386,7 +1388,7 @@ namespace Client
         // 以下为Mainwindow自定义属性
         private readonly DispatcherTimer timer;  // 定时器
         private long counter;                    // 预留的取时间变量
-        AvailableService.AvailableServiceClient client;
+        AvailableService.AvailableServiceClient? client;
         AsyncServerStreamingCall<MessageToClient>? responseStream;
         private StatusBarOfSurvivor[] StatusBarsOfSurvivor;
         private StatusBarOfHunter StatusBarsOfHunter;
@@ -1419,7 +1421,6 @@ namespace Client
         private MessageOfTricker? butcher = null;
         private bool humanOrButcher;//true for human
 
-        private bool bonusflag;
         private bool mapFlag = false;
         private bool hasDrawed = false;
         public int[,] defaultMap = new int[,] {
@@ -1481,7 +1482,8 @@ namespace Client
         bool isSpectatorMode = false;
         bool isEmergencyOpened = false;
         bool isEmergencyDrawed = false;
-        bool isDataFixed = false;
+        bool[] isDataFixed = new bool[5] { false, false, false, false, false };
+        double unitFontsize = 10;
         const double radiusTimes = 1.0 * Preparation.Utility.GameData.characterRadius / Preparation.Utility.GameData.numOfPosGridPerCell;
         const double bulletRadiusTimes = 1.0 * GameData.bulletRadius / Preparation.Utility.GameData.numOfPosGridPerCell;
         private int[] totalLife = new int[4] { 100, 100, 100, 100 }, totalDeath = new int[4] { 100, 100, 100, 100 };

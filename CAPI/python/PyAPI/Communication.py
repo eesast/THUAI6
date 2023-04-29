@@ -7,6 +7,8 @@ import proto.Message2Clients_pb2 as Message2Clients
 import threading
 import grpc
 
+from typing import Union
+
 
 # 使用gRPC的异步来减少通信对于选手而言损失的时间，而gRPC的return值有result()方法，故若连接错误时也应当返回一个具有result()方法的对象，使用此处的ErrorHandler类来实现
 class BoolErrorHandler(IErrorHandler):
@@ -16,19 +18,13 @@ class BoolErrorHandler(IErrorHandler):
 
 
 class Communication:
-
-    __THUAI6Stub: Services.AvailableServiceStub
-    __haveNewMessage: bool
-    __message2Client: Message2Clients.MessageToClient
-    __mtxMessage: threading.Lock
-    __cvMessage: threading.Condition
-
     def __init__(self, sIP: str, sPort: str):
         aim = sIP + ':' + sPort
         channel = grpc.insecure_channel(aim)
         self.__THUAI6Stub = Services.AvailableServiceStub(channel)
         self.__haveNewMessage = False
         self.__cvMessage = threading.Condition()
+        self.__message2Client: Message2Clients.MessageToClient
 
     def Move(self, time: int, angle: float, playerID: int) -> bool:
         try:
@@ -75,7 +71,7 @@ class Communication:
         else:
             return useResult.act_success
 
-    def SendMessage(self, toID: int, message: str, playerID: int) -> bool:
+    def SendMessage(self, toID: int, message: Union[str, bytes], playerID: int) -> bool:
         try:
             sendResult = self.__THUAI6Stub.SendMessage(
                 THUAI62Proto.THUAI62ProtobufSend(message, toID, playerID))

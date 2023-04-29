@@ -10,7 +10,16 @@
 
     <Window.Resources>
         <ImageBrush x:Key="Logo" ImageSource="Logo.png"/>
+        <RoutedUICommand x:Key="maximize_Pressed" Text="maximize_Pressed"/>
     </Window.Resources>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource maximize_Pressed}" Executed="ClickToMaxmize"/>
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="F11" Command="{StaticResource maximize_Pressed}"/>
+    </Window.InputBindings>
 
     <Grid Name="MainGrid" Margin="0,0,0,0">
         <!--Title行删去了两个赋值语句，等之后补回来-->

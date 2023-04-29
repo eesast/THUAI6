@@ -224,7 +224,7 @@ namespace Server
                 boolRes.ActSuccess = false;
                 return Task.FromResult(boolRes);
             }
-            
+
             switch (request.MessageCase)
             {
                 case SendMsg.MessageOneofCase.TextMessage:
@@ -259,7 +259,7 @@ namespace Server
 #if DEBUG
                             Console.WriteLine("Binary message string is too long!");
 #endif
-                        boolRes.ActSuccess = false;
+                            boolRes.ActSuccess = false;
                             return Task.FromResult(boolRes);
                         }
                         MessageOfNews news = new();
@@ -284,7 +284,7 @@ namespace Server
                     }
             }
 
-            
+
         }
         public override Task<BoolRes> PickProp(PropMsg request, ServerCallContext context)
         {

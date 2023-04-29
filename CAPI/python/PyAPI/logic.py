@@ -512,10 +512,10 @@ class Logic(ILogic):
 
         if platform.system().lower() == "windows":
             os.system(
-                f"mkdir {os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + '/logs'}")
+                f"mkdir \"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}\\logs\"")
         else:
             os.system(
-                f"mkdir -p {os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + '/logs'}")
+                f"mkdir -p \"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/logs\"")
 
         fileHandler = logging.FileHandler(os.path.dirname(
             os.path.dirname(os.path.realpath(__file__))) + "/logs/logic" + str(self.__playerID) + "-log.txt", "w+", encoding="utf-8")

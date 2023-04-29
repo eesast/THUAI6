@@ -22,6 +22,11 @@ Q:卡死在第一帧不动
 
 A：大概率是你的代码死循环了
 
+Q：
+![wrongType](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/wrongType.png)
+
+A:命令行参数的type设置有误
+
 ## C++ 
 
 Q:显示API项目已卸载
@@ -56,7 +61,11 @@ A：
 2. 不要点重新生成，要点生成
 3. 开启下图选项
 ![CompileFaster](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/CompileFaster.png)
-   
+
+Q:这是什么错误啊
+![vector](https://raw.githubusercontent.com/shangfengh/THUAI6/new/resource/vector.png)
+
+A:调用了容量为0的vector
 
 ## Python 
 
@@ -73,6 +82,20 @@ A：
 - 可能措施3. 更新pip
 `python -m pip install --upgrade pip` （pip 版本最好为23.1）
 
+## 游戏引擎/机制
+Q：咱们这边play函数调用机制究竟是怎么样的？如果50ms内没有执行完当前程序，是在下一帧不会重新调用play吗
+   还是只有move这样的明确有时间为参量的才会有上面那个机制
+
+A：
+- 调用任何主动指令都不会占用你play函数多少时间，你可以把它想成一个信号，告诉游戏引擎你想做什么
+- 50ms内没有执行完当前程序，是指你的play函数例如求最短路之类的操作会占用的时间
+- 准确地说，50ms内没有执行完当前程序，在下一帧一般会重新调用play
+- 比如说，你第一次调用花了70ms
+   那么下一次调用会在这次之后立刻开始
+   如果你三次都70ms，就会4帧3次play了
+- 当然第一次调用花了110ms，第二帧自然不调用了
+
+
 ## 比赛相关
 Q：职业数值会修改吗？
 
@@ -80,4 +103,4 @@ A：初赛结束会调数值及机制，增加新角色
 
 Q:初赛后会修改什么呢？
 
-A：技能冷却时间等属性设为不可见；出生点随机性或可选性；增强教师等职业，削弱职业；规范Debug信息；提供不同格式的信息传递；增加职业；优化游戏结束条件
+A：可能的修改：技能冷却时间等属性设为不可见；出生点随机性或可选性；增强教师等职业，削弱职业；规范Debug信息；提供不同格式的信息传递；增加职业；优化游戏结束条件；角色毅力值清空不在使捣蛋鬼产生BGM;HaveView()修改 等

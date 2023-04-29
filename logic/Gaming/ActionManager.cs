@@ -37,6 +37,7 @@ namespace Gaming
             {
                 if (moveTimeInMilliseconds < 5) return false;
                 if (!playerToMove.Commandable() || !TryToStop()) return false;
+                if (playerToMove.IsMoving) return false;
                 characterManager.SetPlayerState(playerToMove, PlayerStateType.Moving);
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
                 return true;
@@ -76,6 +77,7 @@ namespace Gaming
           (
               () =>
               {
+                  Thread.Sleep(GameData.frameDuration);
                   new FrameRateTaskExecutor<int>(
                       loopCondition: () => gameMap.Timer.IsGaming && threadNum == player.ThreadNum,
                       loopToDo: () =>

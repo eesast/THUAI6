@@ -1,20 +1,12 @@
-﻿using Grpc.Core;
-using Protobuf;
-using System.Threading;
-using Timothy.FrameRateTask;
-using System;
-using System.Net.Http.Headers;
+﻿using GameClass.GameObj;
 using Gaming;
-using GameClass.GameObj;
+using Grpc.Core;
 using Preparation.Utility;
-using Playback;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Preparation.Interface;
+using Protobuf;
 
 namespace Server
 {
-    public partial class GameServer : AvailableService.AvailableServiceBase
+    partial class GameServer : ServerBase
     {
         private int playerCountNow = 0;
         protected object spectatorLock = new object();
@@ -95,6 +87,7 @@ namespace Server
                             }
                             catch { }
                             Console.WriteLine($"The spectator {request.PlayerId} exited");
+                            return;
                         }
                     }
                     catch (Exception)
@@ -136,7 +129,7 @@ namespace Server
                 var temp = (new SemaphoreSlim(0, 1), new SemaphoreSlim(0, 1));
                 bool start = false;
                 Console.WriteLine($"Id: {request.PlayerId} joins.");
-                // lock (semaDictLock)
+                lock (spetatorJoinLock)  // 为了保证绝对安全，还是加上这个锁吧
                 {
                     if (semaDict.TryAdd(request.PlayerId, temp))
                     {

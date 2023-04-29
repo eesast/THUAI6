@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Installer" xmlns:c="clr-namespace:starter.viewmodel.common"
         mc:Ignorable="d"
-        Title="Installer" Window.SizeToContent="WidthAndHeight">
+        Title="Installer" Window.SizeToContent="WidthAndHeight"
+        ResizeMode="CanMinimize"
+        >
     <Window.Resources>
         <c:RadioConverter x:Key="RadioConverter"/>
     </Window.Resources>

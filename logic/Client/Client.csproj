@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="eesast_software_trans_enlarged.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
 	<PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="FrameRateTask" Version="1.2.0" />
     <PackageReference Include="Google.Protobuf" Version="3.22.3" />

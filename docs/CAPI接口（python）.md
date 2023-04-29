@@ -55,7 +55,7 @@
 
 #### 队内信息
 
-  - `def GetMessage(self) -> Tuple[int, str]`：给同队的队友发送消息。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
+  - `def GetMessage(self) -> Tuple[int, str]`：给同队的队友发送消息,队友在下一帧收到。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
   - `def HaveMessage(self) -> bool`:是否有队友发来的尚未接收的信息。
   - `def GetMessage(self) -> Tuple[int, str]`:按照消息发送顺序获取来自队友的信息，第一个参数为发送该消息的PlayerID。
 
@@ -72,7 +72,7 @@
 下面的 CellX 和 CellY 指的是地图格数，而非绝对坐标。
 
   - `def GetPlaceType(self, cellX: int, cellY: int) -> THUAI6.PlaceType` ：返回某一位置场地种类信息。场地种类详见 structure.h 。
-  - 以下指令，若查询物品当前在视野内，则返回最新进度；若物品当前不在视野内、但曾经出现在视野内，则返回最后一次看到时的进度；若物品从未出现在视野内，或查询位置没有对应的物品，则返回 -1。
+  - 以下指令，若查询物品当前在视野内，则返回最新进度/状态；若物品当前不在视野内、但曾经出现在视野内，则返回最后一次看到时的进度/状态；若物品从未出现在视野内，或查询位置没有对应的物品，则返回 -1。
     - `def GetChestProgress(self, cellX: int, cellY: int) -> int`:查询特定位置箱子开启进度
     - `def GetGateProgress(self, cellX: int, cellY: int) -> int`:查询特定位置校门开启进度
     - `def GetClassroomProgress(self, cellX: int, cellY: int) -> int`:查询特定位置教室作业完成进度

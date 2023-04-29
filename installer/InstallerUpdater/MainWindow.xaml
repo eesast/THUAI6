@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InstallerUpdater"
         mc:Ignorable="d"
-        Title="MainWindow" Height="180" Width="300">
+        Title="MainWindow" Height="180" Width="300"
+        ResizeMode="CanMinimize"
+        >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>

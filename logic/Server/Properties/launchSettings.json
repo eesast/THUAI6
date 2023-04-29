@@ -2,7 +2,7 @@
   "profiles": {
     "Server": {
       "commandName": "Project",
-      "commandLineArgs": "--port 8888 --studentCount 4 --trickerCount 1 --resultFileName result --gameTimeInSecond 1 --fileName video"
+      "commandLineArgs": "--port 8888 --studentCount 4 --trickerCount 1 --resultFileName result --gameTimeInSecond 551 --fileName video"
     }
   }
 }

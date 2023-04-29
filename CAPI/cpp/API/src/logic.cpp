@@ -214,10 +214,10 @@ bool Logic::UseSkill(int32_t skill)
     return pComm->UseSkill(skill, playerID);
 }
 
-bool Logic::SendMessage(int64_t toID, std::string message)
+bool Logic::SendMessage(int64_t toID, std::string message, bool binary)
 {
     logger->debug("Called SendMessage");
-    return pComm->SendMessage(toID, message, playerID);
+    return pComm->SendMessage(toID, message, binary, playerID);
 }
 
 bool Logic::HaveMessage()
@@ -369,7 +369,6 @@ void Logic::ProcessMessage()
                     break;
             }
         }
-        AILoop = false;
         {
             std::lock_guard<std::mutex> lock(mtxBuffer);
             bufferUpdated = true;
@@ -377,6 +376,7 @@ void Logic::ProcessMessage()
         }
         cvBuffer.notify_one();
         logger->info("Game End!");
+        AILoop = false;
     };
     std::thread(messageThread).detach();
 }
@@ -567,7 +567,20 @@ void Logic::LoadBufferCase(const protobuf::MessageOfObj& item)
             {
                 auto news = item.news_message();
                 if (news.to_id() == playerID)
-                    messageQueue.emplace(std::make_pair(news.from_id(), news.news()));
+                {
+                    if (Proto2THUAI6::newsTypeDict[news.news_case()] == THUAI6::NewsType::TextMessage)
+                    {
+                        messageQueue.emplace(std::make_pair(news.to_id(), news.text_message()));
+                        logger->debug("Add News!");
+                    }
+                    else if (Proto2THUAI6::newsTypeDict[news.news_case()] == THUAI6::NewsType::BinaryMessage)
+                    {
+                        messageQueue.emplace(std::make_pair(news.to_id(), news.binary_message()));
+                        logger->debug("Add News!");
+                    }
+                    else
+                        logger->error("Unknown NewsType!");
+                }
                 break;
             }
         case THUAI6::MessageOfObj::NullMessageOfObj:

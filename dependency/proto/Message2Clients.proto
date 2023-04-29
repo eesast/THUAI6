@@ -143,7 +143,11 @@ message MessageOfMap
 
 message MessageOfNews
 {
-    string news = 1;
+    oneof news // 一条新闻
+    {
+        string text_message = 1;
+        bytes binary_message = 4;
+    }
     int64 from_id = 2;
     int64 to_id = 3;
 }

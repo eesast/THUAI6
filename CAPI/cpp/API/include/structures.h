@@ -172,6 +172,13 @@ namespace THUAI6
         Opened = 2,
     };
 
+    enum class NewsType : unsigned char
+    {
+        NullNewsType = 0,
+        TextMessage = 1,
+        BinaryMessage = 2,
+    };
+
     // 玩家类
     struct Player
     {

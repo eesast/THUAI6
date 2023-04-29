@@ -85,7 +85,7 @@ class ILogic(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def SendMessage(self, toID: int, message: str) -> bool:
+    def SendMessage(self, toID: int, message: Union[str, bytes]) -> bool:
         pass
 
     @abstractmethod
@@ -235,7 +235,7 @@ class IAPI(metaclass=ABCMeta):
     # 消息相关，接收消息时无消息则返回(-1, '')
 
     @abstractmethod
-    def SendMessage(self, toID: int, message: str) -> Future[bool]:
+    def SendMessage(self, toID: int, message: Union[str, bytes]) -> Future[bool]:
         pass
 
     @abstractmethod

@@ -61,7 +61,7 @@ public:
     virtual bool UseProp(THUAI6::PropType prop) = 0;
     virtual bool ThrowProp(THUAI6::PropType prop) = 0;
     virtual bool UseSkill(int32_t skillID) = 0;
-    virtual bool SendMessage(int64_t toID, std::string message) = 0;
+    virtual bool SendMessage(int64_t toID, std::string message, bool binary) = 0;
     virtual bool HaveMessage() = 0;
     virtual std::pair<int64_t, std::string> GetMessage() = 0;
 
@@ -119,7 +119,8 @@ public:
     virtual std::future<bool> EndAllAction() = 0;
 
     // 发送信息、接受信息，注意收消息时无消息则返回nullopt
-    virtual std::future<bool> SendMessage(int64_t, std::string) = 0;
+    virtual std::future<bool> SendTextMessage(int64_t, std::string) = 0;
+    virtual std::future<bool> SendBinaryMessage(int64_t, std::string) = 0;
     [[nodiscard]] virtual bool HaveMessage() = 0;
     [[nodiscard]] virtual std::pair<int64_t, std::string> GetMessage() = 0;
 
@@ -246,7 +247,8 @@ public:
     std::future<bool> StartOpenChest() override;
     std::future<bool> EndAllAction() override;
 
-    std::future<bool> SendMessage(int64_t, std::string) override;
+    std::future<bool> SendTextMessage(int64_t, std::string) override;
+    std::future<bool> SendBinaryMessage(int64_t, std::string) override;
     [[nodiscard]] bool HaveMessage() override;
     [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
@@ -336,7 +338,8 @@ public:
     std::future<bool> StartOpenChest() override;
     std::future<bool> EndAllAction() override;
 
-    std::future<bool> SendMessage(int64_t, std::string) override;
+    std::future<bool> SendTextMessage(int64_t, std::string) override;
+    std::future<bool> SendBinaryMessage(int64_t, std::string) override;
     [[nodiscard]] bool HaveMessage() override;
     [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
@@ -418,7 +421,8 @@ public:
     std::future<bool> StartOpenChest() override;
     std::future<bool> EndAllAction() override;
 
-    std::future<bool> SendMessage(int64_t, std::string) override;
+    std::future<bool> SendTextMessage(int64_t, std::string) override;
+    std::future<bool> SendBinaryMessage(int64_t, std::string) override;
     [[nodiscard]] bool HaveMessage() override;
     [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 
@@ -493,7 +497,8 @@ public:
     std::future<bool> StartOpenChest() override;
     std::future<bool> EndAllAction() override;
 
-    std::future<bool> SendMessage(int64_t, std::string) override;
+    std::future<bool> SendTextMessage(int64_t, std::string) override;
+    std::future<bool> SendBinaryMessage(int64_t, std::string) override;
     [[nodiscard]] bool HaveMessage() override;
     [[nodiscard]] std::pair<int64_t, std::string> GetMessage() override;
 

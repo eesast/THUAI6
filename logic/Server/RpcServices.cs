@@ -139,6 +139,7 @@ namespace Server
                 if (start) StartGame();
             }
 
+            bool exitFlag = false;
             do
             {
                 semaDict[request.PlayerId].Item1.Wait();
@@ -152,7 +153,11 @@ namespace Server
                 }
                 catch (Exception)
                 {
-                    //Console.WriteLine(ex);
+                    if (!exitFlag)
+                    {
+                        Console.WriteLine($"The client {request.PlayerId} exited");
+                        exitFlag = true;
+                    }
                 }
                 finally
                 {

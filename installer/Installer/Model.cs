@@ -392,7 +392,7 @@ namespace Downloader
         public class Data
         {
             public static string path = "";      // 标记路径记录文件THUAI6.json的路径
-            public static string FilePath = "";  // 最后一级为THUAI6文件夹所在目录
+            public static string FilePath = ""; // 最后一级为THUAI6文件夹所在目录
             public static string dataPath = "";  // C盘的文档文件夹
             public Data(string path)
             {
@@ -401,7 +401,7 @@ namespace Downloader
                 Data.path = System.IO.Path.Combine(dataPath, "THUAI6.json");
                 if (File.Exists(Data.path))
                 {
-                    var dict = new Dictionary<string, string>();
+                    Dictionary<string, string>? dict;
                     using (StreamReader r = new StreamReader(Data.path))
                     {
                         string json = r.ReadToEnd();
@@ -409,7 +409,7 @@ namespace Downloader
                         {
                             json += @"{""THUAI6""" + ":" + @"""2023""}";
                         }
-                        dict = Utils.DeserializeJson<Dictionary<string, string>>(json);
+                        dict = Utils.TryDeserializeJson<Dictionary<string, string>>(json);
                         if (dict != null && dict.ContainsKey("installpath"))
                         {
                             FilePath = dict["installpath"].Replace('\\', '/');
@@ -424,7 +424,7 @@ namespace Downloader
                 else
                 {
                     FilePath = System.IO.Path.GetDirectoryName(@path)
-                        ?? throw new Exception("Fail to find the path of the file");
+                        ?? throw new Exception("Failed to get the path of the file");
 
                     //将dat文件写入程序运行路径
                     string json;
@@ -437,7 +437,7 @@ namespace Downloader
                         {
                             json += @"{""THUAI6""" + ":" + @"""2023""}";
                         }
-                        dict = Utils.DeserializeJson<Dictionary<string, string>>(json);
+                        dict = Utils.TryDeserializeJson<Dictionary<string, string>>(json);
                         dict?.Add("installpath", path);
                     }
                     using FileStream fs2 = new FileStream(Data.path, FileMode.Create, FileAccess.ReadWrite);
@@ -461,7 +461,7 @@ namespace Downloader
                     {
                         json += @"{""THUAI6""" + ":" + @"""2023""}";
                     }
-                    dict = Utils.DeserializeJson<Dictionary<string, string>>(json);
+                    dict = Utils.TryDeserializeJson<Dictionary<string, string>>(json);
                     if (dict != null && dict.ContainsKey("installpath"))
                     {
                         dict["installpath"] = newPath;
@@ -634,7 +634,7 @@ namespace Downloader
                 using (StreamReader r = new StreamReader(System.IO.Path.Combine(Data.FilePath, jsonName)))
                     json = r.ReadToEnd();
                 json = json.Replace("\r", string.Empty).Replace("\n", string.Empty);
-                Dictionary<string, string> jsonDict = Utils.DeserializeJson<Dictionary<string, string>>(json);
+                var jsonDict = Utils.DeserializeJson1<Dictionary<string, string>>(json);
                 string updatingFolder = "";
                 switch (OS)
                 {
@@ -815,7 +815,7 @@ namespace Downloader
                     {
                         json += @"{""THUAI6""" + ":" + @"""2023""}";
                     }
-                    var dict = Utils.DeserializeJson<Dictionary<string, string>>(json);
+                    var dict = Utils.TryDeserializeJson<Dictionary<string, string>>(json);
                     if (dict == null || !dict.ContainsKey("download") || "false" == dict["download"])
                     {
                         return false;
@@ -865,7 +865,7 @@ namespace Downloader
                 using (StreamReader r = new StreamReader(System.IO.Path.Combine(Data.FilePath, jsonName)))
                     json = r.ReadToEnd();
                 json = json.Replace("\r", string.Empty).Replace("\n", string.Empty);
-                Dictionary<string, string> jsonDict = Utils.DeserializeJson<Dictionary<string, string>>(json);
+                // var jsonDict = Utils.DeserializeJson<Dictionary1<string, string>>(json);
 
                 newFileName.Clear();
                 updateFileName.Clear();
@@ -899,7 +899,7 @@ namespace Downloader
                 FileInfo fileInfo = new FileInfo(System.IO.Path.Combine(Data.FilePath, "THUAI6.tar.gz"));
                 fileInfo.Delete();
                 string json2;
-                Dictionary<string, string> dict = new Dictionary<string, string>();
+                Dictionary<string, string>? dict;
                 string existpath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
                 using FileStream fs = new FileStream(existpath, FileMode.Open, FileAccess.ReadWrite);
                 using (StreamReader r = new StreamReader(fs))
@@ -909,7 +909,7 @@ namespace Downloader
                     {
                         json2 += @"{""THUAI6""" + ":" + @"""2023""}";
                     }
-                    dict = Utils.DeserializeJson<Dictionary<string, string>>(json2);
+                    dict = Utils.TryDeserializeJson<Dictionary<string, string>>(json2);
                     if (dict == null || !dict.ContainsKey("download"))
                     {
                         dict?.Add("download", "true");
@@ -1000,7 +1000,7 @@ namespace Downloader
                         using (StreamReader r = new StreamReader(System.IO.Path.Combine(Data.FilePath, "hash.json")))
                             json = r.ReadToEnd();
                         json = json.Replace("\r", string.Empty).Replace("\n", string.Empty).Replace("/", @"\\");
-                        Dictionary<string, string> jsonDict = Utils.DeserializeJson<Dictionary<string, string>>(json);
+                        Dictionary<string, string> jsonDict = Utils.DeserializeJson1<Dictionary<string, string>>(json);
                         Change_all_hash(Data.FilePath, jsonDict);
                         OverwriteHash(jsonDict);
                         break;
@@ -1058,7 +1058,7 @@ namespace Downloader
                 }
 
                 string json2;
-                Dictionary<string, string> dict = new Dictionary<string, string>();
+                Dictionary<string, string>? dict;
                 string existpath = System.IO.Path.Combine(Data.dataPath, "THUAI6.json");
                 using FileStream fs = new FileStream(existpath, FileMode.Open, FileAccess.ReadWrite);
                 using (StreamReader r = new StreamReader(fs))
@@ -1068,7 +1068,7 @@ namespace Downloader
                     {
                         json2 += @"{""THUAI6""" + ":" + @"""2023""}";
                     }
-                    dict = Utils.DeserializeJson<Dictionary<string, string>>(json2);
+                    dict = Utils.TryDeserializeJson<Dictionary<string, string>>(json2);
                     if (dict == null || !dict.ContainsKey("download"))
                     {
                         dict?.Add("download", "false");
@@ -1302,7 +1302,7 @@ namespace Downloader
                 using (StreamReader r = new StreamReader(System.IO.Path.Combine(dir, hashName)))
                     json = r.ReadToEnd();
                 json = json.Replace("\r", string.Empty).Replace("\n", string.Empty);
-                Dictionary<string, string> jsonDict = Utils.DeserializeJson<Dictionary<string, string>>(json);
+                var jsonDict = Utils.TryDeserializeJson<Dictionary<string, string>>(json);
                 string md5 = "";
                 List<string> awaitUpdate = new List<string>();
                 if (jsonDict != null)
@@ -1351,9 +1351,9 @@ namespace Downloader
                 using (StreamReader r = new StreamReader(System.IO.Path.Combine(dir, "updateList.json")))
                     json = r.ReadToEnd();
                 json = json.Replace("\r", string.Empty).Replace("\n", string.Empty);
-                List<string> jsonList;
+                List<string>? jsonList;
                 if (json != null)
-                    jsonList = Utils.DeserializeJson<List<string>>(json);
+                    jsonList = Utils.TryDeserializeJson<List<string>>(json);
                 else
                     return false;
                 if (jsonList != null && jsonList.Contains("Dismiss"))
@@ -1405,7 +1405,7 @@ namespace WebConnect
                                     throw new Exception("no token!");
                             logintoken = token;
                             SaveToken();
-                            var info = Utils.DeserializeJson<Dictionary<string, string>>(await response.Content.ReadAsStringAsync());
+                            var info = Utils.DeserializeJson1<Dictionary<string, string>>(await response.Content.ReadAsStringAsync());
                             Downloader.UserInfo._id = info["_id"];
                             Downloader.UserInfo.email = info["email"];
                             break;
@@ -1461,19 +1461,19 @@ namespace WebConnect
                     {
                         case System.Net.HttpStatusCode.OK:
 
-                            var res = Utils.DeserializeJson<Dictionary<string, string>>(await response.Content.ReadAsStringAsync());
-                            string appid = "1255334966";   // 设置腾讯云账户的账户标识（APPID）
-                            string region = "ap-beijing";  // 设置一个默认的存储桶地域
+                            var res = Utils.DeserializeJson1<Dictionary<string, string>>(await response.Content.ReadAsStringAsync());
+                            string appid = "1255334966";                    // 设置腾讯云账户的账户标识（APPID）
+                            string region = "ap-beijing";                   // 设置一个默认的存储桶地域
                             CosXmlConfig config = new CosXmlConfig.Builder()
-                                                      .IsHttps(true)      // 设置默认 HTTPS 请求
-                                                      .SetAppid(appid)    // 设置腾讯云账户的账户标识 APPID
-                                                      .SetRegion(region)  // 设置一个默认的存储桶地域
-                                                      .SetDebugLog(true)  // 显示日志
-                                                      .Build();           // 创建 CosXmlConfig 对象
-                            string tmpSecretId = res["TmpSecretId"]; //"临时密钥 SecretId";
-                            string tmpSecretKey = res["TmpSecretKey"]; //"临时密钥 SecretKey";
-                            string tmpToken = res["SecurityToken"]; //"临时密钥 token";
-                            long tmpExpiredTime = Convert.ToInt64(res["ExpiredTime"]);//临时密钥有效截止时间，精确到秒
+                                                      .IsHttps(true)        // 设置默认 HTTPS 请求
+                                                      .SetAppid(appid)      // 设置腾讯云账户的账户标识 APPID
+                                                      .SetRegion(region)    // 设置一个默认的存储桶地域
+                                                      .SetDebugLog(true)    // 显示日志
+                                                      .Build();             // 创建 CosXmlConfig 对象
+                            string tmpSecretId = res["TmpSecretId"];        //"临时密钥 SecretId";
+                            string tmpSecretKey = res["TmpSecretKey"];      //"临时密钥 SecretKey";
+                            string tmpToken = res["SecurityToken"];         //"临时密钥 token";
+                            long tmpExpiredTime = Convert.ToInt64(res["ExpiredTime"]);  //临时密钥有效截止时间，精确到秒
                             QCloudCredentialProvider cosCredentialProvider = new DefaultSessionQCloudCredentialProvider(
                                 tmpSecretId, tmpSecretKey, tmpExpiredTime, tmpToken
                             );
@@ -1586,7 +1586,7 @@ namespace WebConnect
                     {
                         json += @"{""THUAI6""" + ":" + @"""2023""}";
                     }
-                    dict = Utils.DeserializeJson<Dictionary<string, string>>(json);
+                    dict = Utils.DeserializeJson1<Dictionary<string, string>>(json);
                     if (dict.ContainsKey("token"))
                     {
                         dict.Remove("token");
@@ -1629,7 +1629,7 @@ namespace WebConnect
                     json += @"{""THUAI6""" + ":" + @"""2023""}";
                 }
                 Dictionary<string, string> dict = new Dictionary<string, string>();
-                dict = Utils.DeserializeJson<Dictionary<string, string>>(json);
+                dict = Utils.DeserializeJson1<Dictionary<string, string>>(json);
                 if (!dict.ContainsKey(key))
                 {
                     dict.Add(key, data);
@@ -1666,7 +1666,7 @@ namespace WebConnect
                 {
                     json += @"{""THUAI6""" + ":" + @"""2023""}";
                 }
-                dict = Utils.DeserializeJson<Dictionary<string, string>>(json);
+                dict = Utils.DeserializeJson1<Dictionary<string, string>>(json);
                 fs.Close();
                 sr.Close();
                 return dict[key];
@@ -1693,7 +1693,7 @@ namespace WebConnect
                 {
                     json += @"{""THUAI6""" + ":" + @"""2023""}";
                 }
-                dict = Utils.DeserializeJson<Dictionary<string, string>>(json);
+                dict = Utils.DeserializeJson1<Dictionary<string, string>>(json);
                 if (!dict.ContainsKey("token"))
                 {
                     return false;
@@ -1747,9 +1747,9 @@ namespace WebConnect
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var info = await response.Content.ReadAsStringAsync();
-            var s1 = Utils.DeserializeJson<Dictionary<string, object>>(info)["data"];
-            var s2 = Utils.DeserializeJson<Dictionary<string, List<object>>>(s1.ToString() ?? "")["contest_team_member"];
-            var sres = Utils.DeserializeJson<Dictionary<string, string>>(s2[0].ToString() ?? "")["team_id"];
+            var s1 = Utils.DeserializeJson1<Dictionary<string, object>>(info)["data"];
+            var s2 = Utils.DeserializeJson1<Dictionary<string, List<object>>>(s1.ToString() ?? "")["contest_team_member"];
+            var sres = Utils.DeserializeJson1<Dictionary<string, string>>(s2[0].ToString() ?? "")["team_id"];
             return sres;
         }
         async public Task<string> GetUserId(string learnNumber)
@@ -1777,10 +1777,17 @@ namespace WebConnect
 
     internal static class Utils
     {
-        public static T DeserializeJson<T>(string json)
+        public static T DeserializeJson1<T>(string json)
+            where T : notnull
         {
             return JsonConvert.DeserializeObject<T>(json)
                 ?? throw new Exception("Failed to deserialize json.");
+        }
+
+        public static T? TryDeserializeJson<T>(string json)
+            where T : notnull
+        {
+            return JsonConvert.DeserializeObject<T>(json);
         }
     }
 

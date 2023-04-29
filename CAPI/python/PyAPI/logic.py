@@ -188,7 +188,7 @@ class Logic(ILogic):
         self.__logger.debug("Called UseSkill")
         return self.__comm.UseSkill(skillID, self.__playerID)
 
-    def SendMessage(self, toID: int, message: str) -> bool:
+    def SendMessage(self, toID: int, message: Union[str, bytes]) -> bool:
         self.__logger.debug("Called SendMessage")
         return self.__comm.SendMessage(toID, message, self.__playerID)
 
@@ -196,7 +196,7 @@ class Logic(ILogic):
         self.__logger.debug("Called HaveMessage")
         return not self.__messageQueue.empty()
 
-    def GetMessage(self) -> Tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, Union[str, bytes]]:
         self.__logger.debug("Called GetMessage")
         if self.__messageQueue.empty():
             self.__logger.warning("Message queue is empty!")
@@ -438,9 +438,16 @@ class Logic(ILogic):
                     self.__logger.debug("Update Gate!")
         elif item.WhichOneof("message_of_obj") == "news_message":
             if item.news_message.to_id == self.__playerID:
-                self.__messageQueue.put(
-                    (item.news_message.from_id, item.news_message.news))
-                self.__logger.debug("Add News!")
+                if item.news_message.WhichOneof("news") == "text_message":
+                    self.__messageQueue.put(
+                        (item.news_message.from_id, item.news_message.text_message))
+                    self.__logger.debug("Add News!")
+                elif item.news_message.WhichOneof("news") == "binary_message":
+                    self.__messageQueue.put(
+                        (item.news_message.from_id, item.news_message.binary_message))
+                    self.__logger.debug("Add News!")
+                else:
+                    self.__logger.error("Unknown News!")
         else:
             self.__logger.debug(
                 "Unknown Message!")

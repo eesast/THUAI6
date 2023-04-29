@@ -118,7 +118,7 @@ private:
     bool ThrowProp(THUAI6::PropType prop) override;
     bool UseSkill(int32_t skillID) override;
 
-    bool SendMessage(int64_t toID, std::string message) override;
+    bool SendMessage(int64_t toID, std::string message, bool binary) override;
     bool HaveMessage() override;
     std::pair<int64_t, std::string> GetMessage() override;
 

@@ -839,6 +839,13 @@ namespace protobuf
         {
             return *internal_default_instance();
         }
+        enum MessageCase
+        {
+            kTextMessage = 3,
+            kBinaryMessage = 4,
+            MESSAGE_NOT_SET = 0,
+        };
+
         static inline const SendMsg* internal_default_instance()
         {
             return reinterpret_cast<const SendMsg*>(
@@ -938,25 +945,11 @@ namespace protobuf
 
         enum : int
         {
-            kMessageFieldNumber = 3,
             kPlayerIdFieldNumber = 1,
             kToPlayerIdFieldNumber = 2,
+            kTextMessageFieldNumber = 3,
+            kBinaryMessageFieldNumber = 4,
         };
-        // string message = 3;
-        void clear_message();
-        const std::string& message() const;
-        template<typename ArgT0 = const std::string&, typename... ArgT>
-        void set_message(ArgT0&& arg0, ArgT... args);
-        std::string* mutable_message();
-        PROTOBUF_NODISCARD std::string* release_message();
-        void set_allocated_message(std::string* message);
-
-    private:
-        const std::string& _internal_message() const;
-        inline PROTOBUF_ALWAYS_INLINE void _internal_set_message(const std::string& value);
-        std::string* _internal_mutable_message();
-
-    public:
         // int64 player_id = 1;
         void clear_player_id();
         int64_t player_id() const;
@@ -977,10 +970,59 @@ namespace protobuf
         void _internal_set_to_player_id(int64_t value);
 
     public:
+        // string text_message = 3;
+        bool has_text_message() const;
+
+    private:
+        bool _internal_has_text_message() const;
+
+    public:
+        void clear_text_message();
+        const std::string& text_message() const;
+        template<typename ArgT0 = const std::string&, typename... ArgT>
+        void set_text_message(ArgT0&& arg0, ArgT... args);
+        std::string* mutable_text_message();
+        PROTOBUF_NODISCARD std::string* release_text_message();
+        void set_allocated_text_message(std::string* text_message);
+
+    private:
+        const std::string& _internal_text_message() const;
+        inline PROTOBUF_ALWAYS_INLINE void _internal_set_text_message(const std::string& value);
+        std::string* _internal_mutable_text_message();
+
+    public:
+        // bytes binary_message = 4;
+        bool has_binary_message() const;
+
+    private:
+        bool _internal_has_binary_message() const;
+
+    public:
+        void clear_binary_message();
+        const std::string& binary_message() const;
+        template<typename ArgT0 = const std::string&, typename... ArgT>
+        void set_binary_message(ArgT0&& arg0, ArgT... args);
+        std::string* mutable_binary_message();
+        PROTOBUF_NODISCARD std::string* release_binary_message();
+        void set_allocated_binary_message(std::string* binary_message);
+
+    private:
+        const std::string& _internal_binary_message() const;
+        inline PROTOBUF_ALWAYS_INLINE void _internal_set_binary_message(const std::string& value);
+        std::string* _internal_mutable_binary_message();
+
+    public:
+        void clear_message();
+        MessageCase message_case() const;
         // @@protoc_insertion_point(class_scope:protobuf.SendMsg)
 
     private:
         class _Internal;
+        void set_has_text_message();
+        void set_has_binary_message();
+
+        inline bool has_message() const;
+        inline void clear_has_message();
 
         template<typename T>
         friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
@@ -988,10 +1030,20 @@ namespace protobuf
         typedef void DestructorSkippable_;
         struct Impl_
         {
-            ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr message_;
             int64_t player_id_;
             int64_t to_player_id_;
+            union MessageUnion
+            {
+                constexpr MessageUnion() :
+                    _constinit_{}
+                {
+                }
+                ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized _constinit_;
+                ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr text_message_;
+                ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr binary_message_;
+            } message_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+            uint32_t _oneof_case_[1];
         };
         union
         {
@@ -2151,63 +2203,216 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.SendMsg.to_player_id)
     }
 
-    // string message = 3;
-    inline void SendMsg::clear_message()
+    // string text_message = 3;
+    inline bool SendMsg::_internal_has_text_message() const
     {
-        _impl_.message_.ClearToEmpty();
+        return message_case() == kTextMessage;
     }
-    inline const std::string& SendMsg::message() const
+    inline bool SendMsg::has_text_message() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.SendMsg.message)
-        return _internal_message();
+        return _internal_has_text_message();
+    }
+    inline void SendMsg::set_has_text_message()
+    {
+        _impl_._oneof_case_[0] = kTextMessage;
+    }
+    inline void SendMsg::clear_text_message()
+    {
+        if (_internal_has_text_message())
+        {
+            _impl_.message_.text_message_.Destroy();
+            clear_has_message();
+        }
+    }
+    inline const std::string& SendMsg::text_message() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.SendMsg.text_message)
+        return _internal_text_message();
     }
     template<typename ArgT0, typename... ArgT>
-    inline PROTOBUF_ALWAYS_INLINE void SendMsg::set_message(ArgT0&& arg0, ArgT... args)
+    inline void SendMsg::set_text_message(ArgT0&& arg0, ArgT... args)
     {
-        _impl_.message_.Set(static_cast<ArgT0&&>(arg0), args..., GetArenaForAllocation());
-        // @@protoc_insertion_point(field_set:protobuf.SendMsg.message)
+        if (!_internal_has_text_message())
+        {
+            clear_message();
+            set_has_text_message();
+            _impl_.message_.text_message_.InitDefault();
+        }
+        _impl_.message_.text_message_.Set(static_cast<ArgT0&&>(arg0), args..., GetArenaForAllocation());
+        // @@protoc_insertion_point(field_set:protobuf.SendMsg.text_message)
     }
-    inline std::string* SendMsg::mutable_message()
+    inline std::string* SendMsg::mutable_text_message()
     {
-        std::string* _s = _internal_mutable_message();
-        // @@protoc_insertion_point(field_mutable:protobuf.SendMsg.message)
+        std::string* _s = _internal_mutable_text_message();
+        // @@protoc_insertion_point(field_mutable:protobuf.SendMsg.text_message)
         return _s;
     }
-    inline const std::string& SendMsg::_internal_message() const
+    inline const std::string& SendMsg::_internal_text_message() const
     {
-        return _impl_.message_.Get();
-    }
-    inline void SendMsg::_internal_set_message(const std::string& value)
-    {
-        _impl_.message_.Set(value, GetArenaForAllocation());
-    }
-    inline std::string* SendMsg::_internal_mutable_message()
-    {
-        return _impl_.message_.Mutable(GetArenaForAllocation());
-    }
-    inline std::string* SendMsg::release_message()
-    {
-        // @@protoc_insertion_point(field_release:protobuf.SendMsg.message)
-        return _impl_.message_.Release();
-    }
-    inline void SendMsg::set_allocated_message(std::string* message)
-    {
-        if (message != nullptr)
+        if (_internal_has_text_message())
         {
+            return _impl_.message_.text_message_.Get();
+        }
+        return ::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited();
+    }
+    inline void SendMsg::_internal_set_text_message(const std::string& value)
+    {
+        if (!_internal_has_text_message())
+        {
+            clear_message();
+            set_has_text_message();
+            _impl_.message_.text_message_.InitDefault();
+        }
+        _impl_.message_.text_message_.Set(value, GetArenaForAllocation());
+    }
+    inline std::string* SendMsg::_internal_mutable_text_message()
+    {
+        if (!_internal_has_text_message())
+        {
+            clear_message();
+            set_has_text_message();
+            _impl_.message_.text_message_.InitDefault();
+        }
+        return _impl_.message_.text_message_.Mutable(GetArenaForAllocation());
+    }
+    inline std::string* SendMsg::release_text_message()
+    {
+        // @@protoc_insertion_point(field_release:protobuf.SendMsg.text_message)
+        if (_internal_has_text_message())
+        {
+            clear_has_message();
+            return _impl_.message_.text_message_.Release();
         }
         else
         {
+            return nullptr;
         }
-        _impl_.message_.SetAllocated(message, GetArenaForAllocation());
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        if (_impl_.message_.IsDefault())
+    }
+    inline void SendMsg::set_allocated_text_message(std::string* text_message)
+    {
+        if (has_message())
         {
-            _impl_.message_.Set("", GetArenaForAllocation());
+            clear_message();
         }
-#endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        // @@protoc_insertion_point(field_set_allocated:protobuf.SendMsg.message)
+        if (text_message != nullptr)
+        {
+            set_has_text_message();
+            _impl_.message_.text_message_.InitAllocated(text_message, GetArenaForAllocation());
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.SendMsg.text_message)
     }
 
+    // bytes binary_message = 4;
+    inline bool SendMsg::_internal_has_binary_message() const
+    {
+        return message_case() == kBinaryMessage;
+    }
+    inline bool SendMsg::has_binary_message() const
+    {
+        return _internal_has_binary_message();
+    }
+    inline void SendMsg::set_has_binary_message()
+    {
+        _impl_._oneof_case_[0] = kBinaryMessage;
+    }
+    inline void SendMsg::clear_binary_message()
+    {
+        if (_internal_has_binary_message())
+        {
+            _impl_.message_.binary_message_.Destroy();
+            clear_has_message();
+        }
+    }
+    inline const std::string& SendMsg::binary_message() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.SendMsg.binary_message)
+        return _internal_binary_message();
+    }
+    template<typename ArgT0, typename... ArgT>
+    inline void SendMsg::set_binary_message(ArgT0&& arg0, ArgT... args)
+    {
+        if (!_internal_has_binary_message())
+        {
+            clear_message();
+            set_has_binary_message();
+            _impl_.message_.binary_message_.InitDefault();
+        }
+        _impl_.message_.binary_message_.SetBytes(static_cast<ArgT0&&>(arg0), args..., GetArenaForAllocation());
+        // @@protoc_insertion_point(field_set:protobuf.SendMsg.binary_message)
+    }
+    inline std::string* SendMsg::mutable_binary_message()
+    {
+        std::string* _s = _internal_mutable_binary_message();
+        // @@protoc_insertion_point(field_mutable:protobuf.SendMsg.binary_message)
+        return _s;
+    }
+    inline const std::string& SendMsg::_internal_binary_message() const
+    {
+        if (_internal_has_binary_message())
+        {
+            return _impl_.message_.binary_message_.Get();
+        }
+        return ::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited();
+    }
+    inline void SendMsg::_internal_set_binary_message(const std::string& value)
+    {
+        if (!_internal_has_binary_message())
+        {
+            clear_message();
+            set_has_binary_message();
+            _impl_.message_.binary_message_.InitDefault();
+        }
+        _impl_.message_.binary_message_.Set(value, GetArenaForAllocation());
+    }
+    inline std::string* SendMsg::_internal_mutable_binary_message()
+    {
+        if (!_internal_has_binary_message())
+        {
+            clear_message();
+            set_has_binary_message();
+            _impl_.message_.binary_message_.InitDefault();
+        }
+        return _impl_.message_.binary_message_.Mutable(GetArenaForAllocation());
+    }
+    inline std::string* SendMsg::release_binary_message()
+    {
+        // @@protoc_insertion_point(field_release:protobuf.SendMsg.binary_message)
+        if (_internal_has_binary_message())
+        {
+            clear_has_message();
+            return _impl_.message_.binary_message_.Release();
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    inline void SendMsg::set_allocated_binary_message(std::string* binary_message)
+    {
+        if (has_message())
+        {
+            clear_message();
+        }
+        if (binary_message != nullptr)
+        {
+            set_has_binary_message();
+            _impl_.message_.binary_message_.InitAllocated(binary_message, GetArenaForAllocation());
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.SendMsg.binary_message)
+    }
+
+    inline bool SendMsg::has_message() const
+    {
+        return message_case() != MESSAGE_NOT_SET;
+    }
+    inline void SendMsg::clear_has_message()
+    {
+        _impl_._oneof_case_[0] = MESSAGE_NOT_SET;
+    }
+    inline SendMsg::MessageCase SendMsg::message_case() const
+    {
+        return SendMsg::MessageCase(_impl_._oneof_case_[0]);
+    }
     // -------------------------------------------------------------------
 
     // AttackMsg

@@ -190,16 +190,28 @@ std::future<bool> TrickerAPI::EndAllAction()
                       { return logic.EndAllAction(); });
 }
 
-std::future<bool> StudentAPI::SendMessage(int64_t toID, std::string message)
+std::future<bool> StudentAPI::SendTextMessage(int64_t toID, std::string message)
 {
     return std::async(std::launch::async, [=]()
-                      { return logic.SendMessage(toID, message); });
+                      { return logic.SendMessage(toID, message, false); });
 }
 
-std::future<bool> TrickerAPI::SendMessage(int64_t toID, std::string message)
+std::future<bool> TrickerAPI::SendTextMessage(int64_t toID, std::string message)
 {
     return std::async(std::launch::async, [=]()
-                      { return logic.SendMessage(toID, message); });
+                      { return logic.SendMessage(toID, message, false); });
+}
+
+std::future<bool> StudentAPI::SendBinaryMessage(int64_t toID, std::string message)
+{
+    return std::async(std::launch::async, [=]()
+                      { return logic.SendMessage(toID, message, false); });
+}
+
+std::future<bool> TrickerAPI::SendBinaryMessage(int64_t toID, std::string message)
+{
+    return std::async(std::launch::async, [=]()
+                      { return logic.SendMessage(toID, message, false); });
 }
 
 bool StudentAPI::HaveMessage()

@@ -1,22 +1,17 @@
-﻿using Grpc.Core;
-using Protobuf;
-using System.Threading;
-using Timothy.FrameRateTask;
-using System;
-using System.Net.Http.Headers;
+﻿using GameClass.GameObj;
 using Gaming;
-using GameClass.GameObj;
-using Preparation.Utility;
-using Playback;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Preparation.Interface;
+using Playback;
+using Preparation.Utility;
+using Protobuf;
 using System.Collections.Concurrent;
+using Timothy.FrameRateTask;
 
 
 namespace Server
 {
-    public partial class GameServer : AvailableService.AvailableServiceBase
+    partial class GameServer : ServerBase
     {
         private ConcurrentDictionary<long, (SemaphoreSlim, SemaphoreSlim)> semaDict = new();
         // private object semaDictLock = new();
@@ -86,7 +81,7 @@ namespace Server
             }
         }
 
-        public void WaitForEnd()
+        public override void WaitForEnd()
         {
             this.endGameSem.Wait();
             mwr?.Dispose();
@@ -202,7 +197,7 @@ namespace Server
             return false;
         }
 
-        public int[] GetScore()
+        public override int[] GetScore()
         {
             int[] score = new int[2]; // 0代表Student，1代表Tricker
             game.GameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();

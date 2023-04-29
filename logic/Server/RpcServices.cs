@@ -1,19 +1,12 @@
-﻿using Grpc.Core;
-using Protobuf;
-using System.Threading;
-using System;
-using System.Net.Http.Headers;
+﻿using GameClass.GameObj;
 using Gaming;
-using GameClass.GameObj;
+using Grpc.Core;
 using Preparation.Utility;
-using Playback;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Preparation.Interface;
+using Protobuf;
 
 namespace Server
 {
-    public partial class GameServer : AvailableService.AvailableServiceBase
+    partial class GameServer : ServerBase
     {
         private int playerCountNow = 0;
         protected object spectatorLock = new object();

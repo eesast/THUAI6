@@ -1,2 +1,3 @@
 grpcio==1.52.0
 grpcio-tools==1.52.0
+numpy

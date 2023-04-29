@@ -369,7 +369,6 @@ void Logic::ProcessMessage()
                     break;
             }
         }
-        AILoop = false;
         {
             std::lock_guard<std::mutex> lock(mtxBuffer);
             bufferUpdated = true;
@@ -377,6 +376,7 @@ void Logic::ProcessMessage()
         }
         cvBuffer.notify_one();
         logger->info("Game End!");
+        AILoop = false;
     };
     std::thread(messageThread).detach();
 }

@@ -314,13 +314,13 @@ class Logic(ILogic):
                 else:
                     self.__logger.error("Unknown GameState!")
                     continue
-            self.__AILoop = False
             with self.__cvBuffer:
                 self.__bufferUpdated = True
                 self.__counterBuffer = -1
                 self.__cvBuffer.notify()
                 self.__logger.info("Game End!")
             self.__logger.info("Message thread end!")
+            self.__AILoop = False
 
         threading.Thread(target=messageThread).start()
 

@@ -25,11 +25,11 @@ namespace Gaming
                     switch (player.PlayerState)
                     {
                         case PlayerStateType.OpeningTheChest:
-                            ((Chest)player.WhatInteractingWith).StopOpen();
+                            ((Chest)player.WhatInteractingWith!).StopOpen();
                             player.ChangePlayerState(value, gameObj);
                             break;
                         case PlayerStateType.OpeningTheDoorway:
-                            Doorway doorway = (Doorway)player.WhatInteractingWith;
+                            Doorway doorway = (Doorway)player.WhatInteractingWith!;
                             doorway.OpenDegree += gameMap.Timer.nowTime() - doorway.OpenStartTime;
                             doorway.OpenStartTime = 0;
                             player.ChangePlayerState(value, gameObj);
@@ -302,7 +302,7 @@ namespace Gaming
                 if (character.CanBeAwed())
                 {
                     if (BeStunned(character, GameData.basicStunnedTimeOfStudent))
-                        bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.basicStunnedTimeOfStudent));
+                        bullet.Parent!.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.basicStunnedTimeOfStudent));
                     return true;
                 }
                 return false;
@@ -321,7 +321,7 @@ namespace Gaming
                 Debugger.Output(student, "is being shot!");
 #endif
                 if (student.NoHp()) return;  // 原来已经死了
-                if (!bullet.Parent.IsGhost()) return;
+                if (!bullet.Parent!.IsGhost()) return;
 
                 if (student.CharacterType == CharacterType.StraightAStudent)
                 {
@@ -413,9 +413,10 @@ namespace Gaming
                 }
                 if (player.CharacterType == CharacterType.Robot)
                 {
-                    if (((Golem)player).Parent != null && ((Golem)player).Parent.CharacterType == CharacterType.TechOtaku)
+                    var parent = ((Golem)player).Parent;
+                    if (parent != null && parent.CharacterType == CharacterType.TechOtaku)
                     {
-                        ((SummonGolem)(((Golem)player).Parent.FindIActiveSkill(ActiveSkillType.SummonGolem))).GolemSummoned = null;
+                        ((SummonGolem)(parent.FindIActiveSkill(ActiveSkillType.SummonGolem))).GolemSummoned = null;
                         player.FindIActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed = false;
                     }
                     return;

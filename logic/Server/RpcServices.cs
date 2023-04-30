@@ -139,6 +139,7 @@ namespace Server
                 if (start) StartGame();
             }
 
+            bool exitFlag = false;
             do
             {
                 semaDict[request.PlayerId].Item1.Wait();
@@ -152,7 +153,11 @@ namespace Server
                 }
                 catch (Exception)
                 {
-                    //Console.WriteLine(ex);
+                    if (!exitFlag)
+                    {
+                        Console.WriteLine($"The client {request.PlayerId} exited");
+                        exitFlag = true;
+                    }
                 }
                 finally
                 {
@@ -219,30 +224,67 @@ namespace Server
                 boolRes.ActSuccess = false;
                 return Task.FromResult(boolRes);
             }
-            if (request.Message.Length > 256)
+
+            switch (request.MessageCase)
             {
+                case SendMsg.MessageOneofCase.TextMessage:
+                    {
+                        if (request.TextMessage.Length > 256)
+                        {
 #if DEBUG
-                Console.WriteLine("Message string is too long!");
+                            Console.WriteLine("Text message string is too long!");
 #endif
-                boolRes.ActSuccess = false;
-                return Task.FromResult(boolRes);
-            }
-            else
-            {
-                MessageOfNews news = new();
-                news.News = request.Message;
-                news.FromId = request.PlayerId;
-                news.ToId = request.ToPlayerId;
-                lock (newsLock)
-                {
-                    currentNews.Add(news);
-                }
+                            boolRes.ActSuccess = false;
+                            return Task.FromResult(boolRes);
+                        }
+                        MessageOfNews news = new();
+                        news.TextMessage = request.TextMessage;
+                        news.FromId = request.PlayerId;
+                        news.ToId = request.ToPlayerId;
+                        lock (newsLock)
+                        {
+                            currentNews.Add(news);
+                        }
 #if DEBUG
-                Console.WriteLine(news.News);
+                        Console.WriteLine(news.TextMessage);
 #endif
+                        boolRes.ActSuccess = true;
+                        return Task.FromResult(boolRes);
+                    }
+                case SendMsg.MessageOneofCase.BinaryMessage:
+                    {
+
+                        if (request.BinaryMessage.Length > 256)
+                        {
+#if DEBUG
+                            Console.WriteLine("Binary message string is too long!");
+#endif
+                            boolRes.ActSuccess = false;
+                            return Task.FromResult(boolRes);
+                        }
+                        MessageOfNews news = new();
+                        news.BinaryMessage = request.BinaryMessage;
+                        news.FromId = request.PlayerId;
+                        news.ToId = request.ToPlayerId;
+                        lock (newsLock)
+                        {
+                            currentNews.Add(news);
+                        }
+#if DEBUG
+                        Console.Write("BinaryMessageLength: ");
+                        Console.WriteLine(news.BinaryMessage.Length);
+#endif
+                        boolRes.ActSuccess = true;
+                        return Task.FromResult(boolRes);
+                    }
+                default:
+                    {
+                        boolRes.ActSuccess = false;
+                        return Task.FromResult(boolRes);
+                    }
             }
-            boolRes.ActSuccess = true;
-            return Task.FromResult(boolRes);
+
+
         }
         public override Task<BoolRes> PickProp(PropMsg request, ServerCallContext context)
         {

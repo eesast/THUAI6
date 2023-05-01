@@ -206,6 +206,12 @@ namespace Proto2THUAI6
 
     };
 
+    inline std::map<protobuf::MessageOfNews::NewsCase, THUAI6::NewsType> newsTypeDict{
+        {protobuf::MessageOfNews::NewsCase::NEWS_NOT_SET, THUAI6::NewsType::NullNewsType},
+        {protobuf::MessageOfNews::NewsCase::kTextMessage, THUAI6::NewsType::TextMessage},
+        {protobuf::MessageOfNews::NewsCase::kBinaryMessage, THUAI6::NewsType::BinaryMessage},
+    };
+
     // 用于将Protobuf中的类转换为THUAI6的类
     inline std::shared_ptr<THUAI6::Tricker> Protobuf2THUAI6Tricker(const protobuf::MessageOfTricker& trickerMsg)
     {
@@ -460,10 +466,13 @@ namespace THUAI62Proto
         return pickMsg;
     }
 
-    inline protobuf::SendMsg THUAI62ProtobufSend(std::string msg, int64_t toID, int64_t id)
+    inline protobuf::SendMsg THUAI62ProtobufSend(std::string msg, int64_t toID, bool binary, int64_t id)
     {
         protobuf::SendMsg sendMsg;
-        sendMsg.set_message(msg);
+        if (binary)
+            sendMsg.set_binary_message(msg);
+        else
+            sendMsg.set_text_message(msg);
         sendMsg.set_to_player_id(toID);
         sendMsg.set_player_id(id);
         return sendMsg;

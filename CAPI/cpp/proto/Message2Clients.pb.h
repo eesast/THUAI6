@@ -3677,6 +3677,13 @@ namespace protobuf
         {
             return *internal_default_instance();
         }
+        enum NewsCase
+        {
+            kTextMessage = 1,
+            kBinaryMessage = 4,
+            NEWS_NOT_SET = 0,
+        };
+
         static inline const MessageOfNews* internal_default_instance()
         {
             return reinterpret_cast<const MessageOfNews*>(
@@ -3776,25 +3783,11 @@ namespace protobuf
 
         enum : int
         {
-            kNewsFieldNumber = 1,
             kFromIdFieldNumber = 2,
             kToIdFieldNumber = 3,
+            kTextMessageFieldNumber = 1,
+            kBinaryMessageFieldNumber = 4,
         };
-        // string news = 1;
-        void clear_news();
-        const std::string& news() const;
-        template<typename ArgT0 = const std::string&, typename... ArgT>
-        void set_news(ArgT0&& arg0, ArgT... args);
-        std::string* mutable_news();
-        PROTOBUF_NODISCARD std::string* release_news();
-        void set_allocated_news(std::string* news);
-
-    private:
-        const std::string& _internal_news() const;
-        inline PROTOBUF_ALWAYS_INLINE void _internal_set_news(const std::string& value);
-        std::string* _internal_mutable_news();
-
-    public:
         // int64 from_id = 2;
         void clear_from_id();
         int64_t from_id() const;
@@ -3815,10 +3808,59 @@ namespace protobuf
         void _internal_set_to_id(int64_t value);
 
     public:
+        // string text_message = 1;
+        bool has_text_message() const;
+
+    private:
+        bool _internal_has_text_message() const;
+
+    public:
+        void clear_text_message();
+        const std::string& text_message() const;
+        template<typename ArgT0 = const std::string&, typename... ArgT>
+        void set_text_message(ArgT0&& arg0, ArgT... args);
+        std::string* mutable_text_message();
+        PROTOBUF_NODISCARD std::string* release_text_message();
+        void set_allocated_text_message(std::string* text_message);
+
+    private:
+        const std::string& _internal_text_message() const;
+        inline PROTOBUF_ALWAYS_INLINE void _internal_set_text_message(const std::string& value);
+        std::string* _internal_mutable_text_message();
+
+    public:
+        // bytes binary_message = 4;
+        bool has_binary_message() const;
+
+    private:
+        bool _internal_has_binary_message() const;
+
+    public:
+        void clear_binary_message();
+        const std::string& binary_message() const;
+        template<typename ArgT0 = const std::string&, typename... ArgT>
+        void set_binary_message(ArgT0&& arg0, ArgT... args);
+        std::string* mutable_binary_message();
+        PROTOBUF_NODISCARD std::string* release_binary_message();
+        void set_allocated_binary_message(std::string* binary_message);
+
+    private:
+        const std::string& _internal_binary_message() const;
+        inline PROTOBUF_ALWAYS_INLINE void _internal_set_binary_message(const std::string& value);
+        std::string* _internal_mutable_binary_message();
+
+    public:
+        void clear_news();
+        NewsCase news_case() const;
         // @@protoc_insertion_point(class_scope:protobuf.MessageOfNews)
 
     private:
         class _Internal;
+        void set_has_text_message();
+        void set_has_binary_message();
+
+        inline bool has_news() const;
+        inline void clear_has_news();
 
         template<typename T>
         friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
@@ -3826,10 +3868,20 @@ namespace protobuf
         typedef void DestructorSkippable_;
         struct Impl_
         {
-            ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr news_;
             int64_t from_id_;
             int64_t to_id_;
+            union NewsUnion
+            {
+                constexpr NewsUnion() :
+                    _constinit_{}
+                {
+                }
+                ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized _constinit_;
+                ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr text_message_;
+                ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr binary_message_;
+            } news_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+            uint32_t _oneof_case_[1];
         };
         union
         {
@@ -7609,61 +7661,202 @@ namespace protobuf
 
     // MessageOfNews
 
-    // string news = 1;
-    inline void MessageOfNews::clear_news()
+    // string text_message = 1;
+    inline bool MessageOfNews::_internal_has_text_message() const
     {
-        _impl_.news_.ClearToEmpty();
+        return news_case() == kTextMessage;
     }
-    inline const std::string& MessageOfNews::news() const
+    inline bool MessageOfNews::has_text_message() const
     {
-        // @@protoc_insertion_point(field_get:protobuf.MessageOfNews.news)
-        return _internal_news();
+        return _internal_has_text_message();
+    }
+    inline void MessageOfNews::set_has_text_message()
+    {
+        _impl_._oneof_case_[0] = kTextMessage;
+    }
+    inline void MessageOfNews::clear_text_message()
+    {
+        if (_internal_has_text_message())
+        {
+            _impl_.news_.text_message_.Destroy();
+            clear_has_news();
+        }
+    }
+    inline const std::string& MessageOfNews::text_message() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfNews.text_message)
+        return _internal_text_message();
     }
     template<typename ArgT0, typename... ArgT>
-    inline PROTOBUF_ALWAYS_INLINE void MessageOfNews::set_news(ArgT0&& arg0, ArgT... args)
+    inline void MessageOfNews::set_text_message(ArgT0&& arg0, ArgT... args)
     {
-        _impl_.news_.Set(static_cast<ArgT0&&>(arg0), args..., GetArenaForAllocation());
-        // @@protoc_insertion_point(field_set:protobuf.MessageOfNews.news)
+        if (!_internal_has_text_message())
+        {
+            clear_news();
+            set_has_text_message();
+            _impl_.news_.text_message_.InitDefault();
+        }
+        _impl_.news_.text_message_.Set(static_cast<ArgT0&&>(arg0), args..., GetArenaForAllocation());
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfNews.text_message)
     }
-    inline std::string* MessageOfNews::mutable_news()
+    inline std::string* MessageOfNews::mutable_text_message()
     {
-        std::string* _s = _internal_mutable_news();
-        // @@protoc_insertion_point(field_mutable:protobuf.MessageOfNews.news)
+        std::string* _s = _internal_mutable_text_message();
+        // @@protoc_insertion_point(field_mutable:protobuf.MessageOfNews.text_message)
         return _s;
     }
-    inline const std::string& MessageOfNews::_internal_news() const
+    inline const std::string& MessageOfNews::_internal_text_message() const
     {
-        return _impl_.news_.Get();
-    }
-    inline void MessageOfNews::_internal_set_news(const std::string& value)
-    {
-        _impl_.news_.Set(value, GetArenaForAllocation());
-    }
-    inline std::string* MessageOfNews::_internal_mutable_news()
-    {
-        return _impl_.news_.Mutable(GetArenaForAllocation());
-    }
-    inline std::string* MessageOfNews::release_news()
-    {
-        // @@protoc_insertion_point(field_release:protobuf.MessageOfNews.news)
-        return _impl_.news_.Release();
-    }
-    inline void MessageOfNews::set_allocated_news(std::string* news)
-    {
-        if (news != nullptr)
+        if (_internal_has_text_message())
         {
+            return _impl_.news_.text_message_.Get();
+        }
+        return ::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited();
+    }
+    inline void MessageOfNews::_internal_set_text_message(const std::string& value)
+    {
+        if (!_internal_has_text_message())
+        {
+            clear_news();
+            set_has_text_message();
+            _impl_.news_.text_message_.InitDefault();
+        }
+        _impl_.news_.text_message_.Set(value, GetArenaForAllocation());
+    }
+    inline std::string* MessageOfNews::_internal_mutable_text_message()
+    {
+        if (!_internal_has_text_message())
+        {
+            clear_news();
+            set_has_text_message();
+            _impl_.news_.text_message_.InitDefault();
+        }
+        return _impl_.news_.text_message_.Mutable(GetArenaForAllocation());
+    }
+    inline std::string* MessageOfNews::release_text_message()
+    {
+        // @@protoc_insertion_point(field_release:protobuf.MessageOfNews.text_message)
+        if (_internal_has_text_message())
+        {
+            clear_has_news();
+            return _impl_.news_.text_message_.Release();
         }
         else
         {
+            return nullptr;
         }
-        _impl_.news_.SetAllocated(news, GetArenaForAllocation());
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        if (_impl_.news_.IsDefault())
+    }
+    inline void MessageOfNews::set_allocated_text_message(std::string* text_message)
+    {
+        if (has_news())
         {
-            _impl_.news_.Set("", GetArenaForAllocation());
+            clear_news();
         }
-#endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageOfNews.news)
+        if (text_message != nullptr)
+        {
+            set_has_text_message();
+            _impl_.news_.text_message_.InitAllocated(text_message, GetArenaForAllocation());
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageOfNews.text_message)
+    }
+
+    // bytes binary_message = 4;
+    inline bool MessageOfNews::_internal_has_binary_message() const
+    {
+        return news_case() == kBinaryMessage;
+    }
+    inline bool MessageOfNews::has_binary_message() const
+    {
+        return _internal_has_binary_message();
+    }
+    inline void MessageOfNews::set_has_binary_message()
+    {
+        _impl_._oneof_case_[0] = kBinaryMessage;
+    }
+    inline void MessageOfNews::clear_binary_message()
+    {
+        if (_internal_has_binary_message())
+        {
+            _impl_.news_.binary_message_.Destroy();
+            clear_has_news();
+        }
+    }
+    inline const std::string& MessageOfNews::binary_message() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.MessageOfNews.binary_message)
+        return _internal_binary_message();
+    }
+    template<typename ArgT0, typename... ArgT>
+    inline void MessageOfNews::set_binary_message(ArgT0&& arg0, ArgT... args)
+    {
+        if (!_internal_has_binary_message())
+        {
+            clear_news();
+            set_has_binary_message();
+            _impl_.news_.binary_message_.InitDefault();
+        }
+        _impl_.news_.binary_message_.SetBytes(static_cast<ArgT0&&>(arg0), args..., GetArenaForAllocation());
+        // @@protoc_insertion_point(field_set:protobuf.MessageOfNews.binary_message)
+    }
+    inline std::string* MessageOfNews::mutable_binary_message()
+    {
+        std::string* _s = _internal_mutable_binary_message();
+        // @@protoc_insertion_point(field_mutable:protobuf.MessageOfNews.binary_message)
+        return _s;
+    }
+    inline const std::string& MessageOfNews::_internal_binary_message() const
+    {
+        if (_internal_has_binary_message())
+        {
+            return _impl_.news_.binary_message_.Get();
+        }
+        return ::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited();
+    }
+    inline void MessageOfNews::_internal_set_binary_message(const std::string& value)
+    {
+        if (!_internal_has_binary_message())
+        {
+            clear_news();
+            set_has_binary_message();
+            _impl_.news_.binary_message_.InitDefault();
+        }
+        _impl_.news_.binary_message_.Set(value, GetArenaForAllocation());
+    }
+    inline std::string* MessageOfNews::_internal_mutable_binary_message()
+    {
+        if (!_internal_has_binary_message())
+        {
+            clear_news();
+            set_has_binary_message();
+            _impl_.news_.binary_message_.InitDefault();
+        }
+        return _impl_.news_.binary_message_.Mutable(GetArenaForAllocation());
+    }
+    inline std::string* MessageOfNews::release_binary_message()
+    {
+        // @@protoc_insertion_point(field_release:protobuf.MessageOfNews.binary_message)
+        if (_internal_has_binary_message())
+        {
+            clear_has_news();
+            return _impl_.news_.binary_message_.Release();
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    inline void MessageOfNews::set_allocated_binary_message(std::string* binary_message)
+    {
+        if (has_news())
+        {
+            clear_news();
+        }
+        if (binary_message != nullptr)
+        {
+            set_has_binary_message();
+            _impl_.news_.binary_message_.InitAllocated(binary_message, GetArenaForAllocation());
+        }
+        // @@protoc_insertion_point(field_set_allocated:protobuf.MessageOfNews.binary_message)
     }
 
     // int64 from_id = 2;
@@ -7714,6 +7907,18 @@ namespace protobuf
         // @@protoc_insertion_point(field_set:protobuf.MessageOfNews.to_id)
     }
 
+    inline bool MessageOfNews::has_news() const
+    {
+        return news_case() != NEWS_NOT_SET;
+    }
+    inline void MessageOfNews::clear_has_news()
+    {
+        _impl_._oneof_case_[0] = NEWS_NOT_SET;
+    }
+    inline MessageOfNews::NewsCase MessageOfNews::news_case() const
+    {
+        return MessageOfNews::NewsCase(_impl_._oneof_case_[0]);
+    }
     // -------------------------------------------------------------------
 
     // MessageOfObj

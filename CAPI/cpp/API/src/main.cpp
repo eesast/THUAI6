@@ -20,7 +20,7 @@ static constexpr std::string_view welcomeString = R"welcome(
 
                   _____ _   _ _   _   _    ___ __   
                  |_   _| | | | | | | / \  |_ _/ /_  
-                   | | | |_| | | | |/ _ \  | | '_ \ 
+                   | | | |_| | | | |/ _ \  | | '_ \
                    | | |  _  | |_| / ___ \ | | (_) |
                    |_| |_| |_|\___/_/   \_\___\___/ 
 
@@ -115,7 +115,11 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     }
     catch (const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cerr << "C++ Exception: " << e.what() << '\n';
+    }
+    catch (...)
+    {
+        std::cerr << "Unknown Exception\n";
     }
     return 0;
 }

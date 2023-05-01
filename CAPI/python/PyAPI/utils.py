@@ -2,7 +2,7 @@ import proto.MessageType_pb2 as MessageType
 import proto.Message2Server_pb2 as Message2Server
 import proto.Message2Clients_pb2 as Message2Clients
 import PyAPI.structures as THUAI6
-from typing import Final, List
+from typing import Final, List, Union
 
 numOfGridPerCell: Final[int] = 1000
 
@@ -350,8 +350,11 @@ class THUAI62Proto(NoInstance):
         return Message2Server.PropMsg(player_id=id, prop_type=THUAI62Proto.propTypeDict[prop])
 
     @ staticmethod
-    def THUAI62ProtobufSend(msg: str, toID: int, id: int) -> Message2Server.SendMsg:
-        return Message2Server.SendMsg(player_id=id, to_player_id=toID, message=msg)
+    def THUAI62ProtobufSend(msg: Union[str, bytes], toID: int, id: int) -> Message2Server.SendMsg:
+        if isinstance(msg, str):
+            return Message2Server.SendMsg(player_id=id, to_player_id=toID, text_message=msg)
+        elif isinstance(msg, bytes):
+            return Message2Server.SendMsg(player_id=id, to_player_id=toID, binary_message=msg)
 
     @ staticmethod
     def THUAI62ProtobufAttack(angle: float, id: int) -> Message2Server.AttackMsg:

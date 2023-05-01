@@ -312,7 +312,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.news_)*/ {&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}, /*decltype(_impl_.from_id_)*/ int64_t{0}, /*decltype(_impl_.to_id_)*/ int64_t{0}, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.from_id_)*/ int64_t{0}, /*decltype(_impl_.to_id_)*/ int64_t{0}, /*decltype(_impl_.news_)*/ {}, /*decltype(_impl_._cached_size_)*/ {}, /*decltype(_impl_._oneof_case_)*/ {}}
     {
     }
     struct MessageOfNewsDefaultTypeInternal
@@ -612,12 +612,14 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfNews, _internal_metadata_),
     ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfNews, _impl_._oneof_case_[0]),
     ~0u,  // no _weak_field_map_
     ~0u,  // no _inlined_string_donated_
-    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfNews, _impl_.news_),
+    ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfNews, _impl_.from_id_),
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfNews, _impl_.to_id_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfNews, _impl_.news_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::MessageOfObj, _internal_metadata_),
     ~0u,  // no _extensions_
@@ -690,11 +692,11 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
     {149, -1, -1, sizeof(::protobuf::MessageOfMap_Row)},
     {156, -1, -1, sizeof(::protobuf::MessageOfMap)},
     {163, -1, -1, sizeof(::protobuf::MessageOfNews)},
-    {172, -1, -1, sizeof(::protobuf::MessageOfObj)},
-    {191, -1, -1, sizeof(::protobuf::MessageOfAll)},
-    {203, -1, -1, sizeof(::protobuf::MessageToClient)},
-    {212, -1, -1, sizeof(::protobuf::MoveRes)},
-    {221, -1, -1, sizeof(::protobuf::BoolRes)},
+    {174, -1, -1, sizeof(::protobuf::MessageOfObj)},
+    {193, -1, -1, sizeof(::protobuf::MessageOfAll)},
+    {205, -1, -1, sizeof(::protobuf::MessageToClient)},
+    {214, -1, -1, sizeof(::protobuf::MoveRes)},
+    {223, -1, -1, sizeof(::protobuf::BoolRes)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -775,36 +777,37 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
     "\001(\005\022\t\n\001y\030\002 \001(\005\022\020\n\010progress\030\003 \001(\005\"`\n\014Mess"
     "ageOfMap\022\'\n\003row\030\002 \003(\0132\032.protobuf.Message"
     "OfMap.Row\032\'\n\003Row\022 \n\003col\030\001 \003(\0162\023.protobuf"
-    ".PlaceType\"=\n\rMessageOfNews\022\014\n\004news\030\001 \001("
-    "\t\022\017\n\007from_id\030\002 \001(\003\022\r\n\005to_id\030\003 \001(\003\"\244\005\n\014Me"
-    "ssageOfObj\0225\n\017student_message\030\001 \001(\0132\032.pr"
-    "otobuf.MessageOfStudentH\000\0225\n\017tricker_mes"
-    "sage\030\002 \001(\0132\032.protobuf.MessageOfTrickerH\000"
-    "\022/\n\014prop_message\030\003 \001(\0132\027.protobuf.Messag"
-    "eOfPropH\000\0223\n\016bullet_message\030\004 \001(\0132\031.prot"
-    "obuf.MessageOfBulletH\000\022@\n\025bombed_bullet_"
-    "message\030\005 \001(\0132\037.protobuf.MessageOfBombed"
-    "BulletH\000\0229\n\021classroom_message\030\006 \001(\0132\034.pr"
-    "otobuf.MessageOfClassroomH\000\022/\n\014door_mess"
-    "age\030\007 \001(\0132\027.protobuf.MessageOfDoorH\000\022/\n\014"
-    "gate_message\030\010 \001(\0132\027.protobuf.MessageOfG"
-    "ateH\000\0221\n\rchest_message\030\t \001(\0132\030.protobuf."
-    "MessageOfChestH\000\022<\n\023hidden_gate_message\030"
-    "\n \001(\0132\035.protobuf.MessageOfHiddenGateH\000\022/"
-    "\n\014news_message\030\013 \001(\0132\027.protobuf.MessageO"
-    "fNewsH\000\022-\n\013map_message\030\014 \001(\0132\026.protobuf."
-    "MessageOfMapH\000B\020\n\016message_of_obj\"\234\001\n\014Mes"
-    "sageOfAll\022\021\n\tgame_time\030\001 \001(\005\022\030\n\020subject_"
-    "finished\030\002 \001(\005\022\031\n\021student_graduated\030\003 \001("
-    "\005\022\026\n\016student_quited\030\004 \001(\005\022\025\n\rstudent_sco"
-    "re\030\005 \001(\005\022\025\n\rtricker_score\030\006 \001(\005\"\224\001\n\017Mess"
-    "ageToClient\022+\n\013obj_message\030\001 \003(\0132\026.proto"
-    "buf.MessageOfObj\022\'\n\ngame_state\030\002 \001(\0162\023.p"
-    "rotobuf.GameState\022+\n\013all_message\030\003 \001(\0132\026"
-    ".protobuf.MessageOfAll\"J\n\007MoveRes\022\024\n\014act"
-    "ual_speed\030\001 \001(\003\022\024\n\014actual_angle\030\002 \001(\001\022\023\n"
-    "\013act_success\030\003 \001(\010\"\036\n\007BoolRes\022\023\n\013act_suc"
-    "cess\030\001 \001(\010b\006proto3";
+    ".PlaceType\"i\n\rMessageOfNews\022\026\n\014text_mess"
+    "age\030\001 \001(\tH\000\022\030\n\016binary_message\030\004 \001(\014H\000\022\017\n"
+    "\007from_id\030\002 \001(\003\022\r\n\005to_id\030\003 \001(\003B\006\n\004news\"\244\005"
+    "\n\014MessageOfObj\0225\n\017student_message\030\001 \001(\0132"
+    "\032.protobuf.MessageOfStudentH\000\0225\n\017tricker"
+    "_message\030\002 \001(\0132\032.protobuf.MessageOfTrick"
+    "erH\000\022/\n\014prop_message\030\003 \001(\0132\027.protobuf.Me"
+    "ssageOfPropH\000\0223\n\016bullet_message\030\004 \001(\0132\031."
+    "protobuf.MessageOfBulletH\000\022@\n\025bombed_bul"
+    "let_message\030\005 \001(\0132\037.protobuf.MessageOfBo"
+    "mbedBulletH\000\0229\n\021classroom_message\030\006 \001(\0132"
+    "\034.protobuf.MessageOfClassroomH\000\022/\n\014door_"
+    "message\030\007 \001(\0132\027.protobuf.MessageOfDoorH\000"
+    "\022/\n\014gate_message\030\010 \001(\0132\027.protobuf.Messag"
+    "eOfGateH\000\0221\n\rchest_message\030\t \001(\0132\030.proto"
+    "buf.MessageOfChestH\000\022<\n\023hidden_gate_mess"
+    "age\030\n \001(\0132\035.protobuf.MessageOfHiddenGate"
+    "H\000\022/\n\014news_message\030\013 \001(\0132\027.protobuf.Mess"
+    "ageOfNewsH\000\022-\n\013map_message\030\014 \001(\0132\026.proto"
+    "buf.MessageOfMapH\000B\020\n\016message_of_obj\"\234\001\n"
+    "\014MessageOfAll\022\021\n\tgame_time\030\001 \001(\005\022\030\n\020subj"
+    "ect_finished\030\002 \001(\005\022\031\n\021student_graduated\030"
+    "\003 \001(\005\022\026\n\016student_quited\030\004 \001(\005\022\025\n\rstudent"
+    "_score\030\005 \001(\005\022\025\n\rtricker_score\030\006 \001(\005\"\224\001\n\017"
+    "MessageToClient\022+\n\013obj_message\030\001 \003(\0132\026.p"
+    "rotobuf.MessageOfObj\022\'\n\ngame_state\030\002 \001(\016"
+    "2\023.protobuf.GameState\022+\n\013all_message\030\003 \001"
+    "(\0132\026.protobuf.MessageOfAll\"J\n\007MoveRes\022\024\n"
+    "\014actual_speed\030\001 \001(\003\022\024\n\014actual_angle\030\002 \001("
+    "\001\022\023\n\013act_success\030\003 \001(\010\"\036\n\007BoolRes\022\023\n\013act"
+    "_success\030\001 \001(\010b\006proto3";
 static const ::_pbi::DescriptorTable* const descriptor_table_Message2Clients_2eproto_deps[1] = {
     &::descriptor_table_MessageType_2eproto,
 };
@@ -812,7 +815,7 @@ static ::_pbi::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Message2Clients_2eproto = {
     false,
     false,
-    3378,
+    3422,
     descriptor_table_protodef_Message2Clients_2eproto,
     "Message2Clients.proto",
     &descriptor_table_Message2Clients_2eproto_once,
@@ -5927,18 +5930,28 @@ namespace protobuf
         MessageOfNews* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.news_){}, decltype(_impl_.from_id_){}, decltype(_impl_.to_id_){}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.from_id_){}, decltype(_impl_.to_id_){}, decltype(_impl_.news_){}, /*decltype(_impl_._cached_size_)*/ {}, /*decltype(_impl_._oneof_case_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-        _impl_.news_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        _impl_.news_.Set("", GetArenaForAllocation());
-#endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        if (!from._internal_news().empty())
-        {
-            _this->_impl_.news_.Set(from._internal_news(), _this->GetArenaForAllocation());
-        }
         ::memcpy(&_impl_.from_id_, &from._impl_.from_id_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.to_id_) - reinterpret_cast<char*>(&_impl_.from_id_)) + sizeof(_impl_.to_id_));
+        clear_has_news();
+        switch (from.news_case())
+        {
+            case kTextMessage:
+                {
+                    _this->_internal_set_text_message(from._internal_text_message());
+                    break;
+                }
+            case kBinaryMessage:
+                {
+                    _this->_internal_set_binary_message(from._internal_binary_message());
+                    break;
+                }
+            case NEWS_NOT_SET:
+                {
+                    break;
+                }
+        }
         // @@protoc_insertion_point(copy_constructor:protobuf.MessageOfNews)
     }
 
@@ -5949,11 +5962,8 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.news_){}, decltype(_impl_.from_id_){int64_t{0}}, decltype(_impl_.to_id_){int64_t{0}}, /*decltype(_impl_._cached_size_)*/ {}};
-        _impl_.news_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        _impl_.news_.Set("", GetArenaForAllocation());
-#endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+            decltype(_impl_.from_id_){int64_t{0}}, decltype(_impl_.to_id_){int64_t{0}}, decltype(_impl_.news_){}, /*decltype(_impl_._cached_size_)*/ {}, /*decltype(_impl_._oneof_case_)*/ {}};
+        clear_has_news();
     }
 
     MessageOfNews::~MessageOfNews()
@@ -5970,12 +5980,38 @@ namespace protobuf
     inline void MessageOfNews::SharedDtor()
     {
         GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-        _impl_.news_.Destroy();
+        if (has_news())
+        {
+            clear_news();
+        }
     }
 
     void MessageOfNews::SetCachedSize(int size) const
     {
         _impl_._cached_size_.Set(size);
+    }
+
+    void MessageOfNews::clear_news()
+    {
+        // @@protoc_insertion_point(one_of_clear_start:protobuf.MessageOfNews)
+        switch (news_case())
+        {
+            case kTextMessage:
+                {
+                    _impl_.news_.text_message_.Destroy();
+                    break;
+                }
+            case kBinaryMessage:
+                {
+                    _impl_.news_.binary_message_.Destroy();
+                    break;
+                }
+            case NEWS_NOT_SET:
+                {
+                    break;
+                }
+        }
+        _impl_._oneof_case_[0] = NEWS_NOT_SET;
     }
 
     void MessageOfNews::Clear()
@@ -5985,8 +6021,8 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        _impl_.news_.ClearToEmpty();
         ::memset(&_impl_.from_id_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.to_id_) - reinterpret_cast<char*>(&_impl_.from_id_)) + sizeof(_impl_.to_id_));
+        clear_news();
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -6001,14 +6037,14 @@ namespace protobuf
             ptr = ::_pbi::ReadTag(ptr, &tag);
             switch (tag >> 3)
             {
-                // string news = 1;
+                // string text_message = 1;
                 case 1:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10))
                     {
-                        auto str = _internal_mutable_news();
+                        auto str = _internal_mutable_text_message();
                         ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
                         CHK_(ptr);
-                        CHK_(::_pbi::VerifyUTF8(str, "protobuf.MessageOfNews.news"));
+                        CHK_(::_pbi::VerifyUTF8(str, "protobuf.MessageOfNews.text_message"));
                     }
                     else
                         goto handle_unusual;
@@ -6028,6 +6064,17 @@ namespace protobuf
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24))
                     {
                         _impl_.to_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // bytes binary_message = 4;
+                case 4:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34))
+                    {
+                        auto str = _internal_mutable_binary_message();
+                        ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
                         CHK_(ptr);
                     }
                     else
@@ -6067,14 +6114,14 @@ namespace protobuf
         uint32_t cached_has_bits = 0;
         (void)cached_has_bits;
 
-        // string news = 1;
-        if (!this->_internal_news().empty())
+        // string text_message = 1;
+        if (_internal_has_text_message())
         {
             ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-                this->_internal_news().data(), static_cast<int>(this->_internal_news().length()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE, "protobuf.MessageOfNews.news"
+                this->_internal_text_message().data(), static_cast<int>(this->_internal_text_message().length()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE, "protobuf.MessageOfNews.text_message"
             );
             target = stream->WriteStringMaybeAliased(
-                1, this->_internal_news(), target
+                1, this->_internal_text_message(), target
             );
         }
 
@@ -6090,6 +6137,14 @@ namespace protobuf
         {
             target = stream->EnsureSpace(target);
             target = ::_pbi::WireFormatLite::WriteInt64ToArray(3, this->_internal_to_id(), target);
+        }
+
+        // bytes binary_message = 4;
+        if (_internal_has_binary_message())
+        {
+            target = stream->WriteBytesMaybeAliased(
+                4, this->_internal_binary_message(), target
+            );
         }
 
         if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
@@ -6111,15 +6166,6 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        // string news = 1;
-        if (!this->_internal_news().empty())
-        {
-            total_size += 1 +
-                          ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-                              this->_internal_news()
-                          );
-        }
-
         // int64 from_id = 2;
         if (this->_internal_from_id() != 0)
         {
@@ -6132,6 +6178,31 @@ namespace protobuf
             total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_to_id());
         }
 
+        switch (news_case())
+        {
+            // string text_message = 1;
+            case kTextMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+                                      this->_internal_text_message()
+                                  );
+                    break;
+                }
+            // bytes binary_message = 4;
+            case kBinaryMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+                                      this->_internal_binary_message()
+                                  );
+                    break;
+                }
+            case NEWS_NOT_SET:
+                {
+                    break;
+                }
+        }
         return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
     }
 
@@ -6152,10 +6223,6 @@ namespace protobuf
         uint32_t cached_has_bits = 0;
         (void)cached_has_bits;
 
-        if (!from._internal_news().empty())
-        {
-            _this->_internal_set_news(from._internal_news());
-        }
         if (from._internal_from_id() != 0)
         {
             _this->_internal_set_from_id(from._internal_from_id());
@@ -6163,6 +6230,23 @@ namespace protobuf
         if (from._internal_to_id() != 0)
         {
             _this->_internal_set_to_id(from._internal_to_id());
+        }
+        switch (from.news_case())
+        {
+            case kTextMessage:
+                {
+                    _this->_internal_set_text_message(from._internal_text_message());
+                    break;
+                }
+            case kBinaryMessage:
+                {
+                    _this->_internal_set_binary_message(from._internal_binary_message());
+                    break;
+                }
+            case NEWS_NOT_SET:
+                {
+                    break;
+                }
         }
         _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
@@ -6184,17 +6268,14 @@ namespace protobuf
     void MessageOfNews::InternalSwap(MessageOfNews* other)
     {
         using std::swap;
-        auto* lhs_arena = GetArenaForAllocation();
-        auto* rhs_arena = other->GetArenaForAllocation();
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-        ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-            &_impl_.news_, lhs_arena, &other->_impl_.news_, rhs_arena
-        );
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
             PROTOBUF_FIELD_OFFSET(MessageOfNews, _impl_.to_id_) + sizeof(MessageOfNews::_impl_.to_id_) - PROTOBUF_FIELD_OFFSET(MessageOfNews, _impl_.from_id_)>(
             reinterpret_cast<char*>(&_impl_.from_id_),
             reinterpret_cast<char*>(&other->_impl_.from_id_)
         );
+        swap(_impl_.news_, other->_impl_.news_);
+        swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
     }
 
     ::PROTOBUF_NAMESPACE_ID::Metadata MessageOfNews::GetMetadata() const

@@ -92,7 +92,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.message_)*/ {&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}, /*decltype(_impl_.player_id_)*/ int64_t{0}, /*decltype(_impl_.to_player_id_)*/ int64_t{0}, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.player_id_)*/ int64_t{0}, /*decltype(_impl_.to_player_id_)*/ int64_t{0}, /*decltype(_impl_.message_)*/ {}, /*decltype(_impl_._cached_size_)*/ {}, /*decltype(_impl_._oneof_case_)*/ {}}
     {
     }
     struct SendMsgDefaultTypeInternal
@@ -235,11 +235,13 @@ const uint32_t TableStruct_Message2Server_2eproto::offsets[] PROTOBUF_SECTION_VA
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::SendMsg, _internal_metadata_),
     ~0u,  // no _extensions_
-    ~0u,  // no _oneof_case_
+    PROTOBUF_FIELD_OFFSET(::protobuf::SendMsg, _impl_._oneof_case_[0]),
     ~0u,  // no _weak_field_map_
     ~0u,  // no _inlined_string_donated_
     PROTOBUF_FIELD_OFFSET(::protobuf::SendMsg, _impl_.player_id_),
     PROTOBUF_FIELD_OFFSET(::protobuf::SendMsg, _impl_.to_player_id_),
+    ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
     PROTOBUF_FIELD_OFFSET(::protobuf::SendMsg, _impl_.message_),
     ~0u,  // no _has_bits_
     PROTOBUF_FIELD_OFFSET(::protobuf::AttackMsg, _internal_metadata_),
@@ -278,10 +280,10 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
     {11, -1, -1, sizeof(::protobuf::MoveMsg)},
     {20, -1, -1, sizeof(::protobuf::PropMsg)},
     {28, -1, -1, sizeof(::protobuf::SendMsg)},
-    {37, -1, -1, sizeof(::protobuf::AttackMsg)},
-    {45, -1, -1, sizeof(::protobuf::IDMsg)},
-    {52, -1, -1, sizeof(::protobuf::TreatAndRescueMsg)},
-    {60, -1, -1, sizeof(::protobuf::SkillMsg)},
+    {39, -1, -1, sizeof(::protobuf::AttackMsg)},
+    {47, -1, -1, sizeof(::protobuf::IDMsg)},
+    {54, -1, -1, sizeof(::protobuf::TreatAndRescueMsg)},
+    {62, -1, -1, sizeof(::protobuf::SkillMsg)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -305,13 +307,15 @@ const char descriptor_table_protodef_Message2Server_2eproto[] PROTOBUF_SECTION_V
     "eMsg\022\021\n\tplayer_id\030\001 \001(\003\022\r\n\005angle\030\002 \001(\001\022\034"
     "\n\024time_in_milliseconds\030\003 \001(\003\"C\n\007PropMsg\022"
     "\021\n\tplayer_id\030\001 \001(\003\022%\n\tprop_type\030\002 \001(\0162\022."
-    "protobuf.PropType\"C\n\007SendMsg\022\021\n\tplayer_i"
-    "d\030\001 \001(\003\022\024\n\014to_player_id\030\002 \001(\003\022\017\n\007message"
-    "\030\003 \001(\t\"-\n\tAttackMsg\022\021\n\tplayer_id\030\001 \001(\003\022\r"
-    "\n\005angle\030\002 \001(\001\"\032\n\005IDMsg\022\021\n\tplayer_id\030\001 \001("
-    "\003\"<\n\021TreatAndRescueMsg\022\021\n\tplayer_id\030\001 \001("
-    "\003\022\024\n\014to_player_id\030\002 \001(\003\"/\n\010SkillMsg\022\021\n\tp"
-    "layer_id\030\001 \001(\003\022\020\n\010skill_id\030\002 \001(\005b\006proto3";
+    "protobuf.PropType\"o\n\007SendMsg\022\021\n\tplayer_i"
+    "d\030\001 \001(\003\022\024\n\014to_player_id\030\002 \001(\003\022\026\n\014text_me"
+    "ssage\030\003 \001(\tH\000\022\030\n\016binary_message\030\004 \001(\014H\000B"
+    "\t\n\007message\"-\n\tAttackMsg\022\021\n\tplayer_id\030\001 \001"
+    "(\003\022\r\n\005angle\030\002 \001(\001\"\032\n\005IDMsg\022\021\n\tplayer_id\030"
+    "\001 \001(\003\"<\n\021TreatAndRescueMsg\022\021\n\tplayer_id\030"
+    "\001 \001(\003\022\024\n\014to_player_id\030\002 \001(\003\"/\n\010SkillMsg\022"
+    "\021\n\tplayer_id\030\001 \001(\003\022\020\n\010skill_id\030\002 \001(\005b\006pr"
+    "oto3";
 static const ::_pbi::DescriptorTable* const descriptor_table_Message2Server_2eproto_deps[1] = {
     &::descriptor_table_MessageType_2eproto,
 };
@@ -319,7 +323,7 @@ static ::_pbi::once_flag descriptor_table_Message2Server_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Message2Server_2eproto = {
     false,
     false,
-    640,
+    684,
     descriptor_table_protodef_Message2Server_2eproto,
     "Message2Server.proto",
     &descriptor_table_Message2Server_2eproto_once,
@@ -1259,18 +1263,28 @@ namespace protobuf
         SendMsg* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.message_){}, decltype(_impl_.player_id_){}, decltype(_impl_.to_player_id_){}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.player_id_){}, decltype(_impl_.to_player_id_){}, decltype(_impl_.message_){}, /*decltype(_impl_._cached_size_)*/ {}, /*decltype(_impl_._oneof_case_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-        _impl_.message_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        _impl_.message_.Set("", GetArenaForAllocation());
-#endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        if (!from._internal_message().empty())
-        {
-            _this->_impl_.message_.Set(from._internal_message(), _this->GetArenaForAllocation());
-        }
         ::memcpy(&_impl_.player_id_, &from._impl_.player_id_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.to_player_id_) - reinterpret_cast<char*>(&_impl_.player_id_)) + sizeof(_impl_.to_player_id_));
+        clear_has_message();
+        switch (from.message_case())
+        {
+            case kTextMessage:
+                {
+                    _this->_internal_set_text_message(from._internal_text_message());
+                    break;
+                }
+            case kBinaryMessage:
+                {
+                    _this->_internal_set_binary_message(from._internal_binary_message());
+                    break;
+                }
+            case MESSAGE_NOT_SET:
+                {
+                    break;
+                }
+        }
         // @@protoc_insertion_point(copy_constructor:protobuf.SendMsg)
     }
 
@@ -1281,11 +1295,8 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.message_){}, decltype(_impl_.player_id_){int64_t{0}}, decltype(_impl_.to_player_id_){int64_t{0}}, /*decltype(_impl_._cached_size_)*/ {}};
-        _impl_.message_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        _impl_.message_.Set("", GetArenaForAllocation());
-#endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+            decltype(_impl_.player_id_){int64_t{0}}, decltype(_impl_.to_player_id_){int64_t{0}}, decltype(_impl_.message_){}, /*decltype(_impl_._cached_size_)*/ {}, /*decltype(_impl_._oneof_case_)*/ {}};
+        clear_has_message();
     }
 
     SendMsg::~SendMsg()
@@ -1302,12 +1313,38 @@ namespace protobuf
     inline void SendMsg::SharedDtor()
     {
         GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-        _impl_.message_.Destroy();
+        if (has_message())
+        {
+            clear_message();
+        }
     }
 
     void SendMsg::SetCachedSize(int size) const
     {
         _impl_._cached_size_.Set(size);
+    }
+
+    void SendMsg::clear_message()
+    {
+        // @@protoc_insertion_point(one_of_clear_start:protobuf.SendMsg)
+        switch (message_case())
+        {
+            case kTextMessage:
+                {
+                    _impl_.message_.text_message_.Destroy();
+                    break;
+                }
+            case kBinaryMessage:
+                {
+                    _impl_.message_.binary_message_.Destroy();
+                    break;
+                }
+            case MESSAGE_NOT_SET:
+                {
+                    break;
+                }
+        }
+        _impl_._oneof_case_[0] = MESSAGE_NOT_SET;
     }
 
     void SendMsg::Clear()
@@ -1317,8 +1354,8 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        _impl_.message_.ClearToEmpty();
         ::memset(&_impl_.player_id_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.to_player_id_) - reinterpret_cast<char*>(&_impl_.player_id_)) + sizeof(_impl_.to_player_id_));
+        clear_message();
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -1353,14 +1390,25 @@ namespace protobuf
                     else
                         goto handle_unusual;
                     continue;
-                // string message = 3;
+                // string text_message = 3;
                 case 3:
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26))
                     {
-                        auto str = _internal_mutable_message();
+                        auto str = _internal_mutable_text_message();
                         ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
                         CHK_(ptr);
-                        CHK_(::_pbi::VerifyUTF8(str, "protobuf.SendMsg.message"));
+                        CHK_(::_pbi::VerifyUTF8(str, "protobuf.SendMsg.text_message"));
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // bytes binary_message = 4;
+                case 4:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34))
+                    {
+                        auto str = _internal_mutable_binary_message();
+                        ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+                        CHK_(ptr);
                     }
                     else
                         goto handle_unusual;
@@ -1413,14 +1461,22 @@ namespace protobuf
             target = ::_pbi::WireFormatLite::WriteInt64ToArray(2, this->_internal_to_player_id(), target);
         }
 
-        // string message = 3;
-        if (!this->_internal_message().empty())
+        // string text_message = 3;
+        if (_internal_has_text_message())
         {
             ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-                this->_internal_message().data(), static_cast<int>(this->_internal_message().length()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE, "protobuf.SendMsg.message"
+                this->_internal_text_message().data(), static_cast<int>(this->_internal_text_message().length()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE, "protobuf.SendMsg.text_message"
             );
             target = stream->WriteStringMaybeAliased(
-                3, this->_internal_message(), target
+                3, this->_internal_text_message(), target
+            );
+        }
+
+        // bytes binary_message = 4;
+        if (_internal_has_binary_message())
+        {
+            target = stream->WriteBytesMaybeAliased(
+                4, this->_internal_binary_message(), target
             );
         }
 
@@ -1443,15 +1499,6 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        // string message = 3;
-        if (!this->_internal_message().empty())
-        {
-            total_size += 1 +
-                          ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-                              this->_internal_message()
-                          );
-        }
-
         // int64 player_id = 1;
         if (this->_internal_player_id() != 0)
         {
@@ -1464,6 +1511,31 @@ namespace protobuf
             total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_to_player_id());
         }
 
+        switch (message_case())
+        {
+            // string text_message = 3;
+            case kTextMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+                                      this->_internal_text_message()
+                                  );
+                    break;
+                }
+            // bytes binary_message = 4;
+            case kBinaryMessage:
+                {
+                    total_size += 1 +
+                                  ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+                                      this->_internal_binary_message()
+                                  );
+                    break;
+                }
+            case MESSAGE_NOT_SET:
+                {
+                    break;
+                }
+        }
         return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
     }
 
@@ -1484,10 +1556,6 @@ namespace protobuf
         uint32_t cached_has_bits = 0;
         (void)cached_has_bits;
 
-        if (!from._internal_message().empty())
-        {
-            _this->_internal_set_message(from._internal_message());
-        }
         if (from._internal_player_id() != 0)
         {
             _this->_internal_set_player_id(from._internal_player_id());
@@ -1495,6 +1563,23 @@ namespace protobuf
         if (from._internal_to_player_id() != 0)
         {
             _this->_internal_set_to_player_id(from._internal_to_player_id());
+        }
+        switch (from.message_case())
+        {
+            case kTextMessage:
+                {
+                    _this->_internal_set_text_message(from._internal_text_message());
+                    break;
+                }
+            case kBinaryMessage:
+                {
+                    _this->_internal_set_binary_message(from._internal_binary_message());
+                    break;
+                }
+            case MESSAGE_NOT_SET:
+                {
+                    break;
+                }
         }
         _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
@@ -1516,17 +1601,14 @@ namespace protobuf
     void SendMsg::InternalSwap(SendMsg* other)
     {
         using std::swap;
-        auto* lhs_arena = GetArenaForAllocation();
-        auto* rhs_arena = other->GetArenaForAllocation();
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-        ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-            &_impl_.message_, lhs_arena, &other->_impl_.message_, rhs_arena
-        );
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
             PROTOBUF_FIELD_OFFSET(SendMsg, _impl_.to_player_id_) + sizeof(SendMsg::_impl_.to_player_id_) - PROTOBUF_FIELD_OFFSET(SendMsg, _impl_.player_id_)>(
             reinterpret_cast<char*>(&_impl_.player_id_),
             reinterpret_cast<char*>(&other->_impl_.player_id_)
         );
+        swap(_impl_.message_, other->_impl_.message_);
+        swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
     }
 
     ::PROTOBUF_NAMESPACE_ID::Metadata SendMsg::GetMetadata() const

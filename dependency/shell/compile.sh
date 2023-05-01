@@ -14,12 +14,15 @@ do
         fi
         mv ./compile_log$i.txt $bind/compile_log$i.txt
     elif [ -f "${bind}/player${i}.py" ]; then
-        cp -f $bind/player$i.py ../python/PyAPI/AI.py
-        python3 -m compileall ../python/PyAPI
-        mv ../python/PyAPI/__pycache__/AI.cpython-39.pyc $bind/__pycache__/AI$i.cpython-39.pyc
-        if [ $? -ne 0 ]; then
+        pushd ../python
+        cp -f $bind/player$i.py ./PyAPI/AI.py
+        python3 -m compileall ./PyAPI
+        if [ ! -f ./PyAPI/__pycache__/AI.cpython-39.pyc ]; then
             flag=0
+        else
+            rm -rf ./PyAPI/__pycache__/AI.cpython-39.pyc
         fi
+        popd
     fi
     let "i++"
 done

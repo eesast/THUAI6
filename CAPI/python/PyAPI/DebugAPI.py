@@ -318,7 +318,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
             self.__logger.info(
                 f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
             self.__logger.info(
-                f"speed={student.speed}, view range={student.viewRange}, place={student.place.name}, radius={student.radius}")
+                f"speed={student.speed}, view range={student.viewRange}, radius={student.radius}")
             self.__logger.info(
                 f"score={student.score}, facing direction={student.facingDirection}, skill time={student.timeUntilSkillAvailable}")
             studentProp = ""
@@ -342,7 +342,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
             self.__logger.info(
                 f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
             self.__logger.info(
-                f"speed={tricker.speed}, view range={tricker.viewRange}, place={tricker.place.name}, radius={tricker.radius}")
+                f"speed={tricker.speed}, view range={tricker.viewRange}, radius={tricker.radius}")
             self.__logger.info(
                 f"score={tricker.score}, facing direction={tricker.facingDirection}, skill time={tricker.timeUntilSkillAvailable}")
             trickerProp = ""
@@ -362,7 +362,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
         for prop in self.__logic.GetProps():
             self.__logger.info("******Prop Info******")
             self.__logger.info(
-                f"GUID={prop.guid}, x={prop.x}, y={prop.y}, place={prop.place.name}, facing direction={prop.facingDirection}")
+                f"GUID={prop.guid}, x={prop.x}, y={prop.y}, facing direction={prop.facingDirection}")
             self.__logger.info("*********************")
 
     def PrintSelfInfo(self) -> None:
@@ -371,7 +371,7 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
         self.__logger.info(
             f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
         self.__logger.info(
-            f"speed={student.speed}, view range={student.viewRange}, place={student.place.name}, radius={student.radius}")
+            f"speed={student.speed}, view range={student.viewRange}, radius={student.radius}")
         self.__logger.info(
             f"score={student.score}, facing direction={student.facingDirection}, skill time={student.timeUntilSkillAvailable}")
         studentProp = ""
@@ -773,7 +773,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
             self.__logger.info(
                 f"playerID={student.playerID}, GUID={student.guid}, x={student.x}, y={student.y}")
             self.__logger.info(
-                f"speed={student.speed}, view range={student.viewRange}, place={student.place.name}, radius={student.radius}")
+                f"speed={student.speed}, view range={student.viewRange}, radius={student.radius}")
             self.__logger.info(
                 f"score={student.score}, facing direction={student.facingDirection}, skill time={student.timeUntilSkillAvailable}")
             studentProp = ""
@@ -797,7 +797,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
             self.__logger.info(
                 f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
             self.__logger.info(
-                f"speed={tricker.speed}, view range={tricker.viewRange}, place={tricker.place.name}, radius={tricker.radius}")
+                f"speed={tricker.speed}, view range={tricker.viewRange}, radius={tricker.radius}")
             self.__logger.info(
                 f"score={tricker.score}, facing direction={tricker.facingDirection}, skill time={tricker.timeUntilSkillAvailable}")
             trickerProp = ""
@@ -817,7 +817,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
         for prop in self.__logic.GetProps():
             self.__logger.info("******Prop Info******")
             self.__logger.info(
-                f"GUID={prop.guid}, x={prop.x}, y={prop.y}, place={prop.place.name}, facing direction={prop.facingDirection}")
+                f"GUID={prop.guid}, x={prop.x}, y={prop.y}, facing direction={prop.facingDirection}")
             self.__logger.info("*********************")
 
     def PrintSelfInfo(self) -> None:
@@ -826,7 +826,7 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
         self.__logger.info(
             f"playerID={tricker.playerID}, GUID={tricker.guid}, x={tricker.x}, y={tricker.y}")
         self.__logger.info(
-            f"speed={tricker.speed}, view range={tricker.viewRange}, place={tricker.place.name}, radius={tricker.radius}")
+            f"speed={tricker.speed}, view range={tricker.viewRange}, radius={tricker.radius}")
         self.__logger.info(
             f"score={tricker.score}, facing direction={tricker.facingDirection}, skill time={tricker.timeUntilSkillAvailable}")
         trickerProp = ""

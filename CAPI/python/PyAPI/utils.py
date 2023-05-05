@@ -179,7 +179,6 @@ class Proto2THUAI6(NoInstance):
         tricker.bulletType = Proto2THUAI6.bulletTypeDict[trickerMsg.bullet_type]
         for time in trickerMsg.time_until_skill_available:
             tricker.timeUntilSkillAvailable.append(time)
-        tricker.place = Proto2THUAI6.placeTypeDict[trickerMsg.place]
         tricker.playerState = Proto2THUAI6.playerStateDict[trickerMsg.player_state]
         for item in trickerMsg.prop:
             tricker.prop.append(Proto2THUAI6.propTypeDict[item])
@@ -211,7 +210,6 @@ class Proto2THUAI6(NoInstance):
         student.dangerAlert = studentMsg.danger_alert
         for time in studentMsg.time_until_skill_available:
             student.timeUntilSkillAvailable.append(time)
-        student.place = Proto2THUAI6.placeTypeDict[studentMsg.place]
         for item in studentMsg.prop:
             student.prop.append(Proto2THUAI6.propTypeDict[item])
         student.studentType = Proto2THUAI6.studentTypeDict[studentMsg.student_type]
@@ -255,7 +253,6 @@ class Proto2THUAI6(NoInstance):
         bullet.facingDirection = bulletMsg.facing_direction
         bullet.guid = bulletMsg.guid
         bullet.team = Proto2THUAI6.playerTypeDict[bulletMsg.team]
-        bullet.place = Proto2THUAI6.placeTypeDict[bulletMsg.place]
         bullet.bombRange = bulletMsg.bomb_range
         return bullet
 

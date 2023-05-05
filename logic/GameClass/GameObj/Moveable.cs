@@ -48,25 +48,15 @@ namespace GameClass.GameObj
         public int OrgMoveSpeed { get; protected set; }
 
         // 移动，改变坐标
-        public long MovingSetPos(XY moveVec, PlaceType place)
+        public long MovingSetPos(XY moveVec)
         {
             if (moveVec.x != 0 || moveVec.y != 0)
                 lock (gameObjLock)
                 {
                     FacingDirection = moveVec;
                     this.Position += moveVec;
-                    this.place = place;
                 }
             return moveVec * moveVec;
-        }
-
-        public void ReSetPos(XY pos, PlaceType place)
-        {
-            lock (gameObjLock)
-            {
-                this.Position = pos;
-                this.place = place;
-            }
         }
 
         /// <summary>

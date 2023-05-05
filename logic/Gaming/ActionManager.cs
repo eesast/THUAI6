@@ -267,7 +267,7 @@ namespace Gaming
                       {
                           Prop prop = chestToOpen.PropInChest[i];
                           chestToOpen.PropInChest[i] = new NullProp();
-                          prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
+                          prop.Position = player.Position;
                           gameMap.Add(prop);
                       }
                   }
@@ -295,7 +295,7 @@ namespace Gaming
                        if (characterInWindow != null)
                        {
                            if (player.IsGhost() && !characterInWindow.IsGhost())
-                               characterManager.BeAttacked((Student)(characterInWindow), player.Attack(characterInWindow.Position, PlaceType.Null));
+                               characterManager.BeAttacked((Student)(characterInWindow), player.Attack(characterInWindow.Position));
                            return false;
                        }*/
 
@@ -323,7 +323,7 @@ namespace Gaming
                       return;
                   }
 
-                  player.ReSetPos(windowToPlayer + windowForClimb.Position, PlaceType.Window);
+                  player.Position = windowToPlayer + windowForClimb.Position;
                   player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
 
                   moveEngine.MoveObj(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
@@ -339,7 +339,7 @@ namespace Gaming
                     )
                     .Start();
                   XY PosJumpOff = windowForClimb.Position - 2 * windowToPlayer;
-                  player.ReSetPos(PosJumpOff, gameMap.GetPlaceType(PosJumpOff));
+                  player.Position = PosJumpOff;
                   player.MoveSpeed = player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
                   windowForClimb.WhoIsClimbing = null;
                   //  gameMap.Remove(addWall);
@@ -367,15 +367,15 @@ namespace Gaming
                     switch (prop.GetPropType())
                     {
                         case PropType.Key3:
-                            if (doorToLock.Place == PlaceType.Door3)
+                            if (doorToLock.DoorNum == 3)
                                 flag = true;
                             break;
                         case PropType.Key5:
-                            if (doorToLock.Place == PlaceType.Door5)
+                            if (doorToLock.DoorNum == 5)
                                 flag = true;
                             break;
                         case PropType.Key6:
-                            if (doorToLock.Place == PlaceType.Door6)
+                            if (doorToLock.DoorNum == 6)
                                 flag = true;
                             break;
                         default:

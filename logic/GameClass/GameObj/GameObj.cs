@@ -14,20 +14,22 @@ namespace GameClass.GameObj
 
         protected readonly XY birthPos;
 
-        private GameObjType type;
+        private readonly GameObjType type;
         public GameObjType Type => type;
 
         private static long currentMaxID = 0;         // 目前游戏对象的最大ID
         public const long invalidID = long.MaxValue;  // 无效的ID
-        public const long noneID = long.MinValue;
         public long ID { get; }
 
         private XY position;
         public XY Position
         {
-            get => position;
-            protected
-                set
+            get
+            {
+                lock (gameObjLock)
+                    return position;
+            }
+            set
             {
                 lock (gameObjLock)
                 {
@@ -36,13 +38,14 @@ namespace GameClass.GameObj
             }
         }
 
-        protected PlaceType place;
-        public PlaceType Place { get => place; }
-
         private XY facingDirection = new(1, 0);
         public XY FacingDirection
         {
-            get => facingDirection;
+            get
+            {
+                lock (gameObjLock)
+                    return facingDirection;
+            }
             set
             {
                 lock (gameObjLock)

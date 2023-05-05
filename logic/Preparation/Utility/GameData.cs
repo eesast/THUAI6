@@ -1,6 +1,5 @@
 ﻿using Preparation.Interface;
 using System;
-using System.Net.NetworkInformation;
 
 namespace Preparation.Utility
 {

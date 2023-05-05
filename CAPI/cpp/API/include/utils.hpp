@@ -227,7 +227,7 @@ namespace Proto2THUAI6
         tricker->timeUntilSkillAvailable.clear();
         for (int i = 0; i < trickerMsg.time_until_skill_available().size(); i++)
             tricker->timeUntilSkillAvailable.push_back(trickerMsg.time_until_skill_available(i));
-        tricker->place = placeTypeDict[trickerMsg.place()];
+        // tricker->place = placeTypeDict[trickerMsg.place()];
         tricker->playerState = playerStateDict[trickerMsg.player_state()];
         tricker->props.clear();
         for (int i = 0; i < trickerMsg.prop().size(); i++)
@@ -269,7 +269,7 @@ namespace Proto2THUAI6
         student->props.clear();
         for (int i = 0; i < studentMsg.prop().size(); i++)
             student->props.push_back(propTypeDict[studentMsg.prop(i)]);
-        student->place = placeTypeDict[studentMsg.place()];
+        // student->place = placeTypeDict[studentMsg.place()];
         student->playerState = playerStateDict[studentMsg.player_state()];
         student->determination = studentMsg.determination();
         student->addiction = studentMsg.addiction();
@@ -286,7 +286,7 @@ namespace Proto2THUAI6
         prop->x = propMsg.x();
         prop->y = propMsg.y();
         prop->type = propTypeDict[propMsg.type()];
-        prop->place = placeTypeDict[propMsg.place()];
+        // prop->place = placeTypeDict[propMsg.place()];
         prop->guid = propMsg.guid();
         prop->facingDirection = propMsg.facing_direction();
         return prop;
@@ -313,7 +313,7 @@ namespace Proto2THUAI6
         bullet->facingDirection = bulletMsg.facing_direction();
         bullet->guid = bulletMsg.guid();
         bullet->team = playerTypeDict[bulletMsg.team()];
-        bullet->place = placeTypeDict[bulletMsg.place()];
+        // bullet->place = placeTypeDict[bulletMsg.place()];
         bullet->bombRange = bulletMsg.bomb_range();
         bullet->speed = bulletMsg.speed();
         return bullet;

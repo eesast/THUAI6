@@ -1,5 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using Protobuf;
 using System.Threading;
 
 namespace GameClass.GameObj
@@ -16,27 +17,86 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (gameObjLock)
+                lock (moveObjLock)
                     return position;
             }
-            set
+        }
+
+        public override XY FacingDirection
+        {
+            get
             {
-                lock (gameObjLock)
-                {
-                    position = value;
-                }
+                lock (moveObjLock)
+                    return facingDirection;
             }
         }
 
         private bool isMoving;
         public bool IsMoving
         {
-            get => isMoving;
+            get
+            {
+                lock (moveObjLock)
+                    return isMoving;
+            }
+            set
+            {
+                lock (moveObjLock)
+                {
+                    isMoving = value;
+                }
+            }
+        }
+
+        // 移动，改变坐标
+        public long MovingSetPos(XY moveVec)
+        {
+            if (moveVec.x != 0 || moveVec.y != 0)
+                lock (moveObjLock)
+                {
+                    facingDirection = moveVec;
+                    this.position += moveVec;
+                }
+            return moveVec * moveVec;
+        }
+
+        public void ReSetPos(XY position) 
+        {
+            lock (moveObjLock)
+            {
+                this.position = position;
+            }
+        }
+
+        public override bool CanMove
+        {
+            get
+            {
+                lock (gameObjLock)
+                    return canMove;
+            }
             set
             {
                 lock (gameObjLock)
                 {
-                    isMoving = value;
+                    canMove = value;
+                }
+            }
+        }
+
+        private bool isResetting;
+        public bool IsResetting
+        {
+            get
+            {
+                lock (gameObjLock)
+                    return isResetting;
+            }
+            set
+            {
+                lock (gameObjLock)
+                {
+                    isResetting = value;
                 }
             }
         }
@@ -49,7 +109,11 @@ namespace GameClass.GameObj
         /// </summary>
         public int MoveSpeed
         {
-            get => moveSpeed;
+            get
+            {
+                lock (gameObjLock)
+                    return moveSpeed;
+            }
             set
             {
                 lock (gameObjLock)
@@ -63,26 +127,6 @@ namespace GameClass.GameObj
         /// </summary>
         public int OrgMoveSpeed { get; protected set; }
 
-        // 移动，改变坐标
-        public long MovingSetPos(XY moveVec)
-        {
-            if (moveVec.x != 0 || moveVec.y != 0)
-                lock (gameObjLock)
-                {
-                    FacingDirection = moveVec;
-                    this.Position += moveVec;
-                }
-            return moveVec * moveVec;
-        }
-
-        /// <summary>
-        /// 设置移动速度
-        /// </summary>
-        /// <param name="newMoveSpeed">新速度</param>
-        public void SetMoveSpeed(int newMoveSpeed)
-        {
-            MoveSpeed = newMoveSpeed;
-        }
         /*       /// <summary>
                /// 复活时数据重置
                /// </summary>
@@ -98,11 +142,6 @@ namespace GameClass.GameObj
                        this.Place= place;
                    }
                }*/
-        /// <summary>
-        /// 为了使IgnoreCollide多态化并使GameObj能不报错地继承IMoveable
-        /// 在xfgg点播下设计了这个抽象辅助方法，在具体类中实现
-        /// </summary>
-        /// <returns> 依具体类及该方法参数而定，默认为false </returns>
         public Moveable(XY initPos, int initRadius, GameObjType initType) : base(initPos, initRadius, initType)
         {
         }

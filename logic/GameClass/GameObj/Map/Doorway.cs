@@ -6,7 +6,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 出口
     /// </summary>
-    public class Doorway : GameObj
+    public class Doorway : Tile
     {
         public Doorway(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Doorway)

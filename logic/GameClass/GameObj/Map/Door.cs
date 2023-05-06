@@ -6,7 +6,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 门
     /// </summary>
-    public class Door : GameObj
+    public class Door : Tile
     {
         public Door(XY initPos, PlaceType placeType) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Door)

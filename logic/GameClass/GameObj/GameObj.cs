@@ -24,50 +24,15 @@ namespace GameClass.GameObj
         protected XY position;
         public virtual XY Position { get; set; }
 
-        private XY facingDirection = new(1, 0);
-        public XY FacingDirection
-        {
-            get
-            {
-                lock (gameObjLock)
-                    return facingDirection;
-            }
-            set
-            {
-                lock (gameObjLock)
-                    facingDirection = value;
-            }
-        }
+        protected XY facingDirection = new(1, 0);
+        public virtual XY FacingDirection { get; set; }
 
         public abstract bool IsRigid { get; }
 
         public abstract ShapeType Shape { get; }
 
-        private bool canMove;
-        public bool CanMove
-        {
-            get => canMove;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    canMove = value;
-                }
-            }
-        }
-
-        private bool isResetting;
-        public bool IsResetting
-        {
-            get => isResetting;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    isResetting = value;
-                }
-            }
-        }
+        protected bool canMove;
+        public virtual bool CanMove { get; set; }
 
         public int Radius { get; }
 

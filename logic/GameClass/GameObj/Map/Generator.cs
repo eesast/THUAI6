@@ -5,7 +5,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 发电机
     /// </summary>
-    public class Generator : GameObj
+    public class Generator : Tile
     {
         public Generator(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Generator)

@@ -6,7 +6,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 箱子
     /// </summary>
-    public class Chest : GameObj
+    public class Chest : Tile
     {
         public Chest(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Chest)

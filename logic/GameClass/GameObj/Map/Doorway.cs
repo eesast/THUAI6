@@ -11,7 +11,6 @@ namespace GameClass.GameObj
         public Doorway(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Doorway)
         {
-            this.place = PlaceType.Doorway;
             this.CanMove = false;
         }
         public override bool IsRigid => true;

@@ -58,10 +58,10 @@ namespace GameClass.GameObj
         /// 进行一次攻击
         /// </summary>
         /// <returns>攻击操作发出的子弹</returns>
-        public Bullet? Attack(XY pos, PlaceType place)
+        public Bullet? Attack(XY pos)
         {
             if (TrySubBulletNum())
-                return BulletFactory.GetBullet(this, place, pos);
+                return BulletFactory.GetBullet(this, pos);
             else
                 return null;
         }
@@ -365,7 +365,6 @@ namespace GameClass.GameObj
                 CanMove = false;
                 IsResetting = true;
                 Position = GameData.PosWhoDie;
-                place = PlaceType.Grass;
             }
         }
         #endregion

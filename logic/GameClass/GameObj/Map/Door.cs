@@ -11,9 +11,25 @@ namespace GameClass.GameObj
         public Door(XY initPos, PlaceType placeType) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Door)
         {
-            this.place = placeType;
+            switch (placeType)
+            {
+                case PlaceType.Door3:
+                    doorNum = 3;
+                    break;
+                case PlaceType.Door5:
+                    doorNum = 5;
+                    break;
+                case PlaceType.Door6:
+                default:
+                    doorNum = 6;
+                    break;
+            }
             this.CanMove = false;
         }
+
+        private readonly int doorNum;
+        public int DoorNum => doorNum;
+
         public override bool IsRigid => !isOpen;
         public override ShapeType Shape => ShapeType.Square;
 

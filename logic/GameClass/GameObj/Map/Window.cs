@@ -11,7 +11,6 @@ namespace GameClass.GameObj
         public Window(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Window)
         {
-            this.place = PlaceType.Window;
             this.CanMove = false;
         }
         public override bool IsRigid => true;

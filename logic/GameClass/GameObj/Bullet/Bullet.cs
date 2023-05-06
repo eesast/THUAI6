@@ -41,10 +41,9 @@ namespace GameClass.GameObj
                 return true;
             return false;
         }
-        public Bullet(Character player, int radius, PlaceType placeType, XY Position) :
+        public Bullet(Character player, int radius, XY Position) :
             base(Position, radius, GameObjType.Bullet)
         {
-            this.place = placeType;
             this.CanMove = true;
             this.moveSpeed = this.Speed;
             this.hasSpear = player.TryUseSpear();
@@ -57,18 +56,18 @@ namespace GameClass.GameObj
 
     public static class BulletFactory
     {
-        public static Bullet? GetBullet(Character character, PlaceType place, XY pos)
+        public static Bullet? GetBullet(Character character, XY pos)
         {
             switch (character.BulletOfPlayer)
             {
                 case BulletType.FlyingKnife:
-                    return new FlyingKnife(character, place, pos);
+                    return new FlyingKnife(character, pos);
                 case BulletType.CommonAttackOfGhost:
-                    return new CommonAttackOfGhost(character, place, pos);
+                    return new CommonAttackOfGhost(character, pos);
                 case BulletType.JumpyDumpty:
-                    return new JumpyDumpty(character, place, pos);
+                    return new JumpyDumpty(character, pos);
                 case BulletType.BombBomb:
-                    return new BombBomb(character, place, pos);
+                    return new BombBomb(character, pos);
                 default:
                     return null;
             }

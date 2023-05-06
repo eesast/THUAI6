@@ -19,10 +19,9 @@ namespace GameClass.GameObj
 
         public abstract PropType GetPropType();
 
-        public Prop(XY initPos, PlaceType place, int radius = GameData.PropRadius) :
+        public Prop(XY initPos, int radius = GameData.PropRadius) :
             base(initPos, radius, GameObjType.Prop)
         {
-            this.place = place;
             this.CanMove = false;
             this.moveSpeed = GameData.PropMoveSpeed;
         }
@@ -43,8 +42,8 @@ namespace GameClass.GameObj
     /// </summary>
     public sealed class AddSpeed : Prop
     {
-        public AddSpeed(XY initPos, PlaceType placeType) :
-            base(initPos, placeType)
+        public AddSpeed(XY initPos) :
+            base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.AddSpeed;
@@ -54,24 +53,24 @@ namespace GameClass.GameObj
     /// </summary>
     public sealed class AddLifeOrClairaudience : Prop
     {
-        public AddLifeOrClairaudience(XY initPos, PlaceType placeType) :
-            base(initPos, placeType)
+        public AddLifeOrClairaudience(XY initPos) :
+            base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.AddLifeOrClairaudience;
     }
     public sealed class AddHpOrAp : Prop
     {
-        public AddHpOrAp(XY initPos, PlaceType placeType) :
-            base(initPos, placeType)
+        public AddHpOrAp(XY initPos) :
+            base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.AddHpOrAp;
     }
     public sealed class RecoveryFromDizziness : Prop
     {
-        public RecoveryFromDizziness(XY initPos, PlaceType placeType) :
-            base(initPos, placeType)
+        public RecoveryFromDizziness(XY initPos) :
+            base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.RecoveryFromDizziness;
@@ -81,35 +80,35 @@ namespace GameClass.GameObj
     /// </summary>
     public sealed class ShieldOrSpear : Prop
     {
-        public ShieldOrSpear(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        public ShieldOrSpear(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.ShieldOrSpear;
     }
     public sealed class Key3 : Prop
     {
-        public Key3(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        public Key3(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.Key3;
     }
     public sealed class Key5 : Prop
     {
-        public Key5(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        public Key5(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.Key5;
     }
     public sealed class Key6 : Prop
     {
-        public Key6(XY initPos, PlaceType placeType) : base(initPos, placeType)
+        public Key6(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.Key6;
     }
     public sealed class NullProp : Prop
     {
-        public NullProp(PlaceType placeType = PlaceType.Wall) : base(new XY(1, 1), placeType)
+        public NullProp() : base(new XY(1, 1))
         {
         }
         public override PropType GetPropType() => PropType.Null;
@@ -143,26 +142,26 @@ namespace GameClass.GameObj
     // #endregion
     public static class PropFactory
     {
-        public static Prop GetProp(PropType propType, XY pos, PlaceType place)
+        public static Prop GetProp(PropType propType, XY pos)
         {
             switch (propType)
             {
                 case PropType.AddSpeed:
-                    return new AddSpeed(pos, place);
+                    return new AddSpeed(pos);
                 case PropType.AddLifeOrClairaudience:
-                    return new AddLifeOrClairaudience(pos, place);
+                    return new AddLifeOrClairaudience(pos);
                 case PropType.ShieldOrSpear:
-                    return new ShieldOrSpear(pos, place);
+                    return new ShieldOrSpear(pos);
                 case PropType.AddHpOrAp:
-                    return new AddHpOrAp(pos, place);
+                    return new AddHpOrAp(pos);
                 case PropType.RecoveryFromDizziness:
-                    return new RecoveryFromDizziness(pos, place);
+                    return new RecoveryFromDizziness(pos);
                 case PropType.Key3:
-                    return new Key3(pos, place);
+                    return new Key3(pos);
                 case PropType.Key5:
-                    return new Key5(pos, place);
+                    return new Key5(pos);
                 case PropType.Key6:
-                    return new Key6(pos, place);
+                    return new Key6(pos);
                 default:
                     return new NullProp();
             }

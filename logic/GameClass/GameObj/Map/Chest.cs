@@ -11,7 +11,6 @@ namespace GameClass.GameObj
         public Chest(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Chest)
         {
-            this.place = PlaceType.Chest;
             this.CanMove = false;
         }
         public override bool IsRigid => true;

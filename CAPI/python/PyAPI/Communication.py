@@ -40,6 +40,7 @@ class Communication:
                 ):
                     return False
                 self.__counter += 1
+                self.__counterMove += 1
             moveResult = self.__THUAI6Stub.Move(
                 THUAI62Proto.THUAI62ProtobufMove(time, angle, playerID)
             )
@@ -267,6 +268,7 @@ class Communication:
                 ):
                     return False
                 self.__counter += 1
+                self.__counterMove += 1
             endResult = self.__THUAI6Stub.EndAllAction(
                 THUAI62Proto.THUAI62ProtobufID(playerID)
             )

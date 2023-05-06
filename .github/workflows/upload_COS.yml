@@ -78,6 +78,8 @@ jobs:
         cp -r ./THUAI6/win/CAPI ./THUAI6/linux/
         cp -r ./THUAI6/win/CAPI ./THUAI6/osx/
 
+        cp -r ./logic/cmd/map ./THUAI6/
+
     - name: Copy shell
       run: |
         cp -r ./CAPI/cmd/* ./THUAI6/win/

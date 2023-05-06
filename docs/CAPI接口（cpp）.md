@@ -4,6 +4,9 @@
 ## 接口解释
 
 ### 主动指令
+- 每帧最多发送50条主动指令
+- EndAllAction() 及 Move 指令调用数总和一帧内不超过 10 次
+
 #### 移动
 - `std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian)`:移动，`timeInMilliseconds` 为移动时间，单位毫秒；`angleInRadian` 表示移动方向，单位弧度，使用极坐标，**竖直向下方向为x轴，水平向右方向为y轴**。因为移动过程中你会受到多种干扰使得移动结果不符合你的预期；因此建议小步移动，边移动边考虑之后的行为。  
 - `std::future<bool> MoveRight(uint32_t timeInMilliseconds)`即向右移动,`MoveLeft`、`MoveDown`、`MoveUp`同理  
@@ -15,7 +18,6 @@
 - `std::future<bool> EndAllAction()`:可以使不处在不可行动状态中的玩家终止当前行动
 - 在指令仍在进行时，重复发出同一类型的交互指令和移动指令是无效的，你需要先发出 Stop 指令终止进行的指令
   - 实际上唤醒或勉励不同的人是有效的
-- EndAllAction() 及 Move 指令调用数总和一帧内不超过 10 次
 
 #### 攻击
 - `std::future<bool> Attack(double angleInRadian)`:`angleInRadian`为攻击方向

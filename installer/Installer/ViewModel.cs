@@ -39,19 +39,19 @@ namespace starter.viewmodel.settings
             string currentDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName)
                 ?? throw new Exception("Fail to get current directory");
             //MessageBox.Show("更新器工作正常");
-            if (!Program.Tencent_cos_download.SelfUpdateDismissed())
-            {
-                switch (Program.Tencent_cos_download.CheckSelfVersion())
-                {
-                    case 1:
-                        Process.Start(System.IO.Path.Combine(currentDirectory, "InstallerUpdater.exe"));
-                        Environment.Exit(0);
-                        break;
-                    case -1:
-                        MessageBox.Show("下载器更新检查出错，将继续启动现有下载器");
-                        break;
-                }
-            }
+            //if (!Program.Tencent_cos_download.SelfUpdateDismissed())
+            //{
+            //    switch (Program.Tencent_cos_download.CheckSelfVersion())
+            //    {
+            //        case 1:
+            //            Process.Start(System.IO.Path.Combine(currentDirectory, "InstallerUpdater.exe"));
+            //            Environment.Exit(0);
+            //            break;
+            //        case -1:
+            //            MessageBox.Show("下载器更新检查出错，将继续启动现有下载器");
+            //            break;
+            //    }
+            //}
 
             //实例化BackgroundWorker
             asyncDownloader = new BackgroundWorker();

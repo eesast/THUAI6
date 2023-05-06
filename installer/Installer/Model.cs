@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Shapes;
+using System.Collections.Concurrent;
 //using System.Windows.Forms;
 using System.Threading;
 
@@ -361,8 +362,9 @@ namespace Downloader
 
     class Program
     {
-        static List<string> newFileName = new List<string>();     // 新文件名
-        static List<string> updateFileName = new List<string>();  // 更新文件名
+        static ConcurrentQueue<string> newFileName = new ConcurrentQueue<string>();
+        //static List<string> newFileName = new List<string>();     // 新文件名
+        static ConcurrentQueue<string> updateFileName = new ConcurrentQueue<string>();  // 更新文件名
         static List<string> updateFailed = new List<string>();    //更新失败的文件名
         static public List<string> UpdateFailed
         {
@@ -502,9 +504,8 @@ namespace Downloader
                                           .Build();           // 创建 CosXmlConfig 对象
 
                 // 永久密钥访问凭证
-                string secretId = "***"; //"云 API 密钥 SecretId";
-                string secretKey = "***"; //"云 API 密钥 SecretKey";
-
+                string secretId = "AKIDvhEVXN4cv0ugIlFYiniV6Wk1McfkplYA"; //"云 API 密钥 SecretId";
+                string secretKey = "YyGLGCJG4f5VsEUddnz9JSRPSSK8sYBo"; //"云 API 密钥 SecretKey";
 
                 long durationSecond = 1000;  // 每次请求签名有效时长，单位为秒
                 QCloudCredentialProvider cosCredentialProvider = new DefaultQCloudCredentialProvider(
@@ -654,7 +655,7 @@ namespace Downloader
                     {
                         MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key.TrimStart(new char[] { '.', '/' })));
                         if (MD5.Length == 0)  // 文档不存在
-                            newFileName.Add(pair.Key);
+                            newFileName.Enqueue(pair.Key);
                         else if (MD5.Equals("conflict"))
                         {
                             if (pair.Key.Equals("THUAI6/win/CAPI/cpp/.vs/CAPI/v17/Browse.VC.db"))
@@ -670,7 +671,7 @@ namespace Downloader
                                 MessageBox.Show($"检查{pair.Key}更新时遇到问题，请反馈", "读取出错", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else if (!MD5.Equals(pair.Value) && !IsUserFile(System.IO.Path.GetFileName(pair.Key)))  // MD5不匹配
-                            updateFileName.Add(pair.Key);
+                            updateFileName.Enqueue(pair.Key);
                     }
                 }
 
@@ -736,38 +737,110 @@ namespace Downloader
                 {
                     try
                     {
-                        foreach (string filename in newFileName)
+                        int cnt = newFileName.Count;
+                        if (cnt <= 20)
                         {
-                            //Console.WriteLine(newFile + 1 + "/" + totalnew + ":开始下载" + filename);
-                            Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename.TrimStart(new char[] { '.', '/' }));
-                            //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
-                            newFile++;
-                        }
-                        foreach (string filename in updateFileName)
-                        {
-                            //Console.WriteLine(updateFile + 1 + "/" + totalupdate + ":开始下载" + filename);
-                            try
+                            while (newFileName.TryDequeue(out var filename))
                             {
-                                File.Delete(System.IO.Path.Combine(@Data.FilePath, filename));
                                 Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename.TrimStart(new char[] { '.', '/' }));
+                                //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
+                                Interlocked.Increment(ref newFile);
                             }
-                            catch (System.IO.IOException)
+                        }
+                        else
+                        {
+                            const int nthread = 8;
+                            var thrds = new List<Thread>();
+                            for (int i = 0; i < nthread; i++)
                             {
-                                updateFailed = updateFailed.Append(filename).ToList();
-                            }
-                            catch
-                            {
-                                if (filename.Substring(filename.Length - 4, 4).Equals(".pdf"))
+                                var thrd = new Thread(() =>
                                 {
-                                    MessageBox.Show($"由于曾经发生过的访问冲突，下载器无法更新{filename}\n"
-                                        + $"请手动删除{filename}，然后再试一次。");
-                                }
-                                else
-                                    MessageBox.Show($"更新{filename}时遇到未知问题，请反馈");
-                                updateFailed = updateFailed.Append(filename).ToList();
+                                    while (newFileName.TryDequeue(out var filename))
+                                    {
+                                        Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename.TrimStart(new char[] { '.', '/' }));
+                                        //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
+                                        Interlocked.Increment(ref newFile);
+                                    }
+                                });
+                                thrd.Start();
+                                thrds.Add(thrd);
                             }
-                            //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
-                            updateFile++;
+                            foreach (var thrd in thrds)
+                            {
+                                thrd.Join();
+                            }
+                        }
+                        // 读取 Interlocked.CompareExchange(ref newFile, 0, 0);
+
+                        int upcnt = updateFileName.Count;
+                        if(upcnt <= 20)
+                        {
+                            while (newFileName.TryDequeue(out var filename))
+                            {
+                                try
+                                {
+                                    File.Delete(System.IO.Path.Combine(@Data.FilePath, filename));
+                                    Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename.TrimStart(new char[] { '.', '/' }));
+                                }
+                                catch (System.IO.IOException)
+                                {
+                                    updateFailed = updateFailed.Append(filename).ToList();
+                                }
+                                catch
+                                {
+                                    if (filename.Substring(filename.Length - 4, 4).Equals(".pdf"))
+                                    {
+                                        MessageBox.Show($"由于曾经发生过的访问冲突，下载器无法更新{filename}\n"
+                                            + $"请手动删除{filename}，然后再试一次。");
+                                    }
+                                    else
+                                        MessageBox.Show($"更新{filename}时遇到未知问题，请反馈");
+                                    updateFailed = updateFailed.Append(filename).ToList();
+                                }
+                                Interlocked.Increment(ref newFile);
+                            }
+                        }
+                        else
+                        {
+                            const int nthread = 8;
+                            var thrds = new List<Thread>();
+
+                            for (int i = 0; i < nthread; i++)
+                            {
+                                var thrd = new Thread(() =>
+                                {
+                                    while (updateFileName.TryDequeue(out var filename))
+                                    {
+                                        try
+                                        {
+                                            File.Delete(System.IO.Path.Combine(@Data.FilePath, filename));
+                                            Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename.TrimStart(new char[] { '.', '/' }));
+                                        }
+                                        catch (System.IO.IOException)
+                                        {
+                                            updateFailed = updateFailed.Append(filename).ToList();
+                                        }
+                                        catch
+                                        {
+                                            if (filename.Substring(filename.Length - 4, 4).Equals(".pdf"))
+                                            {
+                                                MessageBox.Show($"由于曾经发生过的访问冲突，下载器无法更新{filename}\n"
+                                                    + $"请手动删除{filename}，然后再试一次。");
+                                            }
+                                            else
+                                                MessageBox.Show($"更新{filename}时遇到未知问题，请反馈");
+                                            updateFailed = updateFailed.Append(filename).ToList();
+                                        }
+                                        Interlocked.Increment(ref newFile);
+                                    }
+                                });
+                                thrd.Start();
+                                thrds.Add(thrd);
+                            }
+                            foreach (var thrd in thrds)
+                            {
+                                thrd.Join();
+                            }
                         }
                         if (updateFailed.Count == 0)
                             UpdatePlanned = false;
@@ -869,7 +942,7 @@ namespace Downloader
 
                 newFileName.Clear();
                 updateFileName.Clear();
-                newFileName.Add("THUAI6.tar.gz");
+                newFileName.Enqueue("THUAI6.tar.gz");
                 Download();
                 Stream? inStream = null;
                 Stream? gzipStream = null;
@@ -1371,6 +1444,29 @@ namespace Downloader
                 StreamWriter sw = new StreamWriter(directory, false);
                 sw.WriteLine(JsonConvert.SerializeObject(list));
                 sw.Close();
+            }
+        }
+
+        public class RunProgram
+        {
+            public static int StartServer()
+            {
+                Console.WriteLine("Input port: ");
+                string? port = Console.ReadLine();
+                if(port == null || port.Length == 0)
+                {
+                    return 1;
+                }
+                Process process_cmd = new Process();
+                process_cmd.StartInfo.FileName = "cmd.exe";
+                process_cmd.StartInfo.RedirectStandardInput = true;//是否可以输入
+                process_cmd.StartInfo.RedirectStandardOutput = true;//是否可以输出
+                process_cmd.StartInfo.CreateNoWindow = false;//不创建窗体 也就是隐藏窗体
+                process_cmd.StartInfo.UseShellExecute = true;//是否使用系统shell执行，否
+                process_cmd.Start();
+                string command = Data.FilePath + "\\THUAI6\\win" + "\\win64\\Server.exe --port 8888 --studentCount 1 --trickerCount 1 --gameTimeInSecond 600 --fileName video";
+                process_cmd.StandardInput.WriteLine("你要执行的命令");
+                return -1;
             }
         }
     }

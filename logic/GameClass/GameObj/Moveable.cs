@@ -12,6 +12,22 @@ namespace GameClass.GameObj
         protected readonly object moveObjLock = new();
         public object MoveLock => moveObjLock;
 
+        public override XY Position
+        {
+            get
+            {
+                lock (gameObjLock)
+                    return position;
+            }
+            set
+            {
+                lock (gameObjLock)
+                {
+                    position = value;
+                }
+            }
+        }
+
         private bool isMoving;
         public bool IsMoving
         {

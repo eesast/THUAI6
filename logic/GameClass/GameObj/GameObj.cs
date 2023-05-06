@@ -21,22 +21,8 @@ namespace GameClass.GameObj
         public const long invalidID = long.MaxValue;  // 无效的ID
         public long ID { get; }
 
-        private XY position;
-        public XY Position
-        {
-            get
-            {
-                lock (gameObjLock)
-                    return position;
-            }
-            set
-            {
-                lock (gameObjLock)
-                {
-                    position = value;
-                }
-            }
-        }
+        protected XY position;
+        public virtual XY Position { get; set; }
 
         private XY facingDirection = new(1, 0);
         public XY FacingDirection
@@ -88,7 +74,7 @@ namespace GameClass.GameObj
         public virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
         public GameObj(XY initPos, int initRadius, GameObjType initType)
         {
-            this.Position = this.birthPos = initPos;
+            this.position = this.birthPos = initPos;
             this.Radius = initRadius;
             this.type = initType;
             ID = Interlocked.Increment(ref currentMaxID);

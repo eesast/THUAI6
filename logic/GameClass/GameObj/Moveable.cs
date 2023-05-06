@@ -1,17 +1,15 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
-using Protobuf;
 using System.Threading;
 
 namespace GameClass.GameObj
 {
-    /// <summary>
-    /// 一切游戏元素的总基类，与THUAI4不同，继承IMoveable接口（出于一切物体其实都是可运动的指导思想）——LHR
-    /// </summary>
     public abstract class Moveable : GameObj, IMoveable
     {
         protected readonly object moveObjLock = new();
         public object MoveLock => moveObjLock;
+        private ReaderWriterLockSlim moveReaderWriterLock = new();
+        public ReaderWriterLockSlim MoveReaderWriterLock => moveReaderWriterLock;
 
         public override XY Position
         {
@@ -60,7 +58,7 @@ namespace GameClass.GameObj
             return moveVec * moveVec;
         }
 
-        public void ReSetPos(XY position) 
+        public void ReSetPos(XY position)
         {
             lock (moveObjLock)
             {
@@ -72,12 +70,12 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (gameObjLock)
+                lock (moveReaderWriterLock)
                     return canMove;
             }
             set
             {
-                lock (gameObjLock)
+                lock (moveReaderWriterLock)
                 {
                     canMove = value;
                 }
@@ -89,12 +87,12 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (gameObjLock)
+                lock (moveReaderWriterLock)
                     return isResetting;
             }
             set
             {
-                lock (gameObjLock)
+                lock (moveReaderWriterLock)
                 {
                     isResetting = value;
                 }
@@ -111,12 +109,12 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (gameObjLock)
+                lock (moveReaderWriterLock)
                     return moveSpeed;
             }
             set
             {
-                lock (gameObjLock)
+                lock (moveReaderWriterLock)
                 {
                     moveSpeed = value;
                 }

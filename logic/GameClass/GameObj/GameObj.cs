@@ -9,6 +9,8 @@ namespace GameClass.GameObj
     /// </summary>
     public abstract class GameObj : IGameObj
     {
+        private ReaderWriterLockSlim gameObjReaderWriterLock = new();
+        public ReaderWriterLockSlim GameObjReaderWriterLock => gameObjReaderWriterLock;
         protected readonly object gameObjLock = new();
         public object GameLock => gameObjLock;
 

@@ -1,6 +1,5 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
-using System.Threading;
 
 namespace GameClass.GameObj
 {

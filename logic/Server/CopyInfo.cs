@@ -268,6 +268,7 @@ namespace Server
                     Y = chest.Position.y
                 }
             };
+            Debugger.Output(chest, chest.OpenStartTime.ToString());
             int progress = (chest.WhoOpen != null) ? ((time - chest.OpenStartTime) * chest.WhoOpen.SpeedOfOpenChest) : 0;
             msg.ChestMessage.Progress = (progress > GameData.degreeOfOpenedChest) ? GameData.degreeOfOpenedChest : progress;
             return msg;

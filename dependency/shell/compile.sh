@@ -13,8 +13,16 @@ do
             flag=0
         fi
         mv ./compile_log$i.txt $bind/compile_log$i.txt
-    elif [ ! -f "${bind}/player${i}.py" ]; then
-        flag=0
+    elif [ -f "${bind}/player${i}.py" ]; then
+        pushd ../python
+        cp -f $bind/player$i.py ./PyAPI/AI.py
+        python3 -m compileall ./PyAPI
+        if [ ! -f ./PyAPI/__pycache__/AI.cpython-39.pyc ]; then
+            flag=0
+        else
+            rm -rf ./PyAPI/__pycache__/AI.cpython-39.pyc
+        fi
+        popd
     fi
     let "i++"
 done

@@ -70,7 +70,7 @@ namespace GameEngine
             XY nextPos = obj.Position + moveVec;
             double maxLen = collisionChecker.FindMax(obj, nextPos, moveVec);
             maxLen = Math.Min(maxLen, obj.MoveSpeed / GameData.numOfStepPerSecond);
-            obj.MovingSetPos(new XY(moveVec, maxLen), GetPlaceType(nextPos));
+            obj.MovingSetPos(new XY(moveVec, maxLen));
         }
 
         public void MoveObj(IMoveable obj, int moveTime, double direction)
@@ -90,7 +90,7 @@ namespace GameEngine
 
                     double moveVecLength = 0.0;
                     XY res = new(direction, moveVecLength);
-                    double deltaLen = moveVecLength - Math.Sqrt(obj.MovingSetPos(res, GetPlaceType(obj.Position + res)));  // 转向，并用deltaLen存储行走的误差
+                    double deltaLen = moveVecLength - Math.Sqrt(obj.MovingSetPos(res));  // 转向，并用deltaLen存储行走的误差
                     IGameObj? collisionObj = null;
                     bool isDestroyed = false;
 
@@ -156,7 +156,7 @@ namespace GameEngine
                                 } while (flag);
 
                                 if (threadNum == 0 || ((ICharacter)obj).ThreadNum == threadNum)
-                                    deltaLen += moveVecLength - Math.Sqrt(obj.MovingSetPos(res, GetPlaceType(obj.Position + res)));
+                                    deltaLen += moveVecLength - Math.Sqrt(obj.MovingSetPos(res));
 
                                 return true;
                             },
@@ -175,7 +175,7 @@ namespace GameEngine
                                         if ((collisionObj = collisionChecker.CheckCollisionWhenMoving(obj, res)) == null)
                                         {
                                             if (threadNum == 0 || ((ICharacter)obj).ThreadNum == threadNum)
-                                                obj.MovingSetPos(res, GetPlaceType(obj.Position + res));
+                                                obj.MovingSetPos(res);
                                         }
                                         else
                                         {

@@ -178,7 +178,7 @@ namespace Gaming
                         (int)(Math.Abs((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
                     );
 
-                Bullet? bullet = player.Attack(res, gameMap.GetPlaceType(res));
+                Bullet? bullet = player.Attack(res);
 
                 if (bullet != null)
                 {

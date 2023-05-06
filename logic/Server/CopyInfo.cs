@@ -61,7 +61,6 @@ namespace Server
                     Speed = player.MoveSpeed,
                     Determination = player.HP,
                     Addiction = player.GamingAddiction,
-                    Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)player.Place),
                     Guid = player.ID,
 
                     PlayerState = Transformation.ToPlayerState((PlayerStateType)player.PlayerState),
@@ -108,7 +107,6 @@ namespace Server
                     X = player.Position.x,
                     Y = player.Position.y,
                     Speed = player.MoveSpeed,
-                    Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)player.Place),
 
                     TrickerType = Transformation.ToTrickerType(player.CharacterType),
                     Guid = player.ID,
@@ -152,7 +150,6 @@ namespace Server
                     FacingDirection = bullet.FacingDirection.Angle(),
                     Guid = bullet.ID,
                     Team = (bullet.Parent!.IsGhost()) ? PlayerType.TrickerPlayer : PlayerType.StudentPlayer,
-                    Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)bullet.Place),
                     BombRange = bullet.BulletBombRange,
                     Speed = bullet.Speed
                 }
@@ -170,8 +167,7 @@ namespace Server
                     X = prop.Position.x,
                     Y = prop.Position.y,
                     FacingDirection = prop.FacingDirection.Angle(),
-                    Guid = prop.ID,
-                    Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)prop.Place)
+                    Guid = prop.ID
                 }
             };
             return msg;

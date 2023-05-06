@@ -589,7 +589,7 @@ void Logic::LoadBufferCase(const protobuf::MessageOfObj& item)
                     else if (Proto2THUAI6::newsTypeDict[news.news_case()] == THUAI6::NewsType::BinaryMessage)
                     {
                         messageQueue.emplace(std::make_pair(news.to_id(), news.binary_message()));
-                        logger->debug("Add News!");
+                        logger->debug("Add Binary News!");
                     }
                     else
                         logger->error("Unknown NewsType!");
@@ -712,7 +712,7 @@ bool Logic::HaveView(int gridX, int gridY, int selfX, int selfY, int viewRange) 
 void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool file, bool print, bool warnOnly)
 {
     // 建立日志组件
-    auto fileLogger = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/logic-log.txt", true);
+    auto fileLogger = std::make_shared<spdlog::sinks::basic_file_sink_mt>(fmt::format("logs/logic-{}-log.txt", playerID), true);
     auto printLogger = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     std::string pattern = "[logic] [%H:%M:%S.%e] [%l] %v";
     fileLogger->set_pattern(pattern);

@@ -10,7 +10,6 @@ namespace GameClass.GameObj
         public Generator(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Generator)
         {
-            this.place = PlaceType.Generator;
             this.CanMove = false;
         }
         public override bool IsRigid => true;

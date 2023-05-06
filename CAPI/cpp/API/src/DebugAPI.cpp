@@ -684,7 +684,7 @@ void StudentDebugAPI::PrintStudent() const
     {
         logger->info("******Student Info******");
         logger->info("playerID={}, GUID={}, x={}, y={}", student->playerID, student->guid, student->x, student->y);
-        logger->info("speed={}, view range={}, place={}, radius={}", student->speed, student->viewRange, THUAI6::placeTypeDict[student->place], student->radius);
+        logger->info("speed={}, view range={}, radius={}", student->speed, student->viewRange, student->radius);
         std::string skillTime = "";
         for (const auto& time : student->timeUntilSkillAvailable)
             skillTime += std::to_string(time) + ", ";
@@ -709,7 +709,7 @@ void TrickerDebugAPI::PrintStudent() const
     {
         logger->info("******Student Info******");
         logger->info("playerID={}, GUID={}, x={}, y={}", student->playerID, student->guid, student->x, student->y);
-        logger->info("speed={}, view range={}, place={}, radius={}", student->speed, student->viewRange, THUAI6::placeTypeDict[student->place], student->radius);
+        logger->info("speed={}, view range={}, radius={}", student->speed, student->viewRange, student->radius);
         std::string skillTime = "";
         for (const auto& time : student->timeUntilSkillAvailable)
             skillTime += std::to_string(time) + ", ";
@@ -734,7 +734,7 @@ void StudentDebugAPI::PrintTricker() const
     {
         logger->info("******Tricker Info******");
         logger->info("playerID={}, GUID={}, x={}, y={}", tricker->playerID, tricker->guid, tricker->x, tricker->y);
-        logger->info("speed={}, view range={}, place={}, radius={}", tricker->speed, tricker->viewRange, THUAI6::placeTypeDict[tricker->place], tricker->radius);
+        logger->info("speed={}, view range={},  radius={}", tricker->speed, tricker->viewRange, tricker->radius);
         std::string skillTime = "";
         for (const auto& time : tricker->timeUntilSkillAvailable)
             skillTime += std::to_string(time) + ", ";
@@ -758,7 +758,7 @@ void TrickerDebugAPI::PrintTricker() const
     {
         logger->info("******Tricker Info******");
         logger->info("playerID={}, GUID={}, x={}, y={}", tricker->playerID, tricker->guid, tricker->x, tricker->y);
-        logger->info("speed={}, view range={}, place={}, radius={}", tricker->speed, tricker->viewRange, THUAI6::placeTypeDict[tricker->place], tricker->radius);
+        logger->info("speed={}, view range={},  radius={}", tricker->speed, tricker->viewRange, tricker->radius);
         std::string skillTime = "";
         for (const auto& time : tricker->timeUntilSkillAvailable)
             skillTime += std::to_string(time) + ", ";
@@ -781,7 +781,7 @@ void StudentDebugAPI::PrintProp() const
     for (auto prop : logic.GetProps())
     {
         logger->info("******Prop Info******");
-        logger->info("GUID={}, x={}, y={}, place={}, facing direction={}", prop->guid, prop->x, prop->y, THUAI6::placeTypeDict[prop->place], prop->facingDirection);
+        logger->info("GUID={}, x={}, y={}, facing direction={}", prop->guid, prop->x, prop->y, prop->facingDirection);
         logger->info("*********************\n");
     }
 }
@@ -791,7 +791,7 @@ void TrickerDebugAPI::PrintProp() const
     for (auto prop : logic.GetProps())
     {
         logger->info("******Prop Info******");
-        logger->info("GUID={}, x={}, y={}, place={}, facing direction={}", prop->guid, prop->x, prop->y, THUAI6::placeTypeDict[prop->place], prop->facingDirection);
+        logger->info("GUID={}, x={}, y={}, facing direction={}", prop->guid, prop->x, prop->y, prop->facingDirection);
         logger->info("*********************\n");
     }
 }
@@ -801,7 +801,7 @@ void StudentDebugAPI::PrintSelfInfo() const
     auto student = logic.StudentGetSelfInfo();
     logger->info("******Self Info******");
     logger->info("playerID={}, GUID={}, x={}, y={}", student->playerID, student->guid, student->x, student->y);
-    logger->info("speed={}, view range={}, place={}, radius={}", student->speed, student->viewRange, THUAI6::placeTypeDict[student->place], student->radius);
+    logger->info("speed={}, view range={}, radius={}", student->speed, student->viewRange, student->radius);
     std::string skillTime = "";
     for (const auto& time : student->timeUntilSkillAvailable)
         skillTime += std::to_string(time) + ", ";
@@ -824,7 +824,7 @@ void TrickerDebugAPI::PrintSelfInfo() const
     auto tricker = logic.TrickerGetSelfInfo();
     logger->info("******Self Info******");
     logger->info("playerID={}, GUID={}, x={}, y={}", tricker->playerID, tricker->guid, tricker->x, tricker->y);
-    logger->info("speed={}, view range={}, place={}, radius={}", tricker->speed, tricker->viewRange, THUAI6::placeTypeDict[tricker->place], tricker->radius);
+    logger->info("speed={}, view range={}, radius={}", tricker->speed, tricker->viewRange, tricker->radius);
     std::string skillTime = "";
     for (const auto& time : tricker->timeUntilSkillAvailable)
         skillTime += std::to_string(time) + ", ";

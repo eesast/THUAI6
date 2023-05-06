@@ -197,7 +197,7 @@ namespace THUAI6
 
         PlayerType playerType;  // 玩家类型
         std::vector<PropType> props;
-        PlaceType place;  // 所处格子的类型
+        // PlaceType place;  // 所处格子的类型
         BulletType bulletType;
 
         PlayerState playerState;
@@ -232,9 +232,9 @@ namespace THUAI6
         double facingDirection;  // 朝向
         int64_t guid;            // 全局唯一ID
         PlayerType team;         // 子弹所属队伍
-        PlaceType place;         // 所处格子的类型
-        double bombRange;        // 炸弹爆炸范围
-        int32_t speed;           // 子弹速度
+        // PlaceType place;         // 所处格子的类型
+        double bombRange;  // 炸弹爆炸范围
+        int32_t speed;     // 子弹速度
     };
 
     struct BombedBullet
@@ -253,7 +253,7 @@ namespace THUAI6
         int32_t y;
         int64_t guid;
         PropType type;
-        PlaceType place;
+        // PlaceType place;
         double facingDirection;  // 朝向
     };
 

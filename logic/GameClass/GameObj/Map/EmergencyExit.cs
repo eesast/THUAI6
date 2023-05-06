@@ -11,7 +11,6 @@ namespace GameClass.GameObj
         public EmergencyExit(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.EmergencyExit)
         {
-            this.place = PlaceType.EmergencyExit;
             this.CanMove = false;
         }
         public override bool IsRigid => true;

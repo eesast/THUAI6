@@ -5,8 +5,8 @@ namespace GameClass.GameObj
 {
     internal sealed class CommonAttackOfGhost : Bullet
     {
-        public CommonAttackOfGhost(Character player, PlaceType placeType, XY pos, int radius = GameData.bulletRadius) :
-            base(player, radius, placeType, pos)
+        public CommonAttackOfGhost(Character player, XY pos, int radius = GameData.bulletRadius) :
+            base(player, radius, pos)
         {
         }
         public override double BulletBombRange => 0;
@@ -52,8 +52,8 @@ namespace GameClass.GameObj
 
     internal sealed class FlyingKnife : Bullet
     {
-        public FlyingKnife(Character player, PlaceType placeType, XY pos, int radius = GameData.bulletRadius) :
-            base(player, radius, placeType, pos)
+        public FlyingKnife(Character player, XY pos, int radius = GameData.bulletRadius) :
+            base(player, radius, pos)
         {
         }
         public override double BulletBombRange => 0;
@@ -100,8 +100,7 @@ namespace GameClass.GameObj
 
     internal sealed class BombBomb : Bullet
     {
-        public BombBomb(Character player, PlaceType placeType, XY pos, int radius = GameData.bulletRadius) :
-            base(player, radius, placeType, pos)
+        public BombBomb(Character player, XY pos, int radius = GameData.bulletRadius) : base(player, radius, pos)
         {
         }
         public override double BulletBombRange => GameData.basicBulletBombRange;
@@ -146,8 +145,7 @@ namespace GameClass.GameObj
     }
     internal sealed class JumpyDumpty : Bullet
     {
-        public JumpyDumpty(Character player, PlaceType placeType, XY pos, int radius = GameData.bulletRadius) :
-            base(player, radius, placeType, pos)
+        public JumpyDumpty(Character player, XY pos, int radius = GameData.bulletRadius) : base(player, radius, pos)
         {
         }
         public override double BulletBombRange => GameData.basicBulletBombRange / 2;

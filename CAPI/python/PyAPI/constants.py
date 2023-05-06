@@ -10,18 +10,18 @@ class NoInstance:
 class Constants(NoInstance):
     frameDuration = 50  # 每帧毫秒数
     numOfGridPerCell = 1000  # 单位坐标数
-    rows = 50        # 地图行数
-    cols = 50        # 地图列数
+    rows = 50  # 地图行数
+    cols = 50  # 地图列数
 
     numOfClassroom = 10  # 教室数量
-    numOfChest = 8       # 宝箱数量
+    numOfChest = 8  # 宝箱数量
 
     maxClassroomProgress = 10000000  # 教室最大进度
-    maxDoorProgress = 10000000       # 开关门最大进度
-    maxChestProgress = 10000000      # 宝箱最大进度
-    maxGateProgress = 18000      # 大门最大进度
+    maxDoorProgress = 10000000  # 开关门最大进度
+    maxChestProgress = 10000000  # 宝箱最大进度
+    maxGateProgress = 18000  # 大门最大进度
 
-    numOfRequiredClassroomForGate = 7    # 打开大门需要完成的教室数量
+    numOfRequiredClassroomForGate = 7  # 打开大门需要完成的教室数量
     numOfRequiredClassroomForHiddenGate = 3  # 打开隐藏门需要完成的教室数量
 
     # 人物属性相关
@@ -52,16 +52,16 @@ class Constants(NoInstance):
     # 攻击相关
 
     basicApOfTricker = 1500000
-    basicCD = 3000           # 初始子弹冷却
-    basicCastTime = 500      # 基本前摇时间
-    basicBackswing = 800     # 基本后摇时间
+    basicCD = 3000  # 初始子弹冷却
+    basicCastTime = 500  # 基本前摇时间
+    basicBackswing = 800  # 基本后摇时间
     basicRecoveryFromHit = 3700  # 基本命中攻击恢复时长
     basicStunnedTimeOfStudent = 4300
 
-    basicBulletMoveSpeed = 7400       # 基本子弹移动速度
+    basicBulletMoveSpeed = 7400  # 基本子弹移动速度
     basicRemoteAttackRange = 6000  # 基本远程攻击范围
-    basicAttackShortRange = 2200   # 基本近程攻击范围
-    basicBulletBombRange = 2000    # 基本子弹爆炸范围
+    basicAttackShortRange = 2200  # 基本近程攻击范围
+    basicBulletBombRange = 2000  # 基本子弹爆炸范围
 
     # 道具相关
 
@@ -96,10 +96,10 @@ class Assassin:
     concealment = 1.5 * Constants.basicConcealment
     alertnessRadius = (int)(1.3 * Constants.basicTrickerAlertnessRadius)
     viewRange = (int)(1.2 * Constants.basicTrickerViewRange)
-    speedOfOpeningOrLocking = (int)(
-        1.0 * Constants.basicSpeedOfOpeningOrLocking)
+    speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        1.0 * Constants.basicTrickerSpeedOfClimbingThroughWindows)
+        1.0 * Constants.basicTrickerSpeedOfClimbingThroughWindows
+    )
     speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
 
 
@@ -108,10 +108,10 @@ class Klee:
     concealment = 1.0 * Constants.basicConcealment
     alertnessRadius = (int)(1.0 * Constants.basicTrickerAlertnessRadius)
     viewRange = (int)(1.0 * Constants.basicTrickerViewRange)
-    speedOfOpeningOrLocking = (int)(
-        1.0 * Constants.basicSpeedOfOpeningOrLocking)
+    speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        1.0 * Constants.basicTrickerSpeedOfClimbingThroughWindows)
+        1.0 * Constants.basicTrickerSpeedOfClimbingThroughWindows
+    )
     speedOfOpenChest = (int)(1.1 * Constants.basicSpeedOfOpenChest)
 
 
@@ -120,10 +120,10 @@ class ANoisyPerson:
     concealment = 0.8 * Constants.basicConcealment
     alertnessRadius = (int)(0.9 * Constants.basicTrickerAlertnessRadius)
     viewRange = (int)(1.0 * Constants.basicTrickerViewRange)
-    speedOfOpeningOrLocking = (int)(
-        1.0 * Constants.basicSpeedOfOpeningOrLocking)
+    speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        1.1 * Constants.basicTrickerSpeedOfClimbingThroughWindows)
+        1.1 * Constants.basicTrickerSpeedOfClimbingThroughWindows
+    )
     speedOfOpenChest = (int)(1.1 * Constants.basicSpeedOfOpenChest)
 
 
@@ -132,10 +132,10 @@ class Idol:
     concealment = 0.75 * Constants.basicConcealment
     alertnessRadius = (int)(1.0 * Constants.basicTrickerAlertnessRadius)
     viewRange = (int)(1.1 * Constants.basicTrickerViewRange)
-    speedOfOpeningOrLocking = (int)(
-        1.0 * Constants.basicSpeedOfOpeningOrLocking)
+    speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        1.0 * Constants.basicTrickerSpeedOfClimbingThroughWindows)
+        1.0 * Constants.basicTrickerSpeedOfClimbingThroughWindows
+    )
     speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
 
 
@@ -148,10 +148,10 @@ class Athlete:
     concealment = 0.9 * Constants.basicConcealment
     alertnessRadius = (int)(1.0 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(1.1 * Constants.basicStudentViewRange)
-    speedOfOpeningOrLocking = (int)(
-        1.0 * Constants.basicSpeedOfOpeningOrLocking)
+    speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        1.2 * Constants.basicStudentSpeedOfClimbingThroughWindows)
+        1.2 * Constants.basicStudentSpeedOfClimbingThroughWindows
+    )
     speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
 
 
@@ -164,10 +164,10 @@ class Teacher:
     concealment = 0.5 * Constants.basicConcealment
     alertnessRadius = (int)(0.5 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(0.9 * Constants.basicStudentViewRange)
-    speedOfOpeningOrLocking = (int)(
-        1.0 * Constants.basicSpeedOfOpeningOrLocking)
+    speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        0.5 * Constants.basicStudentSpeedOfClimbingThroughWindows)
+        0.5 * Constants.basicStudentSpeedOfClimbingThroughWindows
+    )
     speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
 
 
@@ -180,10 +180,10 @@ class StraightAStudent:
     concealment = 0.9 * Constants.basicConcealment
     alertnessRadius = (int)(0.9 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(0.9 * Constants.basicStudentViewRange)
-    speedOfOpeningOrLocking = (int)(
-        1.0 * Constants.basicSpeedOfOpeningOrLocking)
+    speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        0.83333 * Constants.basicStudentSpeedOfClimbingThroughWindows)
+        0.83333 * Constants.basicStudentSpeedOfClimbingThroughWindows
+    )
     speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
 
 
@@ -196,10 +196,10 @@ class Robot:
     concealment = 1.0 * Constants.basicConcealment
     alertnessRadius = (int)(1.0 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(1.0 * Constants.basicStudentViewRange)
-    speedOfOpeningOrLocking = (int)(
-        1.0 * Constants.basicSpeedOfOpeningOrLocking)
+    speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        0.0016 * Constants.basicStudentSpeedOfClimbingThroughWindows)
+        0.0016 * Constants.basicStudentSpeedOfClimbingThroughWindows
+    )
     speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
 
 
@@ -212,10 +212,10 @@ class TechOtaku:
     concealment = 1.0 * Constants.basicConcealment
     alertnessRadius = (int)(1.0 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(0.9 * Constants.basicStudentViewRange)
-    speedOfOpeningOrLocking = (int)(
-        1.0 * Constants.basicSpeedOfOpeningOrLocking)
+    speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        0.75 * Constants.basicStudentSpeedOfClimbingThroughWindows)
+        0.75 * Constants.basicStudentSpeedOfClimbingThroughWindows
+    )
     speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
 
 
@@ -228,10 +228,10 @@ class Sunshine:
     concealment = 1.0 * Constants.basicConcealment
     alertnessRadius = (int)(1.0 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(1.0 * Constants.basicStudentViewRange)
-    speedOfOpeningOrLocking = (int)(
-        0.7 * Constants.basicSpeedOfOpeningOrLocking)
+    speedOfOpeningOrLocking = (int)(0.7 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        1.0 * Constants.basicStudentSpeedOfClimbingThroughWindows)
+        1.0 * Constants.basicStudentSpeedOfClimbingThroughWindows
+    )
     speedOfOpenChest = (int)(0.9 * Constants.basicSpeedOfOpenChest)
 
 
@@ -299,6 +299,7 @@ class SummonGolem:
     skillCD = (int)(1.0 * Constants.commonSkillCD)
     durationTime = (int)(0.0 * Constants.commonSkillTime)
 
+
 class CommonAttackOfTricker:
     BulletBombRange = 0
     BulletAttackRange = Constants.basicAttackShortRange
@@ -310,34 +311,37 @@ class CommonAttackOfTricker:
     RecoveryFromHit = Constants.basicRecoveryFromHit
     cd = Constants.basicBackswing
     maxBulletNum = 1
-    
+
+
 class FlyingKnife:
     BulletBombRange = 0
     BulletAttackRange = Constants.basicRemoteAttackRange * 13
-    ap = Constants.basicApOfTricker* 4 / 5
-    Speed = Constants.basicBulletMoveSpeed* 25 / 10
+    ap = Constants.basicApOfTricker * 4 / 5
+    Speed = Constants.basicBulletMoveSpeed * 25 / 10
     IsRemoteAttack = True
     CastTime = Constants.basicCastTime * 4 / 5
-    Backswing =0
-    RecoveryFromHit =0
+    Backswing = 0
+    RecoveryFromHit = 0
     cd = Constants.basicBackswing / 2
     maxBulletNum = 1
-    
+
+
 class BombBomb:
     BulletBombRange = Constants.basicBulletBombRange
     BulletAttackRange = Constants.basicAttackShortRange
     ap = Constants.basicApOfTricker * 6 / 5
-    Speed = Constants.basicBulletMoveSpeed* 30 / 37
+    Speed = Constants.basicBulletMoveSpeed * 30 / 37
     IsRemoteAttack = False
     CastTime = BulletAttackRange * 1000 / Speed
-    Backswing =Constants.basicRecoveryFromHit
-    RecoveryFromHit =Constants.basicRecoveryFromHit
+    Backswing = Constants.basicRecoveryFromHit
+    RecoveryFromHit = Constants.basicRecoveryFromHit
     cd = Constants.basicCD
     maxBulletNum = 1
-    
+
+
 class JumpyDumpty:
     BulletBombRange = Constants.basicBulletBombRange / 2
     BulletAttackRange = Constants.basicRemoteAttackRange * 2
-    ap = (int)(Constants.basicApOfTricker* 0.6)
-    Speed = Constants.basicBulletMoveSpeed* 43 / 37
+    ap = (int)(Constants.basicApOfTricker * 0.6)
+    Speed = Constants.basicBulletMoveSpeed * 43 / 37
     IsRemoteAttack = False

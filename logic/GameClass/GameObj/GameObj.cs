@@ -9,6 +9,8 @@ namespace GameClass.GameObj
     /// </summary>
     public abstract class GameObj : IGameObj
     {
+        private ReaderWriterLockSlim gameObjReaderWriterLock = new();
+        public ReaderWriterLockSlim GameObjReaderWriterLock => gameObjReaderWriterLock;
         protected readonly object gameObjLock = new();
         public object GameLock => gameObjLock;
 
@@ -22,52 +24,17 @@ namespace GameClass.GameObj
         public long ID { get; }
 
         protected XY position;
-        public virtual XY Position { get; set; }
+        public abstract XY Position { get; }
 
-        private XY facingDirection = new(1, 0);
-        public XY FacingDirection
-        {
-            get
-            {
-                lock (gameObjLock)
-                    return facingDirection;
-            }
-            set
-            {
-                lock (gameObjLock)
-                    facingDirection = value;
-            }
-        }
+        protected XY facingDirection = new(1, 0);
+        public abstract XY FacingDirection { get; }
+
+        protected bool canMove;
+        public abstract bool CanMove { get; }
 
         public abstract bool IsRigid { get; }
 
         public abstract ShapeType Shape { get; }
-
-        private bool canMove;
-        public bool CanMove
-        {
-            get => canMove;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    canMove = value;
-                }
-            }
-        }
-
-        private bool isResetting;
-        public bool IsResetting
-        {
-            get => isResetting;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    isResetting = value;
-                }
-            }
-        }
 
         public int Radius { get; }
 

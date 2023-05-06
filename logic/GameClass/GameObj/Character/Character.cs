@@ -2,9 +2,6 @@
 using Preparation.Utility;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
-using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace GameClass.GameObj
 {
@@ -58,10 +55,20 @@ namespace GameClass.GameObj
         /// 进行一次攻击
         /// </summary>
         /// <returns>攻击操作发出的子弹</returns>
-        public Bullet? Attack(XY pos)
+        public Bullet? Attack(double angle)
         {
             if (TrySubBulletNum())
-                return BulletFactory.GetBullet(this, pos);
+            {
+                XY res = Position + new XY  // 子弹紧贴人物生成。
+                    (
+                        (int)(Math.Abs((Radius + BulletFactory.BulletRadius(BulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
+                        (int)(Math.Abs((Radius + BulletFactory.BulletRadius(BulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
+                    );
+                Bullet? bullet = BulletFactory.GetBullet(this, res);
+                if (bullet == null) return null;
+                facingDirection = new(angle, bullet.BulletAttackRange);
+                return bullet;
+            }
             else
                 return null;
         }
@@ -362,9 +369,9 @@ namespace GameClass.GameObj
             lock (gameObjLock)
             {
                 playerState = playerStateType;
-                CanMove = false;
+                canMove = false;
                 IsResetting = true;
-                Position = GameData.PosWhoDie;
+                position = GameData.PosWhoDie;
             }
         }
         #endregion

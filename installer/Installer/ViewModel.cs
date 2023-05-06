@@ -38,7 +38,7 @@ namespace starter.viewmodel.settings
             Status = SettingsModel.Status.working;
             string currentDirectory = System.IO.Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName)
                 ?? throw new Exception("Fail to get current directory");
-            //MessageBox.Show("更新器工作正常");
+            MessageBox.Show("更新器工作正常");
             if (!Program.Tencent_cos_download.SelfUpdateDismissed())
             {
                 switch (Program.Tencent_cos_download.CheckSelfVersion())
@@ -85,6 +85,11 @@ namespace starter.viewmodel.settings
                 //若有更新，将启动键改为更新键；
                 //相应地，使用login界面启动；
                 //结构：上方为登录框架，下方有“修改选手包”按钮
+
+                //下面几行是用来运行测试的代码
+                //Program.RunProgram.StartServerForDebug("0.0.0.0",8888,4,1,600,"video");
+                //Program.RunProgram.RunCpp("127.0.0.1",8888,4,1,false,true,false);
+                //Program.RunProgram.RunGUIClient("127.0.0.1", 8888, 0, true);
             }
             else
             {

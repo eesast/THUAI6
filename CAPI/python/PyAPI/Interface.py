@@ -5,7 +5,6 @@ import PyAPI.structures as THUAI6
 
 
 class ILogic(metaclass=ABCMeta):
-
     # IAPI统一可用的接口
 
     @abstractmethod
@@ -155,12 +154,13 @@ class ILogic(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def HaveView(self, gridX: int, gridY: int, selfX: int, selfY: int, viewRange: int) -> bool:
+    def HaveView(
+        self, gridX: int, gridY: int, selfX: int, selfY: int, viewRange: int
+    ) -> bool:
         pass
 
 
 class IAPI(metaclass=ABCMeta):
-
     # 选手可执行的操作
     # 指挥本角色进行移动，`timeInMilliseconds` 为移动时间，单位为毫秒；`angleInRadian` 表示移动的方向，单位是弧度，使用极坐标——竖直向下方向为 x 轴，水平向右方向为 y 轴
 
@@ -346,7 +346,6 @@ class IAPI(metaclass=ABCMeta):
 
 
 class IStudentAPI(IAPI, metaclass=ABCMeta):
-
     # 人类阵营的特殊函数
 
     @abstractmethod
@@ -371,7 +370,6 @@ class IStudentAPI(IAPI, metaclass=ABCMeta):
 
 
 class ITrickerAPI(IAPI, metaclass=ABCMeta):
-
     # 屠夫阵营的特殊函数
 
     @abstractmethod
@@ -390,7 +388,6 @@ class IAI(metaclass=ABCMeta):
 
 
 class IGameTimer(metaclass=ABCMeta):
-
     # 用于计时的接口
 
     @abstractmethod

@@ -6,7 +6,6 @@ from typing import List, cast, Tuple, Union
 
 
 class StudentAPI(IStudentAPI, IGameTimer):
-
     def __init__(self, logic: ILogic) -> None:
         self.__logic = logic
         self.__pool = ThreadPoolExecutor(20)
@@ -133,7 +132,13 @@ class StudentAPI(IStudentAPI, IGameTimer):
         return self.__logic.GetGameInfo()
 
     def HaveView(self, gridX: int, gridY: int) -> bool:
-        return self.__logic.HaveView(gridX, gridY, self.GetSelfInfo().x, self.GetSelfInfo().y, self.GetSelfInfo().viewRange)
+        return self.__logic.HaveView(
+            gridX,
+            gridY,
+            self.GetSelfInfo().x,
+            self.GetSelfInfo().y,
+            self.GetSelfInfo().viewRange,
+        )
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
@@ -182,7 +187,6 @@ class StudentAPI(IStudentAPI, IGameTimer):
 
 
 class TrickerAPI(ITrickerAPI, IGameTimer):
-
     def __init__(self, logic: ILogic) -> None:
         self.__logic = logic
         self.__pool = ThreadPoolExecutor(20)
@@ -309,7 +313,13 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
         return self.__logic.GetGameInfo()
 
     def HaveView(self, gridX: int, gridY: int) -> bool:
-        return self.__logic.HaveView(gridX, gridY, self.GetSelfInfo().x, self.GetSelfInfo().y, self.GetSelfInfo().viewRange)
+        return self.__logic.HaveView(
+            gridX,
+            gridY,
+            self.GetSelfInfo().x,
+            self.GetSelfInfo().y,
+            self.GetSelfInfo().viewRange,
+        )
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 

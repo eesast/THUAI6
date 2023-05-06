@@ -12,7 +12,7 @@ message MessageOfStudent
     int32 determination = 4; // 剩余的学习毅力，相当于血量
     int32 addiction = 5; // 沉迷程度，相当于淘汰进度
     repeated double time_until_skill_available = 6;
-    PlaceType place = 7;
+    // PlaceType place = 7;
     repeated PropType prop = 8;
     PlayerState player_state = 9;
     int64 guid = 10;
@@ -37,7 +37,7 @@ message MessageOfTricker
     int32 y = 2;
     int32 speed = 3;
     repeated double time_until_skill_available = 5;
-    PlaceType place = 6;
+    // PlaceType place = 6;
     repeated PropType prop = 7;
     TrickerType tricker_type = 8;
     int64 guid = 9;
@@ -61,7 +61,7 @@ message MessageOfBullet
     double facing_direction = 4;
     int64 guid = 5;
     PlayerType team = 6;
-    PlaceType place = 7;
+    // PlaceType place = 7;
     double bomb_range = 8;
     int32 speed = 9;
 }
@@ -83,7 +83,7 @@ message MessageOfProp // 可拾取道具的信息
     int32 y = 3;
     double facing_direction = 4;
     int64 guid = 5;
-    PlaceType place = 6;
+    // PlaceType place = 6;
 }
 
 

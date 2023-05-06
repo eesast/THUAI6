@@ -572,96 +572,96 @@ namespace Client
 
         private bool CanSee(MessageOfStudent msg)
         {
-            if (msg.PlayerState == PlayerState.Quit || msg.PlayerState == PlayerState.Graduated)
-                return false;
-            if (isSpectatorMode || isPlaybackMode)
-                return true;
-            if (humanOrButcher && human != null)
-            {
-                if (msg.Place == human.Place)
-                    return true;
-                if (msg.PlayerId == playerID + Preparation.Utility.GameData.numOfPeople)//robot and its owner
-                    return true;
-            }
-            else if (!humanOrButcher && butcher != null)
-            {
-                if (msg.Place == butcher.Place)
-                    return true;
-            }
-            if (msg.Place == Protobuf.PlaceType.Grass)
-                return false;
+            //if (msg.PlayerState == PlayerState.Quit || msg.PlayerState == PlayerState.Graduated)
+            //    return false;
+            //if (isSpectatorMode || isPlaybackMode)
+            //    return true;
+            //if (humanOrButcher && human != null)
+            //{
+            //    if (msg.Place == human.Place)
+            //        return true;
+            //    if (msg.PlayerId == playerID + Preparation.Utility.GameData.numOfPeople)//robot and its owner
+            //        return true;
+            //}
+            //else if (!humanOrButcher && butcher != null)
+            //{
+            //    if (msg.Place == butcher.Place)
+            //        return true;
+            //}
+            //if (msg.Place == Protobuf.PlaceType.Grass)
+            //    return false;
             return true;
         }
 
         private bool CanSee(MessageOfTricker msg)
         {
-            if (isSpectatorMode || isPlaybackMode)
-                return true;
-            if (!humanOrButcher && butcher != null)
-            {
-                if (butcher.Guid == msg.Guid)  // 自己能看见自己
-                    return true;
-            }
-            if (humanOrButcher && human != null)
-            {
-                if (msg.TrickerType == Protobuf.TrickerType.Assassin)
-                {
-                    foreach (var buff in msg.Buff)
-                    {
-                        if (buff == Protobuf.TrickerBuffType.TrickerInvisible)
-                            return false;
-                    }
-                }
-                if (msg.Place == human.Place)
-                    return true;
-            }
-            if (msg.Place == Protobuf.PlaceType.Grass)
-                return false;
+            //if (isSpectatorMode || isPlaybackMode)
+            //    return true;
+            //if (!humanOrButcher && butcher != null)
+            //{
+            //    if (butcher.Guid == msg.Guid)  // 自己能看见自己
+            //        return true;
+            //}
+            //if (humanOrButcher && human != null)
+            //{
+            //    if (msg.TrickerType == Protobuf.TrickerType.Assassin)
+            //    {
+            //        foreach (var buff in msg.Buff)
+            //        {
+            //            if (buff == Protobuf.TrickerBuffType.TrickerInvisible)
+            //                return false;
+            //        }
+            //    }
+            //    if (msg.Place == human.Place)
+            //        return true;
+            //}
+            //if (msg.Place == Protobuf.PlaceType.Grass)
+            //    return false;
             return true;
         }
 
         private bool CanSee(MessageOfProp msg)
         {
-            if (isSpectatorMode || isPlaybackMode)
-                return true;
-            if (humanOrButcher && human != null)
-            {
-                if (msg.Place == human.Place)
-                    return true;
-            }
-            else if (!humanOrButcher && butcher != null)
-            {
-                if (msg.Place == butcher.Place)
-                    return true;
-            }
-            if (msg.Place == Protobuf.PlaceType.Grass)
-                return false;
+            //if (isSpectatorMode || isPlaybackMode)
+            //    return true;
+            //if (humanOrButcher && human != null)
+            //{
+            //    if (msg.Place == human.Place)
+            //        return true;
+            //}
+            //else if (!humanOrButcher && butcher != null)
+            //{
+            //    if (msg.Place == butcher.Place)
+            //        return true;
+            //}
+            //if (msg.Place == Protobuf.PlaceType.Grass)
+            //    return false;
             return true;
         }
 
         private bool CanSee(MessageOfBullet msg)
         {
-            if (isSpectatorMode || isPlaybackMode)
-                return true;
-            if (humanOrButcher && human != null)
-            {
-                if (msg.Place == human.Place)
-                    return true;
-            }
-            else if (!humanOrButcher && butcher != null)
-            {
-                if (msg.Place == butcher.Place)
-                    return true;
-            }
-            if (msg.Place == Protobuf.PlaceType.Grass)
-                return false;
+            //if (isSpectatorMode || isPlaybackMode)
+            //    return true;
+            //if (humanOrButcher && human != null)
+            //{
+            //    if (msg.Place == human.Place)
+            //        return true;
+            //}
+            //else if (!humanOrButcher && butcher != null)
+            //{
+            //    if (msg.Place == butcher.Place)
+            //        return true;
+            //}
+            //if (msg.Place == Protobuf.PlaceType.Grass)
+            //    return false;
             return true;
         }
 
         private bool CanSee(MessageOfBombedBullet msg)
         {
-            if (isSpectatorMode || isPlaybackMode)
-                return true;
+            //if (isSpectatorMode || isPlaybackMode)
+            //    return true;
             //if (humanOrButcher && human != null)
             //{
             //    if (msg.Place == human.Place)

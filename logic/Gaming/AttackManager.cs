@@ -48,7 +48,7 @@ namespace Gaming
                 {
                     case GameObjType.Character:
 
-                        if ((!(((Character)objBeingShot).IsGhost())) && bullet.Parent.IsGhost())
+                        if ((!(((Character)objBeingShot).IsGhost())) && bullet.Parent!.IsGhost())
                         {
                             characterManager.BeAttacked((Student)objBeingShot, bullet);
                         }
@@ -57,7 +57,7 @@ namespace Gaming
                         break;
                     case GameObjType.Generator:
                         if (bullet.CanBeBombed(GameObjType.Generator))
-                            ((Generator)objBeingShot).Repair(-bullet.AP * GameData.factorDamageGenerator, (Character)bullet.Parent);
+                            ((Generator)objBeingShot).Repair(-bullet.AP * GameData.factorDamageGenerator, (Character)bullet.Parent!);
                         break;
                     default:
                         break;
@@ -101,12 +101,12 @@ namespace Gaming
                 {
                     if (objBeingShot == null)
                     {
-                        characterManager.BackSwing((Character)bullet.Parent, bullet.Backswing);
+                        characterManager.BackSwing((Character)bullet.Parent!, bullet.Backswing);
                         return;
                     }
 
                     BombObj(bullet, objBeingShot);
-                    characterManager.BackSwing((Character)bullet.Parent, bullet.RecoveryFromHit);
+                    characterManager.BackSwing((Character)bullet.Parent!, bullet.RecoveryFromHit);
                     return;
                 }
 
@@ -122,7 +122,7 @@ namespace Gaming
 
                 if (bullet.TypeOfBullet == BulletType.BombBomb && objBeingShot != null)
                 {
-                    bullet.Parent.BulletOfPlayer = BulletType.JumpyDumpty;
+                    bullet.Parent!.BulletOfPlayer = BulletType.JumpyDumpty;
                     Debugger.Output(bullet.Parent, bullet.Parent.CharacterType.ToString() + " " + bullet.Parent.BulletNum.ToString());
                     Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI / 2.0);
                     Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI * 3.0 / 2.0);
@@ -159,10 +159,10 @@ namespace Gaming
 
                 if (objBeingShot == null)
                 {
-                    characterManager.BackSwing((Character)bullet.Parent, bullet.Backswing);
+                    characterManager.BackSwing((Character)bullet.Parent!, bullet.Backswing);
                 }
                 else
-                    characterManager.BackSwing((Character)bullet.Parent, bullet.RecoveryFromHit);
+                    characterManager.BackSwing((Character)bullet.Parent!, bullet.RecoveryFromHit);
             }
 
             public bool Attack(Character player, double angle)
@@ -178,7 +178,7 @@ namespace Gaming
                         (int)(Math.Abs((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
                     );
 
-                Bullet? bullet = player.Attack(res, gameMap.GetPlaceType(res));
+                Bullet? bullet = player.Attack(res);
 
                 if (bullet != null)
                 {

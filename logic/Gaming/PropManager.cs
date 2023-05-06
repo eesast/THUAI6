@@ -124,13 +124,13 @@ namespace Gaming
                 if (prop.GetPropType() == PropType.Null)
                     return;
 
-                prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
+                prop.Position = player.Position;
                 gameMap.Add(prop);
             }
 
-            private Prop ProduceOnePropNotKey(Random r, XY Pos)
+            private static Prop ProduceOnePropNotKey(Random r, XY Pos)
             {
-                return PropFactory.GetProp((PropType)r.Next(GameData.numOfTeachingBuilding + 1, GameData.numOfPropSpecies + 1), Pos, gameMap.GetPlaceType(Pos));
+                return PropFactory.GetProp((PropType)r.Next(GameData.numOfTeachingBuilding + 1, GameData.numOfPropSpecies + 1), Pos);
             }
 
             private Chest GetChest(Random r)
@@ -153,7 +153,7 @@ namespace Gaming
                     {
                         ++cou;
                         Chest chest = GetChest(r);
-                        chest.PropInChest[1] = new Key3(chest.Position, PlaceType.Chest);
+                        chest.PropInChest[1] = new Key3(chest.Position);
                         chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
                     }
                     cou = 0;
@@ -161,7 +161,7 @@ namespace Gaming
                     {
                         ++cou;
                         Chest chest = GetChest(r);
-                        chest.PropInChest[1] = new Key5(chest.Position, PlaceType.Chest);
+                        chest.PropInChest[1] = new Key5(chest.Position);
                         chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
                     }
                     cou = 0;
@@ -169,7 +169,7 @@ namespace Gaming
                     {
                         ++cou;
                         Chest chest = GetChest(r);
-                        chest.PropInChest[1] = new Key6(chest.Position, PlaceType.Chest);
+                        chest.PropInChest[1] = new Key6(chest.Position);
                         chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
                     }
 

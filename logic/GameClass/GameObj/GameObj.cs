@@ -14,35 +14,24 @@ namespace GameClass.GameObj
 
         protected readonly XY birthPos;
 
-        private GameObjType type;
+        private readonly GameObjType type;
         public GameObjType Type => type;
 
         private static long currentMaxID = 0;         // 目前游戏对象的最大ID
         public const long invalidID = long.MaxValue;  // 无效的ID
-        public const long noneID = long.MinValue;
         public long ID { get; }
 
-        private XY position;
-        public XY Position
-        {
-            get => position;
-            protected
-                set
-            {
-                lock (gameObjLock)
-                {
-                    position = value;
-                }
-            }
-        }
-
-        protected PlaceType place;
-        public PlaceType Place { get => place; }
+        protected XY position;
+        public virtual XY Position { get; set; }
 
         private XY facingDirection = new(1, 0);
         public XY FacingDirection
         {
-            get => facingDirection;
+            get
+            {
+                lock (gameObjLock)
+                    return facingDirection;
+            }
             set
             {
                 lock (gameObjLock)
@@ -85,7 +74,7 @@ namespace GameClass.GameObj
         public virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
         public GameObj(XY initPos, int initRadius, GameObjType initType)
         {
-            this.Position = this.birthPos = initPos;
+            this.position = this.birthPos = initPos;
             this.Radius = initRadius;
             this.type = initType;
             ID = Interlocked.Increment(ref currentMaxID);

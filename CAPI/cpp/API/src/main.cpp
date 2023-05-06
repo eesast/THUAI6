@@ -115,7 +115,11 @@ int THUAI6Main(int argc, char** argv, CreateAIFunc AIBuilder)
     }
     catch (const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cerr << "C++ Exception: " << e.what() << '\n';
+    }
+    catch (...)
+    {
+        std::cerr << "Unknown Exception\n";
     }
     return 0;
 }

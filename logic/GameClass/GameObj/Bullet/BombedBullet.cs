@@ -13,7 +13,6 @@ namespace GameClass.GameObj
         public BombedBullet(Bullet bullet) :
             base(bullet.Position, bullet.Radius, GameObjType.BombedBullet)
         {
-            this.place = bullet.Place;
             this.bulletHasBombed = bullet;
             this.MappingID = bullet.ID;
             this.FacingDirection = bullet.FacingDirection;

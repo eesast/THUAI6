@@ -51,7 +51,7 @@ if [ -f $playback_dir/start.lock ]; then
     while [ $? -eq 0 ]
     do
         sleep 1
-        ps -p $server_pid
+        ps -p $server_pid > /dev/null 2>&1
     done
     touch $playback_dir/finish.lock
     echo "Finish"

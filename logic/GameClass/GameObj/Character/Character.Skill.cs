@@ -57,7 +57,6 @@ namespace GameClass.GameObj
         protected Character(XY initPos, int initRadius, CharacterType characterType) :
             base(initPos, initRadius, GameObjType.Character)
         {
-            this.place = PlaceType.Null;
             this.CanMove = true;
             this.score = 0;
             this.buffManager = new BuffManager();

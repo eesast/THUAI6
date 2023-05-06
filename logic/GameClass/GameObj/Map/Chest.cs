@@ -1,12 +1,11 @@
 ﻿using Preparation.Utility;
-using System.Collections.Generic;
 
 namespace GameClass.GameObj
 {
     /// <summary>
     /// 箱子
     /// </summary>
-    public class Chest : GameObj
+    public class Chest : Tile
     {
         public Chest(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Chest)
@@ -16,7 +15,7 @@ namespace GameClass.GameObj
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;
 
-        private Prop[] propInChest = new Prop[GameData.maxNumOfPropInChest] { new NullProp(), new NullProp() };
+        private readonly Prop[] propInChest = new Prop[GameData.maxNumOfPropInChest] { new NullProp(), new NullProp() };
         public Prop[] PropInChest => propInChest;
 
         private int openStartTime = 0;
@@ -25,7 +24,7 @@ namespace GameClass.GameObj
         public Character? WhoOpen => whoOpen;
         public void Open(int startTime, Character character)
         {
-            lock (gameObjLock)
+            lock (GameObjReaderWriterLock)
             {
                 openStartTime = startTime;
                 whoOpen = character;
@@ -33,7 +32,7 @@ namespace GameClass.GameObj
         }
         public void StopOpen()
         {
-            lock (gameObjLock)
+            lock (GameObjReaderWriterLock)
             {
                 openStartTime = 0;
                 whoOpen = null;

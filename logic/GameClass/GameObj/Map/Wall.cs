@@ -5,7 +5,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 墙体
     /// </summary>
-    public class Wall : GameObj
+    public class Wall : Tile
     {
         public Wall(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Wall)

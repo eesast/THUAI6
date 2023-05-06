@@ -6,7 +6,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 紧急出口
     /// </summary>
-    public class EmergencyExit : GameObj
+    public class EmergencyExit : Tile
     {
         public EmergencyExit(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.EmergencyExit)

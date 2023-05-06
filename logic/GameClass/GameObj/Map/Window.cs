@@ -6,7 +6,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 窗
     /// </summary>
-    public class Window : GameObj
+    public class Window : Tile
     {
         public Window(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Window)

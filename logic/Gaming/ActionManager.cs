@@ -267,7 +267,7 @@ namespace Gaming
                       {
                           Prop prop = chestToOpen.PropInChest[i];
                           chestToOpen.PropInChest[i] = new NullProp();
-                          prop.Position = player.Position;
+                          prop.ReSetPos(player.Position);
                           gameMap.Add(prop);
                       }
                   }
@@ -323,7 +323,7 @@ namespace Gaming
                       return;
                   }
 
-                  player.Position = windowToPlayer + windowForClimb.Position;
+                  player.ReSetPos(windowToPlayer + windowForClimb.Position);
                   player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
 
                   moveEngine.MoveObj(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
@@ -339,7 +339,7 @@ namespace Gaming
                     )
                     .Start();
                   XY PosJumpOff = windowForClimb.Position - 2 * windowToPlayer;
-                  player.Position = PosJumpOff;
+                  player.ReSetPos(PosJumpOff);
                   player.MoveSpeed = player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
                   windowForClimb.WhoIsClimbing = null;
                   //  gameMap.Remove(addWall);

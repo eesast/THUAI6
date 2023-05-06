@@ -8,7 +8,6 @@ namespace GameClass.GameObj
 {
     public partial class Map : IMap
     {
-
         private readonly Dictionary<uint, XY> birthPointList;  // 出生点列表
         public Dictionary<uint, XY> BirthPointList => birthPointList;
 

@@ -57,7 +57,7 @@ namespace GameClass.GameObj
         protected Character(XY initPos, int initRadius, CharacterType characterType) :
             base(initPos, initRadius, GameObjType.Character)
         {
-            this.CanMove = true;
+            this.canMove = true;
             this.score = 0;
             this.buffManager = new BuffManager();
             this.occupation = OccupationFactory.FindIOccupation(characterType);

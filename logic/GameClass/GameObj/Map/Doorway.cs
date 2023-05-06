@@ -6,12 +6,11 @@ namespace GameClass.GameObj
     /// <summary>
     /// 出口
     /// </summary>
-    public class Doorway : GameObj
+    public class Doorway : Immovable
     {
         public Doorway(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Doorway)
         {
-            this.CanMove = false;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;

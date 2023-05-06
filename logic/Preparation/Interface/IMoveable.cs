@@ -8,8 +8,10 @@ namespace Preparation.Interface
         object MoveLock { get; }
         public int MoveSpeed { get; }
         public bool IsMoving { get; set; }
+        public bool IsResetting { get; set; }  // reviving
         public bool IsAvailable { get; }
         public long MovingSetPos(XY moveVec);
+        public void ReSetCanMove(bool value);
         public bool WillCollideWith(IGameObj? targetObj, XY nextPos)  // 检查下一位置是否会和目标物碰撞
         {
             if (targetObj == null)

@@ -15,6 +15,7 @@ class State:
         self.mapInfo = THUAI6.GameMap()
         self.gameInfo = THUAI6.GameInfo()
         self.guids = []
+
     teamScore: int
     self: Union[THUAI6.Student, THUAI6.Tricker]
 

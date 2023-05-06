@@ -57,6 +57,9 @@ private:
     bool haveNewMessage = false;
     protobuf::MessageToClient message2Client;
     std::mutex mtxMessage;
+    std::mutex mtxLimit;
+    int counter;
+    static constexpr const int limit = 50;
     std::condition_variable cvMessage;
 };
 

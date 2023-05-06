@@ -407,7 +407,7 @@ namespace Gaming
                     Prop? prop = player.UseProp(i);
                     if (prop != null)
                     {
-                        prop.Position = player.Position;
+                        prop.ReSetPos(player.Position);
                         gameMap.Add(prop);
                     }
                 }

@@ -5,12 +5,11 @@ namespace GameClass.GameObj
     /// <summary>
     /// 箱子
     /// </summary>
-    public class Chest : Tile
+    public class Chest : Immovable
     {
         public Chest(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Chest)
         {
-            this.CanMove = false;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;

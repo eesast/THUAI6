@@ -33,7 +33,7 @@ namespace Gaming
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                         if (obj.CanMove && ((Bullet)obj).TypeOfBullet != BulletType.JumpyDumpty)
                             BulletBomb((Bullet)obj, null);
-                        obj.CanMove = false;
+                        obj.ReSetCanMove(false);
                     }
                 );
                 this.characterManager = characterManager;
@@ -66,7 +66,7 @@ namespace Gaming
 
             public bool TryRemoveBullet(Bullet bullet)
             {
-                bullet.CanMove = false;
+                bullet.ReSetCanMove(false);
                 if (gameMap.Remove(bullet))
                 {
                     if (bullet.BulletBombRange > 0)
@@ -172,20 +172,14 @@ namespace Gaming
                 Debugger.Output(player, player.CharacterType.ToString() + "Attack in " + player.BulletOfPlayer.ToString());
 
                 Debugger.Output(player, player.Position.ToString() + " " + player.Radius.ToString() + " " + BulletFactory.BulletRadius(player.BulletOfPlayer).ToString());
-                XY res = player.Position + new XY  // 子弹紧贴人物生成。
-                    (
-                        (int)(Math.Abs((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
-                        (int)(Math.Abs((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
-                    );
 
-                Bullet? bullet = player.Attack(res);
+                Bullet? bullet = player.Attack(angle);
 
                 if (bullet != null)
                 {
-                    player.FacingDirection = new(angle, bullet.BulletAttackRange);
                     Debugger.Output(bullet, "Attack in " + bullet.Position.ToString());
                     bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
-                    bullet.CanMove = true;
+                    bullet.ReSetCanMove(true);
                     gameMap.Add(bullet);
                     moveEngine.MoveObj(bullet, (int)((bullet.BulletAttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
                     if (bullet.CastTime > 0)

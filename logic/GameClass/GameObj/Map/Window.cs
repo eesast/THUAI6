@@ -6,12 +6,11 @@ namespace GameClass.GameObj
     /// <summary>
     /// 窗
     /// </summary>
-    public class Window : Tile
+    public class Window : Immovable
     {
         public Window(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Window)
         {
-            this.CanMove = false;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;

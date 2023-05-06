@@ -6,12 +6,11 @@ namespace GameClass.GameObj
     /// <summary>
     /// 紧急出口
     /// </summary>
-    public class EmergencyExit : Tile
+    public class EmergencyExit : Immovable
     {
         public EmergencyExit(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.EmergencyExit)
         {
-            this.CanMove = false;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;

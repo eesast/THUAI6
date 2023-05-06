@@ -73,12 +73,13 @@ namespace GameClass.GameObj
                 lock (moveReaderWriterLock)
                     return canMove;
             }
-            set
+        }
+
+        public void ReSetCanMove(bool value)
+        {
+            lock (moveReaderWriterLock)
             {
-                lock (moveReaderWriterLock)
-                {
-                    canMove = value;
-                }
+                canMove = value;
             }
         }
 

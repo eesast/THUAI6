@@ -6,7 +6,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 门
     /// </summary>
-    public class Door : Tile
+    public class Door : Immovable
     {
         public Door(XY initPos, PlaceType placeType) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Door)
@@ -24,7 +24,6 @@ namespace GameClass.GameObj
                     doorNum = 6;
                     break;
             }
-            this.CanMove = false;
         }
 
         private readonly int doorNum;

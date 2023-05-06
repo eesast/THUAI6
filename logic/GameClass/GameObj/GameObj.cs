@@ -24,17 +24,17 @@ namespace GameClass.GameObj
         public long ID { get; }
 
         protected XY position;
-        public virtual XY Position { get; set; }
+        public abstract XY Position { get; }
 
         protected XY facingDirection = new(1, 0);
-        public virtual XY FacingDirection { get; set; }
+        public abstract XY FacingDirection { get; }
+
+        protected bool canMove;
+        public abstract bool CanMove { get; }
 
         public abstract bool IsRigid { get; }
 
         public abstract ShapeType Shape { get; }
-
-        protected bool canMove;
-        public virtual bool CanMove { get; set; }
 
         public int Radius { get; }
 

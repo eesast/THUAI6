@@ -20,6 +20,12 @@ Communication::Communication(std::string sIP, std::string sPort)
 
 bool Communication::Move(int64_t time, double angle, int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::MoveRes moveResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufMove(time, angle, playerID);
@@ -32,6 +38,12 @@ bool Communication::Move(int64_t time, double angle, int64_t playerID)
 
 bool Communication::PickProp(THUAI6::PropType prop, int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes pickPropResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufProp(prop, playerID);
@@ -44,6 +56,12 @@ bool Communication::PickProp(THUAI6::PropType prop, int64_t playerID)
 
 bool Communication::UseProp(THUAI6::PropType prop, int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes usePropResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufProp(prop, playerID);
@@ -56,6 +74,12 @@ bool Communication::UseProp(THUAI6::PropType prop, int64_t playerID)
 
 bool Communication::ThrowProp(THUAI6::PropType prop, int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes throwPropResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufProp(prop, playerID);
@@ -68,6 +92,12 @@ bool Communication::ThrowProp(THUAI6::PropType prop, int64_t playerID)
 
 bool Communication::UseSkill(int32_t skillID, int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes useSkillResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufSkill(skillID, playerID);
@@ -80,6 +110,12 @@ bool Communication::UseSkill(int32_t skillID, int64_t playerID)
 
 bool Communication::SendMessage(int64_t toID, std::string message, bool binary, int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes sendMessageResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufSend(message, toID, binary, playerID);
@@ -92,6 +128,12 @@ bool Communication::SendMessage(int64_t toID, std::string message, bool binary, 
 
 bool Communication::OpenDoor(int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes openDoorResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
@@ -104,6 +146,12 @@ bool Communication::OpenDoor(int64_t playerID)
 
 bool Communication::CloseDoor(int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes closeDoorResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
@@ -116,6 +164,12 @@ bool Communication::CloseDoor(int64_t playerID)
 
 bool Communication::SkipWindow(int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes skipWindowResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
@@ -128,6 +182,12 @@ bool Communication::SkipWindow(int64_t playerID)
 
 bool Communication::StartOpenGate(int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes startOpenGateResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
@@ -140,6 +200,12 @@ bool Communication::StartOpenGate(int64_t playerID)
 
 bool Communication::StartOpenChest(int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes startOpenChestResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
@@ -152,6 +218,12 @@ bool Communication::StartOpenChest(int64_t playerID)
 
 bool Communication::EndAllAction(int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes endAllActionResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
@@ -164,6 +236,12 @@ bool Communication::EndAllAction(int64_t playerID)
 
 bool Communication::Graduate(int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes graduateResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
@@ -176,6 +254,12 @@ bool Communication::Graduate(int64_t playerID)
 
 bool Communication::StartLearning(int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes startLearningResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
@@ -188,6 +272,12 @@ bool Communication::StartLearning(int64_t playerID)
 
 bool Communication::StartRouseMate(int64_t playerID, int64_t mateID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes saveStudentResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufTreatAndRescue(playerID, mateID);
@@ -200,6 +290,12 @@ bool Communication::StartRouseMate(int64_t playerID, int64_t mateID)
 
 bool Communication::StartEncourageMate(int64_t playerID, int64_t mateID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes healStudentResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufTreatAndRescue(playerID, mateID);
@@ -212,6 +308,12 @@ bool Communication::StartEncourageMate(int64_t playerID, int64_t mateID)
 
 bool Communication::Attack(double angle, int64_t playerID)
 {
+    {
+        std::lock_guard<std::mutex> lock(mtxLimit);
+        if (counter > limit)
+            return false;
+        counter++;
+    }
     protobuf::BoolRes attackResult;
     ClientContext context;
     auto request = THUAI62Proto::THUAI62ProtobufAttack(angle, playerID);
@@ -229,9 +331,7 @@ bool Communication::TryConnection(int64_t playerID)
     auto request = THUAI62Proto::THUAI62ProtobufID(playerID);
     auto status = THUAI6Stub->TryConnection(&context, request, &reply);
     if (status.ok())
-    {
         return true;
-    }
     else
         return false;
 }
@@ -254,6 +354,7 @@ void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, T
         auto MessageReader = THUAI6Stub->AddPlayer(&context, playerMsg);
 
         protobuf::MessageToClient buffer2Client;
+        counter = 0;
 
         while (MessageReader->Read(&buffer2Client))
         {
@@ -261,6 +362,10 @@ void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, T
                 std::lock_guard<std::mutex> lock(mtxMessage);
                 message2Client = std::move(buffer2Client);
                 haveNewMessage = true;
+                {
+                    std::lock_guard<std::mutex> lock(mtxLimit);
+                    counter = 0;
+                }
             }
             cvMessage.notify_one();
         }

@@ -27,14 +27,20 @@ class Communication:
         self.__message2Client: Message2Clients.MessageToClient
         self.__mtxLimit = threading.Lock()
         self.__counter = 0
+        self.__counterMove = 0
         self.__limit = 50
+        self.__moveLimit = 10
 
     def Move(self, time: int, angle: float, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if (
+                    self.__counter >= self.__limit
+                    or self.__counterMove >= self.__moveLimit
+                ):
                     return False
                 self.__counter += 1
+                self.__counterMove += 1
             moveResult = self.__THUAI6Stub.Move(
                 THUAI62Proto.THUAI62ProtobufMove(time, angle, playerID)
             )
@@ -46,7 +52,7 @@ class Communication:
     def PickProp(self, propType: THUAI6.PropType, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             pickResult = self.__THUAI6Stub.PickProp(
@@ -60,7 +66,7 @@ class Communication:
     def UseProp(self, propType: THUAI6.PropType, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             useResult = self.__THUAI6Stub.UseProp(
@@ -74,7 +80,7 @@ class Communication:
     def ThrowProp(self, propType: THUAI6.PropType, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             throwResult = self.__THUAI6Stub.ThrowProp(
@@ -88,7 +94,7 @@ class Communication:
     def UseSkill(self, skillID: int, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             useResult = self.__THUAI6Stub.UseSkill(
@@ -102,7 +108,7 @@ class Communication:
     def SendMessage(self, toID: int, message: Union[str, bytes], playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             sendResult = self.__THUAI6Stub.SendMessage(
@@ -116,7 +122,7 @@ class Communication:
     def Graduate(self, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             escapeResult = self.__THUAI6Stub.Graduate(
@@ -130,7 +136,7 @@ class Communication:
     def StartLearning(self, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             learnResult = self.__THUAI6Stub.StartLearning(
@@ -144,7 +150,7 @@ class Communication:
     def StartEncourageMate(self, playerID: int, mateID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             helpResult = self.__THUAI6Stub.StartTreatMate(
@@ -158,7 +164,7 @@ class Communication:
     def StartRouseMate(self, playerID: int, mateID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             helpResult = self.__THUAI6Stub.StartRescueMate(
@@ -172,7 +178,7 @@ class Communication:
     def Attack(self, angle: float, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             attackResult = self.__THUAI6Stub.Attack(
@@ -186,7 +192,7 @@ class Communication:
     def OpenDoor(self, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             openResult = self.__THUAI6Stub.OpenDoor(
@@ -200,7 +206,7 @@ class Communication:
     def CloseDoor(self, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             closeResult = self.__THUAI6Stub.CloseDoor(
@@ -214,7 +220,7 @@ class Communication:
     def SkipWindow(self, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             skipResult = self.__THUAI6Stub.SkipWindow(
@@ -228,7 +234,7 @@ class Communication:
     def StartOpenGate(self, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             openResult = self.__THUAI6Stub.StartOpenGate(
@@ -242,7 +248,7 @@ class Communication:
     def StartOpenChest(self, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             openResult = self.__THUAI6Stub.StartOpenChest(
@@ -256,9 +262,13 @@ class Communication:
     def EndAllAction(self, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
-                if self.__counter > self.__limit:
+                if (
+                    self.__counter >= self.__limit
+                    or self.__counterMove >= self.__moveLimit
+                ):
                     return False
                 self.__counter += 1
+                self.__counterMove += 1
             endResult = self.__THUAI6Stub.EndAllAction(
                 THUAI62Proto.THUAI62ProtobufID(playerID)
             )
@@ -300,6 +310,7 @@ class Communication:
                         self.__cvMessage.notify()
                         with self.__mtxLimit:
                             self.__counter = 0
+                            self.__counterMove = 0
             except grpc.RpcError as e:
                 return
 

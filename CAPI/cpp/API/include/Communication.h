@@ -59,7 +59,9 @@ private:
     std::mutex mtxMessage;
     std::mutex mtxLimit;
     int counter;
+    int counterMove;
     static constexpr const int limit = 50;
+    static constexpr const int moveLimit = 10;
     std::condition_variable cvMessage;
 };
 

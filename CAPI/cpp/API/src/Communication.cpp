@@ -22,9 +22,10 @@ bool Communication::Move(int64_t time, double angle, int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit || counterMove >= moveLimit)
             return false;
         counter++;
+        counterMove++;
     }
     protobuf::MoveRes moveResult;
     ClientContext context;
@@ -40,7 +41,7 @@ bool Communication::PickProp(THUAI6::PropType prop, int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -58,7 +59,7 @@ bool Communication::UseProp(THUAI6::PropType prop, int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -76,7 +77,7 @@ bool Communication::ThrowProp(THUAI6::PropType prop, int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -94,7 +95,7 @@ bool Communication::UseSkill(int32_t skillID, int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -112,7 +113,7 @@ bool Communication::SendMessage(int64_t toID, std::string message, bool binary, 
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -130,7 +131,7 @@ bool Communication::OpenDoor(int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -148,7 +149,7 @@ bool Communication::CloseDoor(int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -166,7 +167,7 @@ bool Communication::SkipWindow(int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -184,7 +185,7 @@ bool Communication::StartOpenGate(int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -202,7 +203,7 @@ bool Communication::StartOpenChest(int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -220,9 +221,10 @@ bool Communication::EndAllAction(int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit || counterMove >= moveLimit)
             return false;
         counter++;
+        counterMove++;
     }
     protobuf::BoolRes endAllActionResult;
     ClientContext context;
@@ -238,7 +240,7 @@ bool Communication::Graduate(int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -256,7 +258,7 @@ bool Communication::StartLearning(int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -274,7 +276,7 @@ bool Communication::StartRouseMate(int64_t playerID, int64_t mateID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -292,7 +294,7 @@ bool Communication::StartEncourageMate(int64_t playerID, int64_t mateID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -310,7 +312,7 @@ bool Communication::Attack(double angle, int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
-        if (counter > limit)
+        if (counter >= limit)
             return false;
         counter++;
     }
@@ -355,6 +357,7 @@ void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, T
 
         protobuf::MessageToClient buffer2Client;
         counter = 0;
+        counterMove = 0;
 
         while (MessageReader->Read(&buffer2Client))
         {
@@ -365,6 +368,7 @@ void Communication::AddPlayer(int64_t playerID, THUAI6::PlayerType playerType, T
                 {
                     std::lock_guard<std::mutex> lock(mtxLimit);
                     counter = 0;
+                    counterMove = 0;
                 }
             }
             cvMessage.notify_one();

@@ -36,7 +36,7 @@ namespace Gaming
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
                 if (moveTimeInMilliseconds < 5) return false;
-                if (!playerToMove.Commandable() || !TryToStop()) return false;
+                if (!playerToMove.Commandable()) return false;
                 if (playerToMove.IsMoving) return false;
                 characterManager.SetPlayerState(playerToMove, PlayerStateType.Moving);
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
@@ -53,7 +53,7 @@ namespace Gaming
 
             public bool Stop(Character player)
             {
-                if (player.Commandable() || !TryToStop())
+                if (player.Commandable())
                 {
                     characterManager.SetPlayerState(player);
                     return true;
@@ -440,33 +440,6 @@ namespace Gaming
                 }
             }
             */
-            private object numLock = new object();
-            private int lastTime = 0;
-            private int numStop = 0;
-            private int NumStop => numStop;
-            private bool TryToStop()
-            {
-                lock (numLock)
-                {
-                    int time = gameMap.Timer.nowTime();
-                    if (time / GameData.frameDuration > lastTime)
-                    {
-                        lastTime = time / GameData.frameDuration;
-                        numStop = 1;
-                        return true;
-                    }
-                    else
-                    {
-                        if (numStop == GameData.LimitOfStopAndMove)
-                            return false;
-                        else
-                        {
-                            ++numStop;
-                            return true;
-                        }
-                    }
-                }
-            }
 
             private readonly Map gameMap;
             private readonly CharacterManager characterManager;

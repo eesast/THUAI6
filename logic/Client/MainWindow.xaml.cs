@@ -46,7 +46,17 @@ namespace Client
             isClientStocked = true;
             isPlaybackMode = false;
             isSpectatorMode = false;
-            drawPicLock = new();
+            lockOfProp = new();
+            lockOfStudent = new();
+            lockOfTricker = new();
+            lockOfBullet = new();
+            lockOfBombedBullet = new();
+            lockOfAll = new();
+            lockOfChest = new();
+            lockOfClassroom = new();
+            lockOfDoor = new();
+            lockOfGate = new();
+            lockOfHiddenGate = new();
             listOfProp = new List<MessageOfProp>();
             listOfHuman = new List<MessageOfStudent>();
             listOfButcher = new List<MessageOfTricker>();
@@ -159,7 +169,7 @@ namespace Client
         {
             var pbClient = new PlaybackClient(fileName, pbSpeed);
             int[,]? map;
-            if ((map = pbClient.ReadDataFromFile(listOfProp, listOfHuman, listOfButcher, listOfBullet, listOfBombedBullet, listOfAll, listOfChest, listOfClassroom, listOfDoor, listOfHiddenGate, listOfGate, drawPicLock)) != null)
+            if ((map = pbClient.ReadDataFromFile(listOfProp, listOfHuman, listOfButcher, listOfBullet, listOfBombedBullet, listOfAll, listOfChest, listOfClassroom, listOfDoor, listOfHiddenGate, listOfGate, lockOfProp, lockOfStudent, lockOfTricker, lockOfBullet, lockOfBombedBullet, lockOfAll, lockOfChest, lockOfClassroom, lockOfDoor, lockOfHiddenGate, lockOfGate)) != null)
             {
                 isClientStocked = false;
                 PorC.Content = "⏸";
@@ -402,160 +412,298 @@ namespace Client
             {
                 while (responseStream != null && await responseStream.ResponseStream.MoveNext())
                 {
-                    lock (drawPicLock)  // 加锁是必要的，画图操作和接收信息操作不能同时进行，否则画图时foreach会有bug
+                    // 加锁是必要的，画图操作和接收信息操作不能同时进行，否则画图时foreach会有bug
+                    lock (lockOfStudent)
                     {
                         listOfHuman.Clear();
+                    }
+                    lock (lockOfTricker)
+                    {
                         listOfButcher.Clear();
+                    }
+                    lock(lockOfProp)
+                    {
                         listOfProp.Clear();
+                    }
+                    lock (lockOfBombedBullet)
+                    {
                         listOfBombedBullet.Clear();
+                    }
+                    lock (lockOfBullet)
+                    {
                         listOfBullet.Clear();
+                    }
+                    lock (lockOfAll)
+                    {
                         listOfAll.Clear();
+                    }
+                    lock (lockOfChest)
+                    {
                         listOfChest.Clear();
+                    }
+                    lock (lockOfClassroom)
+                    {
                         listOfClassroom.Clear();
+                    }
+                    lock (lockOfDoor)
+                    {
                         listOfDoor.Clear();
+                    }
+                    lock (lockOfHiddenGate)
+                    {
                         listOfHiddenGate.Clear();
+                    }
+                    lock (lockOfGate)
+                    {
                         listOfGate.Clear();
-                        MessageToClient content = responseStream.ResponseStream.Current;
-                        switch (content.GameState)
-                        {
-                            case GameState.GameStart:
-                                foreach (var obj in content.ObjMessage)
+                    }
+                    MessageToClient content = responseStream.ResponseStream.Current;
+                    switch (content.GameState)
+                    {
+                        case GameState.GameStart:
+                            foreach (var obj in content.ObjMessage)
+                            {
+                                switch (obj.MessageOfObjCase)
                                 {
-                                    switch (obj.MessageOfObjCase)
-                                    {
-                                        case MessageOfObj.MessageOfObjOneofCase.StudentMessage:
-                                            if (humanOrButcher && obj.StudentMessage.PlayerId == playerID)
-                                            {
-                                                human = obj.StudentMessage;
-                                            }
+                                    case MessageOfObj.MessageOfObjOneofCase.StudentMessage:
+                                        if (humanOrButcher && obj.StudentMessage.PlayerId == playerID)
+                                        {
+                                            human = obj.StudentMessage;
+                                        }
+                                        lock (lockOfStudent)
+                                        {
                                             listOfHuman.Add(obj.StudentMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.TrickerMessage:
-                                            if (!humanOrButcher && obj.TrickerMessage.PlayerId == playerID)
-                                            {
-                                                butcher = obj.TrickerMessage;
-                                            }
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.TrickerMessage:
+                                        if (!humanOrButcher && obj.TrickerMessage.PlayerId == playerID)
+                                        {
+                                            butcher = obj.TrickerMessage;
+                                        }
+                                        lock (lockOfTricker)
+                                        {
                                             listOfButcher.Add(obj.TrickerMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.PropMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.PropMessage:
+                                        lock (lockOfProp)
+                                        {
                                             listOfProp.Add(obj.PropMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.BombedBulletMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.BombedBulletMessage:
+                                        lock (lockOfBombedBullet)
+                                        {
                                             listOfBombedBullet.Add(obj.BombedBulletMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.BulletMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.BulletMessage:
+                                        lock (lockOfBullet)
+                                        {
                                             listOfBullet.Add(obj.BulletMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.ChestMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.ChestMessage:
+                                        lock (lockOfChest)
+                                        {
                                             listOfChest.Add(obj.ChestMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.ClassroomMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.ClassroomMessage:
+                                        lock (lockOfClassroom)
+                                        {
                                             listOfClassroom.Add(obj.ClassroomMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.DoorMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.DoorMessage:
+                                        lock (lockOfDoor)
+                                        {
                                             listOfDoor.Add(obj.DoorMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.GateMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.GateMessage:
+                                        lock (lockOfGate)
+                                        {
                                             listOfGate.Add(obj.GateMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.MapMessage:
-                                            GetMap(obj.MapMessage);
-                                            break;
-                                    }
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.MapMessage:
+                                        GetMap(obj.MapMessage);
+                                        break;
                                 }
+                            }
+                            lock (lockOfAll)
+                            {
                                 listOfAll.Add(content.AllMessage);
-                                break;
-                            case GameState.GameRunning:
-                                foreach (var obj in content.ObjMessage)
+                            }
+                            break;
+                        case GameState.GameRunning:
+                            foreach (var obj in content.ObjMessage)
+                            {
+                                switch (obj.MessageOfObjCase)
                                 {
-                                    switch (obj.MessageOfObjCase)
-                                    {
-                                        case MessageOfObj.MessageOfObjOneofCase.StudentMessage:
-                                            if (humanOrButcher && obj.StudentMessage.PlayerId == playerID)
-                                            {
-                                                human = obj.StudentMessage;
-                                            }
+                                    case MessageOfObj.MessageOfObjOneofCase.StudentMessage:
+                                        if (humanOrButcher && obj.StudentMessage.PlayerId == playerID)
+                                        {
+                                            human = obj.StudentMessage;
+                                        }
+                                        lock (lockOfStudent)
+                                        {
                                             listOfHuman.Add(obj.StudentMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.TrickerMessage:
-                                            if (!humanOrButcher && obj.TrickerMessage.PlayerId == playerID)
-                                            {
-                                                butcher = obj.TrickerMessage;
-                                            }
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.TrickerMessage:
+                                        if (!humanOrButcher && obj.TrickerMessage.PlayerId == playerID)
+                                        {
+                                            butcher = obj.TrickerMessage;
+                                        }
+                                        lock (lockOfTricker)
+                                        {
                                             listOfButcher.Add(obj.TrickerMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.PropMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.PropMessage:
+                                        lock (lockOfProp)
+                                        {
                                             listOfProp.Add(obj.PropMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.BombedBulletMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.BombedBulletMessage:
+                                        lock (lockOfBombedBullet)
+                                        {
                                             listOfBombedBullet.Add(obj.BombedBulletMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.BulletMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.BulletMessage:
+                                        lock (lockOfBullet)
+                                        {
                                             listOfBullet.Add(obj.BulletMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.ChestMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.ChestMessage:
+                                        lock (lockOfChest)
+                                        {
                                             listOfChest.Add(obj.ChestMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.ClassroomMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.ClassroomMessage:
+                                        lock (lockOfClassroom)
+                                        {
                                             listOfClassroom.Add(obj.ClassroomMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.DoorMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.DoorMessage:
+                                        lock (lockOfDoor)
+                                        {
                                             listOfDoor.Add(obj.DoorMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.GateMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.GateMessage:
+                                        lock (lockOfGate)
+                                        {
                                             listOfGate.Add(obj.GateMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.HiddenGateMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.HiddenGateMessage:
+                                        lock (lockOfHiddenGate)
+                                        {
                                             listOfHiddenGate.Add(obj.HiddenGateMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.MapMessage:
-                                            GetMap(obj.MapMessage);
-                                            break;
-                                    }
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.MapMessage:
+                                        GetMap(obj.MapMessage);
+                                        break;
                                 }
+                            }
+                            lock (lockOfAll)
+                            {
                                 listOfAll.Add(content.AllMessage);
-                                break;
-                            case GameState.GameEnd:
-                                MessageBox.Show("Game Over!");
-                                foreach (var obj in content.ObjMessage)
+                            }
+                            break;
+                        case GameState.GameEnd:
+                            MessageBox.Show("Game Over!");
+                            foreach (var obj in content.ObjMessage)
+                            {
+                                switch (obj.MessageOfObjCase)
                                 {
-                                    switch (obj.MessageOfObjCase)
-                                    {
-                                        case MessageOfObj.MessageOfObjOneofCase.StudentMessage:
+                                    case MessageOfObj.MessageOfObjOneofCase.StudentMessage:
+                                        if (humanOrButcher && obj.StudentMessage.PlayerId == playerID)
+                                        {
+                                            human = obj.StudentMessage;
+                                        }
+                                        lock (lockOfStudent)
+                                        {
                                             listOfHuman.Add(obj.StudentMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.TrickerMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.TrickerMessage:
+                                        if (!humanOrButcher && obj.TrickerMessage.PlayerId == playerID)
+                                        {
+                                            butcher = obj.TrickerMessage;
+                                        }
+                                        lock (lockOfTricker)
+                                        {
                                             listOfButcher.Add(obj.TrickerMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.PropMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.PropMessage:
+                                        lock (lockOfProp)
+                                        {
                                             listOfProp.Add(obj.PropMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.BombedBulletMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.BombedBulletMessage:
+                                        lock (lockOfBombedBullet)
+                                        {
                                             listOfBombedBullet.Add(obj.BombedBulletMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.BulletMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.BulletMessage:
+                                        lock (lockOfBullet)
+                                        {
                                             listOfBullet.Add(obj.BulletMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.ChestMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.ChestMessage:
+                                        lock (lockOfChest)
+                                        {
                                             listOfChest.Add(obj.ChestMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.ClassroomMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.ClassroomMessage:
+                                        lock (lockOfClassroom)
+                                        {
                                             listOfClassroom.Add(obj.ClassroomMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.DoorMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.DoorMessage:
+                                        lock (lockOfDoor)
+                                        {
                                             listOfDoor.Add(obj.DoorMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.GateMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.GateMessage:
+                                        lock (lockOfGate)
+                                        {
                                             listOfGate.Add(obj.GateMessage);
-                                            break;
-                                        case MessageOfObj.MessageOfObjOneofCase.HiddenGateMessage:
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.HiddenGateMessage:
+                                        lock (lockOfHiddenGate)
+                                        {
                                             listOfHiddenGate.Add(obj.HiddenGateMessage);
-                                            break;
-                                    }
+                                        }
+                                        break;
+                                    case MessageOfObj.MessageOfObjOneofCase.MapMessage:
+                                        GetMap(obj.MapMessage);
+                                        break;
                                 }
+                            }
+                            lock (lockOfAll)
+                            {
                                 listOfAll.Add(content.AllMessage);
-                                break;
-                        }
+                            }
+                            break;
                     }
                     if (responseStream == null)
                     {
@@ -679,13 +827,14 @@ namespace Client
 
         private void Refresh(object? sender, EventArgs e) //log未更新
         {
-            lock (drawPicLock)  // 加锁是必要的，画图操作和接收信息操作不能同时进行
+            //加锁是必要的，画图操作和接收信息操作不能同时进行
+            // Bonus();
+            if (WindowState == WindowState.Maximized)
+                MaxButton.Content = "❐";
+            else
+                MaxButton.Content = "🗖";
+            lock (lockOfStudent)
             {
-                // Bonus();
-                if (WindowState == WindowState.Maximized)
-                    MaxButton.Content = "❐";
-                else
-                    MaxButton.Content = "🗖";
                 foreach (var obj in listOfHuman)
                 {
                     if (!isDataFixed[obj.PlayerId] && obj.PlayerId < GameData.numOfStudent && obj.StudentType != StudentType.Robot)
@@ -703,6 +852,9 @@ namespace Client
                         isDataFixed[obj.PlayerId] = true;
                     }
                 }
+            }
+            lock (lockOfTricker)
+            {
                 foreach (var obj in listOfButcher)
                 {
                     if (!isDataFixed[obj.PlayerId])
@@ -718,34 +870,41 @@ namespace Client
                         isDataFixed[obj.PlayerId] = true;
                     }
                 }
+            }
 
-                for (int i = 0; i < GameData.numOfStudent; i++)
+            for (int i = 0; i < GameData.numOfStudent; i++)
+            {
+                StatusBarsOfSurvivor[i].NewData(totalLife, totalDeath, coolTime);
+            }
+
+            StatusBarsOfHunter.NewData(totalLife, totalDeath, coolTime);
+
+            for (int i = 0; i < GameData.numOfStudent; i++)
+            {
+                StatusBarsOfSurvivor[i].SetFontSize(12 * unitFontsize);
+            }
+
+            StatusBarsOfHunter.SetFontSize(12 * unitFontsize);
+            StatusBarsOfCircumstance.SetFontSize(12 * unitFontsize);
+
+            if (!isClientStocked)
+            {
+                try
                 {
-                    StatusBarsOfSurvivor[i].NewData(totalLife, totalDeath, coolTime);
-                }
-
-                StatusBarsOfHunter.NewData(totalLife, totalDeath, coolTime);
-
-                for (int i = 0; i < GameData.numOfStudent; i++)
-                {
-                    StatusBarsOfSurvivor[i].SetFontSize(12 * unitFontsize);
-                }
-
-                StatusBarsOfHunter.SetFontSize(12 * unitFontsize);
-                StatusBarsOfCircumstance.SetFontSize(12 * unitFontsize);
-                if (!isClientStocked)
-                {
-                    try
+                    UpperLayerOfMap.Children.Clear();
+                    lock (lockOfAll)
                     {
-                        UpperLayerOfMap.Children.Clear();
                         foreach (var data in listOfAll)
                         {
                             StatusBarsOfCircumstance.SetValue(data, gateOpened, isEmergencyDrawed, isEmergencyOpened, playerID, isPlaybackMode);
                         }
-                        if (!hasDrawed && mapFlag)
-                        {
-                            DrawMap();
-                        }
+                    }
+                    if (!hasDrawed && mapFlag)
+                    {
+                        DrawMap();
+                    }
+                    lock (lockOfStudent)
+                    {
                         foreach (var data in listOfHuman)
                         {
                             if (data.StudentType != StudentType.Robot)
@@ -783,6 +942,9 @@ namespace Client
                                 UpperLayerOfMap.Children.Add(num);
                             }
                         }
+                    }
+                    lock (lockOfTricker)
+                    {
                         foreach (var data in listOfButcher)
                         {
                             StatusBarsOfHunter.SetValue(data);
@@ -800,6 +962,9 @@ namespace Client
                                 UpperLayerOfMap.Children.Add(icon);
                             }
                         }
+                    }
+                    lock (lockOfProp)
+                    {
                         foreach (var data in listOfProp)
                         {
                             if (CanSee(data))
@@ -836,6 +1001,9 @@ namespace Client
                                 }
                             }
                         }
+                    }
+                    lock (lockOfBullet)
+                    {
                         foreach (var data in listOfBullet)
                         {
                             if (CanSee(data))
@@ -865,6 +1033,9 @@ namespace Client
                                 UpperLayerOfMap.Children.Add(icon);
                             }
                         }
+                    }
+                    lock (lockOfBombedBullet)
+                    {
                         foreach (var data in listOfBombedBullet)
                         {
                             if (CanSee(data))
@@ -912,6 +1083,9 @@ namespace Client
                                 }
                             }
                         }
+                    }
+                    lock (lockOfClassroom)
+                    {
                         foreach (var data in listOfClassroom)
                         {
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfFixedGenerator);
@@ -934,6 +1108,9 @@ namespace Client
                             }
                             UpperLayerOfMap.Children.Add(icon);
                         }
+                    }
+                    lock (lockOfChest)
+                    {
                         foreach (var data in listOfChest)
                         {
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedChest);
@@ -956,6 +1133,9 @@ namespace Client
                             }
                             UpperLayerOfMap.Children.Add(icon);
                         }
+                    }
+                    lock (lockOfGate)
+                    {
                         foreach (var data in listOfGate)
                         {
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedDoorway);
@@ -979,6 +1159,9 @@ namespace Client
                             }
                             UpperLayerOfMap.Children.Add(icon);
                         }
+                    }
+                    lock (lockOfDoor)
+                    {
                         foreach (var data in listOfDoor)
                         {
                             TextBox icon = new()
@@ -1003,6 +1186,9 @@ namespace Client
                             }
                             UpperLayerOfMap.Children.Add(icon);
                         }
+                    }
+                    lock (lockOfHiddenGate)
+                    {
                         foreach (var data in listOfHiddenGate)
                         {
                             if (!isEmergencyDrawed)
@@ -1031,16 +1217,16 @@ namespace Client
                             }
                         }
                     }
-                    catch (Exception exc)
-                    {
-                        ErrorDisplayer error = new("Error: " + exc.ToString());
-                        error.Show();
-                        isClientStocked = true;
-                        PorC.Content = "▶";
-                    }
                 }
-                counter++;
+                catch (Exception exc)
+                {
+                    ErrorDisplayer error = new("Error: " + exc.ToString());
+                    error.Show();
+                    isClientStocked = true;
+                    PorC.Content = "▶";
+                }
             }
+            counter++;
         }
 
         // 键盘控制
@@ -1416,7 +1602,17 @@ namespace Client
         private List<MessageOfDoor> listOfDoor;
         private List<MessageOfGate> listOfGate;
         private List<MessageOfHiddenGate> listOfHiddenGate;
-        private object drawPicLock = new object();
+        private object lockOfProp = new object();
+        private object lockOfStudent = new object();
+        private object lockOfTricker = new object();
+        private object lockOfBullet = new object();
+        private object lockOfBombedBullet = new object();
+        private object lockOfAll = new object();
+        private object lockOfChest = new object();
+        private object lockOfClassroom = new object();
+        private object lockOfDoor = new object();
+        private object lockOfGate = new object();
+        private object lockOfHiddenGate = new object();
         private MessageOfStudent? human = null;
         private MessageOfTricker? butcher = null;
         private bool humanOrButcher;//true for human

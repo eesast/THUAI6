@@ -1,6 +1,6 @@
 @echo off
 
-start cmd /k ..\Server\bin\Debug\net6.0\Server.exe --ip  0.0.0.0  --port 8888 --studentCount 2 --trickerCount 1 --gameTimeInSecond 600 --fileName video --mapResource ".\map\map1_final.txt"
+start cmd /k ..\Server\bin\Debug\net6.0\Server.exe --ip  0.0.0.0  --port 8888 --studentCount 2 --trickerCount 1 --gameTimeInSecond 600 --fileName video --mapResource ".\map\map2_final.txt"
 
 ping -n 2 127.0.0.1 > NUL
 

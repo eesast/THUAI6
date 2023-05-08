@@ -141,8 +141,9 @@ namespace GameClass.GameObj
                 moveReaderWriterLock.EnterWriteLock();
                 try
                 {
-                    lock (moveObjLock) {
-                        moveSpeed=value;
+                    lock (moveObjLock)
+                    {
+                        moveSpeed = value;
                     }
                 }
                 finally

@@ -123,7 +123,6 @@ namespace Gaming
                 if (bullet.TypeOfBullet == BulletType.BombBomb && objBeingShot != null)
                 {
                     bullet.Parent!.BulletOfPlayer = BulletType.JumpyDumpty;
-                    Debugger.Output(bullet.Parent, bullet.Parent.CharacterType.ToString() + " " + bullet.Parent.BulletNum.ToString());
                     Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI / 2.0);
                     Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI * 3.0 / 2.0);
                 }
@@ -173,7 +172,7 @@ namespace Gaming
 
                 Debugger.Output(player, player.Position.ToString() + " " + player.Radius.ToString() + " " + BulletFactory.BulletRadius(player.BulletOfPlayer).ToString());
 
-                Bullet? bullet = player.Attack(angle);
+                Bullet? bullet = player.Attack(angle, gameMap.Timer.nowTime());
 
                 if (bullet != null)
                 {

@@ -10,10 +10,7 @@ namespace GameClass.GameObj
     {
         #region 装弹、攻击相关的基本属性及方法
 
-        protected readonly object AttackLock = new();
-        private readonly ReaderWriterLockSlim attackReaderWriterLock = new();
-        public ReaderWriterLockSlim AttackReaderWriterLock => attackReaderWriterLock;
-        //规定AttackReaderWriterLock>AttackLock
+        private readonly object attackLock = new();
 
         /// <summary>
         /// 装弹冷却
@@ -23,31 +20,13 @@ namespace GameClass.GameObj
         {
             get
             {
-                attackReaderWriterLock.EnterReadLock();
-                try
+                lock (attackLock)
                 {
                     return cd;
                 }
-                finally { attackReaderWriterLock.ExitReadLock(); }
             }
         }
         public int OrgCD { get; protected set; }
-
-        protected int maxBulletNum;
-        public int MaxBulletNum
-        {
-            get
-            {
-                attackReaderWriterLock.EnterReadLock();
-                try
-                {
-                    return maxBulletNum;
-                }
-                finally { attackReaderWriterLock.ExitReadLock(); }
-            }
-        }
-        protected int bulletNum;
-        public int BulletNum => bulletNum;  // 目前持有的子弹数
 
         public readonly BulletType OriBulletOfPlayer;
         private BulletType bulletOfPlayer;
@@ -55,27 +34,48 @@ namespace GameClass.GameObj
         {
             get
             {
-                attackReaderWriterLock.EnterReadLock();
-                try
+                lock (attackLock)
                 {
                     return bulletOfPlayer;
                 }
-                finally { attackReaderWriterLock.ExitReadLock(); }
             }
             set
             {
-                attackReaderWriterLock.EnterWriteLock();
-                try
+                lock (attackLock)
                 {
-                    lock (AttackLock)
-                    {
-                        bulletOfPlayer = value;
-                        cd = OrgCD = (BulletFactory.BulletCD(value));
-                        Debugger.Output(this, string.Format("'s CD has been set to: {0}.", cd));
-                        maxBulletNum = bulletNum = (BulletFactory.BulletNum(value));
-                    }
+                    bulletOfPlayer = value;
+                    cd = OrgCD = (BulletFactory.BulletCD(value));
+                    Debugger.Output(this, string.Format("'s CD has been set to: {0}.", cd));
+                    maxBulletNum = bulletNum = (BulletFactory.BulletNum(value));
                 }
-                finally { attackReaderWriterLock.ExitWriteLock(); }
+            }
+        }
+
+        protected int maxBulletNum;
+        public int MaxBulletNum
+        {
+            get
+            {
+                lock (attackLock)
+                {
+                    return maxBulletNum;
+                }
+            }
+        }
+        private int bulletNum;
+        private int updateTimeOfBulletNum = 0;
+
+        public int UpdateBulletNum(int time)
+        {
+            lock (attackLock)
+            {
+                if (bulletNum < maxBulletNum)
+                {
+                    int add = Math.Min(maxBulletNum - bulletNum, (time - updateTimeOfBulletNum) / cd);
+                    updateTimeOfBulletNum += add * cd;
+                    return (bulletNum += add);
+                }
+                return maxBulletNum;
             }
         }
 
@@ -83,54 +83,26 @@ namespace GameClass.GameObj
         /// 进行一次攻击
         /// </summary>
         /// <returns>攻击操作发出的子弹</returns>
-        public Bullet? Attack(double angle)
+        public Bullet? Attack(double angle, int time)
         {
-            if (TrySubBulletNum())
+            lock (attackLock)
             {
-                XY res = Position + new XY  // 子弹紧贴人物生成。
-                    (
-                        (int)(Math.Abs((Radius + BulletFactory.BulletRadius(BulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
-                        (int)(Math.Abs((Radius + BulletFactory.BulletRadius(BulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
-                    );
-                Bullet? bullet = BulletFactory.GetBullet(this, res);
-                if (bullet == null) return null;
-                facingDirection = new(angle, bullet.BulletAttackRange);
-                return bullet;
-            }
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// 尝试将子弹数量减1
-        /// </summary>
-        /// <returns>减操作是否成功</returns>
-        private bool TrySubBulletNum()
-        {
-            lock (gameObjLock)
-            {
-                if (bulletNum > 0)
+                if (UpdateBulletNum(time) > 0)
                 {
+                    if(bulletNum==maxBulletNum)updateTimeOfBulletNum = time;
                     --bulletNum;
-                    return true;
+                    XY res = Position + new XY  // 子弹紧贴人物生成。
+                        (
+                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(BulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
+                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(BulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
+                        );
+                    Bullet? bullet = BulletFactory.GetBullet(this, res);
+                    if (bullet == null) return null;
+                    facingDirection = new(angle, bullet.BulletAttackRange);
+                    return bullet;
                 }
-                return false;
-            }
-        }
-        /// <summary>
-        /// 尝试将子弹数量加1
-        /// </summary>
-        /// <returns>加操作是否成功</returns>
-        public bool TryAddBulletNum()
-        {
-            lock (gameObjLock)
-            {
-                if (bulletNum < maxBulletNum)
-                {
-                    ++bulletNum;
-                    return true;
-                }
-                return false;
+                else
+                    return null;
             }
         }
 
@@ -405,7 +377,7 @@ namespace GameClass.GameObj
                     position = GameData.PosWhoDie;
                 }
             }
-            finally 
+            finally
             {
                 MoveReaderWriterLock.ExitWriteLock();
             }

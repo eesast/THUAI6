@@ -330,7 +330,7 @@ namespace GameClass.GameObj
 
         public void ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
-            lock (gameObjLock)
+            lock (moveObjLock)
             {
                 ++threadNum;
                 whatInteractingWith = gameObj;
@@ -343,7 +343,7 @@ namespace GameClass.GameObj
 
         public void ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
-            lock (gameObjLock)
+            lock (moveObjLock)
             {
                 whatInteractingWith = gameObj;
                 if (value != PlayerStateType.Moving)
@@ -355,7 +355,7 @@ namespace GameClass.GameObj
 
         public void SetPlayerStateNaturally()
         {
-            lock (gameObjLock)
+            lock (moveObjLock)
             {
                 ++threadNum;
                 whatInteractingWith = null;
@@ -366,12 +366,20 @@ namespace GameClass.GameObj
 
         public void RemoveFromGame(PlayerStateType playerStateType)
         {
-            lock (gameObjLock)
+            MoveReaderWriterLock.EnterWriteLock();
+            try
             {
-                playerState = playerStateType;
-                canMove = false;
-                IsResetting = true;
-                position = GameData.PosWhoDie;
+                lock (moveObjLock)
+                {
+                    playerState = playerStateType;
+                    canMove = false;
+                    isResetting = true;
+                    position = GameData.PosWhoDie;
+                }
+            }
+            finally 
+            {
+                MoveReaderWriterLock.ExitWriteLock();
             }
         }
         #endregion

@@ -8,8 +8,9 @@ namespace GameClass.GameObj
     {
         protected readonly object moveObjLock = new();
         public object MoveLock => moveObjLock;
-        private ReaderWriterLockSlim moveReaderWriterLock = new();
+        private readonly ReaderWriterLockSlim moveReaderWriterLock = new();
         public ReaderWriterLockSlim MoveReaderWriterLock => moveReaderWriterLock;
+        //规定moveReaderWriterLock>moveObjLock
 
         public override XY Position
         {
@@ -70,32 +71,44 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (moveReaderWriterLock)
+                moveReaderWriterLock.EnterReadLock();
+                try
+                {
                     return canMove;
+                }
+                finally
+                {
+                    moveReaderWriterLock.ExitReadLock();
+                }
             }
         }
 
         public void ReSetCanMove(bool value)
         {
-            lock (moveReaderWriterLock)
+            moveReaderWriterLock.EnterWriteLock();
+            try
             {
                 canMove = value;
             }
+            finally
+            {
+                moveReaderWriterLock.ExitWriteLock();
+            }
         }
 
-        private bool isResetting;
+        protected bool isResetting;
         public bool IsResetting
         {
             get
             {
-                lock (moveReaderWriterLock)
-                    return isResetting;
-            }
-            set
-            {
-                lock (moveReaderWriterLock)
+                moveReaderWriterLock.EnterReadLock();
+                try
                 {
-                    isResetting = value;
+                    return isResetting;
+                }
+                finally
+                {
+                    moveReaderWriterLock.ExitReadLock();
                 }
             }
         }
@@ -110,14 +123,28 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (moveReaderWriterLock)
+                moveReaderWriterLock.EnterReadLock();
+                try
+                {
                     return moveSpeed;
+                }
+                finally
+                {
+                    moveReaderWriterLock.ExitReadLock();
+                }
             }
             set
             {
-                lock (moveReaderWriterLock)
+                moveReaderWriterLock.EnterWriteLock();
+                try
                 {
-                    moveSpeed = value;
+                    lock (moveObjLock) {
+                        moveSpeed=value;
+                    }
+                }
+                finally
+                {
+                    moveReaderWriterLock.ExitWriteLock();
                 }
             }
         }

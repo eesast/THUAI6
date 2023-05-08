@@ -8,7 +8,7 @@ namespace Preparation.Interface
         object MoveLock { get; }
         public int MoveSpeed { get; }
         public bool IsMoving { get; set; }
-        public bool IsResetting { get; set; }  // reviving
+        public bool IsResetting { get; }  // reviving
         public bool IsAvailable { get; }
         public long MovingSetPos(XY moveVec);
         public void ReSetCanMove(bool value);

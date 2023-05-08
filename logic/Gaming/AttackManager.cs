@@ -66,9 +66,9 @@ namespace Gaming
 
             public bool TryRemoveBullet(Bullet bullet)
             {
-                bullet.ReSetCanMove(false);
                 if (gameMap.Remove(bullet))
                 {
+                    bullet.ReSetCanMove(false);
                     if (bullet.BulletBombRange > 0)
                     {
                         BombedBullet bombedBullet = new(bullet);
@@ -179,7 +179,6 @@ namespace Gaming
                 {
                     Debugger.Output(bullet, "Attack in " + bullet.Position.ToString());
                     bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
-                    bullet.ReSetCanMove(true);
                     gameMap.Add(bullet);
                     moveEngine.MoveObj(bullet, (int)((bullet.BulletAttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
                     if (bullet.CastTime > 0)

@@ -88,7 +88,10 @@ namespace GameClass.GameObj
             moveReaderWriterLock.EnterWriteLock();
             try
             {
-                canMove = value;
+                lock (moveObjLock)
+                {
+                    canMove = value;
+                }
             }
             finally
             {

@@ -2,6 +2,7 @@
 using Preparation.Utility;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
@@ -9,7 +10,10 @@ namespace GameClass.GameObj
     {
         #region 装弹、攻击相关的基本属性及方法
 
-        protected readonly object beAttackedLock = new();
+        protected readonly object AttackLock = new();
+        private readonly ReaderWriterLockSlim attackReaderWriterLock = new();
+        public ReaderWriterLockSlim AttackReaderWriterLock => attackReaderWriterLock;
+        //规定AttackReaderWriterLock>AttackLock
 
         /// <summary>
         /// 装弹冷却
@@ -17,20 +21,31 @@ namespace GameClass.GameObj
         protected int cd;
         public int CD
         {
-            get => cd;
-            private set
+            get
             {
-                lock (gameObjLock)
+                attackReaderWriterLock.EnterReadLock();
+                try
                 {
-                    cd = value;
-                    Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
+                    return cd;
                 }
+                finally { attackReaderWriterLock.ExitReadLock(); }
             }
         }
         public int OrgCD { get; protected set; }
 
         protected int maxBulletNum;
-        public int MaxBulletNum => maxBulletNum;  // 人物最大子弹数
+        public int MaxBulletNum
+        {
+            get
+            {
+                attackReaderWriterLock.EnterReadLock();
+                try
+                {
+                    return maxBulletNum;
+                }
+                finally { attackReaderWriterLock.ExitReadLock(); }
+            }
+        }
         protected int bulletNum;
         public int BulletNum => bulletNum;  // 目前持有的子弹数
 
@@ -38,16 +53,29 @@ namespace GameClass.GameObj
         private BulletType bulletOfPlayer;
         public BulletType BulletOfPlayer
         {
-            get => bulletOfPlayer;
+            get
+            {
+                attackReaderWriterLock.EnterReadLock();
+                try
+                {
+                    return bulletOfPlayer;
+                }
+                finally { attackReaderWriterLock.ExitReadLock(); }
+            }
             set
             {
-                lock (gameObjLock)
+                attackReaderWriterLock.EnterWriteLock();
+                try
                 {
-                    bulletOfPlayer = value;
-                    OrgCD = (BulletFactory.BulletCD(value));
-                    CD = 0;
-                    maxBulletNum = bulletNum = (BulletFactory.BulletNum(value));
+                    lock (AttackLock)
+                    {
+                        bulletOfPlayer = value;
+                        cd = OrgCD = (BulletFactory.BulletCD(value));
+                        Debugger.Output(this, string.Format("'s CD has been set to: {0}.", cd));
+                        maxBulletNum = bulletNum = (BulletFactory.BulletNum(value));
+                    }
                 }
+                finally { attackReaderWriterLock.ExitWriteLock(); }
             }
         }
 

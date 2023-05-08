@@ -166,12 +166,6 @@ namespace Gaming
 
             public bool Attack(Character player, double angle)
             {                                                    // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
-                if (player.BulletOfPlayer == BulletType.Null)
-                    return false;
-                Debugger.Output(player, player.CharacterType.ToString() + "Attack in " + player.BulletOfPlayer.ToString());
-
-                Debugger.Output(player, player.Position.ToString() + " " + player.Radius.ToString() + " " + BulletFactory.BulletRadius(player.BulletOfPlayer).ToString());
-
                 Bullet? bullet = player.Attack(angle, gameMap.Timer.nowTime());
 
                 if (bullet != null)

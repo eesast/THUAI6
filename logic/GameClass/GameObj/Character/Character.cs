@@ -2,15 +2,14 @@
 using Preparation.Utility;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace GameClass.GameObj
 {
     public partial class Character : Moveable, ICharacter  // 负责人LHR摆烂终了
     {
         #region 装弹、攻击相关的基本属性及方法
-
         private readonly object attackLock = new();
+        public object AttackLock => attackLock;
 
         /// <summary>
         /// 装弹冷却
@@ -87,14 +86,16 @@ namespace GameClass.GameObj
         {
             lock (attackLock)
             {
+                if (bulletOfPlayer == BulletType.Null)
+                    return null;
                 if (UpdateBulletNum(time) > 0)
                 {
-                    if(bulletNum==maxBulletNum)updateTimeOfBulletNum = time;
+                    if (bulletNum == maxBulletNum) updateTimeOfBulletNum = time;
                     --bulletNum;
                     XY res = Position + new XY  // 子弹紧贴人物生成。
                         (
-                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(BulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
-                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(BulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
+                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
+                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
                         );
                     Bullet? bullet = BulletFactory.GetBullet(this, res);
                     if (bullet == null) return null;

@@ -4,6 +4,7 @@ MAINTAINER eesast
 WORKDIR /usr/local
 
 COPY ./CAPI/cpp /usr/local/PlayerCode/CAPI/cpp
+COPY ./CAPI/python /usr/local/PlayerCode/CAPI/python
 COPY ./dependency/proto /usr/local/PlayerCode/dependency/proto
 COPY ./dependency/shell /usr/local/PlayerCode/dependency/shell
 WORKDIR /usr/local/PlayerCode/dependency/proto

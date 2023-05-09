@@ -13,7 +13,7 @@ namespace Preparation.Interface
         public PlayerStateType PlayerState { get; }
         public BulletType BulletOfPlayer { get; set; }
         public CharacterType CharacterType { get; }
-        public int BulletNum { get; }
+        public int UpdateBulletNum(int time);
         public long ThreadNum { get; }
 
         public bool IsGhost();

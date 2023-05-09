@@ -8,8 +8,8 @@ namespace GameClass.GameObj
     public partial class Character : Moveable, ICharacter  // 负责人LHR摆烂终了
     {
         #region 装弹、攻击相关的基本属性及方法
-
-        protected readonly object beAttackedLock = new();
+        private readonly object attackLock = new();
+        public object AttackLock => attackLock;
 
         /// <summary>
         /// 装弹冷却
@@ -17,37 +17,64 @@ namespace GameClass.GameObj
         protected int cd;
         public int CD
         {
-            get => cd;
-            private set
+            get
             {
-                lock (gameObjLock)
+                lock (attackLock)
                 {
-                    cd = value;
-                    Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
+                    return cd;
                 }
             }
         }
         public int OrgCD { get; protected set; }
 
-        protected int maxBulletNum;
-        public int MaxBulletNum => maxBulletNum;  // 人物最大子弹数
-        protected int bulletNum;
-        public int BulletNum => bulletNum;  // 目前持有的子弹数
-
         public readonly BulletType OriBulletOfPlayer;
         private BulletType bulletOfPlayer;
         public BulletType BulletOfPlayer
         {
-            get => bulletOfPlayer;
+            get
+            {
+                lock (attackLock)
+                {
+                    return bulletOfPlayer;
+                }
+            }
             set
             {
-                lock (gameObjLock)
+                lock (attackLock)
                 {
                     bulletOfPlayer = value;
-                    OrgCD = (BulletFactory.BulletCD(value));
-                    CD = 0;
+                    cd = OrgCD = (BulletFactory.BulletCD(value));
+                    Debugger.Output(this, string.Format("'s CD has been set to: {0}.", cd));
                     maxBulletNum = bulletNum = (BulletFactory.BulletNum(value));
                 }
+            }
+        }
+
+        protected int maxBulletNum;
+        public int MaxBulletNum
+        {
+            get
+            {
+                lock (attackLock)
+                {
+                    return maxBulletNum;
+                }
+            }
+        }
+        private int bulletNum;
+        private int updateTimeOfBulletNum = 0;
+
+        public int UpdateBulletNum(int time)
+        {
+            lock (attackLock)
+            {
+                if (bulletNum < maxBulletNum)
+                {
+                    int add = Math.Min(maxBulletNum - bulletNum, (time - updateTimeOfBulletNum) / cd);
+                    updateTimeOfBulletNum += add * cd;
+                    return (bulletNum += add);
+                }
+                return maxBulletNum;
             }
         }
 
@@ -55,54 +82,28 @@ namespace GameClass.GameObj
         /// 进行一次攻击
         /// </summary>
         /// <returns>攻击操作发出的子弹</returns>
-        public Bullet? Attack(double angle)
+        public Bullet? Attack(double angle, int time)
         {
-            if (TrySubBulletNum())
+            lock (attackLock)
             {
-                XY res = Position + new XY  // 子弹紧贴人物生成。
-                    (
-                        (int)(Math.Abs((Radius + BulletFactory.BulletRadius(BulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
-                        (int)(Math.Abs((Radius + BulletFactory.BulletRadius(BulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
-                    );
-                Bullet? bullet = BulletFactory.GetBullet(this, res);
-                if (bullet == null) return null;
-                facingDirection = new(angle, bullet.BulletAttackRange);
-                return bullet;
-            }
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// 尝试将子弹数量减1
-        /// </summary>
-        /// <returns>减操作是否成功</returns>
-        private bool TrySubBulletNum()
-        {
-            lock (gameObjLock)
-            {
-                if (bulletNum > 0)
+                if (bulletOfPlayer == BulletType.Null)
+                    return null;
+                if (UpdateBulletNum(time) > 0)
                 {
+                    if (bulletNum == maxBulletNum) updateTimeOfBulletNum = time;
                     --bulletNum;
-                    return true;
+                    XY res = Position + new XY  // 子弹紧贴人物生成。
+                        (
+                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
+                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
+                        );
+                    Bullet? bullet = BulletFactory.GetBullet(this, res);
+                    if (bullet == null) return null;
+                    facingDirection = new(angle, bullet.BulletAttackRange);
+                    return bullet;
                 }
-                return false;
-            }
-        }
-        /// <summary>
-        /// 尝试将子弹数量加1
-        /// </summary>
-        /// <returns>加操作是否成功</returns>
-        public bool TryAddBulletNum()
-        {
-            lock (gameObjLock)
-            {
-                if (bulletNum < maxBulletNum)
-                {
-                    ++bulletNum;
-                    return true;
-                }
-                return false;
+                else
+                    return null;
             }
         }
 
@@ -330,7 +331,7 @@ namespace GameClass.GameObj
 
         public void ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
-            lock (gameObjLock)
+            lock (moveObjLock)
             {
                 ++threadNum;
                 whatInteractingWith = gameObj;
@@ -343,7 +344,7 @@ namespace GameClass.GameObj
 
         public void ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
-            lock (gameObjLock)
+            lock (moveObjLock)
             {
                 whatInteractingWith = gameObj;
                 if (value != PlayerStateType.Moving)
@@ -355,7 +356,7 @@ namespace GameClass.GameObj
 
         public void SetPlayerStateNaturally()
         {
-            lock (gameObjLock)
+            lock (moveObjLock)
             {
                 ++threadNum;
                 whatInteractingWith = null;
@@ -366,12 +367,20 @@ namespace GameClass.GameObj
 
         public void RemoveFromGame(PlayerStateType playerStateType)
         {
-            lock (gameObjLock)
+            MoveReaderWriterLock.EnterWriteLock();
+            try
             {
-                playerState = playerStateType;
-                canMove = false;
-                IsResetting = true;
-                position = GameData.PosWhoDie;
+                lock (moveObjLock)
+                {
+                    playerState = playerStateType;
+                    canMove = false;
+                    isResetting = true;
+                    position = GameData.PosWhoDie;
+                }
+            }
+            finally
+            {
+                MoveReaderWriterLock.ExitWriteLock();
             }
         }
         #endregion

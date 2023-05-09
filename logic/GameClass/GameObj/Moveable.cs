@@ -108,15 +108,15 @@ namespace GameClass.GameObj
             }
         }
 
-        protected bool isResetting;
-        public bool IsResetting
+        protected bool isRemoved;
+        public bool IsRemoved
         {
             get
             {
                 moveReaderWriterLock.EnterReadLock();
                 try
                 {
-                    return isResetting;
+                    return isRemoved;
                 }
                 finally
                 {
@@ -125,7 +125,22 @@ namespace GameClass.GameObj
             }
         }
 
-        public bool IsAvailable => !IsMoving && CanMove && !IsResetting;  // 是否能接收指令
+        public bool IsAvailableForMove // 是否能接收移动指令
+        {
+            get
+            {
+                moveReaderWriterLock.EnterReadLock();
+                try
+                {
+                    lock (actionLock)
+                        return !isMoving && canMove && !isRemoved;
+                }
+                finally
+                {
+                    moveReaderWriterLock.ExitReadLock();
+                }
+            }
+        }
 
         protected int moveSpeed;
         /// <summary>
@@ -176,7 +191,7 @@ namespace GameClass.GameObj
                        this.FacingDirection = new XY(1, 0);
                        isMoving = false;
                        CanMove = false;
-                       IsResetting = true;
+                       IsRemoved = true;
                        this.Position = birthPos;
                        this.Place= place;
                    }

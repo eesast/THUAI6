@@ -14,7 +14,6 @@ namespace Preparation.Interface
         public BulletType BulletOfPlayer { get; set; }
         public CharacterType CharacterType { get; }
         public int UpdateBulletNum(int time);
-        public long StateNum { get; }
 
         public bool IsGhost();
     }

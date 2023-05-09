@@ -75,19 +75,18 @@ namespace GameEngine
 
         public void MoveObj(IMoveable obj, int moveTime, double direction)
         {
-            if (obj.IsMoving)  // 已经移动的物体不能再移动
-                return;
-            if (!obj.IsAvailable || !gameTimer.IsGaming)
-                return;
-
-            long threadNum = (obj.Type == GameObjType.Character) ? ((ICharacter)obj).StateNum : 0;//对人特殊处理
+            if (!gameTimer.IsGaming) return;
+            long threadNum;
+            lock (obj.ActionLock)
+            {
+                if (!obj.IsAvailableForMove) return;
+                threadNum = obj.StateNum;
+                obj.IsMoving = true;
+            }
             new Thread
             (
                 () =>
                 {
-                    lock (obj.ActionLock)
-                        obj.IsMoving = true;
-
                     double moveVecLength = 0.0;
                     XY res = new(direction, moveVecLength);
                     double deltaLen = moveVecLength - Math.Sqrt(obj.MovingSetPos(res));  // 转向，并用deltaLen存储行走的误差
@@ -119,7 +118,7 @@ namespace GameEngine
                     if (!isDestroyed)
                     {
                         new FrameRateTaskExecutor<int>(
-                            () => gameTimer.IsGaming && obj.CanMove && !obj.IsResetting && obj.IsMoving,
+                            () => gameTimer.IsGaming && obj.CanMove && !obj.IsRemoved && obj.IsMoving,
                             () =>
                             {
                                 moveVecLength = obj.MoveSpeed / GameData.numOfStepPerSecond;

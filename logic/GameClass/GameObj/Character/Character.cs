@@ -2,8 +2,6 @@
 using Preparation.Utility;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading;
 
 namespace GameClass.GameObj
 {
@@ -99,6 +97,7 @@ namespace GameClass.GameObj
                         );
                     Bullet? bullet = BulletFactory.GetBullet(this, res);
                     if (bullet == null) return null;
+                    bullet.AP += TryAddAp() ? GameData.ApPropAdd : 0;
                     facingDirection = new(angle, bullet.AttackDistance);
                     return bullet;
                 }
@@ -371,7 +370,7 @@ namespace GameClass.GameObj
                 {
                     playerState = playerStateType;
                     canMove = false;
-                    isResetting = true;
+                    isRemoved = true;
                     position = GameData.PosWhoDie;
                 }
             }
@@ -620,7 +619,7 @@ namespace GameClass.GameObj
         public override ShapeType Shape => ShapeType.Circle;
         public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (IsResetting)
+            if (IsRemoved)
                 return true;
             if (targetObj.Type == GameObjType.Prop)
             {

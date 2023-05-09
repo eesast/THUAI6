@@ -335,7 +335,7 @@ namespace Gaming
                             startSkill();
                             activeSkill.IsBeingUsed = true;
                             new FrameRateTaskExecutor<int>(
-                                () => !player.IsResetting,
+                                () => !player.IsRemoved,
                                 () =>
                                 {
                                     player.AddTimeUntilActiveSkillAvailable(activeSkillType, -(int)GameData.frameDuration);
@@ -355,7 +355,7 @@ namespace Gaming
                             Debugger.Output(player, "return to normal.");
 
                             new FrameRateTaskExecutor<int>(
-                                loopCondition: () => player.TimeUntilActiveSkillAvailable[activeSkillType] > 0 && !player.IsResetting,
+                                loopCondition: () => player.TimeUntilActiveSkillAvailable[activeSkillType] > 0 && !player.IsRemoved,
                                 loopToDo: () =>
                                 {
                                     player.AddTimeUntilActiveSkillAvailable(activeSkillType, -(int)GameData.frameDuration);

@@ -74,7 +74,7 @@ namespace Gaming
                              Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
                          long lastTime = Environment.TickCount64;
                          new FrameRateTaskExecutor<int>(
-                             loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
+                             loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsRemoved,
                              loopToDo: () =>
                              {
                                  long nowTime = Environment.TickCount64;
@@ -132,7 +132,7 @@ namespace Gaming
                             }
                         }
                         new FrameRateTaskExecutor<int>(
-                        loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
+                        loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsRemoved,
                         loopToDo: () =>
                         {
                             gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();

@@ -194,7 +194,6 @@ namespace Gaming
                 if (bullet != null)
                 {
                     Debugger.Output(bullet, "Attack in " + bullet.Position.ToString());
-                    bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
                     gameMap.Add(bullet);
                     moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
                     if (bullet.CastTime > 0)

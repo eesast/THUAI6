@@ -21,7 +21,7 @@ namespace Gaming
 
             public void UseProp(Character player, PropType propType)
             {
-                if (player.IsResetting || player.CharacterType == CharacterType.Robot)
+                if (player.IsRemoved || player.CharacterType == CharacterType.Robot)
                     return;
                 Prop prop = player.UseProp(propType);
                 switch (prop.GetPropType())
@@ -73,7 +73,7 @@ namespace Gaming
             /// <returns></returns>
             public bool PickProp(Character player, PropType propType = PropType.Null)
             {
-                if (player.IsResetting)
+                if (player.IsRemoved)
                     return false;
                 int indexing = player.IndexingOfAddProp();
                 if (indexing == GameData.maxNumOfPropInPropInventory)
@@ -118,7 +118,7 @@ namespace Gaming
 
             public void ThrowProp(Character player, PropType propType)
             {
-                if (!gameMap.Timer.IsGaming || player.IsResetting)
+                if (!gameMap.Timer.IsGaming || player.IsRemoved)
                     return;
                 Prop prop = player.UseProp(propType);
                 if (prop.GetPropType() == PropType.Null)

@@ -6,17 +6,22 @@ namespace GameClass.GameObj
 {
     public abstract class Moveable : GameObj, IMoveable
     {
-        protected readonly object moveObjLock = new();
-        public object MoveLock => moveObjLock;
+        protected readonly object actionLock = new();
+        public object ActionLock => actionLock;
         private readonly ReaderWriterLockSlim moveReaderWriterLock = new();
         public ReaderWriterLockSlim MoveReaderWriterLock => moveReaderWriterLock;
-        //规定moveReaderWriterLock>moveObjLock
+        protected long stateNum = 0;
+        public long StateNum 
+        {
+            get=>Interlocked.Read(ref stateNum);
+        }
+        //规定moveReaderWriterLock>actionLock
 
         public override XY Position
         {
             get
             {
-                lock (moveObjLock)
+                lock (actionLock)
                     return position;
             }
         }
@@ -25,7 +30,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (moveObjLock)
+                lock (actionLock)
                     return facingDirection;
             }
         }
@@ -35,12 +40,12 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (moveObjLock)
+                lock (actionLock)
                     return isMoving;
             }
             set
             {
-                lock (moveObjLock)
+                lock (actionLock)
                 {
                     isMoving = value;
                 }
@@ -51,7 +56,7 @@ namespace GameClass.GameObj
         public long MovingSetPos(XY moveVec)
         {
             if (moveVec.x != 0 || moveVec.y != 0)
-                lock (moveObjLock)
+                lock (actionLock)
                 {
                     facingDirection = moveVec;
                     this.position += moveVec;
@@ -61,7 +66,7 @@ namespace GameClass.GameObj
 
         public void ReSetPos(XY position)
         {
-            lock (moveObjLock)
+            lock (actionLock)
             {
                 this.position = position;
             }
@@ -88,7 +93,7 @@ namespace GameClass.GameObj
             moveReaderWriterLock.EnterWriteLock();
             try
             {
-                lock (moveObjLock)
+                lock (actionLock)
                 {
                     canMove = value;
                 }
@@ -141,7 +146,7 @@ namespace GameClass.GameObj
                 moveReaderWriterLock.EnterWriteLock();
                 try
                 {
-                    lock (moveObjLock)
+                    lock (actionLock)
                     {
                         moveSpeed = value;
                     }

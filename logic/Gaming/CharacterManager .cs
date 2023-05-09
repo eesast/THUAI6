@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using GameClass.GameObj;
 using Preparation.Utility;
 using Preparation.Interface;
@@ -20,7 +19,7 @@ namespace Gaming
 
             public void SetPlayerState(Character player, PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
             {
-                lock (player.MoveLock)
+                lock (player.ActionLock)
                 {
                     switch (player.PlayerState)
                     {
@@ -246,7 +245,7 @@ namespace Gaming
                     }
                 }
                 SetPlayerState(player, PlayerStateType.Addicted);
-                long threadNum = player.ThreadNum;
+                long threadNum = player.StateNum;
                 new Thread
                     (() =>
                     {
@@ -254,7 +253,7 @@ namespace Gaming
                         Debugger.Output(player, " is addicted ");
 #endif
                         new FrameRateTaskExecutor<int>(
-                            () => threadNum == player.ThreadNum && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
+                            () => threadNum == player.StateNum && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
                             () =>
                             {
                                 player.GamingAddiction += (player.PlayerState == PlayerStateType.Addicted) ? GameData.frameDuration : 0;
@@ -283,9 +282,9 @@ namespace Gaming
                     (() =>
                     {
                         SetPlayerState(player, PlayerStateType.Stunned);
-                        long threadNum = player.ThreadNum;
+                        long threadNum = player.StateNum;
                         Thread.Sleep(time);
-                        if (threadNum == player.ThreadNum)
+                        if (threadNum == player.StateNum)
                             SetPlayerState(player);
                     }
                     )
@@ -373,14 +372,14 @@ namespace Gaming
                 if (time <= 0) return false;
                 if (player.PlayerState == PlayerStateType.Swinging || (!player.Commandable() && player.PlayerState != PlayerStateType.TryingToAttack)) return false;
                 SetPlayerState(player, PlayerStateType.Swinging);
-                long threadNum = player.ThreadNum;
+                long threadNum = player.StateNum;
 
                 new Thread
                         (() =>
                         {
                             Thread.Sleep(time);
 
-                            if (threadNum == player.ThreadNum)
+                            if (threadNum == player.StateNum)
                             {
                                 SetPlayerState(player);
                             }

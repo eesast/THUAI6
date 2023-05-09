@@ -2,15 +2,14 @@
 using Preparation.Utility;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
     public partial class Character : Moveable, ICharacter  // 负责人LHR摆烂终了
     {
         #region 装弹、攻击相关的基本属性及方法
-        private readonly object attackLock = new();
-        public object AttackLock => attackLock;
-
         /// <summary>
         /// 装弹冷却
         /// </summary>
@@ -19,7 +18,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (attackLock)
+                lock (actionLock)
                 {
                     return cd;
                 }
@@ -33,14 +32,14 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (attackLock)
+                lock (actionLock)
                 {
                     return bulletOfPlayer;
                 }
             }
             set
             {
-                lock (attackLock)
+                lock (actionLock)
                 {
                     bulletOfPlayer = value;
                     cd = OrgCD = (BulletFactory.BulletCD(value));
@@ -55,7 +54,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (attackLock)
+                lock (actionLock)
                 {
                     return maxBulletNum;
                 }
@@ -66,7 +65,7 @@ namespace GameClass.GameObj
 
         public int UpdateBulletNum(int time)
         {
-            lock (attackLock)
+            lock (actionLock)
             {
                 if (bulletNum < maxBulletNum)
                 {
@@ -84,7 +83,7 @@ namespace GameClass.GameObj
         /// <returns>攻击操作发出的子弹</returns>
         public Bullet? Attack(double angle, int time)
         {
-            lock (attackLock)
+            lock (actionLock)
             {
                 if (bulletOfPlayer == BulletType.Null)
                     return null;
@@ -92,10 +91,11 @@ namespace GameClass.GameObj
                 {
                     if (bulletNum == maxBulletNum) updateTimeOfBulletNum = time;
                     --bulletNum;
+                    
                     XY res = Position + new XY  // 子弹紧贴人物生成。
                         (
-                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
-                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
+                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
+                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Sin(angle))) * Math.Sign(Math.Sin(angle))
                         );
                     Bullet? bullet = BulletFactory.GetBullet(this, res);
                     if (bullet == null) return null;
@@ -326,14 +326,11 @@ namespace GameClass.GameObj
         private GameObj? whatInteractingWith = null;
         public GameObj? WhatInteractingWith => whatInteractingWith;
 
-        private long threadNum = 0;
-        public long ThreadNum => threadNum;
-
         public void ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
-            lock (moveObjLock)
+            lock (actionLock)
             {
-                ++threadNum;
+                stateNum= Interlocked.Increment(ref stateNum);
                 whatInteractingWith = gameObj;
                 if (value != PlayerStateType.Moving)
                     IsMoving = false;
@@ -344,7 +341,7 @@ namespace GameClass.GameObj
 
         public void ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
-            lock (moveObjLock)
+            lock (actionLock)
             {
                 whatInteractingWith = gameObj;
                 if (value != PlayerStateType.Moving)
@@ -356,9 +353,9 @@ namespace GameClass.GameObj
 
         public void SetPlayerStateNaturally()
         {
-            lock (moveObjLock)
+            lock (actionLock)
             {
-                ++threadNum;
+                stateNum= Interlocked.Increment(ref stateNum);
                 whatInteractingWith = null;
                 IsMoving = false;
                 playerState = PlayerStateType.Null;
@@ -370,7 +367,7 @@ namespace GameClass.GameObj
             MoveReaderWriterLock.EnterWriteLock();
             try
             {
-                lock (moveObjLock)
+                lock (actionLock)
                 {
                     playerState = playerStateType;
                     canMove = false;

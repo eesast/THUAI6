@@ -66,43 +66,39 @@ namespace Gaming
 
                 newPlayer.TeamID = teamID;
                 newPlayer.PlayerID = playerID;
-                #region 人物装弹
-                new Thread
-                (
-                    () =>
-                    {
-                        while (!gameMap.Timer.IsGaming)
-                            Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
-                        long lastTime = Environment.TickCount64;
-                        new FrameRateTaskExecutor<int>(
-                            loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
-                            loopToDo: () =>
-                            {
-                                long nowTime = Environment.TickCount64;
-                                if (newPlayer.BulletNum == newPlayer.MaxBulletNum)
-                                    lastTime = nowTime;
-                                else if (nowTime - lastTime >= newPlayer.CD)
-                                {
-                                    _ = newPlayer.TryAddBulletNum();
-                                    lastTime = nowTime;
-                                }
-                            },
-                            timeInterval: GameData.checkInterval,
-                            finallyReturn: () => 0
-                        )
-                        {
-                            AllowTimeExceed = true/*,
-                        MaxTolerantTimeExceedCount = 5,
-                        TimeExceedAction = exceedTooMuch =>
-                        {
-                            if (exceedTooMuch) Console.WriteLine("The computer runs too slow that it cannot check the color below the player in time!");
-                        }*/
-                        }
-                            .Start();
-                    }
-                )
-                { IsBackground = true }.Start();
-                #endregion
+                /* #region 人物装弹
+                 new Thread
+                 (
+                     () =>
+                     {
+                         while (!gameMap.Timer.IsGaming)
+                             Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
+                         long lastTime = Environment.TickCount64;
+                         new FrameRateTaskExecutor<int>(
+                             loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
+                             loopToDo: () =>
+                             {
+                                 long nowTime = Environment.TickCount64;
+                                 if (newPlayer.BulletNum == newPlayer.MaxBulletNum)
+                                     lastTime = nowTime;
+                                 else if (nowTime - lastTime >= newPlayer.CD)
+                                 {
+                                     _ = newPlayer.TryAddBulletNum();
+                                     lastTime = nowTime;
+                                 }
+                             },
+                             timeInterval: GameData.checkInterval,
+                             finallyReturn: () => 0
+                         )
+                         {
+                             AllowTimeExceed = true,
+                         }
+                             .Start();
+                     }
+                 )
+                 { IsBackground = true }.Start();
+                 #endregion
+     */
                 #region BGM,牵制得分更新
                 new Thread
                 (

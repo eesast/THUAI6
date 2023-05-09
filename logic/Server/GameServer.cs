@@ -123,7 +123,7 @@ namespace Server
             mwr?.Flush();
             if (options.ResultFileName != DefaultArgumentOptions.FileName)
                 SaveGameResult(options.ResultFileName.EndsWith(".json") ? options.ResultFileName : options.ResultFileName + ".json");
-            // SendGameResult();
+            SendGameResult();
             this.endGameSem.Release();
         }
         public void ReportGame(GameState gameState, bool requiredGaming = true)

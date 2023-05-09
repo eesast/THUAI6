@@ -152,7 +152,7 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 
 ## 文档风格
 
-仓库的文档使用 Markdown 语法，具体语法可以参照 [Markdown 语法文档](https://docs.github.com/zh/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#ignoring-markdown-formatting)。
+仓库的文档使用 Markdown 语法，具体语法可以参照 [Markdown 语法文档](https://docs.github.com/zh/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)。
 
 中文文档的书写须严格遵循：[中午技术文档规范](https://github.com/ruanyf/document-style-guide)、[中文文案排版指北](https://mazhuang.org/wiki/chinese-copywriting-guidelines/)，以写出更美观的中文文档。例如：[中文文字与西文文字间空格](https://github.com/ruanyf/document-style-guide/blob/master/docs/text.md#%E5%AD%97%E9%97%B4%E8%B7%9D)、[全角标点符号的正确使用](https://github.com/ruanyf/document-style-guide/blob/master/docs/marks.md)，等等。
 

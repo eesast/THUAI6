@@ -11,9 +11,13 @@ namespace GameClass.GameObj
         private readonly ReaderWriterLockSlim moveReaderWriterLock = new();
         public ReaderWriterLockSlim MoveReaderWriterLock => moveReaderWriterLock;
         protected long stateNum = 0;
-        public long StateNum 
+        public long StateNum
         {
-            get=>Interlocked.Read(ref stateNum);
+            get
+            {
+                lock (actionLock)
+                    return stateNum;
+            }
         }
         //规定moveReaderWriterLock>actionLock
 

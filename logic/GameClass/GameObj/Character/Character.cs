@@ -91,7 +91,7 @@ namespace GameClass.GameObj
                 {
                     if (bulletNum == maxBulletNum) updateTimeOfBulletNum = time;
                     --bulletNum;
-                    
+
                     XY res = Position + new XY  // 子弹紧贴人物生成。
                         (
                             (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
@@ -99,7 +99,7 @@ namespace GameClass.GameObj
                         );
                     Bullet? bullet = BulletFactory.GetBullet(this, res);
                     if (bullet == null) return null;
-                    facingDirection = new(angle, bullet.BulletAttackRange);
+                    facingDirection = new(angle, bullet.AttackDistance);
                     return bullet;
                 }
                 else
@@ -330,7 +330,7 @@ namespace GameClass.GameObj
         {
             lock (actionLock)
             {
-                stateNum= Interlocked.Increment(ref stateNum);
+                ++stateNum;
                 whatInteractingWith = gameObj;
                 if (value != PlayerStateType.Moving)
                     IsMoving = false;
@@ -355,7 +355,7 @@ namespace GameClass.GameObj
         {
             lock (actionLock)
             {
-                stateNum= Interlocked.Increment(ref stateNum);
+                ++stateNum;
                 whatInteractingWith = null;
                 IsMoving = false;
                 playerState = PlayerStateType.Null;

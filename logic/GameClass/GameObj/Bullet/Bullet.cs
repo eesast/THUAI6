@@ -10,7 +10,7 @@ namespace GameClass.GameObj
         /// //攻击力
         /// </summary>
         public abstract double BulletBombRange { get; }
-        public abstract double BulletAttackRange { get; }
+        public abstract double AttackDistance { get; }
         public abstract int AP { get; set; }
         public abstract int Speed { get; }
         public abstract bool IsRemoteAttack { get; }

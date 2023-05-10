@@ -583,12 +583,12 @@ void Logic::LoadBufferCase(const protobuf::MessageOfObj& item)
                 {
                     if (Proto2THUAI6::newsTypeDict[news.news_case()] == THUAI6::NewsType::TextMessage)
                     {
-                        messageQueue.emplace(std::make_pair(news.to_id(), news.text_message()));
+                        messageQueue.emplace(std::make_pair(news.from_id(), news.text_message()));
                         logger->debug("Add News!");
                     }
                     else if (Proto2THUAI6::newsTypeDict[news.news_case()] == THUAI6::NewsType::BinaryMessage)
                     {
-                        messageQueue.emplace(std::make_pair(news.to_id(), news.binary_message()));
+                        messageQueue.emplace(std::make_pair(news.from_id(), news.binary_message()));
                         logger->debug("Add Binary News!");
                     }
                     else

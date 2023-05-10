@@ -81,7 +81,7 @@
     - `def GetClassroomProgress(self, cellX: int, cellY: int) -> int`:查询特定位置教室作业完成进度
     - `def GetDoorProgress(self, cellX: int, cellY: int) -> int`:查询特定位置门开启状态
     - `def IsDoorOpen(self, cellX: int, cellY: int) -> bool`:查询特定位置门是否开启，没有门/不在视野内也返回false
-    - `def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState`：:查询特定位置隐藏校门状态,没有隐藏校门/不在视野内返回 THUAI6::HiddenGateState::Null
+    - `def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState`：查询特定位置隐藏校门状态,没有隐藏校门/不在视野内返回 THUAI6::HiddenGateState::Null
 
 #### 其他
 

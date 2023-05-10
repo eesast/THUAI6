@@ -8,9 +8,6 @@ namespace GameClass.GameObj
     public partial class Character : Moveable, ICharacter  // 负责人LHR摆烂终了
     {
         #region 装弹、攻击相关的基本属性及方法
-        private readonly object attackLock = new();
-        public object AttackLock => attackLock;
-
         /// <summary>
         /// 装弹冷却
         /// </summary>
@@ -19,7 +16,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (attackLock)
+                lock (actionLock)
                 {
                     return cd;
                 }
@@ -33,14 +30,14 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (attackLock)
+                lock (actionLock)
                 {
                     return bulletOfPlayer;
                 }
             }
             set
             {
-                lock (attackLock)
+                lock (actionLock)
                 {
                     bulletOfPlayer = value;
                     cd = OrgCD = (BulletFactory.BulletCD(value));
@@ -55,7 +52,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (attackLock)
+                lock (actionLock)
                 {
                     return maxBulletNum;
                 }
@@ -66,7 +63,7 @@ namespace GameClass.GameObj
 
         public int UpdateBulletNum(int time)
         {
-            lock (attackLock)
+            lock (actionLock)
             {
                 if (bulletNum < maxBulletNum)
                 {
@@ -84,7 +81,7 @@ namespace GameClass.GameObj
         /// <returns>攻击操作发出的子弹</returns>
         public Bullet? Attack(double angle, int time)
         {
-            lock (attackLock)
+            lock (actionLock)
             {
                 if (bulletOfPlayer == BulletType.Null)
                     return null;
@@ -92,14 +89,16 @@ namespace GameClass.GameObj
                 {
                     if (bulletNum == maxBulletNum) updateTimeOfBulletNum = time;
                     --bulletNum;
+
                     XY res = Position + new XY  // 子弹紧贴人物生成。
                         (
-                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
-                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
+                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
+                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Sin(angle))) * Math.Sign(Math.Sin(angle))
                         );
-                    Bullet? bullet = BulletFactory.GetBullet(this, res);
+                    Bullet? bullet = BulletFactory.GetBullet(this, res, this.bulletOfPlayer);
                     if (bullet == null) return null;
-                    facingDirection = new(angle, bullet.BulletAttackRange);
+                    bullet.AP += TryAddAp() ? GameData.ApPropAdd : 0;
+                    facingDirection = new(angle, bullet.AttackDistance);
                     return bullet;
                 }
                 else
@@ -305,63 +304,88 @@ namespace GameClass.GameObj
         {
             get
             {
-                if (playerState == PlayerStateType.Null && IsMoving) return PlayerStateType.Moving;
-                return playerState;
+                lock (actionLock)
+                {
+                    if (playerState == PlayerStateType.Null && IsMoving) return PlayerStateType.Moving;
+                    return playerState;
+                }
             }
         }
 
-        public bool NoHp() => (playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
-                                                            || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued);
-        public bool Commandable() => (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
-                                                            && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
-                                                             && playerState != PlayerStateType.Swinging && playerState != PlayerStateType.TryingToAttack
-                                                              && playerState != PlayerStateType.ClimbingThroughWindows && playerState != PlayerStateType.Stunned);
-        public bool InteractingWithMapWithoutMoving() => (playerState == PlayerStateType.LockingOrOpeningTheDoor || playerState == PlayerStateType.Fixing || playerState == PlayerStateType.OpeningTheChest);
-        public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
-        public bool CanBeAwed() => !(playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
-                                                            || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued
-                                                            || playerState == PlayerStateType.Treated || playerState == PlayerStateType.Stunned
-                                                            || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
-
+        public bool NoHp()
+        {
+            lock (actionLock)
+                return (playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued);
+        }
+        public bool Commandable()
+        {
+            lock (actionLock)
+            {
+                return (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
+                           && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
+                           && playerState != PlayerStateType.Swinging && playerState != PlayerStateType.TryingToAttack
+                           && playerState != PlayerStateType.ClimbingThroughWindows && playerState != PlayerStateType.Stunned);
+            }
+        }
+        public bool InteractingWithMapWithoutMoving()
+        {
+            lock (actionLock)
+            {
+                return (playerState == PlayerStateType.LockingOrOpeningTheDoor || playerState == PlayerStateType.Fixing || playerState == PlayerStateType.OpeningTheChest);
+            }
+        }
+        public bool NullOrMoving()
+        {
+            lock (actionLock)
+            {
+                return (playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
+            }
+        }
+        public bool CanBeAwed()
+        {
+            lock (actionLock)
+                return !(playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
+                           || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued
+                           || playerState == PlayerStateType.Treated || playerState == PlayerStateType.Stunned
+                           || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
+        }
         private GameObj? whatInteractingWith = null;
         public GameObj? WhatInteractingWith => whatInteractingWith;
 
-        private long threadNum = 0;
-        public long ThreadNum => threadNum;
-
-        public void ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        public long ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
-            lock (moveObjLock)
-            {
-                ++threadNum;
-                whatInteractingWith = gameObj;
-                if (value != PlayerStateType.Moving)
-                    IsMoving = false;
-                playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
-                //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
-            }
-        }
-
-        public void ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
-        {
-            lock (moveObjLock)
+            lock (actionLock)
             {
                 whatInteractingWith = gameObj;
                 if (value != PlayerStateType.Moving)
                     IsMoving = false;
                 playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
                 //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
+                return ++stateNum;
             }
         }
 
-        public void SetPlayerStateNaturally()
+        public long ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
-            lock (moveObjLock)
+            lock (actionLock)
             {
-                ++threadNum;
+                whatInteractingWith = gameObj;
+                if (value != PlayerStateType.Moving)
+                    IsMoving = false;
+                playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
+                //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
+                return stateNum;
+            }
+        }
+
+        public long SetPlayerStateNaturally()
+        {
+            lock (actionLock)
+            {
                 whatInteractingWith = null;
                 IsMoving = false;
                 playerState = PlayerStateType.Null;
+                return ++stateNum;
             }
         }
 
@@ -370,11 +394,11 @@ namespace GameClass.GameObj
             MoveReaderWriterLock.EnterWriteLock();
             try
             {
-                lock (moveObjLock)
+                lock (actionLock)
                 {
                     playerState = playerStateType;
                     canMove = false;
-                    isResetting = true;
+                    isRemoved = true;
                     position = GameData.PosWhoDie;
                 }
             }
@@ -623,7 +647,7 @@ namespace GameClass.GameObj
         public override ShapeType Shape => ShapeType.Circle;
         public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (IsResetting)
+            if (IsRemoved)
                 return true;
             if (targetObj.Type == GameObjType.Prop)
             {

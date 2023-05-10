@@ -73,24 +73,21 @@ namespace GameEngine
             obj.MovingSetPos(new XY(moveVec, maxLen));
         }
 
-        public void MoveObj(IMoveable obj, int moveTime, double direction)
+        public void MoveObj(IMoveable obj, int moveTime, double direction, long threadNum)
         {
-            if (obj.IsMoving)  // 已经移动的物体不能再移动
-                return;
-            if (!obj.IsAvailable || !gameTimer.IsGaming)
-                return;
-
-            long threadNum = (obj.Type == GameObjType.Character) ? ((ICharacter)obj).ThreadNum : 0;//对人特殊处理
+            if (!gameTimer.IsGaming) return;
+            lock (obj.ActionLock)
+            {
+                if (!obj.IsAvailableForMove) return;
+                obj.IsMoving = true;
+            }
             new Thread
             (
                 () =>
                 {
-                    lock (obj.MoveLock)
-                        obj.IsMoving = true;
-
                     double moveVecLength = 0.0;
                     XY res = new(direction, moveVecLength);
-                    double deltaLen = moveVecLength - Math.Sqrt(obj.MovingSetPos(res));  // 转向，并用deltaLen存储行走的误差
+                    double deltaLen = 0;  // 转向，并用deltaLen存储行走的误差
                     IGameObj? collisionObj = null;
                     bool isDestroyed = false;
 
@@ -119,14 +116,14 @@ namespace GameEngine
                     if (!isDestroyed)
                     {
                         new FrameRateTaskExecutor<int>(
-                            () => gameTimer.IsGaming && obj.CanMove && !obj.IsResetting && obj.IsMoving,
+                            () => gameTimer.IsGaming && obj.CanMove && !obj.IsRemoved && obj.IsMoving,
                             () =>
                             {
                                 moveVecLength = obj.MoveSpeed / GameData.numOfStepPerSecond;
                                 res = new XY(direction, moveVecLength);
 
                                 //对人特殊处理
-                                if (threadNum > 0 && ((ICharacter)obj).ThreadNum != threadNum) return false;
+                                if (threadNum > 0 && obj.StateNum != threadNum) return false;
 
                                 // 越界情况处理：如果越界，则与越界方块碰撞
                                 bool flag;  // 循环标志
@@ -147,7 +144,7 @@ namespace GameEngine
                                             isDestroyed = true;
                                             return false;
                                         case AfterCollision.MoveMax:
-                                            if (threadNum == 0 || ((ICharacter)obj).ThreadNum == threadNum)
+                                            if (threadNum == 0 || obj.StateNum == threadNum)
                                                 MoveMax(obj, res);
                                             moveVecLength = 0;
                                             res = new XY(direction, moveVecLength);
@@ -155,7 +152,7 @@ namespace GameEngine
                                     }
                                 } while (flag);
 
-                                if (threadNum == 0 || ((ICharacter)obj).ThreadNum == threadNum)
+                                if (threadNum == 0 || obj.StateNum == threadNum)
                                     deltaLen += moveVecLength - Math.Sqrt(obj.MovingSetPos(res));
 
                                 return true;
@@ -174,7 +171,7 @@ namespace GameEngine
                                         res = new XY(direction, moveVecLength);
                                         if ((collisionObj = collisionChecker.CheckCollisionWhenMoving(obj, res)) == null)
                                         {
-                                            if (threadNum == 0 || ((ICharacter)obj).ThreadNum == threadNum)
+                                            if (threadNum == 0 || obj.StateNum == threadNum)
                                                 obj.MovingSetPos(res);
                                         }
                                         else
@@ -189,7 +186,7 @@ namespace GameEngine
                                                     isDestroyed = true;
                                                     break;
                                                 case AfterCollision.MoveMax:
-                                                    if (threadNum == 0 || ((ICharacter)obj).ThreadNum == threadNum)
+                                                    if (threadNum == 0 || obj.StateNum == threadNum)
                                                         MoveMax(obj, res);
                                                     moveVecLength = 0;
                                                     res = new XY(direction, moveVecLength);
@@ -202,7 +199,7 @@ namespace GameEngine
                                 {
                                     Thread.Sleep(leftTime);  // 多移动的在这里补回来
                                 }
-                                lock (obj.MoveLock)
+                                lock (obj.ActionLock)
                                     obj.IsMoving = false;  // 结束移动
                                 EndMove(obj);
                                 return 0;

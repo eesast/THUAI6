@@ -1,8 +1,6 @@
 ﻿using Preparation.Utility;
 using Preparation.Interface;
 using System.Collections.Generic;
-using System;
-using System.Numerics;
 
 namespace GameClass.GameObj
 {

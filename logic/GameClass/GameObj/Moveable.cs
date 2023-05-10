@@ -6,17 +6,30 @@ namespace GameClass.GameObj
 {
     public abstract class Moveable : GameObj, IMoveable
     {
-        protected readonly object moveObjLock = new();
-        public object MoveLock => moveObjLock;
+        protected readonly object actionLock = new();
+        public object ActionLock => actionLock;
         private readonly ReaderWriterLockSlim moveReaderWriterLock = new();
         public ReaderWriterLockSlim MoveReaderWriterLock => moveReaderWriterLock;
-        //规定moveReaderWriterLock>moveObjLock
+        protected long stateNum = 0;
+        public long StateNum
+        {
+            get
+            {
+                lock (actionLock)
+                    return stateNum;
+            }
+            set
+            {
+                lock (actionLock) stateNum = value;
+            }
+        }
+        //规定moveReaderWriterLock>actionLock
 
         public override XY Position
         {
             get
             {
-                lock (moveObjLock)
+                lock (actionLock)
                     return position;
             }
         }
@@ -25,7 +38,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (moveObjLock)
+                lock (actionLock)
                     return facingDirection;
             }
         }
@@ -35,12 +48,12 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (moveObjLock)
+                lock (actionLock)
                     return isMoving;
             }
             set
             {
-                lock (moveObjLock)
+                lock (actionLock)
                 {
                     isMoving = value;
                 }
@@ -51,7 +64,7 @@ namespace GameClass.GameObj
         public long MovingSetPos(XY moveVec)
         {
             if (moveVec.x != 0 || moveVec.y != 0)
-                lock (moveObjLock)
+                lock (actionLock)
                 {
                     facingDirection = moveVec;
                     this.position += moveVec;
@@ -61,7 +74,7 @@ namespace GameClass.GameObj
 
         public void ReSetPos(XY position)
         {
-            lock (moveObjLock)
+            lock (actionLock)
             {
                 this.position = position;
             }
@@ -88,7 +101,7 @@ namespace GameClass.GameObj
             moveReaderWriterLock.EnterWriteLock();
             try
             {
-                lock (moveObjLock)
+                lock (actionLock)
                 {
                     canMove = value;
                 }
@@ -99,15 +112,15 @@ namespace GameClass.GameObj
             }
         }
 
-        protected bool isResetting;
-        public bool IsResetting
+        protected bool isRemoved;
+        public bool IsRemoved
         {
             get
             {
                 moveReaderWriterLock.EnterReadLock();
                 try
                 {
-                    return isResetting;
+                    return isRemoved;
                 }
                 finally
                 {
@@ -116,7 +129,22 @@ namespace GameClass.GameObj
             }
         }
 
-        public bool IsAvailable => !IsMoving && CanMove && !IsResetting;  // 是否能接收指令
+        public bool IsAvailableForMove // 是否能接收移动指令
+        {
+            get
+            {
+                moveReaderWriterLock.EnterReadLock();
+                try
+                {
+                    lock (actionLock)
+                        return !isMoving && canMove && !isRemoved;
+                }
+                finally
+                {
+                    moveReaderWriterLock.ExitReadLock();
+                }
+            }
+        }
 
         protected int moveSpeed;
         /// <summary>
@@ -141,7 +169,7 @@ namespace GameClass.GameObj
                 moveReaderWriterLock.EnterWriteLock();
                 try
                 {
-                    lock (moveObjLock)
+                    lock (actionLock)
                     {
                         moveSpeed = value;
                     }
@@ -167,7 +195,7 @@ namespace GameClass.GameObj
                        this.FacingDirection = new XY(1, 0);
                        isMoving = false;
                        CanMove = false;
-                       IsResetting = true;
+                       IsRemoved = true;
                        this.Position = birthPos;
                        this.Place= place;
                    }

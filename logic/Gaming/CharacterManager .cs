@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using GameClass.GameObj;
 using Preparation.Utility;
 using Preparation.Interface;
@@ -18,37 +17,37 @@ namespace Gaming
                 this.gameMap = gameMap;
             }
 
-            public void SetPlayerState(Character player, PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+            public long SetPlayerState(Character player, PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
             {
-                lock (player.MoveLock)
+                lock (player.ActionLock)
                 {
-                    switch (player.PlayerState)
+                    PlayerStateType nowPlayerState = player.PlayerState;
+                    if (nowPlayerState == value) return -1;
+                    switch (nowPlayerState)
                     {
                         case PlayerStateType.OpeningTheChest:
+                            if (player.NoHp()) return -1;
                             ((Chest)player.WhatInteractingWith!).StopOpen();
-                            player.ChangePlayerState(value, gameObj);
-                            break;
+                            return player.ChangePlayerState(value, gameObj);
                         case PlayerStateType.OpeningTheDoorway:
+                            if (player.NoHp()) return -1;
                             Doorway doorway = (Doorway)player.WhatInteractingWith!;
                             doorway.OpenDegree += gameMap.Timer.nowTime() - doorway.OpenStartTime;
                             doorway.OpenStartTime = 0;
-                            player.ChangePlayerState(value, gameObj);
-                            break;
+                            return player.ChangePlayerState(value, gameObj);
                         case PlayerStateType.Addicted:
                             if (value == PlayerStateType.Rescued)
-                                player.ChangePlayerStateInOneThread(value, gameObj);
+                                return player.ChangePlayerStateInOneThread(value, gameObj);
                             else
-                                player.ChangePlayerState(value, gameObj);
-                            break;
+                                return player.ChangePlayerState(value, gameObj);
                         case PlayerStateType.Rescued:
                             if (value == PlayerStateType.Addicted)
-                                player.ChangePlayerStateInOneThread(value, gameObj);
+                                return player.ChangePlayerStateInOneThread(value, gameObj);
                             else
-                                player.ChangePlayerState(value, gameObj);
-                            break;
+                                return player.ChangePlayerState(value, gameObj);
                         default:
-                            player.ChangePlayerState(value, gameObj);
-                            break;
+                            if (player.NoHp()) return -1;
+                            return player.ChangePlayerState(value, gameObj);
                     }
                 }
             }
@@ -75,7 +74,7 @@ namespace Gaming
                              Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
                          long lastTime = Environment.TickCount64;
                          new FrameRateTaskExecutor<int>(
-                             loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
+                             loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsRemoved,
                              loopToDo: () =>
                              {
                                  long nowTime = Environment.TickCount64;
@@ -133,7 +132,7 @@ namespace Gaming
                             }
                         }
                         new FrameRateTaskExecutor<int>(
-                        loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
+                        loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsRemoved,
                         loopToDo: () =>
                         {
                             gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
@@ -246,7 +245,7 @@ namespace Gaming
                     }
                 }
                 SetPlayerState(player, PlayerStateType.Addicted);
-                long threadNum = player.ThreadNum;
+                long threadNum = player.StateNum;
                 new Thread
                     (() =>
                     {
@@ -254,7 +253,7 @@ namespace Gaming
                         Debugger.Output(player, " is addicted ");
 #endif
                         new FrameRateTaskExecutor<int>(
-                            () => threadNum == player.ThreadNum && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
+                            () => threadNum == player.StateNum && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
                             () =>
                             {
                                 player.GamingAddiction += (player.PlayerState == PlayerStateType.Addicted) ? GameData.frameDuration : 0;
@@ -276,28 +275,28 @@ namespace Gaming
                 { IsBackground = true }.Start();
             }
 
-            public bool BeStunned(Character player, int time)
+            public long BeStunned(Character player, int time)
             {
-                if (player.PlayerState == PlayerStateType.Stunned || player.NoHp() || player.CharacterType == CharacterType.Robot) return false;
+                if (player.CharacterType == CharacterType.Robot) return -1;
+                long threadNum = SetPlayerState(player, PlayerStateType.Stunned);
+                if (threadNum == -1) return -1;
                 new Thread
                     (() =>
                     {
-                        SetPlayerState(player, PlayerStateType.Stunned);
-                        long threadNum = player.ThreadNum;
                         Thread.Sleep(time);
-                        if (threadNum == player.ThreadNum)
+                        if (threadNum == player.StateNum)
                             SetPlayerState(player);
                     }
                     )
                 { IsBackground = true }.Start();
-                return true;
+                return threadNum;
             }
 
             public bool TryBeAwed(Student character, Bullet bullet)
             {
                 if (character.CanBeAwed())
                 {
-                    if (BeStunned(character, GameData.basicStunnedTimeOfStudent))
+                    if (BeStunned(character, GameData.basicStunnedTimeOfStudent) > 0)
                         bullet.Parent!.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.basicStunnedTimeOfStudent));
                     return true;
                 }
@@ -373,14 +372,14 @@ namespace Gaming
                 if (time <= 0) return false;
                 if (player.PlayerState == PlayerStateType.Swinging || (!player.Commandable() && player.PlayerState != PlayerStateType.TryingToAttack)) return false;
                 SetPlayerState(player, PlayerStateType.Swinging);
-                long threadNum = player.ThreadNum;
+                long threadNum = player.StateNum;
 
                 new Thread
                         (() =>
                         {
                             Thread.Sleep(time);
 
-                            if (threadNum == player.ThreadNum)
+                            if (threadNum == player.StateNum)
                             {
                                 SetPlayerState(player);
                             }

@@ -5,14 +5,14 @@
 ## 接口解释
 
 ### 主动指令
-- 每帧最多发送50条主动指令
-- EndAllAction() 及 Move 指令调用数总和一帧内不超过 10 次
+- 每帧最多发送 50 条主动指令
+- EndAllAction 及 Move 指令调用数总和一帧内不超过 10 次
 
 #### 移动
 
-- `def Move(self, timeInMilliseconds: int, angle: float) -> Future[bool]`:移动，`timeInMilliseconds` 为移动时间，单位毫秒；`angleInRadian` 表示移动方向，单位弧度，使用极坐标，**竖直向下方向为 x 轴，水平向右方向为 y 轴**因为移动过程中你会受到多种干扰使得移动结果不符合你的预期；因此建议小步移动，边移动边考虑之后的行为。
-  - 5ms以内的移动指令会被禁止，你不应当使用过小的移动指令
-- `def MoveRight(self, timeInMilliseconds: int) -> Future[bool]`即向右移动,`MoveLeft`、`MoveDown`、`MoveUp`同理  
+- `def Move(self, timeInMilliseconds: int, angle: float) -> Future[bool]`: 移动，`timeInMilliseconds` 为移动时间，单位毫秒；`angleInRadian` 表示移动方向，单位弧度，使用极坐标，**竖直向下方向为 x 轴，水平向右方向为 y 轴**因为移动过程中你会受到多种干扰使得移动结果不符合你的预期；因此建议小步移动，边移动边考虑之后的行为。
+  - 5ms 以内的移动指令会被禁止，你不应当使用过小的移动指令
+- `def MoveRight(self, timeInMilliseconds: int) -> Future[bool]` 即向右移动, `MoveLeft`、`MoveDown`、`MoveUp` 同理  
 
 #### 使用技能
 
@@ -23,29 +23,29 @@
 - `def EndAllAction(self) -> Future[bool]`:可以使不处在不可行动状态中的玩家终止当前行动
 - 在指令仍在进行时，重复发出同一类型的交互指令和移动指令是无效的，你需要先发出 Stop 指令终止进行的指令
   - 实际上唤醒或勉励不同的人是有效的
-- EndAllAction() 及 Move 指令调用数总和一帧内不超过 10 次
+- EndAllAction 及 Move 指令调用数总和一帧内不超过 10 次
 
 #### 攻击
 
-- `def Attack(self, angle: float) -> Future[bool]`:`angleInRadian`为攻击方向
+- `def Attack(self, angle: float) -> Future[bool]`: `angleInRadian` 为攻击方向
 
 #### 学习与毕业
 
-- `def StartLearning(self) -> Future[bool]`:在教室里开始做作业
-- `def StartOpenGate(self) -> Future[bool]`:开始开启校门
-- `def Graduate(self) -> Future[bool]`:从开启的校门或隐藏校门毕业。
+- `def StartLearning(self) -> Future[bool]`: 在教室里开始做作业
+- `def StartOpenGate(self) -> Future[bool]`: 开始开启校门
+- `def Graduate(self) -> Future[bool]`: 从开启的校门或隐藏校门毕业。
 
 #### 勉励与唤醒
 
-- `def StartEncourageMate(self, mateID: int) -> Future[bool]`:勉励对应玩家 ID 的学生。
+- `def StartEncourageMate(self, mateID: int) -> Future[bool]`: 勉励对应玩家 ID 的学生。
 - `def StartRouseMate(self, mateID: int) -> Future[bool]`：唤醒对应玩家 ID 的沉迷的学生。
 
 #### 地图互动
 
-- `def OpenDoor(self) -> Future[bool]`:开门
-- `def CloseDoor(self) -> Future[bool]`:关门
-- `def SkipWindow(self) -> Future[bool]`:翻窗
-- `def StartOpenChest(self) -> Future[bool]`:开箱
+- `def OpenDoor(self) -> Future[bool]`: 开门
+- `def CloseDoor(self) -> Future[bool]`: 关门
+- `def SkipWindow(self) -> Future[bool]`: 翻窗
+- `def StartOpenChest(self) -> Future[bool]`: 开箱
 
 #### 道具
 
@@ -57,9 +57,10 @@
 
 #### 队内信息
 
-  - `def GetMessage(self) -> Tuple[int, str]`：给同队的队友发送消息,队友在下一帧收到。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
+  - `def SendMessage(self, toID: int, message: Union[str, bytes]) -> Future[bool]`：给同队的队友发送消息,队友在下一帧收到。第一个参数指定发送的对象，第二个参数指定发送的内容，可以是Unicode字符串，也可以是二进制字符串；不得超过 256 字节。
   - `def HaveMessage(self) -> bool`:是否有队友发来的尚未接收的信息。
-  - `def GetMessage(self) -> Tuple[int, str]`:按照消息发送顺序获取来自队友的信息，第一个参数为发送该消息的PlayerID。
+  - `def GetMessage(self) -> Tuple[int, Union[str, bytes]]`:按照消息发送顺序获取来自队友的信息，第一个参数为发送该消息的 PlayerID。
+    > 需要注意，文本消息和二进制消息都会在这里接受，选手可以简单地使用 `isinstance()` 来判断消息类型。
 
 #### 查询可视范围内的信息
 
@@ -80,7 +81,7 @@
     - `def GetClassroomProgress(self, cellX: int, cellY: int) -> int`:查询特定位置教室作业完成进度
     - `def GetDoorProgress(self, cellX: int, cellY: int) -> int`:查询特定位置门开启状态
     - `def IsDoorOpen(self, cellX: int, cellY: int) -> bool`:查询特定位置门是否开启，没有门/不在视野内也返回false
-    - `def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState`：:查询特定位置隐藏校门状态,没有隐藏校门/不在视野内返回THUAI6::HiddenGateState::Null
+    - `def GetHiddenGateState(self, cellX: int, cellY: int) -> THUAI6.HiddenGateState`：:查询特定位置隐藏校门状态,没有隐藏校门/不在视野内返回 THUAI6::HiddenGateState::Null
 
 #### 其他
 
@@ -192,7 +193,7 @@ class IAPI(metaclass=ABCMeta):
     # 消息相关，接收消息时无消息则返回(-1, '')
 
     @abstractmethod
-    def SendMessage(self, toID: int, message: str) -> Future[bool]:
+    def SendMessage(self, toID: int, message: Union[str, bytes]) -> Future[bool]:
         pass
 
     @abstractmethod
@@ -200,7 +201,7 @@ class IAPI(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def GetMessage(self) -> Tuple[int, str]:
+    def GetMessage(self) -> Tuple[int, Union[str, bytes]]:
         pass
 
     # 等待下一帧

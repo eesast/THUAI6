@@ -45,9 +45,11 @@
 ### 信息获取
 
 #### 队内信息
-  - `std::future<bool> SendMessage(int64_t, std::string)`：给同队的队友发送消息,队友在下一帧收到。第一个参数指定发送的对象，第二个参数指定发送的内容，不得超过256字节。
+  - `std::future<bool> SendTextMessage(int64_t, std::string)`：给同队的队友发送文本消息,队友在下一帧收到。第一个参数指定发送的对象，第二个参数指定发送的内容，形式为Unicode字符串，不得超过256字节。
+  - `std::future<bool> SendBinaryMessage(int64_t, std::string)`：给同队的队友发送二进制消息,队友在下一帧收到。第一个参数指定发送的对象，第二个参数指定发送的内容，形式为二进制字符串，不得超过256字节。
   - `bool HaveMessage()`:是否有队友发来的尚未接收的信息。
   - `std::pair<int64_t, std::string> GetMessage()`:按照消息发送顺序获取来自队友的信息，第一个参数为发送该消息的PlayerID。
+    > 需要注意，收到的二进制消息和文本消息都会被这个函数一并返回，选手需要自行约定消息类型。
 
 #### 查询可视范围内的信息
   - `std::vector<std::shared_ptr<const THUAI6::Student>> GetStudents() const` ：对于学生，返回所有学生的信息；对于捣蛋鬼，返回可视学生的信息。
@@ -95,7 +97,7 @@
     struct Player
     {
       std::vector<PropType> props;//大小固定为3，空的位置为NullPropType
-    }
+    };
 ~~~
 
 ## 接口一览
@@ -123,7 +125,8 @@
     virtual std::future<bool> EndAllAction() = 0;
 
     // 发送信息、接受信息，注意收消息时无消息则返回nullopt
-    virtual std::future<bool> SendMessage(int64_t, std::string) = 0;
+    virtual std::future<bool> SendTextMessage(int64_t, std::string) = 0;
+    virtual std::future<bool> SendBinaryMessage(int64_t, std::string) = 0;
     [[nodiscard]] virtual bool HaveMessage() = 0;
     [[nodiscard]] virtual std::pair<int64_t, std::string> GetMessage() = 0;
 

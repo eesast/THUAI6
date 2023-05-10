@@ -39,6 +39,17 @@ namespace Gaming
                 this.characterManager = characterManager;
             }
 
+            public void ProduceBulletNaturally(BulletType bulletType, Character player, double angle, XY pos)
+            {
+                // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
+                if (bulletType == BulletType.Null) return;
+                Bullet? bullet = BulletFactory.GetBullet(player, pos, bulletType);
+                if (bullet == null) return;
+                Debugger.Output(bullet, "Attack in " + pos.ToString());
+                gameMap.Add(bullet);
+                moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle, ++bullet.StateNum);  // 这里时间参数除出来的单位要是ms
+            }
+
             private void BombObj(Bullet bullet, GameObj objBeingShot)
             {
 #if DEBUG
@@ -122,9 +133,21 @@ namespace Gaming
 
                 if (bullet.TypeOfBullet == BulletType.BombBomb && objBeingShot != null)
                 {
-                    bullet.Parent!.BulletOfPlayer = BulletType.JumpyDumpty;
-                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI / 2.0);
-                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI * 3.0 / 2.0);
+                    double angle = bullet.FacingDirection.Angle() + Math.PI / 2.0;
+                    XY pos = bullet.Position + new XY  // 子弹紧贴人物生成。
+                    (
+                    (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
+                    (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Sin(angle))) * Math.Sign(Math.Sin(angle))
+                    );
+                    ProduceBulletNaturally(BulletType.JumpyDumpty, (Character)bullet.Parent!, angle, pos);
+
+                    angle = bullet.FacingDirection.Angle() + Math.PI * 3.0 / 2.0;
+                    pos = bullet.Position + new XY  // 子弹紧贴人物生成。
+                    (
+                    (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
+                    (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Sin(angle))) * Math.Sign(Math.Sin(angle))
+                    );
+                    ProduceBulletNaturally(BulletType.JumpyDumpty, (Character)bullet.Parent!, angle, pos);
                 }
 
                 var beAttackedList = new List<IGameObj>();
@@ -171,19 +194,18 @@ namespace Gaming
                 if (bullet != null)
                 {
                     Debugger.Output(bullet, "Attack in " + bullet.Position.ToString());
-                    bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
                     gameMap.Add(bullet);
-                    moveEngine.MoveObj(bullet, (int)((bullet.BulletAttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
+                    moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle, ++bullet.StateNum);  // 这里时间参数除出来的单位要是ms
                     if (bullet.CastTime > 0)
                     {
                         characterManager.SetPlayerState(player, PlayerStateType.TryingToAttack);
-                        long threadNum = player.ThreadNum;
+                        long threadNum = player.StateNum;
 
                         new Thread
                                 (() =>
                                 {
                                     new FrameRateTaskExecutor<int>(
-                                    loopCondition: () => threadNum == player.ThreadNum && gameMap.Timer.IsGaming,
+                                    loopCondition: () => threadNum == player.StateNum && gameMap.Timer.IsGaming,
                                     loopToDo: () =>
                                     {
                                     },
@@ -195,7 +217,7 @@ namespace Gaming
 
                                     if (gameMap.Timer.IsGaming)
                                     {
-                                        if (threadNum == player.ThreadNum)
+                                        if (threadNum == player.StateNum)
                                         {
                                             characterManager.SetPlayerState(player);
                                         }

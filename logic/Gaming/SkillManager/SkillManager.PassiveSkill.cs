@@ -22,7 +22,7 @@ namespace Gaming  // 被动技能开局时就释放，持续到游戏结束
                     {
                         new FrameRateTaskExecutor<int>
                         (
-                            () => gameMap.Timer.IsGaming && !player.IsResetting,
+                            () => gameMap.Timer.IsGaming && !player.IsRemoved,
                             () =>
                             {
                                 if (player.Commandable() && player.PlayerState != PlayerStateType.Fixing) activeSkill.DegreeOfMeditation += learningDegree * GameData.frameDuration;

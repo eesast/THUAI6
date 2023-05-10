@@ -25,12 +25,13 @@ namespace Gaming
                     if (nowPlayerState == value) return -1;
                     switch (nowPlayerState)
                     {
+                        case PlayerStateType.Escaped:
+                        case PlayerStateType.Deceased:
+                            return -1;
                         case PlayerStateType.OpeningTheChest:
-                            if (player.NoHp()) return -1;
                             ((Chest)player.WhatInteractingWith!).StopOpen();
                             return player.ChangePlayerState(value, gameObj);
                         case PlayerStateType.OpeningTheDoorway:
-                            if (player.NoHp()) return -1;
                             Doorway doorway = (Doorway)player.WhatInteractingWith!;
                             doorway.OpenDegree += gameMap.Timer.nowTime() - doorway.OpenStartTime;
                             doorway.OpenStartTime = 0;
@@ -38,15 +39,16 @@ namespace Gaming
                         case PlayerStateType.Addicted:
                             if (value == PlayerStateType.Rescued)
                                 return player.ChangePlayerStateInOneThread(value, gameObj);
-                            else
+                            else if (value==PlayerStateType.Null)
                                 return player.ChangePlayerState(value, gameObj);
+                            else return -1;
                         case PlayerStateType.Rescued:
                             if (value == PlayerStateType.Addicted)
                                 return player.ChangePlayerStateInOneThread(value, gameObj);
-                            else
+                            else if(value==PlayerStateType.Null)
                                 return player.ChangePlayerState(value, gameObj);
+                            else return -1;
                         default:
-                            if (player.NoHp()) return -1;
                             return player.ChangePlayerState(value, gameObj);
                     }
                 }

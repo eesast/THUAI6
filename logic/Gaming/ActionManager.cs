@@ -21,14 +21,14 @@ namespace Gaming
                 {
                     if (((Bullet)collisionObj).Parent != player && ((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
                     {
-                        if (characterManager.BeStunned((Character)player, GameData.timeOfStunnedWhenJumpyDumpty))
+                        if (characterManager.BeStunned((Character)player, GameData.timeOfStunnedWhenJumpyDumpty) > 0)
                             player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStunnedWhenJumpyDumpty));
                         gameMap.Remove((GameObj)collisionObj);
                     }
                 }
                 if (player.FindIActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
                 {
-                    if (characterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge))
+                    if (characterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge) > 0)
                         player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenCharge));
                     characterManager.BeStunned(player, GameData.timeOfStudentStunnedWhenCharge);
                 }
@@ -37,7 +37,6 @@ namespace Gaming
             {
                 if (moveTimeInMilliseconds < 5) return false;
                 if (!playerToMove.Commandable()) return false;
-                if (playerToMove.IsMoving) return false;
                 moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection,
                     characterManager.SetPlayerState(playerToMove, PlayerStateType.Moving));
                 return true;

@@ -139,7 +139,7 @@ namespace Gaming
                     (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
                     (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Sin(angle))) * Math.Sign(Math.Sin(angle))
                     );
-                    ProduceBulletNaturally(BulletType.JumpyDumpty, (Character)bullet.Parent, angle, pos);
+                    ProduceBulletNaturally(BulletType.JumpyDumpty, (Character)bullet.Parent!, angle, pos);
 
                     angle = bullet.FacingDirection.Angle() + Math.PI * 3.0 / 2.0;
                     pos = bullet.Position + new XY  // 子弹紧贴人物生成。
@@ -147,7 +147,7 @@ namespace Gaming
                     (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
                     (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Sin(angle))) * Math.Sign(Math.Sin(angle))
                     );
-                    ProduceBulletNaturally(BulletType.JumpyDumpty, (Character)bullet.Parent, angle, pos);
+                    ProduceBulletNaturally(BulletType.JumpyDumpty, (Character)bullet.Parent!, angle, pos);
                 }
 
                 var beAttackedList = new List<IGameObj>();

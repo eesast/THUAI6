@@ -188,7 +188,7 @@ namespace Gaming
                         {
                             if (!character.IsGhost() && !character.NoHp() && XY.DistanceFloor3(character.Position, player.Position) <= player.ViewRange)
                             {
-                                if (characterManager.BeStunned(character, GameData.timeOfStudentStunnedWhenHowl))
+                                if (characterManager.BeStunned(character, GameData.timeOfStudentStunnedWhenHowl) > 0)
                                     player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStudentStunnedWhenHowl));
                             }
                         }
@@ -219,7 +219,7 @@ namespace Gaming
                                 || character.PlayerState == PlayerStateType.UsingSkill || character.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || character.PlayerState == PlayerStateType.ClimbingThroughWindows)
                                 && gameMap.CanSee(player, character))
                             {
-                                if (characterManager.BeStunned(character, GameData.timeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)))
+                                if (characterManager.BeStunned(character, GameData.timeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)) > 0)
                                     player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)));
                                 break;
                             }

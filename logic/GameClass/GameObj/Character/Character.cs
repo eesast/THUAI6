@@ -304,24 +304,51 @@ namespace GameClass.GameObj
         {
             get
             {
-                if (playerState == PlayerStateType.Null && IsMoving) return PlayerStateType.Moving;
-                return playerState;
+                lock (actionLock)
+                {
+                    if (playerState == PlayerStateType.Null && IsMoving) return PlayerStateType.Moving;
+                    return playerState;
+                }
             }
         }
 
-        public bool NoHp() => (playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
-                                                            || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued);
-        public bool Commandable() => (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
-                                                            && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
-                                                             && playerState != PlayerStateType.Swinging && playerState != PlayerStateType.TryingToAttack
-                                                              && playerState != PlayerStateType.ClimbingThroughWindows && playerState != PlayerStateType.Stunned);
-        public bool InteractingWithMapWithoutMoving() => (playerState == PlayerStateType.LockingOrOpeningTheDoor || playerState == PlayerStateType.Fixing || playerState == PlayerStateType.OpeningTheChest);
-        public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
-        public bool CanBeAwed() => !(playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
-                                                            || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued
-                                                            || playerState == PlayerStateType.Treated || playerState == PlayerStateType.Stunned
-                                                            || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
-
+        public bool NoHp()
+        {
+            lock (actionLock)
+                return (playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued);
+        }
+        public bool Commandable()
+        {
+            lock (actionLock)
+            {
+                return (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
+                           && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
+                           && playerState != PlayerStateType.Swinging && playerState != PlayerStateType.TryingToAttack
+                           && playerState != PlayerStateType.ClimbingThroughWindows && playerState != PlayerStateType.Stunned);
+            }
+        }
+        public bool InteractingWithMapWithoutMoving()
+        {
+            lock (actionLock)
+            {
+                return (playerState == PlayerStateType.LockingOrOpeningTheDoor || playerState == PlayerStateType.Fixing || playerState == PlayerStateType.OpeningTheChest);
+            }
+        }
+        public bool NullOrMoving()
+        {
+            lock (actionLock)
+            {
+                return (playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
+            }
+        }
+        public bool CanBeAwed()
+        {
+            lock (actionLock)
+                return !(playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
+                           || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued
+                           || playerState == PlayerStateType.Treated || playerState == PlayerStateType.Stunned
+                           || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
+        }
         private GameObj? whatInteractingWith = null;
         public GameObj? WhatInteractingWith => whatInteractingWith;
 

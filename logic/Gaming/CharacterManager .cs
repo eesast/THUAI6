@@ -21,12 +21,16 @@ namespace Gaming
             {
                 lock (player.ActionLock)
                 {
-                    switch (player.PlayerState)
+                    PlayerStateType nowPlayerState = player.PlayerState;
+                    if (nowPlayerState == value) return -1;
+                    switch (nowPlayerState)
                     {
                         case PlayerStateType.OpeningTheChest:
+                            if (player.NoHp()) return -1;
                             ((Chest)player.WhatInteractingWith!).StopOpen();
                             return player.ChangePlayerState(value, gameObj);
                         case PlayerStateType.OpeningTheDoorway:
+                            if (player.NoHp()) return -1;
                             Doorway doorway = (Doorway)player.WhatInteractingWith!;
                             doorway.OpenDegree += gameMap.Timer.nowTime() - doorway.OpenStartTime;
                             doorway.OpenStartTime = 0;
@@ -42,6 +46,7 @@ namespace Gaming
                             else
                                 return player.ChangePlayerState(value, gameObj);
                         default:
+                            if (player.NoHp()) return -1;
                             return player.ChangePlayerState(value, gameObj);
                     }
                 }
@@ -270,28 +275,28 @@ namespace Gaming
                 { IsBackground = true }.Start();
             }
 
-            public bool BeStunned(Character player, int time)
+            public long BeStunned(Character player, int time)
             {
-                if (player.PlayerState == PlayerStateType.Stunned || player.NoHp() || player.CharacterType == CharacterType.Robot) return false;
+                if (player.CharacterType == CharacterType.Robot) return -1;
+                long threadNum = SetPlayerState(player, PlayerStateType.Stunned);
+                if (threadNum == -1) return -1;
                 new Thread
                     (() =>
                     {
-                        SetPlayerState(player, PlayerStateType.Stunned);
-                        long threadNum = player.StateNum;
                         Thread.Sleep(time);
                         if (threadNum == player.StateNum)
                             SetPlayerState(player);
                     }
                     )
                 { IsBackground = true }.Start();
-                return true;
+                return threadNum;
             }
 
             public bool TryBeAwed(Student character, Bullet bullet)
             {
                 if (character.CanBeAwed())
                 {
-                    if (BeStunned(character, GameData.basicStunnedTimeOfStudent))
+                    if (BeStunned(character, GameData.basicStunnedTimeOfStudent) > 0)
                         bullet.Parent!.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.basicStunnedTimeOfStudent));
                     return true;
                 }

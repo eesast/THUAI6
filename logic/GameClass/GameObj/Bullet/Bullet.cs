@@ -56,9 +56,9 @@ namespace GameClass.GameObj
 
     public static class BulletFactory
     {
-        public static Bullet? GetBullet(Character character, XY pos)
+        public static Bullet? GetBullet(Character character, XY pos, BulletType bulletType)
         {
-            switch (character.BulletOfPlayer)
+            switch (bulletType)
             {
                 case BulletType.FlyingKnife:
                     return new FlyingKnife(character, pos);

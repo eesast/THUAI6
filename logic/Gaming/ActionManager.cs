@@ -38,8 +38,8 @@ namespace Gaming
                 if (moveTimeInMilliseconds < 5) return false;
                 if (!playerToMove.Commandable()) return false;
                 if (playerToMove.IsMoving) return false;
-                characterManager.SetPlayerState(playerToMove, PlayerStateType.Moving);
-                moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
+                moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection,
+                    characterManager.SetPlayerState(playerToMove, PlayerStateType.Moving));
                 return true;
             }
 
@@ -47,7 +47,7 @@ namespace Gaming
             {
                 if (!playerToMove.Commandable() && playerToMove.PlayerState != PlayerStateType.Stunned) return false;
                 characterManager.BeStunned(playerToMove, moveTimeInMilliseconds);
-                moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
+                moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection, playerToMove.StateNum);
                 return true;
             }
 
@@ -326,7 +326,7 @@ namespace Gaming
                   player.ReSetPos(windowToPlayer + windowForClimb.Position);
                   player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
 
-                  moveEngine.MoveObj(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle());
+                  moveEngine.MoveObj(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle(), threadNum);
 
                   new FrameRateTaskExecutor<int>(
                     loopCondition: () => threadNum == player.StateNum && gameMap.Timer.IsGaming,

@@ -95,7 +95,7 @@ namespace GameClass.GameObj
                             (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
                             (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Sin(angle))) * Math.Sign(Math.Sin(angle))
                         );
-                    Bullet? bullet = BulletFactory.GetBullet(this, res);
+                    Bullet? bullet = BulletFactory.GetBullet(this, res, this.bulletOfPlayer);
                     if (bullet == null) return null;
                     bullet.AP += TryAddAp() ? GameData.ApPropAdd : 0;
                     facingDirection = new(angle, bullet.AttackDistance);
@@ -325,20 +325,7 @@ namespace GameClass.GameObj
         private GameObj? whatInteractingWith = null;
         public GameObj? WhatInteractingWith => whatInteractingWith;
 
-        public void ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
-        {
-            lock (actionLock)
-            {
-                ++stateNum;
-                whatInteractingWith = gameObj;
-                if (value != PlayerStateType.Moving)
-                    IsMoving = false;
-                playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
-                //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
-            }
-        }
-
-        public void ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        public long ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
             lock (actionLock)
             {
@@ -347,17 +334,31 @@ namespace GameClass.GameObj
                     IsMoving = false;
                 playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
                 //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
+                return ++stateNum;
             }
         }
 
-        public void SetPlayerStateNaturally()
+        public long ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
             lock (actionLock)
             {
-                ++stateNum;
+                whatInteractingWith = gameObj;
+                if (value != PlayerStateType.Moving)
+                    IsMoving = false;
+                playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
+                //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
+                return stateNum;
+            }
+        }
+
+        public long SetPlayerStateNaturally()
+        {
+            lock (actionLock)
+            {
                 whatInteractingWith = null;
                 IsMoving = false;
                 playerState = PlayerStateType.Null;
+                return ++stateNum;
             }
         }
 

@@ -43,11 +43,11 @@ namespace Gaming
             {
                 // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
                 if (bulletType == BulletType.Null) return;
-                Bullet? bullet = BulletFactory.GetBullet(player, pos);
+                Bullet? bullet = BulletFactory.GetBullet(player, pos, bulletType);
                 if (bullet == null) return;
                 Debugger.Output(bullet, "Attack in " + pos.ToString());
                 gameMap.Add(bullet);
-                moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
+                moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle, ++bullet.StateNum);  // 这里时间参数除出来的单位要是ms
             }
 
             private void BombObj(Bullet bullet, GameObj objBeingShot)
@@ -195,7 +195,7 @@ namespace Gaming
                 {
                     Debugger.Output(bullet, "Attack in " + bullet.Position.ToString());
                     gameMap.Add(bullet);
-                    moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
+                    moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle, ++bullet.StateNum);  // 这里时间参数除出来的单位要是ms
                     if (bullet.CastTime > 0)
                     {
                         characterManager.SetPlayerState(player, PlayerStateType.TryingToAttack);

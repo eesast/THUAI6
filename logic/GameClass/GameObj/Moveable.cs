@@ -18,6 +18,10 @@ namespace GameClass.GameObj
                 lock (actionLock)
                     return stateNum;
             }
+            set
+            {
+                lock (actionLock) stateNum = value;
+            }
         }
         //规定moveReaderWriterLock>actionLock
 

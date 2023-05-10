@@ -17,7 +17,7 @@ namespace Gaming
                 this.gameMap = gameMap;
             }
 
-            public void SetPlayerState(Character player, PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+            public long SetPlayerState(Character player, PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
             {
                 lock (player.ActionLock)
                 {
@@ -25,29 +25,24 @@ namespace Gaming
                     {
                         case PlayerStateType.OpeningTheChest:
                             ((Chest)player.WhatInteractingWith!).StopOpen();
-                            player.ChangePlayerState(value, gameObj);
-                            break;
+                            return player.ChangePlayerState(value, gameObj);
                         case PlayerStateType.OpeningTheDoorway:
                             Doorway doorway = (Doorway)player.WhatInteractingWith!;
                             doorway.OpenDegree += gameMap.Timer.nowTime() - doorway.OpenStartTime;
                             doorway.OpenStartTime = 0;
-                            player.ChangePlayerState(value, gameObj);
-                            break;
+                            return player.ChangePlayerState(value, gameObj);
                         case PlayerStateType.Addicted:
                             if (value == PlayerStateType.Rescued)
-                                player.ChangePlayerStateInOneThread(value, gameObj);
+                                return player.ChangePlayerStateInOneThread(value, gameObj);
                             else
-                                player.ChangePlayerState(value, gameObj);
-                            break;
+                                return player.ChangePlayerState(value, gameObj);
                         case PlayerStateType.Rescued:
                             if (value == PlayerStateType.Addicted)
-                                player.ChangePlayerStateInOneThread(value, gameObj);
+                                return player.ChangePlayerStateInOneThread(value, gameObj);
                             else
-                                player.ChangePlayerState(value, gameObj);
-                            break;
+                                return player.ChangePlayerState(value, gameObj);
                         default:
-                            player.ChangePlayerState(value, gameObj);
-                            break;
+                            return player.ChangePlayerState(value, gameObj);
                     }
                 }
             }

@@ -31,7 +31,7 @@ public:
     bool PickProp(THUAI6::PropType prop, int64_t playerID);
     bool UseProp(THUAI6::PropType prop, int64_t playerID);
     bool ThrowProp(THUAI6::PropType prop, int64_t playerID);
-    bool UseSkill(int32_t skillID, int64_t playerID);
+    bool UseSkill(int32_t skillID, int32_t skillParam, int64_t playerID);
     bool SendMessage(int64_t toID, std::string message, bool binary, int64_t playerID);
     bool OpenDoor(int64_t playerID);
     bool CloseDoor(int64_t playerID);

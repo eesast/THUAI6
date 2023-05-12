@@ -208,10 +208,10 @@ bool Logic::ThrowProp(THUAI6::PropType prop)
     return pComm->ThrowProp(prop, playerID);
 }
 
-bool Logic::UseSkill(int32_t skill)
+bool Logic::UseSkill(int32_t skill, int32_t skillParam)
 {
     logger->debug("Called UseSkill");
-    return pComm->UseSkill(skill, playerID);
+    return pComm->UseSkill(skill, skillParam, playerID);
 }
 
 bool Logic::SendMessage(int64_t toID, std::string message, bool binary)

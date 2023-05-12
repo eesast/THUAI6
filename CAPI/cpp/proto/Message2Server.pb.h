@@ -1813,6 +1813,7 @@ namespace protobuf
         {
             kPlayerIdFieldNumber = 1,
             kSkillIdFieldNumber = 2,
+            kSkillParamFieldNumber = 3,
         };
         // int64 player_id = 1;
         void clear_player_id();
@@ -1834,6 +1835,16 @@ namespace protobuf
         void _internal_set_skill_id(int32_t value);
 
     public:
+        // int32 skill_param = 3;
+        void clear_skill_param();
+        int32_t skill_param() const;
+        void set_skill_param(int32_t value);
+
+    private:
+        int32_t _internal_skill_param() const;
+        void _internal_set_skill_param(int32_t value);
+
+    public:
         // @@protoc_insertion_point(class_scope:protobuf.SkillMsg)
 
     private:
@@ -1847,6 +1858,7 @@ namespace protobuf
         {
             int64_t player_id_;
             int32_t skill_id_;
+            int32_t skill_param_;
             mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
         };
         union
@@ -2595,6 +2607,30 @@ namespace protobuf
     {
         _internal_set_skill_id(value);
         // @@protoc_insertion_point(field_set:protobuf.SkillMsg.skill_id)
+    }
+
+    // int32 skill_param = 3;
+    inline void SkillMsg::clear_skill_param()
+    {
+        _impl_.skill_param_ = 0;
+    }
+    inline int32_t SkillMsg::_internal_skill_param() const
+    {
+        return _impl_.skill_param_;
+    }
+    inline int32_t SkillMsg::skill_param() const
+    {
+        // @@protoc_insertion_point(field_get:protobuf.SkillMsg.skill_param)
+        return _internal_skill_param();
+    }
+    inline void SkillMsg::_internal_set_skill_param(int32_t value)
+    {
+        _impl_.skill_param_ = value;
+    }
+    inline void SkillMsg::set_skill_param(int32_t value)
+    {
+        _internal_set_skill_param(value);
+        // @@protoc_insertion_point(field_set:protobuf.SkillMsg.skill_param)
     }
 
 #ifdef __GNUC__

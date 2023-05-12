@@ -91,7 +91,7 @@ bool Communication::ThrowProp(THUAI6::PropType prop, int64_t playerID)
         return false;
 }
 
-bool Communication::UseSkill(int32_t skillID, int64_t playerID)
+bool Communication::UseSkill(int32_t skillID, int32_t skillParam, int64_t playerID)
 {
     {
         std::lock_guard<std::mutex> lock(mtxLimit);
@@ -101,7 +101,7 @@ bool Communication::UseSkill(int32_t skillID, int64_t playerID)
     }
     protobuf::BoolRes useSkillResult;
     ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufSkill(skillID, playerID);
+    auto request = THUAI62Proto::THUAI62ProtobufSkill(skillID, skillParam, playerID);
     auto status = THUAI6Stub->UseSkill(&context, request, &useSkillResult);
     if (status.ok())
         return useSkillResult.act_success();

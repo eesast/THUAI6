@@ -36,26 +36,59 @@ namespace Gaming
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
                 if (moveTimeInMilliseconds < 5) return false;
-                if (!playerToMove.Commandable()) return false;
-                moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection,
-                    characterManager.SetPlayerState(playerToMove, PlayerStateType.Moving));
+                long stateNum = characterManager.SetPlayerState(playerToMove, PlayerStateType.Moving);
+                if (stateNum == -1) return false;
+                new Thread
+                    (
+                    () =>
+                    {
+                        playerToMove.ThreadNum.WaitOne();
+                        if (stateNum != playerToMove.StateNum)
+                            playerToMove.ThreadNum.Release();
+                        else
+                            moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection, stateNum);
+                    }
+                    )
+                { IsBackground = true }.Start();
                 return true;
             }
 
             public bool MovePlayerWhenStunned(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
-                if (!playerToMove.Commandable() && playerToMove.PlayerState != PlayerStateType.Stunned) return false;
-                characterManager.BeStunned(playerToMove, moveTimeInMilliseconds);
-                moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection, playerToMove.StateNum);
+                if (playerToMove.CharacterType == CharacterType.Robot) return false;
+                long stateNum = characterManager.SetPlayerState(playerToMove, PlayerStateType.Charmed);
+                if (stateNum == -1) return false;
+                new Thread
+                (() =>
+                {
+                    playerToMove.ThreadNum.WaitOne();
+                    if (stateNum != playerToMove.StateNum)
+                        playerToMove.ThreadNum.Release();
+                    else
+                    {
+                        moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection, playerToMove.StateNum);
+                        Thread.Sleep(moveTimeInMilliseconds);
+                        lock (playerToMove.ActionLock)
+                        {
+                            if (stateNum == playerToMove.StateNum)
+                                playerToMove.SetPlayerStateNaturally();
+                        }
+                    }
+                }
+                 )
+                { IsBackground = true }.Start();
                 return true;
             }
 
             public bool Stop(Character player)
             {
-                if (player.Commandable())
+                lock (player.ActionLock)
                 {
-                    characterManager.SetPlayerState(player);
-                    return true;
+                    if (player.Commandable())
+                    {
+                        characterManager.SetPlayerState(player);
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -279,12 +312,11 @@ namespace Gaming
             }
             public bool ClimbingThroughWindow(Character player)
             {
-                if (!player.Commandable())
-                    return false;
                 Window? windowForClimb = (Window?)gameMap.OneForInteractInACross(player.Position, GameObjType.Window);
+                if (windowForClimb == null) return false;
 
-                if (windowForClimb == null || windowForClimb.WhoIsClimbing != null)
-                    return false;
+                long stateNum = characterManager.SetPlayerState(player, PlayerStateType.ClimbingThroughWindows, windowForClimb);
+                if (stateNum == -1) return false;
 
                 XY windowToPlayer = new(
                       (Math.Abs(player.Position.x - windowForClimb.Position.x) > GameData.numOfPosGridPerCell / 2) ? (GameData.numOfPosGridPerCell / 2 * (player.Position.x > windowForClimb.Position.x ? 1 : -1)) : 0,
@@ -296,59 +328,57 @@ namespace Gaming
                            if (player.IsGhost() && !characterInWindow.IsGhost())
                                characterManager.BeAttacked((Student)(characterInWindow), player.Attack(characterInWindow.Position));
                            return false;
-                       }*/
+                       }
 
-                //Wall addWall = new Wall(windowForClimb.Position - 2 * windowToPlayer);
-                // gameMap.Add(addWall);
+                Wall addWall = new Wall(windowForClimb.Position - 2 * windowToPlayer);
+                 gameMap.Add(addWall);*/
 
-                characterManager.SetPlayerState(player, PlayerStateType.ClimbingThroughWindows);
-                long threadNum = player.StateNum;
-                windowForClimb.WhoIsClimbing = player;
                 new Thread
-          (
-              () =>
-              {
-                  new FrameRateTaskExecutor<int>(
-                  loopCondition: () => threadNum == player.StateNum && gameMap.Timer.IsGaming,
-                  loopToDo: () => { },
-                  timeInterval: GameData.frameDuration,
-                  finallyReturn: () => 0,
-                  maxTotalDuration: (int)((windowToPlayer + windowForClimb.Position - player.Position).Length() * 1000 / player.MoveSpeed)
-                  )
-                  .Start();
-                  if (player.PlayerState != PlayerStateType.ClimbingThroughWindows)
-                  {
-                      windowForClimb.WhoIsClimbing = null;
-                      return;
-                  }
-
-                  player.ReSetPos(windowToPlayer + windowForClimb.Position);
-                  player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
-
-                  moveEngine.MoveObj(player, (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed), (-1 * windowToPlayer).Angle(), threadNum);
-
-                  new FrameRateTaskExecutor<int>(
-                    loopCondition: () => threadNum == player.StateNum && gameMap.Timer.IsGaming,
-                    loopToDo: () =>
+                (
+                    () =>
                     {
-                    },
-                    timeInterval: GameData.frameDuration,
-                    finallyReturn: () => 0,
-                    maxTotalDuration: (int)(windowToPlayer.Length() * 3.0 * 1000 / player.MoveSpeed)
-                    )
-                    .Start();
-                  XY PosJumpOff = windowForClimb.Position - 2 * windowToPlayer;
-                  player.ReSetPos(PosJumpOff);
-                  player.MoveSpeed = player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
-                  windowForClimb.WhoIsClimbing = null;
-                  //  gameMap.Remove(addWall);
-                  if (threadNum == player.StateNum)
-                  {
-                      characterManager.SetPlayerState(player);
-                  }
-              }
+                        player.ThreadNum.WaitOne();
+                        if (stateNum != player.StateNum)
+                        {
+                            player.ThreadNum.Release();
+                        }
+                        else
+                        {
+                            if (!windowForClimb.TryToClimb(player))
+                            {
+                                player.ThreadNum.Release();
+                                player.SetPlayerStateNaturally();
+                            }
+                            else
+                            {
+                                Thread.Sleep((int)((windowToPlayer + windowForClimb.Position - player.Position).Length() * 1000 / player.MoveSpeed));
 
-          )
+                                lock (player.ActionLock)
+                                {
+                                    if (player.StateNum != stateNum) return;
+                                    player.ReSetPos(windowToPlayer + windowForClimb.Position);
+                                    windowForClimb.Enter2Stage(windowForClimb.Position - 2 * windowToPlayer);
+                                }
+
+                                player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
+                                moveEngine.MoveObj(player, GameData.numOfPosGridPerCell * 3 * 1000 / player.MoveSpeed / 2, (-1 * windowToPlayer).Angle(), stateNum);
+
+                                Thread.Sleep(GameData.numOfPosGridPerCell * 3 * 1000 / player.MoveSpeed / 2);
+
+                                player.MoveSpeed = player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
+
+                                lock (player.ActionLock)
+                                {
+                                    if (stateNum == player.StateNum)
+                                    {
+                                        characterManager.SetPlayerState(player);
+                                        windowForClimb.FinishClimbing();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                )
                 { IsBackground = true }.Start();
 
                 return true;
@@ -400,7 +430,6 @@ namespace Gaming
                       timeInterval: GameData.frameDuration,
                       finallyReturn: () => 0
                   )
-
                       .Start();
                   if (doorToLock.OpenOrLockDegree >= GameData.degreeOfLockingOrOpeningTheDoor)
                   {

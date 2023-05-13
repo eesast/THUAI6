@@ -8,8 +8,23 @@ namespace GameClass.GameObj
     {
         protected readonly object actionLock = new();
         public object ActionLock => actionLock;
+        //player.actionLock>其他.actionLock
         private readonly ReaderWriterLockSlim moveReaderWriterLock = new();
         public ReaderWriterLockSlim MoveReaderWriterLock => moveReaderWriterLock;
+
+        private Semaphore threadNum = new(1, 1);
+        public Semaphore ThreadNum
+        {
+            get
+            {
+                return threadNum;
+            }
+            set
+            {
+                threadNum = value;
+            }
+        }
+
         protected long stateNum = 0;
         public long StateNum
         {
@@ -61,14 +76,27 @@ namespace GameClass.GameObj
         }
 
         // 移动，改变坐标
-        public long MovingSetPos(XY moveVec)
+        public long MovingSetPos(XY moveVec, long stateNo)
         {
+
             if (moveVec.x != 0 || moveVec.y != 0)
-                lock (actionLock)
+            {
+                moveReaderWriterLock.EnterReadLock();
+                try
                 {
-                    facingDirection = moveVec;
-                    this.position += moveVec;
+                    lock (actionLock)
+                    {
+                        if (!canMove || isRemoved) return -1;
+                        if (stateNo != stateNum) return -1;
+                        facingDirection = moveVec;
+                        this.position += moveVec;
+                    }
                 }
+                finally
+                {
+                    moveReaderWriterLock.ExitReadLock();
+                }
+            }
             return moveVec * moveVec;
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Preparation.Utility;
 
 namespace Preparation.Interface
@@ -11,7 +12,8 @@ namespace Preparation.Interface
         public bool IsRemoved { get; }
         public bool IsAvailableForMove { get; }
         public long StateNum { get; }
-        public long MovingSetPos(XY moveVec);
+        public Semaphore ThreadNum { get; set; }
+        public long MovingSetPos(XY moveVec, long stateNum);
         public void ReSetCanMove(bool value);
         public bool WillCollideWith(IGameObj? targetObj, XY nextPos)  // 检查下一位置是否会和目标物碰撞
         {

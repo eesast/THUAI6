@@ -28,6 +28,39 @@ namespace Gaming
                         case PlayerStateType.Escaped:
                         case PlayerStateType.Deceased:
                             return -1;
+
+                        case PlayerStateType.Addicted:
+                            if (value == PlayerStateType.Rescued)
+                                return player.ChangePlayerStateInOneThread(value, gameObj);
+                            else if (value == PlayerStateType.Null)
+                                return player.ChangePlayerState(value, gameObj);
+                            else return -1;
+                        case PlayerStateType.Rescued:
+                            if (value == PlayerStateType.Addicted)
+                                return player.ChangePlayerStateInOneThread(value, gameObj);
+                            else if (value == PlayerStateType.Null)
+                                return player.ChangePlayerState(value, gameObj);
+                            else return -1;
+
+                        case PlayerStateType.TryingToAttack:
+                        case PlayerStateType.Stunned:
+                        case PlayerStateType.Charmed:
+                        case PlayerStateType.Swinging:
+                            if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows)
+                                return player.ChangePlayerState(value, gameObj);
+                            else return -1;
+                        case PlayerStateType.ClimbingThroughWindows:
+                            if (value != PlayerStateType.Moving)
+                            {
+                                Window window = (Window)player.WhatInteractingWith!;
+                                window.FinishClimbing();
+                                if (window.Stage.x == 0)
+                                    player.ThreadNum.Release();
+                                else player.ReSetPos(window.Stage);
+                                return player.ChangePlayerState(value, gameObj);
+                            }
+                            else return -1;
+
                         case PlayerStateType.OpeningTheChest:
                             ((Chest)player.WhatInteractingWith!).StopOpen();
                             return player.ChangePlayerState(value, gameObj);
@@ -36,18 +69,7 @@ namespace Gaming
                             doorway.OpenDegree += gameMap.Timer.nowTime() - doorway.OpenStartTime;
                             doorway.OpenStartTime = 0;
                             return player.ChangePlayerState(value, gameObj);
-                        case PlayerStateType.Addicted:
-                            if (value == PlayerStateType.Rescued)
-                                return player.ChangePlayerStateInOneThread(value, gameObj);
-                            else if (value==PlayerStateType.Null)
-                                return player.ChangePlayerState(value, gameObj);
-                            else return -1;
-                        case PlayerStateType.Rescued:
-                            if (value == PlayerStateType.Addicted)
-                                return player.ChangePlayerStateInOneThread(value, gameObj);
-                            else if(value==PlayerStateType.Null)
-                                return player.ChangePlayerState(value, gameObj);
-                            else return -1;
+
                         default:
                             return player.ChangePlayerState(value, gameObj);
                     }
@@ -165,7 +187,7 @@ namespace Gaming
                                                     newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position));
                                                 else newPlayer.AddBgm(BgmType.GhostIsComing, 0);
                                             }
-                                            if (newPlayer.CharacterType != CharacterType.Teacher && newPlayer.CharacterType != CharacterType.Robot && !newPlayer.NoHp() && newPlayer.PlayerState != PlayerStateType.Stunned && XY.DistanceFloor3(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
+                                            if (newPlayer.CharacterType != CharacterType.Teacher && newPlayer.CharacterType != CharacterType.Robot && newPlayer.CanPinDown() && XY.DistanceFloor3(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
                                             {
                                                 TimePinningDown += GameData.checkInterval;
                                                 newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);

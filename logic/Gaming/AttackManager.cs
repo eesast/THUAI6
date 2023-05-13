@@ -47,7 +47,15 @@ namespace Gaming
                 if (bullet == null) return;
                 Debugger.Output(bullet, "Attack in " + pos.ToString());
                 gameMap.Add(bullet);
-                moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle, ++bullet.StateNum);  // 这里时间参数除出来的单位要是ms
+                new Thread
+                    (
+                        () =>
+                        {
+                            bullet.ThreadNum.WaitOne();
+                            moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle, ++bullet.StateNum);  // 这里时间参数除出来的单位要是ms
+                        }
+                    )
+                { IsBackground = true }.Start();
             }
 
             private void BombObj(Bullet bullet, GameObj objBeingShot)
@@ -195,7 +203,15 @@ namespace Gaming
                 {
                     Debugger.Output(bullet, "Attack in " + bullet.Position.ToString());
                     gameMap.Add(bullet);
-                    moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle, ++bullet.StateNum);  // 这里时间参数除出来的单位要是ms
+                    new Thread
+                    (
+                        () =>
+                        {
+                            bullet.ThreadNum.WaitOne();
+                            moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle, ++bullet.StateNum);  // 这里时间参数除出来的单位要是ms
+                        }
+                    )
+                    { IsBackground = true }.Start();
                     if (bullet.CastTime > 0)
                     {
                         characterManager.SetPlayerState(player, PlayerStateType.TryingToAttack);

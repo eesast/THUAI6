@@ -484,7 +484,7 @@ namespace GameClass.GameObj
                             }
                         case (uint)PlaceType.Window:
                             {
-                                Add(new Window(GameData.GetCellCenterPos(i, j), mapResource[i - 1, j] == (uint)PlaceType.Wall));
+                                Add(new Window(GameData.GetCellCenterPos(i, j)));
                                 break;
                             }
                         case (uint)PlaceType.BirthPoint1:

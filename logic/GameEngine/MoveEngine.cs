@@ -148,9 +148,11 @@ namespace GameEngine
                         {
                             Thread.Sleep(GameData.numOfPosGridPerCell / GameData.numOfStepPerSecond);
                             new FrameRateTaskExecutor<int>(
-                                () => gameTimer.IsGaming && obj.StateNum == stateNum && obj.CanMove && !obj.IsRemoved,
+                                () => gameTimer.IsGaming,
                                 () =>
                                 {
+                                    if (obj.StateNum == stateNum && obj.CanMove && !obj.IsRemoved)
+                                        return !(isEnded = true);
                                     return !(isEnded = !LoopDo(obj, direction, ref deltaLen, stateNum));
                                 },
                                 GameData.numOfPosGridPerCell / GameData.numOfStepPerSecond,
@@ -179,8 +181,13 @@ namespace GameEngine
                             if (!isEnded && obj.StateNum == stateNum && obj.CanMove && !obj.IsRemoved)
                                 isEnded = !LoopDo(obj, direction, ref deltaLen, stateNum);
                         }
-
-                        if (!isEnded && obj.StateNum == stateNum && obj.CanMove && !obj.IsRemoved)
+                        if (isEnded)
+                        {
+                            obj.IsMoving = false;
+                            EndMove(obj);
+                            return;
+                        }
+                        if (obj.StateNum == stateNum && obj.CanMove && !obj.IsRemoved)
                         {
                             int leftTime = moveTime % (GameData.numOfPosGridPerCell / GameData.numOfStepPerSecond);
                             if (leftTime > 0)

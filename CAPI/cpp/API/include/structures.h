@@ -62,6 +62,7 @@ namespace THUAI6
         AddHpOrAp = 6,
         ShieldOrSpear = 7,
         RecoveryFromDizziness = 8,
+        CraftingBench = 9,
     };
 
     enum class BulletType : unsigned char
@@ -71,7 +72,7 @@ namespace THUAI6
         CommonAttackOfTricker = 2,
         BombBomb = 3,
         JumpyDumpty = 4,
-        AtomBomb = 5,
+        Strike = 5,
     };
 
     // 玩家类型
@@ -363,6 +364,7 @@ namespace THUAI6
         {PropType::AddHpOrAp, "AddHpOrAp"},
         {PropType::ShieldOrSpear, "ShieldOrSpear"},
         {PropType::RecoveryFromDizziness, "RecoveryFromDizziness"},
+        {PropType::CraftingBench, "CraftingBench"},
 
     };
 
@@ -372,7 +374,7 @@ namespace THUAI6
         {BulletType::CommonAttackOfTricker, "CommonAttackOfTricker"},
         {BulletType::BombBomb, "BombBomb"},
         {BulletType::JumpyDumpty, "JumpyDumpty"},
-        {BulletType::AtomBomb, "AtomBomb"},
+        {BulletType::Strike, "Strike"},
     };
 
     inline std::map<StudentBuffType, std::string> studentBuffDict{

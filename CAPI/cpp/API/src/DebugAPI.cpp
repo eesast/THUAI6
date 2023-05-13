@@ -212,21 +212,21 @@ std::future<bool> TrickerDebugAPI::ThrowProp(THUAI6::PropType prop)
                         return result; });
 }
 
-std::future<bool> StudentDebugAPI::UseSkill(int32_t skillID)
+std::future<bool> StudentDebugAPI::UseSkill(int32_t skillID, int32_t skillParam)
 {
-    logger->info("UseSkill: skillID={}, called at {}ms", skillID, Time::TimeSinceStart(startPoint));
+    logger->info("UseSkill: skillID={}, skillParam={}, called at {}ms", skillID, skillParam, Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
-                      { auto result = logic.UseSkill(skillID);
+                      { auto result = logic.UseSkill(skillID, skillParam);
                         if (!result)
                             logger->warn("UseSkill: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
 }
 
-std::future<bool> TrickerDebugAPI::UseSkill(int32_t skillID)
+std::future<bool> TrickerDebugAPI::UseSkill(int32_t skillID, int32_t skillParam)
 {
-    logger->info("UseSkill: skillID={}, called at {}ms", skillID, Time::TimeSinceStart(startPoint));
+    logger->info("UseSkill: skillID={}, skillParam={}, called at {}ms", skillID, skillParam, Time::TimeSinceStart(startPoint));
     return std::async(std::launch::async, [=]()
-                      { auto result = logic.UseSkill(skillID);
+                      { auto result = logic.UseSkill(skillID, skillParam);
                         if (!result)
                             logger->warn("UseSkill: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });

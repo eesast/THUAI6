@@ -109,6 +109,7 @@ class Proto2THUAI6(NoInstance):
         MessageType.ADD_LIFE_OR_CLAIRAUDIENCE: THUAI6.PropType.AddLifeOrClairaudience,
         MessageType.SHIELD_OR_SPEAR: THUAI6.PropType.ShieldOrSpear,
         MessageType.RECOVERY_FROM_DIZZINESS: THUAI6.PropType.RecoveryFromDizziness,
+        MessageType.CRAFTING_BENCH: THUAI6.PropType.CraftingBench,
     }
 
     playerTypeDict: Final[dict] = {
@@ -187,7 +188,7 @@ class Proto2THUAI6(NoInstance):
         MessageType.BOMB_BOMB: THUAI6.BulletType.BombBomb,
         MessageType.COMMON_ATTACK_OF_TRICKER: THUAI6.BulletType.CommonAttackOfTricker,
         MessageType.JUMPY_DUMPTY: THUAI6.BulletType.JumpyDumpty,
-        MessageType.ATOM_BOMB: THUAI6.BulletType.AtomBomb,
+        MessageType.STRIKE: THUAI6.BulletType.Strike,
     }
 
     # 用于将Proto的对象转为THUAI6的对象
@@ -357,6 +358,7 @@ class THUAI62Proto(NoInstance):
         THUAI6.PropType.AddLifeOrClairaudience: MessageType.ADD_LIFE_OR_CLAIRAUDIENCE,
         THUAI6.PropType.AddSpeed: MessageType.ADD_SPEED,
         THUAI6.PropType.ShieldOrSpear: MessageType.SHIELD_OR_SPEAR,
+        THUAI6.PropType.CraftingBench: MessageType.CRAFTING_BENCH,
     }
 
     # 用于将THUAI6的对象转为Proto的对象
@@ -421,5 +423,9 @@ class THUAI62Proto(NoInstance):
         return Message2Server.AttackMsg(player_id=id, angle=angle)
 
     @staticmethod
-    def THUAI62ProtobufSkill(skillID: int, id: int) -> Message2Server.SkillMsg:
-        return Message2Server.SkillMsg(player_id=id, skill_id=skillID)
+    def THUAI62ProtobufSkill(
+        skillID: int, skillParam: int, id: int
+    ) -> Message2Server.SkillMsg:
+        return Message2Server.SkillMsg(
+            player_id=id, skill_id=skillID, skill_param=skillParam
+        )

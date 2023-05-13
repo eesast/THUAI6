@@ -106,16 +106,16 @@ std::future<bool> TrickerAPI::ThrowProp(THUAI6::PropType prop)
                       { return logic.ThrowProp(prop); });
 }
 
-std::future<bool> StudentAPI::UseSkill(int32_t skillID)
+std::future<bool> StudentAPI::UseSkill(int32_t skillID, int32_t skillParam)
 {
     return std::async(std::launch::async, [=]()
-                      { return logic.UseSkill(skillID); });
+                      { return logic.UseSkill(skillID, skillParam); });
 }
 
-std::future<bool> TrickerAPI::UseSkill(int32_t skillID)
+std::future<bool> TrickerAPI::UseSkill(int32_t skillID, int32_t skillParam)
 {
     return std::async(std::launch::async, [=]()
-                      { return logic.UseSkill(skillID); });
+                      { return logic.UseSkill(skillID, skillParam); });
 }
 
 std::future<bool> StudentAPI::OpenDoor()

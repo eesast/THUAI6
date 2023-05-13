@@ -324,7 +324,17 @@ namespace GameClass.GameObj
                 return (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
                            && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
                            && playerState != PlayerStateType.Swinging && playerState != PlayerStateType.TryingToAttack
-                           && playerState != PlayerStateType.ClimbingThroughWindows && playerState != PlayerStateType.Stunned);
+                           && playerState != PlayerStateType.ClimbingThroughWindows
+                           && playerState != PlayerStateType.Stunned && playerState != PlayerStateType.Charmed);
+            }
+        }
+        public bool CanPinDown()
+        {
+            lock (actionLock)
+            {
+                return (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
+                           && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
+                           && playerState != PlayerStateType.Stunned && playerState != PlayerStateType.Charmed);
             }
         }
         public bool InteractingWithMapWithoutMoving()
@@ -345,8 +355,9 @@ namespace GameClass.GameObj
         {
             lock (actionLock)
                 return !(playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
-                           || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued
-                           || playerState == PlayerStateType.Treated || playerState == PlayerStateType.Stunned
+                           || playerState == PlayerStateType.Addicted
+                           || playerState == PlayerStateType.Rescued || playerState == PlayerStateType.Treated
+                           || playerState == PlayerStateType.Stunned || playerState == PlayerStateType.Charmed
                            || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
         }
         private GameObj? whatInteractingWith = null;
@@ -354,28 +365,24 @@ namespace GameClass.GameObj
 
         public long ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
-            lock (actionLock)
-            {
-                whatInteractingWith = gameObj;
-                if (value != PlayerStateType.Moving)
-                    IsMoving = false;
-                playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
-                //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
-                return ++stateNum;
-            }
+            //只能被SetPlayerState引用
+            whatInteractingWith = gameObj;
+            if (value != PlayerStateType.Moving)
+                IsMoving = false;
+            playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
+            //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
+            return ++stateNum;
         }
 
         public long ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
-            lock (actionLock)
-            {
-                whatInteractingWith = gameObj;
-                if (value != PlayerStateType.Moving)
-                    IsMoving = false;
-                playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
-                //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
-                return stateNum;
-            }
+            //只能被SetPlayerState引用
+            whatInteractingWith = gameObj;
+            if (value != PlayerStateType.Moving)
+                IsMoving = false;
+            playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
+            //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
+            return stateNum;
         }
 
         public long SetPlayerStateNaturally()

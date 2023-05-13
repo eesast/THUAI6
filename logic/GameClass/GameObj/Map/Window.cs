@@ -1,5 +1,7 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using System.Numerics;
+using System;
 
 namespace GameClass.GameObj
 {
@@ -25,15 +27,66 @@ namespace GameClass.GameObj
             return false;
         }
 
+        private XY stage = new(0, 0);
+        public XY Stage
+        {
+            get
+            {
+                GameObjReaderWriterLock.EnterReadLock();
+                try
+                {
+                    return stage;
+                }
+                finally { GameObjReaderWriterLock.ExitReadLock(); }
+            }
+        }
+
         private Character? whoIsClimbing = null;
         public Character? WhoIsClimbing
         {
-            get => whoIsClimbing;
-            set
+            get
             {
-                lock (gameObjLock)
-                    whoIsClimbing = value;
+                GameObjReaderWriterLock.EnterReadLock();
+                try
+                {
+                    return whoIsClimbing;
+                }
+                finally { GameObjReaderWriterLock.ExitReadLock(); }
             }
+        }
+
+        public bool TryToClimb(Character character)
+        {
+            GameObjReaderWriterLock.EnterWriteLock();
+            try
+            {
+                if (whoIsClimbing == null)
+                {
+                    stage = new(0, 0);
+                    whoIsClimbing = character;
+                    return true;
+                }
+                else return false;
+            }
+            finally { GameObjReaderWriterLock.ExitWriteLock(); }
+        }
+        public void FinishClimbing()
+        {
+            GameObjReaderWriterLock.EnterWriteLock();
+            try
+            {
+                whoIsClimbing = null;
+            }
+            finally { GameObjReaderWriterLock.ExitWriteLock(); }
+        }
+        public void Enter2Stage(XY xy)
+        {
+            GameObjReaderWriterLock.EnterWriteLock();
+            try
+            {
+                stage = xy;
+            }
+            finally { GameObjReaderWriterLock.ExitWriteLock(); }
         }
     }
 }

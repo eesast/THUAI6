@@ -108,6 +108,7 @@ namespace Proto2THUAI6
         {protobuf::PropType::ADD_LIFE_OR_CLAIRAUDIENCE, THUAI6::PropType::AddLifeOrClairaudience},
         {protobuf::PropType::SHIELD_OR_SPEAR, THUAI6::PropType::ShieldOrSpear},
         {protobuf::PropType::RECOVERY_FROM_DIZZINESS, THUAI6::PropType::RecoveryFromDizziness},
+        {protobuf::PropType::CRAFTING_BENCH, THUAI6::PropType::CraftingBench},
     };
 
     inline std::map<protobuf::PlayerType, THUAI6::PlayerType> playerTypeDict{
@@ -186,7 +187,7 @@ namespace Proto2THUAI6
         {protobuf::BulletType::COMMON_ATTACK_OF_TRICKER, THUAI6::BulletType::CommonAttackOfTricker},
         {protobuf::BulletType::BOMB_BOMB, THUAI6::BulletType::BombBomb},
         {protobuf::BulletType::JUMPY_DUMPTY, THUAI6::BulletType::JumpyDumpty},
-        {protobuf::BulletType::ATOM_BOMB, THUAI6::BulletType::AtomBomb},
+        {protobuf::BulletType::STRIKE, THUAI6::BulletType::Strike},
     };
 
     inline std::map<protobuf::MessageOfObj::MessageOfObjCase, THUAI6::MessageOfObj> messageOfObjDict{
@@ -373,6 +374,7 @@ namespace THUAI62Proto
         {THUAI6::PropType::AddLifeOrClairaudience, protobuf::PropType::ADD_LIFE_OR_CLAIRAUDIENCE},
         {THUAI6::PropType::AddSpeed, protobuf::PropType::ADD_SPEED},
         {THUAI6::PropType::ShieldOrSpear, protobuf::PropType::SHIELD_OR_SPEAR},
+        {THUAI6::PropType::CraftingBench, protobuf::PropType::CRAFTING_BENCH},
     };
 
     inline std::map<THUAI6::PlayerType, protobuf::PlayerType> playerTypeDict{
@@ -486,11 +488,12 @@ namespace THUAI62Proto
         return attackMsg;
     }
 
-    inline protobuf::SkillMsg THUAI62ProtobufSkill(int32_t skillID, int64_t id)
+    inline protobuf::SkillMsg THUAI62ProtobufSkill(int32_t skillID, int32_t skillParam, int64_t id)
     {
         protobuf::SkillMsg skillMsg;
         skillMsg.set_skill_id(skillID);
         skillMsg.set_player_id(id);
+        skillMsg.set_skill_param(skillParam);
         return skillMsg;
     }
 }  // namespace THUAI62Proto

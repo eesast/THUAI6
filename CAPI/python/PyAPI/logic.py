@@ -190,9 +190,9 @@ class Logic(ILogic):
         self.__logger.debug("Called ThrowProp")
         return self.__comm.ThrowProp(propType, self.__playerID)
 
-    def UseSkill(self, skillID: int) -> bool:
+    def UseSkill(self, skillID: int, skillParam: int) -> bool:
         self.__logger.debug("Called UseSkill")
-        return self.__comm.UseSkill(skillID, self.__playerID)
+        return self.__comm.UseSkill(skillID, skillParam, self.__playerID)
 
     def SendMessage(self, toID: int, message: Union[str, bytes]) -> bool:
         self.__logger.debug("Called SendMessage")

@@ -1,6 +1,5 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
-using System;
 
 namespace GameClass.GameObj
 {
@@ -27,7 +26,6 @@ namespace GameClass.GameObj
         public bool HasSpear => hasSpear;
 
         /// <summary>
-        /// 与THUAI4不同的一个攻击判定方案，通过这个函数判断爆炸时能否伤害到target
         /// </summary>
         /// <param name="target">被尝试攻击者</param>
         /// <returns>是否可以攻击到</returns>
@@ -36,7 +34,7 @@ namespace GameClass.GameObj
 
         public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj == Parent && CanMove) return true;
+            if (targetObj == Parent) return true;
             if (targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet)
                 return true;
             return false;

@@ -24,6 +24,7 @@ namespace Preparation.Utility
         ClimbingThroughWindows = 15,
         UsingSkill = 16,
         OpeningTheDoorway = 17,
+        Charmed = 18,
     }
     public enum GameObjType
     {

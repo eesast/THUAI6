@@ -43,8 +43,8 @@ class StudentAPI(IStudentAPI, IGameTimer):
     def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
         return self.__pool.submit(self.__logic.ThrowProp, propType)
 
-    def UseSkill(self, skillID: int) -> Future[bool]:
-        return self.__pool.submit(self.__logic.UseSkill, skillID)
+    def UseSkill(self, skillID: int, skillParam: int = 0) -> Future[bool]:
+        return self.__pool.submit(self.__logic.UseSkill, skillID, skillParam)
 
     # 与地图交互相关
     def OpenDoor(self) -> Future[bool]:
@@ -224,8 +224,8 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
     def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
         return self.__pool.submit(self.__logic.ThrowProp, propType)
 
-    def UseSkill(self, skillID: int) -> Future[bool]:
-        return self.__pool.submit(self.__logic.UseSkill, skillID)
+    def UseSkill(self, skillID: int, skillParam: int = 0) -> Future[bool]:
+        return self.__pool.submit(self.__logic.UseSkill, skillID, skillParam)
 
     # 与地图交互相关
     def OpenDoor(self) -> Future[bool]:

@@ -132,13 +132,13 @@ class StudentDebugAPI(IStudentAPI, IGameTimer):
 
         return self.__pool.submit(logThrow)
 
-    def UseSkill(self, skillID: int) -> Future[bool]:
+    def UseSkill(self, skillID: int, skillParam: int = 0) -> Future[bool]:
         self.__logger.info(
-            f"UseSkill: skillID = {skillID}, called at {self.__GetTime()}ms"
+            f"UseSkill: skillID = {skillID}, skillParam = {skillParam}, called at {self.__GetTime()}ms"
         )
 
         def logUse() -> bool:
-            result = self.__logic.UseSkill(skillID)
+            result = self.__logic.UseSkill(skillID, skillParam)
             if not result:
                 self.__logger.warning(f"UseSkill: failed at {self.__GetTime()}ms")
             return result
@@ -600,13 +600,13 @@ class TrickerDebugAPI(ITrickerAPI, IGameTimer):
 
         return self.__pool.submit(logThrow)
 
-    def UseSkill(self, skillID: int) -> Future[bool]:
+    def UseSkill(self, skillID: int, skillParam: int = 0) -> Future[bool]:
         self.__logger.info(
-            f"UseSkill: skillID = {skillID}, called at {self.__GetTime()}ms"
+            f"UseSkill: skillID = {skillID}, skillParam = {skillParam}, called at {self.__GetTime()}ms"
         )
 
         def logUse() -> bool:
-            result = self.__logic.UseSkill(skillID)
+            result = self.__logic.UseSkill(skillID, skillParam)
             if not result:
                 self.__logger.warning(f"UseSkill: failed at {self.__GetTime()}ms")
             return result

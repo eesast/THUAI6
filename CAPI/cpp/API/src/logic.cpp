@@ -208,10 +208,10 @@ bool Logic::ThrowProp(THUAI6::PropType prop)
     return pComm->ThrowProp(prop, playerID);
 }
 
-bool Logic::UseSkill(int32_t skill)
+bool Logic::UseSkill(int32_t skill, int32_t skillParam)
 {
     logger->debug("Called UseSkill");
-    return pComm->UseSkill(skill, playerID);
+    return pComm->UseSkill(skill, skillParam, playerID);
 }
 
 bool Logic::SendMessage(int64_t toID, std::string message, bool binary)
@@ -583,12 +583,12 @@ void Logic::LoadBufferCase(const protobuf::MessageOfObj& item)
                 {
                     if (Proto2THUAI6::newsTypeDict[news.news_case()] == THUAI6::NewsType::TextMessage)
                     {
-                        messageQueue.emplace(std::make_pair(news.to_id(), news.text_message()));
+                        messageQueue.emplace(std::make_pair(news.from_id(), news.text_message()));
                         logger->debug("Add News!");
                     }
                     else if (Proto2THUAI6::newsTypeDict[news.news_case()] == THUAI6::NewsType::BinaryMessage)
                     {
-                        messageQueue.emplace(std::make_pair(news.to_id(), news.binary_message()));
+                        messageQueue.emplace(std::make_pair(news.from_id(), news.binary_message()));
                         logger->debug("Add Binary News!");
                     }
                     else

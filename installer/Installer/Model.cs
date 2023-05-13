@@ -405,7 +405,7 @@ namespace starter.viewmodel.settings
         /// <summary>
         /// 关于介绍的屏幕显示信息
         /// </summary>
-        public enum Status { newUser, menu, move, working, disconnected, error, successful, login, web };
+        public enum Status { newUser, menu, move, working, initializing, disconnected, error, successful, login, web, launch };
         public Status status
         {
             get; set;
@@ -881,7 +881,7 @@ namespace Downloader
                         int upcnt = updateFileName.Count;
                         if (upcnt <= 20)
                         {
-                            while (newFileName.TryDequeue(out var filename))
+                            while (updateFileName.TryDequeue(out var filename))
                             {
                                 try
                                 {

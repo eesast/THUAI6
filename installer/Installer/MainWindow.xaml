@@ -52,7 +52,7 @@
         <Button Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" Name="UninstBtn" Content="卸载选手包" Command="{Binding ClickUninstCommand}" Visibility="{Binding MenuVis}" />
         <Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Name="MenuBackBtn" Content="回到登陆界面" Command="{Binding ClickBackCommand}" Visibility="{Binding MenuVis}" />
 
-        <TextBlock Grid.Row="3" Grid.Column="3" Text="正在处理……" Grid.ColumnSpan="2" Visibility="{Binding ProgressVis}"/>
+        <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding ProcessingIntro}" Grid.ColumnSpan="2" Visibility="{Binding ProgressVis}"/>
         <ProgressBar Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="7" Minimum="0" Maximum="100" Name="Progress" Visibility="{Binding ProgressVis}" IsIndeterminate="True"/>
 
         <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4" Text="操作完成！你可以继续操作或退出" Visibility="{Binding CompleteVis}"/>
@@ -81,10 +81,21 @@
                 <TextBlock Grid.Row="5" Grid.Column="1" Foreground="Red" Text="    用户名或密码错误！" Visibility="{Binding LoginFailVis}"/>
             </Grid>
         </StackPanel>
-        
-        <Button Grid.Row="7" Grid.Column="1"  Name="Login" Content="登录" Command="{Binding ClickLoginCommand}" Visibility="{Binding LoginVis}"/>
-        <Button Grid.Row="7" Grid.Column="2"  Name="Launch" FontSize="11" Content="{Binding LaunchBtnCont}" Command="{Binding ClickLaunchCommand}" Visibility="{Binding LoginVis}"/>
-        <Button Grid.Row="7" Grid.Column="3" Name="ShiftLanguage" FontSize="11" Content="更改语言" Command="{Binding ClickShiftLanguageCommand}" Visibility="{Binding LaunchVis}"/>
+        <StackPanel Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Row="0" Grid.Column="0"  Name="Login" Content="登录" Command="{Binding ClickLoginCommand}" Visibility="{Binding LoginVis}"/>
+                <Button Grid.Row="0" Grid.Column="1"  Name="Launch" Content="{Binding LaunchBtnCont}" Command="{Binding ClickLaunchCommand}" Visibility="{Binding LoginVis}" IsEnabled="{Binding UpdatePlanned}"/>
+                <Button Grid.Row="0" Grid.Column="2" Name="ShiftLanguage" FontSize="11" Content="配置启动器" Command="{Binding ClickShiftLanguageCommand}" Visibility="{Binding LaunchVis}" IsEnabled="False"/>
+            </Grid>
+        </StackPanel>
         <Button Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="2" Name="Edit" Content="修改文件" Command="{Binding ClickEditCommand}" Visibility="{Binding LoginVis}"/>
 
 
@@ -114,5 +125,40 @@
         <Button Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Content="申请对战" IsEnabled="False" Command="{Binding ClickRequestCommand}" Visibility="{Binding WebVis}" />
         <TextBox Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Text="暂不支持" IsEnabled="False" Visibility="{Binding WebVis}" />
         
+        <!--objects below are enabled-->
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="7">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Name ="ConfigServer" Content="服务端" Command="{Binding ClickCfgServCommand}" IsEnabled="{Binding ServerCfgNotSelected}" Visibility="{Binding CfgVis}"/>
+                <Button Grid.Column="1" Name ="ConfigAI" Content="客户端" Command="{Binding ClickCfgCliCommand}" IsEnabled="{Binding CliCfhNotSelected}" Visibility="{Binding CfgVis}"/>
+                <Button Grid.Column="2" Name ="ConfigCliend" Content="图形界面" Command="{Binding ClickCfgGUICommand}" IsEnabled="{Binding GUICfgNotSelected}" Visibility="{Binding CfgVis}"/>
+            </Grid>
+        </StackPanel>
+        <StackPanel Grid.Row="3" Grid.Column="1" Grid.RowSpan="5" Grid.ColumnSpan="7">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="75"/>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="75"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </StackPanel>
     </Grid>
 </Window>

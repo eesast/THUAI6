@@ -60,7 +60,7 @@ public:
     virtual bool PickProp(THUAI6::PropType prop) = 0;
     virtual bool UseProp(THUAI6::PropType prop) = 0;
     virtual bool ThrowProp(THUAI6::PropType prop) = 0;
-    virtual bool UseSkill(int32_t skillID) = 0;
+    virtual bool UseSkill(int32_t skillID, int32_t skillParam) = 0;
     virtual bool SendMessage(int64_t toID, std::string message, bool binary) = 0;
     virtual bool HaveMessage() = 0;
     virtual std::pair<int64_t, std::string> GetMessage() = 0;
@@ -108,7 +108,7 @@ public:
     virtual std::future<bool> PickProp(THUAI6::PropType prop) = 0;
     virtual std::future<bool> UseProp(THUAI6::PropType prop) = 0;
     virtual std::future<bool> ThrowProp(THUAI6::PropType prop) = 0;
-    virtual std::future<bool> UseSkill(int32_t skillID) = 0;
+    virtual std::future<bool> UseSkill(int32_t skillID, int32_t skillParam = 0) = 0;
     virtual std::future<bool> Attack(double angleInRadian) = 0;
 
     virtual std::future<bool> OpenDoor() = 0;
@@ -236,7 +236,7 @@ public:
     std::future<bool> PickProp(THUAI6::PropType prop) override;
     std::future<bool> UseProp(THUAI6::PropType prop) override;
     std::future<bool> ThrowProp(THUAI6::PropType prop) override;
-    std::future<bool> UseSkill(int32_t skillID) override;
+    std::future<bool> UseSkill(int32_t skillID, int32_t skillParam = 0) override;
 
     std::future<bool> Attack(double angleInRadian) override;
 
@@ -329,7 +329,7 @@ public:
     std::future<bool> PickProp(THUAI6::PropType prop) override;
     std::future<bool> UseProp(THUAI6::PropType prop) override;
     std::future<bool> ThrowProp(THUAI6::PropType prop) override;
-    std::future<bool> UseSkill(int32_t skillID) override;
+    std::future<bool> UseSkill(int32_t skillID, int32_t skillParam = 0) override;
 
     std::future<bool> OpenDoor() override;
     std::future<bool> CloseDoor() override;
@@ -410,7 +410,7 @@ public:
     std::future<bool> PickProp(THUAI6::PropType prop) override;
     std::future<bool> UseProp(THUAI6::PropType prop) override;
     std::future<bool> ThrowProp(THUAI6::PropType prop) override;
-    std::future<bool> UseSkill(int32_t skillID) override;
+    std::future<bool> UseSkill(int32_t skillID, int32_t skillParam = 0) override;
 
     std::future<bool> Attack(double angleInRadian) override;
 
@@ -488,7 +488,7 @@ public:
     std::future<bool> PickProp(THUAI6::PropType prop) override;
     std::future<bool> UseProp(THUAI6::PropType prop) override;
     std::future<bool> ThrowProp(THUAI6::PropType prop) override;
-    std::future<bool> UseSkill(int32_t skillID) override;
+    std::future<bool> UseSkill(int32_t skillID, int32_t skillParam = 0) override;
 
     std::future<bool> OpenDoor() override;
     std::future<bool> CloseDoor() override;

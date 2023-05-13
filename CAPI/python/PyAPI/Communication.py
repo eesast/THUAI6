@@ -91,14 +91,14 @@ class Communication:
         else:
             return throwResult.act_success
 
-    def UseSkill(self, skillID: int, playerID: int) -> bool:
+    def UseSkill(self, skillID: int, skillParam: int, playerID: int) -> bool:
         try:
             with self.__mtxLimit:
                 if self.__counter >= self.__limit:
                     return False
                 self.__counter += 1
             useResult = self.__THUAI6Stub.UseSkill(
-                THUAI62Proto.THUAI62ProtobufSkill(skillID, playerID)
+                THUAI62Proto.THUAI62ProtobufSkill(skillID, skillParam, playerID)
             )
         except grpc.RpcError as e:
             return False

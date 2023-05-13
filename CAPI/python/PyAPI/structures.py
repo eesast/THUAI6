@@ -52,6 +52,7 @@ class PropType(Enum):
     AddHpOrAp = 6
     ShieldOrSpear = 7
     RecoveryFromDizziness = 8
+    CraftingBench = 9
 
 
 class BulletType(Enum):
@@ -60,7 +61,7 @@ class BulletType(Enum):
     CommonAttackOfTricker = 2
     BombBomb = 3
     JumpyDumpty = 4
-    AtomBomb = 5
+    Strike = 5
 
 
 class StudentType(Enum):

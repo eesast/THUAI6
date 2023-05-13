@@ -80,7 +80,7 @@ class ILogic(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def UseSkill(self, skillID: int) -> bool:
+    def UseSkill(self, skillID: int, skillParam: int) -> bool:
         pass
 
     @abstractmethod
@@ -201,7 +201,7 @@ class IAPI(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def UseSkill(self, skillID: int) -> Future[bool]:
+    def UseSkill(self, skillID: int, skillParam: int = 0) -> Future[bool]:
         pass
 
     @abstractmethod

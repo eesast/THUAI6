@@ -180,7 +180,7 @@ namespace protobuf
         ::_pbi::ConstantInitialized
     ) :
         _impl_{
-            /*decltype(_impl_.player_id_)*/ int64_t{0}, /*decltype(_impl_.skill_id_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
+            /*decltype(_impl_.player_id_)*/ int64_t{0}, /*decltype(_impl_.skill_id_)*/ 0, /*decltype(_impl_.skill_param_)*/ 0, /*decltype(_impl_._cached_size_)*/ {}}
     {
     }
     struct SkillMsgDefaultTypeInternal
@@ -274,6 +274,7 @@ const uint32_t TableStruct_Message2Server_2eproto::offsets[] PROTOBUF_SECTION_VA
     ~0u,  // no _inlined_string_donated_
     PROTOBUF_FIELD_OFFSET(::protobuf::SkillMsg, _impl_.player_id_),
     PROTOBUF_FIELD_OFFSET(::protobuf::SkillMsg, _impl_.skill_id_),
+    PROTOBUF_FIELD_OFFSET(::protobuf::SkillMsg, _impl_.skill_param_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
     {0, -1, -1, sizeof(::protobuf::PlayerMsg)},
@@ -313,9 +314,9 @@ const char descriptor_table_protodef_Message2Server_2eproto[] PROTOBUF_SECTION_V
     "\t\n\007message\"-\n\tAttackMsg\022\021\n\tplayer_id\030\001 \001"
     "(\003\022\r\n\005angle\030\002 \001(\001\"\032\n\005IDMsg\022\021\n\tplayer_id\030"
     "\001 \001(\003\"<\n\021TreatAndRescueMsg\022\021\n\tplayer_id\030"
-    "\001 \001(\003\022\024\n\014to_player_id\030\002 \001(\003\"/\n\010SkillMsg\022"
-    "\021\n\tplayer_id\030\001 \001(\003\022\020\n\010skill_id\030\002 \001(\005b\006pr"
-    "oto3";
+    "\001 \001(\003\022\024\n\014to_player_id\030\002 \001(\003\"D\n\010SkillMsg\022"
+    "\021\n\tplayer_id\030\001 \001(\003\022\020\n\010skill_id\030\002 \001(\005\022\023\n\013"
+    "skill_param\030\003 \001(\005b\006proto3";
 static const ::_pbi::DescriptorTable* const descriptor_table_Message2Server_2eproto_deps[1] = {
     &::descriptor_table_MessageType_2eproto,
 };
@@ -323,7 +324,7 @@ static ::_pbi::once_flag descriptor_table_Message2Server_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Message2Server_2eproto = {
     false,
     false,
-    684,
+    705,
     descriptor_table_protodef_Message2Server_2eproto,
     "Message2Server.proto",
     &descriptor_table_Message2Server_2eproto_once,
@@ -2341,10 +2342,10 @@ namespace protobuf
         SkillMsg* const _this = this;
         (void)_this;
         new (&_impl_) Impl_{
-            decltype(_impl_.player_id_){}, decltype(_impl_.skill_id_){}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.player_id_){}, decltype(_impl_.skill_id_){}, decltype(_impl_.skill_param_){}, /*decltype(_impl_._cached_size_)*/ {}};
 
         _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-        ::memcpy(&_impl_.player_id_, &from._impl_.player_id_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.skill_id_) - reinterpret_cast<char*>(&_impl_.player_id_)) + sizeof(_impl_.skill_id_));
+        ::memcpy(&_impl_.player_id_, &from._impl_.player_id_, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.skill_param_) - reinterpret_cast<char*>(&_impl_.player_id_)) + sizeof(_impl_.skill_param_));
         // @@protoc_insertion_point(copy_constructor:protobuf.SkillMsg)
     }
 
@@ -2355,7 +2356,7 @@ namespace protobuf
         (void)arena;
         (void)is_message_owned;
         new (&_impl_) Impl_{
-            decltype(_impl_.player_id_){int64_t{0}}, decltype(_impl_.skill_id_){0}, /*decltype(_impl_._cached_size_)*/ {}};
+            decltype(_impl_.player_id_){int64_t{0}}, decltype(_impl_.skill_id_){0}, decltype(_impl_.skill_param_){0}, /*decltype(_impl_._cached_size_)*/ {}};
     }
 
     SkillMsg::~SkillMsg()
@@ -2386,7 +2387,7 @@ namespace protobuf
         // Prevent compiler warnings about cached_has_bits being unused
         (void)cached_has_bits;
 
-        ::memset(&_impl_.player_id_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.skill_id_) - reinterpret_cast<char*>(&_impl_.player_id_)) + sizeof(_impl_.skill_id_));
+        ::memset(&_impl_.player_id_, 0, static_cast<size_t>(reinterpret_cast<char*>(&_impl_.skill_param_) - reinterpret_cast<char*>(&_impl_.player_id_)) + sizeof(_impl_.skill_param_));
         _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
     }
 
@@ -2416,6 +2417,16 @@ namespace protobuf
                     if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16))
                     {
                         _impl_.skill_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+                        CHK_(ptr);
+                    }
+                    else
+                        goto handle_unusual;
+                    continue;
+                // int32 skill_param = 3;
+                case 3:
+                    if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24))
+                    {
+                        _impl_.skill_param_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
                         CHK_(ptr);
                     }
                     else
@@ -2469,6 +2480,13 @@ namespace protobuf
             target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_skill_id(), target);
         }
 
+        // int32 skill_param = 3;
+        if (this->_internal_skill_param() != 0)
+        {
+            target = stream->EnsureSpace(target);
+            target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_skill_param(), target);
+        }
+
         if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields()))
         {
             target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -2500,6 +2518,12 @@ namespace protobuf
             total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_skill_id());
         }
 
+        // int32 skill_param = 3;
+        if (this->_internal_skill_param() != 0)
+        {
+            total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_skill_param());
+        }
+
         return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
     }
 
@@ -2528,6 +2552,10 @@ namespace protobuf
         {
             _this->_internal_set_skill_id(from._internal_skill_id());
         }
+        if (from._internal_skill_param() != 0)
+        {
+            _this->_internal_set_skill_param(from._internal_skill_param());
+        }
         _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
     }
 
@@ -2550,7 +2578,7 @@ namespace protobuf
         using std::swap;
         _internal_metadata_.InternalSwap(&other->_internal_metadata_);
         ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-            PROTOBUF_FIELD_OFFSET(SkillMsg, _impl_.skill_id_) + sizeof(SkillMsg::_impl_.skill_id_) - PROTOBUF_FIELD_OFFSET(SkillMsg, _impl_.player_id_)>(
+            PROTOBUF_FIELD_OFFSET(SkillMsg, _impl_.skill_param_) + sizeof(SkillMsg::_impl_.skill_param_) - PROTOBUF_FIELD_OFFSET(SkillMsg, _impl_.player_id_)>(
             reinterpret_cast<char*>(&_impl_.player_id_),
             reinterpret_cast<char*>(&other->_impl_.player_id_)
         );

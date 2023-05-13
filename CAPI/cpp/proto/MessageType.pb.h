@@ -57,13 +57,13 @@ namespace protobuf
         COMMON_ATTACK_OF_TRICKER = 2,
         BOMB_BOMB = 3,
         JUMPY_DUMPTY = 4,
-        ATOM_BOMB = 5,
+        STRIKE = 5,
         BulletType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         BulletType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool BulletType_IsValid(int value);
     constexpr BulletType BulletType_MIN = NULL_BULLET_TYPE;
-    constexpr BulletType BulletType_MAX = ATOM_BOMB;
+    constexpr BulletType BulletType_MAX = STRIKE;
     constexpr int BulletType_ARRAYSIZE = BulletType_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* BulletType_descriptor();
@@ -163,12 +163,13 @@ namespace protobuf
         KEY5 = 6,
         KEY6 = 7,
         RECOVERY_FROM_DIZZINESS = 8,
+        CRAFTING_BENCH = 9,
         PropType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
         PropType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
     };
     bool PropType_IsValid(int value);
     constexpr PropType PropType_MIN = NULL_PROP_TYPE;
-    constexpr PropType PropType_MAX = RECOVERY_FROM_DIZZINESS;
+    constexpr PropType PropType_MAX = CRAFTING_BENCH;
     constexpr int PropType_ARRAYSIZE = PropType_MAX + 1;
 
     const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PropType_descriptor();

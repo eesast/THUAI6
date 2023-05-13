@@ -6,13 +6,13 @@ namespace Preparation.Utility
     public static class GameData
     {
         #region 基本常数
-        public const int numOfStepPerSecond = 20;     // 每秒行走的步数
+        public const int numOfStepPerSecond = 100;     // 每秒行走的步数
 
         public const int tolerancesLength = 3;
         public const int adjustLength = 3;
 
         public const int frameDuration = 50;         // 每帧时长
-        public const int checkInterval = 50;  // 检查位置标志、补充子弹的帧时长
+        public const int checkInterval = 10;
         public const long gameDuration = 600000;      // 游戏时长600000ms = 10min
 
         public const int LimitOfStopAndMove = 15;

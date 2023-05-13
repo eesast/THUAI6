@@ -54,7 +54,7 @@ namespace Gaming
                             else player.AddAp(GameData.PropDuration);
                         break;
                     case PropType.RecoveryFromDizziness:
-                        if (player.PlayerState == PlayerStateType.Stunned)
+                        if (player.PlayerState == PlayerStateType.Stunned || player.PlayerState == PlayerStateType.Charmed)
                         {
                             player.AddScore(GameData.ScorePropRecoverFromDizziness);
                             player.SetPlayerStateNaturally();

@@ -116,6 +116,7 @@ namespace Preparation.Utility
                 case Preparation.Utility.PlayerStateType.Rescuing:
                     return PlayerState.Rescuing;
                 case Preparation.Utility.PlayerStateType.Stunned:
+                case Preparation.Utility.PlayerStateType.Charmed:
                     return PlayerState.Stunned;
                 case Preparation.Utility.PlayerStateType.Swinging:
                     return PlayerState.Swinging;

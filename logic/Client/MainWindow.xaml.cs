@@ -58,6 +58,7 @@ namespace Client
             listOfDoor = new List<MessageOfDoor>();
             listOfGate = new List<MessageOfGate>();
             listOfHiddenGate = new List<MessageOfHiddenGate>();
+            countList = new List<int>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             unit = Math.Sqrt(UpperLayerOfMap.ActualHeight * UpperLayerOfMap.ActualWidth) / 50;
             unitFontsize = unit / 13;
@@ -159,7 +160,7 @@ namespace Client
         {
             var pbClient = new PlaybackClient(fileName, pbSpeed);
             int[,]? map;
-            if ((map = pbClient.ReadDataFromFile(listOfProp, listOfHuman, listOfButcher, listOfBullet, listOfBombedBullet, listOfAll, listOfChest, listOfClassroom, listOfDoor, listOfHiddenGate, listOfGate, drawPicLock)) != null)
+            if ((map = pbClient.ReadDataFromFile(listOfProp, listOfHuman, listOfButcher, listOfBullet, listOfBombedBullet, listOfAll, listOfChest, listOfClassroom, listOfDoor, listOfHiddenGate, listOfGate, drawPicLock, countList)) != null)
             {
                 isClientStocked = false;
                 PorC.Content = "⏸";
@@ -311,6 +312,15 @@ namespace Client
 
         private void DrawMap()
         {
+            classroomArray = new TextBlock[countList[0]];
+            doorArray = new TextBlock[countList[1]];
+            chestArray = new TextBlock[countList[2]];
+            gateArray = new TextBlock[countList[3]];
+            classroomPositionIndex = new int[countList[0]];
+            doorPositionIndex = new int[countList[1]];
+            chestPositionIndex = new int[countList[2]];
+            gatePositionIndex = new int[countList[3]];
+            int cntOfClassroom = 0, cntOfDoor = 0, cntOfGate = 0, cntOfChest = 0;
             for (int i = 0; i < defaultMap.GetLength(0); i++)
             {
                 for (int j = 0; j < defaultMap.GetLength(1); j++)
@@ -336,10 +346,38 @@ namespace Client
                         case 8:
                             mapPatches[i, j].Fill = Brushes.LightPink;
                             mapPatches[i, j].Stroke = Brushes.LightPink;
-                            break;//machine
+                            classroomPositionIndex[cntOfClassroom] = 50 * i + j;
+                            classroomArray[cntOfClassroom] = new TextBlock()
+                            {
+                                FontSize = 8 * unitFontsize,//
+                                Width = unitWidth,//
+                                Height = unitHeight,//
+                                Text = Convert.ToString(-1),//
+                                TextAlignment = TextAlignment.Center,
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Top,
+                                Margin = new Thickness(j * unitWidth / 1000.0 - unitWidth / 2, i * unitHeight / 1000.0 - unitHeight / 2, 0, 0),//
+                                Background = Brushes.Transparent,
+                            };
+                            ++cntOfClassroom;
+                            break;//classroom
                         case 9:
                             mapPatches[i, j].Fill = Brushes.LightSkyBlue;
                             mapPatches[i, j].Stroke = Brushes.LightSkyBlue;
+                            gatePositionIndex[cntOfGate] = 50 * i + j;
+                            gateArray[cntOfGate] = new TextBlock()
+                            {
+                                FontSize = 8 * unitFontsize,
+                                Width = unitWidth,
+                                Height = unitHeight,
+                                Text = Convert.ToString(-1),
+                                TextAlignment = TextAlignment.Center,
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Top,
+                                Margin = new Thickness(j * unitWidth / 1000.0 - unitWidth / 2, i * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                Background = Brushes.Transparent,
+                            };
+                            ++cntOfGate;
                             break;//gate
                         case 10:
                             break;//emergency
@@ -352,10 +390,38 @@ namespace Client
                         case 14:
                             mapPatches[i, j].Fill = Brushes.Khaki;
                             mapPatches[i, j].Stroke = Brushes.Khaki;
+                            doorPositionIndex[cntOfDoor] = 50 * i + j;
+                            doorArray[cntOfDoor] = new TextBlock()
+                            {
+                                FontSize = 9 * unitFontsize,
+                                Width = unitWidth,
+                                Height = unitHeight,
+                                Text = Convert.ToString(-1),
+                                TextAlignment = TextAlignment.Center,
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Top,
+                                Margin = new Thickness(j * unitWidth / 1000.0 - unitWidth / 2, i * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                Background = Brushes.Transparent,
+                            };
+                            ++cntOfDoor;
                             break;//door
                         case 15:
                             mapPatches[i, j].Fill = Brushes.Orange;
                             mapPatches[i, j].Stroke = Brushes.Orange;
+                            chestPositionIndex[cntOfChest] = 50 * i + j;
+                            chestArray[cntOfChest] = new TextBlock()
+                            {
+                                FontSize = 8 * unitFontsize,
+                                Width = unitWidth,
+                                Height = unitHeight,
+                                Text = Convert.ToString(-1),
+                                TextAlignment = TextAlignment.Center,
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                VerticalAlignment = VerticalAlignment.Top,
+                                Margin = new Thickness(j * unitWidth / 1000.0 - unitWidth / 2, i * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
+                                Background = Brushes.Transparent,
+                            };
+                            ++cntOfChest;
                             break;//chest
                         default:
                             break;
@@ -419,6 +485,7 @@ namespace Client
                         switch (content.GameState)
                         {
                             case GameState.GameStart:
+                                MessageOfMap mapMessage = new MessageOfMap();
                                 foreach (var obj in content.ObjMessage)
                                 {
                                     switch (obj.MessageOfObjCase)
@@ -459,11 +526,16 @@ namespace Client
                                             listOfGate.Add(obj.GateMessage);
                                             break;
                                         case MessageOfObj.MessageOfObjOneofCase.MapMessage:
-                                            GetMap(obj.MapMessage);
+                                            mapMessage = obj.MapMessage;
                                             break;
                                     }
                                 }
+                                countList.Add(listOfClassroom.Count);
+                                countList.Add(listOfDoor.Count);
+                                countList.Add(listOfChest.Count);
+                                countList.Add(listOfGate.Count);
                                 listOfAll.Add(content.AllMessage);
+                                GetMap(mapMessage);
                                 break;
                             case GameState.GameRunning:
                                 foreach (var obj in content.ObjMessage)
@@ -522,9 +594,17 @@ namespace Client
                                     switch (obj.MessageOfObjCase)
                                     {
                                         case MessageOfObj.MessageOfObjOneofCase.StudentMessage:
+                                            if (humanOrButcher && obj.StudentMessage.PlayerId == playerID)
+                                            {
+                                                human = obj.StudentMessage;
+                                            }
                                             listOfHuman.Add(obj.StudentMessage);
                                             break;
                                         case MessageOfObj.MessageOfObjOneofCase.TrickerMessage:
+                                            if (!humanOrButcher && obj.TrickerMessage.PlayerId == playerID)
+                                            {
+                                                butcher = obj.TrickerMessage;
+                                            }
                                             listOfButcher.Add(obj.TrickerMessage);
                                             break;
                                         case MessageOfObj.MessageOfObjOneofCase.PropMessage:
@@ -675,6 +755,50 @@ namespace Client
             //if (msg.Place == Protobuf.PlaceType.Grass)
             //    return false;
             return true;
+        }
+
+        private int FindIndexOfClassroom(MessageOfClassroom msg)
+        {
+            for (int i = 0; i < classroomPositionIndex.Length; ++i)
+            {
+                int k = msg.X / 1000 * 50 + msg.Y / 1000;
+                if (k == classroomPositionIndex[i])
+                    return i;
+            }
+            return -1;
+        }
+
+        private int FindIndexOfGate(MessageOfGate msg)
+        {
+            for (int i = 0; i < gatePositionIndex.Length; ++i)
+            {
+                int k = msg.X / 1000 * 50 + msg.Y / 1000;
+                if (k == gatePositionIndex[i])
+                    return i;
+            }
+            return -1;
+        }
+
+        private int FindIndexOfDoor(MessageOfDoor msg)
+        {
+            for (int i = 0; i < doorPositionIndex.Length; ++i)
+            {
+                int k = msg.X / 1000 * 50 + msg.Y / 1000;
+                if (k == doorPositionIndex[i])
+                    return i;
+            }
+            return -1;
+        }
+
+        private int FindIndexOfChest(MessageOfChest msg)
+        {
+            for (int i = 0; i < chestPositionIndex.Length; ++i)
+            {
+                int k = msg.X / 1000 * 50 + msg.Y / 1000;
+                if (k == chestPositionIndex[i])
+                    return i;
+            }
+            return -1;
         }
 
         private void Refresh(object? sender, EventArgs e) //log未更新
@@ -829,6 +953,9 @@ namespace Client
                                     case Protobuf.PropType.RecoveryFromDizziness:
                                         DrawProp(data, "🕶");
                                         break;
+                                    case Protobuf.PropType.CraftingBench:
+                                        DrawProp(data, "🎰");
+                                        break;
                                     default:
                                         DrawProp(data, "");
                                         break;
@@ -856,6 +983,7 @@ namespace Client
                                     case Protobuf.BulletType.CommonAttackOfTricker:
                                     case Protobuf.BulletType.BombBomb:
                                     case Protobuf.BulletType.JumpyDumpty:
+                                    case Protobuf.BulletType.Strike:
                                         icon.Fill = Brushes.Red;
                                         break;
                                     default:
@@ -900,12 +1028,6 @@ namespace Client
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
                                         }
-                                    //case Protobuf.BulletType.LineBullet:
-                                    //    {
-                                    //        double bombRange = data.BombRange / 1000;
-                                    //        DrawLaser(new Point(data.Y * unitWidth / 1000.0, data.X * unitHeight / 1000.0), -data.FacingDirection + Math.PI / 2, bombRange * unitHeight, 0.5 * unitWidth);
-                                    //        break;
-                                    //    }
                                     default:
                                         break;
                                 }
@@ -914,89 +1036,65 @@ namespace Client
                         foreach (var data in listOfClassroom)
                         {
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfFixedGenerator);
-                            TextBlock icon = new()
-                            {
-                                FontSize = 8 * unitFontsize,
-                                Width = unitWidth,
-                                Height = unitHeight,
-                                Text = Convert.ToString(deg),
-                                TextAlignment = TextAlignment.Center,
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Top,
-                                Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                Background = Brushes.Transparent,
-                            };
+                            int idx = FindIndexOfClassroom(data);
+                            classroomArray[idx].FontSize = 8 * unitFontsize;
+                            classroomArray[idx].Width = unitWidth;
+                            classroomArray[idx].Height = unitHeight;
+                            classroomArray[idx].Text = Convert.ToString(deg);
+                            classroomArray[idx].Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0);
                             if (deg == 100)
                             {
-                                icon.Text = "A+";
+                                classroomArray[idx].Text = "A+";
                             }
-                            UpperLayerOfMap.Children.Add(icon);
+                            UpperLayerOfMap.Children.Add(classroomArray[idx]);
                         }
                         foreach (var data in listOfChest)
                         {
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedChest);
-                            TextBlock icon = new()
-                            {
-                                FontSize = 8 * unitFontsize,
-                                Width = unitWidth,
-                                Height = unitHeight,
-                                Text = Convert.ToString(deg),
-                                TextAlignment = TextAlignment.Center,
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Top,
-                                Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                Background = Brushes.Transparent,
-                            };
+                            int idx = FindIndexOfChest(data);
+                            chestArray[idx].FontSize = 8 * unitFontsize;
+                            chestArray[idx].Width = unitWidth;
+                            chestArray[idx].Height = unitHeight;
+                            chestArray[idx].Text = Convert.ToString(deg);
+                            chestArray[idx].Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0);
                             if (deg == 100)
                             {
-                                icon.Text = "Ø";
+                                chestArray[idx].Text = "Ø";
                             }
-                            UpperLayerOfMap.Children.Add(icon);
+                            UpperLayerOfMap.Children.Add(chestArray[idx]);
                         }
                         foreach (var data in listOfGate)
                         {
                             int deg = (int)(100.0 * data.Progress / Preparation.Utility.GameData.degreeOfOpenedDoorway);
-                            TextBlock icon = new()
-                            {
-                                FontSize = 8 * unitFontsize,
-                                Width = unitWidth,
-                                Height = unitHeight,
-                                Text = Convert.ToString(deg),
-                                TextAlignment = TextAlignment.Center,
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Top,
-                                Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                Background = Brushes.Transparent,
-                            };
+                            int idx = FindIndexOfGate(data);
+                            gateArray[idx].FontSize = 8 * unitFontsize;
+                            gateArray[idx].Width = unitWidth;
+                            gateArray[idx].Height = unitHeight;
+                            gateArray[idx].Text = Convert.ToString(deg);
+                            gateArray[idx].Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0);
                             if (deg == 100)
                             {
                                 gateOpened = true;
-                                icon.Text = "🔓";
+                                gateArray[idx].Text = "🔓";
                             }
-                            UpperLayerOfMap.Children.Add(icon);
+                            UpperLayerOfMap.Children.Add(gateArray[idx]);
                         }
                         foreach (var data in listOfDoor)
                         {
-                            TextBlock icon = new()
-                            {
-                                FontSize = 9 * unitFontsize,
-                                Width = unitWidth,
-                                Height = unitHeight,
-                                TextAlignment = TextAlignment.Center,
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Top,
-                                Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
-                                Background = Brushes.Transparent,
-                            };
+                            int idx = FindIndexOfDoor(data);
+                            doorArray[idx].FontSize = 9 * unitFontsize;
+                            doorArray[idx].Width = unitWidth;
+                            doorArray[idx].Height = unitHeight;
+                            doorArray[idx].Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0);
                             if (data.IsOpen)
                             {
-                                icon.Text = Convert.ToString("🔓");
+                                doorArray[idx].Text = Convert.ToString("🔓");
                             }
                             else
                             {
-                                icon.Text = Convert.ToString("🔒");
+                                doorArray[idx].Text = Convert.ToString("🔒");
                             }
-                            UpperLayerOfMap.Children.Add(icon);
+                            UpperLayerOfMap.Children.Add(doorArray[idx]);
                         }
                         foreach (var data in listOfHiddenGate)
                         {
@@ -1009,7 +1107,7 @@ namespace Client
                             if (data.Opened)
                             {
                                 isEmergencyOpened = true;
-                                TextBlock icon = new()
+                                hiddenGateArray = new TextBlock()
                                 {
                                     FontSize = 9 * unitFontsize,
                                     Width = unitWidth,
@@ -1021,7 +1119,7 @@ namespace Client
                                     Margin = new Thickness(data.Y * unitWidth / 1000.0 - unitWidth / 2, data.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
                                     Background = Brushes.Transparent,
                                 };
-                                UpperLayerOfMap.Children.Add(icon);
+                                UpperLayerOfMap.Children.Add(hiddenGateArray);
                             }
                         }
                     }
@@ -1410,6 +1508,18 @@ namespace Client
         private List<MessageOfDoor> listOfDoor;
         private List<MessageOfGate> listOfGate;
         private List<MessageOfHiddenGate> listOfHiddenGate;
+
+        private TextBlock[] classroomArray;
+        private int[] classroomPositionIndex;
+        private TextBlock[] chestArray;
+        private int[] chestPositionIndex;
+        private TextBlock[] doorArray;
+        private int[] doorPositionIndex;
+        private TextBlock[] gateArray;
+        private int[] gatePositionIndex;
+        private TextBlock hiddenGateArray;//make a map from the position of icons to the index
+        private List<int> countList;
+
         private object drawPicLock = new object();
         private MessageOfStudent? human = null;
         private MessageOfTricker? butcher = null;

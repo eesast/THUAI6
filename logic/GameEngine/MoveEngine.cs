@@ -20,18 +20,6 @@ namespace GameEngine
 
         private readonly ITimer gameTimer;
         private readonly Action<IMoveable> EndMove;
-        public readonly uint[,] ProtoGameMap;
-        public PlaceType GetPlaceType(XY Position)
-        {
-            try
-            {
-                return (PlaceType)ProtoGameMap[Position.x / GameData.numOfPosGridPerCell, Position.y / GameData.numOfPosGridPerCell];
-            }
-            catch
-            {
-                return PlaceType.Null;
-            }
-        }
 
         public IGameObj? CheckCollision(IMoveable obj, XY Pos)
         {
@@ -52,7 +40,6 @@ namespace GameEngine
             Action<IMoveable> EndMove
         )
         {
-            this.ProtoGameMap = gameMap.ProtoGameMap;
             this.gameTimer = gameMap.Timer;
             this.EndMove = EndMove;
             this.OnCollision = OnCollision;
@@ -114,7 +101,7 @@ namespace GameEngine
             if (!gameTimer.IsGaming) return;
             lock (obj.ActionLock)
             {
-                if (!obj.IsAvailableForMove) { obj.ThreadNum.Release(); return; }
+                if (!obj.IsAvailableForMove) { EndMove(obj); return; }
                 obj.IsMoving = true;
             }
             new Thread
@@ -152,7 +139,6 @@ namespace GameEngine
                     if (isEnded)
                     {
                         obj.IsMoving = false;
-                        obj.ThreadNum.Release();
                         EndMove(obj);
                         return;
                     }
@@ -231,7 +217,6 @@ namespace GameEngine
                             } while (flag);
                         }
                         obj.IsMoving = false;  // 结束移动
-                        obj.ThreadNum.Release();
                         EndMove(obj);
                     }
                 }

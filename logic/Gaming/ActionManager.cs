@@ -491,6 +491,7 @@ namespace Gaming
                     },
                     EndMove: obj =>
                     {
+                        obj.ThreadNum.Release();
                         // Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                     }
                 );

@@ -10,10 +10,9 @@ namespace GameClass.GameObj
     /// </summary>
     public class Window : Immovable
     {
-        public Window(XY initPos, bool xIsWall) :
+        public Window(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Window)
         {
-            this.xIsWall = xIsWall;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;
@@ -27,8 +26,6 @@ namespace GameClass.GameObj
             }
             return false;
         }
-
-        public readonly bool xIsWall;
 
         private XY stage = new(0, 0);
         public XY Stage

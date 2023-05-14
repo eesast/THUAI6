@@ -39,7 +39,7 @@ namespace Client
 
         public int[,]? ReadDataFromFile(List<MessageOfProp> listOfProp, List<MessageOfStudent> listOfHuman, List<MessageOfTricker> listOfButcher, List<MessageOfBullet> listOfBullet,
         List<MessageOfBombedBullet> listOfBombedBullet, List<MessageOfAll> listOfAll, List<MessageOfChest> listOfChest, List<MessageOfClassroom> listOfClassroom,
-        List<MessageOfDoor> listOfDoor, List<MessageOfHiddenGate> listOfHiddenGate, List<MessageOfGate> listOfGate, object dataLock)
+        List<MessageOfDoor> listOfDoor, List<MessageOfHiddenGate> listOfHiddenGate, List<MessageOfGate> listOfGate, object? dataLock, List<int> countList)
         {
             if (Reader == null)
                 return null;
@@ -158,6 +158,10 @@ namespace Client
                                                         break;
                                                 }
                                             }
+                                            countList.Add(listOfClassroom.Count);
+                                            countList.Add(listOfDoor.Count);
+                                            countList.Add(listOfChest.Count);
+                                            countList.Add(listOfGate.Count);
                                             listOfAll.Add(content.AllMessage);
                                             break;
                                         case GameState.GameRunning:

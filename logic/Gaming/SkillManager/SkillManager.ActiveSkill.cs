@@ -111,8 +111,8 @@ namespace Gaming
                 Debugger.Output(player, "use robot!");
                 IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.UseRobot);
                 activeSkill.IsBeingUsed = (activeSkill.IsBeingUsed) ? false : true;
-                if (activeSkill.IsBeingUsed) characterManager.SetPlayerState(player, PlayerStateType.UsingSkill);
-                else characterManager.SetPlayerState(player);
+                if (activeSkill.IsBeingUsed) player.SetPlayerState(PlayerStateType.UsingSkill);
+                else player.SetPlayerState();
                 return true;
             }
 
@@ -247,7 +247,7 @@ namespace Gaming
                         {
                             if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
                             {
-                                characterManager.SetPlayerState(character);
+                                character.SetPlayerState();
                                 character.HP = GameData.RemainHpWhenAddLife;
                                 ((Student)character).TimeOfRescue = 0;
                                 player.AddScore(GameData.StudentScoreRescue);

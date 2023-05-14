@@ -11,19 +11,9 @@ namespace GameClass.GameObj
         //player.actionLock>其他.actionLock
         private readonly ReaderWriterLockSlim moveReaderWriterLock = new();
         public ReaderWriterLockSlim MoveReaderWriterLock => moveReaderWriterLock;
+        //规定moveReaderWriterLock<actionLock
 
-        private Semaphore threadNum = new(1, 1);
-        public Semaphore ThreadNum
-        {
-            get
-            {
-                return threadNum;
-            }
-            set
-            {
-                threadNum = value;
-            }
-        }
+        public Semaphore ThreadNum { get; } = new(1, 1);
 
         protected long stateNum = 0;
         public long StateNum
@@ -38,7 +28,6 @@ namespace GameClass.GameObj
                 lock (actionLock) stateNum = value;
             }
         }
-        //规定moveReaderWriterLock>actionLock
 
         public override XY Position
         {
@@ -81,20 +70,20 @@ namespace GameClass.GameObj
 
             if (moveVec.x != 0 || moveVec.y != 0)
             {
-                moveReaderWriterLock.EnterReadLock();
-                try
+                lock (actionLock)
                 {
-                    lock (actionLock)
+                    moveReaderWriterLock.EnterReadLock();
+                    try
                     {
                         if (!canMove || isRemoved) return -1;
-                        if (stateNo != stateNum) return -1;
-                        facingDirection = moveVec;
-                        this.position += moveVec;
                     }
-                }
-                finally
-                {
-                    moveReaderWriterLock.ExitReadLock();
+                    finally
+                    {
+                        moveReaderWriterLock.ExitReadLock();
+                    }
+                    if (stateNo != stateNum) return -1;
+                    facingDirection = moveVec;
+                    this.position += moveVec;
                 }
             }
             return moveVec * moveVec;
@@ -129,10 +118,7 @@ namespace GameClass.GameObj
             moveReaderWriterLock.EnterWriteLock();
             try
             {
-                lock (actionLock)
-                {
-                    canMove = value;
-                }
+                canMove = value;
             }
             finally
             {
@@ -161,52 +147,29 @@ namespace GameClass.GameObj
         {
             get
             {
-                moveReaderWriterLock.EnterReadLock();
-                try
+                lock (actionLock)
                 {
-                    lock (actionLock)
+                    moveReaderWriterLock.EnterReadLock();
+                    try
+                    {
                         return !isMoving && canMove && !isRemoved;
-                }
-                finally
-                {
-                    moveReaderWriterLock.ExitReadLock();
+                    }
+                    finally
+                    {
+                        moveReaderWriterLock.ExitReadLock();
+                    }
                 }
             }
         }
 
-        protected int moveSpeed;
+        protected long moveSpeed;
         /// <summary>
         /// 移动速度
         /// </summary>
-        public int MoveSpeed
+        public long MoveSpeed
         {
-            get
-            {
-                moveReaderWriterLock.EnterReadLock();
-                try
-                {
-                    return moveSpeed;
-                }
-                finally
-                {
-                    moveReaderWriterLock.ExitReadLock();
-                }
-            }
-            set
-            {
-                moveReaderWriterLock.EnterWriteLock();
-                try
-                {
-                    lock (actionLock)
-                    {
-                        moveSpeed = value;
-                    }
-                }
-                finally
-                {
-                    moveReaderWriterLock.ExitWriteLock();
-                }
-            }
+            get => Interlocked.Read(ref moveSpeed);
+            set => Interlocked.Exchange(ref moveSpeed, value);
         }
         /// <summary>
         /// 原初移动速度

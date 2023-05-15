@@ -1,11 +1,12 @@
-﻿using Preparation.Utility;
+﻿using Preparation.Interface;
+using Preparation.Utility;
 
 namespace GameClass.GameObj
 {
     /// <summary>
     /// 箱子
     /// </summary>
-    public class Chest : Immovable
+    public class Chest : Immovable, IChest
     {
         public Chest(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Chest)

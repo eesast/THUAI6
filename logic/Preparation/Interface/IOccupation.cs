@@ -275,10 +275,10 @@ namespace Preparation.Interface
     }
     public class Robot : IStudentType
     {
-        private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed);
+        private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed * 9 / 10);
         public int MoveSpeed => moveSpeed;
 
-        private const int maxHp = (int)(GameData.basicHp / 2.5);
+        private const int maxHp = (int)(GameData.basicHp * 3 / 10);
         public int MaxHp => maxHp;
 
         private const int maxGamingAddiction = 0;
@@ -286,25 +286,25 @@ namespace Preparation.Interface
 
         public BulletType InitBullet => BulletType.Null;
 
-        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { });
-        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+        public List<ActiveSkillType> ListOfIActiveSkill => new(System.Array.Empty<ActiveSkillType>());
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(System.Array.Empty<PassiveSkillType>());
 
-        public const int fixSpeed = GameData.basicFixSpeed;
+        public const int fixSpeed = GameData.basicFixSpeed * 85 / 123;
         public int FixSpeed => fixSpeed;
 
         public const int treatSpeed = 0;
         public int TreatSpeed => treatSpeed;
 
-        public const double concealment = GameData.basicConcealment;
+        public const double concealment = GameData.basicConcealment * 0.8;
         public double Concealment => concealment;
 
-        public const int alertnessRadius = (int)(GameData.basicStudentAlertnessRadius);
+        public const int alertnessRadius = 0;
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = GameData.basicStudentViewRange;
+        public int viewRange = 0;
         public int ViewRange => viewRange;
 
-        public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
+        public int speedOfOpeningOrLocking = 0;
         public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         public int speedOfClimbingThroughWindows = 1;

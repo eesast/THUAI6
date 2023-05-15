@@ -200,7 +200,7 @@ namespace Gaming
 
                     if (bullet.CastTime > 0)
                     {
-                        characterManager.SetPlayerState(player, PlayerStateType.TryingToAttack);
+                        player.SetPlayerState(PlayerStateType.TryingToAttack);
                         long threadNum = player.StateNum;
 
                         new Thread
@@ -221,7 +221,7 @@ namespace Gaming
                                     {
                                         if (threadNum == player.StateNum)
                                         {
-                                            characterManager.SetPlayerState(player);
+                                            player.SetPlayerState();
                                         }
                                         else TryRemoveBullet(bullet);
                                     }

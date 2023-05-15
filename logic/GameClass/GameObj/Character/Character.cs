@@ -2,11 +2,16 @@
 using Preparation.Utility;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
     public partial class Character : Moveable, ICharacter  // 负责人LHR摆烂终了
     {
+
+        private readonly ReaderWriterLockSlim hpReaderWriterLock = new();
+        public ReaderWriterLockSlim HPReadWriterLock => hpReaderWriterLock;
+
         #region 装弹、攻击相关的基本属性及方法
         /// <summary>
         /// 装弹冷却
@@ -231,21 +236,65 @@ namespace GameClass.GameObj
         }
         #endregion
         #region 血量相关的基本属性及方法
-        public int MaxHp { get; protected set; }  // 最大血量
+        private int maxHp;
+        public int MaxHp
+        {
+            get
+            {
+                HPReadWriterLock.EnterReadLock();
+                try
+                {
+                    return maxHp;
+                }
+                finally
+                {
+                    HPReadWriterLock.ExitReadLock();
+                }
+            }
+            protected set
+            {
+                HPReadWriterLock.EnterWriteLock();
+                try
+                {
+                    maxHp = value;
+                }
+                finally
+                {
+                    HPReadWriterLock.ExitWriteLock();
+                }
+            }
+        }  // 最大血量
         protected int hp;
         public int HP
         {
-            get => hp;
+            get
+            {
+                HPReadWriterLock.EnterReadLock();
+                try
+                {
+                    return hp;
+                }
+                finally
+                {
+                    HPReadWriterLock.ExitReadLock();
+                }
+            }
             set
             {
-                if (value > 0)
+                HPReadWriterLock.EnterWriteLock();
+                try
                 {
-                    lock (gameObjLock)
+                    if (value > 0)
+                    {
                         hp = value <= MaxHp ? value : MaxHp;
-                }
-                else
-                    lock (gameObjLock)
+                    }
+                    else
                         hp = 0;
+                }
+                finally
+                {
+                    HPReadWriterLock.ExitWriteLock();
+                }
             }
         }
 
@@ -256,47 +305,62 @@ namespace GameClass.GameObj
         /// <returns>减操作是否成功</returns>
         public int TrySubHp(int sub)
         {
-            int previousHp = hp;
-            lock (gameObjLock)
-                hp = hp <= sub ? 0 : hp - sub;
-            Debugger.Output(this, " hp has subed to: " + hp.ToString());
-            return previousHp - hp;
+            HPReadWriterLock.EnterWriteLock();
+            try
+            {
+                int previousHp = hp;
+                if (hp <= sub)
+                {
+                    hp = 0;
+                    return hp;
+                }
+                else
+                {
+                    hp -= sub;
+                    return sub;
+                }
+            }
+            finally
+            {
+                HPReadWriterLock.ExitWriteLock();
+            }
         }
 
         private double vampire = 0;  // 回血率：0-1之间
         public double Vampire
         {
-            get => vampire;
+            get
+            {
+                HPReadWriterLock.EnterReadLock();
+                try
+                {
+                    return vampire;
+                }
+                finally
+                {
+                    HPReadWriterLock.ExitReadLock();
+                }
+            }
             set
             {
-                if (value > 1)
-                    lock (gameObjLock)
+                HPReadWriterLock.EnterWriteLock();
+                try
+                {
+                    if (value > 1)
                         vampire = 1;
-                else if (value < 0)
-                    lock (gameObjLock)
+                    else if (value < 0)
                         vampire = 0;
-                else
-                    lock (gameObjLock)
+                    else
                         vampire = value;
+                }
+                finally
+                {
+                    HPReadWriterLock.ExitWriteLock();
+                }
             }
         }
         private double oriVampire = 0;
-        public double OriVampire
-        {
-            get => oriVampire;
-            set
-            {
-                if (value > 1)
-                    lock (gameObjLock)
-                        vampire = 1;
-                else if (value < 0)
-                    lock (gameObjLock)
-                        vampire = 0;
-                else
-                    lock (gameObjLock)
-                        vampire = value;
-            }
-        }
+        public double OriVampire { get; protected set; }
         #endregion
         #region 状态相关的基本属性与方法
         private PlayerStateType playerState = PlayerStateType.Null;
@@ -363,7 +427,7 @@ namespace GameClass.GameObj
         private GameObj? whatInteractingWith = null;
         public GameObj? WhatInteractingWith => whatInteractingWith;
 
-        public long ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        private long ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
             //只能被SetPlayerState引用
             whatInteractingWith = gameObj;
@@ -374,7 +438,7 @@ namespace GameClass.GameObj
             return ++stateNum;
         }
 
-        public long ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        private long ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
             //只能被SetPlayerState引用
             whatInteractingWith = gameObj;
@@ -383,6 +447,74 @@ namespace GameClass.GameObj
             playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
             //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
             return stateNum;
+        }
+
+
+        public long SetPlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        {
+            lock (actionLock)
+            {
+                PlayerStateType nowPlayerState = PlayerState;
+                if (nowPlayerState == value) return -1;
+                switch (nowPlayerState)
+                {
+                    case PlayerStateType.Escaped:
+                    case PlayerStateType.Deceased:
+                        return -1;
+
+                    case PlayerStateType.Addicted:
+                        if (value == PlayerStateType.Rescued)
+                            return ChangePlayerStateInOneThread(value, gameObj);
+                        else if (value == PlayerStateType.Null)
+                            return ChangePlayerState(value, gameObj);
+                        else return -1;
+                    case PlayerStateType.Rescued:
+                        if (value == PlayerStateType.Addicted)
+                            return ChangePlayerStateInOneThread(value, gameObj);
+                        else if (value == PlayerStateType.Null)
+                            return ChangePlayerState(value, gameObj);
+                        else return -1;
+
+                    case PlayerStateType.TryingToAttack:
+                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows)
+                            return ChangePlayerState(value, gameObj);
+                        else return -1;
+                    case PlayerStateType.Stunned:
+                    case PlayerStateType.Charmed:
+                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows && value != PlayerStateType.Swinging)
+                            return ChangePlayerState(value, gameObj);
+                        else return -1;
+                    case PlayerStateType.Swinging:
+                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows)
+                        {
+                            ThreadNum.Release();
+                            return ChangePlayerState(value, gameObj);
+                        }
+                        else return -1;
+                    case PlayerStateType.ClimbingThroughWindows:
+                        if (value != PlayerStateType.Moving)
+                        {
+                            Window window = (Window)WhatInteractingWith!;
+                            window.FinishClimbing();
+                            if (window.Stage.x == 0)
+                                ThreadNum.Release();
+                            else ReSetPos(window.Stage);
+                            return ChangePlayerState(value, gameObj);
+                        }
+                        else return -1;
+
+                    case PlayerStateType.OpeningTheChest:
+                        ((Chest)WhatInteractingWith!).StopOpen();
+                        return ChangePlayerState(value, gameObj);
+                    case PlayerStateType.OpeningTheDoorway:
+                        Doorway doorway = (Doorway)WhatInteractingWith!;
+                        doorway.StopOpenning();
+                        return ChangePlayerState(value, gameObj);
+
+                    default:
+                        return ChangePlayerState(value, gameObj);
+                }
+            }
         }
 
         public long SetPlayerStateNaturally()
@@ -398,20 +530,20 @@ namespace GameClass.GameObj
 
         public void RemoveFromGame(PlayerStateType playerStateType)
         {
-            MoveReaderWriterLock.EnterWriteLock();
-            try
+            lock (actionLock)
             {
-                lock (actionLock)
+                MoveReaderWriterLock.EnterWriteLock();
+                try
                 {
-                    playerState = playerStateType;
                     canMove = false;
                     isRemoved = true;
-                    position = GameData.PosWhoDie;
                 }
-            }
-            finally
-            {
-                MoveReaderWriterLock.ExitWriteLock();
+                finally
+                {
+                    MoveReaderWriterLock.ExitWriteLock();
+                }
+                playerState = playerStateType;
+                position = GameData.PosWhoDie;
             }
         }
         #endregion

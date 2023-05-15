@@ -41,7 +41,6 @@ namespace GameClass.GameObj
             switch (gameObjType)
             {
                 case GameObjType.Character:
-                case GameObjType.Generator:
                     return true;
                 default:
                     return false;
@@ -71,10 +70,11 @@ namespace GameClass.GameObj
         public override int Speed => GameData.basicBulletMoveSpeed * 25 / 10;
         public override bool IsRemoteAttack => true;
 
-        public override int CastTime => GameData.basicCastTime * 4 / 5;
+        public const int castTime = GameData.basicCastTime * 6 / 5;
+        public override int CastTime => castTime;
         public override int Backswing => 0;
         public override int RecoveryFromHit => 0;
-        public const int cd = GameData.basicBackswing / 2;
+        public const int cd = castTime;
         public override int CD => cd;
         public const int maxBulletNum = 1;
         public override int MaxBulletNum => maxBulletNum;
@@ -119,7 +119,7 @@ namespace GameClass.GameObj
         public override bool IsRemoteAttack => false;
 
         public override int CastTime => (int)(AttackDistance * 1000 / Speed);
-        public override int Backswing => GameData.basicRecoveryFromHit;
+        public override int Backswing => GameData.basicBackswing * 3 / 2;
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public const int cd = GameData.basicCD;
         public override int CD => cd;
@@ -135,6 +135,8 @@ namespace GameClass.GameObj
             switch (gameObjType)
             {
                 case GameObjType.Character:
+                case GameObjType.Generator:
+                case GameObjType.Door:
                     return true;
                 default:
                     return false;

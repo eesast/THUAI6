@@ -174,6 +174,9 @@ namespace Client
                             case Protobuf.PropType.RecoveryFromDizziness:
                                 prop0.Text = "🕶";
                                 break;
+                            case Protobuf.PropType.CraftingBench:
+                                prop0.Text = "🎰";
+                                break;
                             default:
                                 prop0.Text = "";
                                 break;
@@ -207,6 +210,9 @@ namespace Client
                             case Protobuf.PropType.RecoveryFromDizziness:
                                 prop1.Text = "🕶";
                                 break;
+                            case Protobuf.PropType.CraftingBench:
+                                prop1.Text = "🎰";
+                                break;
                             default:
                                 prop1.Text = "";
                                 break;
@@ -239,6 +245,9 @@ namespace Client
                                 break;
                             case Protobuf.PropType.RecoveryFromDizziness:
                                 prop2.Text = "🕶";
+                                break;
+                            case Protobuf.PropType.CraftingBench:
+                                prop2.Text = "🎰";
                                 break;
                             default:
                                 prop2.Text = "";

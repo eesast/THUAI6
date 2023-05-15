@@ -1,14 +1,12 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
-using System.Numerics;
-using System;
 
 namespace GameClass.GameObj
 {
     /// <summary>
     /// 窗
     /// </summary>
-    public class Window : Immovable
+    public class Window : Immovable, IWindow
     {
         public Window(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Window)
@@ -32,12 +30,8 @@ namespace GameClass.GameObj
         {
             get
             {
-                GameObjReaderWriterLock.EnterReadLock();
-                try
-                {
+                lock (gameObjLock)
                     return stage;
-                }
-                finally { GameObjReaderWriterLock.ExitReadLock(); }
             }
         }
 
@@ -46,47 +40,31 @@ namespace GameClass.GameObj
         {
             get
             {
-                GameObjReaderWriterLock.EnterReadLock();
-                try
-                {
+                lock (gameObjLock)
                     return whoIsClimbing;
-                }
-                finally { GameObjReaderWriterLock.ExitReadLock(); }
             }
         }
 
-        public bool TryToClimb(Character character)
+        public bool TryToClimb(ICharacter character)
         {
-            GameObjReaderWriterLock.EnterWriteLock();
-            try
-            {
+            lock (gameObjLock)
                 if (whoIsClimbing == null)
                 {
                     stage = new(0, 0);
-                    whoIsClimbing = character;
+                    whoIsClimbing = (Character)character;
                     return true;
                 }
                 else return false;
-            }
-            finally { GameObjReaderWriterLock.ExitWriteLock(); }
         }
         public void FinishClimbing()
         {
-            GameObjReaderWriterLock.EnterWriteLock();
-            try
-            {
+            lock (gameObjLock)
                 whoIsClimbing = null;
-            }
-            finally { GameObjReaderWriterLock.ExitWriteLock(); }
         }
         public void Enter2Stage(XY xy)
         {
-            GameObjReaderWriterLock.EnterWriteLock();
-            try
-            {
+            lock (gameObjLock)
                 stage = xy;
-            }
-            finally { GameObjReaderWriterLock.ExitWriteLock(); }
         }
     }
 }

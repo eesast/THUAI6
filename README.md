@@ -70,6 +70,8 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 3. 在新的分支上进行修改与开发
 4. 向 `eesast/THUAI6` 的 `dev` 分支提出 pull request
 5. 等待其他开发组成员 review 与 merge
+6. 待需要发布新版本时，从 `dev` 向 `main` 分支提出 pull request，等待 review 与 merge
+7. 若非必要，**严禁**直接修改 `main` 分支。若有极特殊情况需要直接修改 `main` 分支，则需要**立即**从 `main` 分支（反向）提出 pull request 到 `dev` 并 merge，以将更改和 Git 提交历史同步到 `dev` 分支，既保证 `dev` 为最新的内容，又防止 `dev` 与 `main` 分支在之后发生冲突
 
 ### 使用 Git 与 Github 时的注意事项
 

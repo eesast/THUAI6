@@ -392,11 +392,8 @@ namespace Gaming
             public bool LockOrOpenDoor(Character player)
             {
                 if (player.CharacterType == CharacterType.Robot) return false;
-                if (!(player.Commandable()) || player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor)
-                    return false;
                 Door? doorToLock = (Door?)gameMap.OneForInteract(player.Position, GameObjType.Door);
-                if (doorToLock == null || doorToLock.OpenOrLockDegree > 0 || gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character) != null)
-                    return false;
+                if (doorToLock == null) return false;
                 bool flag = false;
                 foreach (Prop prop in player.PropInventory)
                 {
@@ -420,6 +417,11 @@ namespace Gaming
                     if (flag) break;
                 }
                 if (!flag) return false;
+
+                if (doorToLock.OpenOrLockDegree > 0 || gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character) != null)
+                    return false;
+                if (!(player.Commandable()) || player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor)
+                    return false;
 
                 player.SetPlayerState(PlayerStateType.LockingOrOpeningTheDoor);
                 long threadNum = player.StateNum;

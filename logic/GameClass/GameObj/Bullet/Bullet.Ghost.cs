@@ -71,10 +71,11 @@ namespace GameClass.GameObj
         public override int Speed => GameData.basicBulletMoveSpeed * 25 / 10;
         public override bool IsRemoteAttack => true;
 
-        public override int CastTime => GameData.basicCastTime * 4 / 5;
+        public const int castTime = GameData.basicCastTime * 6 / 5;
+        public override int CastTime => castTime;
         public override int Backswing => 0;
         public override int RecoveryFromHit => 0;
-        public const int cd = GameData.basicBackswing / 2;
+        public const int cd = castTime;
         public override int CD => cd;
         public const int maxBulletNum = 1;
         public override int MaxBulletNum => maxBulletNum;

@@ -191,6 +191,7 @@ namespace Gaming
 
             public bool Treat(Student player, Student? playerTreated = null)
             {
+                if (player.CharacterType == CharacterType.Robot) return false;
                 if (playerTreated == null)
                 {
                     playerTreated = gameMap.StudentForInteract(player.Position);
@@ -230,11 +231,14 @@ namespace Gaming
             }
             public bool Rescue(Student player, Student? playerRescued = null)
             {
+                if (player.CharacterType == CharacterType.Robot) return false;
+
                 if (playerRescued == null)
                 {
                     playerRescued = gameMap.StudentForInteract(player.Position);
                     if (playerRescued == null) return false;
                 }
+
                 if ((!player.Commandable()) || playerRescued.PlayerState != PlayerStateType.Addicted || !GameData.ApproachToInteract(playerRescued.Position, player.Position))
                     return false;
                 player.SetPlayerState(PlayerStateType.Rescuing);
@@ -363,9 +367,9 @@ namespace Gaming
                                 }
 
                                 player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
-                                moveEngine.MoveObj(player, GameData.numOfPosGridPerCell * 3 * 1000 / player.MoveSpeed / 2, (-1 * windowToPlayer).Angle(), stateNum);
+                                moveEngine.MoveObj(player, (int)(GameData.numOfPosGridPerCell * 3 * 1000 / player.MoveSpeed / 2), (-1 * windowToPlayer).Angle(), stateNum);
 
-                                Thread.Sleep(GameData.numOfPosGridPerCell * 3 * 1000 / player.MoveSpeed / 2);
+                                Thread.Sleep((int)(GameData.numOfPosGridPerCell * 3 * 1000 / player.MoveSpeed / 2));
 
                                 player.MoveSpeed = player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
 
@@ -387,6 +391,7 @@ namespace Gaming
             }
             public bool LockOrOpenDoor(Character player)
             {
+                if (player.CharacterType == CharacterType.Robot) return false;
                 if (!(player.Commandable()) || player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor)
                     return false;
                 Door? doorToLock = (Door?)gameMap.OneForInteract(player.Position, GameObjType.Door);

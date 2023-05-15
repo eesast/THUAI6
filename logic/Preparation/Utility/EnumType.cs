@@ -71,6 +71,7 @@ namespace Preparation.Utility
         AddHpOrAp = 6,
         ShieldOrSpear = 7,
         RecoveryFromDizziness = 8,
+        CraftingBench = 9,
     }
     public enum CharacterType  // 职业
     {

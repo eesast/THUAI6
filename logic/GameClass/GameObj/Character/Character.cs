@@ -557,30 +557,17 @@ namespace GameClass.GameObj
         /// <summary>
         /// 角色所属队伍ID
         /// </summary>
-        private int teamID = int.MaxValue;
-        public int TeamID
+        private long teamID = long.MaxValue;
+        public long TeamID
         {
-            get => teamID;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    teamID = value;
-                    Debugger.Output(this, " joins in the team: " + value.ToString());
-                }
-            }
+            get => Interlocked.Read(ref teamID);
+            set => Interlocked.Exchange(ref teamID, value);
         }
-        private int playerID = int.MaxValue;
-        public int PlayerID
+        private long playerID = long.MaxValue;
+        public long PlayerID
         {
-            get => playerID;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    playerID = value;
-                }
-            }
+            get => Interlocked.Read(ref playerID);
+            set => Interlocked.Exchange(ref playerID, value);
         }
 
         #region 道具和buff相关属性、方法

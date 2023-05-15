@@ -5,7 +5,7 @@ namespace Preparation.Interface
 {
     public interface ICharacter : IGameObj
     {
-        public int TeamID { get; }
+        public long TeamID { get; }
         public int HP { get; set; }
         public int Score { get; }
         public void AddScore(int add);

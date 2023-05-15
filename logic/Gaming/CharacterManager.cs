@@ -17,7 +17,7 @@ namespace Gaming
                 this.gameMap = gameMap;
             }
 
-            public Character? AddPlayer(XY pos, int teamID, int playerID, CharacterType characterType, Character? parent = null)
+            public Character? AddPlayer(XY pos, long teamID, long playerID, CharacterType characterType, Character? parent = null)
             {
                 Character newPlayer;
 

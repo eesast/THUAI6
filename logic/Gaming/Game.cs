@@ -2,10 +2,8 @@
 using System.Threading;
 using System.Collections.Generic;
 using Preparation.Utility;
-using Timothy.FrameRateTask;
 using Preparation.Interface;
 using GameClass.GameObj;
-using System.Numerics;
 
 namespace Gaming
 {
@@ -14,10 +12,10 @@ namespace Gaming
         public struct PlayerInitInfo
         {
             public uint birthPointIndex;
-            public int teamID;
-            public int playerID;
+            public long teamID;
+            public long playerID;
             public CharacterType characterType;
-            public PlayerInitInfo(uint birthPointIndex, int teamID, int playerID, CharacterType characterType)
+            public PlayerInitInfo(uint birthPointIndex, long teamID, long playerID, CharacterType characterType)
             {
                 this.birthPointIndex = birthPointIndex;
                 this.teamID = teamID;

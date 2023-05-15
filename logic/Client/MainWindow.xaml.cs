@@ -482,10 +482,11 @@ namespace Client
                         listOfHiddenGate.Clear();
                         listOfGate.Clear();
                         MessageToClient content = responseStream.ResponseStream.Current;
+                        MessageOfMap mapMessage = new MessageOfMap();
+                        bool mapMessageExist = false;
                         switch (content.GameState)
                         {
                             case GameState.GameStart:
-                                MessageOfMap mapMessage = new MessageOfMap();
                                 foreach (var obj in content.ObjMessage)
                                 {
                                     switch (obj.MessageOfObjCase)
@@ -530,11 +531,12 @@ namespace Client
                                             break;
                                     }
                                 }
+                                listOfAll.Add(content.AllMessage);
+                                countList.Clear();
                                 countList.Add(listOfClassroom.Count);
                                 countList.Add(listOfDoor.Count);
                                 countList.Add(listOfChest.Count);
                                 countList.Add(listOfGate.Count);
-                                listOfAll.Add(content.AllMessage);
                                 GetMap(mapMessage);
                                 break;
                             case GameState.GameRunning:
@@ -581,11 +583,22 @@ namespace Client
                                             listOfHiddenGate.Add(obj.HiddenGateMessage);
                                             break;
                                         case MessageOfObj.MessageOfObjOneofCase.MapMessage:
-                                            GetMap(obj.MapMessage);
+                                            mapMessage = obj.MapMessage;
+                                            mapMessageExist = true;//只有中间加入游戏的旁观者着一种可能，使得在这里收到地图
                                             break;
                                     }
                                 }
                                 listOfAll.Add(content.AllMessage);
+                                if (mapMessageExist)
+                                {
+                                    countList.Clear();
+                                    countList.Add(listOfClassroom.Count);
+                                    countList.Add(listOfDoor.Count);
+                                    countList.Add(listOfChest.Count);
+                                    countList.Add(listOfGate.Count);
+                                    GetMap(mapMessage);
+                                    mapMessageExist = false;
+                                }
                                 break;
                             case GameState.GameEnd:
                                 MessageBox.Show("Game Over!");

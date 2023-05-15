@@ -41,7 +41,6 @@ namespace GameClass.GameObj
             switch (gameObjType)
             {
                 case GameObjType.Character:
-                case GameObjType.Generator:
                     return true;
                 default:
                     return false;
@@ -120,7 +119,7 @@ namespace GameClass.GameObj
         public override bool IsRemoteAttack => false;
 
         public override int CastTime => (int)(AttackDistance * 1000 / Speed);
-        public override int Backswing => GameData.basicRecoveryFromHit;
+        public override int Backswing => GameData.basicBackswing * 3 / 2;
         public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
         public const int cd = GameData.basicCD;
         public override int CD => cd;
@@ -136,6 +135,8 @@ namespace GameClass.GameObj
             switch (gameObjType)
             {
                 case GameObjType.Character:
+                case GameObjType.Generator:
+                case GameObjType.Door:
                     return true;
                 default:
                     return false;

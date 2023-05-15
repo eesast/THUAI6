@@ -33,10 +33,10 @@ namespace Server
                     else return null;
                 case Preparation.Utility.GameObjType.Door:
                     return Door((Door)gameObj);
-                case GameObjType.Prop:
-                    return Prop((Prop)gameObj);
-                case Preparation.Utility.GameObjType.Consumables:
-                    return Prop((Consumables)gameObj);
+                case GameObjType.Item:
+                    return Prop((Item)gameObj);
+                case Preparation.Utility.GameObjType.Gadget:
+                    return Prop((Gadget)gameObj);
                 default: return null;
             }
         }
@@ -157,7 +157,7 @@ namespace Server
             return msg;
         }
 
-        private static MessageOfObj Prop(Consumables prop)
+        private static MessageOfObj Prop(Gadget prop)
         {
             MessageOfObj msg = new()
             {
@@ -173,7 +173,7 @@ namespace Server
             return msg;
         }
 
-        private static MessageOfObj Prop(Prop prop)
+        private static MessageOfObj Prop(Item prop)
         {
             MessageOfObj msg = new()
             {

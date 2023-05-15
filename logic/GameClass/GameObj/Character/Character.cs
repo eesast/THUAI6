@@ -11,6 +11,8 @@ namespace GameClass.GameObj
 
         private readonly ReaderWriterLockSlim hpReaderWriterLock = new();
         public ReaderWriterLockSlim HPReadWriterLock => hpReaderWriterLock;
+        private readonly object vampireLock = new();
+        public object VampireLock => vampire;
 
         #region 装弹、攻击相关的基本属性及方法
         /// <summary>
@@ -331,32 +333,18 @@ namespace GameClass.GameObj
         {
             get
             {
-                HPReadWriterLock.EnterReadLock();
-                try
-                {
+                lock (vampireLock)
                     return vampire;
-                }
-                finally
-                {
-                    HPReadWriterLock.ExitReadLock();
-                }
             }
             set
             {
-                HPReadWriterLock.EnterWriteLock();
-                try
-                {
+                lock (vampireLock)
                     if (value > 1)
                         vampire = 1;
                     else if (value < 0)
                         vampire = 0;
                     else
                         vampire = value;
-                }
-                finally
-                {
-                    HPReadWriterLock.ExitWriteLock();
-                }
             }
         }
         public double OriVampire { get; protected set; }
@@ -596,9 +584,9 @@ namespace GameClass.GameObj
         }
 
         #region 道具和buff相关属性、方法
-        private Consumables[] propInventory = new Consumables[GameData.maxNumOfPropInPropInventory]
+        private Gadget[] propInventory = new Gadget[GameData.maxNumOfPropInPropInventory]
                                                 {new NullProp(), new NullProp(),new NullProp() };
-        public Consumables[] PropInventory
+        public Gadget[] PropInventory
         {
             get => propInventory;
             set
@@ -615,19 +603,19 @@ namespace GameClass.GameObj
         /// 使用物品栏中的道具
         /// </summary>
         /// <returns>被使用的道具</returns>
-        public Consumables UseProp(int indexing)
+        public Gadget UseProp(int indexing)
         {
             if (indexing < 0 || indexing >= GameData.maxNumOfPropInPropInventory)
                 return new NullProp();
             lock (gameObjLock)
             {
-                Consumables prop = propInventory[indexing];
+                Gadget prop = propInventory[indexing];
                 PropInventory[indexing] = new NullProp();
                 return prop;
             }
         }
 
-        public Consumables UseProp(PropType propType)
+        public Gadget UseProp(PropType propType)
         {
             lock (gameObjLock)
             {
@@ -637,7 +625,7 @@ namespace GameClass.GameObj
                     {
                         if (PropInventory[indexing].GetPropType() != PropType.Null)
                         {
-                            Consumables prop = PropInventory[indexing];
+                            Gadget prop = PropInventory[indexing];
                             PropInventory[indexing] = new NullProp();
                             return prop;
                         }
@@ -648,7 +636,7 @@ namespace GameClass.GameObj
                     {
                         if (PropInventory[indexing].GetPropType() == propType)
                         {
-                            Consumables prop = PropInventory[indexing];
+                            Gadget prop = PropInventory[indexing];
                             PropInventory[indexing] = new NullProp();
                             return prop;
                         }
@@ -787,7 +775,7 @@ namespace GameClass.GameObj
         {
             if (IsRemoved)
                 return true;
-            if (targetObj.Type == GameObjType.Consumables)
+            if (targetObj.Type == GameObjType.Gadget)
             {
                 return true;
             }

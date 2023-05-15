@@ -3,7 +3,7 @@ using Preparation.Utility;
 
 namespace GameClass.GameObj
 {
-    public abstract class Prop : ObjOfCharacter
+    public abstract class Item : ObjOfCharacter
     {
         public override bool IsRigid => true;
 
@@ -13,11 +13,11 @@ namespace GameClass.GameObj
 
         public abstract PropType GetPropType();
 
-        public Prop(XY initPos, int radius = GameData.PropRadius) :
-            base(initPos, radius, GameObjType.Prop)
+        public Item(XY initPos, int radius = GameData.PropRadius) :
+            base(initPos, radius, GameObjType.Item)
         {
             this.canMove = false;
-            this.MoveSpeed = GameData.PropMoveSpeed;
+            this.MoveSpeed = 0;
         }
     }
 
@@ -25,12 +25,12 @@ namespace GameClass.GameObj
     ///// <summary>
     ///// 坑人地雷
     ///// </summary>
-    // public abstract class DebuffMine : Consumables
+    // public abstract class DebuffMine : Gadget
     //{
     //     public DebuffMine(XYPosition initPos) : base(initPos) { }
     // }
 
-    public sealed class CraftingBench : Prop
+    public sealed class CraftingBench : Item
     {
         public CraftingBench(XY initPos) :
             base(initPos)

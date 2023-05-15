@@ -1,15 +1,16 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
-    public abstract class Consumables : ObjOfCharacter
+    public abstract class Gadget : ObjOfCharacter
     {
         public override bool IsRigid => true;
 
         public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj.Type == GameObjType.Consumables || targetObj.Type == GameObjType.Bullet
+            if (targetObj.Type == GameObjType.Gadget || targetObj.Type == GameObjType.Bullet
                 || targetObj.Type == GameObjType.Character || targetObj.Type == GameObjType.Chest)
                 return true;
             return false;
@@ -19,19 +20,42 @@ namespace GameClass.GameObj
 
         public abstract PropType GetPropType();
 
-        public Consumables(XY initPos, int radius = GameData.PropRadius) :
-            base(initPos, radius, GameObjType.Consumables)
+        public Gadget(XY initPos, int radius = GameData.PropRadius) :
+            base(initPos, radius, GameObjType.Gadget)
         {
             this.canMove = false;
             this.MoveSpeed = GameData.PropMoveSpeed;
         }
     }
-
+    public abstract class Tool : Gadget
+    {
+        private bool isUsed = false;
+        public bool IsUsed
+        {
+            get
+            {
+                lock (gameObjLock)
+                    return isUsed;
+            }
+            set
+            {
+                lock (gameObjLock)
+                {
+                    isUsed = value;
+                }
+            }
+        }
+        public Tool(XY initPos) : base(initPos) { }
+    }
+    public abstract class Consumables : Gadget
+    {
+        public Consumables(XY initPos) : base(initPos) { }
+    }
 
     ///// <summary>
     ///// 坑人地雷
     ///// </summary>
-    // public abstract class DebuffMine : Consumables
+    // public abstract class DebuffMine : Gadget
     //{
     //     public DebuffMine(XYPosition initPos) : base(initPos) { }
     // }
@@ -86,35 +110,35 @@ namespace GameClass.GameObj
         }
         public override PropType GetPropType() => PropType.ShieldOrSpear;
     }
-    public sealed class Key3 : Consumables
+    #endregion
+    public sealed class Key3 : Tool
     {
         public Key3(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.Key3;
     }
-    public sealed class Key5 : Consumables
+    public sealed class Key5 : Tool
     {
         public Key5(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.Key5;
     }
-    public sealed class Key6 : Consumables
+    public sealed class Key6 : Tool
     {
         public Key6(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.Key6;
     }
-    public sealed class NullProp : Consumables
+    public sealed class NullProp : Gadget
     {
         public NullProp() : base(new XY(1, 1))
         {
         }
         public override PropType GetPropType() => PropType.Null;
     }
-    #endregion
     // #region 所有坑人地雷
     ///// <summary>
     ///// 减速
@@ -143,7 +167,7 @@ namespace GameClass.GameObj
     // #endregion
     public static class PropFactory
     {
-        public static Consumables GetConsumables(PropType propType, XY pos)
+        public static Gadget GetConsumables(PropType propType, XY pos)
         {
             switch (propType)
             {

@@ -23,7 +23,7 @@ namespace Gaming
             {
                 if (player.IsRemoved || player.CharacterType == CharacterType.Robot)
                     return;
-                Consumables prop = player.UseProp(propType);
+                Gadget prop = player.UseProp(propType);
                 switch (prop.GetPropType())
                 {
                     case PropType.ShieldOrSpear:
@@ -79,17 +79,17 @@ namespace Gaming
                 if (indexing == GameData.maxNumOfPropInPropInventory)
                     return false;
 
-                Consumables pickProp = new NullProp();
+                Gadget pickProp = new NullProp();
                 if (propType == PropType.Null)  // 自动检查有无道具可捡
                 {
-                    pickProp = player.PropInventory[indexing] = ((Consumables?)gameMap.OneInTheSameCell(player.Position, GameObjType.Consumables)) ?? new NullProp();
+                    pickProp = player.PropInventory[indexing] = ((Gadget?)gameMap.OneInTheSameCell(player.Position, GameObjType.Gadget)) ?? new NullProp();
                 }
                 else
                 {
-                    gameMap.GameObjLockDict[GameObjType.Consumables].EnterReadLock();
+                    gameMap.GameObjLockDict[GameObjType.Gadget].EnterReadLock();
                     try
                     {
-                        foreach (Consumables prop in gameMap.GameObjDict[GameObjType.Consumables])
+                        foreach (Gadget prop in gameMap.GameObjDict[GameObjType.Gadget])
                         {
                             if (prop.GetPropType() == propType)
                             {
@@ -102,14 +102,14 @@ namespace Gaming
                     }
                     finally
                     {
-                        gameMap.GameObjLockDict[GameObjType.Consumables].ExitReadLock();
+                        gameMap.GameObjLockDict[GameObjType.Gadget].ExitReadLock();
                     }
                 }
 
                 if (pickProp.GetPropType() != PropType.Null)
                 {
                     gameMap.Remove(pickProp);
-                    //gameMap.Add(new Prop(pickProp));
+                    //gameMap.Add(new Item(pickProp));
                     return true;
                 }
                 else
@@ -120,7 +120,7 @@ namespace Gaming
             {
                 if (!gameMap.Timer.IsGaming || player.IsRemoved)
                     return;
-                Consumables prop = player.UseProp(propType);
+                Gadget prop = player.UseProp(propType);
                 if (prop.GetPropType() == PropType.Null)
                     return;
 
@@ -128,7 +128,7 @@ namespace Gaming
                 gameMap.Add(prop);
             }
 
-            private static Consumables ProduceOnePropNotKey(Random r, XY Pos)
+            private static Gadget ProduceOnePropNotKey(Random r, XY Pos)
             {
                 return PropFactory.GetConsumables((PropType)r.Next(GameData.numOfTeachingBuilding + 1, GameData.numOfPropSpecies + 1), Pos);
             }

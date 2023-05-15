@@ -535,23 +535,20 @@ namespace GameClass.GameObj
         }
         #endregion
 
-        private int score = 0;
-        public int Score
+        private long score = 0;
+        public long Score
         {
-            get => score;
+            get => Interlocked.Read(ref score);
         }
 
         /// <summary>
         /// 加分
         /// </summary>
         /// <param name="add">增加量</param>
-        public virtual void AddScore(int add)
+        public virtual void AddScore(long add)
         {
-            lock (gameObjLock)
-            {
-                score += add;
-                //Debugger.Output(this, " 's score has been added to: " + score.ToString());
-            }
+            Interlocked.Add(ref score, add);
+            //Debugger.Output(this, " 's score has been added to: " + score.ToString());
         }
 
         /// <summary>

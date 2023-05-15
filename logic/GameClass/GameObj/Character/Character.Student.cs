@@ -141,7 +141,7 @@ namespace GameClass.GameObj
                 }
             }
         }
-        public override void AddScore(int add)
+        public override void AddScore(long add)
         {
             if (parent == null)
                 base.AddScore(add);

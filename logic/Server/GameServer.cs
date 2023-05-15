@@ -196,8 +196,8 @@ namespace Server
             {
                 foreach (Character character in game.GameMap.GameObjDict[GameObjType.Character])
                 {
-                    if (!character.IsGhost()) score[0] += character.Score;
-                    else score[1] += character.Score;
+                    if (!character.IsGhost()) score[0] += (int)character.Score;
+                    else score[1] += (int)character.Score;
                 }
 
             }

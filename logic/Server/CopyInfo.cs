@@ -68,7 +68,7 @@ namespace Server
                     ViewRange = player.ViewRange,
                     Radius = player.Radius,
                     DangerAlert = (player.BgmDictionary.ContainsKey(BgmType.GhostIsComing)) ? player.BgmDictionary[BgmType.GhostIsComing] : 0,
-                    Score = player.Score,
+                    Score = (int)player.Score,
                     TreatProgress = player.DegreeOfTreatment,
                     RescueProgress = player.TimeOfRescue,
 
@@ -110,7 +110,7 @@ namespace Server
 
                     TrickerType = Transformation.ToTrickerType(player.CharacterType),
                     Guid = player.ID,
-                    Score = player.Score,
+                    Score = (int)player.Score,
                     PlayerId = player.PlayerID,
                     ViewRange = player.ViewRange,
                     Radius = player.Radius,

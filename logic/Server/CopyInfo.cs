@@ -19,12 +19,8 @@ namespace Server
                     else return Student((Student)character);
                 case Preparation.Utility.GameObjType.Bullet:
                     return Bullet((Bullet)gameObj);
-                case Preparation.Utility.GameObjType.Prop:
-                    return Prop((Prop)gameObj);
                 case Preparation.Utility.GameObjType.BombedBullet:
                     return BombedBullet((BombedBullet)gameObj);
-                case Preparation.Utility.GameObjType.PickedProp:
-                    return PickedProp((PickedProp)gameObj);
                 case Preparation.Utility.GameObjType.Generator:
                     return Classroom((Generator)gameObj);
                 case Preparation.Utility.GameObjType.Chest:
@@ -37,6 +33,10 @@ namespace Server
                     else return null;
                 case Preparation.Utility.GameObjType.Door:
                     return Door((Door)gameObj);
+                case GameObjType.Prop:
+                    return Prop((Prop)gameObj);
+                case Preparation.Utility.GameObjType.Consumables:
+                    return Prop((Consumables)gameObj);
                 default: return null;
             }
         }
@@ -157,6 +157,22 @@ namespace Server
             return msg;
         }
 
+        private static MessageOfObj Prop(Consumables prop)
+        {
+            MessageOfObj msg = new()
+            {
+                PropMessage = new()
+                {
+                    Type = Transformation.ToPropType(prop.GetPropType()),
+                    X = prop.Position.x,
+                    Y = prop.Position.y,
+                    FacingDirection = prop.FacingDirection.Angle(),
+                    Guid = prop.ID
+                }
+            };
+            return msg;
+        }
+
         private static MessageOfObj Prop(Prop prop)
         {
             MessageOfObj msg = new()
@@ -188,18 +204,6 @@ namespace Server
                 }
             };
             //   Debugger.Output(bombedBullet, bombedBullet.Place.ToString()+" "+bombedBullet.Position.ToString());
-            return msg;
-        }
-
-        private static MessageOfObj PickedProp(PickedProp pickedProp)
-        {
-            MessageOfObj msg = new MessageOfObj(); // MessageOfObj中没有PickedProp
-            /*msg.MessageOfPickedProp = new MessageOfPickedProp();
-
-            msg.MessageOfPickedProp.MappingID = pickedProp.MappingID;
-            msg.MessageOfPickedProp.X = pickedProp.PropHasPicked.Position.x;
-            msg.MessageOfPickedProp.Y = pickedProp.PropHasPicked.Position.y;
-            msg.MessageOfPickedProp.FacingDirection = pickedProp.PropHasPicked.FacingDirection;*/
             return msg;
         }
 

@@ -15,8 +15,8 @@ namespace GameClass.GameObj
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;
 
-        private readonly Prop[] propInChest = new Prop[GameData.maxNumOfPropInChest] { new NullProp(), new NullProp() };
-        public Prop[] PropInChest => propInChest;
+        private readonly Consumables[] propInChest = new Consumables[GameData.maxNumOfPropInChest] { new NullProp(), new NullProp() };
+        public Consumables[] PropInChest => propInChest;
 
         private int openStartTime = 0;
         public int OpenStartTime => openStartTime;

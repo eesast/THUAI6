@@ -45,8 +45,8 @@ namespace Preparation.Utility
                 {
                     return gameObjType != GameObjType.Null && gameObjType != GameObjType.Grass 
                         && gameObjType != GameObjType.OutOfBoundBlock && gameObjType != GameObjType.Window 
-                        && gameObjType != GameObjType.Bullet&&gameObjType != GameObjType.Prop
-                        &&gameObjType != GameObjType.PickedProp&&gameObjType != GameObjType.BombedBullet
+                        && gameObjType != GameObjType.Bullet&&gameObjType != GameObjType.Consumables
+                        &&gameObjType != GameObjType.Prop&&gameObjType != GameObjType.BombedBullet
                         &&gameObjType != GameObjType.EmergencyExit&&gameObjType != GameObjType.Doorway;
                 }*/
 

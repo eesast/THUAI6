@@ -303,7 +303,7 @@ namespace Gaming
                       player.SetPlayerStateNaturally();
                       for (int i = 0; i < GameData.maxNumOfPropInChest; ++i)
                       {
-                          Prop prop = chestToOpen.PropInChest[i];
+                          Consumables prop = chestToOpen.PropInChest[i];
                           chestToOpen.PropInChest[i] = new NullProp();
                           prop.ReSetPos(player.Position);
                           gameMap.Add(prop);
@@ -395,7 +395,7 @@ namespace Gaming
                 Door? doorToLock = (Door?)gameMap.OneForInteract(player.Position, GameObjType.Door);
                 if (doorToLock == null) return false;
                 bool flag = false;
-                foreach (Prop prop in player.PropInventory)
+                foreach (Consumables prop in player.PropInventory)
                 {
                     switch (prop.GetPropType())
                     {

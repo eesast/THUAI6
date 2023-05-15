@@ -253,7 +253,7 @@ namespace Gaming
             return false;
         }
 
-        public bool UseActiveSkill(long playerID, int skillNum)
+        public bool UseActiveSkill(long playerID, int skillNum, int parameter)
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
@@ -261,7 +261,7 @@ namespace Gaming
             if (player != null)
             {
                 if (player.Occupation.ListOfIActiveSkill.Count <= skillNum) return false;
-                return skillManager.UseActiveSkill(player, player.Occupation.ListOfIActiveSkill[skillNum]);
+                return skillManager.UseActiveSkill(player, player.Occupation.ListOfIActiveSkill[skillNum], parameter);
             }
             else
                 return false;

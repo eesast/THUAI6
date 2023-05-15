@@ -58,7 +58,7 @@ namespace Server
                 {
                     X = player.Position.x,
                     Y = player.Position.y,
-                    Speed = player.MoveSpeed,
+                    Speed = (int)player.MoveSpeed,
                     Determination = player.HP,
                     Addiction = player.GamingAddiction,
                     Guid = player.ID,
@@ -106,7 +106,7 @@ namespace Server
                 {
                     X = player.Position.x,
                     Y = player.Position.y,
-                    Speed = player.MoveSpeed,
+                    Speed = (int)player.MoveSpeed,
 
                     TrickerType = Transformation.ToTrickerType(player.CharacterType),
                     Guid = player.ID,

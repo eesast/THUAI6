@@ -17,65 +17,6 @@ namespace Gaming
                 this.gameMap = gameMap;
             }
 
-            public long SetPlayerState(Character player, PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
-            {
-                lock (player.ActionLock)
-                {
-                    PlayerStateType nowPlayerState = player.PlayerState;
-                    if (nowPlayerState == value) return -1;
-                    switch (nowPlayerState)
-                    {
-                        case PlayerStateType.Escaped:
-                        case PlayerStateType.Deceased:
-                            return -1;
-
-                        case PlayerStateType.Addicted:
-                            if (value == PlayerStateType.Rescued)
-                                return player.ChangePlayerStateInOneThread(value, gameObj);
-                            else if (value == PlayerStateType.Null)
-                                return player.ChangePlayerState(value, gameObj);
-                            else return -1;
-                        case PlayerStateType.Rescued:
-                            if (value == PlayerStateType.Addicted)
-                                return player.ChangePlayerStateInOneThread(value, gameObj);
-                            else if (value == PlayerStateType.Null)
-                                return player.ChangePlayerState(value, gameObj);
-                            else return -1;
-
-                        case PlayerStateType.TryingToAttack:
-                        case PlayerStateType.Stunned:
-                        case PlayerStateType.Charmed:
-                        case PlayerStateType.Swinging:
-                            if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows)
-                                return player.ChangePlayerState(value, gameObj);
-                            else return -1;
-                        case PlayerStateType.ClimbingThroughWindows:
-                            if (value != PlayerStateType.Moving)
-                            {
-                                Window window = (Window)player.WhatInteractingWith!;
-                                window.FinishClimbing();
-                                if (window.Stage.x == 0)
-                                    player.ThreadNum.Release();
-                                else player.ReSetPos(window.Stage);
-                                return player.ChangePlayerState(value, gameObj);
-                            }
-                            else return -1;
-
-                        case PlayerStateType.OpeningTheChest:
-                            ((Chest)player.WhatInteractingWith!).StopOpen();
-                            return player.ChangePlayerState(value, gameObj);
-                        case PlayerStateType.OpeningTheDoorway:
-                            Doorway doorway = (Doorway)player.WhatInteractingWith!;
-                            doorway.OpenDegree += gameMap.Timer.nowTime() - doorway.OpenStartTime;
-                            doorway.OpenStartTime = 0;
-                            return player.ChangePlayerState(value, gameObj);
-
-                        default:
-                            return player.ChangePlayerState(value, gameObj);
-                    }
-                }
-            }
-
             public Character? AddPlayer(XY pos, int teamID, int playerID, CharacterType characterType, Character? parent = null)
             {
                 Character newPlayer;
@@ -268,7 +209,7 @@ namespace Gaming
                         return;
                     }
                 }
-                SetPlayerState(player, PlayerStateType.Addicted);
+                player.SetPlayerState(PlayerStateType.Addicted);
                 long threadNum = player.StateNum;
                 new Thread
                     (() =>
@@ -302,14 +243,14 @@ namespace Gaming
             public long BeStunned(Character player, int time)
             {
                 if (player.CharacterType == CharacterType.Robot) return -1;
-                long threadNum = SetPlayerState(player, PlayerStateType.Stunned);
+                long threadNum = player.SetPlayerState(PlayerStateType.Stunned);
                 if (threadNum == -1) return -1;
                 new Thread
                     (() =>
                     {
                         Thread.Sleep(time);
                         if (threadNum == player.StateNum)
-                            SetPlayerState(player);
+                            player.SetPlayerState();
                     }
                     )
                 { IsBackground = true }.Start();
@@ -339,7 +280,6 @@ namespace Gaming
 #if DEBUG
                 Debugger.Output(student, "is being shot!");
 #endif
-                if (student.NoHp()) return;  // 原来已经死了
                 if (!bullet.Parent!.IsGhost()) return;
 
                 if (student.CharacterType == CharacterType.StraightAStudent)
@@ -347,6 +287,9 @@ namespace Gaming
                     ((WriteAnswers)student.FindIActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
                 }
                 student.SetDegreeOfTreatment0();
+
+                if (student.NoHp()) return;  // 原来已经死了
+
 #if DEBUG
                 Debugger.Output(bullet, " 's AP is " + bullet.AP.ToString());
 #endif
@@ -394,18 +337,22 @@ namespace Gaming
             public bool BackSwing(Character player, int time)
             {
                 if (time <= 0) return false;
-                if (player.PlayerState == PlayerStateType.Swinging || (!player.Commandable() && player.PlayerState != PlayerStateType.TryingToAttack)) return false;
-                SetPlayerState(player, PlayerStateType.Swinging);
-                long threadNum = player.StateNum;
+                long stateNum = player.SetPlayerState(PlayerStateType.Swinging);
+                if (stateNum == -1) return false;
 
                 new Thread
                         (() =>
                         {
+                            player.ThreadNum.WaitOne();
                             Thread.Sleep(time);
 
-                            if (threadNum == player.StateNum)
+                            lock (player.ActionLock)
                             {
-                                SetPlayerState(player);
+                                if (stateNum == player.StateNum)
+                                {
+                                    player.ThreadNum.Release();
+                                    player.SetPlayerStateNaturally();
+                                }
                             }
                         }
                         )

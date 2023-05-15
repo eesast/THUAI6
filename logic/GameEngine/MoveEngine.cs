@@ -104,6 +104,7 @@ namespace GameEngine
                 if (!obj.IsAvailableForMove) { EndMove(obj); return; }
                 obj.IsMoving = true;
             }
+
             new Thread
             (
                 () =>
@@ -151,7 +152,7 @@ namespace GameEngine
                                 () => gameTimer.IsGaming,
                                 () =>
                                 {
-                                    if (obj.StateNum == stateNum && obj.CanMove && !obj.IsRemoved)
+                                    if (obj.StateNum != stateNum || !obj.CanMove || obj.IsRemoved)
                                         return !(isEnded = true);
                                     return !(isEnded = !LoopDo(obj, direction, ref deltaLen, stateNum));
                                 },

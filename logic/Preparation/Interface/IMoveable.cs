@@ -7,12 +7,12 @@ namespace Preparation.Interface
     public interface IMoveable : IGameObj
     {
         object ActionLock { get; }
-        public int MoveSpeed { get; }
+        public long MoveSpeed { get; }
         public bool IsMoving { get; set; }
         public bool IsRemoved { get; }
         public bool IsAvailableForMove { get; }
         public long StateNum { get; }
-        public Semaphore ThreadNum { get; set; }
+        public Semaphore ThreadNum { get; }
         public long MovingSetPos(XY moveVec, long stateNum);
         public void ReSetCanMove(bool value);
         public bool WillCollideWith(IGameObj? targetObj, XY nextPos)  // 检查下一位置是否会和目标物碰撞

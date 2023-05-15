@@ -23,7 +23,7 @@ namespace GameClass.GameObj
             base(initPos, radius, GameObjType.Prop)
         {
             this.canMove = false;
-            this.moveSpeed = GameData.PropMoveSpeed;
+            this.MoveSpeed = GameData.PropMoveSpeed;
         }
     }
 
@@ -35,11 +35,28 @@ namespace GameClass.GameObj
     //{
     //     public DebuffMine(XYPosition initPos) : base(initPos) { }
     // }
+
+    public sealed class CraftingBench : Prop
+    {
+        public override bool IsRigid => true;
+        public override bool IgnoreCollideExecutor(IGameObj targetObj) => false;
+        public CraftingBench(XY initPos) :
+            base(initPos)
+        {
+        }
+        public override PropType GetPropType() => PropType.CraftingBench;
+    }
+
+    public abstract class BuffProp : Prop
+    {
+        public BuffProp(XY initPos) : base(initPos) { }
+    }
+
     #region 所有增益道具
     /// <summary>
     /// 增加速度
     /// </summary>
-    public sealed class AddSpeed : Prop
+    public sealed class AddSpeed : BuffProp
     {
         public AddSpeed(XY initPos) :
             base(initPos)
@@ -47,10 +64,11 @@ namespace GameClass.GameObj
         }
         public override PropType GetPropType() => PropType.AddSpeed;
     }
+
     /// <summary>
     /// 复活甲
     /// </summary>
-    public sealed class AddLifeOrClairaudience : Prop
+    public sealed class AddLifeOrClairaudience : BuffProp
     {
         public AddLifeOrClairaudience(XY initPos) :
             base(initPos)
@@ -58,7 +76,7 @@ namespace GameClass.GameObj
         }
         public override PropType GetPropType() => PropType.AddLifeOrClairaudience;
     }
-    public sealed class AddHpOrAp : Prop
+    public sealed class AddHpOrAp : BuffProp
     {
         public AddHpOrAp(XY initPos) :
             base(initPos)
@@ -66,7 +84,7 @@ namespace GameClass.GameObj
         }
         public override PropType GetPropType() => PropType.AddHpOrAp;
     }
-    public sealed class RecoveryFromDizziness : Prop
+    public sealed class RecoveryFromDizziness : BuffProp
     {
         public RecoveryFromDizziness(XY initPos) :
             base(initPos)
@@ -77,28 +95,28 @@ namespace GameClass.GameObj
     /// <summary>
     /// 矛盾
     /// </summary>
-    public sealed class ShieldOrSpear : Prop
+    public sealed class ShieldOrSpear : BuffProp
     {
         public ShieldOrSpear(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.ShieldOrSpear;
     }
-    public sealed class Key3 : Prop
+    public sealed class Key3 : BuffProp
     {
         public Key3(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.Key3;
     }
-    public sealed class Key5 : Prop
+    public sealed class Key5 : BuffProp
     {
         public Key5(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.Key5;
     }
-    public sealed class Key6 : Prop
+    public sealed class Key6 : BuffProp
     {
         public Key6(XY initPos) : base(initPos)
         {
@@ -145,6 +163,8 @@ namespace GameClass.GameObj
         {
             switch (propType)
             {
+                case PropType.CraftingBench:
+                    return new CraftingBench(pos);
                 case PropType.AddSpeed:
                     return new AddSpeed(pos);
                 case PropType.AddLifeOrClairaudience:

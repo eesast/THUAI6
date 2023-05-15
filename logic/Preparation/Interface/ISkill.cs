@@ -206,9 +206,9 @@ namespace Preparation.Interface
 
     public class SummonGolem : IActiveSkill
     {
-        public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => 0;
-        private readonly object commonSkillLock = new object();
+        public int SkillCD => GameData.commonSkillCD * 4 / 3;
+        public int DurationTime => 6;
+        private readonly object commonSkillLock = new();
         public object ActiveSkillLock => commonSkillLock;
 
         private IGolem? golemSummoned = null;

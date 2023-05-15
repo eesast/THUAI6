@@ -30,8 +30,8 @@ namespace Preparation.Utility
     {
         Null = 0,
         Character = 1,
-        Prop = 2,
-        PickedProp = 3,
+        Consumables = 2,
+        Prop = 3,
         Bullet = 4,
         BombedBullet = 5,
 

@@ -257,6 +257,7 @@ namespace GameClass.GameObj
                 try
                 {
                     maxHp = value;
+                    if (hp > maxHp) hp = maxHp;
                 }
                 finally
                 {
@@ -286,7 +287,7 @@ namespace GameClass.GameObj
                 {
                     if (value > 0)
                     {
-                        hp = value <= MaxHp ? value : MaxHp;
+                        hp = value <= maxHp ? value : maxHp;
                     }
                     else
                         hp = 0;
@@ -302,7 +303,6 @@ namespace GameClass.GameObj
         /// 尝试减血
         /// </summary>
         /// <param name="sub">减血量</param>
-        /// <returns>减操作是否成功</returns>
         public int TrySubHp(int sub)
         {
             HPReadWriterLock.EnterWriteLock();
@@ -359,7 +359,6 @@ namespace GameClass.GameObj
                 }
             }
         }
-        private double oriVampire = 0;
         public double OriVampire { get; protected set; }
         #endregion
         #region 状态相关的基本属性与方法
@@ -597,9 +596,9 @@ namespace GameClass.GameObj
         }
 
         #region 道具和buff相关属性、方法
-        private Prop[] propInventory = new Prop[GameData.maxNumOfPropInPropInventory]
+        private Consumables[] propInventory = new Consumables[GameData.maxNumOfPropInPropInventory]
                                                 {new NullProp(), new NullProp(),new NullProp() };
-        public Prop[] PropInventory
+        public Consumables[] PropInventory
         {
             get => propInventory;
             set
@@ -616,19 +615,19 @@ namespace GameClass.GameObj
         /// 使用物品栏中的道具
         /// </summary>
         /// <returns>被使用的道具</returns>
-        public Prop UseProp(int indexing)
+        public Consumables UseProp(int indexing)
         {
             if (indexing < 0 || indexing >= GameData.maxNumOfPropInPropInventory)
                 return new NullProp();
             lock (gameObjLock)
             {
-                Prop prop = propInventory[indexing];
+                Consumables prop = propInventory[indexing];
                 PropInventory[indexing] = new NullProp();
                 return prop;
             }
         }
 
-        public Prop UseProp(PropType propType)
+        public Consumables UseProp(PropType propType)
         {
             lock (gameObjLock)
             {
@@ -638,7 +637,7 @@ namespace GameClass.GameObj
                     {
                         if (PropInventory[indexing].GetPropType() != PropType.Null)
                         {
-                            Prop prop = PropInventory[indexing];
+                            Consumables prop = PropInventory[indexing];
                             PropInventory[indexing] = new NullProp();
                             return prop;
                         }
@@ -649,7 +648,7 @@ namespace GameClass.GameObj
                     {
                         if (PropInventory[indexing].GetPropType() == propType)
                         {
-                            Prop prop = PropInventory[indexing];
+                            Consumables prop = PropInventory[indexing];
                             PropInventory[indexing] = new NullProp();
                             return prop;
                         }
@@ -788,7 +787,7 @@ namespace GameClass.GameObj
         {
             if (IsRemoved)
                 return true;
-            if (targetObj.Type == GameObjType.Prop)
+            if (targetObj.Type == GameObjType.Consumables)
             {
                 return true;
             }

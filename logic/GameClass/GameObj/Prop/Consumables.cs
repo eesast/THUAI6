@@ -3,13 +3,13 @@ using Preparation.Utility;
 
 namespace GameClass.GameObj
 {
-    public abstract class Prop : ObjOfCharacter
+    public abstract class Consumables : ObjOfCharacter
     {
         public override bool IsRigid => true;
 
         public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet
+            if (targetObj.Type == GameObjType.Consumables || targetObj.Type == GameObjType.Bullet
                 || targetObj.Type == GameObjType.Character || targetObj.Type == GameObjType.Chest)
                 return true;
             return false;
@@ -19,8 +19,8 @@ namespace GameClass.GameObj
 
         public abstract PropType GetPropType();
 
-        public Prop(XY initPos, int radius = GameData.PropRadius) :
-            base(initPos, radius, GameObjType.Prop)
+        public Consumables(XY initPos, int radius = GameData.PropRadius) :
+            base(initPos, radius, GameObjType.Consumables)
         {
             this.canMove = false;
             this.MoveSpeed = GameData.PropMoveSpeed;
@@ -31,32 +31,16 @@ namespace GameClass.GameObj
     ///// <summary>
     ///// 坑人地雷
     ///// </summary>
-    // public abstract class DebuffMine : Prop
+    // public abstract class DebuffMine : Consumables
     //{
     //     public DebuffMine(XYPosition initPos) : base(initPos) { }
     // }
-
-    public sealed class CraftingBench : Prop
-    {
-        public override bool IsRigid => true;
-        public override bool IgnoreCollideExecutor(IGameObj targetObj) => false;
-        public CraftingBench(XY initPos) :
-            base(initPos)
-        {
-        }
-        public override PropType GetPropType() => PropType.CraftingBench;
-    }
-
-    public abstract class BuffProp : Prop
-    {
-        public BuffProp(XY initPos) : base(initPos) { }
-    }
 
     #region 所有增益道具
     /// <summary>
     /// 增加速度
     /// </summary>
-    public sealed class AddSpeed : BuffProp
+    public sealed class AddSpeed : Consumables
     {
         public AddSpeed(XY initPos) :
             base(initPos)
@@ -68,7 +52,7 @@ namespace GameClass.GameObj
     /// <summary>
     /// 复活甲
     /// </summary>
-    public sealed class AddLifeOrClairaudience : BuffProp
+    public sealed class AddLifeOrClairaudience : Consumables
     {
         public AddLifeOrClairaudience(XY initPos) :
             base(initPos)
@@ -76,7 +60,7 @@ namespace GameClass.GameObj
         }
         public override PropType GetPropType() => PropType.AddLifeOrClairaudience;
     }
-    public sealed class AddHpOrAp : BuffProp
+    public sealed class AddHpOrAp : Consumables
     {
         public AddHpOrAp(XY initPos) :
             base(initPos)
@@ -84,7 +68,7 @@ namespace GameClass.GameObj
         }
         public override PropType GetPropType() => PropType.AddHpOrAp;
     }
-    public sealed class RecoveryFromDizziness : BuffProp
+    public sealed class RecoveryFromDizziness : Consumables
     {
         public RecoveryFromDizziness(XY initPos) :
             base(initPos)
@@ -95,35 +79,35 @@ namespace GameClass.GameObj
     /// <summary>
     /// 矛盾
     /// </summary>
-    public sealed class ShieldOrSpear : BuffProp
+    public sealed class ShieldOrSpear : Consumables
     {
         public ShieldOrSpear(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.ShieldOrSpear;
     }
-    public sealed class Key3 : BuffProp
+    public sealed class Key3 : Consumables
     {
         public Key3(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.Key3;
     }
-    public sealed class Key5 : BuffProp
+    public sealed class Key5 : Consumables
     {
         public Key5(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.Key5;
     }
-    public sealed class Key6 : BuffProp
+    public sealed class Key6 : Consumables
     {
         public Key6(XY initPos) : base(initPos)
         {
         }
         public override PropType GetPropType() => PropType.Key6;
     }
-    public sealed class NullProp : Prop
+    public sealed class NullProp : Consumables
     {
         public NullProp() : base(new XY(1, 1))
         {
@@ -159,12 +143,10 @@ namespace GameClass.GameObj
     // #endregion
     public static class PropFactory
     {
-        public static Prop GetProp(PropType propType, XY pos)
+        public static Consumables GetConsumables(PropType propType, XY pos)
         {
             switch (propType)
             {
-                case PropType.CraftingBench:
-                    return new CraftingBench(pos);
                 case PropType.AddSpeed:
                     return new AddSpeed(pos);
                 case PropType.AddLifeOrClairaudience:

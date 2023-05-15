@@ -11,7 +11,7 @@ namespace Gaming
         readonly SkillManager skillManager;
         private partial class SkillManager
         {
-            public bool UseActiveSkill(Character character, ActiveSkillType activeSkillType)
+            public bool UseActiveSkill(Character character, ActiveSkillType activeSkillType, int parameter)
             {
                 if (character.Occupation.ListOfIActiveSkill.Contains(activeSkillType))
                     switch (activeSkillType)

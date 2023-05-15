@@ -346,7 +346,7 @@ namespace Server
                 return Task.FromResult(boolRes);
             }
             var gameID = communicationToGameID[request.PlayerId];
-            boolRes.ActSuccess = game.UseActiveSkill(gameID, request.SkillId);
+            boolRes.ActSuccess = game.UseActiveSkill(gameID, request.SkillId, request.SkillParam);
             return Task.FromResult(boolRes);
         }
 

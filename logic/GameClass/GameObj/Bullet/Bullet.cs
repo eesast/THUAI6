@@ -35,7 +35,7 @@ namespace GameClass.GameObj
         public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
             if (targetObj == Parent) return true;
-            if (targetObj.Type == GameObjType.Consumables || targetObj.Type == GameObjType.Bullet)
+            if (targetObj.Type == GameObjType.Gadget || targetObj.Type == GameObjType.Bullet)
                 return true;
             return false;
         }

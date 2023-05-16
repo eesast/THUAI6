@@ -216,7 +216,9 @@ namespace Gaming
                         {
                             if (character.IsGhost() &&
                                 (character.PlayerState == PlayerStateType.TryingToAttack || character.PlayerState == PlayerStateType.Swinging
-                                || character.PlayerState == PlayerStateType.UsingSkill || character.PlayerState == PlayerStateType.LockingOrOpeningTheDoor || character.PlayerState == PlayerStateType.ClimbingThroughWindows)
+                                || character.PlayerState == PlayerStateType.UsingSkill
+                                || character.PlayerState == PlayerStateType.LockingTheDoor || character.PlayerState == PlayerStateType.OpeningTheDoor
+                                || character.PlayerState == PlayerStateType.ClimbingThroughWindows)
                                 && gameMap.CanSee(player, character))
                             {
                                 if (characterManager.BeStunned(character, GameData.timeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)) > 0)

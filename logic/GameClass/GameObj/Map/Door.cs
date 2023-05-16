@@ -1,5 +1,7 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using System;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
@@ -32,30 +34,123 @@ namespace GameClass.GameObj
         public override bool IsRigid => !isOpen;
         public override ShapeType Shape => ShapeType.Square;
 
-        private bool isOpen = true;
-        public bool IsOpen
+        private Character? whoLockOrOpen = null;
+        public Character? WhoLockOrOpen
         {
-            get => isOpen;
-            set
+            get
             {
                 lock (gameObjLock)
-                    isOpen = value;
+                    return whoLockOrOpen;
             }
         }
 
-        private int openOrLockDegree = 0;
-        public int OpenOrLockDegree
+        private bool isOpen = true;
+        public bool IsOpen
         {
-            get => openOrLockDegree;
+            get
+            {
+                lock (gameObjLock)
+                    return isOpen;
+            }
+        }
+
+        private int lockDegree = 0;
+        public int LockDegree
+        {
+            get
+            {
+                lock (gameObjLock)
+                    return lockDegree;
+            }
             set
             {
-                if (value > 0)
-                    lock (gameObjLock)
-                        openOrLockDegree = (value > GameData.degreeOfLockingOrOpeningTheDoor) ? GameData.degreeOfLockingOrOpeningTheDoor : value;
-                else
-                    lock (gameObjLock)
-                        openOrLockDegree = 0;
+                value = (value > GameData.degreeOfLockingOrOpeningTheDoor) ? GameData.degreeOfLockingOrOpeningTheDoor : value;
+                lock (gameObjLock)
+                    lockDegree = value;
             }
+        }
+
+        private long openStartTime = 0;
+        public long OpenStartTime
+        {
+            get
+            {
+                lock (gameObjLock)
+                    return openStartTime;
+            }
+        }
+
+        public bool TryOpen(Character character)
+        {
+            lock (gameObjLock)
+            {
+                if (isOpen) return false;
+                if (whoLockOrOpen != null) return false;
+                openStartTime = Environment.TickCount64;
+                whoLockOrOpen = character;
+                return true;
+            }
+        }
+        public void StopOpen()
+        {
+            lock (gameObjLock)
+            {
+                if (whoLockOrOpen != null)
+                {
+                    if (Environment.TickCount64 - openStartTime >= GameData.degreeOfLockingOrOpeningTheDoor)
+                        isOpen = true;
+                    whoLockOrOpen = null;
+                }
+            }
+        }
+        public void FinishOpen()
+        {
+            lock (gameObjLock)
+            {
+                isOpen = true;
+                whoLockOrOpen = null;
+            }
+        }
+
+        public bool TryLock(Character character)
+        {
+            lock (gameObjLock)
+            {
+                if (!isOpen) return false;
+                if (whoLockOrOpen != null) return false;
+                lockDegree = 0;
+                whoLockOrOpen = character;
+                return true;
+            }
+        }
+        public void StopLock()
+        {
+            lock (gameObjLock)
+            {
+                if (lockDegree >= GameData.degreeOfLockingOrOpeningTheDoor)
+                    isOpen = true;
+                whoLockOrOpen = null;
+            }
+        }
+        public void FinishLock()
+        {
+            lock (gameObjLock)
+            {
+                isOpen = false;
+                whoLockOrOpen = null;
+            }
+        }
+
+        public void ForceToOpen()
+        {
+            Character? character;
+            lock (gameObjLock)
+            {
+                character = whoLockOrOpen;
+                whoLockOrOpen = null;
+                isOpen = true;
+            }
+            if (character != null) character.SetPlayerState();
         }
     }
 }

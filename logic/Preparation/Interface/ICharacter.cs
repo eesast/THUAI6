@@ -5,10 +5,10 @@ namespace Preparation.Interface
 {
     public interface ICharacter : IGameObj
     {
-        public int TeamID { get; }
+        public long TeamID { get; }
         public int HP { get; set; }
-        public int Score { get; }
-        public void AddScore(int add);
+        public long Score { get; }
+        public void AddScore(long add);
         public double Vampire { get; }
         public PlayerStateType PlayerState { get; }
         public BulletType BulletOfPlayer { get; set; }

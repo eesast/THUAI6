@@ -197,14 +197,25 @@ namespace Gaming
             }
             return false;
         }
-        public bool LockOrOpenDoor(long playerID)
+        public bool LockDoor(long playerID)
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
             Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
-                return actionManager.LockOrOpenDoor(player);
+                return actionManager.LockDoor(player);
+            }
+            return false;
+        }
+        public bool OpenDoor(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayerToAction(playerID);
+            if (player != null)
+            {
+                return actionManager.OpenDoor(player);
             }
             return false;
         }

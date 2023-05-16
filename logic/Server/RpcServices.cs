@@ -471,7 +471,7 @@ namespace Server
                 return Task.FromResult(boolRes);
             }
             var gameID = communicationToGameID[request.PlayerId];
-            boolRes.ActSuccess = game.LockOrOpenDoor(gameID);
+            boolRes.ActSuccess = game.OpenDoor(gameID);
             return Task.FromResult(boolRes);
         }
 
@@ -487,7 +487,7 @@ namespace Server
                 return Task.FromResult(boolRes);
             }
             var gameID = communicationToGameID[request.PlayerId];
-            boolRes.ActSuccess = game.LockOrOpenDoor(gameID);
+            boolRes.ActSuccess = game.LockDoor(gameID);
             return Task.FromResult(boolRes);
         }
 

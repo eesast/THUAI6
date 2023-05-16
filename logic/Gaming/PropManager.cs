@@ -21,7 +21,7 @@ namespace Gaming
 
             public void UseProp(Character player, PropType propType)
             {
-                if (player.IsRemoved || player.CharacterType == CharacterType.Robot)
+                if (player.CharacterType == CharacterType.Robot || player.IsRemoved)
                     return;
                 Gadget prop = player.UseProp(propType);
                 switch (prop.GetPropType())

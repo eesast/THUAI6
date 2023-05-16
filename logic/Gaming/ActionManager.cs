@@ -389,67 +389,133 @@ namespace Gaming
 
                 return true;
             }
-            public bool LockOrOpenDoor(Character player)
+            public bool LockDoor(Character player)
             {
                 if (player.CharacterType == CharacterType.Robot) return false;
                 Door? doorToLock = (Door?)gameMap.OneForInteract(player.Position, GameObjType.Door);
                 if (doorToLock == null) return false;
-                bool flag = false;
-                foreach (Gadget prop in player.PropInventory)
+
+                PropType propType = doorToLock.DoorNum switch
                 {
-                    switch (prop.GetPropType())
-                    {
-                        case PropType.Key3:
-                            if (doorToLock.DoorNum == 3)
-                                flag = true;
-                            break;
-                        case PropType.Key5:
-                            if (doorToLock.DoorNum == 5)
-                                flag = true;
-                            break;
-                        case PropType.Key6:
-                            if (doorToLock.DoorNum == 6)
-                                flag = true;
-                            break;
-                        default:
-                            break;
-                    }
-                    if (flag) break;
+                    3 => PropType.Key3,
+                    5 => PropType.Key5,
+                    _ => PropType.Key6,
+                };
+
+                if (!player.UseTool(propType)) return false;
+
+                long stateNum = player.SetPlayerState(PlayerStateType.LockingTheDoor, doorToLock);
+                if (stateNum == -1)
+                {
+                    player.ReleaseTool(propType);
+                    return false;
                 }
-                if (!flag) return false;
 
-                if (doorToLock.OpenOrLockDegree > 0 || gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character) != null)
-                    return false;
-                if (!(player.Commandable()) || player.PlayerState == PlayerStateType.LockingOrOpeningTheDoor)
-                    return false;
-
-                player.SetPlayerState(PlayerStateType.LockingOrOpeningTheDoor);
-                long threadNum = player.StateNum;
                 new Thread
-          (
-              () =>
-              {
-                  new FrameRateTaskExecutor<int>(
-                      loopCondition: () => flag && threadNum == player.StateNum && gameMap.Timer.IsGaming && doorToLock.OpenOrLockDegree < GameData.degreeOfLockingOrOpeningTheDoor,
-                      loopToDo: () =>
-                      {
-                          flag = ((gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character)) == null);
-                          doorToLock.OpenOrLockDegree += GameData.frameDuration * player.SpeedOfOpeningOrLocking;
-                      },
-                      timeInterval: GameData.frameDuration,
-                      finallyReturn: () => 0
-                  )
-                      .Start();
-                  if (doorToLock.OpenOrLockDegree >= GameData.degreeOfLockingOrOpeningTheDoor)
-                  {
-                      doorToLock.IsOpen = (!doorToLock.IsOpen);
-                  }
-                  if (threadNum == player.StateNum)
-                      player.SetPlayerState();
-                  doorToLock.OpenOrLockDegree = 0;
-              }
+                (
+                    () =>
+                    {
+                        player.ThreadNum.WaitOne();
+                        if (stateNum != player.StateNum)
+                        {
+                            player.ReleaseTool(propType);
+                            player.ThreadNum.Release();
+                        }
+                        else
+                        {
+                            if (!doorToLock.TryLock(player))
+                            {
+                                player.ReleaseTool(propType);
+                                player.SetPlayerState();
+                                player.ThreadNum.Release();
+                            }
+                            else
+                            {
+                                Thread.Sleep(GameData.checkInterval);
+                                new FrameRateTaskExecutor<int>(
+                                loopCondition: () => stateNum == player.StateNum && gameMap.Timer.IsGaming && doorToLock.LockDegree < GameData.degreeOfLockingOrOpeningTheDoor,
+                                loopToDo: () =>
+                                {
+                                    if ((gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character)) != null)
+                                        return false;
+                                    doorToLock.LockDegree += GameData.checkInterval * player.SpeedOfOpeningOrLocking;
+                                    return true;
+                                },
+                          timeInterval: GameData.checkInterval,
+                          finallyReturn: () => 0
+                          )
+                          .Start();
+                                doorToLock.StopLock();
+                                if (stateNum == player.StateNum) player.SetPlayerState();
+                                player.ReleaseTool(propType);
+                                player.ThreadNum.Release();
+                            }
+                        }
+                    }
+                 )
+                { IsBackground = true }.Start();
 
-          )
+                return true;
+            }
+
+            public bool OpenDoor(Character player)
+            {
+                if (player.CharacterType == CharacterType.Robot) return false;
+                Door? doorToLock = (Door?)gameMap.OneForInteract(player.Position, GameObjType.Door);
+                if (doorToLock == null) return false;
+
+                PropType propType = doorToLock.DoorNum switch
+                {
+                    3 => PropType.Key3,
+                    5 => PropType.Key5,
+                    _ => PropType.Key6,
+                };
+
+                if (!player.UseTool(propType)) return false;
+
+                long stateNum = player.SetPlayerState(PlayerStateType.OpeningTheDoor, doorToLock);
+                if (stateNum == -1)
+                {
+                    player.ReleaseTool(propType);
+                    return false;
+                }
+
+                new Thread
+                (
+                    () =>
+                    {
+                        player.ThreadNum.WaitOne();
+                        if (stateNum != player.StateNum)
+                        {
+                            player.ReleaseTool(propType);
+                            player.ThreadNum.Release();
+                        }
+                        else
+                        {
+                            if (!doorToLock.TryOpen(player))
+                            {
+                                player.ReleaseTool(propType);
+                                player.SetPlayerState();
+                                player.ThreadNum.Release();
+                            }
+                            else
+                            {
+                                Thread.Sleep(GameData.degreeOfLockingOrOpeningTheDoor / player.SpeedOfOpeningOrLocking);
+
+                                lock (player.ActionLock)
+                                {
+                                    if (stateNum == player.StateNum)
+                                    {
+                                        player.SetPlayerState();
+                                        doorToLock.StopOpen();
+                                        player.ReleaseTool(propType);
+                                        player.ThreadNum.Release();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                 )
                 { IsBackground = true }.Start();
 
                 return true;

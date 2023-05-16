@@ -256,7 +256,7 @@ namespace Server
                 {
                     X = door.Position.x,
                     Y = door.Position.y,
-                    Progress = door.OpenOrLockDegree,
+                    Progress = door.LockDegree,
                     IsOpen = door.IsOpen
                 }
             };

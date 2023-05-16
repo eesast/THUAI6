@@ -341,12 +341,14 @@ namespace GameClass.GameObj
             set
             {
                 lock (vampireLock)
+                {
                     if (value > 1)
                         vampire = 1;
                     else if (value < 0)
                         vampire = 0;
                     else
                         vampire = value;
+                }
             }
         }
         public double OriVampire { get; protected set; }
@@ -394,7 +396,8 @@ namespace GameClass.GameObj
         {
             lock (actionLock)
             {
-                return (playerState == PlayerStateType.LockingOrOpeningTheDoor || playerState == PlayerStateType.Fixing || playerState == PlayerStateType.OpeningTheChest);
+                return (playerState == PlayerStateType.LockingTheDoor || playerState == PlayerStateType.OpeningTheDoor
+                            || playerState == PlayerStateType.Fixing || playerState == PlayerStateType.OpeningTheChest);
             }
         }
         public bool NullOrMoving()
@@ -465,41 +468,75 @@ namespace GameClass.GameObj
                         else return -1;
 
                     case PlayerStateType.TryingToAttack:
-                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows)
+                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows
+                            && value != PlayerStateType.LockingTheDoor && value != PlayerStateType.OpeningTheDoor)
                             return ChangePlayerState(value, gameObj);
                         else return -1;
                     case PlayerStateType.Stunned:
                     case PlayerStateType.Charmed:
-                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows && value != PlayerStateType.Swinging)
+                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows
+                            && value != PlayerStateType.LockingTheDoor && value != PlayerStateType.OpeningTheDoor
+                            && value != PlayerStateType.Swinging)
                             return ChangePlayerState(value, gameObj);
                         else return -1;
                     case PlayerStateType.Swinging:
-                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows)
+                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows
+                            && value != PlayerStateType.LockingTheDoor && value != PlayerStateType.OpeningTheDoor)
                         {
-                            ThreadNum.Release();
-                            return ChangePlayerState(value, gameObj);
+                            try
+                            {
+                                return ChangePlayerState(value, gameObj);
+                            }
+                            finally
+                            {
+                                ThreadNum.Release();
+                            }
                         }
                         else return -1;
                     case PlayerStateType.ClimbingThroughWindows:
-                        if (value != PlayerStateType.Moving)
+                        if (value != PlayerStateType.Moving && value != PlayerStateType.LockingTheDoor && value != PlayerStateType.OpeningTheDoor)
                         {
                             Window window = (Window)WhatInteractingWith!;
-                            window.FinishClimbing();
-                            if (window.Stage.x == 0)
-                                ThreadNum.Release();
-                            else ReSetPos(window.Stage);
-                            return ChangePlayerState(value, gameObj);
+                            try
+                            {
+                                window.FinishClimbing();
+                                return ChangePlayerState(value, gameObj);
+                            }
+                            finally
+                            {
+                                if (window.Stage.x == 0)
+                                    ThreadNum.Release();
+                                else ReSetPos(window.Stage);
+                            }
                         }
                         else return -1;
 
                     case PlayerStateType.OpeningTheChest:
-                        ((Chest)WhatInteractingWith!).StopOpen();
+                        ((Chest)whatInteractingWith!).StopOpen();
                         return ChangePlayerState(value, gameObj);
                     case PlayerStateType.OpeningTheDoorway:
-                        Doorway doorway = (Doorway)WhatInteractingWith!;
+                        Doorway doorway = (Doorway)whatInteractingWith!;
                         doorway.StopOpenning();
                         return ChangePlayerState(value, gameObj);
 
+                    case PlayerStateType.OpeningTheDoor:
+                        Door door = (Door)whatInteractingWith!;
+                        try
+                        {
+                            door.StopOpen();
+                            ReleaseTool(door.DoorNum switch
+                            {
+                                3 => PropType.Key3,
+                                5 => PropType.Key5,
+                                _ => PropType.Key6,
+                            }
+                            );
+                            return ChangePlayerState(value, gameObj);
+                        }
+                        finally
+                        {
+                            ThreadNum.Release();
+                        }
                     default:
                         return ChangePlayerState(value, gameObj);
                 }
@@ -636,6 +673,36 @@ namespace GameClass.GameObj
                 }
             }
             return new NullProp();
+        }
+
+        public bool UseTool(PropType propType)
+        {
+            lock (inventoryLock)
+            {
+                for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
+                {
+                    if (PropInventory[indexing].GetPropType() == propType && PropInventory[indexing].IsUsable())
+                    {
+                        return ((Tool)PropInventory[indexing]).IsUsed = true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public void ReleaseTool(PropType propType)
+        {
+            lock (inventoryLock)
+            {
+                for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
+                {
+                    if (PropInventory[indexing].GetPropType() == propType && ((Tool)PropInventory[indexing]).IsUsed)
+                    {
+                        ((Tool)PropInventory[indexing]).IsUsed = false;
+                        break;
+                    }
+                }
+            }
         }
 
         /// <summary>

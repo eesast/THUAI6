@@ -13,6 +13,8 @@ namespace GameClass.GameObj
         public ReaderWriterLockSlim HPReadWriterLock => hpReaderWriterLock;
         private readonly object vampireLock = new();
         public object VampireLock => vampire;
+        private readonly object inventoryLock = new();
+        public object InventoryLock => inventoryLock;
 
         #region 装弹、攻击相关的基本属性及方法
         /// <summary>
@@ -572,14 +574,15 @@ namespace GameClass.GameObj
                                                 {new NullProp(), new NullProp(),new NullProp() };
         public Gadget[] PropInventory
         {
-            get => propInventory;
+            get
+            {
+                lock (inventoryLock)
+                    return propInventory;
+            }
             set
             {
-                lock (gameObjLock)
-                {
+                lock (inventoryLock)
                     propInventory = value;
-                    Debugger.Output(this, " prop becomes " + (PropInventory == null ? "null" : PropInventory.ToString()));
-                }
             }
         }
 
@@ -591,9 +594,10 @@ namespace GameClass.GameObj
         {
             if (indexing < 0 || indexing >= GameData.maxNumOfPropInPropInventory)
                 return new NullProp();
-            lock (gameObjLock)
+            lock (inventoryLock)
             {
                 Gadget prop = propInventory[indexing];
+                if (!prop.IsUsable()) return new NullProp();
                 PropInventory[indexing] = new NullProp();
                 return prop;
             }
@@ -601,13 +605,13 @@ namespace GameClass.GameObj
 
         public Gadget UseProp(PropType propType)
         {
-            lock (gameObjLock)
+            if (propType == PropType.Null)
             {
-                if (propType == PropType.Null)
+                lock (inventoryLock)
                 {
                     for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
                     {
-                        if (PropInventory[indexing].GetPropType() != PropType.Null)
+                        if (PropInventory[indexing].IsUsable())
                         {
                             Gadget prop = PropInventory[indexing];
                             PropInventory[indexing] = new NullProp();
@@ -615,18 +619,23 @@ namespace GameClass.GameObj
                         }
                     }
                 }
-                else
+            }
+            else
+            {
+                lock (inventoryLock)
+                {
                     for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
                     {
-                        if (PropInventory[indexing].GetPropType() == propType)
+                        if (PropInventory[indexing].GetPropType() == propType && PropInventory[indexing].IsUsable())
                         {
                             Gadget prop = PropInventory[indexing];
                             PropInventory[indexing] = new NullProp();
                             return prop;
                         }
                     }
-                return new NullProp();
+                }
             }
+            return new NullProp();
         }
 
         /// <summary>
@@ -635,9 +644,10 @@ namespace GameClass.GameObj
         public int IndexingOfAddProp()
         {
             int indexing = 0;
-            for (; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
-                if (PropInventory[indexing].GetPropType() == PropType.Null)
-                    break;
+            lock (inventoryLock)
+                for (; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
+                    if (propInventory[indexing].GetPropType() == PropType.Null)
+                        break;
             return indexing;
         }
 

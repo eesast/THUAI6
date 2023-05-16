@@ -18,6 +18,7 @@ namespace GameClass.GameObj
 
         public override ShapeType Shape => ShapeType.Square;
 
+        public abstract bool IsUsable();
         public abstract PropType GetPropType();
 
         public Gadget(XY initPos, int radius = GameData.PropRadius) :
@@ -45,10 +46,12 @@ namespace GameClass.GameObj
                 }
             }
         }
+        public override bool IsUsable() => !IsUsed;
         public Tool(XY initPos) : base(initPos) { }
     }
     public abstract class Consumables : Gadget
     {
+        public override bool IsUsable() => true;
         public Consumables(XY initPos) : base(initPos) { }
     }
 
@@ -134,6 +137,7 @@ namespace GameClass.GameObj
     }
     public sealed class NullProp : Gadget
     {
+        public override bool IsUsable() => false;
         public NullProp() : base(new XY(1, 1))
         {
         }

@@ -73,8 +73,7 @@ namespace Gaming
             /// <returns></returns>
             public bool PickProp(Character player, PropType propType = PropType.Null)
             {
-                if (player.IsRemoved)
-                    return false;
+                if (!player.Commandable()) return false;
                 int indexing = player.IndexingOfAddProp();
                 if (indexing == GameData.maxNumOfPropInPropInventory)
                     return false;

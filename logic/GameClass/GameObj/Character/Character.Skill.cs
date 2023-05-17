@@ -11,37 +11,32 @@ namespace GameClass.GameObj
         private readonly IOccupation occupation;
         public IOccupation Occupation => occupation;
 
-        private Dictionary<ActiveSkillType, int> timeUntilActiveSkillAvailable = new();
-        public Dictionary<ActiveSkillType, int> TimeUntilActiveSkillAvailable => timeUntilActiveSkillAvailable;
+        private Dictionary<ActiveSkillType, ActiveSkill> activeSkillDictionary = new();
+        public Dictionary<ActiveSkillType, ActiveSkill> ActiveSkillDictionary => activeSkillDictionary;
 
-        private Dictionary<ActiveSkillType, IActiveSkill> iActiveSkillDictionary = new();
-        public Dictionary<ActiveSkillType, IActiveSkill> IActiveSkillDictionary => iActiveSkillDictionary;
-
-        public IActiveSkill FindIActiveSkill(ActiveSkillType activeSkillType)
+        public ActiveSkill FindActiveSkill(ActiveSkillType activeSkillType)
         {
             if (Occupation.ListOfIActiveSkill.Contains(activeSkillType))
             {
-                return IActiveSkillDictionary[activeSkillType];
+                return ActiveSkillDictionary[activeSkillType];
             }
             return new NullSkill();
         }
 
         public bool SetTimeUntilActiveSkillAvailable(ActiveSkillType activeSkillType, int timeUntilActiveSkillAvailable)
         {
-            if (TimeUntilActiveSkillAvailable.ContainsKey(activeSkillType))
+            if (Occupation.ListOfIActiveSkill.Contains(activeSkillType))
             {
-                lock (gameObjLock)
-                    this.timeUntilActiveSkillAvailable[activeSkillType] = (timeUntilActiveSkillAvailable > 0) ? timeUntilActiveSkillAvailable : 0;
+                ActiveSkillDictionary[activeSkillType].TimeUntilActiveSkillAvailable = (timeUntilActiveSkillAvailable > 0) ? timeUntilActiveSkillAvailable : 0;
                 return true;
             }
             return false;
         }
         public bool AddTimeUntilActiveSkillAvailable(ActiveSkillType activeSkillType, int addTimeUntilActiveSkillAvailable)
         {
-            if (TimeUntilActiveSkillAvailable.ContainsKey(activeSkillType))
+            if (Occupation.ListOfIActiveSkill.Contains(activeSkillType))
             {
-                lock (gameObjLock)
-                    this.timeUntilActiveSkillAvailable[activeSkillType] = (timeUntilActiveSkillAvailable[activeSkillType] + addTimeUntilActiveSkillAvailable > 0) ? timeUntilActiveSkillAvailable[activeSkillType] + addTimeUntilActiveSkillAvailable : 0;
+                ActiveSkillDictionary[activeSkillType].TimeUntilActiveSkillAvailable += addTimeUntilActiveSkillAvailable;
                 return true;
             }
             return false;
@@ -72,12 +67,10 @@ namespace GameClass.GameObj
 
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)
             {
-                this.IActiveSkillDictionary.Add(activeSkill, SkillFactory.FindIActiveSkill(activeSkill));
-                this.TimeUntilActiveSkillAvailable.Add(activeSkill, 0);
+                this.ActiveSkillDictionary.Add(activeSkill, SkillFactory.FindActiveSkill(activeSkill));
             }
 
-            // UsePassiveSkill();  //创建player时开始被动技能，这一过程也可以放到gamestart时进行
-            // 这可以放在AddPlayer中做
+            // UsePassiveSkill();  //这一过程放到gamestart时进行
 
             Debugger.Output(this, "constructed!");
         }

@@ -13,7 +13,7 @@ namespace GameClass.GameObj
 
         public abstract PropType GetPropType();
 
-        public Item(XY initPos, int radius = GameData.PropRadius) :
+        public Item(XY initPos, int radius = GameData.propRadius) :
             base(initPos, radius, GameObjType.Item)
         {
             this.canMove = false;

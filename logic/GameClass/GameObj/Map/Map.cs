@@ -193,7 +193,7 @@ namespace GameClass.GameObj
                 {
                     if (playerID == person.ID)
                     {
-                        if (person.CharacterType == CharacterType.TechOtaku && person.FindIActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed)
+                        if (person.CharacterType == CharacterType.TechOtaku && person.FindActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed)
                         {
                             Debugger.Output(person, person.PlayerID.ToString());
                             foreach (Character character in gameObjDict[GameObjType.Character])

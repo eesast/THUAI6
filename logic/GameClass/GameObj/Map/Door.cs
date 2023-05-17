@@ -150,7 +150,12 @@ namespace GameClass.GameObj
                 whoLockOrOpen = null;
                 isOpen = true;
             }
-            if (character != null) character.SetPlayerState();
+            if (character != null)
+            {
+                lock (character.ActionLock)
+                    if (character.PlayerState == PlayerStateType.OpeningTheDoor)
+                        character.SetPlayerState();
+            }
         }
     }
 }

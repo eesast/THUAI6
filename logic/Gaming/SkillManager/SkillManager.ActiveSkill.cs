@@ -15,7 +15,7 @@ namespace Gaming
             {
 
                 if ((!player.Commandable())) return false;
-                IActiveSkill skill = player.FindIActiveSkill(ActiveSkillType.CanBeginToCharge);
+                ActiveSkill skill = player.FindActiveSkill(ActiveSkillType.CanBeginToCharge);
                 Debugger.Output(player, "can begin to charge!");
 
 
@@ -31,7 +31,7 @@ namespace Gaming
             public bool ShowTime(Character player)
             {
                 if ((!player.Commandable())) return false;
-                IActiveSkill skill = player.FindIActiveSkill(ActiveSkillType.ShowTime);
+                ActiveSkill skill = player.FindActiveSkill(ActiveSkillType.ShowTime);
 
                 return ActiveSkillEffect(skill, player, () =>
                 {
@@ -93,7 +93,7 @@ namespace Gaming
             public static bool BecomeInvisible(Character player)
             {
                 if ((!player.Commandable())) return false;
-                IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.BecomeInvisible);
+                ActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.BecomeInvisible);
                 return ActiveSkillEffect(activeSkill, player, () =>
                 {
                     player.AddScore(GameData.ScoreBecomeInvisible);
@@ -106,20 +106,21 @@ namespace Gaming
 
             public bool UseRobot(Character player)
             {
-                IGolem? golem = (IGolem?)(((SummonGolem)player.FindIActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned);
-                if ((!player.Commandable()) || ((SummonGolem)player.FindIActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned == null) return false;
+                /*
+                IGolem? golem = (IGolem?)(((SummonGolem)player.FindActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned);
+                if ((!player.Commandable()) || ((SummonGolem)player.FindActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned == null) return false;
                 Debugger.Output(player, "use robot!");
-                IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.UseRobot);
+                IActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.UseRobot);
                 activeSkill.IsBeingUsed = (activeSkill.IsBeingUsed) ? false : true;
                 if (activeSkill.IsBeingUsed) player.SetPlayerState(PlayerStateType.UsingSkill);
-                else player.SetPlayerState();
+                else player.SetPlayerState();*/
                 return true;
             }
 
             public static bool JumpyBomb(Character player)
             {
                 if ((!player.Commandable())) return false;
-                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.JumpyBomb), player, () =>
+                return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.JumpyBomb), player, () =>
                 {
                     player.BulletOfPlayer = BulletType.BombBomb;
                     Debugger.Output(player, "uses jumpybomb!");
@@ -131,7 +132,7 @@ namespace Gaming
             public bool WriteAnswers(Character player)
             {
                 if ((!player.Commandable())) return false;
-                IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.WriteAnswers);
+                ActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.WriteAnswers);
                 return ActiveSkillEffect(activeSkill, player, () =>
                 {
                     Generator? generator = (Generator?)gameMap.OneForInteract(player.Position, GameObjType.Generator);
@@ -149,25 +150,30 @@ namespace Gaming
 
             public bool SummonGolem(Character player)
             {
-                if ((!player.Commandable())) return false;
-                IActiveSkill activeSkill = player.FindIActiveSkill(ActiveSkillType.SummonGolem);
-                if (((SummonGolem)activeSkill).GolemSummoned != null) return false;
-                XY res = player.Position + new XY(player.FacingDirection, player.Radius * 2);
-                if (actionManager.moveEngine.CheckCollision(player, res) != null)
-                    return false;
-                Golem? golem = (Golem?)characterManager.AddPlayer(res, player.TeamID, player.PlayerID + GameData.numOfPeople, CharacterType.Robot, player);
-                if (golem == null) return false;
-                ((SummonGolem)activeSkill).GolemSummoned = golem;
+                ActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.SummonGolem);
+                long num = ((SummonGolem)activeSkill).AddGolem();
+                if (num >= GameData.maxSummonedGolemNum) return false;
+                num = (num + 1) * GameData.numOfPeople + player.PlayerID;
+
+                /*   if ((!player.Commandable())) return false;
+                   XY res = player.Position + new XY(player.FacingDirection, player.Radius * 2);
+                   if (actionManager.moveEngine.CheckCollision(player, res) != null)
+                       return false;
+                   Golem? golem = (Golem?)characterManager.AddPlayer(res, player.TeamID, player.PlayerID + GameData.numOfPeople, CharacterType.Robot, player);
+                   if (golem == null) return false;
+                   ((SummonGolem)activeSkill).GolemSummoned = golem;
+               */
                 return ActiveSkillEffect(activeSkill, player, () =>
                 {
                 },
                                                       () =>
                                                       { });
+
             }
 
             public static bool UseKnife(Character player)
             {
-                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.UseKnife), player, () =>
+                return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.UseKnife), player, () =>
                 {
                     player.BulletOfPlayer = BulletType.FlyingKnife;
                     Debugger.Output(player, "uses flyingknife!");
@@ -179,7 +185,7 @@ namespace Gaming
             public bool Howl(Character player)
             {
                 if ((!player.Commandable())) return false;
-                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Howl), player, () =>
+                return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.Howl), player, () =>
                 {
                     gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
                     try
@@ -207,7 +213,7 @@ namespace Gaming
             public bool Punish(Character player)
             {
                 if ((!player.Commandable())) return false;
-                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Punish), player, () =>
+                return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.Punish), player, () =>
                 {
                     gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
                     try
@@ -240,7 +246,7 @@ namespace Gaming
             public bool Rouse(Character player)
             {
                 if ((!player.Commandable())) return false;
-                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Rouse), player, () =>
+                return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.Rouse), player, () =>
                 {
                     gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
                     try
@@ -270,7 +276,7 @@ namespace Gaming
             public bool Encourage(Character player)
             {
                 if ((!player.Commandable())) return false;
-                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Encourage), player, () =>
+                return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.Encourage), player, () =>
                 {
                     gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
                     try
@@ -299,7 +305,7 @@ namespace Gaming
             public bool Inspire(Character player)
             {
                 if ((!player.Commandable())) return false;
-                return ActiveSkillEffect(player.FindIActiveSkill(ActiveSkillType.Inspire), player, () =>
+                return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.Inspire), player, () =>
                 {
                     gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
                     try
@@ -323,24 +329,23 @@ namespace Gaming
                                                       { });
             }
 
-            public static bool ActiveSkillEffect(IActiveSkill activeSkill, Character player, Action startSkill, Action endSkill)
+            public static bool ActiveSkillEffect(ActiveSkill activeSkill, Character player, Action startSkill, Action endSkill)
             {
-                lock (activeSkill.ActiveSkillLock)
+                lock (activeSkill.ActiveSkillUseLock)
                 {
-                    ActiveSkillType activeSkillType = SkillFactory.FindActiveSkillType(activeSkill);
-                    if (player.TimeUntilActiveSkillAvailable[activeSkillType] == 0)
+                    if (activeSkill.TimeUntilActiveSkillAvailable == 0)
                     {
-                        player.SetTimeUntilActiveSkillAvailable(activeSkillType, activeSkill.SkillCD);
+                        activeSkill.TimeUntilActiveSkillAvailable = activeSkill.SkillCD;
                         new Thread
                         (() =>
                         {
                             startSkill();
-                            activeSkill.IsBeingUsed = true;
+                            activeSkill.IsBeingUsed = 1;
                             new FrameRateTaskExecutor<int>(
                                 () => !player.IsRemoved,
                                 () =>
                                 {
-                                    player.AddTimeUntilActiveSkillAvailable(activeSkillType, -(int)GameData.frameDuration);
+                                    activeSkill.TimeUntilActiveSkillAvailable -= (int)GameData.frameDuration;
                                 },
                                 timeInterval: GameData.frameDuration,
                                 () => 0,
@@ -353,14 +358,14 @@ namespace Gaming
                                 .Start();
 
                             endSkill();
-                            activeSkill.IsBeingUsed = false;
+                            activeSkill.IsBeingUsed = 0;
                             Debugger.Output(player, "return to normal.");
 
                             new FrameRateTaskExecutor<int>(
-                                loopCondition: () => player.TimeUntilActiveSkillAvailable[activeSkillType] > 0 && !player.IsRemoved,
+                                loopCondition: () => activeSkill.TimeUntilActiveSkillAvailable > 0,
                                 loopToDo: () =>
                                 {
-                                    player.AddTimeUntilActiveSkillAvailable(activeSkillType, -(int)GameData.frameDuration);
+                                    activeSkill.TimeUntilActiveSkillAvailable -= (int)GameData.frameDuration;
                                 },
                                 timeInterval: GameData.frameDuration,
                                 finallyReturn: () => 0
@@ -371,7 +376,7 @@ namespace Gaming
                             }
                                 .Start();
 
-                            player.SetTimeUntilActiveSkillAvailable(activeSkillType, 0);
+                            activeSkill.TimeUntilActiveSkillAvailable = 0;
                             Debugger.Output(player, "ActiveSkill is ready.");
                         }
                         )

@@ -15,7 +15,7 @@ namespace Gaming  // 被动技能开局时就释放，持续到游戏结束
             public void Meditate(Character player)
             {
                 const int learningDegree = GameData.basicFixSpeed / 4;
-                WriteAnswers activeSkill = (WriteAnswers)player.FindIActiveSkill(ActiveSkillType.WriteAnswers);
+                WriteAnswers activeSkill = (WriteAnswers)player.FindActiveSkill(ActiveSkillType.WriteAnswers);
                 new Thread
                 (
                     () =>

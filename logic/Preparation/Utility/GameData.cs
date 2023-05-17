@@ -92,10 +92,10 @@ namespace Preparation.Utility
 
         public const int basicTreatSpeed = 100;
         public const int basicFixSpeed = 123;
-        public const int basicSpeedOfOpeningOrLocking = 4000;
+        public const int basicSpeedOfOpeningOrLocking = 5000;
         public const int basicStudentSpeedOfClimbingThroughWindows = 1222;
         public const int basicGhostSpeedOfClimbingThroughWindows = 2540;
-        public const int basicSpeedOfOpenChest = 1000;
+        public const int basicSpeedOfOpenChest = 1250;
 
         public const int basicHp = 3000000;                             // 初始血量
         public const int basicMaxGamingAddiction = 60000;//基本完全沉迷时间
@@ -228,10 +228,12 @@ namespace Preparation.Utility
 
         public const int checkIntervalWhenShowTime = 200;
         public const int addAddictionPer100msWhenShowTime = 300;
+
+        public const int maxSummonedGolemNum = 3;
         #endregion
         #region 道具相关
-        public const int PropRadius = numOfPosGridPerCell / 2;
-        public const int PropMoveSpeed = 3000;
+        public const int propRadius = characterRadius;
+        public const int propMoveSpeed = 3000;
         public const int PropMaxMoveDistance = 15 * numOfPosGridPerCell;
         public const long PropProduceTime = 20000;
         public const int PropDuration = 10000;

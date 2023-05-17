@@ -26,7 +26,7 @@ namespace Gaming
                         gameMap.Remove((GameObj)collisionObj);
                     }
                 }
-                if (player.FindIActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
+                if (player.FindActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
                 {
                     if (characterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge) > 0)
                         player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenCharge));
@@ -117,7 +117,7 @@ namespace Gaming
                           if (generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player))
                               gameMap.NumOfRepairedGenerators++;
                           if (generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
-                              player.SetPlayerState();
+                              player.SetPlayerState();//Num == player.StateNum
                       },
                       timeInterval: GameData.frameDuration,
                       finallyReturn: () => 0
@@ -215,7 +215,7 @@ namespace Gaming
                        loopToDo: () =>
                        {
                            if (playerTreated.AddDegreeOfTreatment(GameData.frameDuration * player.TreatSpeed, player))
-                               playerTreated.SetPlayerState();
+                               playerTreated.SetPlayerState();//
                        },
                        timeInterval: GameData.frameDuration,
                        finallyReturn: () => 0
@@ -426,7 +426,10 @@ namespace Gaming
                             if (!doorToLock.TryLock(player))
                             {
                                 player.ReleaseTool(propType);
-                                player.SetPlayerState();
+                                lock (player.ActionLock)
+                                {
+                                    if (stateNum == player.StateNum) player.SetPlayerState();
+                                }
                                 player.ThreadNum.Release();
                             }
                             else
@@ -495,7 +498,10 @@ namespace Gaming
                             if (!doorToLock.TryOpen(player))
                             {
                                 player.ReleaseTool(propType);
-                                player.SetPlayerState();
+                                lock (player.ActionLock)
+                                {
+                                    if (stateNum == player.StateNum) player.SetPlayerState();
+                                }
                                 player.ThreadNum.Release();
                             }
                             else

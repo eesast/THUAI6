@@ -121,10 +121,9 @@ namespace Server
                     BulletType = Transformation.ToBulletType((Preparation.Utility.BulletType)player.BulletOfPlayer)
                 }
             };
-
-            foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
-                msg.TrickerMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
-            for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count; ++i)
+            foreach (var keyValue in player.ActiveSkillDictionary)
+                msg.TrickerMessage.TimeUntilSkillAvailable.Add(keyValue.Value.TimeUntilActiveSkillAvailable);
+            for (int i = 0; i < GameData.maxNumOfSkill - player.ActiveSkillDictionary.Count; ++i)
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(-1);
 
             foreach (var value in player.PropInventory)

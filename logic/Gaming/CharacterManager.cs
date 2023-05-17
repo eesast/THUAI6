@@ -382,8 +382,8 @@ namespace Gaming
                     var parent = ((Golem)player).Parent;
                     if (parent != null && parent.CharacterType == CharacterType.TechOtaku)
                     {
-                        ((SummonGolem)(parent.FindActiveSkill(ActiveSkillType.SummonGolem))).GolemSummoned = null;
-                        player.FindActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed = false;
+                        ((SummonGolem)(parent.FindActiveSkill(ActiveSkillType.SummonGolem))).DeleteGolem((int)(player.PlayerID - parent.PlayerID) / GameData.numOfPeople - 1);
+                        //player.FindActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed = false;
                     }
                     return;
                 }

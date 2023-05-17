@@ -26,7 +26,7 @@ namespace Gaming
                         gameMap.Remove((GameObj)collisionObj);
                     }
                 }
-                if (player.FindActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
+                if (player.FindActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed == 1 && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
                 {
                     if (characterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge) > 0)
                         player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenCharge));

@@ -107,7 +107,8 @@ namespace Preparation.Utility
                     return PlayerState.Graduated;
                 case Preparation.Utility.PlayerStateType.Fixing:
                     return PlayerState.Learning;
-                case Preparation.Utility.PlayerStateType.LockingOrOpeningTheDoor:
+                case Preparation.Utility.PlayerStateType.LockingTheDoor:
+                case PlayerStateType.OpeningTheDoor:
                     return PlayerState.Locking;
                 case Preparation.Utility.PlayerStateType.OpeningTheChest:
                     return PlayerState.OpeningAChest;

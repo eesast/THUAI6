@@ -19,19 +19,20 @@ namespace Preparation.Utility
         Rescued = 10,
         Stunned = 11,
         TryingToAttack = 12,//指前摇
-        LockingOrOpeningTheDoor = 13,
+        LockingTheDoor = 13,
         OpeningTheChest = 14,
         ClimbingThroughWindows = 15,
         UsingSkill = 16,
         OpeningTheDoorway = 17,
         Charmed = 18,
+        OpeningTheDoor = 19,
     }
     public enum GameObjType
     {
         Null = 0,
         Character = 1,
-        Consumables = 2,
-        Prop = 3,
+        Gadget = 2,
+        Item = 3,
         Bullet = 4,
         BombedBullet = 5,
 

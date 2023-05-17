@@ -121,7 +121,7 @@ namespace Server
 
             lock (addPlayerLock)
             {
-                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(request.PlayerId), PlayerTypeToTeamID(request.PlayerType), (int)request.PlayerId, characterType);
+                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(request.PlayerId), PlayerTypeToTeamID(request.PlayerType), request.PlayerId, characterType);
                 long newPlayerID = game.AddPlayer(playerInitInfo);
                 if (newPlayerID == GameObj.invalidID)
                     return;
@@ -471,7 +471,7 @@ namespace Server
                 return Task.FromResult(boolRes);
             }
             var gameID = communicationToGameID[request.PlayerId];
-            boolRes.ActSuccess = game.LockOrOpenDoor(gameID);
+            boolRes.ActSuccess = game.OpenDoor(gameID);
             return Task.FromResult(boolRes);
         }
 
@@ -487,7 +487,7 @@ namespace Server
                 return Task.FromResult(boolRes);
             }
             var gameID = communicationToGameID[request.PlayerId];
-            boolRes.ActSuccess = game.LockOrOpenDoor(gameID);
+            boolRes.ActSuccess = game.LockDoor(gameID);
             return Task.FromResult(boolRes);
         }
 

@@ -33,10 +33,10 @@ namespace Server
                     else return null;
                 case Preparation.Utility.GameObjType.Door:
                     return Door((Door)gameObj);
-                case GameObjType.Prop:
-                    return Prop((Prop)gameObj);
-                case Preparation.Utility.GameObjType.Consumables:
-                    return Prop((Consumables)gameObj);
+                case GameObjType.Item:
+                    return Prop((Item)gameObj);
+                case Preparation.Utility.GameObjType.Gadget:
+                    return Prop((Gadget)gameObj);
                 default: return null;
             }
         }
@@ -68,7 +68,7 @@ namespace Server
                     ViewRange = player.ViewRange,
                     Radius = player.Radius,
                     DangerAlert = (player.BgmDictionary.ContainsKey(BgmType.GhostIsComing)) ? player.BgmDictionary[BgmType.GhostIsComing] : 0,
-                    Score = player.Score,
+                    Score = (int)player.Score,
                     TreatProgress = player.DegreeOfTreatment,
                     RescueProgress = player.TimeOfRescue,
 
@@ -110,7 +110,7 @@ namespace Server
 
                     TrickerType = Transformation.ToTrickerType(player.CharacterType),
                     Guid = player.ID,
-                    Score = player.Score,
+                    Score = (int)player.Score,
                     PlayerId = player.PlayerID,
                     ViewRange = player.ViewRange,
                     Radius = player.Radius,
@@ -157,7 +157,7 @@ namespace Server
             return msg;
         }
 
-        private static MessageOfObj Prop(Consumables prop)
+        private static MessageOfObj Prop(Gadget prop)
         {
             MessageOfObj msg = new()
             {
@@ -173,7 +173,7 @@ namespace Server
             return msg;
         }
 
-        private static MessageOfObj Prop(Prop prop)
+        private static MessageOfObj Prop(Item prop)
         {
             MessageOfObj msg = new()
             {
@@ -256,7 +256,7 @@ namespace Server
                 {
                     X = door.Position.x,
                     Y = door.Position.y,
-                    Progress = door.OpenOrLockDegree,
+                    Progress = door.LockDegree,
                     IsOpen = door.IsOpen
                 }
             };

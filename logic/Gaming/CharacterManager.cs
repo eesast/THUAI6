@@ -17,7 +17,7 @@ namespace Gaming
                 this.gameMap = gameMap;
             }
 
-            public Character? AddPlayer(XY pos, int teamID, int playerID, CharacterType characterType, Character? parent = null)
+            public Character? AddPlayer(XY pos, long teamID, long playerID, CharacterType characterType, Character? parent = null)
             {
                 Character newPlayer;
 
@@ -370,7 +370,7 @@ namespace Gaming
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {
-                    Consumables? prop = player.UseProp(i);
+                    Gadget? prop = player.UseProp(i);
                     if (prop != null)
                     {
                         prop.ReSetPos(player.Position);

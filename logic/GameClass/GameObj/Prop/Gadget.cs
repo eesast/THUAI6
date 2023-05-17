@@ -21,11 +21,11 @@ namespace GameClass.GameObj
         public abstract bool IsUsable();
         public abstract PropType GetPropType();
 
-        public Gadget(XY initPos, int radius = GameData.PropRadius) :
+        public Gadget(XY initPos, int radius = GameData.propRadius) :
             base(initPos, radius, GameObjType.Gadget)
         {
             this.canMove = false;
-            this.MoveSpeed = GameData.PropMoveSpeed;
+            this.MoveSpeed = GameData.propMoveSpeed;
         }
     }
     public abstract class Tool : Gadget

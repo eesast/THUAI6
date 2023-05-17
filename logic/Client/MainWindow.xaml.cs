@@ -833,7 +833,7 @@ namespace Client
                         int i = 0;
                         foreach (var skill in occupation.ListOfIActiveSkill)
                         {
-                            var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
+                            var iActiveSkill = SkillFactory.FindActiveSkill(skill);
                             coolTime[i, obj.PlayerId] = iActiveSkill.SkillCD;
                             ++i;
                         }
@@ -848,7 +848,7 @@ namespace Client
                         int j = 0;
                         foreach (var skill in occupation1.ListOfIActiveSkill)
                         {
-                            var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
+                            var iActiveSkill = SkillFactory.FindActiveSkill(skill);
                             coolTime[j, GameData.numOfStudent] = iActiveSkill.SkillCD;
                             ++j;
                         }

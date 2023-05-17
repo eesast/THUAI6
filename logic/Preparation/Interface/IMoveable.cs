@@ -7,7 +7,7 @@ namespace Preparation.Interface
     public interface IMoveable : IGameObj
     {
         object ActionLock { get; }
-        public long MoveSpeed { get; }
+        public int MoveSpeed { get; }
         public bool IsMoving { get; set; }
         public bool IsRemoved { get; }
         public bool IsAvailableForMove { get; }

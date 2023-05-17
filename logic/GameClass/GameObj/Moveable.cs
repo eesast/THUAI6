@@ -162,13 +162,13 @@ namespace GameClass.GameObj
             }
         }
 
-        protected long moveSpeed;
+        protected int moveSpeed;
         /// <summary>
         /// 移动速度
         /// </summary>
-        public long MoveSpeed
+        public int MoveSpeed
         {
-            get => Interlocked.Read(ref moveSpeed);
+            get => Interlocked.CompareExchange(ref moveSpeed, 0, 1);
             set => Interlocked.Exchange(ref moveSpeed, value);
         }
         /// <summary>

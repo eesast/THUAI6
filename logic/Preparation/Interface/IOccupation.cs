@@ -315,13 +315,13 @@ namespace Preparation.Interface
     }
     public class TechOtaku : IStudentType
     {
-        private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed * 0.75);
+        private const int moveSpeed = (int)(GameData.basicStudentMoveSpeed * 288 / 300);
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = (int)(GameData.basicHp * 0.9);
         public int MaxHp => maxHp;
 
-        private const int maxGamingAddiction = (int)(GameData.basicMaxGamingAddiction * 1.1);
+        private const int maxGamingAddiction = (int)(GameData.basicMaxGamingAddiction);
         public int MaxGamingAddiction => maxGamingAddiction;
 
         public BulletType InitBullet => BulletType.Null;
@@ -329,13 +329,13 @@ namespace Preparation.Interface
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.SummonGolem, ActiveSkillType.UseRobot });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
 
-        public const int fixSpeed = (int)(GameData.basicFixSpeed * 1.1);
+        public const int fixSpeed = (int)(GameData.basicFixSpeed * 110 / 123);
         public int FixSpeed => fixSpeed;
 
-        public const int treatSpeed = GameData.basicTreatSpeed * 9 / 10;
+        public const int treatSpeed = GameData.basicTreatSpeed;
         public int TreatSpeed => treatSpeed;
 
-        public const double concealment = GameData.basicConcealment;
+        public const double concealment = GameData.basicConcealment * 1.1;
         public double Concealment => concealment;
 
         public const int alertnessRadius = (int)(GameData.basicStudentAlertnessRadius);
@@ -347,10 +347,10 @@ namespace Preparation.Interface
         public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;
         public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
-        public int speedOfClimbingThroughWindows = (int)(GameData.basicStudentSpeedOfClimbingThroughWindows * 3 / 4);
+        public int speedOfClimbingThroughWindows = (int)(GameData.basicStudentSpeedOfClimbingThroughWindows * 1100 / 1222);
         public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
-        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest;
+        public int speedOfOpenChest = GameData.basicSpeedOfOpenChest * 1100 / 1250;
         public int SpeedOfOpenChest => speedOfOpenChest;
     }
     public class Sunshine : IStudentType

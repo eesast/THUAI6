@@ -104,17 +104,39 @@ namespace Gaming
                                                       { });
             }
 
-            public bool UseRobot(Character player)
+            public bool UseRobot(Character player, int robotID)
             {
-                /*
-                IGolem? golem = (IGolem?)(((SummonGolem)player.FindActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned);
-                if ((!player.Commandable()) || ((SummonGolem)player.FindActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned == null) return false;
-                Debugger.Output(player, "use robot!");
-                IActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.UseRobot);
-                activeSkill.IsBeingUsed = (activeSkill.IsBeingUsed) ? false : true;
-                if (activeSkill.IsBeingUsed) player.SetPlayerState(PlayerStateType.UsingSkill);
-                else player.SetPlayerState();*/
-                return true;
+                if ((robotID - player.PlayerID) % GameData.numOfPeople != 0) return false;
+                if ((robotID - (int)player.PlayerID) / GameData.numOfPeople < 0 || (robotID - (int)player.PlayerID) / GameData.numOfPeople > GameData.maxSummonedGolemNum) return false;
+                UseRobot activeSkill = (UseRobot)player.FindActiveSkill(ActiveSkillType.UseRobot);
+                lock (activeSkill.ActiveSkillUseLock)
+                {
+                    if (robotID == player.PlayerID)
+                    {
+                        lock (player.ActionLock)
+                        {
+                            if (player.PlayerState == PlayerStateType.UsingSkill && player.WhatInteractingWith == null)
+                                player.SetPlayerStateNaturally();
+                            activeSkill.NowPlayerID = robotID;
+                        }
+                    }
+                    else
+                    {
+                        SummonGolem summonGolemSkill = (SummonGolem)player.FindActiveSkill(ActiveSkillType.SummonGolem);
+                        if (summonGolemSkill.GolemStateArray[(robotID - (int)player.PlayerID) / GameData.numOfPeople - 1] == 2)
+                        {
+                            activeSkill.NowPlayerID = robotID;
+                        }
+                        else return false;
+                        long stateNum = player.SetPlayerState(PlayerStateType.UsingSkill);
+                        if (stateNum == -1)
+                        {
+                            activeSkill.NowPlayerID = (int)player.PlayerID;
+                            return false;
+                        }
+                    }
+                    return ActiveSkillEffect(activeSkill, player, () => { }, () => { });
+                }
             }
 
             public static bool JumpyBomb(Character player)
@@ -151,61 +173,61 @@ namespace Gaming
             public bool SummonGolem(Character player)
             {
                 ActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.SummonGolem);
-                int num = ((SummonGolem)activeSkill).AddGolem();
+                int num = ((SummonGolem)activeSkill).BuildGolem();
                 if (num >= GameData.maxSummonedGolemNum) return false;
-                Debugger.Output(player, num.ToString());
 
                 XY res = player.Position + new XY(player.FacingDirection, player.Radius * 2);
-                CraftingBench craftingBench = new(res, player, num);
+                lock (activeSkill.ActiveSkillUseLock)
+                {
+                    CraftingBench craftingBench = new(res, player, num);
 
-                long stateNum = player.SetPlayerState(PlayerStateType.UsingSkill, craftingBench);
-                if (stateNum == -1)
-                {
-                    ((SummonGolem)activeSkill).DeleteGolem(num);
-                    return false;
-                }
-
-                player.ThreadNum.WaitOne();
-                if (stateNum != player.StateNum)
-                {
-                    ((SummonGolem)activeSkill).DeleteGolem(num);
-                    player.ThreadNum.Release();
-                    return false;
-                }
-
-                if (actionManager.moveEngine.CheckCollision(craftingBench, res) != null)
-                {
-                    ((SummonGolem)activeSkill).DeleteGolem(num);
-                    player.ThreadNum.Release();
-                    return false;
-                }
-                craftingBench.ParentStateNum = stateNum;
-                gameMap.Add(craftingBench);
-                /*
-               */
-                return ActiveSkillEffect(activeSkill, player, () =>
-                {
-                },
-                () =>
-                {
-                    lock (player.ActionLock)
+                    long stateNum = player.SetPlayerState(PlayerStateType.UsingSkill, craftingBench);
+                    if (stateNum == -1)
                     {
-                        if (stateNum == player.StateNum)
+                        ((SummonGolem)activeSkill).DeleteGolem(num);
+                        return false;
+                    }
+
+                    player.ThreadNum.WaitOne();
+                    if (stateNum != player.StateNum)
+                    {
+                        ((SummonGolem)activeSkill).DeleteGolem(num);
+                        player.ThreadNum.Release();
+                        return false;
+                    }
+
+                    if (actionManager.moveEngine.CheckCollision(craftingBench, res) != null)
+                    {
+                        ((SummonGolem)activeSkill).DeleteGolem(num);
+                        player.ThreadNum.Release();
+                        return false;
+                    }
+                    craftingBench.ParentStateNum = stateNum;
+                    gameMap.Add(craftingBench);
+                    /*
+                   */
+                    return ActiveSkillEffect(activeSkill, player, () =>
+                    {
+                    },
+                    () =>
+                    {
+                        lock (player.ActionLock)
                         {
-                            gameMap.RemoveJustFromMap(craftingBench);
-                            Golem? golem = (Golem?)characterManager.AddPlayer(res, player.TeamID, (num + 1) * GameData.numOfPeople + player.PlayerID, CharacterType.Robot, player);
-                            if (golem == null)
+                            if (stateNum == player.StateNum)
                             {
-                                ((SummonGolem)activeSkill).DeleteGolem(num);
+                                gameMap.RemoveJustFromMap(craftingBench);
+                                Golem? golem = (Golem?)characterManager.AddPlayer(res, player.TeamID, (num + 1) * GameData.numOfPeople + player.PlayerID, CharacterType.Robot, player);
+                                if (golem == null)
+                                {
+                                    ((SummonGolem)activeSkill).AddGolem(num);
+                                }
+                                player.SetPlayerStateNaturally();
+                                player.ThreadNum.Release();
                             }
-                            Debugger.Output(player, activeSkill.DurationTime.ToString());
-                            player.SetPlayerStateNaturally();
-                            Debugger.Output(player, player.StateNum.ToString());
-                            player.ThreadNum.Release();
                         }
                     }
+                     );
                 }
-                 );
             }
 
             public static bool UseKnife(Character player)

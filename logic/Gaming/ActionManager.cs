@@ -61,7 +61,7 @@ namespace Gaming
                 return true;
             }
 
-            public bool Stop(Character player)
+            public static bool Stop(Character player)
             {
                 lock (player.ActionLock)
                 {

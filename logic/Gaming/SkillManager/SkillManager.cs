@@ -37,7 +37,7 @@ namespace Gaming
                         case ActiveSkillType.SummonGolem:
                             return SummonGolem(character);
                         case ActiveSkillType.UseRobot:
-                            return UseRobot(character);
+                            return UseRobot(character, parameter);
                         case ActiveSkillType.Rouse:
                             return Rouse(character);
                         case ActiveSkillType.ShowTime:

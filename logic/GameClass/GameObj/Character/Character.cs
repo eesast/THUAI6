@@ -448,7 +448,7 @@ namespace GameClass.GameObj
             lock (actionLock)
             {
                 PlayerStateType nowPlayerState = PlayerState;
-                if (nowPlayerState == value) return -1;
+                if (nowPlayerState == value && value != PlayerStateType.UsingSkill) return -1;
                 switch (nowPlayerState)
                 {
                     case PlayerStateType.Escaped:
@@ -542,16 +542,24 @@ namespace GameClass.GameObj
                             ThreadNum.Release();
                         }
                     case PlayerStateType.UsingSkill:
-                        if (typeof(CraftingBench).IsInstanceOfType(whatInteractingWith))
+                        if (CharacterType == CharacterType.TechOtaku)
                         {
-                            try
+                            if (typeof(CraftingBench).IsInstanceOfType(whatInteractingWith))
                             {
-                                ((CraftingBench)whatInteractingWith!).StopSkill();
-                                return ChangePlayerState(value, gameObj);
+                                try
+                                {
+                                    ((CraftingBench)whatInteractingWith!).StopSkill();
+                                    return ChangePlayerState(value, gameObj);
+                                }
+                                finally
+                                {
+                                    ThreadNum.Release();
+                                }
                             }
-                            finally
+                            else
                             {
-                                ThreadNum.Release();
+                                if (value != PlayerStateType.UsingSkill)
+                                    ((UseRobot)FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID = (int)playerID;
                             }
                         }
                         return ChangePlayerState(value, gameObj);

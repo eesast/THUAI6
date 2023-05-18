@@ -72,7 +72,7 @@ namespace Gaming
                         break;
                     case GameObjType.Door:
                         if (bullet.CanBeBombed(GameObjType.Door))
-                            ;
+                            ((Door)objBeingShot).ForceToOpen();
                         break;
                     case GameObjType.Item:
                         if (((Item)objBeingShot).GetPropType() == PropType.CraftingBench)

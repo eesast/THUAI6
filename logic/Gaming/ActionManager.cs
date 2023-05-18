@@ -430,8 +430,11 @@ namespace Gaming
                           )
                           .Start();
                                 doorToLock.StopLock();
-                                if (stateNum == player.StateNum) player.SetPlayerState();
                                 player.ReleaseTool(propType);
+                                lock (player.ActionLock)
+                                {
+                                    if (stateNum == player.StateNum) player.SetPlayerState();
+                                }
                                 player.ThreadNum.Release();
                             }
                         }
@@ -481,9 +484,12 @@ namespace Gaming
                                 player.ReleaseTool(propType);
                                 lock (player.ActionLock)
                                 {
-                                    if (stateNum == player.StateNum) player.SetPlayerState();
+                                    if (stateNum == player.StateNum)
+                                    {
+                                        player.SetPlayerStateNaturally();
+                                        player.ThreadNum.Release();
+                                    }
                                 }
-                                player.ThreadNum.Release();
                             }
                             else
                             {
@@ -493,7 +499,7 @@ namespace Gaming
                                 {
                                     if (stateNum == player.StateNum)
                                     {
-                                        player.SetPlayerState();
+                                        player.SetPlayerStateNaturally();
                                         doorToLock.StopOpen();
                                         player.ReleaseTool(propType);
                                         player.ThreadNum.Release();

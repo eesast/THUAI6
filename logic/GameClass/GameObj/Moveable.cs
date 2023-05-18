@@ -126,8 +126,7 @@ namespace GameClass.GameObj
             }
         }
 
-        protected bool isRemoved;
-        public bool IsRemoved
+        public override bool IsRemoved
         {
             get
             {

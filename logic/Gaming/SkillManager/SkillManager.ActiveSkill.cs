@@ -151,24 +151,61 @@ namespace Gaming
             public bool SummonGolem(Character player)
             {
                 ActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.SummonGolem);
-                long num = ((SummonGolem)activeSkill).AddGolem();
+                int num = ((SummonGolem)activeSkill).AddGolem();
                 if (num >= GameData.maxSummonedGolemNum) return false;
-                num = (num + 1) * GameData.numOfPeople + player.PlayerID;
+                Debugger.Output(player, num.ToString());
 
-                /*   if ((!player.Commandable())) return false;
-                   XY res = player.Position + new XY(player.FacingDirection, player.Radius * 2);
-                   if (actionManager.moveEngine.CheckCollision(player, res) != null)
-                       return false;
-                   Golem? golem = (Golem?)characterManager.AddPlayer(res, player.TeamID, player.PlayerID + GameData.numOfPeople, CharacterType.Robot, player);
-                   if (golem == null) return false;
-                   ((SummonGolem)activeSkill).GolemSummoned = golem;
+                XY res = player.Position + new XY(player.FacingDirection, player.Radius * 2);
+                CraftingBench craftingBench = new(res, player, num);
+
+                long stateNum = player.SetPlayerState(PlayerStateType.UsingSkill, craftingBench);
+                if (stateNum == -1)
+                {
+                    ((SummonGolem)activeSkill).DeleteGolem(num);
+                    return false;
+                }
+
+                player.ThreadNum.WaitOne();
+                if (stateNum != player.StateNum)
+                {
+                    ((SummonGolem)activeSkill).DeleteGolem(num);
+                    player.ThreadNum.Release();
+                    return false;
+                }
+
+                if (actionManager.moveEngine.CheckCollision(craftingBench, res) != null)
+                {
+                    ((SummonGolem)activeSkill).DeleteGolem(num);
+                    player.ThreadNum.Release();
+                    return false;
+                }
+                craftingBench.ParentStateNum = stateNum;
+                gameMap.Add(craftingBench);
+                /*
                */
                 return ActiveSkillEffect(activeSkill, player, () =>
                 {
                 },
-                                                      () =>
-                                                      { });
-
+                () =>
+                {
+                    lock (player.ActionLock)
+                    {
+                        if (stateNum == player.StateNum)
+                        {
+                            gameMap.RemoveJustFromMap(craftingBench);
+                            Golem? golem = (Golem?)characterManager.AddPlayer(res, player.TeamID, (num + 1) * GameData.numOfPeople + player.PlayerID, CharacterType.Robot, player);
+                            if (golem == null)
+                            {
+                                ((SummonGolem)activeSkill).DeleteGolem(num);
+                            }
+                            Debugger.Output(player, activeSkill.DurationTime.ToString());
+                            player.SetPlayerStateNaturally();
+                            Debugger.Output(player, player.StateNum.ToString());
+                            player.ThreadNum.Release();
+                        }
+                    }
+                }
+                 );
             }
 
             public static bool UseKnife(Character player)
@@ -336,6 +373,7 @@ namespace Gaming
                     if (activeSkill.TimeUntilActiveSkillAvailable == 0)
                     {
                         activeSkill.TimeUntilActiveSkillAvailable = activeSkill.SkillCD;
+
                         new Thread
                         (() =>
                         {

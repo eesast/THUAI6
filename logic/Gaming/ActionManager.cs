@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Threading;
 using GameClass.GameObj;
 using GameEngine;
@@ -13,26 +14,6 @@ namespace Gaming
         private readonly ActionManager actionManager;
         private class ActionManager
         {
-
-            // 人物移动
-            private void SkillWhenColliding(Character player, IGameObj collisionObj)
-            {
-                if (collisionObj.Type == GameObjType.Bullet)
-                {
-                    if (((Bullet)collisionObj).Parent != player && ((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
-                    {
-                        if (characterManager.BeStunned((Character)player, GameData.timeOfStunnedWhenJumpyDumpty) > 0)
-                            player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStunnedWhenJumpyDumpty));
-                        gameMap.Remove((GameObj)collisionObj);
-                    }
-                }
-                if (player.FindActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed == 1 && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
-                {
-                    if (characterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge) > 0)
-                        player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenCharge));
-                    characterManager.BeStunned(player, GameData.timeOfStudentStunnedWhenCharge);
-                }
-            }
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
                 if (moveTimeInMilliseconds < 5) return false;
@@ -561,7 +542,37 @@ namespace Gaming
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>
                     {
-                        SkillWhenColliding((Character)obj, collisionObj);
+                        Character player = (Character)obj;
+                        switch (collisionObj.Type)
+                        {
+                            case GameObjType.Bullet:
+
+                                if (((Bullet)collisionObj).Parent != player && ((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
+                                {
+                                    if (characterManager.BeStunned((Character)player, GameData.timeOfStunnedWhenJumpyDumpty) > 0)
+                                        player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStunnedWhenJumpyDumpty));
+                                    gameMap.Remove((GameObj)collisionObj);
+                                }
+                                break;
+                            case GameObjType.Character:
+                                if (player.FindActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed == 1 && ((Character)collisionObj).IsGhost())
+                                {
+                                    if (characterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge) > 0)
+                                        player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenCharge));
+                                    characterManager.BeStunned(player, GameData.timeOfStudentStunnedWhenCharge);
+                                }
+                                break;
+                            case GameObjType.Item:
+                                if (((Item)collisionObj).GetPropType() == PropType.CraftingBench)
+                                {
+                                    ((CraftingBench)collisionObj).TryStopSkill();
+                                    gameMap.Remove((Item)collisionObj);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+
                         //Preparation.Utility.Debugger.Output(obj, " end move with " + collisionObj.ToString());
                         //if (collisionObj is Mine)
                         //{

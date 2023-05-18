@@ -32,7 +32,10 @@ namespace Preparation.Interface
         private int timeUntilActiveSkillAvailable = 0;
         public int TimeUntilActiveSkillAvailable
         {
-            get => Interlocked.CompareExchange(ref timeUntilActiveSkillAvailable, 0, 1);
+            get
+            {
+                return Interlocked.CompareExchange(ref timeUntilActiveSkillAvailable, 0, 1);
+            }
             set
             {
                 if (value < 0) value = 0;
@@ -138,7 +141,7 @@ namespace Preparation.Interface
     public class SummonGolem : ActiveSkill
     {
         public override int SkillCD => GameData.commonSkillCD * 4 / 3;
-        public override int DurationTime => 6;
+        public override int DurationTime => 6000;
 
         private bool[] golemIDArray = new bool[GameData.maxSummonedGolemNum] { false, false, false };
         public bool[] GolemIDArray

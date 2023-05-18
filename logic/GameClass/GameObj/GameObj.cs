@@ -36,6 +36,35 @@ namespace GameClass.GameObj
 
         public abstract ShapeType Shape { get; }
 
+        protected bool isRemoved = false;
+        public virtual bool IsRemoved
+        {
+            get
+            {
+                gameObjReaderWriterLock.EnterReadLock();
+                try
+                {
+                    return isRemoved;
+                }
+                finally
+                {
+                    gameObjReaderWriterLock.ExitReadLock();
+                }
+            }
+        }
+        public virtual void TryToRemove()
+        {
+            gameObjReaderWriterLock.EnterWriteLock();
+            try
+            {
+                isRemoved = true;
+            }
+            finally
+            {
+                gameObjReaderWriterLock.ExitWriteLock();
+            }
+        }
+
         public int Radius { get; }
 
         public virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;

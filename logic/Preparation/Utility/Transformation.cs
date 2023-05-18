@@ -55,6 +55,8 @@ namespace Preparation.Utility
                     return Protobuf.PropType.ShieldOrSpear;
                 case Preparation.Utility.PropType.RecoveryFromDizziness:
                     return Protobuf.PropType.RecoveryFromDizziness;
+                case PropType.CraftingBench:
+                    return Protobuf.PropType.CraftingBench;
                 case Preparation.Utility.PropType.Key3:
                     return Protobuf.PropType.Key3;
                 case Preparation.Utility.PropType.Key5:

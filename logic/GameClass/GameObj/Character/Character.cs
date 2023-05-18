@@ -442,8 +442,9 @@ namespace GameClass.GameObj
         }
 
 
-        public long SetPlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        public long SetPlayerState(PlayerStateType value = PlayerStateType.Null, IGameObj? obj = null)
         {
+            GameObj? gameObj = (GameObj?)obj;
             lock (actionLock)
             {
                 PlayerStateType nowPlayerState = PlayerState;
@@ -468,20 +469,21 @@ namespace GameClass.GameObj
                         else return -1;
 
                     case PlayerStateType.TryingToAttack:
-                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows
-                            && value != PlayerStateType.LockingTheDoor && value != PlayerStateType.OpeningTheDoor)
+                        if (value == PlayerStateType.Addicted || value == PlayerStateType.Swinging
+                            || value == PlayerStateType.Deceased || value == PlayerStateType.Stunned
+                            || value == PlayerStateType.Charmed || value == PlayerStateType.Null)
                             return ChangePlayerState(value, gameObj);
                         else return -1;
                     case PlayerStateType.Stunned:
                     case PlayerStateType.Charmed:
-                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows
-                            && value != PlayerStateType.LockingTheDoor && value != PlayerStateType.OpeningTheDoor
-                            && value != PlayerStateType.Swinging)
+                        if (value == PlayerStateType.Addicted || value == PlayerStateType.Deceased
+                            || value == PlayerStateType.Null)
                             return ChangePlayerState(value, gameObj);
                         else return -1;
                     case PlayerStateType.Swinging:
-                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows
-                            && value != PlayerStateType.LockingTheDoor && value != PlayerStateType.OpeningTheDoor)
+                        if (value == PlayerStateType.Addicted
+                            || value == PlayerStateType.Deceased || value == PlayerStateType.Stunned
+                            || value == PlayerStateType.Charmed || value == PlayerStateType.Null)
                         {
                             try
                             {
@@ -494,7 +496,9 @@ namespace GameClass.GameObj
                         }
                         else return -1;
                     case PlayerStateType.ClimbingThroughWindows:
-                        if (value != PlayerStateType.Moving && value != PlayerStateType.LockingTheDoor && value != PlayerStateType.OpeningTheDoor)
+                        if (value == PlayerStateType.Addicted
+                             || value == PlayerStateType.Deceased || value == PlayerStateType.Stunned
+                             || value == PlayerStateType.Charmed || value == PlayerStateType.Null)
                         {
                             Window window = (Window)WhatInteractingWith!;
                             try
@@ -537,6 +541,20 @@ namespace GameClass.GameObj
                         {
                             ThreadNum.Release();
                         }
+                    case PlayerStateType.UsingSkill:
+                        if (typeof(CraftingBench).IsInstanceOfType(whatInteractingWith))
+                        {
+                            try
+                            {
+                                ((CraftingBench)whatInteractingWith!).StopSkill();
+                                return ChangePlayerState(value, gameObj);
+                            }
+                            finally
+                            {
+                                ThreadNum.Release();
+                            }
+                        }
+                        return ChangePlayerState(value, gameObj);
                     default:
                         return ChangePlayerState(value, gameObj);
                 }

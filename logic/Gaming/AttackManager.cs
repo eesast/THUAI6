@@ -74,6 +74,13 @@ namespace Gaming
                         if (bullet.CanBeBombed(GameObjType.Door))
                             ;
                         break;
+                    case GameObjType.Item:
+                        if (((Item)objBeingShot).GetPropType() == PropType.CraftingBench)
+                        {
+                            ((CraftingBench)objBeingShot).TryStopSkill();
+                            gameMap.Remove(objBeingShot);
+                        }
+                        break;
                     default:
                         break;
                 }

@@ -1,5 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
@@ -32,9 +33,32 @@ namespace GameClass.GameObj
 
     public sealed class CraftingBench : Item
     {
-        public CraftingBench(XY initPos) :
+        public CraftingBench(XY initPos, Character character, int num) :
             base(initPos)
         {
+            Parent = character;
+            this.num = num;
+        }
+        private readonly int num;
+        private long parentStateNum;
+        public long ParentStateNum
+        {
+            get => Interlocked.Read(ref parentStateNum);
+            set => Interlocked.Exchange(ref parentStateNum, value);
+        }
+        public void StopSkill()
+        {
+            ((SummonGolem)Parent!.FindActiveSkill(ActiveSkillType.SummonGolem)).DeleteGolem((int)num);
+        }
+        public void TryStopSkill()
+        {
+            lock (Parent!.ActionLock)
+            {
+                if (Parent!.StateNum == parentStateNum)
+                {
+                    Parent!.SetPlayerState();
+                }
+            }
         }
         public override PropType GetPropType() => PropType.CraftingBench;
     }

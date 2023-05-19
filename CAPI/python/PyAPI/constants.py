@@ -27,10 +27,10 @@ class Constants(NoInstance):
     # 人物属性相关
     basicEncourageSpeed = 100
     basicLearnSpeed = 123
-    basicSpeedOfOpeningOrLocking = 4000
+    basicSpeedOfOpeningOrLocking = 5000
     basicStudentSpeedOfClimbingThroughWindows = 1222
     basicTrickerSpeedOfClimbingThroughWindows = 2540
-    basicSpeedOfOpenChest = 1000
+    basicSpeedOfOpenChest = 1250
 
     basicHp = 3000000
     basicMaxGamingAddiction = 60000
@@ -65,8 +65,8 @@ class Constants(NoInstance):
 
     # 道具相关
 
-    apPropAdd = basicApOfTricker * 12 / 10
-    apSpearAdd = basicApOfTricker * 6 / 10
+    apPropAdd = basicApOfTricker * 12 // 10
+    apSpearAdd = basicApOfTricker * 6 // 10
 
     # 技能相关
     maxNumOfSkill = 3
@@ -85,7 +85,7 @@ class Constants(NoInstance):
 
     addedTimeOfSpeedWhenInspire = 1.6
     timeOfAddingSpeedWhenInspire = 6000
-    addHpWhenEncourage = basicHp / 4
+    addHpWhenEncourage = basicHp // 4
 
     checkIntervalWhenShowTime = 200
     addAddictionPer100msWhenShowTime = 300
@@ -159,14 +159,14 @@ class Teacher:
     moveSpeed = (int)(0.9 * Constants.basicStudentSpeed)
     maxHp = (int)(10.0 * Constants.basicHp)
     maxAddiction = (int)(10.0 * Constants.basicMaxGamingAddiction)
-    LearnSpeed = (int)(0.0 * Constants.basicLearnSpeed)
+    LearnSpeed = (int)(0.4 * Constants.basicLearnSpeed)
     EncourageSpeed = (int)(0.8 * Constants.basicEncourageSpeed)
     concealment = 0.5 * Constants.basicConcealment
-    alertnessRadius = (int)(0.5 * Constants.basicStudentAlertnessRadius)
-    viewRange = (int)(0.9 * Constants.basicStudentViewRange)
+    alertnessRadius = (int)(0.75 * Constants.basicStudentAlertnessRadius)
+    viewRange = (int)(0.8 * Constants.basicStudentViewRange)
     speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        0.5 * Constants.basicStudentSpeedOfClimbingThroughWindows
+        0.82 * Constants.basicStudentSpeedOfClimbingThroughWindows
     )
     speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
 
@@ -188,35 +188,35 @@ class StraightAStudent:
 
 
 class Robot:
-    moveSpeed = (int)(1.0 * Constants.basicStudentSpeed)
-    maxHp = (int)(0.4 * Constants.basicHp)
+    moveSpeed = (int)(0.9 * Constants.basicStudentSpeed)
+    maxHp = (int)(0.3 * Constants.basicHp)
     maxAddiction = (int)(0.0 * Constants.basicMaxGamingAddiction)
-    LearnSpeed = (int)(1.0 * Constants.basicLearnSpeed)
+    LearnSpeed = (int)(0.7 * Constants.basicLearnSpeed)
     EncourageSpeed = 0
-    concealment = 1.0 * Constants.basicConcealment
-    alertnessRadius = (int)(1.0 * Constants.basicStudentAlertnessRadius)
-    viewRange = (int)(1.0 * Constants.basicStudentViewRange)
-    speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
+    concealment = 0.8 * Constants.basicConcealment
+    alertnessRadius = (int)(0.0 * Constants.basicStudentAlertnessRadius)
+    viewRange = (int)(0.0 * Constants.basicStudentViewRange)
+    speedOfOpeningOrLocking = (int)(0.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        0.0016 * Constants.basicStudentSpeedOfClimbingThroughWindows
+        0.0008 * Constants.basicStudentSpeedOfClimbingThroughWindows
     )
-    speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
+    speedOfOpenChest = (int)(0.8 * Constants.basicSpeedOfOpenChest)
 
 
 class TechOtaku:
-    moveSpeed = (int)(0.75 * Constants.basicStudentSpeed)
+    moveSpeed = (int)(0.96 * Constants.basicStudentSpeed)
     maxHp = (int)(0.9 * Constants.basicHp)
-    maxAddiction = (int)(1.1 * Constants.basicMaxGamingAddiction)
-    LearnSpeed = (int)(1.1 * Constants.basicLearnSpeed)
-    EncourageSpeed = (int)(0.9 * Constants.basicEncourageSpeed)
+    maxAddiction = (int)(1.0 * Constants.basicMaxGamingAddiction)
+    LearnSpeed = (int)(0.9 * Constants.basicLearnSpeed)
+    EncourageSpeed = (int)(1.0 * Constants.basicEncourageSpeed)
     concealment = 1.0 * Constants.basicConcealment
     alertnessRadius = (int)(1.0 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(0.9 * Constants.basicStudentViewRange)
     speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        0.75 * Constants.basicStudentSpeedOfClimbingThroughWindows
+        0.9 * Constants.basicStudentSpeedOfClimbingThroughWindows
     )
-    speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
+    speedOfOpenChest = (int)(0.88 * Constants.basicSpeedOfOpenChest)
 
 
 class Sunshine:
@@ -241,12 +241,22 @@ class CanBeginToCharge:
 
 
 class BecomeInvisible:
-    skillCD = (int)(4 * Constants.commonSkillCD / 3)
+    skillCD = (int)(4 * Constants.commonSkillCD // 3)
     durationTime = (int)(Constants.commonSkillTime)
 
 
 class Punish:
-    skillCD = (int)(1.0 * Constants.commonSkillCD)
+    skillCD = (int)(1.5 * Constants.commonSkillCD)
+    durationTime = (int)(0.0 * Constants.commonSkillTime)
+
+
+class SparksNSplash:
+    skillCD = (int)(1.5 * Constants.commonSkillCD)
+    durationTime = (int)(1.0 * Constants.commonSkillTime)
+
+
+class HaveTea:
+    skillCD = (int)(3 * Constants.commonSkillCD)
     durationTime = (int)(0.0 * Constants.commonSkillTime)
 
 
@@ -271,7 +281,7 @@ class Howl:
 
 
 class ShowTime:
-    skillCD = (int)(8 * Constants.commonSkillCD / 3)
+    skillCD = (int)(8 * Constants.commonSkillCD // 3)
     durationTime = (int)(1.0 * Constants.commonSkillTime)
 
 
@@ -286,7 +296,7 @@ class UseKnife:
 
 
 class UseRobot:
-    skillCD = (int)(0.0017 * Constants.commonSkillCD)
+    skillCD = (int)(0.0667 * Constants.commonSkillCD)
     durationTime = (int)(0.0 * Constants.commonSkillTime)
 
 
@@ -296,8 +306,8 @@ class WriteAnswers:
 
 
 class SummonGolem:
-    skillCD = (int)(1.0 * Constants.commonSkillCD)
-    durationTime = (int)(0.0 * Constants.commonSkillTime)
+    skillCD = (int)(1.25 * Constants.commonSkillCD)
+    durationTime = (int)(6.0 * Constants.commonSkillTime)
 
 
 class CommonAttackOfTricker:
@@ -306,7 +316,7 @@ class CommonAttackOfTricker:
     ap = Constants.basicApOfTricker
     Speed = Constants.basicBulletMoveSpeed
     IsRemoteAttack = False
-    CastTime = BulletAttackRange * 1000 / Speed
+    CastTime = BulletAttackRange * 1000 // Speed
     Backswing = Constants.basicBackswing
     RecoveryFromHit = Constants.basicRecoveryFromHit
     cd = Constants.basicBackswing
@@ -316,32 +326,45 @@ class CommonAttackOfTricker:
 class FlyingKnife:
     BulletBombRange = 0
     BulletAttackRange = Constants.basicRemoteAttackRange * 13
-    ap = Constants.basicApOfTricker * 4 / 5
-    Speed = Constants.basicBulletMoveSpeed * 25 / 10
+    ap = Constants.basicApOfTricker * 4 // 5
+    Speed = Constants.basicBulletMoveSpeed * 25 // 10
     IsRemoteAttack = True
-    CastTime = Constants.basicCastTime * 4 / 5
+    CastTime = Constants.basicCastTime * 6 // 5
     Backswing = 0
     RecoveryFromHit = 0
-    cd = Constants.basicBackswing / 2
+    cd = Constants.basicBackswing * 3 // 4
     maxBulletNum = 1
 
 
 class BombBomb:
     BulletBombRange = Constants.basicBulletBombRange
     BulletAttackRange = Constants.basicAttackShortRange
-    ap = Constants.basicApOfTricker * 6 / 5
-    Speed = Constants.basicBulletMoveSpeed * 30 / 37
+    ap = Constants.basicApOfTricker * 6 // 5
+    Speed = Constants.basicBulletMoveSpeed * 30 // 37
     IsRemoteAttack = False
-    CastTime = BulletAttackRange * 1000 / Speed
-    Backswing = Constants.basicRecoveryFromHit
+    CastTime = BulletAttackRange * 1000 // Speed
+    Backswing = Constants.basicBackswing * 3 // 2
     RecoveryFromHit = Constants.basicRecoveryFromHit
     cd = Constants.basicCD
     maxBulletNum = 1
 
 
 class JumpyDumpty:
-    BulletBombRange = Constants.basicBulletBombRange / 2
+    BulletBombRange = Constants.basicBulletBombRange // 2
     BulletAttackRange = Constants.basicRemoteAttackRange * 2
     ap = (int)(Constants.basicApOfTricker * 0.6)
-    Speed = Constants.basicBulletMoveSpeed * 43 / 37
+    Speed = Constants.basicBulletMoveSpeed * 43 // 37
     IsRemoteAttack = False
+
+
+class Strike:
+    BulletBombRange = 0
+    BulletAttackRange = Constants.basicAttackShortRange
+    ap = Constants.basicApOfTricker * 16 // 5
+    Speed = Constants.basicBulletMoveSpeed * 125 // 148
+    IsRemoteAttack = False
+    CastTime = Constants.basicCastTime * 16 // 25
+    Backswing = Constants.basicBackswing
+    RecoveryFromHit = Constants.basicRecoveryFromHit
+    cd = Constants.basicBackswing * 3 // 4
+    maxBulletNum = 1

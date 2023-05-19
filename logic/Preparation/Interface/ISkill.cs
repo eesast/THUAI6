@@ -34,7 +34,7 @@ namespace Preparation.Interface
         {
             get
             {
-                return Interlocked.CompareExchange(ref timeUntilActiveSkillAvailable, 0, 1);
+                return Interlocked.CompareExchange(ref timeUntilActiveSkillAvailable, 0, 0);
             }
             set
             {
@@ -47,7 +47,7 @@ namespace Preparation.Interface
         public int isBeingUsed = 0;//实为bool
         public int IsBeingUsed
         {
-            get => Interlocked.CompareExchange(ref isBeingUsed, 0, 1);
+            get => Interlocked.CompareExchange(ref isBeingUsed, 0, 0);
             set => Interlocked.Exchange(ref isBeingUsed, value);
         }
     }
@@ -169,7 +169,7 @@ namespace Preparation.Interface
         private int degreeOfMeditation = 0;
         public int DegreeOfMeditation
         {
-            get => Interlocked.CompareExchange(ref degreeOfMeditation, 0, 1);
+            get => Interlocked.CompareExchange(ref degreeOfMeditation, 0, 0);
             set => Interlocked.Exchange(ref degreeOfMeditation, value);
         }
     }

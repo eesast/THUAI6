@@ -349,7 +349,7 @@ class BombBomb:
 
 class JumpyDumpty:
     BulletBombRange = Constants.basicBulletBombRange // 2
-    BulletAttackRange = Constants.basicRemoteAttackRange * 2
+    BulletAttackRange = Constants.basicAttackShortRange * 16 / 22
     ap = (int)(Constants.basicApOfTricker * 0.6)
     Speed = Constants.basicBulletMoveSpeed * 43 // 37
     IsRemoteAttack = False

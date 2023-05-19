@@ -368,7 +368,7 @@ namespace Constants
     struct JumpyDumpty
     {
         SCCI double BulletBombRange = basicBulletBombRange / 2;
-        SCCI double BulletAttackRange = basicRemoteAttackRange * 2;
+        SCCI double BulletAttackRange = basicAttackShortRange * 16 / 22;
         SCCI int ap = (int)(basicApOfTricker * 0.6);
         SCCI int Speed = basicBulletMoveSpeed * 43 / 37;
         SCCI bool IsRemoteAttack = false;

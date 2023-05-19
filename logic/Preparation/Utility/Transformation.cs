@@ -185,6 +185,8 @@ namespace Preparation.Utility
                     return Protobuf.BulletType.BombBomb;
                 case Preparation.Utility.BulletType.JumpyDumpty:
                     return Protobuf.BulletType.JumpyDumpty;
+                case Preparation.Utility.BulletType.Strike:
+                    return Protobuf.BulletType.Strike;
                 default:
                     return Protobuf.BulletType.NullBulletType;
             }

@@ -47,21 +47,11 @@ namespace GameClass.GameObj
             }
         }
 
-        private bool isMoving;
-        public bool IsMoving
+        private int isMoving = 0;
+        public int IsMoving
         {
-            get
-            {
-                lock (actionLock)
-                    return isMoving;
-            }
-            set
-            {
-                lock (actionLock)
-                {
-                    isMoving = value;
-                }
-            }
+            get => Interlocked.CompareExchange(ref isMoving, 0, 1);
+            set => Interlocked.Exchange(ref isMoving, value);
         }
 
         // 移动，改变坐标
@@ -151,7 +141,7 @@ namespace GameClass.GameObj
                     moveReaderWriterLock.EnterReadLock();
                     try
                     {
-                        return !isMoving && canMove && !isRemoved;
+                        return isMoving == 0 && canMove && !isRemoved;
                     }
                     finally
                     {

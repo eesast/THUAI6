@@ -76,7 +76,7 @@ namespace Gaming
 
             public bool Fix(Student player)// 自动检查有无发电机可修
             {
-                if (player.CharacterType == CharacterType.Teacher || (!player.Commandable()) || player.PlayerState == PlayerStateType.Fixing)
+                if ((!player.Commandable()) || player.PlayerState == PlayerStateType.Fixing)
                     return false;
                 Generator? generatorForFix = (Generator?)gameMap.OneForInteract(player.Position, GameObjType.Generator);
 

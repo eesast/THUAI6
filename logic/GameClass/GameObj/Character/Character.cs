@@ -361,7 +361,7 @@ namespace GameClass.GameObj
             {
                 lock (actionLock)
                 {
-                    if (playerState == PlayerStateType.Null && IsMoving) return PlayerStateType.Moving;
+                    if (playerState == PlayerStateType.Moving && IsMoving == 1) return PlayerStateType.Moving;
                     return playerState;
                 }
             }
@@ -423,9 +423,7 @@ namespace GameClass.GameObj
         {
             //只能被SetPlayerState引用
             whatInteractingWith = gameObj;
-            if (value != PlayerStateType.Moving)
-                IsMoving = false;
-            playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
+            playerState = value;
             //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
             return ++stateNum;
         }
@@ -434,9 +432,7 @@ namespace GameClass.GameObj
         {
             //只能被SetPlayerState引用
             whatInteractingWith = gameObj;
-            if (value != PlayerStateType.Moving)
-                IsMoving = false;
-            playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
+            playerState = value;
             //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
             return stateNum;
         }
@@ -574,7 +570,6 @@ namespace GameClass.GameObj
             lock (actionLock)
             {
                 whatInteractingWith = null;
-                IsMoving = false;
                 playerState = PlayerStateType.Null;
                 return ++stateNum;
             }
@@ -803,6 +798,7 @@ namespace GameClass.GameObj
                     return false;
             }
         }
+
         public void TryActivatingLIFE()
         {
             if (buffManager.TryActivatingLIFE())

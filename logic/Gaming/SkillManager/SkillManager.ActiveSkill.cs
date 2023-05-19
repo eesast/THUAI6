@@ -13,7 +13,6 @@ namespace Gaming
         {
             public static bool CanBeginToCharge(Character player)
             {
-
                 if ((!player.Commandable())) return false;
                 ActiveSkill skill = player.FindActiveSkill(ActiveSkillType.CanBeginToCharge);
                 Debugger.Output(player, "can begin to charge!");
@@ -118,7 +117,7 @@ namespace Gaming
                                                       );
             }
 
-            public bool UseRobot(Character player, int robotID)
+            public static bool UseRobot(Character player, int robotID)
             {
                 if ((robotID - player.PlayerID) % GameData.numOfPeople != 0) return false;
                 if ((robotID - (int)player.PlayerID) / GameData.numOfPeople < 0 || (robotID - (int)player.PlayerID) / GameData.numOfPeople > GameData.maxSummonedGolemNum) return false;
@@ -274,8 +273,7 @@ namespace Gaming
                     }
                     craftingBench.ParentStateNum = stateNum;
                     gameMap.Add(craftingBench);
-                    /*
-                   */
+
                     return ActiveSkillEffect(activeSkill, player, () =>
                     {
                     },
@@ -356,8 +354,8 @@ namespace Gaming
                                 || character.PlayerState == PlayerStateType.ClimbingThroughWindows)
                                 && XY.DistanceFloor3(character.Position, player.Position) <= player.ViewRange / 3)
                             {
-                                if (CharacterManager.BeStunned(character, GameData.timeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)) > 0)
-                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP)));
+                                if (CharacterManager.BeStunned(character, GameData.timeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP) / GameData.basicApOfGhost) > 0)
+                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP) / GameData.basicApOfGhost));
                                 break;
                             }
                         }
@@ -367,6 +365,41 @@ namespace Gaming
                         gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
                     Debugger.Output(player, "uses punishing!");
+                },
+                                                      () =>
+                                                      { });
+            }
+
+            public bool HaveTea(Character player, int angle1000)
+            {
+                long stateNum = player.SetPlayerState(PlayerStateType.UsingSkill);
+                if (stateNum == -1)
+                {
+                    return false;
+                }
+                player.ThreadNum.WaitOne();
+
+                XY res = player.Position + new XY(angle1000 / 1000.0, GameData.distanceOfHaveTea);
+                Debugger.Output(res.ToString());
+                if (actionManager.moveEngine.CheckCollision(player, res) != null)
+                {
+                    player.ThreadNum.Release();
+                    return false;
+                }
+                Debugger.Output("NO Collision!");
+                player.ReSetPos(res);
+                lock (player.ActionLock)
+                {
+                    if (player.StateNum == stateNum)
+                    {
+                        player.SetPlayerStateNaturally();
+                    }
+                }
+                player.ThreadNum.Release();
+
+                return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.HaveTea), player, () =>
+                {
+                    Debugger.Output(player, "have tea!");
                 },
                                                       () =>
                                                       { });

@@ -30,6 +30,8 @@ namespace Gaming
                             return Encourage(character);
                         case ActiveSkillType.Punish:
                             return Punish(character);
+                        case ActiveSkillType.HaveTea:
+                            return HaveTea(character, parameter);
                         case ActiveSkillType.JumpyBomb:
                             return JumpyBomb(character);
                         case ActiveSkillType.SparksNSplash:

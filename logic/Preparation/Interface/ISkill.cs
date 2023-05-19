@@ -70,6 +70,12 @@ namespace Preparation.Interface
         public override int DurationTime => 0;
     }
 
+    public class HaveTea : ActiveSkill
+    {
+        public override int SkillCD => GameData.commonSkillCD * 3;
+        public override int DurationTime => 0;
+    }
+
     public class Rouse : ActiveSkill
     {
         public override int SkillCD => GameData.commonSkillCD * 4;
@@ -245,6 +251,8 @@ namespace Preparation.Interface
                     return new CanBeginToCharge();
                 case ActiveSkillType.Punish:
                     return new Punish();
+                case ActiveSkillType.HaveTea:
+                    return new HaveTea();
                 case ActiveSkillType.JumpyBomb:
                     return new JumpyBomb();
                 case ActiveSkillType.SparksNSplash:
@@ -284,6 +292,8 @@ namespace Preparation.Interface
                     return ActiveSkillType.Inspire;
                 case Punish:
                     return ActiveSkillType.Punish;
+                case HaveTea:
+                    return ActiveSkillType.HaveTea;
                 case JumpyBomb:
                     return ActiveSkillType.JumpyBomb;
                 case SparksNSplash:

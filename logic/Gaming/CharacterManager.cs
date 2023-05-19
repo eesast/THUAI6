@@ -383,7 +383,15 @@ namespace Gaming
                     if (parent != null && parent.CharacterType == CharacterType.TechOtaku)
                     {
                         ((SummonGolem)(parent.FindActiveSkill(ActiveSkillType.SummonGolem))).DeleteGolem((int)(player.PlayerID - parent.PlayerID) / GameData.numOfPeople - 1);
-                        //player.FindActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed = false;
+                        UseRobot useRobot = (UseRobot)parent.FindActiveSkill(ActiveSkillType.UseRobot);
+                        if (useRobot.TryResetNowPlayerID((int)player.PlayerID))
+                        {
+                            lock (parent.ActionLock)
+                            {
+                                if (parent.PlayerState == PlayerStateType.UsingSkill)
+                                    parent.SetPlayerState();
+                            }
+                        }
                     }
                     return;
                 }

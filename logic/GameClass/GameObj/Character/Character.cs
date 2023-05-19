@@ -361,7 +361,7 @@ namespace GameClass.GameObj
             {
                 lock (actionLock)
                 {
-                    if (playerState == PlayerStateType.Null && IsMoving) return PlayerStateType.Moving;
+                    if (playerState == PlayerStateType.Moving && IsMoving == 1) return PlayerStateType.Moving;
                     return playerState;
                 }
             }
@@ -423,9 +423,7 @@ namespace GameClass.GameObj
         {
             //只能被SetPlayerState引用
             whatInteractingWith = gameObj;
-            if (value != PlayerStateType.Moving)
-                IsMoving = false;
-            playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
+            playerState = value;
             //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
             return ++stateNum;
         }
@@ -434,20 +432,19 @@ namespace GameClass.GameObj
         {
             //只能被SetPlayerState引用
             whatInteractingWith = gameObj;
-            if (value != PlayerStateType.Moving)
-                IsMoving = false;
-            playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
+            playerState = value;
             //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
             return stateNum;
         }
 
 
-        public long SetPlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        public long SetPlayerState(PlayerStateType value = PlayerStateType.Null, IGameObj? obj = null)
         {
+            GameObj? gameObj = (GameObj?)obj;
             lock (actionLock)
             {
                 PlayerStateType nowPlayerState = PlayerState;
-                if (nowPlayerState == value) return -1;
+                if (nowPlayerState == value && value != PlayerStateType.UsingSkill) return -1;
                 switch (nowPlayerState)
                 {
                     case PlayerStateType.Escaped:
@@ -468,20 +465,21 @@ namespace GameClass.GameObj
                         else return -1;
 
                     case PlayerStateType.TryingToAttack:
-                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows
-                            && value != PlayerStateType.LockingTheDoor && value != PlayerStateType.OpeningTheDoor)
+                        if (value == PlayerStateType.Addicted || value == PlayerStateType.Swinging
+                            || value == PlayerStateType.Deceased || value == PlayerStateType.Stunned
+                            || value == PlayerStateType.Charmed || value == PlayerStateType.Null)
                             return ChangePlayerState(value, gameObj);
                         else return -1;
                     case PlayerStateType.Stunned:
                     case PlayerStateType.Charmed:
-                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows
-                            && value != PlayerStateType.LockingTheDoor && value != PlayerStateType.OpeningTheDoor
-                            && value != PlayerStateType.Swinging)
+                        if (value == PlayerStateType.Addicted || value == PlayerStateType.Deceased
+                            || value == PlayerStateType.Null)
                             return ChangePlayerState(value, gameObj);
                         else return -1;
                     case PlayerStateType.Swinging:
-                        if (value != PlayerStateType.Moving && value != PlayerStateType.ClimbingThroughWindows
-                            && value != PlayerStateType.LockingTheDoor && value != PlayerStateType.OpeningTheDoor)
+                        if (value == PlayerStateType.Addicted
+                            || value == PlayerStateType.Deceased || value == PlayerStateType.Stunned
+                            || value == PlayerStateType.Charmed || value == PlayerStateType.Null)
                         {
                             try
                             {
@@ -494,7 +492,9 @@ namespace GameClass.GameObj
                         }
                         else return -1;
                     case PlayerStateType.ClimbingThroughWindows:
-                        if (value != PlayerStateType.Moving && value != PlayerStateType.LockingTheDoor && value != PlayerStateType.OpeningTheDoor)
+                        if (value == PlayerStateType.Addicted
+                             || value == PlayerStateType.Deceased || value == PlayerStateType.Stunned
+                             || value == PlayerStateType.Charmed || value == PlayerStateType.Null)
                         {
                             Window window = (Window)WhatInteractingWith!;
                             try
@@ -537,6 +537,28 @@ namespace GameClass.GameObj
                         {
                             ThreadNum.Release();
                         }
+                    case PlayerStateType.UsingSkill:
+                        if (CharacterType == CharacterType.TechOtaku)
+                        {
+                            if (typeof(CraftingBench).IsInstanceOfType(whatInteractingWith))
+                            {
+                                try
+                                {
+                                    ((CraftingBench)whatInteractingWith!).StopSkill();
+                                    return ChangePlayerState(value, gameObj);
+                                }
+                                finally
+                                {
+                                    ThreadNum.Release();
+                                }
+                            }
+                            else
+                            {
+                                if (value != PlayerStateType.UsingSkill)
+                                    ((UseRobot)FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID = (int)playerID;
+                            }
+                        }
+                        return ChangePlayerState(value, gameObj);
                     default:
                         return ChangePlayerState(value, gameObj);
                 }
@@ -548,7 +570,6 @@ namespace GameClass.GameObj
             lock (actionLock)
             {
                 whatInteractingWith = null;
-                IsMoving = false;
                 playerState = PlayerStateType.Null;
                 return ++stateNum;
             }
@@ -777,6 +798,7 @@ namespace GameClass.GameObj
                     return false;
             }
         }
+
         public void TryActivatingLIFE()
         {
             if (buffManager.TryActivatingLIFE())
@@ -799,6 +821,11 @@ namespace GameClass.GameObj
         public bool TryUseSpear()
         {
             return buffManager.TryUseSpear();
+        }
+
+        public bool TryDeleteInvisible()
+        {
+            return buffManager.TryDeleteInvisible();
         }
 
         public bool TryUseShield()

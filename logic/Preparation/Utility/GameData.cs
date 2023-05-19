@@ -220,13 +220,14 @@ namespace Preparation.Utility
         public const int timeOfStudentStunnedWhenHowl = 5500;
 
         public const int timeOfStunnedWhenJumpyDumpty = 3070;
+        public const int checkIntervalWhenSparksNSplash = 100;
 
         public const double addedTimeOfSpeedWhenInspire = 1.6;
         public const int timeOfAddingSpeedWhenInspire = 6000;
 
         public const int addHpWhenEncourage = basicHp / 4;
 
-        public const int checkIntervalWhenShowTime = 200;
+        public const int checkIntervalWhenShowTime = 500;
         public const int addAddictionPer100msWhenShowTime = 300;
 
         public const int maxSummonedGolemNum = 3;

@@ -97,7 +97,7 @@ namespace GameClass.GameObj
             {
                 if (whoLockOrOpen != null)
                 {
-                    if (Environment.TickCount64 - openStartTime >= GameData.degreeOfLockingOrOpeningTheDoor)
+                    if ((Environment.TickCount64 - openStartTime) >= GameData.degreeOfLockingOrOpeningTheDoor / whoLockOrOpen.SpeedOfOpeningOrLocking)
                         isOpen = true;
                     whoLockOrOpen = null;
                 }
@@ -128,7 +128,7 @@ namespace GameClass.GameObj
             lock (gameObjLock)
             {
                 if (lockDegree >= GameData.degreeOfLockingOrOpeningTheDoor)
-                    isOpen = true;
+                    isOpen = false;
                 whoLockOrOpen = null;
             }
         }

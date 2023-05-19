@@ -197,6 +197,19 @@ namespace GameClass.GameObj
                 return false;
             }
 
+            public bool TryDeleteInvisible()
+            {
+                if (HasInvisible)
+                {
+                    lock (buffListLock[(int)BuffType.Invisible])
+                    {
+                        buffList[(int)BuffType.Invisible].RemoveFirst();
+                    }
+                    return true;
+                }
+                return false;
+            }
+
             public void AddClairaudience(int shieldTime) => AddBuff(new BuffValue(), shieldTime, BuffType.Clairaudience, () =>
             { });
             public bool HasClairaudience

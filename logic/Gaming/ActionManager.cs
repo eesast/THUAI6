@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Threading;
 using GameClass.GameObj;
 using GameEngine;
@@ -13,26 +14,6 @@ namespace Gaming
         private readonly ActionManager actionManager;
         private class ActionManager
         {
-
-            // 人物移动
-            private void SkillWhenColliding(Character player, IGameObj collisionObj)
-            {
-                if (collisionObj.Type == GameObjType.Bullet)
-                {
-                    if (((Bullet)collisionObj).Parent != player && ((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
-                    {
-                        if (characterManager.BeStunned((Character)player, GameData.timeOfStunnedWhenJumpyDumpty) > 0)
-                            player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStunnedWhenJumpyDumpty));
-                        gameMap.Remove((GameObj)collisionObj);
-                    }
-                }
-                if (player.FindActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed == 1 && collisionObj.Type == GameObjType.Character && ((Character)collisionObj).IsGhost())
-                {
-                    if (characterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge) > 0)
-                        player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenCharge));
-                    characterManager.BeStunned(player, GameData.timeOfStudentStunnedWhenCharge);
-                }
-            }
             public bool MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
             {
                 if (moveTimeInMilliseconds < 5) return false;
@@ -80,7 +61,7 @@ namespace Gaming
                 return true;
             }
 
-            public bool Stop(Character player)
+            public static bool Stop(Character player)
             {
                 lock (player.ActionLock)
                 {
@@ -95,7 +76,7 @@ namespace Gaming
 
             public bool Fix(Student player)// 自动检查有无发电机可修
             {
-                if (player.CharacterType == CharacterType.Teacher || (!player.Commandable()) || player.PlayerState == PlayerStateType.Fixing)
+                if ((!player.Commandable()) || player.PlayerState == PlayerStateType.Fixing)
                     return false;
                 Generator? generatorForFix = (Generator?)gameMap.OneForInteract(player.Position, GameObjType.Generator);
 
@@ -449,8 +430,11 @@ namespace Gaming
                           )
                           .Start();
                                 doorToLock.StopLock();
-                                if (stateNum == player.StateNum) player.SetPlayerState();
                                 player.ReleaseTool(propType);
+                                lock (player.ActionLock)
+                                {
+                                    if (stateNum == player.StateNum) player.SetPlayerStateNaturally();
+                                }
                                 player.ThreadNum.Release();
                             }
                         }
@@ -500,9 +484,12 @@ namespace Gaming
                                 player.ReleaseTool(propType);
                                 lock (player.ActionLock)
                                 {
-                                    if (stateNum == player.StateNum) player.SetPlayerState();
+                                    if (stateNum == player.StateNum)
+                                    {
+                                        player.SetPlayerStateNaturally();
+                                        player.ThreadNum.Release();
+                                    }
                                 }
-                                player.ThreadNum.Release();
                             }
                             else
                             {
@@ -512,7 +499,7 @@ namespace Gaming
                                 {
                                     if (stateNum == player.StateNum)
                                     {
-                                        player.SetPlayerState();
+                                        player.SetPlayerStateNaturally();
                                         doorToLock.StopOpen();
                                         player.ReleaseTool(propType);
                                         player.ThreadNum.Release();
@@ -561,7 +548,37 @@ namespace Gaming
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>
                     {
-                        SkillWhenColliding((Character)obj, collisionObj);
+                        Character player = (Character)obj;
+                        switch (collisionObj.Type)
+                        {
+                            case GameObjType.Bullet:
+
+                                if (((Bullet)collisionObj).Parent != player && ((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
+                                {
+                                    if (characterManager.BeStunned((Character)player, GameData.timeOfStunnedWhenJumpyDumpty) > 0)
+                                        player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStunnedWhenJumpyDumpty));
+                                    gameMap.Remove((GameObj)collisionObj);
+                                }
+                                break;
+                            case GameObjType.Character:
+                                if (player.FindActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed == 1 && ((Character)collisionObj).IsGhost())
+                                {
+                                    if (characterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge) > 0)
+                                        player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenCharge));
+                                    characterManager.BeStunned(player, GameData.timeOfStudentStunnedWhenCharge);
+                                }
+                                break;
+                            case GameObjType.Item:
+                                if (((Item)collisionObj).GetPropType() == PropType.CraftingBench)
+                                {
+                                    ((CraftingBench)collisionObj).TryStopSkill();
+                                    gameMap.Remove((Item)collisionObj);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+
                         //Preparation.Utility.Debugger.Output(obj, " end move with " + collisionObj.ToString());
                         //if (collisionObj is Mine)
                         //{

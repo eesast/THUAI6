@@ -76,6 +76,7 @@ namespace Gaming
                                  }
                              },
                              timeInterval: GameData.checkIntervalWhenShowTime,
+                             maxTotalDuration: skill.DurationTime,
                              finallyReturn: () => 0
                          )
 
@@ -104,17 +105,39 @@ namespace Gaming
                                                       { });
             }
 
-            public bool UseRobot(Character player)
+            public bool UseRobot(Character player, int robotID)
             {
-                /*
-                IGolem? golem = (IGolem?)(((SummonGolem)player.FindActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned);
-                if ((!player.Commandable()) || ((SummonGolem)player.FindActiveSkill(ActiveSkillType.SummonGolem)).GolemSummoned == null) return false;
-                Debugger.Output(player, "use robot!");
-                IActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.UseRobot);
-                activeSkill.IsBeingUsed = (activeSkill.IsBeingUsed) ? false : true;
-                if (activeSkill.IsBeingUsed) player.SetPlayerState(PlayerStateType.UsingSkill);
-                else player.SetPlayerState();*/
-                return true;
+                if ((robotID - player.PlayerID) % GameData.numOfPeople != 0) return false;
+                if ((robotID - (int)player.PlayerID) / GameData.numOfPeople < 0 || (robotID - (int)player.PlayerID) / GameData.numOfPeople > GameData.maxSummonedGolemNum) return false;
+                UseRobot activeSkill = (UseRobot)player.FindActiveSkill(ActiveSkillType.UseRobot);
+                lock (activeSkill.ActiveSkillUseLock)
+                {
+                    if (robotID == player.PlayerID)
+                    {
+                        lock (player.ActionLock)
+                        {
+                            if (player.PlayerState == PlayerStateType.UsingSkill && player.WhatInteractingWith == null)
+                                player.SetPlayerStateNaturally();
+                            activeSkill.NowPlayerID = robotID;
+                        }
+                    }
+                    else
+                    {
+                        SummonGolem summonGolemSkill = (SummonGolem)player.FindActiveSkill(ActiveSkillType.SummonGolem);
+                        if (summonGolemSkill.GolemStateArray[(robotID - (int)player.PlayerID) / GameData.numOfPeople - 1] == 2)
+                        {
+                            activeSkill.NowPlayerID = robotID;
+                        }
+                        else return false;
+                        long stateNum = player.SetPlayerState(PlayerStateType.UsingSkill);
+                        if (stateNum == -1)
+                        {
+                            activeSkill.NowPlayerID = (int)player.PlayerID;
+                            return false;
+                        }
+                    }
+                    return ActiveSkillEffect(activeSkill, player, () => { }, () => { });
+                }
             }
 
             public static bool JumpyBomb(Character player)
@@ -127,6 +150,62 @@ namespace Gaming
                 },
                                                       () =>
                                                       { player.BulletOfPlayer = player.OriBulletOfPlayer; });
+            }
+
+            public bool SparksNSplash(Character player, int AttackID)
+            {
+                Character? whoAttacked = gameMap.FindPlayer(AttackID);
+                if (whoAttacked == null || whoAttacked.NoHp()) return false;
+                ActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.SparksNSplash);
+
+                return ActiveSkillEffect(activeSkill, player, () =>
+                {
+                    new Thread
+                    (
+                   () =>
+                   {
+                       Bullet? homingMissile = null;
+                       double dis;
+                       new FrameRateTaskExecutor<int>(
+                       loopCondition: () => gameMap.Timer.IsGaming && !whoAttacked.NoHp(),
+                             loopToDo: () =>
+                             {
+                                 dis = ((homingMissile == null || homingMissile.IsRemoved) ? double.MaxValue : XY.DistanceFloor3(homingMissile.Position, whoAttacked.Position));
+                                 gameMap.GameObjLockDict[GameObjType.Bullet].EnterReadLock();
+                                 try
+                                 {
+                                     foreach (Bullet bullet in gameMap.GameObjDict[GameObjType.Bullet])
+                                     {
+                                         if (!bullet.CanMove && XY.DistanceFloor3(bullet.Position, whoAttacked.Position) < dis && bullet.TypeOfBullet == BulletType.JumpyDumpty)
+                                         {
+                                             homingMissile = bullet;
+                                             dis = XY.DistanceFloor3(bullet.Position, whoAttacked.Position);
+                                         }
+                                     }
+                                 }
+                                 finally
+                                 {
+                                     gameMap.GameObjLockDict[GameObjType.Bullet].ExitReadLock();
+                                 }
+                                 if (homingMissile != null)
+                                 {
+                                     homingMissile.ReSetCanMove(true);
+                                     attackManager.moveEngine.MoveObj(homingMissile, GameData.checkIntervalWhenSparksNSplash - 1, (whoAttacked.Position - homingMissile.Position).Angle(), ++homingMissile.StateNum);
+                                 }
+                             },
+                             timeInterval: GameData.checkIntervalWhenSparksNSplash,
+                             maxTotalDuration: activeSkill.DurationTime,
+                             finallyReturn: () => 0
+                         )
+
+                             .Start();
+                   }
+                    )
+                    { IsBackground = true }.Start();
+                    Debugger.Output(player, "uses sparks n splash!");
+                },
+                                                      () =>
+                                                      { });
             }
 
             public bool WriteAnswers(Character player)
@@ -151,24 +230,61 @@ namespace Gaming
             public bool SummonGolem(Character player)
             {
                 ActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.SummonGolem);
-                long num = ((SummonGolem)activeSkill).AddGolem();
+                int num = ((SummonGolem)activeSkill).BuildGolem();
                 if (num >= GameData.maxSummonedGolemNum) return false;
-                num = (num + 1) * GameData.numOfPeople + player.PlayerID;
 
-                /*   if ((!player.Commandable())) return false;
-                   XY res = player.Position + new XY(player.FacingDirection, player.Radius * 2);
-                   if (actionManager.moveEngine.CheckCollision(player, res) != null)
-                       return false;
-                   Golem? golem = (Golem?)characterManager.AddPlayer(res, player.TeamID, player.PlayerID + GameData.numOfPeople, CharacterType.Robot, player);
-                   if (golem == null) return false;
-                   ((SummonGolem)activeSkill).GolemSummoned = golem;
-               */
-                return ActiveSkillEffect(activeSkill, player, () =>
+                XY res = player.Position + new XY(player.FacingDirection, player.Radius * 2);
+                lock (activeSkill.ActiveSkillUseLock)
                 {
-                },
-                                                      () =>
-                                                      { });
+                    CraftingBench craftingBench = new(res, player, num);
 
+                    long stateNum = player.SetPlayerState(PlayerStateType.UsingSkill, craftingBench);
+                    if (stateNum == -1)
+                    {
+                        ((SummonGolem)activeSkill).DeleteGolem(num);
+                        return false;
+                    }
+
+                    player.ThreadNum.WaitOne();
+                    if (stateNum != player.StateNum)
+                    {
+                        ((SummonGolem)activeSkill).DeleteGolem(num);
+                        player.ThreadNum.Release();
+                        return false;
+                    }
+
+                    if (actionManager.moveEngine.CheckCollision(craftingBench, res) != null)
+                    {
+                        ((SummonGolem)activeSkill).DeleteGolem(num);
+                        player.ThreadNum.Release();
+                        return false;
+                    }
+                    craftingBench.ParentStateNum = stateNum;
+                    gameMap.Add(craftingBench);
+                    /*
+                   */
+                    return ActiveSkillEffect(activeSkill, player, () =>
+                    {
+                    },
+                    () =>
+                    {
+                        lock (player.ActionLock)
+                        {
+                            if (stateNum == player.StateNum)
+                            {
+                                gameMap.RemoveJustFromMap(craftingBench);
+                                Golem? golem = (Golem?)characterManager.AddPlayer(res, player.TeamID, (num + 1) * GameData.numOfPeople + player.PlayerID, CharacterType.Robot, player);
+                                if (golem == null)
+                                {
+                                    ((SummonGolem)activeSkill).AddGolem(num);
+                                }
+                                player.SetPlayerStateNaturally();
+                                player.ThreadNum.Release();
+                            }
+                        }
+                    }
+                     );
+                }
             }
 
             public static bool UseKnife(Character player)
@@ -312,7 +428,7 @@ namespace Gaming
                     {
                         foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            if (gameMap.CanSee(player, character))
+                            if (gameMap.CanSee(player, character) && !character.IsGhost())
                             {
                                 player.AddScore(GameData.ScoreInspire);
                                 character.AddMoveSpeed(GameData.timeOfAddingSpeedWhenInspire, GameData.addedTimeOfSpeedWhenInspire);
@@ -336,6 +452,7 @@ namespace Gaming
                     if (activeSkill.TimeUntilActiveSkillAvailable == 0)
                     {
                         activeSkill.TimeUntilActiveSkillAvailable = activeSkill.SkillCD;
+
                         new Thread
                         (() =>
                         {

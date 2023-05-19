@@ -32,7 +32,10 @@ namespace Preparation.Interface
         private int timeUntilActiveSkillAvailable = 0;
         public int TimeUntilActiveSkillAvailable
         {
-            get => Interlocked.CompareExchange(ref timeUntilActiveSkillAvailable, 0, 1);
+            get
+            {
+                return Interlocked.CompareExchange(ref timeUntilActiveSkillAvailable, 0, 1);
+            }
             set
             {
                 if (value < 0) value = 0;
@@ -103,6 +106,12 @@ namespace Preparation.Interface
         public override int DurationTime => GameData.commonSkillTime * 3 / 10;
     }
 
+    public class SparksNSplash : ActiveSkill
+    {
+        public override int SkillCD => GameData.commonSkillCD * 45 / 30;
+        public override int DurationTime => GameData.commonSkillTime;
+    }
+
     public class UseKnife : ActiveSkill
     {
         public override int SkillCD => GameData.commonSkillCD;
@@ -117,8 +126,32 @@ namespace Preparation.Interface
         private int nowPlayerID;
         public int NowPlayerID
         {
-            get => Interlocked.CompareExchange(ref nowPlayerID, 0, 1);
-            set => Interlocked.Exchange(ref nowPlayerID, value);
+            get
+            {
+                lock (SkillLock)
+                {
+                    return nowPlayerID;
+                }
+            }
+            set
+            {
+                lock (SkillLock)
+                {
+                    nowPlayerID = value;
+                }
+            }
+        }
+        public bool TryResetNowPlayerID(int tryPlayerID)
+        {
+            lock (SkillLock)
+            {
+                if (nowPlayerID == tryPlayerID)
+                {
+                    nowPlayerID %= GameData.numOfPeople;
+                    return true;
+                }
+                else return false;
+            }
         }
     }
 
@@ -138,14 +171,15 @@ namespace Preparation.Interface
     public class SummonGolem : ActiveSkill
     {
         public override int SkillCD => GameData.commonSkillCD * 4 / 3;
-        public override int DurationTime => 6;
+        public override int DurationTime => 6000;
 
-        private bool[] golemIDArray = new bool[GameData.maxSummonedGolemNum] { false, false, false };
-        public bool[] GolemIDArray
+        private int[] golemStateArray = new int[GameData.maxSummonedGolemNum] { 0, 0, 0 };
+        //0未建造，1建造中，2已建造
+        public int[] GolemStateArray
         {
             get
             {
-                lock (SkillLock) { return golemIDArray; }
+                lock (SkillLock) { return golemStateArray; }
             }
         }
         private int nowPtr = 0;
@@ -156,14 +190,14 @@ namespace Preparation.Interface
                 lock (SkillLock) { return nowPtr; }
             }
         }
-        public int AddGolem()
+        public int BuildGolem()
         {
             lock (SkillLock)
             {
                 if (nowPtr == GameData.maxSummonedGolemNum) return GameData.maxSummonedGolemNum;
                 int num = nowPtr;
-                golemIDArray[nowPtr] = true;
-                while ((++nowPtr) < GameData.maxSummonedGolemNum && golemIDArray[nowPtr]) ;
+                golemStateArray[nowPtr] = 1;
+                while ((++nowPtr) < GameData.maxSummonedGolemNum && golemStateArray[nowPtr] != 0) ;
                 return num;
             }
         }
@@ -171,11 +205,18 @@ namespace Preparation.Interface
         {
             lock (SkillLock)
             {
-                golemIDArray[num] = false;
+                golemStateArray[num] = 0;
                 if (num < nowPtr)
                 {
                     nowPtr = num;
                 }
+            }
+        }
+        public void AddGolem(int num)
+        {
+            lock (SkillLock)
+            {
+                golemStateArray[num] = 2;
             }
         }
     }
@@ -206,6 +247,8 @@ namespace Preparation.Interface
                     return new Punish();
                 case ActiveSkillType.JumpyBomb:
                     return new JumpyBomb();
+                case ActiveSkillType.SparksNSplash:
+                    return new SparksNSplash();
                 case ActiveSkillType.WriteAnswers:
                     return new WriteAnswers();
                 case ActiveSkillType.SummonGolem:
@@ -243,6 +286,8 @@ namespace Preparation.Interface
                     return ActiveSkillType.Punish;
                 case JumpyBomb:
                     return ActiveSkillType.JumpyBomb;
+                case SparksNSplash:
+                    return ActiveSkillType.SparksNSplash;
                 case WriteAnswers:
                     return ActiveSkillType.WriteAnswers;
                 case SummonGolem:

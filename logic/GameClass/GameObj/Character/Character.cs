@@ -106,7 +106,7 @@ namespace GameClass.GameObj
                         );
                     Bullet? bullet = BulletFactory.GetBullet(this, res, this.bulletOfPlayer);
                     if (bullet == null) return null;
-                    bullet.AP += TryAddAp() ? GameData.ApPropAdd : 0;
+                    if (TryAddAp()) bullet.AddAP(GameData.ApPropAdd);
                     facingDirection = new(angle, bullet.AttackDistance);
                     return bullet;
                 }

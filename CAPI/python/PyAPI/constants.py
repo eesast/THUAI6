@@ -296,7 +296,7 @@ class UseKnife:
 
 
 class UseRobot:
-    skillCD = (int)(0.0667 * Constants.commonSkillCD)
+    skillCD = (int)(0.0666 * Constants.commonSkillCD)
     durationTime = (int)(0.0 * Constants.commonSkillTime)
 
 
@@ -306,7 +306,7 @@ class WriteAnswers:
 
 
 class SummonGolem:
-    skillCD = (int)(1.25 * Constants.commonSkillCD)
+    skillCD = (int)(Constants.commonSkillCD * 4 // 3)
     durationTime = (int)(6.0 * Constants.commonSkillTime)
 
 

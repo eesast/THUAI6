@@ -59,7 +59,7 @@ namespace Preparation.Utility
         CommonAttackOfGhost = 2,
         JumpyDumpty = 3,
         BombBomb = 4,
-        // Ram = 7,
+        Strike = 8,
     }
     public enum PropType  // 道具类型
     {//numOfPropSpecies 见Gamedata
@@ -106,6 +106,7 @@ namespace Preparation.Utility
         Inspire = 13,
         ShowTime = 14,
         SparksNSplash = 15,
+        HaveTea = 16,
     }
     public enum PassiveSkillType
     {

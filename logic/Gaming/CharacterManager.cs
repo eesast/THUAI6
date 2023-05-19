@@ -240,7 +240,7 @@ namespace Gaming
                 { IsBackground = true }.Start();
             }
 
-            public long BeStunned(Character player, int time)
+            public static long BeStunned(Character player, int time)
             {
                 if (player.CharacterType == CharacterType.Robot) return -1;
                 long threadNum = player.SetPlayerState(PlayerStateType.Stunned);
@@ -324,6 +324,11 @@ namespace Gaming
 #endif
                     }
                     bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
+                    if (student.CharacterType == CharacterType.Teacher)
+                    {
+                        student.AddScore(subHp * GameData.factorOfScoreWhenTeacherAttacked / GameData.basicApOfGhost);
+                    }
+
                     bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                 }
                 if (student.HP <= 0)

@@ -106,7 +106,7 @@ namespace GameClass.GameObj
                         );
                     Bullet? bullet = BulletFactory.GetBullet(this, res, this.bulletOfPlayer);
                     if (bullet == null) return null;
-                    bullet.AP += TryAddAp() ? GameData.ApPropAdd : 0;
+                    if (TryAddAp()) bullet.AddAP(GameData.ApPropAdd);
                     facingDirection = new(angle, bullet.AttackDistance);
                     return bullet;
                 }
@@ -361,7 +361,9 @@ namespace GameClass.GameObj
             {
                 lock (actionLock)
                 {
-                    if (playerState == PlayerStateType.Moving && IsMoving == 1) return PlayerStateType.Moving;
+                    if (playerState == PlayerStateType.Moving)
+                        if (IsMoving == 1) return PlayerStateType.Moving;
+                        else return PlayerStateType.Null;
                     return playerState;
                 }
             }

@@ -362,7 +362,7 @@ namespace GameClass.GameObj
                 lock (actionLock)
                 {
                     if (playerState == PlayerStateType.Moving)
-                        return (IsMoving == 1) ? PlayerStateType.Moving : PlayerStateType.Null;
+                        return (IsMoving) ? PlayerStateType.Moving : PlayerStateType.Null;
                     return playerState;
                 }
             }
@@ -594,17 +594,9 @@ namespace GameClass.GameObj
         {
             lock (actionLock)
             {
-                MoveReaderWriterLock.EnterWriteLock();
-                try
-                {
-                    canMove = false;
-                    isRemoved = true;
-                }
-                finally
-                {
-                    MoveReaderWriterLock.ExitWriteLock();
-                }
-                playerState = playerStateType;
+                TryToRemove();
+                ReSetCanMove(false);
+                SetPlayerState(playerStateType);
                 position = GameData.PosWhoDie;
             }
         }

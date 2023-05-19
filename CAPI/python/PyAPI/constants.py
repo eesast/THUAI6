@@ -159,14 +159,14 @@ class Teacher:
     moveSpeed = (int)(0.9 * Constants.basicStudentSpeed)
     maxHp = (int)(10.0 * Constants.basicHp)
     maxAddiction = (int)(10.0 * Constants.basicMaxGamingAddiction)
-    LearnSpeed = (int)(0.4 * Constants.basicLearnSpeed)
+    LearnSpeed = (int)( Constants.basicLearnSpeed* 50//123)
     EncourageSpeed = (int)(0.8 * Constants.basicEncourageSpeed)
     concealment = 0.5 * Constants.basicConcealment
-    alertnessRadius = (int)(0.75 * Constants.basicStudentAlertnessRadius)
+    alertnessRadius = (int)(Constants.basicStudentAlertnessRadius * 2 // 3)
     viewRange = (int)(0.8 * Constants.basicStudentViewRange)
     speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        0.82 * Constants.basicStudentSpeedOfClimbingThroughWindows
+        Constants.basicStudentSpeedOfClimbingThroughWindows* 1000 // 1222
     )
     speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
 
@@ -197,9 +197,7 @@ class Robot:
     alertnessRadius = (int)(0.0 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(0.0 * Constants.basicStudentViewRange)
     speedOfOpeningOrLocking = (int)(0.0 * Constants.basicSpeedOfOpeningOrLocking)
-    speedOfClimbingThroughWindows = (int)(
-        0.0008 * Constants.basicStudentSpeedOfClimbingThroughWindows
-    )
+    speedOfClimbingThroughWindows = 1
     speedOfOpenChest = (int)(0.8 * Constants.basicSpeedOfOpenChest)
 
 
@@ -209,7 +207,7 @@ class TechOtaku:
     maxAddiction = (int)(1.0 * Constants.basicMaxGamingAddiction)
     LearnSpeed = (int)(0.9 * Constants.basicLearnSpeed)
     EncourageSpeed = (int)(1.0 * Constants.basicEncourageSpeed)
-    concealment = 1.0 * Constants.basicConcealment
+    concealment = 1.1 * Constants.basicConcealment
     alertnessRadius = (int)(1.0 * Constants.basicStudentAlertnessRadius)
     viewRange = (int)(0.9 * Constants.basicStudentViewRange)
     speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
@@ -296,7 +294,7 @@ class UseKnife:
 
 
 class UseRobot:
-    skillCD = (int)(0.0667 * Constants.commonSkillCD)
+    skillCD = (int)(2 * Constants.commonSkillCD // 30)
     durationTime = (int)(0.0 * Constants.commonSkillTime)
 
 
@@ -306,7 +304,7 @@ class WriteAnswers:
 
 
 class SummonGolem:
-    skillCD = (int)(1.25 * Constants.commonSkillCD)
+    skillCD = (int)(4 * Constants.commonSkillCD//3)
     durationTime = (int)(6.0 * Constants.commonSkillTime)
 
 
@@ -366,5 +364,5 @@ class Strike:
     CastTime = Constants.basicCastTime * 16 // 25
     Backswing = Constants.basicBackswing
     RecoveryFromHit = Constants.basicRecoveryFromHit
-    cd = Constants.basicBackswing * 3 // 4
+    cd = Constants.basicBackswing
     maxBulletNum = 1

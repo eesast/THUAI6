@@ -29,40 +29,23 @@ namespace GameClass.GameObj
         protected XY facingDirection = new(1, 0);
         public abstract XY FacingDirection { get; }
 
-        protected bool canMove;
         public abstract bool CanMove { get; }
 
         public abstract bool IsRigid { get; }
 
         public abstract ShapeType Shape { get; }
 
-        protected bool isRemoved = false;
-        public virtual bool IsRemoved
+        protected int isRemoved = 0;
+        public bool IsRemoved
         {
             get
             {
-                gameObjReaderWriterLock.EnterReadLock();
-                try
-                {
-                    return isRemoved;
-                }
-                finally
-                {
-                    gameObjReaderWriterLock.ExitReadLock();
-                }
+                return (Interlocked.CompareExchange(ref isRemoved, 0, 0) == 1);
             }
         }
         public virtual void TryToRemove()
         {
-            gameObjReaderWriterLock.EnterWriteLock();
-            try
-            {
-                isRemoved = true;
-            }
-            finally
-            {
-                gameObjReaderWriterLock.ExitWriteLock();
-            }
+            Interlocked.Exchange(ref isRemoved, 1);
         }
 
         public int Radius { get; }

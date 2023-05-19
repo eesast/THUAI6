@@ -138,13 +138,13 @@ namespace Constants
         SCCI int moveSpeed = basicStudentSpeed * 9 / 10;
         SCCI int maxHp = basicHp * 10;
         SCCI int maxAddiction = basicMaxGamingAddiction * 10;
-        SCCI int fixSpeed = (int)(basicFixSpeed * 0.4);
+        SCCI int fixSpeed = (int)(basicFixSpeed * 50 / 123);
         SCCI int encourageSpeed = basicEncourageSpeed * 8 / 10;
         SCCI double concealment = 0.5;
-        SCCI int alertnessRadius = basicStudentAlertnessRadius * 3 / 4;
+        SCCI int alertnessRadius = basicStudentAlertnessRadius * 2 / 3;
         SCCI int viewRange = basicStudentViewRange * 8 / 10;
         SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
-        SCCI int speedOfClimbingThroughWindows = (int)(basicStudentSpeedOfClimbingThroughWindows * 0.82);
+        SCCI int speedOfClimbingThroughWindows = (int)(basicStudentSpeedOfClimbingThroughWindows * 1000 / 1222);
         SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
     };
 
@@ -377,7 +377,7 @@ namespace Constants
     struct Strike
     {
         SCCI double BulletBombRange = 0;
-        SSC double BulletAttackRange = basicAttackShortRange;
+        SCCI double BulletAttackRange = basicAttackShortRange;
         SCCI int ap = basicApOfTricker * 16 / 15;
         SCCI int Speed = basicBulletMoveSpeed * 125 / 148;
         SCCI bool IsRemoteAttack = false;
@@ -385,7 +385,7 @@ namespace Constants
         SCCI int CastTime = basicCastTime * 16 / 25;
         SCCI int Backswing = basicBackswing;
         SCCI int RecoveryFromHit = basicRecoveryFromHit;
-        SCCI int cd = basicBackswing * 3 / 4;
+        SCCI int cd = basicBackswing;
         SCCI int maxBulletNum = 1;
     };
 }  // namespace Constants

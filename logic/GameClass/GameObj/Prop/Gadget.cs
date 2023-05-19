@@ -24,7 +24,7 @@ namespace GameClass.GameObj
         public Gadget(XY initPos, int radius = GameData.propRadius) :
             base(initPos, radius, GameObjType.Gadget)
         {
-            this.canMove = false;
+            this.ReSetCanMove(false);
             this.MoveSpeed = GameData.propMoveSpeed;
         }
     }

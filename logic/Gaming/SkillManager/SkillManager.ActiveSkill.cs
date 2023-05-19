@@ -428,7 +428,7 @@ namespace Gaming
                     {
                         foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            if (gameMap.CanSee(player, character))
+                            if (gameMap.CanSee(player, character) && !character.IsGhost())
                             {
                                 player.AddScore(GameData.ScoreInspire);
                                 character.AddMoveSpeed(GameData.timeOfAddingSpeedWhenInspire, GameData.addedTimeOfSpeedWhenInspire);

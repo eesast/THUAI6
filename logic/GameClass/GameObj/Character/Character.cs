@@ -823,6 +823,11 @@ namespace GameClass.GameObj
             return buffManager.TryUseSpear();
         }
 
+        public bool TryDeleteInvisible()
+        {
+            return buffManager.TryDeleteInvisible();
+        }
+
         public bool TryUseShield()
         {
             if (buffManager.TryUseShield())

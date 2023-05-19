@@ -8,7 +8,7 @@ namespace Preparation.Interface
     {
         object ActionLock { get; }
         public int MoveSpeed { get; }
-        public int IsMoving { get; set; }
+        public bool IsMoving { get; set; }
         public bool IsRemoved { get; }
         public bool IsAvailableForMove { get; }
         public long StateNum { get; }

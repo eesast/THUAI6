@@ -32,10 +32,10 @@ namespace Constants
     // 人物属性相关
     SCCI int basicEncourageSpeed = 100;
     SCCI int basicFixSpeed = 123;
-    SCCI int basicSpeedOfOpeningOrLocking = 4000;
+    SCCI int basicSpeedOfOpeningOrLocking = 5000;
     SCCI int basicStudentSpeedOfClimbingThroughWindows = 1222;
     SCCI int basicTrickerSpeedOfClimbingThroughWindows = 2540;
-    SCCI int basicSpeedOfOpenChest = 1000;
+    SCCI int basicSpeedOfOpenChest = 1250;
 
     SCCI int basicHp = 3000000;
     SCCI int basicMaxGamingAddiction = 60000;
@@ -138,19 +138,19 @@ namespace Constants
         SCCI int moveSpeed = basicStudentSpeed * 9 / 10;
         SCCI int maxHp = basicHp * 10;
         SCCI int maxAddiction = basicMaxGamingAddiction * 10;
-        SCCI int fixSpeed = basicFixSpeed * 0;
+        SCCI int fixSpeed = (int)(basicFixSpeed * 50 / 123);
         SCCI int encourageSpeed = basicEncourageSpeed * 8 / 10;
         SCCI double concealment = 0.5;
-        SCCI int alertnessRadius = basicStudentAlertnessRadius / 2;
-        SCCI int viewRange = basicStudentViewRange * 9 / 10;
+        SCCI int alertnessRadius = basicStudentAlertnessRadius * 2 / 3;
+        SCCI int viewRange = basicStudentViewRange * 8 / 10;
         SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
-        SCCI int speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows / 2;
+        SCCI int speedOfClimbingThroughWindows = (int)(basicStudentSpeedOfClimbingThroughWindows * 1000 / 1222);
         SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
     };
 
     struct StraightAStudent
     {
-        SCCI int moveSpeed = basicStudentSpeed * 96 / 100;
+        SCCI int moveSpeed = basicStudentSpeed * 24 / 25;
         SCCI int maxHp = basicHp * 11 / 10;
         SCCI int maxAddiction = basicMaxGamingAddiction * 13 / 10;
         SCCI int fixSpeed = basicFixSpeed * 11 / 10;
@@ -165,41 +165,41 @@ namespace Constants
 
     struct Robot
     {
-        SCCI int moveSpeed = basicStudentSpeed;
-        SCCI int maxHp = basicHp * 0.4;
+        SCCI int moveSpeed = basicStudentSpeed * 9 / 10;
+        SCCI int maxHp = basicHp * 0.3;
         SCCI int maxAddiction = basicMaxGamingAddiction * 0;
-        SCCI int fixSpeed = basicFixSpeed;
+        SCCI int fixSpeed = (int)(basicFixSpeed * 0.7);
         SCCI int encourageSpeed = 0;
-        SCCI double concealment = 1;
-        SCCI int alertnessRadius = basicStudentAlertnessRadius * 1;
-        SCCI int viewRange = basicStudentViewRange;
-        SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
+        SCCI double concealment = 0.8;
+        SCCI int alertnessRadius = 0;
+        SCCI int viewRange = 0;
+        SCCI int speedOfOpeningOrLocking = 0;
         SCCI int speedOfClimbingThroughWindows = 1;
-        SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest * 4 / 5;
     };
 
     struct TechOtaku
     {
-        SCCI int moveSpeed = basicStudentSpeed * 3 / 4;
+        SCCI int moveSpeed = (int)(basicStudentSpeed * 0.96);
         SCCI int maxHp = basicHp * 9 / 10;
-        SCCI int maxAddiction = basicMaxGamingAddiction * 11 / 10;
-        SCCI int fixSpeed = basicFixSpeed * 11 / 10;
-        SCCI int encourageSpeed = basicEncourageSpeed * 9 / 10;
-        SCCI double concealment = 1;
+        SCCI int maxAddiction = basicMaxGamingAddiction;
+        SCCI int fixSpeed = (int)(basicFixSpeed * 0.9);
+        SCCI int encourageSpeed = basicEncourageSpeed;
+        SCCI double concealment = 1.1;
         SCCI int alertnessRadius = basicStudentAlertnessRadius;
         SCCI int viewRange = basicStudentViewRange * 9 / 10;
         SCCI int speedOfOpeningOrLocking = basicSpeedOfOpeningOrLocking;
-        SCCI int speedOfClimbingThroughWindows = basicStudentSpeedOfClimbingThroughWindows * 3 / 4;
-        SCCI int speedOfOpenChest = basicSpeedOfOpenChest;
+        SCCI int speedOfClimbingThroughWindows = (int)(basicStudentSpeedOfClimbingThroughWindows * 0.9);
+        SCCI int speedOfOpenChest = basicSpeedOfOpenChest * 22 / 25;
     };
 
     struct Sunshine
     {
         SCCI int moveSpeed = basicStudentSpeed;
-        SCCI int maxHp = basicHp * 32 / 30;
+        SCCI int maxHp = basicHp * 16 / 15;
         SCCI int maxAddiction = basicMaxGamingAddiction * 11 / 10;
         SCCI int fixSpeed = basicFixSpeed;
-        SCCI int encourageSpeed = basicEncourageSpeed * 12 / 10;
+        SCCI int encourageSpeed = basicEncourageSpeed * 6 / 5;
         SCCI double concealment = 1;
         SCCI int alertnessRadius = basicStudentAlertnessRadius;
         SCCI int viewRange = basicStudentViewRange;
@@ -244,7 +244,19 @@ namespace Constants
 
     struct Punish
     {
-        SCCI int skillCD = commonSkillCD * 1;
+        SCCI int skillCD = commonSkillCD * 3 / 2;
+        SCCI int durationTime = commonSkillTime * 0;
+    };
+
+    struct SparksNSplash
+    {
+        SCCI int skillCD = commonSkillCD * 3 / 2;
+        SCCI int durationTime = commonSkillTime * 1;
+    };
+
+    struct HaveTea
+    {
+        SCCI int skillCD = commonSkillCD * 3;
         SCCI int durationTime = commonSkillTime * 0;
     };
 
@@ -292,7 +304,7 @@ namespace Constants
 
     struct UseRobot
     {
-        SCCI int skillCD = commonSkillCD / 300;
+        SCCI int skillCD = commonSkillCD / 15;
         SCCI int durationTime = commonSkillTime * 0;
     };
 
@@ -304,8 +316,8 @@ namespace Constants
 
     struct SummonGolem
     {
-        SCCI int skillCD = commonSkillCD * 1;
-        SCCI int durationTime = commonSkillTime * 0;
+        SCCI int skillCD = commonSkillCD * 4 / 3;
+        SCCI int durationTime = commonSkillTime * 6;
     };
 
     struct CommonAttackOfTricker
@@ -331,10 +343,10 @@ namespace Constants
         SCCI int Speed = basicBulletMoveSpeed * 25 / 10;
         SCCI bool IsRemoteAttack = true;
 
-        SCCI int CastTime = basicCastTime * 4 / 5;
+        SCCI int CastTime = basicCastTime * 6 / 5;
         SCCI int Backswing = 0;
         SCCI int RecoveryFromHit = 0;
-        SCCI int cd = basicBackswing / 2;
+        SCCI int cd = basicBackswing * 3 / 4;
         SCCI int maxBulletNum = 1;
     };
 
@@ -347,7 +359,7 @@ namespace Constants
         SCCI bool IsRemoteAttack = false;
 
         SCCI int CastTime = (int)BulletAttackRange * 1000 / Speed;
-        SCCI int Backswing = basicRecoveryFromHit;
+        SCCI int Backswing = basicBackswing * 3 / 2;
         SCCI int RecoveryFromHit = basicRecoveryFromHit;
         SCCI int cd = basicCD;
         SCCI int maxBulletNum = 1;
@@ -356,10 +368,25 @@ namespace Constants
     struct JumpyDumpty
     {
         SCCI double BulletBombRange = basicBulletBombRange / 2;
-        SCCI double BulletAttackRange = basicRemoteAttackRange * 2;
+        SCCI double BulletAttackRange = basicAttackShortRange * 16 / 22;
         SCCI int ap = (int)(basicApOfTricker * 0.6);
         SCCI int Speed = basicBulletMoveSpeed * 43 / 37;
         SCCI bool IsRemoteAttack = false;
+    };
+
+    struct Strike
+    {
+        SCCI double BulletBombRange = 0;
+        SCCI double BulletAttackRange = basicAttackShortRange;
+        SCCI int ap = basicApOfTricker * 16 / 15;
+        SCCI int Speed = basicBulletMoveSpeed * 125 / 148;
+        SCCI bool IsRemoteAttack = false;
+
+        SCCI int CastTime = basicCastTime * 16 / 25;
+        SCCI int Backswing = basicBackswing;
+        SCCI int RecoveryFromHit = basicRecoveryFromHit;
+        SCCI int cd = basicBackswing;
+        SCCI int maxBulletNum = 1;
     };
 }  // namespace Constants
 #endif

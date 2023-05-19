@@ -14,7 +14,7 @@ namespace GameClass.GameObj
         protected int ap;
         public int AP
         {
-            get => Interlocked.CompareExchange(ref ap, 0, 1);
+            get => Interlocked.CompareExchange(ref ap, 0, 0);
         }
         public void AddAP(int addAp)
         {
@@ -52,7 +52,7 @@ namespace GameClass.GameObj
         public Bullet(Character player, int radius, XY Position) :
             base(Position, radius, GameObjType.Bullet)
         {
-            this.canMove = true;
+            this.ReSetCanMove(true);
             this.MoveSpeed = this.Speed;
             this.hasSpear = player.TryUseSpear();
             this.Parent = player;

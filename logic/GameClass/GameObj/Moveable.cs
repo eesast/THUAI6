@@ -48,10 +48,10 @@ namespace GameClass.GameObj
         }
 
         private int isMoving = 0;
-        public int IsMoving
+        public bool IsMoving
         {
-            get => Interlocked.CompareExchange(ref isMoving, 0, 1);
-            set => Interlocked.Exchange(ref isMoving, value);
+            get => (Interlocked.CompareExchange(ref isMoving, 0, 0) == 1);
+            set => Interlocked.Exchange(ref isMoving, value ? 1 : 0);
         }
 
         // 移动，改变坐标
@@ -62,15 +62,7 @@ namespace GameClass.GameObj
             {
                 lock (actionLock)
                 {
-                    moveReaderWriterLock.EnterReadLock();
-                    try
-                    {
-                        if (!canMove || isRemoved) return -1;
-                    }
-                    finally
-                    {
-                        moveReaderWriterLock.ExitReadLock();
-                    }
+                    if (!CanMove || IsRemoved) return -1;
                     if (stateNo != stateNum) return -1;
                     facingDirection = moveVec;
                     this.position += moveVec;
@@ -87,49 +79,15 @@ namespace GameClass.GameObj
             }
         }
 
+        private int canMove;
         public override bool CanMove
         {
-            get
-            {
-                moveReaderWriterLock.EnterReadLock();
-                try
-                {
-                    return canMove;
-                }
-                finally
-                {
-                    moveReaderWriterLock.ExitReadLock();
-                }
-            }
+            get => (Interlocked.CompareExchange(ref canMove, 0, 0) == 1);
         }
 
         public void ReSetCanMove(bool value)
         {
-            moveReaderWriterLock.EnterWriteLock();
-            try
-            {
-                canMove = value;
-            }
-            finally
-            {
-                moveReaderWriterLock.ExitWriteLock();
-            }
-        }
-
-        public override bool IsRemoved
-        {
-            get
-            {
-                moveReaderWriterLock.EnterReadLock();
-                try
-                {
-                    return isRemoved;
-                }
-                finally
-                {
-                    moveReaderWriterLock.ExitReadLock();
-                }
-            }
+            Interlocked.Exchange(ref canMove, (value ? 1 : 0));
         }
 
         public bool IsAvailableForMove // 是否能接收移动指令
@@ -138,15 +96,7 @@ namespace GameClass.GameObj
             {
                 lock (actionLock)
                 {
-                    moveReaderWriterLock.EnterReadLock();
-                    try
-                    {
-                        return isMoving == 0 && canMove && !isRemoved;
-                    }
-                    finally
-                    {
-                        moveReaderWriterLock.ExitReadLock();
-                    }
+                    return !IsMoving && CanMove && !IsRemoved;
                 }
             }
         }
@@ -157,7 +107,7 @@ namespace GameClass.GameObj
         /// </summary>
         public int MoveSpeed
         {
-            get => Interlocked.CompareExchange(ref moveSpeed, 0, 1);
+            get => Interlocked.CompareExchange(ref moveSpeed, 0, 0);
             set => Interlocked.Exchange(ref moveSpeed, value);
         }
         /// <summary>

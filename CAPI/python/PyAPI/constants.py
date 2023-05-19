@@ -65,8 +65,8 @@ class Constants(NoInstance):
 
     # 道具相关
 
-    apPropAdd = basicApOfTricker * 12 / 10
-    apSpearAdd = basicApOfTricker * 6 / 10
+    apPropAdd = basicApOfTricker * 12 // 10
+    apSpearAdd = basicApOfTricker * 6 // 10
 
     # 技能相关
     maxNumOfSkill = 3
@@ -85,7 +85,7 @@ class Constants(NoInstance):
 
     addedTimeOfSpeedWhenInspire = 1.6
     timeOfAddingSpeedWhenInspire = 6000
-    addHpWhenEncourage = basicHp / 4
+    addHpWhenEncourage = basicHp // 4
 
     checkIntervalWhenShowTime = 200
     addAddictionPer100msWhenShowTime = 300
@@ -241,7 +241,7 @@ class CanBeginToCharge:
 
 
 class BecomeInvisible:
-    skillCD = (int)(4 * Constants.commonSkillCD / 3)
+    skillCD = (int)(4 * Constants.commonSkillCD // 3)
     durationTime = (int)(Constants.commonSkillTime)
 
 
@@ -281,7 +281,7 @@ class Howl:
 
 
 class ShowTime:
-    skillCD = (int)(8 * Constants.commonSkillCD / 3)
+    skillCD = (int)(8 * Constants.commonSkillCD // 3)
     durationTime = (int)(1.0 * Constants.commonSkillTime)
 
 
@@ -316,7 +316,7 @@ class CommonAttackOfTricker:
     ap = Constants.basicApOfTricker
     Speed = Constants.basicBulletMoveSpeed
     IsRemoteAttack = False
-    CastTime = BulletAttackRange * 1000 / Speed
+    CastTime = BulletAttackRange * 1000 // Speed
     Backswing = Constants.basicBackswing
     RecoveryFromHit = Constants.basicRecoveryFromHit
     cd = Constants.basicBackswing
@@ -326,45 +326,45 @@ class CommonAttackOfTricker:
 class FlyingKnife:
     BulletBombRange = 0
     BulletAttackRange = Constants.basicRemoteAttackRange * 13
-    ap = Constants.basicApOfTricker * 4 / 5
-    Speed = Constants.basicBulletMoveSpeed * 25 / 10
+    ap = Constants.basicApOfTricker * 4 // 5
+    Speed = Constants.basicBulletMoveSpeed * 25 // 10
     IsRemoteAttack = True
-    CastTime = Constants.basicCastTime * 6 / 5
+    CastTime = Constants.basicCastTime * 6 // 5
     Backswing = 0
     RecoveryFromHit = 0
-    cd = Constants.basicBackswing * 3 / 4
+    cd = Constants.basicBackswing * 3 // 4
     maxBulletNum = 1
 
 
 class BombBomb:
     BulletBombRange = Constants.basicBulletBombRange
     BulletAttackRange = Constants.basicAttackShortRange
-    ap = Constants.basicApOfTricker * 6 / 5
-    Speed = Constants.basicBulletMoveSpeed * 30 / 37
+    ap = Constants.basicApOfTricker * 6 // 5
+    Speed = Constants.basicBulletMoveSpeed * 30 // 37
     IsRemoteAttack = False
-    CastTime = BulletAttackRange * 1000 / Speed
-    Backswing = Constants.basicBackswing * 3 / 2
+    CastTime = BulletAttackRange * 1000 // Speed
+    Backswing = Constants.basicBackswing * 3 // 2
     RecoveryFromHit = Constants.basicRecoveryFromHit
     cd = Constants.basicCD
     maxBulletNum = 1
 
 
 class JumpyDumpty:
-    BulletBombRange = Constants.basicBulletBombRange / 2
+    BulletBombRange = Constants.basicBulletBombRange // 2
     BulletAttackRange = Constants.basicRemoteAttackRange * 2
     ap = (int)(Constants.basicApOfTricker * 0.6)
-    Speed = Constants.basicBulletMoveSpeed * 43 / 37
+    Speed = Constants.basicBulletMoveSpeed * 43 // 37
     IsRemoteAttack = False
 
 
 class Strike:
     BulletBombRange = 0
     BulletAttackRange = Constants.basicAttackShortRange
-    ap = Constants.basicApOfTricker * 16 / 5
-    Speed = Constants.basicBulletMoveSpeed * 125 / 148
+    ap = Constants.basicApOfTricker * 16 // 5
+    Speed = Constants.basicBulletMoveSpeed * 125 // 148
     IsRemoteAttack = False
-    CastTime = Constants.basicCastTime * 16 / 25
+    CastTime = Constants.basicCastTime * 16 // 25
     Backswing = Constants.basicBackswing
     RecoveryFromHit = Constants.basicRecoveryFromHit
-    cd = Constants.basicBackswing * 3 / 4
+    cd = Constants.basicBackswing * 3 // 4
     maxBulletNum = 1

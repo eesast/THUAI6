@@ -106,6 +106,12 @@ namespace Preparation.Interface
         public override int DurationTime => GameData.commonSkillTime * 3 / 10;
     }
 
+    public class SparksNSplash : ActiveSkill
+    {
+        public override int SkillCD => GameData.commonSkillCD * 45 / 30;
+        public override int DurationTime => GameData.commonSkillTime;
+    }
+
     public class UseKnife : ActiveSkill
     {
         public override int SkillCD => GameData.commonSkillCD;
@@ -241,6 +247,8 @@ namespace Preparation.Interface
                     return new Punish();
                 case ActiveSkillType.JumpyBomb:
                     return new JumpyBomb();
+                case ActiveSkillType.SparksNSplash:
+                    return new SparksNSplash();
                 case ActiveSkillType.WriteAnswers:
                     return new WriteAnswers();
                 case ActiveSkillType.SummonGolem:
@@ -278,6 +286,8 @@ namespace Preparation.Interface
                     return ActiveSkillType.Punish;
                 case JumpyBomb:
                     return ActiveSkillType.JumpyBomb;
+                case SparksNSplash:
+                    return ActiveSkillType.SparksNSplash;
                 case WriteAnswers:
                     return ActiveSkillType.WriteAnswers;
                 case SummonGolem:

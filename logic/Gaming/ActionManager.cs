@@ -433,7 +433,7 @@ namespace Gaming
                                 player.ReleaseTool(propType);
                                 lock (player.ActionLock)
                                 {
-                                    if (stateNum == player.StateNum) player.SetPlayerState();
+                                    if (stateNum == player.StateNum) player.SetPlayerStateNaturally();
                                 }
                                 player.ThreadNum.Release();
                             }

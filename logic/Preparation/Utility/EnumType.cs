@@ -105,6 +105,7 @@ namespace Preparation.Utility
         Encourage = 12,
         Inspire = 13,
         ShowTime = 14,
+        SparksNSplash = 15,
     }
     public enum PassiveSkillType
     {

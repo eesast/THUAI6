@@ -15,7 +15,7 @@ namespace Gaming
         private class AttackManager
         {
             readonly Map gameMap;
-            readonly MoveEngine moveEngine;
+            public readonly MoveEngine moveEngine;
             readonly CharacterManager characterManager;
 
             public AttackManager(Map gameMap, CharacterManager characterManager)
@@ -109,6 +109,17 @@ namespace Gaming
                 else return false;
             }
 
+            private void ProduceBombBomb(Bullet bullet, double angle)
+            {
+                angle += bullet.FacingDirection.Angle();
+                XY pos = bullet.Position + new XY
+                (
+                (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
+                (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Sin(angle))) * Math.Sign(Math.Sin(angle))
+                );
+                ProduceBulletNaturally(BulletType.JumpyDumpty, (Character)bullet.Parent!, angle, pos);
+            }
+
             private void BulletBomb(Bullet bullet, GameObj? objBeingShot)
             {
 #if DEBUG
@@ -144,21 +155,14 @@ namespace Gaming
 
                 if (bullet.TypeOfBullet == BulletType.BombBomb && objBeingShot != null)
                 {
-                    double angle = bullet.FacingDirection.Angle() + Math.PI / 2.0;
-                    XY pos = bullet.Position + new XY  // 子弹紧贴人物生成。
-                    (
-                    (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
-                    (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Sin(angle))) * Math.Sign(Math.Sin(angle))
-                    );
-                    ProduceBulletNaturally(BulletType.JumpyDumpty, (Character)bullet.Parent!, angle, pos);
-
-                    angle = bullet.FacingDirection.Angle() + Math.PI * 3.0 / 2.0;
-                    pos = bullet.Position + new XY  // 子弹紧贴人物生成。
-                    (
-                    (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
-                    (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Sin(angle))) * Math.Sign(Math.Sin(angle))
-                    );
-                    ProduceBulletNaturally(BulletType.JumpyDumpty, (Character)bullet.Parent!, angle, pos);
+                    ProduceBombBomb(bullet, 0);
+                    ProduceBombBomb(bullet, Math.PI / 4);
+                    ProduceBombBomb(bullet, Math.PI / 2);
+                    ProduceBombBomb(bullet, Math.PI * 3 / 4);
+                    ProduceBombBomb(bullet, Math.PI);
+                    ProduceBombBomb(bullet, Math.PI * 5 / 4);
+                    ProduceBombBomb(bullet, Math.PI * 3 / 2);
+                    ProduceBombBomb(bullet, Math.PI * 7 / 4);
                 }
 
                 var beAttackedList = new List<IGameObj>();

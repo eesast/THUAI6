@@ -70,8 +70,8 @@ namespace Preparation.Interface
 
         public BulletType InitBullet => BulletType.CommonAttackOfGhost;
 
-        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.JumpyBomb });
-        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.JumpyBomb, ActiveSkillType.SparksNSplash });
+        public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { PassiveSkillType.Lucky });
 
         public double concealment = GameData.basicConcealment;
         public double Concealment => concealment;

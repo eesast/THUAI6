@@ -76,6 +76,7 @@ namespace Gaming
                                  }
                              },
                              timeInterval: GameData.checkIntervalWhenShowTime,
+                             maxTotalDuration: skill.DurationTime,
                              finallyReturn: () => 0
                          )
 
@@ -149,6 +150,62 @@ namespace Gaming
                 },
                                                       () =>
                                                       { player.BulletOfPlayer = player.OriBulletOfPlayer; });
+            }
+
+            public bool SparksNSplash(Character player, int AttackID)
+            {
+                Character? whoAttacked = gameMap.FindPlayer(AttackID);
+                if (whoAttacked == null || whoAttacked.NoHp()) return false;
+                ActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.SparksNSplash);
+
+                return ActiveSkillEffect(activeSkill, player, () =>
+                {
+                    new Thread
+                    (
+                   () =>
+                   {
+                       Bullet? homingMissile = null;
+                       double dis;
+                       new FrameRateTaskExecutor<int>(
+                       loopCondition: () => gameMap.Timer.IsGaming && !whoAttacked.NoHp(),
+                             loopToDo: () =>
+                             {
+                                 dis = ((homingMissile == null || homingMissile.IsRemoved) ? double.MaxValue : XY.DistanceFloor3(homingMissile.Position, whoAttacked.Position));
+                                 gameMap.GameObjLockDict[GameObjType.Bullet].EnterReadLock();
+                                 try
+                                 {
+                                     foreach (Bullet bullet in gameMap.GameObjDict[GameObjType.Bullet])
+                                     {
+                                         if (!bullet.CanMove && XY.DistanceFloor3(bullet.Position, whoAttacked.Position) < dis && bullet.TypeOfBullet == BulletType.JumpyDumpty)
+                                         {
+                                             homingMissile = bullet;
+                                             dis = XY.DistanceFloor3(bullet.Position, whoAttacked.Position);
+                                         }
+                                     }
+                                 }
+                                 finally
+                                 {
+                                     gameMap.GameObjLockDict[GameObjType.Bullet].ExitReadLock();
+                                 }
+                                 if (homingMissile != null)
+                                 {
+                                     homingMissile.ReSetCanMove(true);
+                                     attackManager.moveEngine.MoveObj(homingMissile, GameData.checkIntervalWhenSparksNSplash - 1, (whoAttacked.Position - homingMissile.Position).Angle(), ++homingMissile.StateNum);
+                                 }
+                             },
+                             timeInterval: GameData.checkIntervalWhenSparksNSplash,
+                             maxTotalDuration: activeSkill.DurationTime,
+                             finallyReturn: () => 0
+                         )
+
+                             .Start();
+                   }
+                    )
+                    { IsBackground = true }.Start();
+                    Debugger.Output(player, "uses sparks n splash!");
+                },
+                                                      () =>
+                                                      { });
             }
 
             public bool WriteAnswers(Character player)

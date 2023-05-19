@@ -102,10 +102,10 @@ namespace Server
                 }
             }
         }
-        protected virtual void SendGameResult()		// 天梯的 Server 给网站发消息记录比赛结果
+        protected void SendGameResult()		// 天梯的 Server 给网站发消息记录比赛结果
         {
             int[] scores = GetScore();
-            httpSender?.SendHttpRequest(scores);
+            httpSender?.SendHttpRequest(scores).Wait();
         }
 
         private void OnGameEnd()

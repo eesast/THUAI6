@@ -93,16 +93,29 @@ namespace Gaming
 
             public static bool BecomeInvisible(Character player)
             {
-                if ((!player.Commandable())) return false;
                 ActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.BecomeInvisible);
+                long stateNum = player.SetPlayerState(PlayerStateType.UsingSkill);
+                if (stateNum == -1)
+                {
+                    return false;
+                }
                 return ActiveSkillEffect(activeSkill, player, () =>
                 {
                     player.AddScore(GameData.ScoreBecomeInvisible);
                     player.AddInvisible(activeSkill.DurationTime);
                     Debugger.Output(player, "become invisible!");
                 },
-                                                      () =>
-                                                      { });
+                () =>
+                 {
+                     lock (player.ActionLock)
+                     {
+                         if (stateNum == player.StateNum)
+                         {
+                             player.SetPlayerStateNaturally();
+                         }
+                     }
+                 }
+                                                      );
             }
 
             public bool UseRobot(Character player, int robotID)

@@ -34,7 +34,7 @@ namespace Preparation.Interface
         {
             get
             {
-                return Interlocked.CompareExchange(ref timeUntilActiveSkillAvailable, 0, 1);
+                return Interlocked.CompareExchange(ref timeUntilActiveSkillAvailable, 0, 0);
             }
             set
             {
@@ -47,7 +47,7 @@ namespace Preparation.Interface
         public int isBeingUsed = 0;//实为bool
         public int IsBeingUsed
         {
-            get => Interlocked.CompareExchange(ref isBeingUsed, 0, 1);
+            get => Interlocked.CompareExchange(ref isBeingUsed, 0, 0);
             set => Interlocked.Exchange(ref isBeingUsed, value);
         }
     }
@@ -67,6 +67,12 @@ namespace Preparation.Interface
     public class Punish : ActiveSkill
     {
         public override int SkillCD => GameData.commonSkillCD * 45 / 30;
+        public override int DurationTime => 0;
+    }
+
+    public class HaveTea : ActiveSkill
+    {
+        public override int SkillCD => GameData.commonSkillCD * 3;
         public override int DurationTime => 0;
     }
 
@@ -163,7 +169,7 @@ namespace Preparation.Interface
         private int degreeOfMeditation = 0;
         public int DegreeOfMeditation
         {
-            get => Interlocked.CompareExchange(ref degreeOfMeditation, 0, 1);
+            get => Interlocked.CompareExchange(ref degreeOfMeditation, 0, 0);
             set => Interlocked.Exchange(ref degreeOfMeditation, value);
         }
     }
@@ -245,6 +251,8 @@ namespace Preparation.Interface
                     return new CanBeginToCharge();
                 case ActiveSkillType.Punish:
                     return new Punish();
+                case ActiveSkillType.HaveTea:
+                    return new HaveTea();
                 case ActiveSkillType.JumpyBomb:
                     return new JumpyBomb();
                 case ActiveSkillType.SparksNSplash:
@@ -284,6 +292,8 @@ namespace Preparation.Interface
                     return ActiveSkillType.Inspire;
                 case Punish:
                     return ActiveSkillType.Punish;
+                case HaveTea:
+                    return ActiveSkillType.HaveTea;
                 case JumpyBomb:
                     return ActiveSkillType.JumpyBomb;
                 case SparksNSplash:

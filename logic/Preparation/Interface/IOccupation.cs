@@ -166,7 +166,7 @@ namespace Preparation.Interface
 
         public BulletType InitBullet => BulletType.Null;
 
-        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.Punish });
+        public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.Punish, ActiveSkillType.HaveTea });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });
 
         public const int fixSpeed = 50;
@@ -181,7 +181,7 @@ namespace Preparation.Interface
         public const int alertnessRadius = GameData.basicStudentAlertnessRadius * 2 / 3;
         public int AlertnessRadius => alertnessRadius;
 
-        public int viewRange = GameData.basicStudentViewRange * 8 / 10;
+        public int viewRange = GameData.basicStudentViewRange * 9 / 10;
         public int ViewRange => viewRange;
 
         public int speedOfOpeningOrLocking = GameData.basicSpeedOfOpeningOrLocking;

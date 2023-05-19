@@ -362,8 +362,7 @@ namespace GameClass.GameObj
                 lock (actionLock)
                 {
                     if (playerState == PlayerStateType.Moving)
-                        if (IsMoving == 1) return PlayerStateType.Moving;
-                        else return PlayerStateType.Null;
+                        return (IsMoving == 1) ? PlayerStateType.Moving : PlayerStateType.Null;
                     return playerState;
                 }
             }
@@ -540,27 +539,41 @@ namespace GameClass.GameObj
                             ThreadNum.Release();
                         }
                     case PlayerStateType.UsingSkill:
-                        if (CharacterType == CharacterType.TechOtaku)
                         {
-                            if (typeof(CraftingBench).IsInstanceOfType(whatInteractingWith))
+                            switch (CharacterType)
                             {
-                                try
-                                {
-                                    ((CraftingBench)whatInteractingWith!).StopSkill();
+                                case CharacterType.TechOtaku:
+                                    {
+                                        if (typeof(CraftingBench).IsInstanceOfType(whatInteractingWith))
+                                        {
+                                            try
+                                            {
+                                                ((CraftingBench)whatInteractingWith!).StopSkill();
+                                                return ChangePlayerState(value, gameObj);
+                                            }
+                                            finally
+                                            {
+                                                ThreadNum.Release();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (value != PlayerStateType.UsingSkill)
+                                                ((UseRobot)FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID = (int)playerID;
+                                            return ChangePlayerState(value, gameObj);
+                                        }
+                                    }
+                                case CharacterType.Assassin:
+                                    if (value == PlayerStateType.Moving) return StateNum;
+                                    else
+                                    {
+                                        TryDeleteInvisible();
+                                        return ChangePlayerState(value, gameObj);
+                                    }
+                                default:
                                     return ChangePlayerState(value, gameObj);
-                                }
-                                finally
-                                {
-                                    ThreadNum.Release();
-                                }
-                            }
-                            else
-                            {
-                                if (value != PlayerStateType.UsingSkill)
-                                    ((UseRobot)FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID = (int)playerID;
                             }
                         }
-                        return ChangePlayerState(value, gameObj);
                     default:
                         return ChangePlayerState(value, gameObj);
                 }

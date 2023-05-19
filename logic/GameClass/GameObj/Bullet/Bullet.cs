@@ -14,7 +14,7 @@ namespace GameClass.GameObj
         protected int ap;
         public int AP
         {
-            get => Interlocked.CompareExchange(ref ap, 0, 1);
+            get => Interlocked.CompareExchange(ref ap, 0, 0);
         }
         public void AddAP(int addAp)
         {

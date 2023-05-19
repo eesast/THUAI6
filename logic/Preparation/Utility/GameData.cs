@@ -214,7 +214,7 @@ namespace Preparation.Utility
         public const int timeOfStudentStunnedWhenCharge = 2090;
 
         public const int timeOfGhostStunnedWhenPunish = 3070;
-        public const int factorOfTimeStunnedWhenPunish = 300 / basicApOfGhost;
+        public const int factorOfTimeStunnedWhenPunish = 500 / basicApOfGhost;
         public const int factorOfScoreWhenTeacherAttacked = 100;//每个
 
         public const int timeOfGhostSwingingAfterHowl = 800;

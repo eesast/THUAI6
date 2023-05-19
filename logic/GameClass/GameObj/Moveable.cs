@@ -50,7 +50,7 @@ namespace GameClass.GameObj
         private int isMoving = 0;
         public int IsMoving
         {
-            get => Interlocked.CompareExchange(ref isMoving, 0, 1);
+            get => Interlocked.CompareExchange(ref isMoving, 0, 0);
             set => Interlocked.Exchange(ref isMoving, value);
         }
 
@@ -157,7 +157,7 @@ namespace GameClass.GameObj
         /// </summary>
         public int MoveSpeed
         {
-            get => Interlocked.CompareExchange(ref moveSpeed, 0, 1);
+            get => Interlocked.CompareExchange(ref moveSpeed, 0, 0);
             set => Interlocked.Exchange(ref moveSpeed, value);
         }
         /// <summary>

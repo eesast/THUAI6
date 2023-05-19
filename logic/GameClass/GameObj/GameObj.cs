@@ -9,7 +9,7 @@ namespace GameClass.GameObj
     /// </summary>
     public abstract class GameObj : IGameObj
     {
-        private ReaderWriterLockSlim gameObjReaderWriterLock = new();
+        private readonly ReaderWriterLockSlim gameObjReaderWriterLock = new();
         public ReaderWriterLockSlim GameObjReaderWriterLock => gameObjReaderWriterLock;
         protected readonly object gameObjLock = new();
         public object GameLock => gameObjLock;
@@ -35,6 +35,35 @@ namespace GameClass.GameObj
         public abstract bool IsRigid { get; }
 
         public abstract ShapeType Shape { get; }
+
+        protected bool isRemoved = false;
+        public virtual bool IsRemoved
+        {
+            get
+            {
+                gameObjReaderWriterLock.EnterReadLock();
+                try
+                {
+                    return isRemoved;
+                }
+                finally
+                {
+                    gameObjReaderWriterLock.ExitReadLock();
+                }
+            }
+        }
+        public virtual void TryToRemove()
+        {
+            gameObjReaderWriterLock.EnterWriteLock();
+            try
+            {
+                isRemoved = true;
+            }
+            finally
+            {
+                gameObjReaderWriterLock.ExitWriteLock();
+            }
+        }
 
         public int Radius { get; }
 

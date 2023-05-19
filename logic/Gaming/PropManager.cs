@@ -5,8 +5,6 @@ using Preparation.Utility;
 using System;
 using Timothy.FrameRateTask;
 using GameEngine;
-using System.Numerics;
-using System.Reflection;
 
 namespace Gaming
 {
@@ -107,7 +105,7 @@ namespace Gaming
 
                 if (pickProp.GetPropType() != PropType.Null)
                 {
-                    gameMap.Remove(pickProp);
+                    gameMap.RemoveJustFromMap(pickProp);
                     //gameMap.Add(new Item(pickProp));
                     return true;
                 }

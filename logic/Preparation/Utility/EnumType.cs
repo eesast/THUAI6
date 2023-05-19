@@ -105,11 +105,12 @@ namespace Preparation.Utility
         Encourage = 12,
         Inspire = 13,
         ShowTime = 14,
+        SparksNSplash = 15,
     }
     public enum PassiveSkillType
     {
         Null = 0,
-        BecomeInvisible = 1,
+        Lucky = 1,
         BecomeVampire = 2,
         NuclearWeapon = 3,
         SuperFast = 4,

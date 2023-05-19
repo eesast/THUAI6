@@ -816,63 +816,63 @@ namespace Client
 
         private void Refresh(object? sender, EventArgs e) //log未更新
         {
-            lock (drawPicLock)  // 加锁是必要的，画图操作和接收信息操作不能同时进行
+            try
             {
-                // Bonus();
-                if (WindowState == WindowState.Maximized)
-                    MaxButton.Content = "❐";
-                else
-                    MaxButton.Content = "🗖";
-                foreach (var obj in listOfHuman)
+                lock (drawPicLock)  // 加锁是必要的，画图操作和接收信息操作不能同时进行
                 {
-                    if (!isDataFixed[obj.PlayerId] && obj.PlayerId < GameData.numOfStudent && obj.StudentType != StudentType.Robot)
+                    // Bonus();
+                    if (WindowState == WindowState.Maximized)
+                        MaxButton.Content = "❐";
+                    else
+                        MaxButton.Content = "🗖";
+                    foreach (var obj in listOfHuman)
                     {
-                        IStudentType occupation = (IStudentType)OccupationFactory.FindIOccupation(Transformation.ToStudentType(obj.StudentType));
-                        totalLife[obj.PlayerId] = occupation.MaxHp;
-                        totalDeath[obj.PlayerId] = occupation.MaxGamingAddiction;
-                        int i = 0;
-                        foreach (var skill in occupation.ListOfIActiveSkill)
+                        if (obj.PlayerId < GameData.numOfStudent && !isDataFixed[obj.PlayerId])
                         {
-                            var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
-                            coolTime[i, obj.PlayerId] = iActiveSkill.SkillCD;
-                            ++i;
+                            IStudentType occupation = (IStudentType)OccupationFactory.FindIOccupation(Transformation.ToStudentType(obj.StudentType));
+                            totalLife[obj.PlayerId] = occupation.MaxHp;
+                            totalDeath[obj.PlayerId] = occupation.MaxGamingAddiction;
+                            int i = 0;
+                            foreach (var skill in occupation.ListOfIActiveSkill)
+                            {
+                                var iActiveSkill = SkillFactory.FindActiveSkill(skill);
+                                coolTime[i, obj.PlayerId] = iActiveSkill.SkillCD;
+                                ++i;
+                            }
+                            isDataFixed[obj.PlayerId] = true;
                         }
-                        isDataFixed[obj.PlayerId] = true;
                     }
-                }
-                foreach (var obj in listOfButcher)
-                {
-                    if (!isDataFixed[obj.PlayerId])
+                    foreach (var obj in listOfButcher)
                     {
-                        IGhostType occupation1 = (IGhostType)OccupationFactory.FindIOccupation(Transformation.ToTrickerType(obj.TrickerType));
-                        int j = 0;
-                        foreach (var skill in occupation1.ListOfIActiveSkill)
+                        if (!isDataFixed[obj.PlayerId])
                         {
-                            var iActiveSkill = SkillFactory.FindIActiveSkill(skill);
-                            coolTime[j, GameData.numOfStudent] = iActiveSkill.SkillCD;
-                            ++j;
+                            IGhostType occupation1 = (IGhostType)OccupationFactory.FindIOccupation(Transformation.ToTrickerType(obj.TrickerType));
+                            int j = 0;
+                            foreach (var skill in occupation1.ListOfIActiveSkill)
+                            {
+                                var iActiveSkill = SkillFactory.FindActiveSkill(skill);
+                                coolTime[j, GameData.numOfStudent] = iActiveSkill.SkillCD;
+                                ++j;
+                            }
+                            isDataFixed[obj.PlayerId] = true;
                         }
-                        isDataFixed[obj.PlayerId] = true;
                     }
-                }
 
-                for (int i = 0; i < GameData.numOfStudent; i++)
-                {
-                    StatusBarsOfSurvivor[i].NewData(totalLife, totalDeath, coolTime);
-                }
+                    for (int i = 0; i < GameData.numOfStudent; i++)
+                    {
+                        StatusBarsOfSurvivor[i].NewData(totalLife, totalDeath, coolTime);
+                    }
 
-                StatusBarsOfHunter.NewData(totalLife, totalDeath, coolTime);
+                    StatusBarsOfHunter.NewData(totalLife, totalDeath, coolTime);
 
-                for (int i = 0; i < GameData.numOfStudent; i++)
-                {
-                    StatusBarsOfSurvivor[i].SetFontSize(12 * unitFontsize);
-                }
+                    for (int i = 0; i < GameData.numOfStudent; i++)
+                    {
+                        StatusBarsOfSurvivor[i].SetFontSize(12 * unitFontsize);
+                    }
 
-                StatusBarsOfHunter.SetFontSize(12 * unitFontsize);
-                StatusBarsOfCircumstance.SetFontSize(12 * unitFontsize);
-                if (!isClientStocked)
-                {
-                    try
+                    StatusBarsOfHunter.SetFontSize(12 * unitFontsize);
+                    StatusBarsOfCircumstance.SetFontSize(12 * unitFontsize);
+                    if (!isClientStocked)
                     {
                         UpperLayerOfMap.Children.Clear();
                         foreach (var data in listOfAll)
@@ -885,7 +885,7 @@ namespace Client
                         }
                         foreach (var data in listOfHuman)
                         {
-                            if (data.StudentType != StudentType.Robot)
+                            if (data.PlayerId < GameData.numOfStudent)
                                 StatusBarsOfSurvivor[data.PlayerId].SetValue(data, data.PlayerId);
                             if (CanSee(data))
                             {
@@ -1136,15 +1136,15 @@ namespace Client
                             }
                         }
                     }
-                    catch (Exception exc)
-                    {
-                        ErrorDisplayer error = new("Error: " + exc.ToString());
-                        error.Show();
-                        isClientStocked = true;
-                        PorC.Content = "▶";
-                    }
+                    counter++;
                 }
-                counter++;
+            }
+            catch (Exception exc)
+            {
+                ErrorDisplayer error = new("Error: " + exc.ToString());
+                error.Show();
+                isClientStocked = true;
+                PorC.Content = "▶";
             }
         }
 
@@ -1309,6 +1309,7 @@ namespace Client
                         {
                             PlayerId = playerID,
                             SkillId = 0,
+                            SkillParam = 0,
                         };
                         client.UseSkill(msgB);
                         break;

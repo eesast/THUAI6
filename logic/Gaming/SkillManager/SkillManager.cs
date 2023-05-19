@@ -32,12 +32,14 @@ namespace Gaming
                             return Punish(character);
                         case ActiveSkillType.JumpyBomb:
                             return JumpyBomb(character);
+                        case ActiveSkillType.SparksNSplash:
+                            return SparksNSplash(character, parameter);
                         case ActiveSkillType.WriteAnswers:
                             return WriteAnswers(character);
                         case ActiveSkillType.SummonGolem:
                             return SummonGolem(character);
                         case ActiveSkillType.UseRobot:
-                            return UseRobot(character);
+                            return UseRobot(character, parameter);
                         case ActiveSkillType.Rouse:
                             return Rouse(character);
                         case ActiveSkillType.ShowTime:
@@ -47,7 +49,7 @@ namespace Gaming
                     }
                 return false;
             }
-            public void UsePassiveSkill(Character character, PassiveSkillType passiveSkillType)
+            /*public void UsePassiveSkill(Character character, PassiveSkillType passiveSkillType)
             {
                 if (character.Occupation.ListOfIPassiveSkill.Contains(passiveSkillType))
                     switch (passiveSkillType)
@@ -59,7 +61,7 @@ namespace Gaming
                             return;
                     }
                 return;
-            }
+            }*/
             public void UseAllPassiveSkill(Character character)
             {
                 foreach (var passiveSkill in character.Occupation.ListOfIPassiveSkill)
@@ -67,6 +69,9 @@ namespace Gaming
                     {
                         case PassiveSkillType.Meditate:
                             Meditate(character);
+                            break;
+                        case PassiveSkillType.Lucky:
+                            Lucky(character);
                             break;
                         default:
                             return;

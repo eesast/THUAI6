@@ -10,5 +10,11 @@ namespace Preparation.Utility
             Console.WriteLine(current.GetType() + " " + current.ToString() + " " + str);
 #endif
         }
+        static public void Output(string str)
+        {
+#if DEBUG
+            Console.WriteLine(str);
+#endif
+        }
     }
 }

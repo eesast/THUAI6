@@ -284,7 +284,7 @@ namespace Gaming
 
                 if (student.CharacterType == CharacterType.StraightAStudent)
                 {
-                    ((WriteAnswers)student.FindIActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
+                    ((WriteAnswers)student.FindActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
                 }
                 student.SetDegreeOfTreatment0();
 
@@ -382,8 +382,16 @@ namespace Gaming
                     var parent = ((Golem)player).Parent;
                     if (parent != null && parent.CharacterType == CharacterType.TechOtaku)
                     {
-                        ((SummonGolem)(parent.FindIActiveSkill(ActiveSkillType.SummonGolem))).GolemSummoned = null;
-                        player.FindIActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed = false;
+                        ((SummonGolem)(parent.FindActiveSkill(ActiveSkillType.SummonGolem))).DeleteGolem((int)(player.PlayerID - parent.PlayerID) / GameData.numOfPeople - 1);
+                        UseRobot useRobot = (UseRobot)parent.FindActiveSkill(ActiveSkillType.UseRobot);
+                        if (useRobot.TryResetNowPlayerID((int)player.PlayerID))
+                        {
+                            lock (parent.ActionLock)
+                            {
+                                if (parent.PlayerState == PlayerStateType.UsingSkill)
+                                    parent.SetPlayerState();
+                            }
+                        }
                     }
                     return;
                 }

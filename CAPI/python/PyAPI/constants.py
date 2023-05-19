@@ -304,7 +304,7 @@ class WriteAnswers:
 
 
 class SummonGolem:
-    skillCD = (int)(4 * Constants.commonSkillCD//3)
+    skillCD = (int)(Constants.commonSkillCD * 4 // 3)
     durationTime = (int)(6.0 * Constants.commonSkillTime)
 
 

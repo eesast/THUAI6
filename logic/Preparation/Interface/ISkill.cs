@@ -66,7 +66,7 @@ namespace Preparation.Interface
 
     public class Punish : ActiveSkill
     {
-        public override int SkillCD => GameData.commonSkillCD;
+        public override int SkillCD => GameData.commonSkillCD * 45 / 30;
         public override int DurationTime => 0;
     }
 

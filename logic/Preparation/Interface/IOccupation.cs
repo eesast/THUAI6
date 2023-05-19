@@ -130,7 +130,7 @@ namespace Preparation.Interface
         private const int maxHp = GameData.basicHp * 12 / 10;
         public int MaxHp => maxHp;
 
-        public BulletType InitBullet => BulletType.CommonAttackOfGhost;
+        public BulletType InitBullet => BulletType.Strike;
 
         public List<ActiveSkillType> ListOfIActiveSkill => new(new ActiveSkillType[] { ActiveSkillType.Howl });
         public List<PassiveSkillType> ListOfIPassiveSkill => new(new PassiveSkillType[] { });

@@ -8,19 +8,10 @@ namespace GameClass.GameObj
         public CommonAttackOfGhost(Character player, XY pos, int radius = GameData.bulletRadius) :
             base(player, radius, pos)
         {
+            ap = GameData.basicApOfGhost;
         }
         public override double BulletBombRange => 0;
         public override double AttackDistance => GameData.basicAttackShortRange;
-        public int ap = GameData.basicApOfGhost;
-        public override int AP
-        {
-            get => ap;
-            set
-            {
-                lock (gameObjLock)
-                    ap = value;
-            }
-        }
         public override int Speed => GameData.basicBulletMoveSpeed;
         public override bool IsRemoteAttack => false;
 
@@ -49,24 +40,54 @@ namespace GameClass.GameObj
         public override BulletType TypeOfBullet => BulletType.CommonAttackOfGhost;
     }
 
+    internal sealed class Strike : Bullet
+    {
+        public Strike(Character player, XY pos, int radius = GameData.bulletRadius) :
+            base(player, radius, pos)
+        {
+            ap = GameData.basicApOfGhost * 16 / 15;
+        }
+        public override double BulletBombRange => 0;
+        public override double AttackDistance => GameData.basicAttackShortRange * 20 / 22;
+        public override int Speed => GameData.basicBulletMoveSpeed * 625 / 740;
+        public override bool IsRemoteAttack => false;
+
+        public override int CastTime => (int)AttackDistance * 1000 / Speed;
+        public override int Backswing => GameData.basicBackswing;
+        public override int RecoveryFromHit => GameData.basicRecoveryFromHit;
+        public const int cd = GameData.basicBackswing;
+        public override int CD => cd;
+        public const int maxBulletNum = 1;
+        public override int MaxBulletNum => maxBulletNum;
+
+        public override bool CanAttack(GameObj target)
+        {
+            return false;
+        }
+        public override bool CanBeBombed(GameObjType gameObjType)
+        {
+            switch (gameObjType)
+            {
+                case GameObjType.Character:
+                case GameObjType.Generator:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        public override BulletType TypeOfBullet => BulletType.Strike;
+    }
+
     internal sealed class FlyingKnife : Bullet
     {
         public FlyingKnife(Character player, XY pos, int radius = GameData.bulletRadius) :
             base(player, radius, pos)
         {
+            ap = GameData.basicApOfGhost * 4 / 5;
         }
         public override double BulletBombRange => 0;
         public override double AttackDistance => GameData.basicRemoteAttackRange * 13;
-        public int ap = GameData.basicApOfGhost * 4 / 5;
-        public override int AP
-        {
-            get => ap;
-            set
-            {
-                lock (gameObjLock)
-                    ap = value;
-            }
-        }
+
         public override int Speed => GameData.basicBulletMoveSpeed * 25 / 10;
         public override bool IsRemoteAttack => true;
 
@@ -102,19 +123,11 @@ namespace GameClass.GameObj
     {
         public BombBomb(Character player, XY pos, int radius = GameData.bulletRadius) : base(player, radius, pos)
         {
+            ap = (int)(GameData.basicApOfGhost * 6.0 / 5);
         }
         public override double BulletBombRange => GameData.basicBulletBombRange;
         public override double AttackDistance => GameData.basicAttackShortRange;
-        public int ap = (int)(GameData.basicApOfGhost * 6.0 / 5);
-        public override int AP
-        {
-            get => ap;
-            set
-            {
-                lock (gameObjLock)
-                    ap = value;
-            }
-        }
+
         public override int Speed => (int)(GameData.basicBulletMoveSpeed * 30 / 37);
         public override bool IsRemoteAttack => false;
 
@@ -149,19 +162,11 @@ namespace GameClass.GameObj
     {
         public JumpyDumpty(Character player, XY pos, int radius = GameData.bulletRadius) : base(player, radius, pos)
         {
+            ap = (int)(GameData.basicApOfGhost * 0.6);
         }
         public override double BulletBombRange => GameData.basicBulletBombRange / 2;
         public override double AttackDistance => GameData.basicAttackShortRange * 2;
-        public int ap = (int)(GameData.basicApOfGhost * 0.6);
-        public override int AP
-        {
-            get => ap;
-            set
-            {
-                lock (gameObjLock)
-                    ap = value;
-            }
-        }
+
         public override int Speed => (int)(GameData.basicBulletMoveSpeed * 43 / 37);
         public override bool IsRemoteAttack => false;
 

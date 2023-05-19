@@ -1,5 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
@@ -10,7 +11,16 @@ namespace GameClass.GameObj
         /// </summary>
         public abstract double BulletBombRange { get; }
         public abstract double AttackDistance { get; }
-        public abstract int AP { get; set; }
+        protected int ap;
+        public int AP
+        {
+            get => Interlocked.CompareExchange(ref ap, 0, 1);
+        }
+        public void AddAP(int addAp)
+        {
+            Interlocked.Add(ref ap, addAp);
+        }
+
         public abstract int Speed { get; }
         public abstract bool IsRemoteAttack { get; }
         public abstract int CastTime { get; }

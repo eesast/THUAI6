@@ -76,6 +76,8 @@ namespace GameClass.GameObj
                     return new JumpyDumpty(character, pos);
                 case BulletType.BombBomb:
                     return new BombBomb(character, pos);
+                case BulletType.Strike:
+                    return new Strike(character, pos);
                 default:
                     return null;
             }
@@ -101,6 +103,8 @@ namespace GameClass.GameObj
                     return BombBomb.cd;
                 case BulletType.JumpyDumpty:
                     return JumpyDumpty.cd;
+                case BulletType.Strike:
+                    return Strike.cd;
                 default:
                     return GameData.basicCD;
             }

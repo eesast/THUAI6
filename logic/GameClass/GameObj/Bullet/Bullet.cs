@@ -121,6 +121,8 @@ namespace GameClass.GameObj
                     return BombBomb.maxBulletNum;
                 case BulletType.JumpyDumpty:
                     return JumpyDumpty.maxBulletNum;
+                case BulletType.Strike:
+                    return Strike.maxBulletNum;
                 default:
                     return 0;
             }

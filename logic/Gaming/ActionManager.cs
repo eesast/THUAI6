@@ -555,7 +555,7 @@ namespace Gaming
 
                                 if (((Bullet)collisionObj).Parent != player && ((Bullet)collisionObj).TypeOfBullet == BulletType.JumpyDumpty)
                                 {
-                                    if (characterManager.BeStunned((Character)player, GameData.timeOfStunnedWhenJumpyDumpty) > 0)
+                                    if (CharacterManager.BeStunned((Character)player, GameData.timeOfStunnedWhenJumpyDumpty) > 0)
                                         player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStunnedWhenJumpyDumpty));
                                     gameMap.Remove((GameObj)collisionObj);
                                 }
@@ -563,9 +563,9 @@ namespace Gaming
                             case GameObjType.Character:
                                 if (player.FindActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed == 1 && ((Character)collisionObj).IsGhost())
                                 {
-                                    if (characterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge) > 0)
+                                    if (CharacterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge) > 0)
                                         player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenCharge));
-                                    characterManager.BeStunned(player, GameData.timeOfStudentStunnedWhenCharge);
+                                    CharacterManager.BeStunned(player, GameData.timeOfStudentStunnedWhenCharge);
                                 }
                                 break;
                             case GameObjType.Item:

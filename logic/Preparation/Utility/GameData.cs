@@ -205,7 +205,7 @@ namespace Preparation.Utility
         public const double basicAttackShortRange = 2200;                 // 基本近程攻击范围
         public const double basicBulletBombRange = 2000;             // 基本子弹爆炸范围
         #endregion
-        #region 技能相关
+        #region 技能、特性相关
         public const int maxNumOfSkill = 3;
         public const int commonSkillCD = 30000;                      // 普通技能标准冷却时间
         public const int commonSkillTime = 10000;                    // 普通技能标准持续时间
@@ -215,6 +215,7 @@ namespace Preparation.Utility
 
         public const int timeOfGhostStunnedWhenPunish = 3070;
         public const int factorOfTimeStunnedWhenPunish = 300 / basicApOfGhost;
+        public const int factorOfScoreWhenTeacherAttacked = 100;//每个
 
         public const int timeOfGhostSwingingAfterHowl = 800;
         public const int timeOfStudentStunnedWhenHowl = 5500;

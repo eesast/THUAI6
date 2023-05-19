@@ -69,8 +69,7 @@ namespace GameClass.GameObj
             switch (gameObjType)
             {
                 case GameObjType.Character:
-                case:
-                    GameObjType.Generator:
+                case GameObjType.Generator:
                     return true;
                 default:
                     return false;

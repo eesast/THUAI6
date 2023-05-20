@@ -40,15 +40,20 @@ namespace Gaming
             {
                 Character newPlayer;
 
-                if (characterType == CharacterType.Teacher)
-                    DoubleFactorTeacher();
+                if (characterType == CharacterType.Robot)
+                {
+                    newPlayer = new Golem(pos, GameData.characterRadius, parent);
+                }
                 else
                 {
-                    if (characterType == CharacterType.Robot)
+                    if (GameData.IsGhost(characterType))
+                        newPlayer = new Ghost(pos, GameData.characterRadius, characterType);
+                    else
                     {
-                        newPlayer = new Golem(pos, GameData.characterRadius, parent);
+                        newPlayer = new Student(pos, GameData.characterRadius, characterType);
+                        if (characterType == CharacterType.Teacher)
+                            DoubleFactorTeacher();
                     }
-                    else newPlayer = (GameData.IsGhost(characterType)) ? new Ghost(pos, GameData.characterRadius, characterType) : new Student(pos, GameData.characterRadius, characterType);
                 }
                 gameMap.Add(newPlayer);
 

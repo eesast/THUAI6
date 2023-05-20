@@ -164,7 +164,7 @@ namespace Gaming
                 {
                     player.AddScore(GameData.StudentScoreEscape);
                     gameMap.MapEscapeStudent();
-                    player.RemoveFromGame(PlayerStateType.Escaped);
+                    player.TryToRemoveFromGame(PlayerStateType.Escaped);
                     return true;
                 }
                 else
@@ -174,7 +174,7 @@ namespace Gaming
                     {
                         player.AddScore(GameData.StudentScoreEscape);
                         gameMap.MapEscapeStudent();
-                        player.RemoveFromGame(PlayerStateType.Escaped);
+                        player.TryToRemoveFromGame(PlayerStateType.Escaped);
                         return true;
                     }
                     return false;

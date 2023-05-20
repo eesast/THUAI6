@@ -218,13 +218,18 @@ namespace Gaming
 
             public void BeAddictedToGame(Student player, Ghost ghost)
             {
+                long stateNum = player.SetPlayerState(PlayerStateType.Addicted);
+                if (stateNum == -1)
+                {
+                    return;
+                }
+
                 if (player.CharacterType == CharacterType.Robot)
                 {
                     ghost.AddScore(GameData.TrickerScoreDestroyRobot);
                     Die(player);
                     return;
                 }
-                ghost.AddScore(GameData.TrickerScoreStudentBeAddicted);
                 if (player.GamingAddiction > 0)
                 {
                     if (player.GamingAddiction < GameData.BeginGamingAddiction)
@@ -238,17 +243,16 @@ namespace Gaming
                         return;
                     }
                 }
-                player.SetPlayerState(PlayerStateType.Addicted);
-                long threadNum = player.StateNum;
+                ghost.AddScore(GameData.TrickerScoreStudentBeAddicted);
+
                 gameMap.MapAddictStudent();
                 new Thread
                     (() =>
                     {
-#if DEBUG
                         Debugger.Output(player, " is addicted ");
-#endif
+
                         new FrameRateTaskExecutor<int>(
-                            () => threadNum == player.StateNum && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
+                            () => stateNum == player.StateNum && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
                             () =>
                             {
                                 player.GamingAddiction += (player.PlayerState == PlayerStateType.Addicted) ? GameData.frameDuration : 0;
@@ -401,8 +405,7 @@ namespace Gaming
             {
                 Debugger.Output(player, "die.");
 
-                if (player.PlayerState == PlayerStateType.Deceased) return;
-                player.RemoveFromGame(PlayerStateType.Deceased);
+                if (!player.TryToRemoveFromGame(PlayerStateType.Deceased)) return;
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {

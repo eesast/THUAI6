@@ -1,4 +1,5 @@
 ﻿using Preparation.Utility;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
@@ -17,20 +18,25 @@ namespace GameClass.GameObj
         private int numOfFixing = 0;
         public int NumOfFixing
         {
-            get => numOfFixing;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    numOfFixing = value;
-                }
-            }
+            get => Interlocked.CompareExchange(ref numOfFixing, 0, 0);
+        }
+        public void AddNumOfFixing()
+        {
+            Interlocked.Increment(ref numOfFixing);
+        }
+        public void SubNumOfFixing()
+        {
+            Interlocked.Decrement(ref numOfFixing);
         }
 
         private int degreeOfRepair = 0;
         public int DegreeOfRepair
         {
-            get => degreeOfRepair;
+            get
+            {
+                lock (gameObjLock)
+                    return degreeOfRepair;
+            }
             private set
             {
                 lock (gameObjLock)

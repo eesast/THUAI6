@@ -335,10 +335,10 @@ void Logic::ProcessMessage()
                             {
                                 auto map = std::vector<std::vector<THUAI6::PlaceType>>();
                                 auto mapResult = item.map_message();
-                                for (int i = 0; i < item.map_message().row_size(); i++)
+                                for (int32_t i = 0; i < item.map_message().row_size(); i++)
                                 {
                                     std::vector<THUAI6::PlaceType> row;
-                                    for (int j = 0; j < mapResult.row(i).col_size(); j++)
+                                    for (int32_t j = 0; j < mapResult.row(i).col_size(); j++)
                                     {
                                         if (Proto2THUAI6::placeTypeDict.count(mapResult.row(i).col(j)) == 0)
                                             logger->error("Unknown place type!");
@@ -438,7 +438,7 @@ void Logic::LoadBufferCase(const protobuf::MessageOfObj& item)
 
     if (playerType == THUAI6::PlayerType::StudentPlayer && Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()] == THUAI6::MessageOfObj::TrickerMessage)
     {
-        for (int i = 0; i < item.tricker_message().buff_size(); i++)
+        for (int32_t i = 0; i < item.tricker_message().buff_size(); i++)
             if (Proto2THUAI6::trickerBuffTypeDict[item.tricker_message().buff(i)] == THUAI6::TrickerBuffType::Invisible)
                 return;
         if (AssistFunction::HaveView(viewRange, x, y, item.tricker_message().x(), item.tricker_message().y(), bufferState->gameMap))
@@ -457,7 +457,7 @@ void Logic::LoadBufferCase(const protobuf::MessageOfObj& item)
                 logger->debug("Add Student!");
                 return;
             }
-        for (int i = 0; i < item.student_message().buff_size(); i++)
+        for (int32_t i = 0; i < item.student_message().buff_size(); i++)
             if (Proto2THUAI6::studentBuffTypeDict[item.student_message().buff(i)] == THUAI6::StudentBuffType::Invisible)
                 return;
         if (AssistFunction::HaveView(viewRange, x, y, item.student_message().x(), item.student_message().y(), bufferState->gameMap))
@@ -685,7 +685,7 @@ void Logic::UnBlockAI()
     cvAI.notify_one();
 }
 
-int Logic::GetCounter() const
+int32_t Logic::GetCounter() const
 {
     std::unique_lock<std::mutex> lock(mtxState);
     return counterState;
@@ -703,7 +703,7 @@ bool Logic::TryConnection()
     return pComm->TryConnection(playerID);
 }
 
-bool Logic::HaveView(int gridX, int gridY, int selfX, int selfY, int viewRange) const
+bool Logic::HaveView(int32_t gridX, int32_t gridY, int32_t selfX, int32_t selfY, int32_t viewRange) const
 {
     std::unique_lock<std::mutex> lock(mtxState);
     return AssistFunction::HaveView(viewRange, selfX, selfY, gridX, gridY, currentState->gameMap);

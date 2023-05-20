@@ -26,7 +26,7 @@
 #undef SendMessage
 #undef PeekMessage
 
-const constexpr int numOfGridPerCell = 1000;
+const constexpr int32_t numOfGridPerCell = 1000;
 
 class IAI;
 
@@ -67,7 +67,7 @@ public:
 
     virtual bool WaitThread() = 0;
 
-    virtual int GetCounter() const = 0;
+    virtual int32_t GetCounter() const = 0;
 
     // IStudentAPI使用的部分
     virtual bool Graduate() = 0;
@@ -88,7 +88,7 @@ public:
 
     virtual std::vector<int64_t> GetPlayerGUIDs() const = 0;
 
-    [[nodiscard]] virtual bool HaveView(int gridX, int gridY, int selfX, int selfY, int viewRange) const = 0;
+    [[nodiscard]] virtual bool HaveView(int32_t gridX, int32_t gridY, int32_t selfX, int32_t selfY, int32_t viewRange) const = 0;
 };
 
 class IAPI
@@ -153,23 +153,23 @@ public:
     [[nodiscard]] virtual std::vector<int64_t> GetPlayerGUIDs() const = 0;
 
     // 获取游戏目前所进行的帧数
-    [[nodiscard]] virtual int GetFrameCount() const = 0;
+    [[nodiscard]] virtual int32_t GetFrameCount() const = 0;
 
     /*****选手可能用的辅助函数*****/
 
     // 获取指定格子中心的坐标
-    [[nodiscard]] static inline int CellToGrid(int cell) noexcept
+    [[nodiscard]] static inline int32_t CellToGrid(int32_t cell) noexcept
     {
         return cell * numOfGridPerCell + numOfGridPerCell / 2;
     }
 
     // 获取指定坐标点所位于的格子的 X 序号
-    [[nodiscard]] static inline int GridToCell(int grid) noexcept
+    [[nodiscard]] static inline int32_t GridToCell(int32_t grid) noexcept
     {
         return grid / numOfGridPerCell;
     }
 
-    [[nodiscard]] virtual bool HaveView(int gridX, int gridY) const = 0;
+    [[nodiscard]] virtual bool HaveView(int32_t gridX, int32_t gridY) const = 0;
 
     // 用于DEBUG的输出函数，选手仅在开启Debug模式的情况下可以使用
 
@@ -224,7 +224,7 @@ public:
     }
     void Play(IAI& ai) override;
 
-    [[nodiscard]] int GetFrameCount() const override;
+    [[nodiscard]] int32_t GetFrameCount() const override;
 
     std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override;
 
@@ -281,7 +281,7 @@ public:
     std::future<bool> Graduate() override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
-    [[nodiscard]] bool HaveView(int gridX, int gridY) const override;
+    [[nodiscard]] bool HaveView(int32_t gridX, int32_t gridY) const override;
 
     void Print(std::string str) const override
     {
@@ -318,7 +318,7 @@ public:
     }
     void Play(IAI& ai) override;
 
-    [[nodiscard]] int GetFrameCount() const override;
+    [[nodiscard]] int32_t GetFrameCount() const override;
 
     std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override;
     std::future<bool> MoveRight(int64_t timeInMilliseconds) override;
@@ -369,7 +369,7 @@ public:
     std::future<bool> Attack(double angleInRadian) override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
 
-    [[nodiscard]] bool HaveView(int gridX, int gridY) const override;
+    [[nodiscard]] bool HaveView(int32_t gridX, int32_t gridY) const override;
 
     void Print(std::string str) const override
     {
@@ -399,7 +399,7 @@ public:
     void EndTimer() override;
     void Play(IAI& ai) override;
 
-    [[nodiscard]] int GetFrameCount() const override;
+    [[nodiscard]] int32_t GetFrameCount() const override;
 
     std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override;
     std::future<bool> MoveRight(int64_t timeInMilliseconds) override;
@@ -455,7 +455,7 @@ public:
     std::future<bool> Graduate() override;
     [[nodiscard]] virtual std::shared_ptr<const THUAI6::Student> GetSelfInfo() const override;
 
-    [[nodiscard]] bool HaveView(int gridX, int gridY) const override;
+    [[nodiscard]] bool HaveView(int32_t gridX, int32_t gridY) const override;
 
     void Print(std::string str) const override;
     void PrintStudent() const override;
@@ -477,7 +477,7 @@ public:
     void EndTimer() override;
     void Play(IAI& ai) override;
 
-    [[nodiscard]] int GetFrameCount() const override;
+    [[nodiscard]] int32_t GetFrameCount() const override;
 
     std::future<bool> Move(int64_t timeInMilliseconds, double angleInRadian) override;
     std::future<bool> MoveRight(int64_t timeInMilliseconds) override;
@@ -528,7 +528,7 @@ public:
     std::future<bool> Attack(double angleInRadian) override;
     [[nodiscard]] std::shared_ptr<const THUAI6::Tricker> GetSelfInfo() const override;
 
-    [[nodiscard]] bool HaveView(int gridX, int gridY) const override;
+    [[nodiscard]] bool HaveView(int32_t gridX, int32_t gridY) const override;
 
     void Print(std::string str) const override;
     void PrintStudent() const override;

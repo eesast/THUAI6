@@ -8,12 +8,12 @@
 
 #define PI 3.14159265358979323846
 
-int StudentAPI::GetFrameCount() const
+int32_t StudentAPI::GetFrameCount() const
 {
     return logic.GetCounter();
 }
 
-int TrickerAPI::GetFrameCount() const
+int32_t TrickerAPI::GetFrameCount() const
 {
     return logic.GetCounter();
 }
@@ -436,13 +436,13 @@ std::shared_ptr<const THUAI6::Tricker> TrickerAPI::GetSelfInfo() const
     return logic.TrickerGetSelfInfo();
 }
 
-bool StudentAPI::HaveView(int gridX, int gridY) const
+bool StudentAPI::HaveView(int32_t gridX, int32_t gridY) const
 {
     auto selfInfo = GetSelfInfo();
     return logic.HaveView(gridX, gridY, selfInfo->x, selfInfo->y, selfInfo->viewRange);
 }
 
-bool TrickerAPI::HaveView(int gridX, int gridY) const
+bool TrickerAPI::HaveView(int32_t gridX, int32_t gridY) const
 {
     auto selfInfo = GetSelfInfo();
     return logic.HaveView(gridX, gridY, selfInfo->x, selfInfo->y, selfInfo->viewRange);

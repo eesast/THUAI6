@@ -230,7 +230,7 @@ namespace Gaming
                     if (generator != null)
                     {
                         if (generator.Repair(((WriteAnswers)activeSkill).DegreeOfMeditation, player))
-                            gameMap.NumOfRepairedGenerators++;
+                            gameMap.AddNumOfRepairedGenerators();
                         Debugger.Output(player, "uses WriteAnswers in" + generator.ToString() + "with " + (((WriteAnswers)activeSkill).DegreeOfMeditation).ToString());
                         ((WriteAnswers)activeSkill).DegreeOfMeditation = 0;
                     }

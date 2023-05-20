@@ -217,7 +217,7 @@ bool Logic::UseSkill(int32_t skill)
 bool Logic::SendMessage(int64_t toID, std::string message, bool binary)
 {
     logger->debug("Called SendMessage");
-    return pComm->SendMessage(toID, message, binary, playerID);
+    return pComm->SendMessage(toID, std::move(message), binary, playerID);
 }
 
 bool Logic::HaveMessage()

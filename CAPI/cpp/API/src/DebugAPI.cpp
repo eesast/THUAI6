@@ -355,8 +355,8 @@ std::future<bool> TrickerDebugAPI::EndAllAction()
 std::future<bool> StudentDebugAPI::SendTextMessage(int64_t toID, std::string message)
 {
     logger->info("SendTextMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [=]()
-                      { auto result = logic.SendMessage(toID, message, false);
+    return std::async(std::launch::async, [=, message = std::move(message)]()
+                      { auto result = logic.SendMessage(toID, std::move(message), false);
                         if (!result)
                             logger->warn("SendTextMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
@@ -365,8 +365,8 @@ std::future<bool> StudentDebugAPI::SendTextMessage(int64_t toID, std::string mes
 std::future<bool> TrickerDebugAPI::SendTextMessage(int64_t toID, std::string message)
 {
     logger->info("SendTextMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [=]()
-                      { auto result = logic.SendMessage(toID, message, false);
+    return std::async(std::launch::async, [=, message = std::move(message)]()
+                      { auto result = logic.SendMessage(toID, std::move(message), false);
                         if (!result)
                             logger->warn("SendTextMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
@@ -375,8 +375,8 @@ std::future<bool> TrickerDebugAPI::SendTextMessage(int64_t toID, std::string mes
 std::future<bool> StudentDebugAPI::SendBinaryMessage(int64_t toID, std::string message)
 {
     logger->info("SendBinaryMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [=]()
-                      { auto result = logic.SendMessage(toID, message, true);
+    return std::async(std::launch::async, [=, message = std::move(message)]()
+                      { auto result = logic.SendMessage(toID, std::move(message), true);
                         if (!result)
                             logger->warn("SendBinaryMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });
@@ -385,8 +385,8 @@ std::future<bool> StudentDebugAPI::SendBinaryMessage(int64_t toID, std::string m
 std::future<bool> TrickerDebugAPI::SendBinaryMessage(int64_t toID, std::string message)
 {
     logger->info("SendBinaryMessage: toID = {}, message = {}, called at {}ms", toID, message, Time::TimeSinceStart(startPoint));
-    return std::async(std::launch::async, [=]()
-                      { auto result = logic.SendMessage(toID, message, true);
+    return std::async(std::launch::async, [=, message = std::move(message)]()
+                      { auto result = logic.SendMessage(toID, std::move(message), true);
                         if (!result)
                             logger->warn("SendBinaryMessage: failed at {}ms", Time::TimeSinceStart(startPoint));
                         return result; });

@@ -166,7 +166,7 @@ namespace Constants
     struct Robot
     {
         SCCI int moveSpeed = basicStudentSpeed;
-        SCCI int maxHp = basicHp * 0.4;
+        SCCI int maxHp = basicHp * 2 / 5;
         SCCI int maxAddiction = basicMaxGamingAddiction * 0;
         SCCI int fixSpeed = basicFixSpeed;
         SCCI int encourageSpeed = 0;

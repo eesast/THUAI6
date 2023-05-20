@@ -163,8 +163,8 @@ namespace Gaming
                 if (doorwayForEscape != null && doorwayForEscape.IsOpen())
                 {
                     player.AddScore(GameData.StudentScoreEscape);
-                    ++gameMap.NumOfEscapedStudent;
-                    player.RemoveFromGame(PlayerStateType.Escaped);
+                    gameMap.MapEscapeStudent();
+                    player.TryToRemoveFromGame(PlayerStateType.Escaped);
                     return true;
                 }
                 else
@@ -173,8 +173,8 @@ namespace Gaming
                     if (emergencyExit != null && emergencyExit.IsOpen)
                     {
                         player.AddScore(GameData.StudentScoreEscape);
-                        ++gameMap.NumOfEscapedStudent;
-                        player.RemoveFromGame(PlayerStateType.Escaped);
+                        gameMap.MapEscapeStudent();
+                        player.TryToRemoveFromGame(PlayerStateType.Escaped);
                         return true;
                     }
                     return false;

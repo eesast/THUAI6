@@ -11,58 +11,14 @@ namespace GameClass.GameObj
         private readonly Dictionary<uint, XY> birthPointList;  // 出生点列表
         public Dictionary<uint, XY> BirthPointList => birthPointList;
 
-        private readonly object lockForNum = new();
-        private void WhenStudentNumChange()
-        {
-            if (numOfDeceasedStudent + numOfEscapedStudent == GameData.numOfStudent)
-            {
-                Timer.IsGaming = false;
-                return;
-            }
-
-            if (GameData.numOfStudent - numOfDeceasedStudent - numOfEscapedStudent == 1)
-            {
-                GameObjLockDict[GameObjType.Character].EnterReadLock();
-                try
-                {
-                    foreach (Character player in GameObjDict[GameObjType.Character])
-                        if (player.PlayerState == PlayerStateType.Addicted)
-                        {
-                            Timer.IsGaming = false;
-                            break;
-                        }
-                }
-                finally
-                {
-                    GameObjLockDict[GameObjType.Character].ExitReadLock();
-                }
-                if (Timer.IsGaming)
-                {
-                    GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
-                    try
-                    {
-                        foreach (EmergencyExit emergencyExit in GameObjDict[GameObjType.EmergencyExit])
-                            if (emergencyExit.CanOpen)
-                            {
-                                emergencyExit.IsOpen = true;
-                                break;
-                            }
-                    }
-                    finally
-                    {
-                        GameObjLockDict[GameObjType.EmergencyExit].ExitWriteLock();
-                    }
-                }
-            }
-        }
         private uint numOfRepairedGenerators = 0;
         public uint NumOfRepairedGenerators
         {
-            get => Interlocked.CompareExchange(ref numOfDeceasedStudent, 0, 0);
+            get => Interlocked.CompareExchange(ref numOfRepairedGenerators, 0, 0);
         }
         public void AddNumOfRepairedGenerators()
         {
-            uint value = Interlocked.Increment(ref numOfDeceasedStudent);
+            uint value = Interlocked.Increment(ref numOfRepairedGenerators);
             if (value == GameData.numOfGeneratorRequiredForEmergencyExit)
             {
                 GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
@@ -93,32 +49,78 @@ namespace GameClass.GameObj
                 }
             }
         }
+
         private uint numOfDeceasedStudent = 0;
         public uint NumOfDeceasedStudent
         {
-            get => numOfDeceasedStudent;
-            set
-            {
-                lock (lockForNum)
-                {
-                    numOfDeceasedStudent = value;
-                    WhenStudentNumChange();
-                }
-            }
+            get => Interlocked.CompareExchange(ref numOfDeceasedStudent, 0, 0);
         }
         private uint numOfEscapedStudent = 0;
         public uint NumOfEscapedStudent
         {
-            get => numOfEscapedStudent;
-            set
+            get => Interlocked.CompareExchange(ref numOfEscapedStudent, 0, 0);
+        }
+        private uint numOfNoHpStudent = 0;
+        public uint NumOfNoHpStudent
+        {
+            get => Interlocked.CompareExchange(ref numOfNoHpStudent, 0, 0);
+        }
+        private uint numOfRemovedStudent = 0;
+        public uint NumOfRemovedStudent
+        {
+            get => Interlocked.CompareExchange(ref numOfRemovedStudent, 0, 0);
+        }
+
+        public void MapEscapeStudent()
+        {
+            if (Interlocked.Increment(ref numOfNoHpStudent) == GameData.numOfStudent)
             {
-                lock (lockForNum)
-                {
-                    numOfEscapedStudent = value;
-                    WhenStudentNumChange();
-                }
+                Timer.IsGaming = false;
+                return;
+            }
+            Interlocked.Increment(ref numOfEscapedStudent);
+            if (Interlocked.Increment(ref numOfRemovedStudent) == GameData.numOfStudent - 1)
+                OpenEmergencyExit();
+        }
+        public void MapDieStudent()
+        {
+            if (Interlocked.Increment(ref numOfNoHpStudent) == GameData.numOfStudent)
+            {
+                Timer.IsGaming = false;
+                return;
+            }
+            Interlocked.Increment(ref numOfDeceasedStudent);
+            if (Interlocked.Increment(ref numOfRemovedStudent) == GameData.numOfStudent - 1)
+                OpenEmergencyExit();
+        }
+        public void MapAddictStudent()
+        {
+            if (Interlocked.Increment(ref numOfNoHpStudent) == GameData.numOfStudent)
+                Timer.IsGaming = false;
+        }
+        public void MapRescueStudent()
+        {
+            Interlocked.Decrement(ref numOfNoHpStudent);
+        }
+
+        private void OpenEmergencyExit()
+        {
+            GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
+            try
+            {
+                foreach (EmergencyExit emergencyExit in GameObjDict[GameObjType.EmergencyExit])
+                    if (emergencyExit.CanOpen)
+                    {
+                        emergencyExit.IsOpen = true;
+                        break;
+                    }
+            }
+            finally
+            {
+                GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
             }
         }
+
 
         private Dictionary<GameObjType, IList<IGameObj>> gameObjDict;
         public Dictionary<GameObjType, IList<IGameObj>> GameObjDict => gameObjDict;

@@ -43,9 +43,9 @@ namespace GameClass.GameObj
                 return (Interlocked.CompareExchange(ref isRemoved, 0, 0) == 1);
             }
         }
-        public virtual void TryToRemove()
+        public virtual bool TryToRemove()
         {
-            Interlocked.Exchange(ref isRemoved, 1);
+            return Interlocked.Exchange(ref isRemoved, 1) == 0;
         }
 
         public int Radius { get; }

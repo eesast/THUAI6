@@ -455,13 +455,13 @@ namespace GameClass.GameObj
                     case PlayerStateType.Addicted:
                         if (value == PlayerStateType.Rescued)
                             return ChangePlayerStateInOneThread(value, gameObj);
-                        else if (value == PlayerStateType.Null)
+                        else if (value == PlayerStateType.Null || value == PlayerStateType.Deceased)
                             return ChangePlayerState(value, gameObj);
                         else return -1;
                     case PlayerStateType.Rescued:
                         if (value == PlayerStateType.Addicted)
                             return ChangePlayerStateInOneThread(value, gameObj);
-                        else if (value == PlayerStateType.Null)
+                        else if (value == PlayerStateType.Null || value == PlayerStateType.Deceased)
                             return ChangePlayerState(value, gameObj);
                         else return -1;
 
@@ -590,15 +590,17 @@ namespace GameClass.GameObj
             }
         }
 
-        public void RemoveFromGame(PlayerStateType playerStateType)
+        public bool TryToRemoveFromGame(PlayerStateType playerStateType)
         {
             lock (actionLock)
             {
-                TryToRemove();
+                if (!TryToRemove()) return false;
+                Debugger.Output(this, "TryToRemove");
                 ReSetCanMove(false);
                 SetPlayerState(playerStateType);
                 position = GameData.PosWhoDie;
             }
+            return true;
         }
         #endregion
 

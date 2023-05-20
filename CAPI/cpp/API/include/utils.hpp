@@ -20,22 +20,22 @@
 namespace AssistFunction
 {
 
-    constexpr int numOfGridPerCell = 1000;
+    constexpr int32_t numOfGridPerCell = 1000;
 
-    [[nodiscard]] constexpr inline int GridToCell(int grid) noexcept
+    [[nodiscard]] constexpr inline int32_t GridToCell(int32_t grid) noexcept
     {
         return grid / numOfGridPerCell;
     }
 
-    [[nodiscard]] constexpr inline int GridToCell(double grid) noexcept
+    [[nodiscard]] constexpr inline int32_t GridToCell(double grid) noexcept
     {
         return int(grid) / numOfGridPerCell;
     }
 
-    inline bool HaveView(int viewRange, int x, int y, int newX, int newY, std::vector<std::vector<THUAI6::PlaceType>>& map)
+    inline bool HaveView(int32_t viewRange, int32_t x, int32_t y, int32_t newX, int32_t newY, std::vector<std::vector<THUAI6::PlaceType>>& map)
     {
-        int deltaX = newX - x;
-        int deltaY = newY - y;
+        int32_t deltaX = newX - x;
+        int32_t deltaY = newY - y;
         double distance = deltaX * deltaX + deltaY * deltaY;
         THUAI6::PlaceType myPlace = map[GridToCell(x)][GridToCell(y)];
         THUAI6::PlaceType newPlace = map[GridToCell(newX)][GridToCell(newY)];
@@ -43,7 +43,7 @@ namespace AssistFunction
             return false;
         if (distance < viewRange * viewRange)
         {
-            int divide = std::max(std::abs(deltaX), std::abs(deltaY)) / 100;
+            int32_t divide = std::max(std::abs(deltaX), std::abs(deltaY)) / 100;
             if (divide == 0)
                 return true;
             double dx = deltaX / divide;
@@ -51,7 +51,7 @@ namespace AssistFunction
             double myX = double(x);
             double myY = double(y);
             if (newPlace == THUAI6::PlaceType::Grass && myPlace == THUAI6::PlaceType::Grass)  // 都在草丛内，要另作判断
-                for (int i = 0; i < divide; i++)
+                for (int32_t i = 0; i < divide; i++)
                 {
                     myX += dx;
                     myY += dy;
@@ -59,7 +59,7 @@ namespace AssistFunction
                         return false;
                 }
             else  // 不在草丛内，只需要没有墙即可
-                for (int i = 0; i < divide; i++)
+                for (int32_t i = 0; i < divide; i++)
                 {
                     myX += dx;
                     myY += dy;
@@ -226,12 +226,12 @@ namespace Proto2THUAI6
         tricker->trickDesire = trickerMsg.trick_desire();
         tricker->classVolume = trickerMsg.class_volume();
         tricker->timeUntilSkillAvailable.clear();
-        for (int i = 0; i < trickerMsg.time_until_skill_available().size(); i++)
+        for (int32_t i = 0; i < trickerMsg.time_until_skill_available().size(); i++)
             tricker->timeUntilSkillAvailable.push_back(trickerMsg.time_until_skill_available(i));
         // tricker->place = placeTypeDict[trickerMsg.place()];
         tricker->playerState = playerStateDict[trickerMsg.player_state()];
         tricker->props.clear();
-        for (int i = 0; i < trickerMsg.prop().size(); i++)
+        for (int32_t i = 0; i < trickerMsg.prop().size(); i++)
             tricker->props.push_back(propTypeDict[trickerMsg.prop(i)]);
         tricker->trickerType = trickerTypeDict[trickerMsg.tricker_type()];
         tricker->guid = trickerMsg.guid();
@@ -240,7 +240,7 @@ namespace Proto2THUAI6
         tricker->radius = trickerMsg.radius();
         tricker->playerType = THUAI6::PlayerType::TrickerPlayer;
         tricker->buff.clear();
-        for (int i = 0; i < trickerMsg.buff().size(); i++)
+        for (int32_t i = 0; i < trickerMsg.buff().size(); i++)
             tricker->buff.push_back(trickerBuffTypeDict[trickerMsg.buff(i)]);
         return tricker;
     }
@@ -264,11 +264,11 @@ namespace Proto2THUAI6
         student->rouseProgress = studentMsg.rescue_progress();
         student->dangerAlert = studentMsg.danger_alert();
         student->timeUntilSkillAvailable.clear();
-        for (int i = 0; i < studentMsg.time_until_skill_available().size(); i++)
+        for (int32_t i = 0; i < studentMsg.time_until_skill_available().size(); i++)
             student->timeUntilSkillAvailable.push_back(studentMsg.time_until_skill_available(i));
         student->playerType = THUAI6::PlayerType::StudentPlayer;
         student->props.clear();
-        for (int i = 0; i < studentMsg.prop().size(); i++)
+        for (int32_t i = 0; i < studentMsg.prop().size(); i++)
             student->props.push_back(propTypeDict[studentMsg.prop(i)]);
         // student->place = placeTypeDict[studentMsg.place()];
         student->playerState = playerStateDict[studentMsg.player_state()];
@@ -276,7 +276,7 @@ namespace Proto2THUAI6
         student->addiction = studentMsg.addiction();
         student->studentType = studentTypeDict[studentMsg.student_type()];
         student->buff.clear();
-        for (int i = 0; i < studentMsg.buff_size(); i++)
+        for (int32_t i = 0; i < studentMsg.buff_size(); i++)
             student->buff.push_back(studentBuffTypeDict[studentMsg.buff(i)]);
         return student;
     }

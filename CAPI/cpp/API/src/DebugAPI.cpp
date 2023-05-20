@@ -82,12 +82,12 @@ void TrickerDebugAPI::EndTimer()
     logger->info("Time elapsed: {}ms", Time::TimeSinceStart(startPoint));
 }
 
-int StudentDebugAPI::GetFrameCount() const
+int32_t StudentDebugAPI::GetFrameCount() const
 {
     return logic.GetCounter();
 }
 
-int TrickerDebugAPI::GetFrameCount() const
+int32_t TrickerDebugAPI::GetFrameCount() const
 {
     return logic.GetCounter();
 }
@@ -656,13 +656,13 @@ std::shared_ptr<const THUAI6::Tricker> TrickerDebugAPI::GetSelfInfo() const
     return logic.TrickerGetSelfInfo();
 }
 
-bool StudentDebugAPI::HaveView(int gridX, int gridY) const
+bool StudentDebugAPI::HaveView(int32_t gridX, int32_t gridY) const
 {
     auto selfInfo = GetSelfInfo();
     return logic.HaveView(gridX, gridY, selfInfo->x, selfInfo->y, selfInfo->viewRange);
 }
 
-bool TrickerDebugAPI::HaveView(int gridX, int gridY) const
+bool TrickerDebugAPI::HaveView(int32_t gridX, int32_t gridY) const
 {
     auto selfInfo = GetSelfInfo();
     return logic.HaveView(gridX, gridY, selfInfo->x, selfInfo->y, selfInfo->viewRange);

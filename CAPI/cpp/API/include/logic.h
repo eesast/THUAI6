@@ -73,8 +73,8 @@ private:
     State* bufferState;
 
     // 保存缓冲区数
-    int counterState = 0;
-    int counterBuffer = 0;
+    int32_t counterState = 0;
+    int32_t counterBuffer = 0;
 
     THUAI6::GameState gameState = THUAI6::GameState::NullGameState;
 
@@ -140,7 +140,7 @@ private:
 
     bool WaitThread() override;
 
-    int GetCounter() const override;
+    int32_t GetCounter() const override;
 
     std::vector<int64_t> GetPlayerGUIDs() const override;
 
@@ -162,7 +162,7 @@ private:
     // 等待
     void Wait() noexcept;
 
-    [[nodiscard]] bool HaveView(int gridX, int gridY, int selfX, int selfY, int viewRange) const override;
+    [[nodiscard]] bool HaveView(int32_t gridX, int32_t gridY, int32_t selfX, int32_t selfY, int32_t viewRange) const override;
 
 public:
     // 构造函数还需要传更多参数，有待补充

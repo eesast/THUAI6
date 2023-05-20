@@ -137,7 +137,7 @@ namespace Preparation.Utility
         }
         #endregion
         #region 得分相关
-        public static int TrickerScoreAttackStudent(int damage)
+        public static long TrickerScoreAttackStudent(long damage)
         {
             return damage * 100 / basicApOfGhost;
         }
@@ -167,7 +167,7 @@ namespace Preparation.Utility
             return time * 20 / 1000;
         }
         public const int StudentScoreRescue = 100;
-        public static int StudentScoreTreat(int degree)
+        public static long StudentScoreTreat(long degree)
         {
             return degree * 50 / basicTreatmentDegree;
         }

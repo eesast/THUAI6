@@ -248,6 +248,7 @@ namespace Gaming
                 new Thread
                     (() =>
                     {
+                        Debugger.Output(player, " is stunned for " + time.ToString());
                         Thread.Sleep(time);
                         if (threadNum == player.StateNum)
                             player.SetPlayerState();
@@ -297,18 +298,18 @@ namespace Gaming
                 {
                     if (bullet.HasSpear)
                     {
-                        int subHp = student.TrySubHp(bullet.AP);
+                        long subHp = student.TrySubHp(bullet.AP);
 #if DEBUG
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
 #endif
                         bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
-                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
+                        bullet.Parent.HP = (long)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                     }
                     else return;
                 }
                 else
                 {
-                    int subHp;
+                    long subHp;
                     if (bullet.HasSpear)
                     {
                         subHp = student.TrySubHp(bullet.AP + GameData.ApSpearAdd);

@@ -240,8 +240,8 @@ namespace GameClass.GameObj
         }
         #endregion
         #region 血量相关的基本属性及方法
-        private int maxHp;
-        public int MaxHp
+        private long maxHp;
+        public long MaxHp
         {
             get
             {
@@ -269,8 +269,8 @@ namespace GameClass.GameObj
                 }
             }
         }  // 最大血量
-        protected int hp;
-        public int HP
+        protected long hp;
+        public long HP
         {
             get
             {
@@ -307,12 +307,12 @@ namespace GameClass.GameObj
         /// 尝试减血
         /// </summary>
         /// <param name="sub">减血量</param>
-        public int TrySubHp(int sub)
+        public long TrySubHp(long sub)
         {
             HPReadWriterLock.EnterWriteLock();
             try
             {
-                int previousHp = hp;
+                long previousHp = hp;
                 if (hp <= sub)
                 {
                     hp = 0;

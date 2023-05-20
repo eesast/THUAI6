@@ -58,8 +58,8 @@ namespace Server
                 {
                     X = player.Position.x,
                     Y = player.Position.y,
-                    Speed = (int)player.MoveSpeed,
-                    Determination = player.HP,
+                    Speed = player.MoveSpeed,
+                    Determination = (int)player.HP,
                     Addiction = player.GamingAddiction,
                     Guid = player.ID,
 

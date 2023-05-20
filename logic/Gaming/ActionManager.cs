@@ -76,35 +76,43 @@ namespace Gaming
 
             public bool Fix(Student player)// 自动检查有无发电机可修
             {
-                if ((!player.Commandable()) || player.PlayerState == PlayerStateType.Fixing)
-                    return false;
                 Generator? generatorForFix = (Generator?)gameMap.OneForInteract(player.Position, GameObjType.Generator);
+                if (generatorForFix == null) return false;
 
-                if (generatorForFix == null || generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
+                long stateNum = player.SetPlayerState(PlayerStateType.Fixing);
+                if (stateNum == -1) return false;
+
+                player.ThreadNum.WaitOne();
+                if (generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
                     return false;
 
-                ++generatorForFix.NumOfFixing;
-                player.SetPlayerState(PlayerStateType.Fixing);
-                long threadNum = player.StateNum;
+                generatorForFix.AddNumOfFixing();
                 new Thread
           (
               () =>
               {
-                  Thread.Sleep(GameData.frameDuration);
+                  Thread.Sleep(GameData.checkInterval);
                   new FrameRateTaskExecutor<int>(
-                      loopCondition: () => gameMap.Timer.IsGaming && threadNum == player.StateNum,
+                      loopCondition: () => stateNum == player.StateNum && gameMap.Timer.IsGaming,
                       loopToDo: () =>
                       {
-                          if (generatorForFix.Repair(player.FixSpeed * GameData.frameDuration, player))
+                          if (generatorForFix.Repair(player.FixSpeed * GameData.checkInterval, player))
                               gameMap.NumOfRepairedGenerators++;
                           if (generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
-                              player.SetPlayerState();//Num == player.StateNum
+                          {
+                              lock (player.ActionLock)
+                              {
+                                  if (stateNum == player.StateNum)
+                                      player.SetPlayerState();
+                              }
+                          }
                       },
-                      timeInterval: GameData.frameDuration,
+                      timeInterval: GameData.checkInterval,
                       finallyReturn: () => 0
                   )
                       .Start();
-                  --generatorForFix.NumOfFixing;
+                  player.ThreadNum.Release();
+                  generatorForFix.SubNumOfFixing();
               }
 
           )

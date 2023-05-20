@@ -6,7 +6,7 @@ namespace Preparation.Interface
     public interface ICharacter : IMoveable
     {
         public long TeamID { get; }
-        public int HP { get; set; }
+        public long HP { get; set; }
         public long Score { get; }
         public void AddScore(long add);
         public double Vampire { get; }

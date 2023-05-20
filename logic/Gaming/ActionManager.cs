@@ -84,7 +84,10 @@ namespace Gaming
 
                 player.ThreadNum.WaitOne();
                 if (generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
+                {
+                    player.ThreadNum.Release();
                     return false;
+                }
 
                 generatorForFix.AddNumOfFixing();
                 new Thread
@@ -97,7 +100,7 @@ namespace Gaming
                       loopToDo: () =>
                       {
                           if (generatorForFix.Repair(player.FixSpeed * GameData.checkInterval, player))
-                              gameMap.NumOfRepairedGenerators++;
+                              gameMap.AddNumOfRepairedGenerators();
                           if (generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
                           {
                               lock (player.ActionLock)

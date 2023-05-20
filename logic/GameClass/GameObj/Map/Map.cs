@@ -58,41 +58,38 @@ namespace GameClass.GameObj
         private uint numOfRepairedGenerators = 0;
         public uint NumOfRepairedGenerators
         {
-            get => numOfRepairedGenerators;
-            set
+            get => Interlocked.CompareExchange(ref numOfDeceasedStudent, 0, 0);
+        }
+        public void AddNumOfRepairedGenerators()
+        {
+            uint value = Interlocked.Increment(ref numOfDeceasedStudent);
+            if (value == GameData.numOfGeneratorRequiredForEmergencyExit)
             {
-                lock (lockForNum)
+                GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
+                try
                 {
-                    numOfRepairedGenerators = value;
-                    if (NumOfRepairedGenerators == GameData.numOfGeneratorRequiredForEmergencyExit)
-                    {
-                        GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
-                        try
-                        {
-                            Random r = new Random(Environment.TickCount);
-                            EmergencyExit emergencyExit = (EmergencyExit)(GameObjDict[GameObjType.EmergencyExit][r.Next(0, GameObjDict[GameObjType.EmergencyExit].Count)]);
-                            emergencyExit.CanOpen = true;
-                            Preparation.Utility.Debugger.Output(emergencyExit, emergencyExit.Position.ToString());
-                        }
-                        finally
-                        {
-                            GameObjLockDict[GameObjType.EmergencyExit].ExitWriteLock();
-                        }
-                    }
-                    else
-                      if (NumOfRepairedGenerators == GameData.numOfGeneratorRequiredForRepair)
-                    {
-                        GameObjLockDict[GameObjType.Doorway].EnterWriteLock();
-                        try
-                        {
-                            foreach (Doorway doorway in GameObjDict[GameObjType.Doorway])
-                                doorway.PowerSupply = true;
-                        }
-                        finally
-                        {
-                            GameObjLockDict[GameObjType.Doorway].ExitWriteLock();
-                        }
-                    }
+                    Random r = new Random(Environment.TickCount);
+                    EmergencyExit emergencyExit = (EmergencyExit)(GameObjDict[GameObjType.EmergencyExit][r.Next(0, GameObjDict[GameObjType.EmergencyExit].Count)]);
+                    emergencyExit.CanOpen = true;
+                    Preparation.Utility.Debugger.Output(emergencyExit, emergencyExit.Position.ToString());
+                }
+                finally
+                {
+                    GameObjLockDict[GameObjType.EmergencyExit].ExitWriteLock();
+                }
+            }
+            else
+                  if (value == GameData.numOfGeneratorRequiredForRepair)
+            {
+                GameObjLockDict[GameObjType.Doorway].EnterWriteLock();
+                try
+                {
+                    foreach (Doorway doorway in GameObjDict[GameObjType.Doorway])
+                        doorway.PowerSupply = true;
+                }
+                finally
+                {
+                    GameObjLockDict[GameObjType.Doorway].ExitWriteLock();
                 }
             }
         }

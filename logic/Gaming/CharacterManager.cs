@@ -3,6 +3,7 @@ using GameClass.GameObj;
 using Preparation.Utility;
 using Preparation.Interface;
 using Timothy.FrameRateTask;
+using static Gaming.Game;
 
 namespace Gaming
 {
@@ -17,15 +18,38 @@ namespace Gaming
                 this.gameMap = gameMap;
             }
 
+            private readonly object numTeacherLock = new();
+            private int factorTeacher = 1;
+            public int FactorTeacher
+            {
+                get
+                {
+                    lock (numTeacherLock)
+                    {
+                        return factorTeacher;
+                    }
+                }
+            }
+            public void DoubleFactorTeacher()
+            {
+                lock (numTeacherLock)
+                    factorTeacher *= 2;
+            }
+
             public Character? AddPlayer(XY pos, long teamID, long playerID, CharacterType characterType, Character? parent = null)
             {
                 Character newPlayer;
 
-                if (characterType == CharacterType.Robot)
+                if (characterType == CharacterType.Teacher)
+                    DoubleFactorTeacher();
+                else
                 {
-                    newPlayer = new Golem(pos, GameData.characterRadius, parent);
+                    if (characterType == CharacterType.Robot)
+                    {
+                        newPlayer = new Golem(pos, GameData.characterRadius, parent);
+                    }
+                    else newPlayer = (GameData.IsGhost(characterType)) ? new Ghost(pos, GameData.characterRadius, characterType) : new Student(pos, GameData.characterRadius, characterType);
                 }
-                else newPlayer = (GameData.IsGhost(characterType)) ? new Ghost(pos, GameData.characterRadius, characterType) : new Student(pos, GameData.characterRadius, characterType);
                 gameMap.Add(newPlayer);
 
                 newPlayer.TeamID = teamID;
@@ -327,7 +351,7 @@ namespace Gaming
                     bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
                     if (student.CharacterType == CharacterType.Teacher)
                     {
-                        student.AddScore(subHp * GameData.factorOfScoreWhenTeacherAttacked / GameData.basicApOfGhost);
+                        student.AddScore(subHp * GameData.factorOfScoreWhenTeacherAttacked / GameData.basicApOfGhost / FactorTeacher);
                     }
 
                     bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));

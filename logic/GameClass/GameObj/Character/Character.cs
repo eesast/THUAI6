@@ -595,7 +595,6 @@ namespace GameClass.GameObj
             lock (actionLock)
             {
                 if (!TryToRemove()) return false;
-                Debugger.Output(this, "TryToRemove");
                 ReSetCanMove(false);
                 SetPlayerState(playerStateType);
                 position = GameData.PosWhoDie;

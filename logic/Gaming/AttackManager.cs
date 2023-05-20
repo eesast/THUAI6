@@ -52,9 +52,8 @@ namespace Gaming
 
             private void BombObj(Bullet bullet, GameObj objBeingShot)
             {
-#if DEBUG
                 Debugger.Output(bullet, "bombed " + objBeingShot.ToString());
-#endif
+
                 switch (objBeingShot.Type)
                 {
                     case GameObjType.Character:
@@ -122,12 +121,11 @@ namespace Gaming
 
             private void BulletBomb(Bullet bullet, GameObj? objBeingShot)
             {
-#if DEBUG
                 if (objBeingShot != null)
                     Debugger.Output(bullet, "bombed with" + objBeingShot.ToString());
                 else
                     Debugger.Output(bullet, "bombed without objBeingShot");
-#endif
+
                 if (!TryRemoveBullet(bullet)) return;
 
                 if (bullet.BulletBombRange == 0)
@@ -155,14 +153,13 @@ namespace Gaming
 
                 if (bullet.TypeOfBullet == BulletType.BombBomb && objBeingShot != null)
                 {
-                    ProduceBombBomb(bullet, 0);
-                    ProduceBombBomb(bullet, Math.PI / 4);
                     ProduceBombBomb(bullet, Math.PI / 2);
-                    ProduceBombBomb(bullet, Math.PI * 3 / 4);
+                    ProduceBombBomb(bullet, Math.PI * 2 / 3);
+                    ProduceBombBomb(bullet, Math.PI * 5 / 6);
                     ProduceBombBomb(bullet, Math.PI);
-                    ProduceBombBomb(bullet, Math.PI * 5 / 4);
+                    ProduceBombBomb(bullet, Math.PI * 7 / 6);
+                    ProduceBombBomb(bullet, Math.PI * 4 / 3);
                     ProduceBombBomb(bullet, Math.PI * 3 / 2);
-                    ProduceBombBomb(bullet, Math.PI * 7 / 4);
                 }
 
                 var beAttackedList = new List<IGameObj>();

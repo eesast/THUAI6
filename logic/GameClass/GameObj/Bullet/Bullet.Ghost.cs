@@ -158,6 +158,7 @@ namespace GameClass.GameObj
         public override BulletType TypeOfBullet => BulletType.BombBomb;
 
     }
+
     internal sealed class JumpyDumpty : Bullet
     {
         public JumpyDumpty(Character player, XY pos, int radius = GameData.bulletRadius) : base(player, radius, pos)
@@ -165,7 +166,7 @@ namespace GameClass.GameObj
             ap = (int)(GameData.basicApOfGhost * 0.6);
         }
         public override double BulletBombRange => GameData.basicBulletBombRange / 2;
-        public override double AttackDistance => GameData.basicAttackShortRange * 16 / 22;
+        public override double AttackDistance => GameData.basicAttackShortRange * 18 / 22;
 
         public override int Speed => (int)(GameData.basicBulletMoveSpeed * 43 / 37);
         public override bool IsRemoteAttack => false;

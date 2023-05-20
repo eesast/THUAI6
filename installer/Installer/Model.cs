@@ -835,7 +835,7 @@ namespace Downloader
             private static void Download()
             {
                 Tencent_cos_download Downloader = new Tencent_cos_download();
-                int newFile = 0, updateFile = 0;
+                int newFile = 0;
                 int totalnew = newFileName.Count, totalupdate = updateFileName.Count;
                 filenum = totalnew + totalupdate;
                 updateFailed.Clear();
@@ -1573,24 +1573,25 @@ namespace Downloader
                 ServerDebugAndPythonVisit,
             }
 
+            // !!! 目前此类的各个静态成员从未被赋值过
             public class RunInfo                //UI需要在调用Launch函数前保证其中数据已经更新并有效
             {
-                static public RunMode mode;
-                static public string? IP;
-                static public int port;
-                static public int studentCount;
-                static public int trickerCount;
-                static public int gameTimeSec;
-                static public string? playbackFileName;
-                static public int characterID;
-                static public int type;
-                static public bool saveDebugLog;
-                static public bool showDebugLog;
-                static public bool warningOnly;
-                static public bool visiting;
-                static public int occupation;
-                static public List<int>? playerId = new List<int>();           //两者长度必须与studentCount + trickerCount一致
-                static public List<string>? filePath = new List<string>();
+                public static RunMode mode = default;
+                public static string? IP = null;
+                public static int port = 0;
+                public static int studentCount = 0;
+                public static int trickerCount = 0;
+                public static int gameTimeSec = 0;
+                public static string? playbackFileName = null;
+                public static int characterID = 0;
+                public static int type = 0;
+                public static bool saveDebugLog = false;
+                public static bool showDebugLog = false;
+                public static bool warningOnly = false;
+                public static bool visiting = false;
+                public static int occupation = 0;
+                public static List<int>? playerId = new List<int>();           //两者长度必须与studentCount + trickerCount一致
+                public static List<string>? filePath = new List<string>();
             }
 
             /// <summary>

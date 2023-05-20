@@ -96,6 +96,7 @@ namespace Server
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                Console.WriteLine(ex.StackTrace);
             }
             return 0;
         }

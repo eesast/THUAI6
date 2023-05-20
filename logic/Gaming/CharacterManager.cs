@@ -240,6 +240,7 @@ namespace Gaming
                 }
                 player.SetPlayerState(PlayerStateType.Addicted);
                 long threadNum = player.StateNum;
+                gameMap.MapAddictStudent();
                 new Thread
                     (() =>
                     {
@@ -255,6 +256,7 @@ namespace Gaming
                             timeInterval: GameData.frameDuration,
                             () =>
                             {
+                                gameMap.MapRescueStudent();
                                 if (player.GamingAddiction == player.MaxGamingAddiction && gameMap.Timer.IsGaming)
                                 {
                                     ghost.AddScore(GameData.TrickerScoreStudentDie);
@@ -397,9 +399,8 @@ namespace Gaming
 
             public void Die(Student player)
             {
-#if DEBUG
                 Debugger.Output(player, "die.");
-#endif
+
                 if (player.PlayerState == PlayerStateType.Deceased) return;
                 player.RemoveFromGame(PlayerStateType.Deceased);
 
@@ -430,9 +431,8 @@ namespace Gaming
                     }
                     return;
                 }
-                ++gameMap.NumOfDeceasedStudent;
+                gameMap.MapDieStudent();
             }
-
         }
     }
 }

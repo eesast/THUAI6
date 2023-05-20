@@ -192,26 +192,26 @@ std::future<bool> TrickerAPI::EndAllAction()
 
 std::future<bool> StudentAPI::SendTextMessage(int64_t toID, std::string message)
 {
-    return std::async(std::launch::async, [=]()
-                      { return logic.SendMessage(toID, message, false); });
+    return std::async(std::launch::async, [=, message = std::move(message)]()
+                      { return logic.SendMessage(toID, std::move(message), false); });
 }
 
 std::future<bool> TrickerAPI::SendTextMessage(int64_t toID, std::string message)
 {
-    return std::async(std::launch::async, [=]()
-                      { return logic.SendMessage(toID, message, false); });
+    return std::async(std::launch::async, [=, message = std::move(message)]()
+                      { return logic.SendMessage(toID, std::move(message), false); });
 }
 
 std::future<bool> StudentAPI::SendBinaryMessage(int64_t toID, std::string message)
 {
-    return std::async(std::launch::async, [=]()
-                      { return logic.SendMessage(toID, message, false); });
+    return std::async(std::launch::async, [=, message = std::move(message)]()
+                      { return logic.SendMessage(toID, std::move(message), false); });
 }
 
 std::future<bool> TrickerAPI::SendBinaryMessage(int64_t toID, std::string message)
 {
-    return std::async(std::launch::async, [=]()
-                      { return logic.SendMessage(toID, message, false); });
+    return std::async(std::launch::async, [=, message = std::move(message)]()
+                      { return logic.SendMessage(toID, std::move(message), false); });
 }
 
 bool StudentAPI::HaveMessage()

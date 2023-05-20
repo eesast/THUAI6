@@ -2,10 +2,8 @@
 using System.Threading;
 using System.Collections.Generic;
 using Preparation.Utility;
-using Timothy.FrameRateTask;
 using Preparation.Interface;
 using GameClass.GameObj;
-using System.Numerics;
 
 namespace Gaming
 {
@@ -14,10 +12,10 @@ namespace Gaming
         public struct PlayerInitInfo
         {
             public uint birthPointIndex;
-            public int teamID;
-            public int playerID;
+            public long teamID;
+            public long playerID;
             public CharacterType characterType;
-            public PlayerInitInfo(uint birthPointIndex, int teamID, int playerID, CharacterType characterType)
+            public PlayerInitInfo(uint birthPointIndex, long teamID, long playerID, CharacterType characterType)
             {
                 this.birthPointIndex = birthPointIndex;
                 this.teamID = teamID;
@@ -162,7 +160,7 @@ namespace Gaming
             Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
-                return actionManager.Stop(player);
+                return ActionManager.Stop(player);
             }
             return false;
         }
@@ -199,14 +197,25 @@ namespace Gaming
             }
             return false;
         }
-        public bool LockOrOpenDoor(long playerID)
+        public bool LockDoor(long playerID)
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
             Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
-                return actionManager.LockOrOpenDoor(player);
+                return actionManager.LockDoor(player);
+            }
+            return false;
+        }
+        public bool OpenDoor(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayerToAction(playerID);
+            if (player != null)
+            {
+                return actionManager.OpenDoor(player);
             }
             return false;
         }
@@ -253,7 +262,7 @@ namespace Gaming
             return false;
         }
 
-        public bool UseActiveSkill(long playerID, int skillNum)
+        public bool UseActiveSkill(long playerID, int skillNum, int parameter)
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
@@ -261,7 +270,7 @@ namespace Gaming
             if (player != null)
             {
                 if (player.Occupation.ListOfIActiveSkill.Count <= skillNum) return false;
-                return skillManager.UseActiveSkill(player, player.Occupation.ListOfIActiveSkill[skillNum]);
+                return skillManager.UseActiveSkill(player, player.Occupation.ListOfIActiveSkill[skillNum], parameter);
             }
             else
                 return false;
@@ -316,7 +325,7 @@ namespace Gaming
                         {
                             foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
                             {
-                                player.CanMove = false;
+                                player.ReSetCanMove(false);
                             }
                         }
                         gameMap.GameObjDict[keyValuePair.Key].Clear();

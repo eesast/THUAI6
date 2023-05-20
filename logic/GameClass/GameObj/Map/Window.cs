@@ -6,13 +6,11 @@ namespace GameClass.GameObj
     /// <summary>
     /// 窗
     /// </summary>
-    public class Window : GameObj
+    public class Window : Immovable, IWindow
     {
         public Window(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Window)
         {
-            this.place = PlaceType.Window;
-            this.CanMove = false;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;
@@ -27,15 +25,46 @@ namespace GameClass.GameObj
             return false;
         }
 
+        private XY stage = new(0, 0);
+        public XY Stage
+        {
+            get
+            {
+                lock (gameObjLock)
+                    return stage;
+            }
+        }
+
         private Character? whoIsClimbing = null;
         public Character? WhoIsClimbing
         {
-            get => whoIsClimbing;
-            set
+            get
             {
                 lock (gameObjLock)
-                    whoIsClimbing = value;
+                    return whoIsClimbing;
             }
+        }
+
+        public bool TryToClimb(ICharacter character)
+        {
+            lock (gameObjLock)
+                if (whoIsClimbing == null)
+                {
+                    stage = new(0, 0);
+                    whoIsClimbing = (Character)character;
+                    return true;
+                }
+                else return false;
+        }
+        public void FinishClimbing()
+        {
+            lock (gameObjLock)
+                whoIsClimbing = null;
+        }
+        public void Enter2Stage(XY xy)
+        {
+            lock (gameObjLock)
+                stage = xy;
         }
     }
 }

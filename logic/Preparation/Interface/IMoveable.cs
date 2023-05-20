@@ -1,16 +1,20 @@
 ﻿using System;
+using System.Threading;
 using Preparation.Utility;
 
 namespace Preparation.Interface
 {
     public interface IMoveable : IGameObj
     {
-        object MoveLock { get; }
+        object ActionLock { get; }
         public int MoveSpeed { get; }
         public bool IsMoving { get; set; }
-        public bool IsAvailable { get; }
-        public long MovingSetPos(XY moveVec, PlaceType place);
-        public void ReSetPos(XY pos, PlaceType place);
+        public bool IsRemoved { get; }
+        public bool IsAvailableForMove { get; }
+        public long StateNum { get; }
+        public Semaphore ThreadNum { get; }
+        public long MovingSetPos(XY moveVec, long stateNum);
+        public void ReSetCanMove(bool value);
         public bool WillCollideWith(IGameObj? targetObj, XY nextPos)  // 检查下一位置是否会和目标物碰撞
         {
             if (targetObj == null)

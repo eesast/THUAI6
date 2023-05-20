@@ -102,19 +102,10 @@ namespace Server
                 }
             }
         }
-        protected virtual void SendGameResult()		// 天梯的 Server 给网站发消息记录比赛结果
+        protected void SendGameResult()		// 天梯的 Server 给网站发消息记录比赛结果
         {
-            var scores = new JObject[options.TeamCount];
-            int[] score = GetScore();
-            scores[0] = new JObject { ["team_name"] = "Student", ["score"] = score[0] };
-            scores[1] = new JObject { ["team_name"] = "Tricker", ["score"] = score[1] };
-            httpSender?.SendHttpRequest
-                (
-                    new JObject
-                    {
-                        ["result"] = new JArray(scores)
-                    }
-                );
+            int[] scores = GetScore();
+            httpSender?.SendHttpRequest(scores).Wait();
         }
 
         private void OnGameEnd()
@@ -205,8 +196,8 @@ namespace Server
             {
                 foreach (Character character in game.GameMap.GameObjDict[GameObjType.Character])
                 {
-                    if (!character.IsGhost()) score[0] += character.Score;
-                    else score[1] += character.Score;
+                    if (!character.IsGhost()) score[0] += (int)character.Score;
+                    else score[1] += (int)character.Score;
                 }
 
             }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using GameClass.GameObj;
 using Preparation.Utility;
 using Preparation.Interface;
@@ -18,42 +17,7 @@ namespace Gaming
                 this.gameMap = gameMap;
             }
 
-            public void SetPlayerState(Character player, PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
-            {
-                lock (player.MoveLock)
-                {
-                    switch (player.PlayerState)
-                    {
-                        case PlayerStateType.OpeningTheChest:
-                            ((Chest)player.WhatInteractingWith).StopOpen();
-                            player.ChangePlayerState(value, gameObj);
-                            break;
-                        case PlayerStateType.OpeningTheDoorway:
-                            Doorway doorway = (Doorway)player.WhatInteractingWith;
-                            doorway.OpenDegree += gameMap.Timer.nowTime() - doorway.OpenStartTime;
-                            doorway.OpenStartTime = 0;
-                            player.ChangePlayerState(value, gameObj);
-                            break;
-                        case PlayerStateType.Addicted:
-                            if (value == PlayerStateType.Rescued)
-                                player.ChangePlayerStateInOneThread(value, gameObj);
-                            else
-                                player.ChangePlayerState(value, gameObj);
-                            break;
-                        case PlayerStateType.Rescued:
-                            if (value == PlayerStateType.Addicted)
-                                player.ChangePlayerStateInOneThread(value, gameObj);
-                            else
-                                player.ChangePlayerState(value, gameObj);
-                            break;
-                        default:
-                            player.ChangePlayerState(value, gameObj);
-                            break;
-                    }
-                }
-            }
-
-            public Character? AddPlayer(XY pos, int teamID, int playerID, CharacterType characterType, Character? parent = null)
+            public Character? AddPlayer(XY pos, long teamID, long playerID, CharacterType characterType, Character? parent = null)
             {
                 Character newPlayer;
 
@@ -66,43 +30,39 @@ namespace Gaming
 
                 newPlayer.TeamID = teamID;
                 newPlayer.PlayerID = playerID;
-                #region 人物装弹
-                new Thread
-                (
-                    () =>
-                    {
-                        while (!gameMap.Timer.IsGaming)
-                            Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
-                        long lastTime = Environment.TickCount64;
-                        new FrameRateTaskExecutor<int>(
-                            loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
-                            loopToDo: () =>
-                            {
-                                long nowTime = Environment.TickCount64;
-                                if (newPlayer.BulletNum == newPlayer.MaxBulletNum)
-                                    lastTime = nowTime;
-                                else if (nowTime - lastTime >= newPlayer.CD)
-                                {
-                                    _ = newPlayer.TryAddBulletNum();
-                                    lastTime = nowTime;
-                                }
-                            },
-                            timeInterval: GameData.checkInterval,
-                            finallyReturn: () => 0
-                        )
-                        {
-                            AllowTimeExceed = true/*,
-                        MaxTolerantTimeExceedCount = 5,
-                        TimeExceedAction = exceedTooMuch =>
-                        {
-                            if (exceedTooMuch) Console.WriteLine("The computer runs too slow that it cannot check the color below the player in time!");
-                        }*/
-                        }
-                            .Start();
-                    }
-                )
-                { IsBackground = true }.Start();
-                #endregion
+                /* #region 人物装弹
+                 new Thread
+                 (
+                     () =>
+                     {
+                         while (!gameMap.Timer.IsGaming)
+                             Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
+                         long lastTime = Environment.TickCount64;
+                         new FrameRateTaskExecutor<int>(
+                             loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsRemoved,
+                             loopToDo: () =>
+                             {
+                                 long nowTime = Environment.TickCount64;
+                                 if (newPlayer.BulletNum == newPlayer.MaxBulletNum)
+                                     lastTime = nowTime;
+                                 else if (nowTime - lastTime >= newPlayer.CD)
+                                 {
+                                     _ = newPlayer.TryAddBulletNum();
+                                     lastTime = nowTime;
+                                 }
+                             },
+                             timeInterval: GameData.checkInterval,
+                             finallyReturn: () => 0
+                         )
+                         {
+                             AllowTimeExceed = true,
+                         }
+                             .Start();
+                     }
+                 )
+                 { IsBackground = true }.Start();
+                 #endregion
+     */
                 #region BGM,牵制得分更新
                 new Thread
                 (
@@ -137,7 +97,7 @@ namespace Gaming
                             }
                         }
                         new FrameRateTaskExecutor<int>(
-                        loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsResetting,
+                        loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsRemoved,
                         loopToDo: () =>
                         {
                             gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
@@ -168,7 +128,7 @@ namespace Gaming
                                                     newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position));
                                                 else newPlayer.AddBgm(BgmType.GhostIsComing, 0);
                                             }
-                                            if (newPlayer.CharacterType != CharacterType.Teacher && newPlayer.CharacterType != CharacterType.Robot && !newPlayer.NoHp() && newPlayer.PlayerState != PlayerStateType.Stunned && XY.DistanceFloor3(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
+                                            if (newPlayer.CharacterType != CharacterType.Teacher && newPlayer.CharacterType != CharacterType.Robot && newPlayer.CanPinDown() && XY.DistanceFloor3(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
                                             {
                                                 TimePinningDown += GameData.checkInterval;
                                                 newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
@@ -249,8 +209,8 @@ namespace Gaming
                         return;
                     }
                 }
-                SetPlayerState(player, PlayerStateType.Addicted);
-                long threadNum = player.ThreadNum;
+                player.SetPlayerState(PlayerStateType.Addicted);
+                long threadNum = player.StateNum;
                 new Thread
                     (() =>
                     {
@@ -258,7 +218,7 @@ namespace Gaming
                         Debugger.Output(player, " is addicted ");
 #endif
                         new FrameRateTaskExecutor<int>(
-                            () => threadNum == player.ThreadNum && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
+                            () => threadNum == player.StateNum && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
                             () =>
                             {
                                 player.GamingAddiction += (player.PlayerState == PlayerStateType.Addicted) ? GameData.frameDuration : 0;
@@ -280,29 +240,29 @@ namespace Gaming
                 { IsBackground = true }.Start();
             }
 
-            public bool BeStunned(Character player, int time)
+            public static long BeStunned(Character player, int time)
             {
-                if (player.PlayerState == PlayerStateType.Stunned || player.NoHp() || player.CharacterType == CharacterType.Robot) return false;
+                if (player.CharacterType == CharacterType.Robot) return -1;
+                long threadNum = player.SetPlayerState(PlayerStateType.Stunned);
+                if (threadNum == -1) return -1;
                 new Thread
                     (() =>
                     {
-                        SetPlayerState(player, PlayerStateType.Stunned);
-                        long threadNum = player.ThreadNum;
                         Thread.Sleep(time);
-                        if (threadNum == player.ThreadNum)
-                            SetPlayerState(player);
+                        if (threadNum == player.StateNum)
+                            player.SetPlayerState();
                     }
                     )
                 { IsBackground = true }.Start();
-                return true;
+                return threadNum;
             }
 
             public bool TryBeAwed(Student character, Bullet bullet)
             {
                 if (character.CanBeAwed())
                 {
-                    if (BeStunned(character, GameData.basicStunnedTimeOfStudent))
-                        bullet.Parent.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.basicStunnedTimeOfStudent));
+                    if (BeStunned(character, GameData.basicStunnedTimeOfStudent) > 0)
+                        bullet.Parent!.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.basicStunnedTimeOfStudent));
                     return true;
                 }
                 return false;
@@ -320,14 +280,16 @@ namespace Gaming
 #if DEBUG
                 Debugger.Output(student, "is being shot!");
 #endif
-                if (student.NoHp()) return;  // 原来已经死了
-                if (!bullet.Parent.IsGhost()) return;
+                if (!bullet.Parent!.IsGhost()) return;
 
                 if (student.CharacterType == CharacterType.StraightAStudent)
                 {
-                    ((WriteAnswers)student.FindIActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
+                    ((WriteAnswers)student.FindActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
                 }
                 student.SetDegreeOfTreatment0();
+
+                if (student.NoHp()) return;  // 原来已经死了
+
 #if DEBUG
                 Debugger.Output(bullet, " 's AP is " + bullet.AP.ToString());
 #endif
@@ -362,6 +324,11 @@ namespace Gaming
 #endif
                     }
                     bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
+                    if (student.CharacterType == CharacterType.Teacher)
+                    {
+                        student.AddScore(subHp * GameData.factorOfScoreWhenTeacherAttacked / GameData.basicApOfGhost);
+                    }
+
                     bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
                 }
                 if (student.HP <= 0)
@@ -375,18 +342,22 @@ namespace Gaming
             public bool BackSwing(Character player, int time)
             {
                 if (time <= 0) return false;
-                if (player.PlayerState == PlayerStateType.Swinging || (!player.Commandable() && player.PlayerState != PlayerStateType.TryingToAttack)) return false;
-                SetPlayerState(player, PlayerStateType.Swinging);
-                long threadNum = player.ThreadNum;
+                long stateNum = player.SetPlayerState(PlayerStateType.Swinging);
+                if (stateNum == -1) return false;
 
                 new Thread
                         (() =>
                         {
+                            player.ThreadNum.WaitOne();
                             Thread.Sleep(time);
 
-                            if (threadNum == player.ThreadNum)
+                            lock (player.ActionLock)
                             {
-                                SetPlayerState(player);
+                                if (stateNum == player.StateNum)
+                                {
+                                    player.ThreadNum.Release();
+                                    player.SetPlayerStateNaturally();
+                                }
                             }
                         }
                         )
@@ -404,19 +375,28 @@ namespace Gaming
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {
-                    Prop? prop = player.UseProp(i);
+                    Gadget? prop = player.UseProp(i);
                     if (prop != null)
                     {
-                        prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
+                        prop.ReSetPos(player.Position);
                         gameMap.Add(prop);
                     }
                 }
                 if (player.CharacterType == CharacterType.Robot)
                 {
-                    if (((Golem)player).Parent != null && ((Golem)player).Parent.CharacterType == CharacterType.TechOtaku)
+                    var parent = ((Golem)player).Parent;
+                    if (parent != null && parent.CharacterType == CharacterType.TechOtaku)
                     {
-                        ((SummonGolem)(((Golem)player).Parent.FindIActiveSkill(ActiveSkillType.SummonGolem))).GolemSummoned = null;
-                        player.FindIActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed = false;
+                        ((SummonGolem)(parent.FindActiveSkill(ActiveSkillType.SummonGolem))).DeleteGolem((int)(player.PlayerID - parent.PlayerID) / GameData.numOfPeople - 1);
+                        UseRobot useRobot = (UseRobot)parent.FindActiveSkill(ActiveSkillType.UseRobot);
+                        if (useRobot.TryResetNowPlayerID((int)player.PlayerID))
+                        {
+                            lock (parent.ActionLock)
+                            {
+                                if (parent.PlayerState == PlayerStateType.UsingSkill)
+                                    parent.SetPlayerState();
+                            }
+                        }
                     }
                     return;
                 }

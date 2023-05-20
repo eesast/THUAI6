@@ -20,7 +20,7 @@ namespace Server
         // {
         //     this.SendHttpRequest(new()).Wait();
         // }
-        public async Task SendHttpRequest(JObject body)
+        public async Task SendHttpRequest(int[] scores)
         {
             try
             {
@@ -30,9 +30,10 @@ namespace Server
                 {
                     result = new TeamScore[]
                     {
-                        new TeamScore() { team_name = "Student", score = 0, },
-                        new TeamScore() { team_name = "Tricker", score = 0, },
-                    }
+                        new TeamScore() { team_id = 0, score = scores[0], },
+                        new TeamScore() { team_id = 1, score = scores[1], },
+                    },
+                    mode = 0
                 })))
                 {
                     Console.WriteLine("Send to web successfully!");
@@ -49,7 +50,7 @@ namespace Server
 
     internal class TeamScore
     {
-        public string team_name { get; set; } = "";
+        public int team_id { get; set; } = 0;
         public int score { get; set; } = 0;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
-using System;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
@@ -10,8 +10,17 @@ namespace GameClass.GameObj
         /// //攻击力
         /// </summary>
         public abstract double BulletBombRange { get; }
-        public abstract double BulletAttackRange { get; }
-        public abstract int AP { get; set; }
+        public abstract double AttackDistance { get; }
+        protected int ap;
+        public int AP
+        {
+            get => Interlocked.CompareExchange(ref ap, 0, 0);
+        }
+        public void AddAP(int addAp)
+        {
+            Interlocked.Add(ref ap, addAp);
+        }
+
         public abstract int Speed { get; }
         public abstract bool IsRemoteAttack { get; }
         public abstract int CastTime { get; }
@@ -27,7 +36,6 @@ namespace GameClass.GameObj
         public bool HasSpear => hasSpear;
 
         /// <summary>
-        /// 与THUAI4不同的一个攻击判定方案，通过这个函数判断爆炸时能否伤害到target
         /// </summary>
         /// <param name="target">被尝试攻击者</param>
         /// <returns>是否可以攻击到</returns>
@@ -36,17 +44,16 @@ namespace GameClass.GameObj
 
         public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj == Parent && CanMove) return true;
-            if (targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet)
+            if (targetObj == Parent) return true;
+            if (targetObj.Type == GameObjType.Gadget || targetObj.Type == GameObjType.Bullet)
                 return true;
             return false;
         }
-        public Bullet(Character player, int radius, PlaceType placeType, XY Position) :
+        public Bullet(Character player, int radius, XY Position) :
             base(Position, radius, GameObjType.Bullet)
         {
-            this.place = placeType;
-            this.CanMove = true;
-            this.moveSpeed = this.Speed;
+            this.ReSetCanMove(true);
+            this.MoveSpeed = this.Speed;
             this.hasSpear = player.TryUseSpear();
             this.Parent = player;
         }
@@ -57,18 +64,20 @@ namespace GameClass.GameObj
 
     public static class BulletFactory
     {
-        public static Bullet? GetBullet(Character character, PlaceType place, XY pos)
+        public static Bullet? GetBullet(Character character, XY pos, BulletType bulletType)
         {
-            switch (character.BulletOfPlayer)
+            switch (bulletType)
             {
                 case BulletType.FlyingKnife:
-                    return new FlyingKnife(character, place, pos);
+                    return new FlyingKnife(character, pos);
                 case BulletType.CommonAttackOfGhost:
-                    return new CommonAttackOfGhost(character, place, pos);
+                    return new CommonAttackOfGhost(character, pos);
                 case BulletType.JumpyDumpty:
-                    return new JumpyDumpty(character, place, pos);
+                    return new JumpyDumpty(character, pos);
                 case BulletType.BombBomb:
-                    return new BombBomb(character, place, pos);
+                    return new BombBomb(character, pos);
+                case BulletType.Strike:
+                    return new Strike(character, pos);
                 default:
                     return null;
             }
@@ -94,6 +103,8 @@ namespace GameClass.GameObj
                     return BombBomb.cd;
                 case BulletType.JumpyDumpty:
                     return JumpyDumpty.cd;
+                case BulletType.Strike:
+                    return Strike.cd;
                 default:
                     return GameData.basicCD;
             }
@@ -110,6 +121,8 @@ namespace GameClass.GameObj
                     return BombBomb.maxBulletNum;
                 case BulletType.JumpyDumpty:
                     return JumpyDumpty.maxBulletNum;
+                case BulletType.Strike:
+                    return Strike.maxBulletNum;
                 default:
                     return 0;
             }

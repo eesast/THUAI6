@@ -5,8 +5,6 @@ using Preparation.Utility;
 using System;
 using Timothy.FrameRateTask;
 using GameEngine;
-using System.Numerics;
-using System.Reflection;
 
 namespace Gaming
 {
@@ -21,9 +19,9 @@ namespace Gaming
 
             public void UseProp(Character player, PropType propType)
             {
-                if (player.IsResetting || player.CharacterType == CharacterType.Robot)
+                if (player.CharacterType == CharacterType.Robot || player.IsRemoved)
                     return;
-                Prop prop = player.UseProp(propType);
+                Gadget prop = player.UseProp(propType);
                 switch (prop.GetPropType())
                 {
                     case PropType.ShieldOrSpear:
@@ -54,7 +52,7 @@ namespace Gaming
                             else player.AddAp(GameData.PropDuration);
                         break;
                     case PropType.RecoveryFromDizziness:
-                        if (player.PlayerState == PlayerStateType.Stunned)
+                        if (player.PlayerState == PlayerStateType.Stunned || player.PlayerState == PlayerStateType.Charmed)
                         {
                             player.AddScore(GameData.ScorePropRecoverFromDizziness);
                             player.SetPlayerStateNaturally();
@@ -73,23 +71,22 @@ namespace Gaming
             /// <returns></returns>
             public bool PickProp(Character player, PropType propType = PropType.Null)
             {
-                if (player.IsResetting)
-                    return false;
+                if (!player.Commandable()) return false;
                 int indexing = player.IndexingOfAddProp();
                 if (indexing == GameData.maxNumOfPropInPropInventory)
                     return false;
 
-                Prop pickProp = new NullProp();
+                Gadget pickProp = new NullProp();
                 if (propType == PropType.Null)  // 自动检查有无道具可捡
                 {
-                    pickProp = player.PropInventory[indexing] = ((Prop?)gameMap.OneInTheSameCell(player.Position, GameObjType.Prop)) ?? new NullProp();
+                    pickProp = player.PropInventory[indexing] = ((Gadget?)gameMap.OneInTheSameCell(player.Position, GameObjType.Gadget)) ?? new NullProp();
                 }
                 else
                 {
-                    gameMap.GameObjLockDict[GameObjType.Prop].EnterReadLock();
+                    gameMap.GameObjLockDict[GameObjType.Gadget].EnterReadLock();
                     try
                     {
-                        foreach (Prop prop in gameMap.GameObjDict[GameObjType.Prop])
+                        foreach (Gadget prop in gameMap.GameObjDict[GameObjType.Gadget])
                         {
                             if (prop.GetPropType() == propType)
                             {
@@ -102,14 +99,14 @@ namespace Gaming
                     }
                     finally
                     {
-                        gameMap.GameObjLockDict[GameObjType.Prop].ExitReadLock();
+                        gameMap.GameObjLockDict[GameObjType.Gadget].ExitReadLock();
                     }
                 }
 
                 if (pickProp.GetPropType() != PropType.Null)
                 {
-                    gameMap.Remove(pickProp);
-                    gameMap.Add(new PickedProp(pickProp));
+                    gameMap.RemoveJustFromMap(pickProp);
+                    //gameMap.Add(new Item(pickProp));
                     return true;
                 }
                 else
@@ -118,19 +115,19 @@ namespace Gaming
 
             public void ThrowProp(Character player, PropType propType)
             {
-                if (!gameMap.Timer.IsGaming || player.IsResetting)
+                if (!gameMap.Timer.IsGaming || player.IsRemoved)
                     return;
-                Prop prop = player.UseProp(propType);
+                Gadget prop = player.UseProp(propType);
                 if (prop.GetPropType() == PropType.Null)
                     return;
 
-                prop.ReSetPos(player.Position, gameMap.GetPlaceType(player.Position));
+                prop.ReSetPos(player.Position);
                 gameMap.Add(prop);
             }
 
-            private Prop ProduceOnePropNotKey(Random r, XY Pos)
+            private static Gadget ProduceOnePropNotKey(Random r, XY Pos)
             {
-                return PropFactory.GetProp((PropType)r.Next(GameData.numOfTeachingBuilding + 1, GameData.numOfPropSpecies + 1), Pos, gameMap.GetPlaceType(Pos));
+                return PropFactory.GetConsumables((PropType)r.Next(GameData.numOfTeachingBuilding + 1, GameData.numOfPropSpecies + 1), Pos);
             }
 
             private Chest GetChest(Random r)
@@ -153,7 +150,7 @@ namespace Gaming
                     {
                         ++cou;
                         Chest chest = GetChest(r);
-                        chest.PropInChest[1] = new Key3(chest.Position, PlaceType.Chest);
+                        chest.PropInChest[1] = new Key3(chest.Position);
                         chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
                     }
                     cou = 0;
@@ -161,7 +158,7 @@ namespace Gaming
                     {
                         ++cou;
                         Chest chest = GetChest(r);
-                        chest.PropInChest[1] = new Key5(chest.Position, PlaceType.Chest);
+                        chest.PropInChest[1] = new Key5(chest.Position);
                         chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
                     }
                     cou = 0;
@@ -169,7 +166,7 @@ namespace Gaming
                     {
                         ++cou;
                         Chest chest = GetChest(r);
-                        chest.PropInChest[1] = new Key6(chest.Position, PlaceType.Chest);
+                        chest.PropInChest[1] = new Key6(chest.Position);
                         chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
                     }
 

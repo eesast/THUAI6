@@ -22,6 +22,7 @@ namespace starter.viewmodel.settings
         //定义BackgroundWorker
         BackgroundWorker asyncDownloader;
         BackgroundWorker asyncUpdater;
+        BackgroundWorker asyncInitializer;
         /// <summary>
         /// Model object
         /// </summary>
@@ -53,44 +54,91 @@ namespace starter.viewmodel.settings
                 }
             }
 
-            //实例化BackgroundWorker
-            asyncDownloader = new BackgroundWorker();
-            asyncUpdater = new BackgroundWorker();
-            //指示BackgroundWorker是否可以报告进度更新
-            //当该属性值为True是，将可以成功调用ReportProgress方法，否则将引发InvalidOperationException异常。
-            asyncDownloader.WorkerReportsProgress = true;
-            asyncUpdater.WorkerReportsProgress = true;
-            //挂载方法：
-            asyncDownloader.DoWork += AsyncDownloader_DoWork;
-            asyncUpdater.DoWork += AsyncUpdater_DoWork;
-            //完成通知器：
-            asyncDownloader.RunWorkerCompleted += AsyncDownloader_RunWorkerCompleted;
-            asyncUpdater.RunWorkerCompleted += AsyncUpdater_RunWorkerCompleted;
-
             UpdateInfoVis = Visibility.Collapsed;
 
-            if (Downloader.Program.Tencent_cos_download.CheckAlreadyDownload())
+            asyncInitializer = new BackgroundWorker();
+            asyncInitializer.WorkerReportsProgress = true;
+            asyncInitializer.DoWork += AsyncInitializer_DoWork;
+            asyncInitializer.RunWorkerCompleted += AsyncInitializer_RunWorkerCompleted;
+
+            asyncInitializer.RunWorkerAsync();
+            Status = SettingsModel.Status.initializing;
+
+        }
+
+        private void AsyncInitializer_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Result == null)
             {
-                obj.checkUpdate();
+                Status = SettingsModel.Status.error;
+            }
+            else if ((int)e.Result == 1)
+            {
                 Status = SettingsModel.Status.login;
-                this.RaisePropertyChanged("WindowWidth");
                 this.RaisePropertyChanged("LaunchVis");
-                if (obj.RecallUser())
-                    RememberMe = true;
-                else
-                    RememberMe = false;
                 this.RaisePropertyChanged("RememberMe");
                 this.RaisePropertyChanged("SwitchOSBtnCont");
-                //在启动时立刻检查更新，确保选手启动最新版选手包
-                //若有更新，将启动键改为更新键；
-                //相应地，使用login界面启动；
-                //结构：上方为登录框架，下方有“修改选手包”按钮
+                this.RaisePropertyChanged("UpdateBtnCont");
+                this.RaisePropertyChanged("LaunchBtnCont");
+                this.RaisePropertyChanged("Updateinfo");
+                this.RaisePropertyChanged("UpdatePlanned");
             }
             else
             {
                 Route = Environment.GetEnvironmentVariable("USERPROFILE") + "\\THUAI6";
                 Status = SettingsModel.Status.newUser;
-                this.RaisePropertyChanged("WindowWidth");
+            }
+        }
+
+        private void AsyncInitializer_DoWork(object? sender, DoWorkEventArgs e)
+        {
+            if (asyncInitializer.CancellationPending)
+            {
+                Status = SettingsModel.Status.error;
+                e.Cancel = true;
+                return;
+            }
+            else
+            {
+                //实例化BackgroundWorker
+                asyncDownloader = new BackgroundWorker();
+                asyncUpdater = new BackgroundWorker();
+                //指示BackgroundWorker是否可以报告进度更新
+                //当该属性值为True是，将可以成功调用ReportProgress方法，否则将引发InvalidOperationException异常。
+                asyncDownloader.WorkerReportsProgress = true;
+                asyncUpdater.WorkerReportsProgress = true;
+                //挂载方法：
+                asyncDownloader.DoWork += AsyncDownloader_DoWork;
+                asyncUpdater.DoWork += AsyncUpdater_DoWork;
+                //完成通知器：
+                asyncDownloader.RunWorkerCompleted += AsyncDownloader_RunWorkerCompleted;
+                asyncUpdater.RunWorkerCompleted += AsyncUpdater_RunWorkerCompleted;
+
+                if (Downloader.Program.Tencent_cos_download.CheckAlreadyDownload())
+                {
+                    obj.checkUpdate();
+
+                    if (obj.RecallUser())
+                        RememberMe = true;
+                    else
+                        RememberMe = false;
+
+                    //在启动时立刻检查更新，确保选手启动最新版选手包
+                    //若有更新，将启动键改为更新键；
+                    //相应地，使用login界面启动；
+                    //结构：上方为登录框架，下方有“修改选手包”按钮
+
+                    //下面几行是用来运行测试的代码
+                    //Program.RunProgram.StartServerForDebug("0.0.0.0",8888,4,1,600,"video");
+                    //Program.RunProgram.RunCpp("127.0.0.1",8888,4,1,false,true,false);
+                    //Program.RunProgram.RunGUIClient("127.0.0.1", 8888, 0, true);
+
+                    e.Result = 1;
+                }
+                else
+                {
+                    e.Result = 2;
+                }
             }
         }
 
@@ -148,6 +196,7 @@ namespace starter.viewmodel.settings
                     this.RaisePropertyChanged("UpdateInfo");
                     this.RaisePropertyChanged("LaunchBtnCont");
                 }
+                this.RaisePropertyChanged("UpdatePlanned");
             }
         }
 
@@ -252,6 +301,7 @@ namespace starter.viewmodel.settings
                 this.RaisePropertyChanged("LaunchVis");
                 this.RaisePropertyChanged("NewUserVis");
                 this.RaisePropertyChanged("ConfirmBtnCont");
+                this.RaisePropertyChanged("ProcessingIntro");
             }
         }
         public string Intro
@@ -288,6 +338,21 @@ namespace starter.viewmodel.settings
                         return "将选手包安装在（将创建THUAI6文件夹）：";
                     case SettingsModel.Status.move:
                         return "将选手包移动到（THUAI6文件夹将会被整体移动）：";
+                    default:
+                        return "";
+                }
+            }
+        }
+        public string ProcessingIntro
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case SettingsModel.Status.working:
+                        return "正在下载";
+                    case SettingsModel.Status.initializing:
+                        return "正在检查更新";
                     default:
                         return "";
                 }
@@ -448,7 +513,7 @@ namespace starter.viewmodel.settings
         {
             get
             {
-                return Status == SettingsModel.Status.working ? Visibility.Visible : Visibility.Collapsed;
+                return (Status == SettingsModel.Status.working || Status == SettingsModel.Status.initializing) ? Visibility.Visible : Visibility.Collapsed;
             }
         }
         public Visibility CompleteVis
@@ -503,6 +568,13 @@ namespace starter.viewmodel.settings
                 return obj.status == SettingsModel.Status.login && (!obj.UpdatePlanned) ? Visibility.Visible : Visibility.Collapsed;
             }
         }
+        public Visibility CfgVis
+        {
+            get
+            {
+                return obj.status == SettingsModel.Status.launch ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
 
         public string UpdateBtnCont
         {
@@ -529,9 +601,9 @@ namespace starter.viewmodel.settings
                 if (obj.UpdatePlanned)
                     ans = "更新";
                 else if (obj.launchLanguage == SettingsModel.LaunchLanguage.cpp)
-                    ans = "启动c++包";
+                    ans = "启动选手包";
                 else
-                    ans = "启动python包";
+                    ans = "启动选手包";
                 return ans;
             }
         }
@@ -563,6 +635,11 @@ namespace starter.viewmodel.settings
                         return "";
                 }
             }
+        }
+
+        public bool UpdatePlanned
+        {
+            get { return obj.UpdatePlanned; }
         }
 
         public string RouteSelectWindow(string type)
@@ -714,6 +791,7 @@ namespace starter.viewmodel.settings
                             this.RaisePropertyChanged("UpdateBtnCont");
                             this.RaisePropertyChanged("UpdateInfo");
                             this.RaisePropertyChanged("LaunchVis");
+                            this.RaisePropertyChanged("UpdatePlanned");
                         }
                     }));
                 }

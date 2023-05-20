@@ -6,7 +6,6 @@ from typing import List, cast, Tuple, Union
 
 
 class StudentAPI(IStudentAPI, IGameTimer):
-
     def __init__(self, logic: ILogic) -> None:
         self.__logic = logic
         self.__pool = ThreadPoolExecutor(20)
@@ -44,8 +43,8 @@ class StudentAPI(IStudentAPI, IGameTimer):
     def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
         return self.__pool.submit(self.__logic.ThrowProp, propType)
 
-    def UseSkill(self, skillID: int) -> Future[bool]:
-        return self.__pool.submit(self.__logic.UseSkill, skillID)
+    def UseSkill(self, skillID: int, skillParam: int = 0) -> Future[bool]:
+        return self.__pool.submit(self.__logic.UseSkill, skillID, skillParam)
 
     # 与地图交互相关
     def OpenDoor(self) -> Future[bool]:
@@ -133,7 +132,13 @@ class StudentAPI(IStudentAPI, IGameTimer):
         return self.__logic.GetGameInfo()
 
     def HaveView(self, gridX: int, gridY: int) -> bool:
-        return self.__logic.HaveView(gridX, gridY, self.GetSelfInfo().x, self.GetSelfInfo().y, self.GetSelfInfo().viewRange)
+        return self.__logic.HaveView(
+            gridX,
+            gridY,
+            self.GetSelfInfo().x,
+            self.GetSelfInfo().y,
+            self.GetSelfInfo().viewRange,
+        )
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 
@@ -182,7 +187,6 @@ class StudentAPI(IStudentAPI, IGameTimer):
 
 
 class TrickerAPI(ITrickerAPI, IGameTimer):
-
     def __init__(self, logic: ILogic) -> None:
         self.__logic = logic
         self.__pool = ThreadPoolExecutor(20)
@@ -220,8 +224,8 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
     def ThrowProp(self, propType: THUAI6.PropType) -> Future[bool]:
         return self.__pool.submit(self.__logic.ThrowProp, propType)
 
-    def UseSkill(self, skillID: int) -> Future[bool]:
-        return self.__pool.submit(self.__logic.UseSkill, skillID)
+    def UseSkill(self, skillID: int, skillParam: int = 0) -> Future[bool]:
+        return self.__pool.submit(self.__logic.UseSkill, skillID, skillParam)
 
     # 与地图交互相关
     def OpenDoor(self) -> Future[bool]:
@@ -309,7 +313,13 @@ class TrickerAPI(ITrickerAPI, IGameTimer):
         return self.__logic.GetGameInfo()
 
     def HaveView(self, gridX: int, gridY: int) -> bool:
-        return self.__logic.HaveView(gridX, gridY, self.GetSelfInfo().x, self.GetSelfInfo().y, self.GetSelfInfo().viewRange)
+        return self.__logic.HaveView(
+            gridX,
+            gridY,
+            self.GetSelfInfo().x,
+            self.GetSelfInfo().y,
+            self.GetSelfInfo().viewRange,
+        )
 
     # 用于DEBUG的输出函数，仅在DEBUG模式下有效
 

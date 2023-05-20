@@ -208,10 +208,10 @@ bool Logic::ThrowProp(THUAI6::PropType prop)
     return pComm->ThrowProp(prop, playerID);
 }
 
-bool Logic::UseSkill(int32_t skill)
+bool Logic::UseSkill(int32_t skill, int32_t skillParam)
 {
     logger->debug("Called UseSkill");
-    return pComm->UseSkill(skill, playerID);
+    return pComm->UseSkill(skill, skillParam, playerID);
 }
 
 bool Logic::SendMessage(int64_t toID, std::string message, bool binary)
@@ -315,68 +315,81 @@ void Logic::ProcessMessage()
 {
     auto messageThread = [this]()
     {
-        logger->info("Message thread start!");
-        pComm->AddPlayer(playerID, playerType, studentType, trickerType);
-        while (gameState != THUAI6::GameState::GameEnd)
+        try
         {
-            auto clientMsg = pComm->GetMessage2Client();  // 在获得新消息之前阻塞
-            logger->debug("Get message from server!");
-            gameState = Proto2THUAI6::gameStateDict[clientMsg.game_state()];
-            switch (gameState)
+            logger->info("Message thread start!");
+            pComm->AddPlayer(playerID, playerType, studentType, trickerType);
+            while (gameState != THUAI6::GameState::GameEnd)
             {
-                case THUAI6::GameState::GameStart:
-                    logger->info("Game Start!");
+                auto clientMsg = pComm->GetMessage2Client();  // 在获得新消息之前阻塞
+                logger->debug("Get message from server!");
+                gameState = Proto2THUAI6::gameStateDict[clientMsg.game_state()];
+                switch (gameState)
+                {
+                    case THUAI6::GameState::GameStart:
+                        logger->info("Game Start!");
 
-                    // 读取地图
-                    for (const auto& item : clientMsg.obj_message())
-                        if (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()] == THUAI6::MessageOfObj::MapMessage)
-                        {
-                            auto map = std::vector<std::vector<THUAI6::PlaceType>>();
-                            auto mapResult = item.map_message();
-                            for (int i = 0; i < item.map_message().row_size(); i++)
+                        // 读取地图
+                        for (const auto& item : clientMsg.obj_message())
+                            if (Proto2THUAI6::messageOfObjDict[item.message_of_obj_case()] == THUAI6::MessageOfObj::MapMessage)
                             {
-                                std::vector<THUAI6::PlaceType> row;
-                                for (int j = 0; j < mapResult.row(i).col_size(); j++)
+                                auto map = std::vector<std::vector<THUAI6::PlaceType>>();
+                                auto mapResult = item.map_message();
+                                for (int i = 0; i < item.map_message().row_size(); i++)
                                 {
-                                    if (Proto2THUAI6::placeTypeDict.count(mapResult.row(i).col(j)) == 0)
-                                        logger->error("Unknown place type!");
-                                    row.push_back(Proto2THUAI6::placeTypeDict[mapResult.row(i).col(j)]);
+                                    std::vector<THUAI6::PlaceType> row;
+                                    for (int j = 0; j < mapResult.row(i).col_size(); j++)
+                                    {
+                                        if (Proto2THUAI6::placeTypeDict.count(mapResult.row(i).col(j)) == 0)
+                                            logger->error("Unknown place type!");
+                                        row.push_back(Proto2THUAI6::placeTypeDict[mapResult.row(i).col(j)]);
+                                    }
+                                    map.push_back(std::move(row));
                                 }
-                                map.push_back(std::move(row));
+                                bufferState->gameMap = std::move(map);
+                                currentState->gameMap = bufferState->gameMap;
+                                logger->info("Map loaded!");
+                                break;
                             }
-                            bufferState->gameMap = std::move(map);
-                            currentState->gameMap = bufferState->gameMap;
-                            logger->info("Map loaded!");
-                            break;
+                        if (currentState->gameMap.empty())
+                        {
+                            logger->error("Map not loaded!");
+                            throw std::runtime_error("Map not loaded!");
                         }
-                    if (currentState->gameMap.empty())
-                    {
-                        logger->error("Map not loaded!");
-                        throw std::runtime_error("Map not loaded!");
-                    }
-                    LoadBuffer(clientMsg);
+                        LoadBuffer(clientMsg);
 
-                    AILoop = true;
-                    UnBlockAI();
+                        AILoop = true;
+                        UnBlockAI();
 
-                    break;
-                case THUAI6::GameState::GameRunning:
+                        break;
+                    case THUAI6::GameState::GameRunning:
 
-                    LoadBuffer(clientMsg);
-                    break;
-                default:
-                    logger->debug("Unknown GameState!");
-                    break;
+                        LoadBuffer(clientMsg);
+                        break;
+                    default:
+                        logger->debug("Unknown GameState!");
+                        break;
+                }
             }
+            {
+                std::lock_guard<std::mutex> lock(mtxBuffer);
+                bufferUpdated = true;
+                counterBuffer = -1;
+            }
+            cvBuffer.notify_one();
+            logger->info("Game End!");
+            AILoop = false;
         }
+        catch (const std::exception& e)
         {
-            std::lock_guard<std::mutex> lock(mtxBuffer);
-            bufferUpdated = true;
-            counterBuffer = -1;
+            std::cerr << "C++ Exception: " << e.what() << std::endl;
+            AILoop = false;
         }
-        cvBuffer.notify_one();
-        logger->info("Game End!");
-        AILoop = false;
+        catch (...)
+        {
+            std::cerr << "Unknown Exception!" << std::endl;
+            AILoop = false;
+        }
     };
     std::thread(messageThread).detach();
 }
@@ -570,13 +583,13 @@ void Logic::LoadBufferCase(const protobuf::MessageOfObj& item)
                 {
                     if (Proto2THUAI6::newsTypeDict[news.news_case()] == THUAI6::NewsType::TextMessage)
                     {
-                        messageQueue.emplace(std::make_pair(news.to_id(), news.text_message()));
+                        messageQueue.emplace(std::make_pair(news.from_id(), news.text_message()));
                         logger->debug("Add News!");
                     }
                     else if (Proto2THUAI6::newsTypeDict[news.news_case()] == THUAI6::NewsType::BinaryMessage)
                     {
-                        messageQueue.emplace(std::make_pair(news.to_id(), news.binary_message()));
-                        logger->debug("Add News!");
+                        messageQueue.emplace(std::make_pair(news.from_id(), news.binary_message()));
+                        logger->debug("Add Binary News!");
                     }
                     else
                         logger->error("Unknown NewsType!");
@@ -699,7 +712,7 @@ bool Logic::HaveView(int gridX, int gridY, int selfX, int selfY, int viewRange) 
 void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool file, bool print, bool warnOnly)
 {
     // 建立日志组件
-    auto fileLogger = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/logic-log.txt", true);
+    auto fileLogger = std::make_shared<spdlog::sinks::basic_file_sink_mt>(fmt::format("logs/logic-{}-log.txt", playerID), true);
     auto printLogger = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     std::string pattern = "[logic] [%H:%M:%S.%e] [%l] %v";
     fileLogger->set_pattern(pattern);
@@ -747,29 +760,40 @@ void Logic::Main(CreateAIFunc createAI, std::string IP, std::string port, bool f
     // 构造AI线程
     auto AIThread = [&]()
     {
+        try
         {
-            std::unique_lock<std::mutex> lock(mtxAI);
-            cvAI.wait(lock, [this]()
-                      { return AIStart; });
-        }
-        auto ai = createAI(playerID);
+            {
+                std::unique_lock<std::mutex> lock(mtxAI);
+                cvAI.wait(lock, [this]()
+                          { return AIStart; });
+            }
+            auto ai = createAI(playerID);
 
-        while (AILoop)
+            while (AILoop)
+            {
+                if (asynchronous)
+                {
+                    Wait();
+                    timer->StartTimer();
+                    timer->Play(*ai);
+                    timer->EndTimer();
+                }
+                else
+                {
+                    Update();
+                    timer->StartTimer();
+                    timer->Play(*ai);
+                    timer->EndTimer();
+                }
+            }
+        }
+        catch (const std::exception& e)
         {
-            if (asynchronous)
-            {
-                Wait();
-                timer->StartTimer();
-                timer->Play(*ai);
-                timer->EndTimer();
-            }
-            else
-            {
-                Update();
-                timer->StartTimer();
-                timer->Play(*ai);
-                timer->EndTimer();
-            }
+            std::cerr << "C++ Exception: " << e.what() << std::endl;
+        }
+        catch (...)
+        {
+            std::cerr << "Unknown Exception!" << std::endl;
         }
     };
 

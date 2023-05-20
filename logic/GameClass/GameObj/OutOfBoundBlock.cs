@@ -6,13 +6,11 @@ namespace GameClass.GameObj
     /// <summary>
     /// 逻辑墙
     /// </summary>
-    public class OutOfBoundBlock : GameObj, IOutOfBound
+    public class OutOfBoundBlock : Immovable, IOutOfBound
     {
         public OutOfBoundBlock(XY initPos) :
             base(initPos, int.MaxValue, GameObjType.OutOfBoundBlock)
         {
-            this.place = PlaceType.Wall;
-            this.CanMove = false;
         }
 
         public override bool IsRigid => true;

@@ -51,8 +51,12 @@ if [ -f $playback_dir/start.lock ]; then
     while [ $? -eq 0 ]
     do
         sleep 1
-        ps -p $server_pid
+        ps -p $server_pid > /dev/null 2>&1
     done
+    # result=$(cat /usr/local/playback/result.json)
+    # score0=$(echo "$result" | grep -oP '(?<="Student":)\d+')
+    # score1=$(echo "$result" | grep -oP '(?<="Tricker":)\d+')
+    # curl $URL -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"result":[{"team_id":0, "score":'${score0}'}, {"team_id":1, "score":'${score1}'}], "mode":'${MODE}'}'> $playback_dir/send.log 2>&1
     touch $playback_dir/finish.lock
     echo "Finish"
 else
@@ -62,8 +66,3 @@ else
     mv -f temp.lock $playback_dir/video.thuaipb
     kill -9 $server_pid
 fi
-
-result=$(cat /usr/local/playback/result.json)
-score0=$(echo "$result" | grep -oP '(?<="Student":)\d+')
-score1=$(echo "$result" | grep -oP '(?<="Tricker":)\d+')
-curl $URL -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"result":[{"team_id":0, "score":'${score0}'}, {"team_id":1, "score":'${score1}'}], "mode":'${MODE}'}'

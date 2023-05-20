@@ -1,8 +1,8 @@
 import os
 import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-sys.path.append(os.path.dirname(os.path.dirname(
-    os.path.realpath(__file__))) + '/proto')
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/proto")
 
 from PyAPI.Interface import IAI
 from PyAPI.AI import AI
@@ -42,19 +42,50 @@ def THUAI6Main(argv: List[str], AIBuilder: Callable) -> None:
     screen: bool = True
     warnOnly: bool = False
     parser = argparse.ArgumentParser(
-        description="THUAI6 Python Interface Commandline Parameter Introduction")
-    parser.add_argument("-I", type=str, required=True,
-                        help="Server`s IP 127.0.0.1 in default", dest="sIP", default="127.0.0.1")
-    parser.add_argument("-P", type=str, required=True,
-                        help="Server`s Port 8888 in default", dest="sPort", default="8888")
-    parser.add_argument("-p", type=int, required=True,
-                        help="Player`s ID", dest="pID", choices=[0, 1, 2, 3, 4])
-    parser.add_argument("-d", action='store_true',
-                        help="Set this flag to save the debug log to ./logs folder", dest="file")
-    parser.add_argument("-o", action='store_true',
-                        help="Set this flag to print the debug log to the screen", dest="screen")
-    parser.add_argument("-w", action='store_true',
-                        help="Set this flag to only print warning on the screen", dest="warnOnly")
+        description="THUAI6 Python Interface Commandline Parameter Introduction"
+    )
+    parser.add_argument(
+        "-I",
+        type=str,
+        required=True,
+        help="Server`s IP 127.0.0.1 in default",
+        dest="sIP",
+        default="127.0.0.1",
+    )
+    parser.add_argument(
+        "-P",
+        type=str,
+        required=True,
+        help="Server`s Port 8888 in default",
+        dest="sPort",
+        default="8888",
+    )
+    parser.add_argument(
+        "-p",
+        type=int,
+        required=True,
+        help="Player`s ID",
+        dest="pID",
+        choices=[0, 1, 2, 3, 4],
+    )
+    parser.add_argument(
+        "-d",
+        action="store_true",
+        help="Set this flag to save the debug log to ./logs folder",
+        dest="file",
+    )
+    parser.add_argument(
+        "-o",
+        action="store_true",
+        help="Set this flag to print the debug log to the screen",
+        dest="screen",
+    )
+    parser.add_argument(
+        "-w",
+        action="store_true",
+        help="Set this flag to only print warning on the screen",
+        dest="warnOnly",
+    )
     args = parser.parse_args()
     pID = args.pID
     sIP = args.sIP
@@ -79,5 +110,5 @@ def CreateAI(pID: int) -> IAI:
     return AI(pID)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     THUAI6Main(sys.argv, CreateAI)

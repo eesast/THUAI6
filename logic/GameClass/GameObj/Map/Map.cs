@@ -8,7 +8,6 @@ namespace GameClass.GameObj
 {
     public partial class Map : IMap
     {
-
         private readonly Dictionary<uint, XY> birthPointList;  // 出生点列表
         public Dictionary<uint, XY> BirthPointList => birthPointList;
 
@@ -194,13 +193,12 @@ namespace GameClass.GameObj
                 {
                     if (playerID == person.ID)
                     {
-                        if (person.CharacterType == CharacterType.TechOtaku && person.FindIActiveSkill(ActiveSkillType.UseRobot).IsBeingUsed)
+                        if (person.CharacterType == CharacterType.TechOtaku)
                         {
                             Debugger.Output(person, person.PlayerID.ToString());
                             foreach (Character character in gameObjDict[GameObjType.Character])
                             {
-                                Debugger.Output(character, character.PlayerID.ToString());
-                                if (person.PlayerID + GameData.numOfPeople == character.PlayerID)
+                                if (((UseRobot)person.FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID == character.PlayerID)
                                 {
                                     player = character;
                                     break;
@@ -233,7 +231,10 @@ namespace GameClass.GameObj
                     }
                 }
                 if (ToDel != null)
+                {
                     GameObjDict[gameObj.Type].Remove(ToDel);
+                    ToDel.TryToRemove();
+                }
             }
             finally
             {
@@ -244,16 +245,19 @@ namespace GameClass.GameObj
         public bool RemoveJustFromMap(GameObj gameObj)
         {
             GameObjLockDict[gameObj.Type].EnterWriteLock();
-            bool flag;
             try
             {
-                flag = GameObjDict[gameObj.Type].Remove(gameObj);
+                if (GameObjDict[gameObj.Type].Remove(gameObj))
+                {
+                    gameObj.TryToRemove();
+                    return true;
+                }
+                return false;
             }
             finally
             {
                 GameObjLockDict[gameObj.Type].ExitWriteLock();
             }
-            return flag;
         }
         public void Add(GameObj gameObj)
         {

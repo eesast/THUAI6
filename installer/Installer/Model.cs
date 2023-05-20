@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Shapes;
+using System.Collections.Concurrent;
 //using System.Windows.Forms;
 using System.Threading;
 
@@ -198,7 +199,113 @@ namespace starter.viewmodel.settings
         {
             if (Tencent_cos_download.CheckAlreadyDownload())
             {
-                Process.Start(System.IO.Path.Combine(Data.FilePath, startName));
+                //Process.Start(System.IO.Path.Combine(Data.FilePath, startName));
+                switch (RunProgram.RunInfo.mode)
+                {
+                    case RunProgram.RunMode.ServerOnly:
+                        RunProgram.StartServer(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.gameTimeSec, RunProgram.RunInfo.playbackFileName);
+                        break;
+                    case RunProgram.RunMode.ServerForDebugOnly:
+                        RunProgram.StartServerForDebug(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.gameTimeSec, RunProgram.RunInfo.playbackFileName);
+                        break;
+                    case RunProgram.RunMode.GUIAttendGameOnly:
+                        RunProgram.RunGUIClient(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.characterID,
+                            false, RunProgram.RunInfo.occupation, RunProgram.RunInfo.type);
+                        break;
+                    case RunProgram.RunMode.GUIVisit:
+                        RunProgram.RunGUIClient(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, 0, true, 1, 1);
+                        break;
+                    case RunProgram.RunMode.GUIAndAICpp:
+                        RunProgram.StartServerForDebug(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.gameTimeSec, RunProgram.RunInfo.playbackFileName);
+                        Task.Delay(100);
+                        RunProgram.RunCpp(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.saveDebugLog, RunProgram.RunInfo.showDebugLog,
+                            RunProgram.RunInfo.warningOnly, RunProgram.RunInfo.playerId, RunProgram.RunInfo.filePath);
+                        RunProgram.RunInfo.playerId = null;
+                        RunProgram.RunInfo.filePath = null;
+                        RunProgram.RunGUIClient(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.characterID,
+                            false, RunProgram.RunInfo.occupation, RunProgram.RunInfo.type);
+                        break;
+                    case RunProgram.RunMode.GUIAndAIPython:
+                        RunProgram.StartServerForDebug(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.gameTimeSec, RunProgram.RunInfo.playbackFileName);
+                        Task.Delay(100);
+                        RunProgram.RunPython(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.saveDebugLog, RunProgram.RunInfo.showDebugLog,
+                            RunProgram.RunInfo.warningOnly, RunProgram.RunInfo.playerId, RunProgram.RunInfo.filePath);
+                        RunProgram.RunInfo.playerId = null;
+                        RunProgram.RunInfo.filePath = null;
+                        RunProgram.RunGUIClient(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.characterID,
+                            false, RunProgram.RunInfo.occupation, RunProgram.RunInfo.type);
+                        break;
+                    case RunProgram.RunMode.ServerAndCpp:
+                        RunProgram.StartServer(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.gameTimeSec, RunProgram.RunInfo.playbackFileName);
+                        Task.Delay(100);
+                        RunProgram.RunCpp(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.saveDebugLog, RunProgram.RunInfo.showDebugLog,
+                            RunProgram.RunInfo.warningOnly, RunProgram.RunInfo.playerId, RunProgram.RunInfo.filePath);
+                        RunProgram.RunInfo.playerId = null;
+                        RunProgram.RunInfo.filePath = null;
+                        break;
+                    case RunProgram.RunMode.ServerAndPython:
+                        RunProgram.StartServer(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.gameTimeSec, RunProgram.RunInfo.playbackFileName);
+                        Task.Delay(100);
+                        RunProgram.RunPython(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.saveDebugLog, RunProgram.RunInfo.showDebugLog,
+                            RunProgram.RunInfo.warningOnly, RunProgram.RunInfo.playerId, RunProgram.RunInfo.filePath);
+                        RunProgram.RunInfo.playerId = null;
+                        RunProgram.RunInfo.filePath = null;
+                        break;
+                    case RunProgram.RunMode.ServerAndCppVisit:
+                        RunProgram.StartServer(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.gameTimeSec, RunProgram.RunInfo.playbackFileName);
+                        Task.Delay(100);
+                        RunProgram.RunCpp(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.saveDebugLog, RunProgram.RunInfo.showDebugLog,
+                            RunProgram.RunInfo.warningOnly, RunProgram.RunInfo.playerId, RunProgram.RunInfo.filePath);
+                        RunProgram.RunInfo.playerId = null;
+                        RunProgram.RunInfo.filePath = null;
+                        RunProgram.RunGUIClient(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.characterID, true, 0, 1);
+                        break;
+                    case RunProgram.RunMode.ServerAndPythonVisit:
+                        RunProgram.StartServer(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.gameTimeSec, RunProgram.RunInfo.playbackFileName);
+                        Task.Delay(100);
+                        RunProgram.RunPython(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.saveDebugLog, RunProgram.RunInfo.showDebugLog,
+                            RunProgram.RunInfo.warningOnly, RunProgram.RunInfo.playerId, RunProgram.RunInfo.filePath);
+                        RunProgram.RunInfo.playerId = null;
+                        RunProgram.RunInfo.filePath = null;
+                        RunProgram.RunGUIClient(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.characterID, true, 0, 1);
+                        break;
+                    case RunProgram.RunMode.ServerDebugAndCppVisit:
+                        RunProgram.StartServerForDebug(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.gameTimeSec, RunProgram.RunInfo.playbackFileName);
+                        Task.Delay(100);
+                        RunProgram.RunCpp(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.saveDebugLog, RunProgram.RunInfo.showDebugLog,
+                            RunProgram.RunInfo.warningOnly, RunProgram.RunInfo.playerId, RunProgram.RunInfo.filePath);
+                        RunProgram.RunInfo.playerId = null;
+                        RunProgram.RunInfo.filePath = null;
+                        RunProgram.RunGUIClient(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.characterID, true, 0, 1);
+                        break;
+                    case RunProgram.RunMode.ServerDebugAndPythonVisit:
+                        RunProgram.StartServerForDebug(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.gameTimeSec, RunProgram.RunInfo.playbackFileName);
+                        Task.Delay(100);
+                        RunProgram.RunPython(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.studentCount,
+                            RunProgram.RunInfo.trickerCount, RunProgram.RunInfo.saveDebugLog, RunProgram.RunInfo.showDebugLog,
+                            RunProgram.RunInfo.warningOnly, RunProgram.RunInfo.playerId, RunProgram.RunInfo.filePath);
+                        RunProgram.RunInfo.playerId = null;
+                        RunProgram.RunInfo.filePath = null;
+                        RunProgram.RunGUIClient(RunProgram.RunInfo.IP, RunProgram.RunInfo.port, RunProgram.RunInfo.characterID, true, 0, 1);
+                        break;
+                }
                 return true;
             }
             else
@@ -298,7 +405,7 @@ namespace starter.viewmodel.settings
         /// <summary>
         /// 关于介绍的屏幕显示信息
         /// </summary>
-        public enum Status { newUser, menu, move, working, disconnected, error, successful, login, web };
+        public enum Status { newUser, menu, move, working, initializing, disconnected, error, successful, login, web, launch };
         public Status status
         {
             get; set;
@@ -361,8 +468,9 @@ namespace Downloader
 
     class Program
     {
-        static List<string> newFileName = new List<string>();     // 新文件名
-        static List<string> updateFileName = new List<string>();  // 更新文件名
+        static ConcurrentQueue<string> newFileName = new ConcurrentQueue<string>();
+        //static List<string> newFileName = new List<string>();     // 新文件名
+        static ConcurrentQueue<string> updateFileName = new ConcurrentQueue<string>();  // 更新文件名
         static List<string> updateFailed = new List<string>();    //更新失败的文件名
         static public List<string> UpdateFailed
         {
@@ -504,7 +612,6 @@ namespace Downloader
                 // 永久密钥访问凭证
                 string secretId = "***"; //"云 API 密钥 SecretId";
                 string secretKey = "***"; //"云 API 密钥 SecretKey";
-
 
                 long durationSecond = 1000;  // 每次请求签名有效时长，单位为秒
                 QCloudCredentialProvider cosCredentialProvider = new DefaultQCloudCredentialProvider(
@@ -654,7 +761,7 @@ namespace Downloader
                     {
                         MD5 = GetFileMd5Hash(System.IO.Path.Combine(Data.FilePath, pair.Key.TrimStart(new char[] { '.', '/' })));
                         if (MD5.Length == 0)  // 文档不存在
-                            newFileName.Add(pair.Key);
+                            newFileName.Enqueue(pair.Key);
                         else if (MD5.Equals("conflict"))
                         {
                             if (pair.Key.Equals("THUAI6/win/CAPI/cpp/.vs/CAPI/v17/Browse.VC.db"))
@@ -670,7 +777,7 @@ namespace Downloader
                                 MessageBox.Show($"检查{pair.Key}更新时遇到问题，请反馈", "读取出错", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         else if (!MD5.Equals(pair.Value) && !IsUserFile(System.IO.Path.GetFileName(pair.Key)))  // MD5不匹配
-                            updateFileName.Add(pair.Key);
+                            updateFileName.Enqueue(pair.Key);
                     }
                 }
 
@@ -736,38 +843,110 @@ namespace Downloader
                 {
                     try
                     {
-                        foreach (string filename in newFileName)
+                        int cnt = newFileName.Count;
+                        if (cnt <= 20)
                         {
-                            //Console.WriteLine(newFile + 1 + "/" + totalnew + ":开始下载" + filename);
-                            Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename.TrimStart(new char[] { '.', '/' }));
-                            //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
-                            newFile++;
-                        }
-                        foreach (string filename in updateFileName)
-                        {
-                            //Console.WriteLine(updateFile + 1 + "/" + totalupdate + ":开始下载" + filename);
-                            try
+                            while (newFileName.TryDequeue(out var filename))
                             {
-                                File.Delete(System.IO.Path.Combine(@Data.FilePath, filename));
                                 Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename.TrimStart(new char[] { '.', '/' }));
+                                //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
+                                Interlocked.Increment(ref newFile);
                             }
-                            catch (System.IO.IOException)
+                        }
+                        else
+                        {
+                            const int nthread = 8;
+                            var thrds = new List<Thread>();
+                            for (int i = 0; i < nthread; i++)
                             {
-                                updateFailed = updateFailed.Append(filename).ToList();
-                            }
-                            catch
-                            {
-                                if (filename.Substring(filename.Length - 4, 4).Equals(".pdf"))
+                                var thrd = new Thread(() =>
                                 {
-                                    MessageBox.Show($"由于曾经发生过的访问冲突，下载器无法更新{filename}\n"
-                                        + $"请手动删除{filename}，然后再试一次。");
-                                }
-                                else
-                                    MessageBox.Show($"更新{filename}时遇到未知问题，请反馈");
-                                updateFailed = updateFailed.Append(filename).ToList();
+                                    while (newFileName.TryDequeue(out var filename))
+                                    {
+                                        Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename.TrimStart(new char[] { '.', '/' }));
+                                        //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
+                                        Interlocked.Increment(ref newFile);
+                                    }
+                                });
+                                thrd.Start();
+                                thrds.Add(thrd);
                             }
-                            //Console.WriteLine(filename + "下载完毕!" + Environment.NewLine);
-                            updateFile++;
+                            foreach (var thrd in thrds)
+                            {
+                                thrd.Join();
+                            }
+                        }
+                        // 读取 Interlocked.CompareExchange(ref newFile, 0, 0);
+
+                        int upcnt = updateFileName.Count;
+                        if (upcnt <= 20)
+                        {
+                            while (updateFileName.TryDequeue(out var filename))
+                            {
+                                try
+                                {
+                                    File.Delete(System.IO.Path.Combine(@Data.FilePath, filename));
+                                    Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename.TrimStart(new char[] { '.', '/' }));
+                                }
+                                catch (System.IO.IOException)
+                                {
+                                    updateFailed = updateFailed.Append(filename).ToList();
+                                }
+                                catch
+                                {
+                                    if (filename.Substring(filename.Length - 4, 4).Equals(".pdf"))
+                                    {
+                                        MessageBox.Show($"由于曾经发生过的访问冲突，下载器无法更新{filename}\n"
+                                            + $"请手动删除{filename}，然后再试一次。");
+                                    }
+                                    else
+                                        MessageBox.Show($"更新{filename}时遇到未知问题，请反馈");
+                                    updateFailed = updateFailed.Append(filename).ToList();
+                                }
+                                Interlocked.Increment(ref newFile);
+                            }
+                        }
+                        else
+                        {
+                            const int nthread = 8;
+                            var thrds = new List<Thread>();
+
+                            for (int i = 0; i < nthread; i++)
+                            {
+                                var thrd = new Thread(() =>
+                                {
+                                    while (updateFileName.TryDequeue(out var filename))
+                                    {
+                                        try
+                                        {
+                                            File.Delete(System.IO.Path.Combine(@Data.FilePath, filename));
+                                            Downloader.download(System.IO.Path.Combine(@Data.FilePath, filename), filename.TrimStart(new char[] { '.', '/' }));
+                                        }
+                                        catch (System.IO.IOException)
+                                        {
+                                            updateFailed = updateFailed.Append(filename).ToList();
+                                        }
+                                        catch
+                                        {
+                                            if (filename.Substring(filename.Length - 4, 4).Equals(".pdf"))
+                                            {
+                                                MessageBox.Show($"由于曾经发生过的访问冲突，下载器无法更新{filename}\n"
+                                                    + $"请手动删除{filename}，然后再试一次。");
+                                            }
+                                            else
+                                                MessageBox.Show($"更新{filename}时遇到未知问题，请反馈");
+                                            updateFailed = updateFailed.Append(filename).ToList();
+                                        }
+                                        Interlocked.Increment(ref newFile);
+                                    }
+                                });
+                                thrd.Start();
+                                thrds.Add(thrd);
+                            }
+                            foreach (var thrd in thrds)
+                            {
+                                thrd.Join();
+                            }
                         }
                         if (updateFailed.Count == 0)
                             UpdatePlanned = false;
@@ -869,7 +1048,7 @@ namespace Downloader
 
                 newFileName.Clear();
                 updateFileName.Clear();
-                newFileName.Add("THUAI6.tar.gz");
+                newFileName.Enqueue("THUAI6.tar.gz");
                 Download();
                 Stream? inStream = null;
                 Stream? gzipStream = null;
@@ -1371,6 +1550,297 @@ namespace Downloader
                 StreamWriter sw = new StreamWriter(directory, false);
                 sw.WriteLine(JsonConvert.SerializeObject(list));
                 sw.Close();
+            }
+        }
+
+        public class RunProgram
+        {
+            public enum RunMode
+            {
+                ServerOnly,                     //只启动Server
+                ServerForDebugOnly,             //只启动ServerForDebug
+                GUIAttendGameOnly,              //只用GUIClient参与游戏
+                GUIVisit,                       //只用GUIClient观战
+                GUIAndAICpp,                    //用GUI参与游戏并且让cpp的AI同时参与
+                GUIAndAIPython,                 //用GUI参与游戏并且让python的AI同时参与
+                ServerAndCpp,                   //只运行Server和cpp，
+                ServerAndPython,                //只运行Server和python
+                ServerAndCppVisit,              //运行Server和Cpp并用GUI观战
+                ServerAndPythonVisit,           //运行Server和python并用GUI观战
+                ServerDebugAndCpp,              //运行ServerForDebug...
+                ServerDebugAndPython,
+                ServerDebugAndCppVisit,
+                ServerDebugAndPythonVisit,
+            }
+
+            public class RunInfo                //UI需要在调用Launch函数前保证其中数据已经更新并有效
+            {
+                static public RunMode mode;
+                static public string? IP;
+                static public int port;
+                static public int studentCount;
+                static public int trickerCount;
+                static public int gameTimeSec;
+                static public string? playbackFileName;
+                static public int characterID;
+                static public int type;
+                static public bool saveDebugLog;
+                static public bool showDebugLog;
+                static public bool warningOnly;
+                static public bool visiting;
+                static public int occupation;
+                static public List<int>? playerId = new List<int>();           //两者长度必须与studentCount + trickerCount一致
+                static public List<string>? filePath = new List<string>();
+            }
+
+            /// <summary>
+            /// 运行cmd命令
+            /// 会显示命令窗口
+            /// </summary>
+            /// <param name="cmdExe">指定应用程序的完整路径</param>
+            /// <param name="cmdStr">执行命令行参数</param>
+            static bool RunCmd(string cmdExe, string cmdStr)
+            {
+                bool result = false;
+                try
+                {
+                    using (Process myPro = new Process())
+                    {
+                        //指定启动进程是调用的应用程序和命令行参数
+                        ProcessStartInfo psi = new ProcessStartInfo(cmdExe, cmdStr);
+                        myPro.StartInfo = psi;
+                        myPro.Start();
+                        //myPro.WaitForExitAsync();
+                        result = true;
+                    }
+                }
+                catch
+                {
+
+                }
+                return result;
+            }
+
+            /// <summary>
+            /// 启动Server
+            /// 会显示命令窗口
+            /// </summary>
+            /// <param name="IP">指定Server运行的IPV4地址</param>
+            /// <param name="port">指定Server运行的端口</param>
+            /// <param name="studentCount">指定学生人数</param>
+            /// <param name="trickerCount">指定捣蛋鬼人数</param>
+            /// <param name="gameTimeSec">指定游戏最大时长</param>
+            /// <param name="playbackFileName">指定回放文件名称</param>
+            public static int StartServer(string? IP, int port, int studentCount, int trickerCount, int gameTimeSec, string? playbackFileName)
+            {
+                if (System.Diagnostics.Process.GetProcessesByName("Server").ToList().Count > 0)
+                {
+                    System.Diagnostics.Process.GetProcessesByName("Server")[0].Kill();
+                }
+                string cmdExe = $"{Data.FilePath}\\THUAI6\\win\\win64\\Server.exe";
+                string cmdPara = $"--ip {IP} --port {port} --studentCount {studentCount} --trickerCount {trickerCount}" +
+                    $" --gameTimeInSecond {gameTimeSec} --fileName {playbackFileName}";
+                RunCmd(cmdExe, cmdPara);
+                return 0;
+            }
+
+            /// <summary>
+            /// 启动Debug用的Server
+            /// 会显示命令窗口
+            /// </summary>
+            /// <param name="IP">指定Server运行的IPV4地址</param>
+            /// <param name="port">指定Server运行的端口</param>
+            /// <param name="studentCount">指定学生人数</param>
+            /// <param name="trickerCount">指定捣蛋鬼人数</param>
+            /// <param name="gameTimeSec">指定游戏最大时长</param>
+            /// <param name="playbackFileName">指定回放文件名称</param>
+            public static int StartServerForDebug(string? IP, int port, int studentCount, int trickerCount, int gameTimeSec, string? playbackFileName)
+            {
+                if (System.Diagnostics.Process.GetProcessesByName("Server").ToList().Count > 0)
+                {
+                    System.Diagnostics.Process.GetProcessesByName("Server")[0].Kill();
+                }
+                string cmdExe = $"{Data.FilePath}\\THUAI6\\win\\win64\\Debug\\Server.exe";
+                string cmdPara = $"--ip {IP} --port {port} --studentCount {studentCount} --trickerCount {trickerCount} " +
+                    $"--gameTimeInSecond {gameTimeSec} --fileName {playbackFileName}";
+                RunCmd(cmdExe, cmdPara);
+                return 0;
+            }
+
+            /// <summary>
+            /// 启动cpp，在这之前要先启动Server,可能还需要一些延时
+            /// 会显示命令窗口
+            /// </summary>
+            /// <param name="IP">指定Server运行的IPV4地址</param>
+            /// <param name="port">指定Server运行的端口</param>
+            /// <param name="studentCount">指定学生人数</param>
+            /// <param name="trickerCount">指定捣蛋鬼人数</param>
+            /// <param name="saveDebugLog">是否保存Debug日志文件</param>
+            /// <param name="showDebugLog">是否将日志输出到屏幕上</param>
+            /// <param name="warningOnly">在showDebugLog == true时，是否只输出警告或者报错（不影响日志保存）</param>
+            /// <param name="playerIp">默认为空，如果不为空，playerIp将会按照顺序代替默认从0~3的IP</param>
+            public static int RunCpp(string? IP, int port, int studentCount, int trickerCount, bool saveDebugLog,
+                bool showDebugLog, bool warningOnly, List<int>? playerIp = null, List<string>? filePath = null)
+            {
+                string cmdExe;
+                string cmdBase = $"-I {IP} -P {port} ";
+                for (int i = 0; i < studentCount; i++)
+                {
+                    string cmdPara;
+                    if (playerIp == null)
+                    {
+                        cmdPara = cmdBase + $" -p {i}";
+                    }
+                    else
+                    {
+                        cmdPara = cmdBase + $" -p {playerIp[i]}";
+                    }
+                    if (saveDebugLog)
+                    {
+                        cmdPara = cmdPara + " -d";
+                    }
+                    if (showDebugLog)
+                    {
+                        cmdPara = cmdPara + " -o";
+                    }
+                    if (warningOnly)
+                    {
+                        cmdPara = cmdPara + " -w";
+                    }
+                    if (filePath == null)
+                    {
+                        cmdExe = $"{Data.FilePath}\\THUAI6\\win\\CAPI\\cpp\\x64\\Debug\\API.exe";
+                    }
+                    else
+                    {
+                        cmdExe = filePath[i];
+                    }
+                    RunCmd(cmdExe, cmdPara);
+                }
+
+                if (trickerCount != 0)
+                {
+                    string cmdPara;
+                    cmdPara = cmdBase + " -p 4";
+                    if (saveDebugLog)
+                    {
+                        cmdPara = cmdPara + " -d";
+                    }
+                    if (showDebugLog)
+                    {
+                        cmdPara = cmdPara + " -o";
+                    }
+                    if (warningOnly)
+                    {
+                        cmdPara = cmdPara + " -w";
+                    }
+                    if (filePath == null)
+                    {
+                        cmdExe = $"{Data.FilePath}\\THUAI6\\win\\CAPI\\cpp\\x64\\Debug\\API.exe";
+                    }
+                    else
+                    {
+                        cmdExe = filePath[studentCount];
+                    }
+                    RunCmd(cmdExe, cmdPara);
+                }
+                return 0;
+            }
+
+            /// <summary>
+            /// 启动客户端
+            /// 会显示命令窗口
+            /// </summary>
+            /// <param name="IP">指定Server运行的IPV4地址</param>
+            /// <param name="port">指定Server运行的端口</param>
+            /// <param name="characterID">进入游戏时的角色ID 0~4，0~3为学生，4为捣蛋鬼</param>
+            /// <param name="visiting">是否观战，当值为true时，characterID无效</param>
+            /// <param name="occupation">指定参加游戏时的角色职业，详情见说明文档</param>
+            /// <param name="type">角色类别，type = 1 表示学生，type = 2 表示捣蛋鬼</param>
+            public static int RunGUIClient(string? IP, int port, int characterID, bool visiting, int occupation = 1, int type = 1)
+            {
+                string cmdExe = $"{Data.FilePath}\\THUAI6\\win\\win64\\Client.exe";
+                string cmdBase = $"--port {port} --ip {IP} --type {type} --occupation {occupation}";
+                if (visiting)
+                {
+                    cmdBase = cmdBase + " --characterID 200000";
+                }
+                else
+                {
+                    cmdBase = cmdBase + $" --characterID {characterID}";
+                }
+                cmdBase = cmdBase + " --cl";
+                RunCmd(cmdExe, cmdBase);
+                return 0;
+            }
+
+            //启动python，参数同RunCpp
+            public static int RunPython(string? IP, int port, int studentCount, int trickerCount, bool saveDebugLog,
+                bool showDebugLog, bool warningOnly, List<int>? playerIp = null, List<string>? filePath = null)
+            {
+                string cmdExe = $"python";
+                string cmdBase;
+                for (int i = 0; i < studentCount; i++)
+                {
+                    string cmdPara;
+                    if (filePath == null)
+                    {
+                        cmdBase = $" {Data.FilePath}\\THUAI6\\win\\CAPI\\python\\PyAPI\\main.py -I {IP} -P {port} ";
+                    }
+                    else
+                    {
+                        cmdBase = " " + filePath[i] + $" -I {IP} -P {port} ";
+                    }
+                    if (playerIp == null)
+                    {
+                        cmdPara = cmdBase + $" -p {i}";
+                    }
+                    else
+                    {
+                        cmdPara = cmdBase + $" -p {playerIp[i]}";
+                    }
+                    if (saveDebugLog)
+                    {
+                        cmdPara = cmdPara + " -d";
+                    }
+                    if (showDebugLog)
+                    {
+                        cmdPara = cmdPara + " -o";
+                    }
+                    if (warningOnly)
+                    {
+                        cmdPara = cmdPara + " -w";
+                    }
+                    RunCmd(cmdExe, cmdPara);
+                }
+
+                if (trickerCount != 0)
+                {
+                    string cmdPara;
+                    if (filePath == null)
+                    {
+                        cmdBase = $" {Data.FilePath}\\THUAI6\\win\\CAPI\\python\\PyAPI\\main.py -I {IP} -P {port} ";
+                    }
+                    else
+                    {
+                        cmdBase = " " + filePath[studentCount] + $" -I {IP} -P {port} ";
+                    }
+                    cmdPara = cmdBase + " -p 4";
+                    if (saveDebugLog)
+                    {
+                        cmdPara = cmdPara + " -d";
+                    }
+                    if (showDebugLog)
+                    {
+                        cmdPara = cmdPara + " -o";
+                    }
+                    if (warningOnly)
+                    {
+                        cmdPara = cmdPara + " -w";
+                    }
+                    RunCmd(cmdExe, cmdPara);
+                }
+                return 0;
             }
         }
     }

@@ -1,19 +1,18 @@
 ﻿using Preparation.Interface;
 using System;
-using System.Net.NetworkInformation;
 
 namespace Preparation.Utility
 {
     public static class GameData
     {
         #region 基本常数
-        public const int numOfStepPerSecond = 20;     // 每秒行走的步数
+        public const int numOfStepPerSecond = 100;     // 每秒行走的步数
 
         public const int tolerancesLength = 3;
         public const int adjustLength = 3;
 
         public const int frameDuration = 50;         // 每帧时长
-        public const int checkInterval = 50;  // 检查位置标志、补充子弹的帧时长
+        public const int checkInterval = 10;
         public const long gameDuration = 600000;      // 游戏时长600000ms = 10min
 
         public const int LimitOfStopAndMove = 15;
@@ -46,8 +45,8 @@ namespace Preparation.Utility
                 {
                     return gameObjType != GameObjType.Null && gameObjType != GameObjType.Grass 
                         && gameObjType != GameObjType.OutOfBoundBlock && gameObjType != GameObjType.Window 
-                        && gameObjType != GameObjType.Bullet&&gameObjType != GameObjType.Prop
-                        &&gameObjType != GameObjType.PickedProp&&gameObjType != GameObjType.BombedBullet
+                        && gameObjType != GameObjType.Bullet&&gameObjType != GameObjType.Gadget
+                        &&gameObjType != GameObjType.Item&&gameObjType != GameObjType.BombedBullet
                         &&gameObjType != GameObjType.EmergencyExit&&gameObjType != GameObjType.Doorway;
                 }*/
 
@@ -93,10 +92,10 @@ namespace Preparation.Utility
 
         public const int basicTreatSpeed = 100;
         public const int basicFixSpeed = 123;
-        public const int basicSpeedOfOpeningOrLocking = 4000;
+        public const int basicSpeedOfOpeningOrLocking = 5000;
         public const int basicStudentSpeedOfClimbingThroughWindows = 1222;
         public const int basicGhostSpeedOfClimbingThroughWindows = 2540;
-        public const int basicSpeedOfOpenChest = 1000;
+        public const int basicSpeedOfOpenChest = 1250;
 
         public const int basicHp = 3000000;                             // 初始血量
         public const int basicMaxGamingAddiction = 60000;//基本完全沉迷时间
@@ -206,7 +205,7 @@ namespace Preparation.Utility
         public const double basicAttackShortRange = 2200;                 // 基本近程攻击范围
         public const double basicBulletBombRange = 2000;             // 基本子弹爆炸范围
         #endregion
-        #region 技能相关
+        #region 技能、特性相关
         public const int maxNumOfSkill = 3;
         public const int commonSkillCD = 30000;                      // 普通技能标准冷却时间
         public const int commonSkillTime = 10000;                    // 普通技能标准持续时间
@@ -215,24 +214,29 @@ namespace Preparation.Utility
         public const int timeOfStudentStunnedWhenCharge = 2090;
 
         public const int timeOfGhostStunnedWhenPunish = 3070;
-        public const int factorOfTimeStunnedWhenPunish = 300 / basicApOfGhost;
+        public const int factorOfTimeStunnedWhenPunish = 500;
+        public const int factorOfScoreWhenTeacherAttacked = 100;
+        public const int distanceOfHaveTea = 3000;
 
         public const int timeOfGhostSwingingAfterHowl = 800;
         public const int timeOfStudentStunnedWhenHowl = 5500;
 
         public const int timeOfStunnedWhenJumpyDumpty = 3070;
+        public const int checkIntervalWhenSparksNSplash = 100;
 
         public const double addedTimeOfSpeedWhenInspire = 1.6;
         public const int timeOfAddingSpeedWhenInspire = 6000;
 
         public const int addHpWhenEncourage = basicHp / 4;
 
-        public const int checkIntervalWhenShowTime = 200;
+        public const int checkIntervalWhenShowTime = 500;
         public const int addAddictionPer100msWhenShowTime = 300;
+
+        public const int maxSummonedGolemNum = 3;
         #endregion
         #region 道具相关
-        public const int PropRadius = numOfPosGridPerCell / 2;
-        public const int PropMoveSpeed = 3000;
+        public const int propRadius = characterRadius;
+        public const int propMoveSpeed = 3000;
         public const int PropMaxMoveDistance = 15 * numOfPosGridPerCell;
         public const long PropProduceTime = 20000;
         public const int PropDuration = 10000;

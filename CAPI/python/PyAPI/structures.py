@@ -52,6 +52,7 @@ class PropType(Enum):
     AddHpOrAp = 6
     ShieldOrSpear = 7
     RecoveryFromDizziness = 8
+    CraftingBench = 9
 
 
 class BulletType(Enum):
@@ -60,7 +61,7 @@ class BulletType(Enum):
     CommonAttackOfTricker = 2
     BombBomb = 3
     JumpyDumpty = 4
-    AtomBomb = 5
+    Strike = 5
 
 
 class StudentType(Enum):
@@ -156,7 +157,6 @@ class Player:
         self.timeUntilSkillAvailable: List[float] = []
         self.playerType: PlayerType = PlayerType.NullPlayerType
         self.prop: List[PropType] = []
-        self.place: PlaceType = PlaceType.NullPlaceType
         self.bulletType: BulletType = BulletType.NullBulletType
         self.playerState: PlayerState = PlayerState.NullState
 
@@ -190,7 +190,6 @@ class Prop:
         self.y: int = 0
         self.guid: int = 0
         self.type: PropType = PropType.NullPropType
-        self.place: PlaceType = PlaceType.NullPlaceType
         self.facingDirection: float = 0.0
 
 
@@ -202,7 +201,6 @@ class Bullet:
         self.facingDirection: float = 0.0
         self.guid: int = 0
         self.team: PlayerType = PlayerType.NullPlayerType
-        self.place: PlaceType = PlaceType.NullPlaceType
         self.bombRange: float = 0.0
         self.speed: int = 0
 

@@ -15,14 +15,14 @@ namespace Gaming  // 被动技能开局时就释放，持续到游戏结束
             public void Meditate(Character player)
             {
                 const int learningDegree = GameData.basicFixSpeed / 4;
-                WriteAnswers activeSkill = (WriteAnswers)player.FindIActiveSkill(ActiveSkillType.WriteAnswers);
+                WriteAnswers activeSkill = (WriteAnswers)player.FindActiveSkill(ActiveSkillType.WriteAnswers);
                 new Thread
                 (
                     () =>
                     {
                         new FrameRateTaskExecutor<int>
                         (
-                            () => gameMap.Timer.IsGaming && !player.IsResetting,
+                            () => gameMap.Timer.IsGaming && !player.IsRemoved,
                             () =>
                             {
                                 if (player.Commandable() && player.PlayerState != PlayerStateType.Fixing) activeSkill.DegreeOfMeditation += learningDegree * GameData.frameDuration;
@@ -52,6 +52,10 @@ namespace Gaming  // 被动技能开局时就释放，持续到游戏结束
                     }
                 )
                 { IsBackground = true }.Start();
+            }
+            public void Lucky(Character player)
+            {
+                player.PropInventory[0] = PropFactory.GetConsumables((PropType)((4 * Environment.TickCount) % 5 + 4), new XY(0, 0));
             }
         }
     }

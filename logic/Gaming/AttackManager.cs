@@ -15,7 +15,7 @@ namespace Gaming
         private class AttackManager
         {
             readonly Map gameMap;
-            readonly MoveEngine moveEngine;
+            public readonly MoveEngine moveEngine;
             readonly CharacterManager characterManager;
 
             public AttackManager(Map gameMap, CharacterManager characterManager)
@@ -33,10 +33,21 @@ namespace Gaming
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                         if (obj.CanMove && ((Bullet)obj).TypeOfBullet != BulletType.JumpyDumpty)
                             BulletBomb((Bullet)obj, null);
-                        obj.CanMove = false;
+                        obj.ReSetCanMove(false);
                     }
                 );
                 this.characterManager = characterManager;
+            }
+
+            public void ProduceBulletNaturally(BulletType bulletType, Character player, double angle, XY pos)
+            {
+                // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
+                if (bulletType == BulletType.Null) return;
+                Bullet? bullet = BulletFactory.GetBullet(player, pos, bulletType);
+                if (bullet == null) return;
+                Debugger.Output(bullet, "Attack in " + pos.ToString());
+                gameMap.Add(bullet);
+                moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle, ++bullet.StateNum);  // 这里时间参数除出来的单位要是ms
             }
 
             private void BombObj(Bullet bullet, GameObj objBeingShot)
@@ -48,7 +59,7 @@ namespace Gaming
                 {
                     case GameObjType.Character:
 
-                        if ((!(((Character)objBeingShot).IsGhost())) && bullet.Parent.IsGhost())
+                        if ((!(((Character)objBeingShot).IsGhost())) && bullet.Parent!.IsGhost())
                         {
                             characterManager.BeAttacked((Student)objBeingShot, bullet);
                         }
@@ -57,7 +68,18 @@ namespace Gaming
                         break;
                     case GameObjType.Generator:
                         if (bullet.CanBeBombed(GameObjType.Generator))
-                            ((Generator)objBeingShot).Repair(-bullet.AP * GameData.factorDamageGenerator, (Character)bullet.Parent);
+                            ((Generator)objBeingShot).Repair(-bullet.AP * GameData.factorDamageGenerator, (Character)bullet.Parent!);
+                        break;
+                    case GameObjType.Door:
+                        if (bullet.CanBeBombed(GameObjType.Door))
+                            ((Door)objBeingShot).ForceToOpen();
+                        break;
+                    case GameObjType.Item:
+                        if (((Item)objBeingShot).GetPropType() == PropType.CraftingBench)
+                        {
+                            ((CraftingBench)objBeingShot).TryStopSkill();
+                            gameMap.Remove(objBeingShot);
+                        }
                         break;
                     default:
                         break;
@@ -66,9 +88,9 @@ namespace Gaming
 
             public bool TryRemoveBullet(Bullet bullet)
             {
-                bullet.CanMove = false;
                 if (gameMap.Remove(bullet))
                 {
+                    bullet.ReSetCanMove(false);
                     if (bullet.BulletBombRange > 0)
                     {
                         BombedBullet bombedBullet = new(bullet);
@@ -87,6 +109,17 @@ namespace Gaming
                 else return false;
             }
 
+            private void ProduceBombBomb(Bullet bullet, double angle)
+            {
+                angle += bullet.FacingDirection.Angle();
+                XY pos = bullet.Position + new XY
+                (
+                (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
+                (int)(Math.Abs((bullet.Radius + BulletFactory.BulletRadius(BulletType.JumpyDumpty)) * Math.Sin(angle))) * Math.Sign(Math.Sin(angle))
+                );
+                ProduceBulletNaturally(BulletType.JumpyDumpty, (Character)bullet.Parent!, angle, pos);
+            }
+
             private void BulletBomb(Bullet bullet, GameObj? objBeingShot)
             {
 #if DEBUG
@@ -101,12 +134,12 @@ namespace Gaming
                 {
                     if (objBeingShot == null)
                     {
-                        characterManager.BackSwing((Character)bullet.Parent, bullet.Backswing);
+                        characterManager.BackSwing((Character)bullet.Parent!, bullet.Backswing);
                         return;
                     }
 
                     BombObj(bullet, objBeingShot);
-                    characterManager.BackSwing((Character)bullet.Parent, bullet.RecoveryFromHit);
+                    characterManager.BackSwing((Character)bullet.Parent!, bullet.RecoveryFromHit);
                     return;
                 }
 
@@ -122,10 +155,14 @@ namespace Gaming
 
                 if (bullet.TypeOfBullet == BulletType.BombBomb && objBeingShot != null)
                 {
-                    bullet.Parent.BulletOfPlayer = BulletType.JumpyDumpty;
-                    Debugger.Output(bullet.Parent, bullet.Parent.CharacterType.ToString() + " " + bullet.Parent.BulletNum.ToString());
-                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI / 2.0);
-                    Attack((Character)bullet.Parent, bullet.FacingDirection.Angle() + Math.PI * 3.0 / 2.0);
+                    ProduceBombBomb(bullet, 0);
+                    ProduceBombBomb(bullet, Math.PI / 4);
+                    ProduceBombBomb(bullet, Math.PI / 2);
+                    ProduceBombBomb(bullet, Math.PI * 3 / 4);
+                    ProduceBombBomb(bullet, Math.PI);
+                    ProduceBombBomb(bullet, Math.PI * 5 / 4);
+                    ProduceBombBomb(bullet, Math.PI * 3 / 2);
+                    ProduceBombBomb(bullet, Math.PI * 7 / 4);
                 }
 
                 var beAttackedList = new List<IGameObj>();
@@ -159,45 +196,33 @@ namespace Gaming
 
                 if (objBeingShot == null)
                 {
-                    characterManager.BackSwing((Character)bullet.Parent, bullet.Backswing);
+                    characterManager.BackSwing((Character)bullet.Parent!, bullet.Backswing);
                 }
                 else
-                    characterManager.BackSwing((Character)bullet.Parent, bullet.RecoveryFromHit);
+                    characterManager.BackSwing((Character)bullet.Parent!, bullet.RecoveryFromHit);
             }
 
             public bool Attack(Character player, double angle)
             {                                                    // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
-                if (player.BulletOfPlayer == BulletType.Null)
-                    return false;
-                Debugger.Output(player, player.CharacterType.ToString() + "Attack in " + player.BulletOfPlayer.ToString());
-
-                Debugger.Output(player, player.Position.ToString() + " " + player.Radius.ToString() + " " + BulletFactory.BulletRadius(player.BulletOfPlayer).ToString());
-                XY res = player.Position + new XY  // 子弹紧贴人物生成。
-                    (
-                        (int)(Math.Abs((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Cos(angle))) * ((Math.Cos(angle) > 0) ? 1 : -1),
-                        (int)(Math.Abs((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))) * ((Math.Sin(angle) > 0) ? 1 : -1)
-                    );
-
-                Bullet? bullet = player.Attack(res, gameMap.GetPlaceType(res));
+                Bullet? bullet = player.Attack(angle, gameMap.Timer.nowTime());
 
                 if (bullet != null)
                 {
-                    player.FacingDirection = new(angle, bullet.BulletAttackRange);
                     Debugger.Output(bullet, "Attack in " + bullet.Position.ToString());
-                    bullet.AP += player.TryAddAp() ? GameData.ApPropAdd : 0;
-                    bullet.CanMove = true;
                     gameMap.Add(bullet);
-                    moveEngine.MoveObj(bullet, (int)((bullet.BulletAttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  // 这里时间参数除出来的单位要是ms
+
+                    moveEngine.MoveObj(bullet, (int)(bullet.AttackDistance * 1000 / bullet.MoveSpeed), angle, ++bullet.StateNum);  // 这里时间参数除出来的单位要是ms
+
                     if (bullet.CastTime > 0)
                     {
-                        characterManager.SetPlayerState(player, PlayerStateType.TryingToAttack);
-                        long threadNum = player.ThreadNum;
+                        player.SetPlayerState(PlayerStateType.TryingToAttack);
+                        long threadNum = player.StateNum;
 
                         new Thread
                                 (() =>
                                 {
                                     new FrameRateTaskExecutor<int>(
-                                    loopCondition: () => threadNum == player.ThreadNum && gameMap.Timer.IsGaming,
+                                    loopCondition: () => threadNum == player.StateNum && gameMap.Timer.IsGaming,
                                     loopToDo: () =>
                                     {
                                     },
@@ -209,9 +234,9 @@ namespace Gaming
 
                                     if (gameMap.Timer.IsGaming)
                                     {
-                                        if (threadNum == player.ThreadNum)
+                                        if (threadNum == player.StateNum)
                                         {
-                                            characterManager.SetPlayerState(player);
+                                            player.SetPlayerState();
                                         }
                                         else TryRemoveBullet(bullet);
                                     }

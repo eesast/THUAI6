@@ -9,7 +9,7 @@ enum BulletType
     COMMON_ATTACK_OF_TRICKER = 2;
     BOMB_BOMB = 3;
     JUMPY_DUMPTY = 4;
-    ATOM_BOMB = 5;
+    STRIKE = 5;
 }
 
 enum PlaceType // 地图中的所有物件类型
@@ -49,6 +49,7 @@ enum PropType // 地图中的可拾取道具类型
     KEY5 = 6;
     KEY6 = 7;
     RECOVERY_FROM_DIZZINESS = 8;
+    CRAFTING_BENCH = 9;
 }
 
 enum StudentBuffType // 人类可用的增益效果类型
@@ -78,7 +79,7 @@ enum PlayerState
     LOCKING = 13;
     RUMMAGING = 14;
     CLIMBING = 15; // 翻窗
-    OPENING_A_CHEST =16;
+    OPENING_A_CHEST = 16;
     USING_SPECIAL_SKILL = 17;
     OPENING_A_GATE =18;
 }
@@ -109,7 +110,7 @@ enum StudentType
     TEACHER = 2;
     STRAIGHT_A_STUDENT = 3;
     ROBOT = 4;
-    TECH_OTAKU =5;
+    TECH_OTAKU = 5;
     SUNSHINE = 6;
 }
 

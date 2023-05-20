@@ -1,5 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
@@ -8,13 +9,21 @@ namespace GameClass.GameObj
     /// </summary>
     public abstract class ObjOfCharacter : Moveable, IObjOfCharacter
     {
+        private ReaderWriterLockSlim objOfCharacterReaderWriterLock = new();
+        public ReaderWriterLockSlim ObjOfCharacterReaderWriterLock => objOfCharacterReaderWriterLock;
         private ICharacter? parent = null;  // 主人
         public ICharacter? Parent
         {
-            get => parent;
+            get
+            {
+                lock (objOfCharacterReaderWriterLock)
+                {
+                    return parent;
+                }
+            }
             set
             {
-                lock (gameObjLock)
+                lock (objOfCharacterReaderWriterLock)
                 {
                     parent = value;
                 }

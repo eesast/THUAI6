@@ -20,7 +20,6 @@ from PyAPI.Interface import ILogic, IGameTimer
 
 class Logic(ILogic):
     def __init__(self, playerID: int, playerType: THUAI6.PlayerType) -> None:
-
         # ID
         self.__playerID: int = playerID
 
@@ -103,7 +102,12 @@ class Logic(ILogic):
 
     def GetPlaceType(self, x: int, y: int) -> THUAI6.PlaceType:
         with self.__mtxState:
-            if x < 0 or x >= len(self.__currentState.gameMap) or y < 0 or y >= len(self.__currentState.gameMap[0]):
+            if (
+                x < 0
+                or x >= len(self.__currentState.gameMap)
+                or y < 0
+                or y >= len(self.__currentState.gameMap[0])
+            ):
                 self.__logger.warning("Invalid position")
                 return THUAI6.PlaceType.NullPlaceType
             self.__logger.debug("Called GetPlaceType")
@@ -149,7 +153,9 @@ class Logic(ILogic):
         with self.__mtxState:
             self.__logger.debug("Called GetHiddenGateState")
             if (x, y) in self.__currentState.mapInfo.hiddenGateState:
-                return copy.deepcopy(self.__currentState.mapInfo.hiddenGateState[(x, y)])
+                return copy.deepcopy(
+                    self.__currentState.mapInfo.hiddenGateState[(x, y)]
+                )
             else:
                 self.__logger.warning("HiddenGate not found")
                 return THUAI6.HiddenGateState.Null
@@ -184,9 +190,9 @@ class Logic(ILogic):
         self.__logger.debug("Called ThrowProp")
         return self.__comm.ThrowProp(propType, self.__playerID)
 
-    def UseSkill(self, skillID: int) -> bool:
+    def UseSkill(self, skillID: int, skillParam: int) -> bool:
         self.__logger.debug("Called UseSkill")
-        return self.__comm.UseSkill(skillID, self.__playerID)
+        return self.__comm.UseSkill(skillID, skillParam, self.__playerID)
 
     def SendMessage(self, toID: int, message: Union[str, bytes]) -> bool:
         self.__logger.debug("Called SendMessage")
@@ -262,9 +268,13 @@ class Logic(ILogic):
         self.__logger.debug("Called EndAllAction")
         return self.__comm.EndAllAction(self.__playerID)
 
-    def HaveView(self, gridX: int, gridY: int, selfX: int, selfY: int, viewRange: int) -> bool:
+    def HaveView(
+        self, gridX: int, gridY: int, selfX: int, selfY: int, viewRange: int
+    ) -> bool:
         with self.__mtxState:
-            return AssistFunction.HaveView(viewRange, selfX, selfY, gridX, gridY, self.__currentState.gameMap)
+            return AssistFunction.HaveView(
+                viewRange, selfX, selfY, gridX, gridY, self.__currentState.gameMap
+            )
 
     # Logic内部逻辑
     def __TryConnection(self) -> bool:
@@ -281,8 +291,7 @@ class Logic(ILogic):
                 # 读取消息，无消息时此处阻塞
                 clientMsg = self.__comm.GetMessage2Client()
                 self.__logger.debug("Get message from server!")
-                self.__gameState = Proto2THUAI6.gameStateDict[
-                    clientMsg.game_state]
+                self.__gameState = Proto2THUAI6.gameStateDict[clientMsg.game_state]
 
                 if self.__gameState == THUAI6.GameState.GameStart:
                     # 读取玩家的GUID
@@ -294,8 +303,7 @@ class Logic(ILogic):
                             for row in obj.map_message.row:
                                 col: List[THUAI6.PlaceType] = []
                                 for place in row.col:
-                                    col.append(
-                                        Proto2THUAI6.placeTypeDict[place])
+                                    col.append(Proto2THUAI6.placeTypeDict[place])
                                 gameMap.append(col)
                             self.__currentState.gameMap = gameMap
                             self.__bufferState.gameMap = gameMap
@@ -330,127 +338,238 @@ class Logic(ILogic):
                 if item.WhichOneof("message_of_obj") == "student_message":
                     if item.student_message.player_id == self.__playerID:
                         self.__bufferState.self = Proto2THUAI6.Protobuf2THUAI6Student(
-                            item.student_message)
-                        self.__bufferState.students.append(
-                            self.__bufferState.self)
+                            item.student_message
+                        )
+                        self.__bufferState.students.append(self.__bufferState.self)
                     else:
                         self.__bufferState.students.append(
-                            Proto2THUAI6.Protobuf2THUAI6Student(item.student_message))
+                            Proto2THUAI6.Protobuf2THUAI6Student(item.student_message)
+                        )
                     self.__logger.debug("Add Student!")
         else:
             for item in message.obj_message:
                 if item.WhichOneof("message_of_obj") == "tricker_message":
                     if item.tricker_message.player_id == self.__playerID:
                         self.__bufferState.self = Proto2THUAI6.Protobuf2THUAI6Tricker(
-                            item.tricker_message)
-                        self.__bufferState.trickers.append(
-                            self.__bufferState.self)
+                            item.tricker_message
+                        )
+                        self.__bufferState.trickers.append(self.__bufferState.self)
                     else:
                         self.__bufferState.trickers.append(
-                            Proto2THUAI6.Protobuf2THUAI6Tricker(item.tricker_message))
+                            Proto2THUAI6.Protobuf2THUAI6Tricker(item.tricker_message)
+                        )
                     self.__logger.debug("Add Tricker!")
 
     def __LoadBufferCase(self, item: Message2Clients.MessageOfObj) -> None:
-        if self.__playerType == THUAI6.PlayerType.StudentPlayer and item.WhichOneof("message_of_obj") == "tricker_message":
+        if (
+            self.__playerType == THUAI6.PlayerType.StudentPlayer
+            and item.WhichOneof("message_of_obj") == "tricker_message"
+        ):
             if MessageType.TRICKER_INVISIBLE in item.tricker_message.buff:
                 return
-            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.tricker_message.x, item.tricker_message.y, self.__bufferState.gameMap):
+            if AssistFunction.HaveView(
+                self.__bufferState.self.viewRange,
+                self.__bufferState.self.x,
+                self.__bufferState.self.y,
+                item.tricker_message.x,
+                item.tricker_message.y,
+                self.__bufferState.gameMap,
+            ):
                 self.__bufferState.trickers.append(
-                    Proto2THUAI6.Protobuf2THUAI6Tricker(item.tricker_message))
+                    Proto2THUAI6.Protobuf2THUAI6Tricker(item.tricker_message)
+                )
                 self.__logger.debug("Add Tricker!")
-        elif self.__playerType == THUAI6.PlayerType.TrickerPlayer and item.WhichOneof("message_of_obj") == "student_message":
+        elif (
+            self.__playerType == THUAI6.PlayerType.TrickerPlayer
+            and item.WhichOneof("message_of_obj") == "student_message"
+        ):
             if THUAI6.TrickerBuffType.Clairaudience in self.__bufferState.self.buff:
                 self.__bufferState.students.append(
-                    Proto2THUAI6.Protobuf2THUAI6Student(item.student_message))
+                    Proto2THUAI6.Protobuf2THUAI6Student(item.student_message)
+                )
                 self.__logger.debug("Add Student!")
                 return
             if MessageType.STUDENT_INVISIBLE in item.student_message.buff:
                 return
-            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.student_message.x, item.student_message.y, self.__bufferState.gameMap):
+            if AssistFunction.HaveView(
+                self.__bufferState.self.viewRange,
+                self.__bufferState.self.x,
+                self.__bufferState.self.y,
+                item.student_message.x,
+                item.student_message.y,
+                self.__bufferState.gameMap,
+            ):
                 self.__bufferState.students.append(
-                    Proto2THUAI6.Protobuf2THUAI6Student(item.student_message))
+                    Proto2THUAI6.Protobuf2THUAI6Student(item.student_message)
+                )
                 self.__logger.debug("Add Student!")
         elif item.WhichOneof("message_of_obj") == "prop_message":
-            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.prop_message.x, item.prop_message.y, self.__bufferState.gameMap):
+            if AssistFunction.HaveView(
+                self.__bufferState.self.viewRange,
+                self.__bufferState.self.x,
+                self.__bufferState.self.y,
+                item.prop_message.x,
+                item.prop_message.y,
+                self.__bufferState.gameMap,
+            ):
                 self.__bufferState.props.append(
-                    Proto2THUAI6.Protobuf2THUAI6Prop(item.prop_message))
+                    Proto2THUAI6.Protobuf2THUAI6Prop(item.prop_message)
+                )
                 self.__logger.debug("Add Prop!")
         elif item.WhichOneof("message_of_obj") == "bullet_message":
-            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.bullet_message.x, item.bullet_message.y, self.__bufferState.gameMap):
+            if AssistFunction.HaveView(
+                self.__bufferState.self.viewRange,
+                self.__bufferState.self.x,
+                self.__bufferState.self.y,
+                item.bullet_message.x,
+                item.bullet_message.y,
+                self.__bufferState.gameMap,
+            ):
                 self.__bufferState.bullets.append(
-                    Proto2THUAI6.Protobuf2THUAI6Bullet(item.bullet_message))
+                    Proto2THUAI6.Protobuf2THUAI6Bullet(item.bullet_message)
+                )
                 self.__logger.debug("Add Bullet!")
         elif item.WhichOneof("message_of_obj") == "classroom_message":
-            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.classroom_message.x, item.classroom_message.y, self.__bufferState.gameMap):
-                pos = (AssistFunction.GridToCell(
-                    item.classroom_message.x), AssistFunction.GridToCell(item.classroom_message.y))
+            if AssistFunction.HaveView(
+                self.__bufferState.self.viewRange,
+                self.__bufferState.self.x,
+                self.__bufferState.self.y,
+                item.classroom_message.x,
+                item.classroom_message.y,
+                self.__bufferState.gameMap,
+            ):
+                pos = (
+                    AssistFunction.GridToCell(item.classroom_message.x),
+                    AssistFunction.GridToCell(item.classroom_message.y),
+                )
                 if pos not in self.__bufferState.mapInfo.classroomState:
-                    self.__bufferState.mapInfo.classroomState[pos] = item.classroom_message.progress
+                    self.__bufferState.mapInfo.classroomState[
+                        pos
+                    ] = item.classroom_message.progress
                     self.__logger.debug("Add Classroom!")
                 else:
-                    self.__bufferState.mapInfo.classroomState[pos] = item.classroom_message.progress
+                    self.__bufferState.mapInfo.classroomState[
+                        pos
+                    ] = item.classroom_message.progress
                     self.__logger.debug("Update Classroom!")
         elif item.WhichOneof("message_of_obj") == "chest_message":
-            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.chest_message.x, item.chest_message.y, self.__bufferState.gameMap):
-                pos = (AssistFunction.GridToCell(
-                    item.chest_message.x), AssistFunction.GridToCell(item.chest_message.y))
+            if AssistFunction.HaveView(
+                self.__bufferState.self.viewRange,
+                self.__bufferState.self.x,
+                self.__bufferState.self.y,
+                item.chest_message.x,
+                item.chest_message.y,
+                self.__bufferState.gameMap,
+            ):
+                pos = (
+                    AssistFunction.GridToCell(item.chest_message.x),
+                    AssistFunction.GridToCell(item.chest_message.y),
+                )
                 if pos not in self.__bufferState.mapInfo.chestState:
-                    self.__bufferState.mapInfo.chestState[pos] = item.chest_message.progress
-                    self.__logger.debug(
-                        f"Add Chest at {pos[0]}, {pos[1]}")
+                    self.__bufferState.mapInfo.chestState[
+                        pos
+                    ] = item.chest_message.progress
+                    self.__logger.debug(f"Add Chest at {pos[0]}, {pos[1]}")
                 else:
-                    self.__bufferState.mapInfo.chestState[pos] = item.chest_message.progress
-                    self.__logger.debug(
-                        f"Update Chest at {pos[0]}, {pos[1]}")
+                    self.__bufferState.mapInfo.chestState[
+                        pos
+                    ] = item.chest_message.progress
+                    self.__logger.debug(f"Update Chest at {pos[0]}, {pos[1]}")
         elif item.WhichOneof("message_of_obj") == "door_message":
-            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.door_message.x, item.door_message.y, self.__bufferState.gameMap):
-                pos = (AssistFunction.GridToCell(
-                    item.door_message.x), AssistFunction.GridToCell(item.door_message.y))
+            if AssistFunction.HaveView(
+                self.__bufferState.self.viewRange,
+                self.__bufferState.self.x,
+                self.__bufferState.self.y,
+                item.door_message.x,
+                item.door_message.y,
+                self.__bufferState.gameMap,
+            ):
+                pos = (
+                    AssistFunction.GridToCell(item.door_message.x),
+                    AssistFunction.GridToCell(item.door_message.y),
+                )
                 if pos not in self.__bufferState.mapInfo.doorState:
-                    self.__bufferState.mapInfo.doorState[pos] = item.door_message.is_open
-                    self.__bufferState.mapInfo.doorProgress[pos] = item.door_message.progress
+                    self.__bufferState.mapInfo.doorState[
+                        pos
+                    ] = item.door_message.is_open
+                    self.__bufferState.mapInfo.doorProgress[
+                        pos
+                    ] = item.door_message.progress
                     self.__logger.debug("Add Door!")
                 else:
-                    self.__bufferState.mapInfo.doorState[pos] = item.door_message.is_open
-                    self.__bufferState.mapInfo.doorProgress[pos] = item.door_message.progress
+                    self.__bufferState.mapInfo.doorState[
+                        pos
+                    ] = item.door_message.is_open
+                    self.__bufferState.mapInfo.doorProgress[
+                        pos
+                    ] = item.door_message.progress
                     self.__logger.debug("Update Door!")
         elif item.WhichOneof("message_of_obj") == "hidden_gate_message":
-            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.hidden_gate_message.x, item.hidden_gate_message.y, self.__bufferState.gameMap):
-                pos = (AssistFunction.GridToCell(
-                    item.hidden_gate_message.x), AssistFunction.GridToCell(item.hidden_gate_message.y))
+            if AssistFunction.HaveView(
+                self.__bufferState.self.viewRange,
+                self.__bufferState.self.x,
+                self.__bufferState.self.y,
+                item.hidden_gate_message.x,
+                item.hidden_gate_message.y,
+                self.__bufferState.gameMap,
+            ):
+                pos = (
+                    AssistFunction.GridToCell(item.hidden_gate_message.x),
+                    AssistFunction.GridToCell(item.hidden_gate_message.y),
+                )
                 if pos not in self.__bufferState.mapInfo.hiddenGateState:
-                    self.__bufferState.mapInfo.hiddenGateState[pos] = Proto2THUAI6.Bool2HiddenGateState(
-                        item.hidden_gate_message.opened)
+                    self.__bufferState.mapInfo.hiddenGateState[
+                        pos
+                    ] = Proto2THUAI6.Bool2HiddenGateState(
+                        item.hidden_gate_message.opened
+                    )
                     self.__logger.debug("Add HiddenGate!")
                 else:
-                    self.__bufferState.mapInfo.hiddenGateState[pos] = Proto2THUAI6.Bool2HiddenGateState(
-                        item.hidden_gate_message.opened)
+                    self.__bufferState.mapInfo.hiddenGateState[
+                        pos
+                    ] = Proto2THUAI6.Bool2HiddenGateState(
+                        item.hidden_gate_message.opened
+                    )
                     self.__logger.debug("Update HiddenGate!")
         elif item.WhichOneof("message_of_obj") == "gate_message":
-            if AssistFunction.HaveView(self.__bufferState.self.viewRange, self.__bufferState.self.x, self.__bufferState.self.y, item.gate_message.x, item.gate_message.y, self.__bufferState.gameMap):
-                pos = (AssistFunction.GridToCell(
-                    item.gate_message.x), AssistFunction.GridToCell(item.gate_message.y))
+            if AssistFunction.HaveView(
+                self.__bufferState.self.viewRange,
+                self.__bufferState.self.x,
+                self.__bufferState.self.y,
+                item.gate_message.x,
+                item.gate_message.y,
+                self.__bufferState.gameMap,
+            ):
+                pos = (
+                    AssistFunction.GridToCell(item.gate_message.x),
+                    AssistFunction.GridToCell(item.gate_message.y),
+                )
                 if pos not in self.__bufferState.mapInfo.gateState:
-                    self.__bufferState.mapInfo.gateState[pos] = item.gate_message.progress
+                    self.__bufferState.mapInfo.gateState[
+                        pos
+                    ] = item.gate_message.progress
                     self.__logger.debug("Add Gate!")
                 else:
-                    self.__bufferState.mapInfo.gateState[pos] = item.gate_message.progress
+                    self.__bufferState.mapInfo.gateState[
+                        pos
+                    ] = item.gate_message.progress
                     self.__logger.debug("Update Gate!")
         elif item.WhichOneof("message_of_obj") == "news_message":
             if item.news_message.to_id == self.__playerID:
                 if item.news_message.WhichOneof("news") == "text_message":
                     self.__messageQueue.put(
-                        (item.news_message.from_id, item.news_message.text_message))
+                        (item.news_message.from_id, item.news_message.text_message)
+                    )
                     self.__logger.debug("Add News!")
                 elif item.news_message.WhichOneof("news") == "binary_message":
                     self.__messageQueue.put(
-                        (item.news_message.from_id, item.news_message.binary_message))
+                        (item.news_message.from_id, item.news_message.binary_message)
+                    )
                     self.__logger.debug("Add News!")
                 else:
                     self.__logger.error("Unknown News!")
         else:
-            self.__logger.debug(
-                "Unknown Message!")
+            self.__logger.debug("Unknown Message!")
 
     def __LoadBuffer(self, message: Message2Clients.MessageToClient) -> None:
         with self.__cvBuffer:
@@ -470,14 +589,18 @@ class Logic(ILogic):
                     self.__bufferState.guids.append(obj.tricker_message.guid)
 
             self.__bufferState.gameInfo = Proto2THUAI6.Protobuf2THUAI6GameInfo(
-                message.all_message)
+                message.all_message
+            )
 
             self.__LoadBufferSelf(message)
             for item in message.obj_message:
                 self.__LoadBufferCase(item)
             if Setting.asynchronous():
                 with self.__mtxState:
-                    self.__currentState, self.__bufferState = self.__bufferState, self.__currentState
+                    self.__currentState, self.__bufferState = (
+                        self.__bufferState,
+                        self.__currentState,
+                    )
                     self.__counterState = self.__counterBuffer
                     self.__logger.info("Update state!")
                 self.__freshed = True
@@ -496,7 +619,10 @@ class Logic(ILogic):
             with self.__cvBuffer:
                 self.__cvBuffer.wait_for(lambda: self.__bufferUpdated)
                 with self.__mtxState:
-                    self.__bufferState, self.__currentState = self.__currentState, self.__bufferState
+                    self.__bufferState, self.__currentState = (
+                        self.__currentState,
+                        self.__bufferState,
+                    )
                     self.__counterState = self.__counterBuffer
                 self.__bufferUpdated = False
                 self.__logger.info("Update state!")
@@ -506,12 +632,21 @@ class Logic(ILogic):
         with self.__cvBuffer:
             self.__cvBuffer.wait_for(lambda: self.__freshed)
 
-    def Main(self, createAI: Callable, IP: str, port: str, file: bool, screen: bool, warnOnly: bool) -> None:
-
+    def Main(
+        self,
+        createAI: Callable,
+        IP: str,
+        port: str,
+        file: bool,
+        screen: bool,
+        warnOnly: bool,
+    ) -> None:
         # 建立日志组件
         self.__logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter(
-            "[%(name)s] [%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s", '%H:%M:%S')
+            "[%(name)s] [%(asctime)s.%(msecs)03d] [%(levelname)s] %(message)s",
+            "%H:%M:%S",
+        )
         # 确保文件存在
         # if not os.path.exists(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + "/logs"):
         #     os.makedirs(os.path.dirname(os.path.dirname(
@@ -519,13 +654,21 @@ class Logic(ILogic):
 
         if platform.system().lower() == "windows":
             os.system(
-                f"mkdir \"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}\\logs\"")
+                f'mkdir "{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}\\logs"'
+            )
         else:
             os.system(
-                f"mkdir -p \"{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/logs\"")
+                f'mkdir -p "{os.path.dirname(os.path.dirname(os.path.realpath(__file__)))}/logs"'
+            )
 
-        fileHandler = logging.FileHandler(os.path.dirname(
-            os.path.dirname(os.path.realpath(__file__))) + "/logs/logic" + str(self.__playerID) + "-log.txt", "w+", encoding="utf-8")
+        fileHandler = logging.FileHandler(
+            os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+            + "/logs/logic"
+            + str(self.__playerID)
+            + "-log.txt",
+            "w+",
+            encoding="utf-8",
+        )
         screenHandler = logging.StreamHandler()
         if file:
             fileHandler.setLevel(logging.DEBUG)
@@ -555,13 +698,15 @@ class Logic(ILogic):
                 self.__timer = StudentAPI(self)
             else:
                 self.__timer = StudentDebugAPI(
-                    self, file, screen, warnOnly, self.__playerID)
+                    self, file, screen, warnOnly, self.__playerID
+                )
         elif self.__playerType == THUAI6.PlayerType.TrickerPlayer:
             if not file and not screen:
                 self.__timer = TrickerAPI(self)
             else:
                 self.__timer = TrickerDebugAPI(
-                    self, file, screen, warnOnly, self.__playerID)
+                    self, file, screen, warnOnly, self.__playerID
+                )
 
         # 构建AI线程
         def AIThread():
@@ -583,7 +728,8 @@ class Logic(ILogic):
 
         if self.__TryConnection():
             self.__logger.info(
-                "Connect to the server successfully, AI thread will be started.")
+                "Connect to the server successfully, AI thread will be started."
+            )
             self.__threadAI = threading.Thread(target=AIThread)
             self.__threadAI.start()
             self.__ProcessMessage()

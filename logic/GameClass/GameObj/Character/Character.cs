@@ -2,55 +2,85 @@
 using Preparation.Utility;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
-using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace GameClass.GameObj
 {
     public partial class Character : Moveable, ICharacter  // 负责人LHR摆烂终了
     {
+
+        private readonly ReaderWriterLockSlim hpReaderWriterLock = new();
+        public ReaderWriterLockSlim HPReadWriterLock => hpReaderWriterLock;
+        private readonly object vampireLock = new();
+        public object VampireLock => vampire;
+        private readonly object inventoryLock = new();
+        public object InventoryLock => inventoryLock;
+
         #region 装弹、攻击相关的基本属性及方法
-
-        protected readonly object beAttackedLock = new();
-
         /// <summary>
         /// 装弹冷却
         /// </summary>
         protected int cd;
         public int CD
         {
-            get => cd;
-            private set
+            get
             {
-                lock (gameObjLock)
+                lock (actionLock)
                 {
-                    cd = value;
-                    Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
+                    return cd;
                 }
             }
         }
         public int OrgCD { get; protected set; }
 
-        protected int maxBulletNum;
-        public int MaxBulletNum => maxBulletNum;  // 人物最大子弹数
-        protected int bulletNum;
-        public int BulletNum => bulletNum;  // 目前持有的子弹数
-
         public readonly BulletType OriBulletOfPlayer;
         private BulletType bulletOfPlayer;
         public BulletType BulletOfPlayer
         {
-            get => bulletOfPlayer;
+            get
+            {
+                lock (actionLock)
+                {
+                    return bulletOfPlayer;
+                }
+            }
             set
             {
-                lock (gameObjLock)
+                lock (actionLock)
                 {
                     bulletOfPlayer = value;
-                    OrgCD = (BulletFactory.BulletCD(value));
-                    CD = 0;
+                    cd = OrgCD = (BulletFactory.BulletCD(value));
+                    Debugger.Output(this, string.Format("'s CD has been set to: {0}.", cd));
                     maxBulletNum = bulletNum = (BulletFactory.BulletNum(value));
                 }
+            }
+        }
+
+        protected int maxBulletNum;
+        public int MaxBulletNum
+        {
+            get
+            {
+                lock (actionLock)
+                {
+                    return maxBulletNum;
+                }
+            }
+        }
+        private int bulletNum;
+        private int updateTimeOfBulletNum = 0;
+
+        public int UpdateBulletNum(int time)
+        {
+            lock (actionLock)
+            {
+                if (bulletNum < maxBulletNum)
+                {
+                    int add = Math.Min(maxBulletNum - bulletNum, (time - updateTimeOfBulletNum) / cd);
+                    updateTimeOfBulletNum += add * cd;
+                    return (bulletNum += add);
+                }
+                return maxBulletNum;
             }
         }
 
@@ -58,44 +88,30 @@ namespace GameClass.GameObj
         /// 进行一次攻击
         /// </summary>
         /// <returns>攻击操作发出的子弹</returns>
-        public Bullet? Attack(XY pos, PlaceType place)
+        public Bullet? Attack(double angle, int time)
         {
-            if (TrySubBulletNum())
-                return BulletFactory.GetBullet(this, place, pos);
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// 尝试将子弹数量减1
-        /// </summary>
-        /// <returns>减操作是否成功</returns>
-        private bool TrySubBulletNum()
-        {
-            lock (gameObjLock)
+            lock (actionLock)
             {
-                if (bulletNum > 0)
+                if (bulletOfPlayer == BulletType.Null)
+                    return null;
+                if (UpdateBulletNum(time) > 0)
                 {
+                    if (bulletNum == maxBulletNum) updateTimeOfBulletNum = time;
                     --bulletNum;
-                    return true;
+
+                    XY res = Position + new XY  // 子弹紧贴人物生成。
+                        (
+                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
+                            (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Sin(angle))) * Math.Sign(Math.Sin(angle))
+                        );
+                    Bullet? bullet = BulletFactory.GetBullet(this, res, this.bulletOfPlayer);
+                    if (bullet == null) return null;
+                    if (TryAddAp()) bullet.AddAP(GameData.ApPropAdd);
+                    facingDirection = new(angle, bullet.AttackDistance);
+                    return bullet;
                 }
-                return false;
-            }
-        }
-        /// <summary>
-        /// 尝试将子弹数量加1
-        /// </summary>
-        /// <returns>加操作是否成功</returns>
-        public bool TryAddBulletNum()
-        {
-            lock (gameObjLock)
-            {
-                if (bulletNum < maxBulletNum)
-                {
-                    ++bulletNum;
-                    return true;
-                }
-                return false;
+                else
+                    return null;
             }
         }
 
@@ -224,21 +240,66 @@ namespace GameClass.GameObj
         }
         #endregion
         #region 血量相关的基本属性及方法
-        public int MaxHp { get; protected set; }  // 最大血量
+        private int maxHp;
+        public int MaxHp
+        {
+            get
+            {
+                HPReadWriterLock.EnterReadLock();
+                try
+                {
+                    return maxHp;
+                }
+                finally
+                {
+                    HPReadWriterLock.ExitReadLock();
+                }
+            }
+            protected set
+            {
+                HPReadWriterLock.EnterWriteLock();
+                try
+                {
+                    maxHp = value;
+                    if (hp > maxHp) hp = maxHp;
+                }
+                finally
+                {
+                    HPReadWriterLock.ExitWriteLock();
+                }
+            }
+        }  // 最大血量
         protected int hp;
         public int HP
         {
-            get => hp;
+            get
+            {
+                HPReadWriterLock.EnterReadLock();
+                try
+                {
+                    return hp;
+                }
+                finally
+                {
+                    HPReadWriterLock.ExitReadLock();
+                }
+            }
             set
             {
-                if (value > 0)
+                HPReadWriterLock.EnterWriteLock();
+                try
                 {
-                    lock (gameObjLock)
-                        hp = value <= MaxHp ? value : MaxHp;
-                }
-                else
-                    lock (gameObjLock)
+                    if (value > 0)
+                    {
+                        hp = value <= maxHp ? value : maxHp;
+                    }
+                    else
                         hp = 0;
+                }
+                finally
+                {
+                    HPReadWriterLock.ExitWriteLock();
+                }
             }
         }
 
@@ -246,50 +307,51 @@ namespace GameClass.GameObj
         /// 尝试减血
         /// </summary>
         /// <param name="sub">减血量</param>
-        /// <returns>减操作是否成功</returns>
         public int TrySubHp(int sub)
         {
-            int previousHp = hp;
-            lock (gameObjLock)
-                hp = hp <= sub ? 0 : hp - sub;
-            Debugger.Output(this, " hp has subed to: " + hp.ToString());
-            return previousHp - hp;
+            HPReadWriterLock.EnterWriteLock();
+            try
+            {
+                int previousHp = hp;
+                if (hp <= sub)
+                {
+                    hp = 0;
+                    return hp;
+                }
+                else
+                {
+                    hp -= sub;
+                    return sub;
+                }
+            }
+            finally
+            {
+                HPReadWriterLock.ExitWriteLock();
+            }
         }
 
         private double vampire = 0;  // 回血率：0-1之间
         public double Vampire
         {
-            get => vampire;
+            get
+            {
+                lock (vampireLock)
+                    return vampire;
+            }
             set
             {
-                if (value > 1)
-                    lock (gameObjLock)
+                lock (vampireLock)
+                {
+                    if (value > 1)
                         vampire = 1;
-                else if (value < 0)
-                    lock (gameObjLock)
+                    else if (value < 0)
                         vampire = 0;
-                else
-                    lock (gameObjLock)
+                    else
                         vampire = value;
+                }
             }
         }
-        private double oriVampire = 0;
-        public double OriVampire
-        {
-            get => oriVampire;
-            set
-            {
-                if (value > 1)
-                    lock (gameObjLock)
-                        vampire = 1;
-                else if (value < 0)
-                    lock (gameObjLock)
-                        vampire = 0;
-                else
-                    lock (gameObjLock)
-                        vampire = value;
-            }
-        }
+        public double OriVampire { get; protected set; }
         #endregion
         #region 状态相关的基本属性与方法
         private PlayerStateType playerState = PlayerStateType.Null;
@@ -297,140 +359,295 @@ namespace GameClass.GameObj
         {
             get
             {
-                if (playerState == PlayerStateType.Null && IsMoving) return PlayerStateType.Moving;
-                return playerState;
+                lock (actionLock)
+                {
+                    if (playerState == PlayerStateType.Moving)
+                        return (IsMoving) ? PlayerStateType.Moving : PlayerStateType.Null;
+                    return playerState;
+                }
             }
         }
 
-        public bool NoHp() => (playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
-                                                            || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued);
-        public bool Commandable() => (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
-                                                            && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
-                                                             && playerState != PlayerStateType.Swinging && playerState != PlayerStateType.TryingToAttack
-                                                              && playerState != PlayerStateType.ClimbingThroughWindows && playerState != PlayerStateType.Stunned);
-        public bool InteractingWithMapWithoutMoving() => (playerState == PlayerStateType.LockingOrOpeningTheDoor || playerState == PlayerStateType.Fixing || playerState == PlayerStateType.OpeningTheChest);
-        public bool NullOrMoving() => (playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
-        public bool CanBeAwed() => !(playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
-                                                            || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued
-                                                            || playerState == PlayerStateType.Treated || playerState == PlayerStateType.Stunned
-                                                            || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
-
+        public bool NoHp()
+        {
+            lock (actionLock)
+                return (playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped || playerState == PlayerStateType.Addicted || playerState == PlayerStateType.Rescued);
+        }
+        public bool Commandable()
+        {
+            lock (actionLock)
+            {
+                return (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
+                           && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
+                           && playerState != PlayerStateType.Swinging && playerState != PlayerStateType.TryingToAttack
+                           && playerState != PlayerStateType.ClimbingThroughWindows
+                           && playerState != PlayerStateType.Stunned && playerState != PlayerStateType.Charmed);
+            }
+        }
+        public bool CanPinDown()
+        {
+            lock (actionLock)
+            {
+                return (playerState != PlayerStateType.Deceased && playerState != PlayerStateType.Escaped
+                           && playerState != PlayerStateType.Addicted && playerState != PlayerStateType.Rescued
+                           && playerState != PlayerStateType.Stunned && playerState != PlayerStateType.Charmed);
+            }
+        }
+        public bool InteractingWithMapWithoutMoving()
+        {
+            lock (actionLock)
+            {
+                return (playerState == PlayerStateType.LockingTheDoor || playerState == PlayerStateType.OpeningTheDoor
+                            || playerState == PlayerStateType.Fixing || playerState == PlayerStateType.OpeningTheChest);
+            }
+        }
+        public bool NullOrMoving()
+        {
+            lock (actionLock)
+            {
+                return (playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
+            }
+        }
+        public bool CanBeAwed()
+        {
+            lock (actionLock)
+                return !(playerState == PlayerStateType.Deceased || playerState == PlayerStateType.Escaped
+                           || playerState == PlayerStateType.Addicted
+                           || playerState == PlayerStateType.Rescued || playerState == PlayerStateType.Treated
+                           || playerState == PlayerStateType.Stunned || playerState == PlayerStateType.Charmed
+                           || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
+        }
         private GameObj? whatInteractingWith = null;
         public GameObj? WhatInteractingWith => whatInteractingWith;
 
-        private long threadNum = 0;
-        public long ThreadNum => threadNum;
-
-        public void ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        private long ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
-            lock (gameObjLock)
+            //只能被SetPlayerState引用
+            whatInteractingWith = gameObj;
+            playerState = value;
+            //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
+            return ++stateNum;
+        }
+
+        private long ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        {
+            //只能被SetPlayerState引用
+            whatInteractingWith = gameObj;
+            playerState = value;
+            //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
+            return stateNum;
+        }
+
+
+        public long SetPlayerState(PlayerStateType value = PlayerStateType.Null, IGameObj? obj = null)
+        {
+            GameObj? gameObj = (GameObj?)obj;
+            lock (actionLock)
             {
-                ++threadNum;
-                whatInteractingWith = gameObj;
-                if (value != PlayerStateType.Moving)
-                    IsMoving = false;
-                playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
-                //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
+                PlayerStateType nowPlayerState = PlayerState;
+                if (nowPlayerState == value && value != PlayerStateType.UsingSkill) return -1;
+                switch (nowPlayerState)
+                {
+                    case PlayerStateType.Escaped:
+                    case PlayerStateType.Deceased:
+                        return -1;
+
+                    case PlayerStateType.Addicted:
+                        if (value == PlayerStateType.Rescued)
+                            return ChangePlayerStateInOneThread(value, gameObj);
+                        else if (value == PlayerStateType.Null)
+                            return ChangePlayerState(value, gameObj);
+                        else return -1;
+                    case PlayerStateType.Rescued:
+                        if (value == PlayerStateType.Addicted)
+                            return ChangePlayerStateInOneThread(value, gameObj);
+                        else if (value == PlayerStateType.Null)
+                            return ChangePlayerState(value, gameObj);
+                        else return -1;
+
+                    case PlayerStateType.TryingToAttack:
+                        if (value == PlayerStateType.Addicted || value == PlayerStateType.Swinging
+                            || value == PlayerStateType.Deceased || value == PlayerStateType.Stunned
+                            || value == PlayerStateType.Charmed || value == PlayerStateType.Null)
+                            return ChangePlayerState(value, gameObj);
+                        else return -1;
+                    case PlayerStateType.Stunned:
+                    case PlayerStateType.Charmed:
+                        if (value == PlayerStateType.Addicted || value == PlayerStateType.Deceased
+                            || value == PlayerStateType.Null)
+                            return ChangePlayerState(value, gameObj);
+                        else return -1;
+                    case PlayerStateType.Swinging:
+                        if (value == PlayerStateType.Addicted
+                            || value == PlayerStateType.Deceased || value == PlayerStateType.Stunned
+                            || value == PlayerStateType.Charmed || value == PlayerStateType.Null)
+                        {
+                            try
+                            {
+                                return ChangePlayerState(value, gameObj);
+                            }
+                            finally
+                            {
+                                ThreadNum.Release();
+                            }
+                        }
+                        else return -1;
+                    case PlayerStateType.ClimbingThroughWindows:
+                        if (value == PlayerStateType.Addicted
+                             || value == PlayerStateType.Deceased || value == PlayerStateType.Stunned
+                             || value == PlayerStateType.Charmed || value == PlayerStateType.Null)
+                        {
+                            Window window = (Window)WhatInteractingWith!;
+                            try
+                            {
+                                window.FinishClimbing();
+                                return ChangePlayerState(value, gameObj);
+                            }
+                            finally
+                            {
+                                if (window.Stage.x == 0)
+                                    ThreadNum.Release();
+                                else ReSetPos(window.Stage);
+                            }
+                        }
+                        else return -1;
+
+                    case PlayerStateType.OpeningTheChest:
+                        ((Chest)whatInteractingWith!).StopOpen();
+                        return ChangePlayerState(value, gameObj);
+                    case PlayerStateType.OpeningTheDoorway:
+                        Doorway doorway = (Doorway)whatInteractingWith!;
+                        doorway.StopOpenning();
+                        return ChangePlayerState(value, gameObj);
+
+                    case PlayerStateType.OpeningTheDoor:
+                        Door door = (Door)whatInteractingWith!;
+                        try
+                        {
+                            door.StopOpen();
+                            ReleaseTool(door.DoorNum switch
+                            {
+                                3 => PropType.Key3,
+                                5 => PropType.Key5,
+                                _ => PropType.Key6,
+                            }
+                            );
+                            return ChangePlayerState(value, gameObj);
+                        }
+                        finally
+                        {
+                            ThreadNum.Release();
+                        }
+                    case PlayerStateType.UsingSkill:
+                        {
+                            switch (CharacterType)
+                            {
+                                case CharacterType.TechOtaku:
+                                    {
+                                        if (typeof(CraftingBench).IsInstanceOfType(whatInteractingWith))
+                                        {
+                                            try
+                                            {
+                                                ((CraftingBench)whatInteractingWith!).StopSkill();
+                                                return ChangePlayerState(value, gameObj);
+                                            }
+                                            finally
+                                            {
+                                                ThreadNum.Release();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (value != PlayerStateType.UsingSkill)
+                                                ((UseRobot)FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID = (int)playerID;
+                                            return ChangePlayerState(value, gameObj);
+                                        }
+                                    }
+                                case CharacterType.Assassin:
+                                    if (value == PlayerStateType.Moving) return StateNum;
+                                    else
+                                    {
+                                        TryDeleteInvisible();
+                                        return ChangePlayerState(value, gameObj);
+                                    }
+                                default:
+                                    return ChangePlayerState(value, gameObj);
+                            }
+                        }
+                    default:
+                        return ChangePlayerState(value, gameObj);
+                }
             }
         }
 
-        public void ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        public long SetPlayerStateNaturally()
         {
-            lock (gameObjLock)
+            lock (actionLock)
             {
-                whatInteractingWith = gameObj;
-                if (value != PlayerStateType.Moving)
-                    IsMoving = false;
-                playerState = (value == PlayerStateType.Moving) ? PlayerStateType.Null : value;
-                //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
-            }
-        }
-
-        public void SetPlayerStateNaturally()
-        {
-            lock (gameObjLock)
-            {
-                ++threadNum;
                 whatInteractingWith = null;
-                IsMoving = false;
                 playerState = PlayerStateType.Null;
+                return ++stateNum;
             }
         }
 
         public void RemoveFromGame(PlayerStateType playerStateType)
         {
-            lock (gameObjLock)
+            lock (actionLock)
             {
-                playerState = playerStateType;
-                CanMove = false;
-                IsResetting = true;
-                Position = GameData.PosWhoDie;
-                place = PlaceType.Grass;
+                TryToRemove();
+                ReSetCanMove(false);
+                SetPlayerState(playerStateType);
+                position = GameData.PosWhoDie;
             }
         }
         #endregion
 
-        private int score = 0;
-        public int Score
+        private long score = 0;
+        public long Score
         {
-            get => score;
+            get => Interlocked.Read(ref score);
         }
 
         /// <summary>
         /// 加分
         /// </summary>
         /// <param name="add">增加量</param>
-        public virtual void AddScore(int add)
+        public virtual void AddScore(long add)
         {
-            lock (gameObjLock)
-            {
-                score += add;
-                //Debugger.Output(this, " 's score has been added to: " + score.ToString());
-            }
+            Interlocked.Add(ref score, add);
+            //Debugger.Output(this, " 's score has been added to: " + score.ToString());
         }
 
         /// <summary>
         /// 角色所属队伍ID
         /// </summary>
-        private int teamID = int.MaxValue;
-        public int TeamID
+        private long teamID = long.MaxValue;
+        public long TeamID
         {
-            get => teamID;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    teamID = value;
-                    Debugger.Output(this, " joins in the team: " + value.ToString());
-                }
-            }
+            get => Interlocked.Read(ref teamID);
+            set => Interlocked.Exchange(ref teamID, value);
         }
-        private int playerID = int.MaxValue;
-        public int PlayerID
+        private long playerID = long.MaxValue;
+        public long PlayerID
         {
-            get => playerID;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    playerID = value;
-                }
-            }
+            get => Interlocked.Read(ref playerID);
+            set => Interlocked.Exchange(ref playerID, value);
         }
 
         #region 道具和buff相关属性、方法
-        private Prop[] propInventory = new Prop[GameData.maxNumOfPropInPropInventory]
+        private Gadget[] propInventory = new Gadget[GameData.maxNumOfPropInPropInventory]
                                                 {new NullProp(), new NullProp(),new NullProp() };
-        public Prop[] PropInventory
+        public Gadget[] PropInventory
         {
-            get => propInventory;
+            get
+            {
+                lock (inventoryLock)
+                    return propInventory;
+            }
             set
             {
-                lock (gameObjLock)
-                {
+                lock (inventoryLock)
                     propInventory = value;
-                    Debugger.Output(this, " prop becomes " + (PropInventory == null ? "null" : PropInventory.ToString()));
-                }
             }
         }
 
@@ -438,45 +655,81 @@ namespace GameClass.GameObj
         /// 使用物品栏中的道具
         /// </summary>
         /// <returns>被使用的道具</returns>
-        public Prop UseProp(int indexing)
+        public Gadget UseProp(int indexing)
         {
             if (indexing < 0 || indexing >= GameData.maxNumOfPropInPropInventory)
                 return new NullProp();
-            lock (gameObjLock)
+            lock (inventoryLock)
             {
-                Prop prop = propInventory[indexing];
+                Gadget prop = propInventory[indexing];
+                if (!prop.IsUsable()) return new NullProp();
                 PropInventory[indexing] = new NullProp();
                 return prop;
             }
         }
 
-        public Prop UseProp(PropType propType)
+        public Gadget UseProp(PropType propType)
         {
-            lock (gameObjLock)
+            if (propType == PropType.Null)
             {
-                if (propType == PropType.Null)
+                lock (inventoryLock)
                 {
                     for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
                     {
-                        if (PropInventory[indexing].GetPropType() != PropType.Null)
+                        if (PropInventory[indexing].IsUsable())
                         {
-                            Prop prop = PropInventory[indexing];
+                            Gadget prop = PropInventory[indexing];
                             PropInventory[indexing] = new NullProp();
                             return prop;
                         }
                     }
                 }
-                else
+            }
+            else
+            {
+                lock (inventoryLock)
+                {
                     for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
                     {
-                        if (PropInventory[indexing].GetPropType() == propType)
+                        if (PropInventory[indexing].GetPropType() == propType && PropInventory[indexing].IsUsable())
                         {
-                            Prop prop = PropInventory[indexing];
+                            Gadget prop = PropInventory[indexing];
                             PropInventory[indexing] = new NullProp();
                             return prop;
                         }
                     }
-                return new NullProp();
+                }
+            }
+            return new NullProp();
+        }
+
+        public bool UseTool(PropType propType)
+        {
+            lock (inventoryLock)
+            {
+                for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
+                {
+                    if (PropInventory[indexing].GetPropType() == propType && PropInventory[indexing].IsUsable())
+                    {
+                        return ((Tool)PropInventory[indexing]).IsUsed = true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public void ReleaseTool(PropType propType)
+        {
+            lock (inventoryLock)
+            {
+                for (int indexing = 0; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
+                {
+                    if (PropInventory[indexing].GetPropType() == propType && ((Tool)PropInventory[indexing]).IsUsed)
+                    {
+                        ((Tool)PropInventory[indexing]).IsUsed = false;
+                        break;
+                    }
+                }
             }
         }
 
@@ -486,9 +739,10 @@ namespace GameClass.GameObj
         public int IndexingOfAddProp()
         {
             int indexing = 0;
-            for (; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
-                if (PropInventory[indexing].GetPropType() == PropType.Null)
-                    break;
+            lock (inventoryLock)
+                for (; indexing < GameData.maxNumOfPropInPropInventory; ++indexing)
+                    if (propInventory[indexing].GetPropType() == PropType.Null)
+                        break;
             return indexing;
         }
 
@@ -551,6 +805,7 @@ namespace GameClass.GameObj
                     return false;
             }
         }
+
         public void TryActivatingLIFE()
         {
             if (buffManager.TryActivatingLIFE())
@@ -573,6 +828,11 @@ namespace GameClass.GameObj
         public bool TryUseSpear()
         {
             return buffManager.TryUseSpear();
+        }
+
+        public bool TryDeleteInvisible()
+        {
+            return buffManager.TryDeleteInvisible();
         }
 
         public bool TryUseShield()
@@ -608,9 +868,9 @@ namespace GameClass.GameObj
         public override ShapeType Shape => ShapeType.Circle;
         public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (IsResetting)
+            if (IsRemoved)
                 return true;
-            if (targetObj.Type == GameObjType.Prop)
+            if (targetObj.Type == GameObjType.Gadget)
             {
                 return true;
             }

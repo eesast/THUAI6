@@ -9,75 +9,43 @@ namespace GameClass.GameObj
     /// </summary>
     public abstract class GameObj : IGameObj
     {
+        private readonly ReaderWriterLockSlim gameObjReaderWriterLock = new();
+        public ReaderWriterLockSlim GameObjReaderWriterLock => gameObjReaderWriterLock;
         protected readonly object gameObjLock = new();
         public object GameLock => gameObjLock;
 
         protected readonly XY birthPos;
 
-        private GameObjType type;
+        private readonly GameObjType type;
         public GameObjType Type => type;
 
         private static long currentMaxID = 0;         // 目前游戏对象的最大ID
         public const long invalidID = long.MaxValue;  // 无效的ID
-        public const long noneID = long.MinValue;
         public long ID { get; }
 
-        private XY position;
-        public XY Position
-        {
-            get => position;
-            protected
-                set
-            {
-                lock (gameObjLock)
-                {
-                    position = value;
-                }
-            }
-        }
+        protected XY position;
+        public abstract XY Position { get; }
 
-        protected PlaceType place;
-        public PlaceType Place { get => place; }
+        protected XY facingDirection = new(1, 0);
+        public abstract XY FacingDirection { get; }
 
-        private XY facingDirection = new(1, 0);
-        public XY FacingDirection
-        {
-            get => facingDirection;
-            set
-            {
-                lock (gameObjLock)
-                    facingDirection = value;
-            }
-        }
+        public abstract bool CanMove { get; }
 
         public abstract bool IsRigid { get; }
 
         public abstract ShapeType Shape { get; }
 
-        private bool canMove;
-        public bool CanMove
+        protected int isRemoved = 0;
+        public bool IsRemoved
         {
-            get => canMove;
-            set
+            get
             {
-                lock (gameObjLock)
-                {
-                    canMove = value;
-                }
+                return (Interlocked.CompareExchange(ref isRemoved, 0, 0) == 1);
             }
         }
-
-        private bool isResetting;
-        public bool IsResetting
+        public virtual void TryToRemove()
         {
-            get => isResetting;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    isResetting = value;
-                }
-            }
+            Interlocked.Exchange(ref isRemoved, 1);
         }
 
         public int Radius { get; }
@@ -85,7 +53,7 @@ namespace GameClass.GameObj
         public virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
         public GameObj(XY initPos, int initRadius, GameObjType initType)
         {
-            this.Position = this.birthPos = initPos;
+            this.position = this.birthPos = initPos;
             this.Radius = initRadius;
             this.type = initType;
             ID = Interlocked.Increment(ref currentMaxID);

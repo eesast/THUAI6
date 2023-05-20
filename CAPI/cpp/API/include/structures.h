@@ -62,6 +62,7 @@ namespace THUAI6
         AddHpOrAp = 6,
         ShieldOrSpear = 7,
         RecoveryFromDizziness = 8,
+        CraftingBench = 9,
     };
 
     enum class BulletType : unsigned char
@@ -71,7 +72,7 @@ namespace THUAI6
         CommonAttackOfTricker = 2,
         BombBomb = 3,
         JumpyDumpty = 4,
-        AtomBomb = 5,
+        Strike = 5,
     };
 
     // 玩家类型
@@ -197,7 +198,7 @@ namespace THUAI6
 
         PlayerType playerType;  // 玩家类型
         std::vector<PropType> props;
-        PlaceType place;  // 所处格子的类型
+        // PlaceType place;  // 所处格子的类型
         BulletType bulletType;
 
         PlayerState playerState;
@@ -232,9 +233,9 @@ namespace THUAI6
         double facingDirection;  // 朝向
         int64_t guid;            // 全局唯一ID
         PlayerType team;         // 子弹所属队伍
-        PlaceType place;         // 所处格子的类型
-        double bombRange;        // 炸弹爆炸范围
-        int32_t speed;           // 子弹速度
+        // PlaceType place;         // 所处格子的类型
+        double bombRange;  // 炸弹爆炸范围
+        int32_t speed;     // 子弹速度
     };
 
     struct BombedBullet
@@ -253,7 +254,7 @@ namespace THUAI6
         int32_t y;
         int64_t guid;
         PropType type;
-        PlaceType place;
+        // PlaceType place;
         double facingDirection;  // 朝向
     };
 
@@ -363,6 +364,7 @@ namespace THUAI6
         {PropType::AddHpOrAp, "AddHpOrAp"},
         {PropType::ShieldOrSpear, "ShieldOrSpear"},
         {PropType::RecoveryFromDizziness, "RecoveryFromDizziness"},
+        {PropType::CraftingBench, "CraftingBench"},
 
     };
 
@@ -372,7 +374,7 @@ namespace THUAI6
         {BulletType::CommonAttackOfTricker, "CommonAttackOfTricker"},
         {BulletType::BombBomb, "BombBomb"},
         {BulletType::JumpyDumpty, "JumpyDumpty"},
-        {BulletType::AtomBomb, "AtomBomb"},
+        {BulletType::Strike, "Strike"},
     };
 
     inline std::map<StudentBuffType, std::string> studentBuffDict{

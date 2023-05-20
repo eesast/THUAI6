@@ -25,6 +25,8 @@
 #include <grpcpp/impl/codegen/stub_options.h>
 #include <grpcpp/impl/codegen/sync_stream.h>
 
+#undef SendMessage
+
 namespace protobuf
 {
 

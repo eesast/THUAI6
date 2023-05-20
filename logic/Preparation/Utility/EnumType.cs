@@ -19,18 +19,20 @@ namespace Preparation.Utility
         Rescued = 10,
         Stunned = 11,
         TryingToAttack = 12,//指前摇
-        LockingOrOpeningTheDoor = 13,
+        LockingTheDoor = 13,
         OpeningTheChest = 14,
         ClimbingThroughWindows = 15,
         UsingSkill = 16,
         OpeningTheDoorway = 17,
+        Charmed = 18,
+        OpeningTheDoor = 19,
     }
     public enum GameObjType
     {
         Null = 0,
         Character = 1,
-        Prop = 2,
-        PickedProp = 3,
+        Gadget = 2,
+        Item = 3,
         Bullet = 4,
         BombedBullet = 5,
 
@@ -57,7 +59,7 @@ namespace Preparation.Utility
         CommonAttackOfGhost = 2,
         JumpyDumpty = 3,
         BombBomb = 4,
-        // Ram = 7,
+        Strike = 8,
     }
     public enum PropType  // 道具类型
     {//numOfPropSpecies 见Gamedata
@@ -70,6 +72,7 @@ namespace Preparation.Utility
         AddHpOrAp = 6,
         ShieldOrSpear = 7,
         RecoveryFromDizziness = 8,
+        CraftingBench = 9,
     }
     public enum CharacterType  // 职业
     {
@@ -102,11 +105,13 @@ namespace Preparation.Utility
         Encourage = 12,
         Inspire = 13,
         ShowTime = 14,
+        SparksNSplash = 15,
+        HaveTea = 16,
     }
     public enum PassiveSkillType
     {
         Null = 0,
-        BecomeInvisible = 1,
+        Lucky = 1,
         BecomeVampire = 2,
         NuclearWeapon = 3,
         SuperFast = 4,

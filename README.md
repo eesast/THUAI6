@@ -70,6 +70,8 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 3. 在新的分支上进行修改与开发
 4. 向 `eesast/THUAI6` 的 `dev` 分支提出 pull request
 5. 等待其他开发组成员 review 与 merge
+6. 待需要发布新版本时，从 `dev` 向 `main` 分支提出 pull request，等待 review 与 merge
+7. 若非必要，**严禁**直接修改 `main` 分支。若有极特殊情况需要直接修改 `main` 分支，则需要**立即**从 `main` 分支（反向）提出 pull request 到 `dev` 并 merge，以将更改和 Git 提交历史同步到 `dev` 分支，既保证 `dev` 为最新的内容，又防止 `dev` 与 `main` 分支在之后发生冲突
 
 ### 使用 Git 与 Github 时的注意事项
 
@@ -152,7 +154,7 @@ THUAI6 开发组成员与其他贡献者应当遵循以下流程：
 
 ## 文档风格
 
-仓库的文档使用 Markdown 语法，具体语法可以参照 [Markdown 语法文档](https://docs.github.com/zh/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#ignoring-markdown-formatting)。
+仓库的文档使用 Markdown 语法，具体语法可以参照 [Markdown 语法文档](https://docs.github.com/zh/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)。
 
 中文文档的书写须严格遵循：[中午技术文档规范](https://github.com/ruanyf/document-style-guide)、[中文文案排版指北](https://mazhuang.org/wiki/chinese-copywriting-guidelines/)，以写出更美观的中文文档。例如：[中文文字与西文文字间空格](https://github.com/ruanyf/document-style-guide/blob/master/docs/text.md#%E5%AD%97%E9%97%B4%E8%B7%9D)、[全角标点符号的正确使用](https://github.com/ruanyf/document-style-guide/blob/master/docs/marks.md)，等等。
 

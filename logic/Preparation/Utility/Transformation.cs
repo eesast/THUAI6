@@ -55,6 +55,8 @@ namespace Preparation.Utility
                     return Protobuf.PropType.ShieldOrSpear;
                 case Preparation.Utility.PropType.RecoveryFromDizziness:
                     return Protobuf.PropType.RecoveryFromDizziness;
+                case PropType.CraftingBench:
+                    return Protobuf.PropType.CraftingBench;
                 case Preparation.Utility.PropType.Key3:
                     return Protobuf.PropType.Key3;
                 case Preparation.Utility.PropType.Key5:
@@ -107,7 +109,8 @@ namespace Preparation.Utility
                     return PlayerState.Graduated;
                 case Preparation.Utility.PlayerStateType.Fixing:
                     return PlayerState.Learning;
-                case Preparation.Utility.PlayerStateType.LockingOrOpeningTheDoor:
+                case Preparation.Utility.PlayerStateType.LockingTheDoor:
+                case PlayerStateType.OpeningTheDoor:
                     return PlayerState.Locking;
                 case Preparation.Utility.PlayerStateType.OpeningTheChest:
                     return PlayerState.OpeningAChest;
@@ -116,6 +119,7 @@ namespace Preparation.Utility
                 case Preparation.Utility.PlayerStateType.Rescuing:
                     return PlayerState.Rescuing;
                 case Preparation.Utility.PlayerStateType.Stunned:
+                case Preparation.Utility.PlayerStateType.Charmed:
                     return PlayerState.Stunned;
                 case Preparation.Utility.PlayerStateType.Swinging:
                     return PlayerState.Swinging;
@@ -181,6 +185,8 @@ namespace Preparation.Utility
                     return Protobuf.BulletType.BombBomb;
                 case Preparation.Utility.BulletType.JumpyDumpty:
                     return Protobuf.BulletType.JumpyDumpty;
+                case Preparation.Utility.BulletType.Strike:
+                    return Protobuf.BulletType.Strike;
                 default:
                     return Protobuf.BulletType.NullBulletType;
             }

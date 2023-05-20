@@ -5,13 +5,11 @@ namespace GameClass.GameObj
     /// <summary>
     /// 发电机
     /// </summary>
-    public class Generator : GameObj
+    public class Generator : Immovable
     {
         public Generator(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Generator)
         {
-            this.place = PlaceType.Generator;
-            this.CanMove = false;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;

@@ -17,7 +17,7 @@ namespace GameClass.GameObj
             {
                 int score = 0;
                 foreach (var player in playerList)
-                    score += player.Score;
+                    score += (int)player.Score;
                 return score;
             }
         }

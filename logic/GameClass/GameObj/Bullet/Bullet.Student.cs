@@ -9,7 +9,7 @@ namespace GameClass.GameObj
             {
             }
             public override double BulletBombRange => 0;
-            public override double BulletAttackRange => 0;
+            public override double AttackDistance => 0;
             public override int AP => 7220;
             public override int Speed => 0;
             public override bool IsRemoteAttack => false;

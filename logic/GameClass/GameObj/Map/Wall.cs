@@ -5,13 +5,11 @@ namespace GameClass.GameObj
     /// <summary>
     /// 墙体
     /// </summary>
-    public class Wall : GameObj
+    public class Wall : Immovable
     {
         public Wall(XY initPos) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Wall)
         {
-            this.place = PlaceType.Wall;
-            this.CanMove = false;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Square;

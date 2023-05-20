@@ -3,18 +3,19 @@ using Preparation.Utility;
 
 namespace Preparation.Interface
 {
-    public interface ICharacter : IGameObj
+    public interface ICharacter : IMoveable
     {
-        public int TeamID { get; }
+        public long TeamID { get; }
         public int HP { get; set; }
-        public int Score { get; }
-        public void AddScore(int add);
+        public long Score { get; }
+        public void AddScore(long add);
         public double Vampire { get; }
         public PlayerStateType PlayerState { get; }
         public BulletType BulletOfPlayer { get; set; }
         public CharacterType CharacterType { get; }
-        public int BulletNum { get; }
-        public long ThreadNum { get; }
+        public ActiveSkill FindActiveSkill(ActiveSkillType activeSkillType);
+        public int UpdateBulletNum(int time);
+        public long SetPlayerState(PlayerStateType value = PlayerStateType.Null, IGameObj? obj = null);
 
         public bool IsGhost();
     }

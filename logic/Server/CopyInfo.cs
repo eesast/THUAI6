@@ -19,12 +19,8 @@ namespace Server
                     else return Student((Student)character);
                 case Preparation.Utility.GameObjType.Bullet:
                     return Bullet((Bullet)gameObj);
-                case Preparation.Utility.GameObjType.Prop:
-                    return Prop((Prop)gameObj);
                 case Preparation.Utility.GameObjType.BombedBullet:
                     return BombedBullet((BombedBullet)gameObj);
-                case Preparation.Utility.GameObjType.PickedProp:
-                    return PickedProp((PickedProp)gameObj);
                 case Preparation.Utility.GameObjType.Generator:
                     return Classroom((Generator)gameObj);
                 case Preparation.Utility.GameObjType.Chest:
@@ -37,6 +33,10 @@ namespace Server
                     else return null;
                 case Preparation.Utility.GameObjType.Door:
                     return Door((Door)gameObj);
+                case GameObjType.Item:
+                    return Prop((Item)gameObj);
+                case Preparation.Utility.GameObjType.Gadget:
+                    return Prop((Gadget)gameObj);
                 default: return null;
             }
         }
@@ -58,10 +58,9 @@ namespace Server
                 {
                     X = player.Position.x,
                     Y = player.Position.y,
-                    Speed = player.MoveSpeed,
+                    Speed = (int)player.MoveSpeed,
                     Determination = player.HP,
                     Addiction = player.GamingAddiction,
-                    Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)player.Place),
                     Guid = player.ID,
 
                     PlayerState = Transformation.ToPlayerState((PlayerStateType)player.PlayerState),
@@ -69,7 +68,7 @@ namespace Server
                     ViewRange = player.ViewRange,
                     Radius = player.Radius,
                     DangerAlert = (player.BgmDictionary.ContainsKey(BgmType.GhostIsComing)) ? player.BgmDictionary[BgmType.GhostIsComing] : 0,
-                    Score = player.Score,
+                    Score = (int)player.Score,
                     TreatProgress = player.DegreeOfTreatment,
                     RescueProgress = player.TimeOfRescue,
 
@@ -81,9 +80,9 @@ namespace Server
                 }
             };
 
-            foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
-                msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
-            for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count; ++i)
+            foreach (var keyValue in player.ActiveSkillDictionary)
+                msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value.TimeUntilActiveSkillAvailable);
+            for (int i = 0; i < GameData.maxNumOfSkill - player.ActiveSkillDictionary.Count; ++i)
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
 
             foreach (var value in player.PropInventory)
@@ -107,12 +106,11 @@ namespace Server
                 {
                     X = player.Position.x,
                     Y = player.Position.y,
-                    Speed = player.MoveSpeed,
-                    Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)player.Place),
+                    Speed = (int)player.MoveSpeed,
 
                     TrickerType = Transformation.ToTrickerType(player.CharacterType),
                     Guid = player.ID,
-                    Score = player.Score,
+                    Score = (int)player.Score,
                     PlayerId = player.PlayerID,
                     ViewRange = player.ViewRange,
                     Radius = player.Radius,
@@ -123,10 +121,9 @@ namespace Server
                     BulletType = Transformation.ToBulletType((Preparation.Utility.BulletType)player.BulletOfPlayer)
                 }
             };
-
-            foreach (var keyValue in player.TimeUntilActiveSkillAvailable)
-                msg.TrickerMessage.TimeUntilSkillAvailable.Add(keyValue.Value);
-            for (int i = 0; i < GameData.maxNumOfSkill - player.TimeUntilActiveSkillAvailable.Count; ++i)
+            foreach (var keyValue in player.ActiveSkillDictionary)
+                msg.TrickerMessage.TimeUntilSkillAvailable.Add(keyValue.Value.TimeUntilActiveSkillAvailable);
+            for (int i = 0; i < GameData.maxNumOfSkill - player.ActiveSkillDictionary.Count; ++i)
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(-1);
 
             foreach (var value in player.PropInventory)
@@ -152,7 +149,6 @@ namespace Server
                     FacingDirection = bullet.FacingDirection.Angle(),
                     Guid = bullet.ID,
                     Team = (bullet.Parent!.IsGhost()) ? PlayerType.TrickerPlayer : PlayerType.StudentPlayer,
-                    Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)bullet.Place),
                     BombRange = bullet.BulletBombRange,
                     Speed = bullet.Speed
                 }
@@ -160,7 +156,7 @@ namespace Server
             return msg;
         }
 
-        private static MessageOfObj Prop(Prop prop)
+        private static MessageOfObj Prop(Gadget prop)
         {
             MessageOfObj msg = new()
             {
@@ -170,8 +166,23 @@ namespace Server
                     X = prop.Position.x,
                     Y = prop.Position.y,
                     FacingDirection = prop.FacingDirection.Angle(),
-                    Guid = prop.ID,
-                    Place = Transformation.ToPlaceType((Preparation.Utility.PlaceType)prop.Place)
+                    Guid = prop.ID
+                }
+            };
+            return msg;
+        }
+
+        private static MessageOfObj Prop(Item prop)
+        {
+            MessageOfObj msg = new()
+            {
+                PropMessage = new()
+                {
+                    Type = Transformation.ToPropType(prop.GetPropType()),
+                    X = prop.Position.x,
+                    Y = prop.Position.y,
+                    FacingDirection = prop.FacingDirection.Angle(),
+                    Guid = prop.ID
                 }
             };
             return msg;
@@ -192,18 +203,6 @@ namespace Server
                 }
             };
             //   Debugger.Output(bombedBullet, bombedBullet.Place.ToString()+" "+bombedBullet.Position.ToString());
-            return msg;
-        }
-
-        private static MessageOfObj PickedProp(PickedProp pickedProp)
-        {
-            MessageOfObj msg = new MessageOfObj(); // MessageOfObj中没有PickedProp
-            /*msg.MessageOfPickedProp = new MessageOfPickedProp();
-
-            msg.MessageOfPickedProp.MappingID = pickedProp.MappingID;
-            msg.MessageOfPickedProp.X = pickedProp.PropHasPicked.Position.x;
-            msg.MessageOfPickedProp.Y = pickedProp.PropHasPicked.Position.y;
-            msg.MessageOfPickedProp.FacingDirection = pickedProp.PropHasPicked.FacingDirection;*/
             return msg;
         }
 
@@ -256,7 +255,7 @@ namespace Server
                 {
                     X = door.Position.x,
                     Y = door.Position.y,
-                    Progress = door.OpenOrLockDegree,
+                    Progress = door.LockDegree,
                     IsOpen = door.IsOpen
                 }
             };

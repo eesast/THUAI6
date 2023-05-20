@@ -74,7 +74,7 @@ C++ 通信组件与选手接口
   - 将之前提取的 Debug 和 Release 的 `.lib` 分别放在项目中的单独的文件夹里（THUAI6 使用的是 `CAPI\cpp\lib\debug` 和 `CAPI\cpp\lib\release`），并[使用 `.gitignore` 忽略掉](https://github.com/eesast/THUAI6/blob/c8e1fbe299c67a6e101fa02e85bcc971acd0f48b/CAPI/cpp/.gitignore#L502)
   - 在项目属性的“链接器”的首页的“附加库目录”中分别配置 Debug 和 Release 的 [`.lib` 文件的相应路径](https://github.com/eesast/THUAI6/blob/c8e1fbe299c67a6e101fa02e85bcc971acd0f48b/CAPI/cpp/API/API.vcxproj#L166)
   - 在项目属性中的“链接器”的“输入”的“附加依赖库”中分别配置 Debug 和 Release [所需要链接的库的文件名](https://github.com/eesast/THUAI6/blob/c8e1fbe299c67a6e101fa02e85bcc971acd0f48b/CAPI/cpp/API/API.vcxproj#L165)。注意 Debug 和 Release 链接的库可能并不完全相同，建议在 cmd 中使用 `dir /b` 将其自动列举并复制。还需要注意需要手动指定链接一些 Windows 自带的 `lib`，例如 `Ws2_32.lib`、`Crypt32.lib`、`Iphlpapi.lib` 等。如果生成过程中不通过，表示找不到一些函数，则在 Google 中搜索该函数，如果发现是 Windows 系统的 API 函数则会搜到[微软官方文档](https://learn.microsoft.com) 的对应链接的页面，则在页面最下方会表明它所在的 `.lib`（例如 [`CreateProcessA` 的页面](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa#requirements)），加进去即可
-  - 然后进行生成解决方案。如果感觉编译的速度过慢，可以在项目属性的 `C/C++` 的“所有选项”中搜索并行编译，并开启之（`/Qpar`）。不过由于 THUAI6 的疏忽，忘记开启了并行编译
+  - 然后进行生成解决方案。如果感觉编译的速度过慢，可以在项目属性的 `C/C++` 的“所有选项”中搜索多处理器编译，并[开启（`/MP`）](https://github.com/eesast/THUAI6/blob/ad4db599f97449786e6c910940bf4f69224d5408/CAPI/cpp/API/API.vcxproj#L162)
   - 然后开始运行。如果提示缺少一些 DLL，可以把之前保存的 `.dll` 文件（如果有的话）放在与 `.exe` 相同的目录下。该目录为**与 `.sln` 相同目录的**（不是与 `.vcxproj` 相同目录的）`x64\Debug` 和 `x64\Release`
   - 如果 x64 的 Debug 和 x64 的 Release 均生成成功，那么找一台没配过的电脑再试一次
   - 随便写点 AI 代码，重新生成解决方案，确认成功后发布选手包

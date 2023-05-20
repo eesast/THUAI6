@@ -354,8 +354,9 @@ namespace Gaming
                                 || character.PlayerState == PlayerStateType.ClimbingThroughWindows)
                                 && XY.DistanceFloor3(character.Position, player.Position) <= player.ViewRange / 3)
                             {
-                                if (CharacterManager.BeStunned(character, GameData.timeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP) / GameData.basicApOfGhost) > 0)
-                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenPunish + GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP) / GameData.basicApOfGhost));
+                                int stunTime = (GameData.timeOfGhostStunnedWhenPunish + (int)((GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP) / GameData.basicApOfGhost))) / characterManager.FactorTeacher;
+                                if (CharacterManager.BeStunned(character, stunTime) > 0)
+                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(stunTime) / characterManager.FactorTeacher);
                                 break;
                             }
                         }

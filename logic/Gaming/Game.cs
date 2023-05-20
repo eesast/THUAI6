@@ -28,6 +28,7 @@ namespace Gaming
         public List<Team> TeamList => teamList;
         private readonly Map gameMap;
         public Map GameMap => gameMap;
+
         //       private readonly int numOfTeam;
         public long AddPlayer(PlayerInitInfo playerInitInfo)
         {

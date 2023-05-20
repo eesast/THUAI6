@@ -472,9 +472,9 @@ namespace THUAI62Proto
     {
         protobuf::SendMsg sendMsg;
         if (binary)
-            sendMsg.set_binary_message(msg);
+            sendMsg.set_binary_message(std::move(msg));
         else
-            sendMsg.set_text_message(msg);
+            sendMsg.set_text_message(std::move(msg));
         sendMsg.set_to_player_id(toID);
         sendMsg.set_player_id(id);
         return sendMsg;

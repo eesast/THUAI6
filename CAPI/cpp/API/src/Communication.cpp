@@ -119,7 +119,7 @@ bool Communication::SendMessage(int64_t toID, std::string message, bool binary, 
     }
     protobuf::BoolRes sendMessageResult;
     ClientContext context;
-    auto request = THUAI62Proto::THUAI62ProtobufSend(message, toID, binary, playerID);
+    auto request = THUAI62Proto::THUAI62ProtobufSend(std::move(message), toID, binary, playerID);
     auto status = THUAI6Stub->SendMessage(&context, request, &sendMessageResult);
     if (status.ok())
         return sendMessageResult.act_success();

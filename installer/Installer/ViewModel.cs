@@ -20,8 +20,8 @@ namespace starter.viewmodel.settings
     public class SettingsViewModel : NotificationObject
     {
         //定义BackgroundWorker
-        BackgroundWorker asyncDownloader;
-        BackgroundWorker asyncUpdater;
+        BackgroundWorker? asyncDownloader;
+        BackgroundWorker? asyncUpdater;
         BackgroundWorker asyncInitializer;
         /// <summary>
         /// Model object
@@ -202,6 +202,11 @@ namespace starter.viewmodel.settings
 
         private void AsyncUpdater_DoWork(object? sender, DoWorkEventArgs e)
         {
+            if (asyncUpdater is null)
+            {
+                throw new InvalidOperationException("asyncUpdater is null");
+            }
+
             if (asyncUpdater.CancellationPending)
             {
                 e.Cancel = true;
@@ -230,6 +235,11 @@ namespace starter.viewmodel.settings
 
         private void AsyncDownloader_DoWork(object? sender, DoWorkEventArgs e)
         {
+            if (asyncDownloader is null)
+            {
+                throw new InvalidOperationException("asyncDownloader is null");
+            }
+
             if (asyncDownloader.CancellationPending)
             {
                 e.Cancel = true;
@@ -710,7 +720,7 @@ namespace starter.viewmodel.settings
                                 {
                                     Status = SettingsModel.Status.successful;
                                 }*/
-                                if (asyncDownloader.IsBusy)
+                                if (asyncDownloader?.IsBusy ?? true)
                                     return;
                                 else
                                 {
@@ -776,7 +786,7 @@ namespace starter.viewmodel.settings
                             }
                             else
                                 Status = SettingsModel.Status.error;*/
-                            if (asyncUpdater.IsBusy)
+                            if (asyncUpdater?.IsBusy ?? true)
                                 return;
                             else
                                 asyncUpdater.RunWorkerAsync("Manual");
@@ -905,7 +915,7 @@ namespace starter.viewmodel.settings
                         {
                             Status = SettingsModel.Status.working;
                             this.RaisePropertyChanged("ProgressVis");
-                            if (asyncUpdater.IsBusy)
+                            if (asyncUpdater?.IsBusy ?? true)
                                 return;
                             else
                                 asyncUpdater.RunWorkerAsync("Auto");

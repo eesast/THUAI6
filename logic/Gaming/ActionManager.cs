@@ -126,8 +126,6 @@ namespace Gaming
 
             public bool OpenDoorway(Student player)
             {
-                if (!(player.Commandable()))
-                    return false;
                 Doorway? doorwayToOpen = (Doorway?)gameMap.OneForInteract(player.Position, GameObjType.Doorway);
                 if (doorwayToOpen == null) return false;
 
@@ -137,7 +135,16 @@ namespace Gaming
           (
               () =>
               {
-                  //player.ThreadNum.WaitOne();
+                  player.ThreadNum.WaitOne();
+                  lock (player.ActionLock)
+                  {
+                      if (stateNum != player.StateNum)
+                      {
+                          player.ThreadNum.Release();
+                          return;
+                      }
+                  }
+                  doorwayToOpen.TryToOpen();
                   Thread.Sleep(GameData.degreeOfOpenedDoorway - doorwayToOpen.OpenDegree);
                   lock (player.ActionLock)
                   {
@@ -145,6 +152,7 @@ namespace Gaming
                       {
                           player.SetPlayerStateNaturally();
                           doorwayToOpen.FinishOpenning();
+                          player.ThreadNum.Release();
                       }
                   }
               }

@@ -516,10 +516,16 @@ namespace GameClass.GameObj
                         ((Chest)whatInteractingWith!).StopOpen();
                         return ChangePlayerState(value, gameObj);
                     case PlayerStateType.OpeningTheDoorway:
-                        Doorway doorway = (Doorway)whatInteractingWith!;
-                        doorway.StopOpenning();
-                        return ChangePlayerState(value, gameObj);
-
+                        try
+                        {
+                            Doorway doorway = (Doorway)whatInteractingWith!;
+                            doorway.StopOpenning();
+                            return ChangePlayerState(value, gameObj);
+                        }
+                        finally
+                        {
+                            ThreadNum.Release();
+                        }
                     case PlayerStateType.OpeningTheDoor:
                         Door door = (Door)whatInteractingWith!;
                         try

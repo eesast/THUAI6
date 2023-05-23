@@ -159,14 +159,14 @@ class Teacher:
     moveSpeed = (int)(0.9 * Constants.basicStudentSpeed)
     maxHp = (int)(10.0 * Constants.basicHp)
     maxAddiction = (int)(10.0 * Constants.basicMaxGamingAddiction)
-    LearnSpeed = (int)( Constants.basicLearnSpeed* 50//123)
+    LearnSpeed = (int)(Constants.basicLearnSpeed * 50 // 123)
     EncourageSpeed = (int)(0.8 * Constants.basicEncourageSpeed)
     concealment = 0.5 * Constants.basicConcealment
     alertnessRadius = (int)(Constants.basicStudentAlertnessRadius * 2 // 3)
     viewRange = (int)(0.8 * Constants.basicStudentViewRange)
     speedOfOpeningOrLocking = (int)(1.0 * Constants.basicSpeedOfOpeningOrLocking)
     speedOfClimbingThroughWindows = (int)(
-        Constants.basicStudentSpeedOfClimbingThroughWindows* 1000 // 1222
+        Constants.basicStudentSpeedOfClimbingThroughWindows * 1000 // 1222
     )
     speedOfOpenChest = (int)(1.0 * Constants.basicSpeedOfOpenChest)
 
@@ -305,7 +305,7 @@ class WriteAnswers:
 
 class SummonGolem:
     skillCD = (int)(Constants.commonSkillCD * 4 // 3)
-    durationTime = (int)(6.0 * Constants.commonSkillTime)
+    durationTime = (int)(0.6 * Constants.commonSkillTime)
 
 
 class CommonAttackOfTricker:

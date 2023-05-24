@@ -30,7 +30,7 @@ namespace Gaming
                     },
                     EndMove: obj =>
                     {
-                        Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
+                        Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount);
                         if (obj.CanMove && ((Bullet)obj).TypeOfBullet != BulletType.JumpyDumpty)
                             BulletBomb((Bullet)obj, null);
                         obj.ReSetCanMove(false);
@@ -201,6 +201,8 @@ namespace Gaming
 
             public bool Attack(Character player, double angle)
             {                                                    // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
+                if (!player.Commandable()) return false;
+
                 Bullet? bullet = player.Attack(angle, gameMap.Timer.nowTime());
 
                 if (bullet != null)
@@ -212,14 +214,24 @@ namespace Gaming
 
                     if (bullet.CastTime > 0)
                     {
-                        player.SetPlayerState(PlayerStateType.TryingToAttack);
-                        long threadNum = player.StateNum;
+                        long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.TryingToAttack);
+                        if (stateNum == -1)
+                        {
+                            TryRemoveBullet(bullet);
+                            return false;
+                        }
 
                         new Thread
                                 (() =>
                                 {
+                                    player.ThreadNum.WaitOne();
+                                    if (!player.StartThread(stateNum, RunningStateType.RunningActively))
+                                    {
+                                        TryRemoveBullet(bullet);
+                                        return;
+                                    }
                                     new FrameRateTaskExecutor<int>(
-                                    loopCondition: () => threadNum == player.StateNum && gameMap.Timer.IsGaming,
+                                    loopCondition: () => stateNum == player.StateNum && gameMap.Timer.IsGaming,
                                     loopToDo: () =>
                                     {
                                     },
@@ -231,11 +243,8 @@ namespace Gaming
 
                                     if (gameMap.Timer.IsGaming)
                                     {
-                                        if (threadNum == player.StateNum)
-                                        {
-                                            player.SetPlayerState();
-                                        }
-                                        else TryRemoveBullet(bullet);
+                                        if (!player.ResetPlayerState(stateNum))
+                                            TryRemoveBullet(bullet);
                                     }
                                 }
                                 )

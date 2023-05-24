@@ -75,6 +75,7 @@ namespace GameClass.GameObj
         {
             if (Interlocked.Increment(ref numOfNoHpStudent) == GameData.numOfStudent)
             {
+                AddScoreFromAddict();
                 Timer.IsGaming = false;
                 return;
             }
@@ -119,6 +120,10 @@ namespace GameClass.GameObj
             {
                 GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
             }
+        }
+        private void AddScoreFromAddict()
+        {
+
         }
 
 
@@ -182,6 +187,26 @@ namespace GameClass.GameObj
             }
             return player;
         }
+        public Character FindGhost()
+        {
+            gameObjLockDict[GameObjType.Character].EnterReadLock();
+            try
+            {
+                int i;
+                for (i = 0; i < (gameObjDict[GameObjType.Character]).Count - 1; ++i)
+                {
+                    if (((Character)gameObjDict[GameObjType.Character][i]).IsGhost())
+                    {
+                        return ((Character)gameObjDict[GameObjType.Character][i]);
+                    }
+                }
+                return ((Character)gameObjDict[GameObjType.Character][i]);
+            }
+            finally
+            {
+                gameObjLockDict[GameObjType.Character].ExitReadLock();
+            }
+        }
         public Character? FindPlayerToAction(long playerID)
         {
             Character? player = null;
@@ -215,61 +240,7 @@ namespace GameClass.GameObj
             }
             return player;
         }
-        public bool Remove(GameObj gameObj)
-        {
-            GameObj? ToDel = null;
-            GameObjLockDict[gameObj.Type].EnterWriteLock();
-            try
-            {
-                foreach (GameObj obj in GameObjDict[gameObj.Type])
-                {
-                    if (gameObj.ID == obj.ID)
-                    {
-                        ToDel = obj;
-                        break;
-                    }
-                }
-                if (ToDel != null)
-                {
-                    GameObjDict[gameObj.Type].Remove(ToDel);
-                    ToDel.TryToRemove();
-                }
-            }
-            finally
-            {
-                GameObjLockDict[gameObj.Type].ExitWriteLock();
-            }
-            return ToDel != null;
-        }
-        public bool RemoveJustFromMap(GameObj gameObj)
-        {
-            GameObjLockDict[gameObj.Type].EnterWriteLock();
-            try
-            {
-                if (GameObjDict[gameObj.Type].Remove(gameObj))
-                {
-                    gameObj.TryToRemove();
-                    return true;
-                }
-                return false;
-            }
-            finally
-            {
-                GameObjLockDict[gameObj.Type].ExitWriteLock();
-            }
-        }
-        public void Add(GameObj gameObj)
-        {
-            GameObjLockDict[gameObj.Type].EnterWriteLock();
-            try
-            {
-                GameObjDict[gameObj.Type].Add(gameObj);
-            }
-            finally
-            {
-                GameObjLockDict[gameObj.Type].ExitWriteLock();
-            }
-        }
+
         public GameObj? OneForInteract(XY Pos, GameObjType gameObjType)
         {
             GameObj? GameObjForInteract = null;
@@ -375,6 +346,7 @@ namespace GameClass.GameObj
             }
             return GameObjForInteract;
         }
+
         public bool CanSee(Character player, GameObj gameObj)
         {
             if ((gameObj.Type == GameObjType.Character) && ((Character)gameObj).HasInvisible) return false;
@@ -422,6 +394,63 @@ namespace GameClass.GameObj
             }
             return true;
         }
+
+        public bool Remove(GameObj gameObj)
+        {
+            GameObj? ToDel = null;
+            GameObjLockDict[gameObj.Type].EnterWriteLock();
+            try
+            {
+                foreach (GameObj obj in GameObjDict[gameObj.Type])
+                {
+                    if (gameObj.ID == obj.ID)
+                    {
+                        ToDel = obj;
+                        break;
+                    }
+                }
+                if (ToDel != null)
+                {
+                    GameObjDict[gameObj.Type].Remove(ToDel);
+                    ToDel.TryToRemove();
+                }
+            }
+            finally
+            {
+                GameObjLockDict[gameObj.Type].ExitWriteLock();
+            }
+            return ToDel != null;
+        }
+        public bool RemoveJustFromMap(GameObj gameObj)
+        {
+            GameObjLockDict[gameObj.Type].EnterWriteLock();
+            try
+            {
+                if (GameObjDict[gameObj.Type].Remove(gameObj))
+                {
+                    gameObj.TryToRemove();
+                    return true;
+                }
+                return false;
+            }
+            finally
+            {
+                GameObjLockDict[gameObj.Type].ExitWriteLock();
+            }
+        }
+        public void Add(GameObj gameObj)
+        {
+            GameObjLockDict[gameObj.Type].EnterWriteLock();
+            try
+            {
+                GameObjDict[gameObj.Type].Add(gameObj);
+            }
+            finally
+            {
+                GameObjLockDict[gameObj.Type].ExitWriteLock();
+            }
+        }
+
         public Map(uint[,] mapResource)
         {
             gameObjDict = new Dictionary<GameObjType, IList<IGameObj>>();

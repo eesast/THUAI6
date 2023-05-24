@@ -228,6 +228,7 @@ namespace Gaming
                                     if (!player.StartThread(stateNum, RunningStateType.RunningActively))
                                     {
                                         TryRemoveBullet(bullet);
+                                        player.ThreadNum.Release();
                                         return;
                                     }
                                     new FrameRateTaskExecutor<int>(
@@ -241,6 +242,7 @@ namespace Gaming
                       )
                           .Start();
 
+                                    player.ThreadNum.Release();
                                     if (gameMap.Timer.IsGaming)
                                     {
                                         if (!player.ResetPlayerState(stateNum))

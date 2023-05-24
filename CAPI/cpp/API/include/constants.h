@@ -317,7 +317,7 @@ namespace Constants
     struct SummonGolem
     {
         SCCI int32_t skillCD = commonSkillCD * 4 / 3;
-        SCCI int32_t durationTime = commonSkillTime * 6;
+        SCCI int32_t durationTime = commonSkillTime * 3 / 5;
     };
 
     struct CommonAttackOfTricker

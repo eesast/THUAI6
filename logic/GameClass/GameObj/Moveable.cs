@@ -29,6 +29,20 @@ namespace GameClass.GameObj
             }
         }
 
+        protected RunningStateType runningState = RunningStateType.Null;
+        public RunningStateType RunningState
+        {
+            get
+            {
+                lock (actionLock) return runningState;
+            }
+            set
+            {
+                lock (actionLock)
+                    runningState = value;
+            }
+        }
+
         public override XY Position
         {
             get

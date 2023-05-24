@@ -15,7 +15,8 @@ namespace Preparation.Interface
         public CharacterType CharacterType { get; }
         public ActiveSkill FindActiveSkill(ActiveSkillType activeSkillType);
         public int UpdateBulletNum(int time);
-        public long SetPlayerState(PlayerStateType value = PlayerStateType.Null, IGameObj? obj = null);
+        public long SetPlayerState(RunningStateType running, PlayerStateType value = PlayerStateType.Null, IGameObj? obj = null);
+        public bool ResetPlayerState(long state);
 
         public bool IsGhost();
     }

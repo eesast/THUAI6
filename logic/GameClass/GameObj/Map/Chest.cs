@@ -1,5 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using System;
 
 namespace GameClass.GameObj
 {
@@ -22,19 +23,20 @@ namespace GameClass.GameObj
         public int OpenStartTime => openStartTime;
         private Character? whoOpen = null;
         public Character? WhoOpen => whoOpen;
-        public void Open(int startTime, Character character)
+        public bool Open(Character character)
         {
             lock (GameObjReaderWriterLock)
             {
-                openStartTime = startTime;
+                if (whoOpen != null) return false;
+                openStartTime = Environment.TickCount;
                 whoOpen = character;
             }
+            return true;
         }
         public void StopOpen()
         {
             lock (GameObjReaderWriterLock)
             {
-                openStartTime = 0;
                 whoOpen = null;
             }
         }

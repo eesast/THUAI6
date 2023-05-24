@@ -133,7 +133,7 @@ namespace Server
                             currentGameInfo.ObjMessage.Add(currentMapMsg);
                             IsSpectatorJoin = false;
                         }
-                        int time = game.GameMap.Timer.nowTime();
+                        int time = Environment.TickCount;
                         foreach (GameObj gameObj in gameObjList)
                         {
                             MessageOfObj? msg = CopyInfo.Auto(gameObj, time);

@@ -52,13 +52,7 @@ namespace GameClass.GameObj
         }
         public void TryStopSkill()
         {
-            lock (Parent!.ActionLock)
-            {
-                if (Parent!.StateNum == parentStateNum)
-                {
-                    Parent!.SetPlayerState();
-                }
-            }
+            Parent!.ResetPlayerState(parentStateNum);
         }
         public override PropType GetPropType() => PropType.CraftingBench;
     }

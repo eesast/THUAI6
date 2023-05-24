@@ -1,6 +1,7 @@
 ﻿using Preparation.Utility;
 using Preparation.Interface;
 using System;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
@@ -108,16 +109,15 @@ namespace GameClass.GameObj
         private int timeOfRescue = 0;
         public int TimeOfRescue
         {
-            get => timeOfRescue;
-            set
-            {
-                if (value > 0)
-                    lock (gameObjLock)
-                        timeOfRescue = (value < GameData.basicTimeOfRescue) ? value : GameData.basicTimeOfRescue;
-                else
-                    lock (gameObjLock)
-                        timeOfRescue = 0;
-            }
+            get => Interlocked.CompareExchange(ref timeOfRescue, -1, -1);
+        }
+        public bool AddTimeOfRescue(int value)
+        {
+            return Interlocked.Add(ref timeOfRescue, value) >= GameData.basicTimeOfRescue;
+        }
+        public void SetTimeOfRescue(int value)
+        {
+            Interlocked.Exchange(ref timeOfRescue, value);
         }
 
         public Student(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)

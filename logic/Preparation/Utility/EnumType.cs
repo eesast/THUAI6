@@ -27,6 +27,14 @@ namespace Preparation.Utility
         Charmed = 18,
         OpeningTheDoor = 19,
     }
+    public enum RunningStateType
+    {
+        Null = 0,
+        Waiting = 1,
+        RunningActively = 2,
+        RunningSleepily = 3,
+        RunningForcibly = 4,
+    }
     public enum GameObjType
     {
         Null = 0,

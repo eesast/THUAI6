@@ -418,34 +418,64 @@ namespace GameClass.GameObj
                            || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
         }
         private GameObj? whatInteractingWith = null;
-        public GameObj? WhatInteractingWith => whatInteractingWith;
+        public GameObj? WhatInteractingWith
+        {
+            get
+            {
+                lock (actionLock)
+                {
+                    return whatInteractingWith;
+                }
+            }
+        }
 
-        private long ChangePlayerState(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        public bool StartThread(long stateNum, RunningStateType runningState)
+        {
+            lock (ActionLock)
+            {
+                if (this.StateNum == stateNum)
+                {
+                    this.runningState = runningState;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private long ChangePlayerState(RunningStateType running, PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
             //只能被SetPlayerState引用
+            if (runningState == RunningStateType.RunningSleepily)
+            {
+                ThreadNum.Release();
+            }
+            runningState = running;
             whatInteractingWith = gameObj;
             playerState = value;
-            //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
             return ++stateNum;
         }
 
-        private long ChangePlayerStateInOneThread(PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
+        private long ChangePlayerStateInOneThread(RunningStateType running, PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
         {
+            if (runningState == RunningStateType.RunningSleepily)
+            {
+                ThreadNum.Release();
+            }
+            runningState = running;
             //只能被SetPlayerState引用
             whatInteractingWith = gameObj;
             playerState = value;
-            //Debugger.Output(this,playerState.ToString()+" "+IsMoving.ToString());
             return stateNum;
         }
 
-
-        public long SetPlayerState(PlayerStateType value = PlayerStateType.Null, IGameObj? obj = null)
+        public long SetPlayerState(RunningStateType runningState, PlayerStateType value = PlayerStateType.Null, IGameObj? obj = null)
         {
             GameObj? gameObj = (GameObj?)obj;
             lock (actionLock)
             {
                 PlayerStateType nowPlayerState = PlayerState;
                 if (nowPlayerState == value && value != PlayerStateType.UsingSkill) return -1;
+                GameObj? lastObj = whatInteractingWith;
                 switch (nowPlayerState)
                 {
                     case PlayerStateType.Escaped:
@@ -454,119 +484,85 @@ namespace GameClass.GameObj
 
                     case PlayerStateType.Addicted:
                         if (value == PlayerStateType.Rescued)
-                            return ChangePlayerStateInOneThread(value, gameObj);
+                            return ChangePlayerStateInOneThread(runningState, value, gameObj);
                         else if (value == PlayerStateType.Null || value == PlayerStateType.Deceased)
-                            return ChangePlayerState(value, gameObj);
+                            return ChangePlayerState(runningState, value, gameObj);
                         else return -1;
                     case PlayerStateType.Rescued:
                         if (value == PlayerStateType.Addicted)
-                            return ChangePlayerStateInOneThread(value, gameObj);
+                            return ChangePlayerStateInOneThread(runningState, value, gameObj);
                         else if (value == PlayerStateType.Null || value == PlayerStateType.Deceased)
-                            return ChangePlayerState(value, gameObj);
+                            return ChangePlayerState(runningState, value, gameObj);
                         else return -1;
 
                     case PlayerStateType.TryingToAttack:
                         if (value == PlayerStateType.Addicted || value == PlayerStateType.Swinging
                             || value == PlayerStateType.Deceased || value == PlayerStateType.Stunned
                             || value == PlayerStateType.Charmed || value == PlayerStateType.Null)
-                            return ChangePlayerState(value, gameObj);
+                            return ChangePlayerState(runningState, value, gameObj);
                         else return -1;
                     case PlayerStateType.Stunned:
                     case PlayerStateType.Charmed:
                         if (value == PlayerStateType.Addicted || value == PlayerStateType.Deceased
                             || value == PlayerStateType.Null)
-                            return ChangePlayerState(value, gameObj);
+                            return ChangePlayerState(runningState, value, gameObj);
                         else return -1;
                     case PlayerStateType.Swinging:
                         if (value == PlayerStateType.Addicted
                             || value == PlayerStateType.Deceased || value == PlayerStateType.Stunned
                             || value == PlayerStateType.Charmed || value == PlayerStateType.Null)
-                        {
-                            try
-                            {
-                                return ChangePlayerState(value, gameObj);
-                            }
-                            finally
-                            {
-                                ThreadNum.Release();
-                            }
-                        }
+                            return ChangePlayerState(runningState, value, gameObj);
                         else return -1;
                     case PlayerStateType.ClimbingThroughWindows:
                         if (value == PlayerStateType.Addicted
                              || value == PlayerStateType.Deceased || value == PlayerStateType.Stunned
                              || value == PlayerStateType.Charmed || value == PlayerStateType.Null)
                         {
-                            Window window = (Window)WhatInteractingWith!;
-                            try
-                            {
-                                window.FinishClimbing();
-                                return ChangePlayerState(value, gameObj);
-                            }
-                            finally
-                            {
-                                if (window.Stage.x == 0)
-                                    ThreadNum.Release();
-                                else ReSetPos(window.Stage);
-                            }
+                            Window window = (Window)lastObj!;
+                            if (window.Stage.x != 0) ReSetPos(window.Stage);
+                            window.FinishClimbing();
+                            return ChangePlayerState(runningState, value, gameObj);
                         }
                         else return -1;
 
                     case PlayerStateType.OpeningTheChest:
-                        ((Chest)whatInteractingWith!).StopOpen();
-                        return ChangePlayerState(value, gameObj);
+                        if (value == PlayerStateType.Rescued) return -1;
+                        ((Chest)lastObj!).StopOpen();
+                        return ChangePlayerState(runningState, value, gameObj);
                     case PlayerStateType.OpeningTheDoorway:
-                        try
-                        {
-                            Doorway doorway = (Doorway)whatInteractingWith!;
-                            doorway.StopOpenning();
-                            return ChangePlayerState(value, gameObj);
-                        }
-                        finally
-                        {
-                            ThreadNum.Release();
-                        }
+                        if (value == PlayerStateType.Rescued) return -1;
+                        Doorway doorway = (Doorway)lastObj!;
+                        doorway.StopOpenning();
+                        return ChangePlayerState(runningState, value, gameObj);
                     case PlayerStateType.OpeningTheDoor:
-                        Door door = (Door)whatInteractingWith!;
-                        try
+                        if (value == PlayerStateType.Rescued) return -1;
+                        Door door = (Door)lastObj!;
+                        door.StopOpen();
+                        ReleaseTool(door.DoorNum switch
                         {
-                            door.StopOpen();
-                            ReleaseTool(door.DoorNum switch
-                            {
-                                3 => PropType.Key3,
-                                5 => PropType.Key5,
-                                _ => PropType.Key6,
-                            }
-                            );
-                            return ChangePlayerState(value, gameObj);
+                            3 => PropType.Key3,
+                            5 => PropType.Key5,
+                            _ => PropType.Key6,
                         }
-                        finally
-                        {
-                            ThreadNum.Release();
-                        }
+                        );
+                        return ChangePlayerState(runningState, value, gameObj);
                     case PlayerStateType.UsingSkill:
                         {
+                            if (value == PlayerStateType.Rescued) return -1;
                             switch (CharacterType)
                             {
                                 case CharacterType.TechOtaku:
                                     {
-                                        if (typeof(CraftingBench).IsInstanceOfType(whatInteractingWith))
+                                        if (typeof(CraftingBench).IsInstanceOfType(lastObj))
                                         {
-                                            try
-                                            {
-                                                ((CraftingBench)whatInteractingWith!).StopSkill();
-                                                return ChangePlayerState(value, gameObj);
-                                            }
-                                            finally
-                                            {
-                                                ThreadNum.Release();
-                                            }
+                                            ((CraftingBench)lastObj!).StopSkill();
+                                            return ChangePlayerState(runningState, value, gameObj);
                                         }
                                         else
                                         {
                                             if (value != PlayerStateType.UsingSkill)
                                                 ((UseRobot)FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID = (int)playerID;
-                                            return ChangePlayerState(value, gameObj);
+                                            return ChangePlayerState(runningState, value, gameObj);
                                         }
                                     }
                                 case CharacterType.Assassin:
@@ -574,14 +570,15 @@ namespace GameClass.GameObj
                                     else
                                     {
                                         TryDeleteInvisible();
-                                        return ChangePlayerState(value, gameObj);
+                                        return ChangePlayerState(runningState, value, gameObj);
                                     }
                                 default:
-                                    return ChangePlayerState(value, gameObj);
+                                    return ChangePlayerState(runningState, value, gameObj);
                             }
                         }
                     default:
-                        return ChangePlayerState(value, gameObj);
+                        if (value == PlayerStateType.Rescued) return -1;
+                        return ChangePlayerState(runningState, value, gameObj);
                 }
             }
         }
@@ -590,9 +587,23 @@ namespace GameClass.GameObj
         {
             lock (actionLock)
             {
+                runningState = RunningStateType.Null;
                 whatInteractingWith = null;
                 playerState = PlayerStateType.Null;
                 return ++stateNum;
+            }
+        }
+
+        public bool ResetPlayerState(long state)
+        {
+            lock (actionLock)
+            {
+                if (state != stateNum) return false;
+                runningState = RunningStateType.Null;
+                whatInteractingWith = null;
+                playerState = PlayerStateType.Null;
+                ++stateNum;
+                return true;
             }
         }
 
@@ -600,9 +611,9 @@ namespace GameClass.GameObj
         {
             lock (actionLock)
             {
-                if (!TryToRemove()) return false;
+                if (SetPlayerState(RunningStateType.RunningForcibly, playerStateType) == -1) return false;
+                TryToRemove();
                 ReSetCanMove(false);
-                SetPlayerState(playerStateType);
                 position = GameData.PosWhoDie;
             }
             return true;

@@ -85,6 +85,9 @@ namespace Gaming
                 Generator? generatorForFix = (Generator?)gameMap.OneForInteract(player.Position, GameObjType.Generator);
                 if (generatorForFix == null) return false;
 
+                if (generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
+                    return false;
+
                 long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.Fixing);
                 if (stateNum == -1) return false;
 
@@ -93,11 +96,6 @@ namespace Gaming
               () =>
               {
                   player.ThreadNum.WaitOne();
-                  if (generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
-                  {
-                      player.ThreadNum.Release();
-                      return;
-                  }
                   if (!player.StartThread(stateNum, RunningStateType.RunningActively))
                   {
                       player.ThreadNum.Release();
@@ -296,8 +294,7 @@ namespace Gaming
                     playerRescued = gameMap.StudentForInteract(player.Position);
                     if (playerRescued == null) return false;
                 }
-                //        else//no need
-                //           if (!GameData.ApproachToInteract(playerRescued.Position, player.Position)) return false;
+                else if (!GameData.ApproachToInteract(playerRescued.Position, player.Position)) return false;
 
                 long stateNumRescued = playerRescued.SetPlayerState(RunningStateType.Waiting, PlayerStateType.Rescued);
                 if (stateNumRescued == -1) return false;
@@ -322,7 +319,6 @@ namespace Gaming
                    }
 
                    playerRescued.ThreadNum.WaitOne();
-                   if (!GameData.ApproachToInteract(playerRescued.Position, player.Position)) return;
 
                    if (!playerRescued.StartThread(stateNumRescued, RunningStateType.RunningSleepily))
                    {

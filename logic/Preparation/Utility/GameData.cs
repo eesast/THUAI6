@@ -91,11 +91,7 @@ namespace Preparation.Utility
         public const int characterRadius = numOfPosGridPerCell * 4 / 10;  // 人物半径
 
         public const int basicTreatSpeed = 100;
-#if DEBUG
-        public const int basicFixSpeed = 1800;
-#else
         public const int basicFixSpeed = 123;
-#endif
         public const int basicSpeedOfOpeningOrLocking = 5000;
         public const int basicStudentSpeedOfClimbingThroughWindows = 1222;
         public const int basicGhostSpeedOfClimbingThroughWindows = 2540;
@@ -108,11 +104,7 @@ namespace Preparation.Utility
         public const int basicTreatmentDegree = 1500000;
         public const int basicTimeOfRescue = 1000;
 
-#if DEBUG
-        public const int basicStudentMoveSpeed = 9000;// 基本移动速度，单位：s-1
-#else
-        public const int basicStudentMoveSpeed = 3000;
-#endif
+        public const int basicStudentMoveSpeed = 3000;// 基本移动速度，单位：s-1
         public const int basicGhostMoveSpeed = (int)(basicStudentMoveSpeed * 1.2);
 
         public const int characterMaxSpeed = 12000;                  // 最大速度

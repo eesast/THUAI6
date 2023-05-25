@@ -366,6 +366,10 @@ namespace Gaming
 
             public bool HaveTea(Character player, int angle1000)
             {
+                XY res = player.Position + new XY(angle1000 / 1000.0, GameData.distanceOfHaveTea);
+                if (res.x <= GameData.numOfPosGridPerCell || res.y <= GameData.numOfPosGridPerCell || res.x >= GameData.numOfPosGridPerCell * (GameData.rows - 1) || res.y >= GameData.numOfPosGridPerCell * (GameData.cols - 1))
+                    return false;
+
                 long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.UsingSkill);
                 if (stateNum == -1)
                 {
@@ -376,7 +380,6 @@ namespace Gaming
                 {
                     player.ThreadNum.WaitOne();
 
-                    XY res = player.Position + new XY(angle1000 / 1000.0, GameData.distanceOfHaveTea);
                     if (!player.StartThread(stateNum, RunningStateType.RunningActively))
                     {
                         player.ThreadNum.Release();

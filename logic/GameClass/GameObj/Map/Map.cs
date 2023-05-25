@@ -85,8 +85,11 @@ namespace GameClass.GameObj
         }
         public void MapDieStudent()
         {
-            if (Interlocked.Increment(ref numOfNoHpStudent) == GameData.numOfStudent)
+            uint noHp = Interlocked.Increment(ref numOfNoHpStudent);
+            ghost!.AddScore(GameData.TrickerScoreStudentDie);
+            if (noHp == GameData.numOfStudent)
             {
+                AddScoreFromAddict();
                 Timer.IsGaming = false;
                 return;
             }
@@ -97,11 +100,15 @@ namespace GameClass.GameObj
         public void MapAddictStudent()
         {
             if (Interlocked.Increment(ref numOfNoHpStudent) == GameData.numOfStudent)
+            {
+                AddScoreFromAddict();
                 Timer.IsGaming = false;
+            }
         }
         public void MapRescueStudent()
         {
-            Interlocked.Decrement(ref numOfNoHpStudent);
+            if (Timer.IsGaming)
+                Interlocked.Decrement(ref numOfNoHpStudent);
         }
 
         private void OpenEmergencyExit()
@@ -123,7 +130,7 @@ namespace GameClass.GameObj
         }
         private void AddScoreFromAddict()
         {
-
+            ghost.AddScore(GameData.TrickerScoreStudentDie * (GameData.numOfStudent - NumOfRemovedStudent));
         }
 
 
@@ -187,26 +194,7 @@ namespace GameClass.GameObj
             }
             return player;
         }
-        public Character FindGhost()
-        {
-            gameObjLockDict[GameObjType.Character].EnterReadLock();
-            try
-            {
-                int i;
-                for (i = 0; i < (gameObjDict[GameObjType.Character]).Count - 1; ++i)
-                {
-                    if (((Character)gameObjDict[GameObjType.Character][i]).IsGhost())
-                    {
-                        return ((Character)gameObjDict[GameObjType.Character][i]);
-                    }
-                }
-                return ((Character)gameObjDict[GameObjType.Character][i]);
-            }
-            finally
-            {
-                gameObjLockDict[GameObjType.Character].ExitReadLock();
-            }
-        }
+        public Ghost? ghost = null;
         public Character? FindPlayerToAction(long playerID)
         {
             Character? player = null;

@@ -47,7 +47,7 @@ namespace Gaming
                 else
                 {
                     if (GameData.IsGhost(characterType))
-                        newPlayer = new Ghost(pos, GameData.characterRadius, characterType);
+                        newPlayer = gameMap.ghost = new Ghost(pos, GameData.characterRadius, characterType);
                     else
                     {
                         newPlayer = new Student(pos, GameData.characterRadius, characterType);
@@ -223,7 +223,6 @@ namespace Gaming
 
                 if (player.CharacterType == CharacterType.Robot)
                 {
-                    ghost.AddScore(GameData.TrickerScoreDestroyRobot);
                     Die(player);
                     return;
                 }
@@ -235,7 +234,6 @@ namespace Gaming
                         player.GamingAddiction = GameData.MidGamingAddiction;
                     else
                     {
-                        ghost.AddScore(GameData.TrickerScoreStudentDie);
                         Die(player);
                         return;
                     }
@@ -260,7 +258,6 @@ namespace Gaming
                                 gameMap.MapRescueStudent();
                                 if (player.GamingAddiction == player.MaxGamingAddiction && gameMap.Timer.IsGaming)
                                 {
-                                    ghost.AddScore(GameData.TrickerScoreStudentDie);
                                     Die(player);
                                 }
                                 return 0;
@@ -418,8 +415,9 @@ namespace Gaming
                                     parent.SetPlayerStateNaturally();
                             }
                         }
+                        gameMap.ghost.AddScore(GameData.TrickerScoreDestroyRobot);
+                        return;
                     }
-                    return;
                 }
                 gameMap.MapDieStudent();
             }

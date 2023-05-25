@@ -148,12 +148,17 @@ namespace Gaming
               () =>
               {
                   player.ThreadNum.WaitOne();
+                  if (!doorwayToOpen.TryToOpen())
+                  {
+                      player.ThreadNum.Release();
+                      player.ResetPlayerState(stateNum);
+                      return;
+                  }
                   if (!player.StartThread(stateNum, RunningStateType.RunningSleepily))
                   {
                       player.ThreadNum.Release();
                       return;
                   }
-                  doorwayToOpen.TryToOpen();
                   Thread.Sleep(GameData.degreeOfOpenedDoorway - doorwayToOpen.OpenDegree);
 
                   if (player.ResetPlayerState(stateNum))

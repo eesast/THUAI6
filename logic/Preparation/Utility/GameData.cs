@@ -91,7 +91,11 @@ namespace Preparation.Utility
         public const int characterRadius = numOfPosGridPerCell * 4 / 10;  // 人物半径
 
         public const int basicTreatSpeed = 100;
+#if DEBUG
+        public const int basicFixSpeed = 1800;
+#else
         public const int basicFixSpeed = 123;
+#endif
         public const int basicSpeedOfOpeningOrLocking = 5000;
         public const int basicStudentSpeedOfClimbingThroughWindows = 1222;
         public const int basicGhostSpeedOfClimbingThroughWindows = 2540;

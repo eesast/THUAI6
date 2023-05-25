@@ -133,7 +133,7 @@ namespace Server
                             currentGameInfo.ObjMessage.Add(currentMapMsg);
                             IsSpectatorJoin = false;
                         }
-                        int time = game.GameMap.Timer.nowTime();
+                        int time = Environment.TickCount;
                         foreach (GameObj gameObj in gameObjList)
                         {
                             MessageOfObj? msg = CopyInfo.Auto(gameObj, time);
@@ -149,7 +149,7 @@ namespace Server
                             currentNews.Clear();
                         }
                         currentGameInfo.GameState = gameState;
-                        currentGameInfo.AllMessage = GetMessageOfAll(time);
+                        currentGameInfo.AllMessage = GetMessageOfAll(game.GameMap.Timer.nowTime());
                         mwr?.WriteOne(currentGameInfo);
                         break;
                     default:

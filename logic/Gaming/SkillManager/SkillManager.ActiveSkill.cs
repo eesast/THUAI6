@@ -93,7 +93,7 @@ namespace Gaming
             public static bool BecomeInvisible(Character player)
             {
                 ActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.BecomeInvisible);
-                long stateNum = player.SetPlayerState(PlayerStateType.UsingSkill);
+                long stateNum = player.SetPlayerState(RunningStateType.RunningForcibly, PlayerStateType.UsingSkill);
                 if (stateNum == -1)
                 {
                     return false;
@@ -106,15 +106,9 @@ namespace Gaming
                 },
                 () =>
                  {
-                     lock (player.ActionLock)
-                     {
-                         if (stateNum == player.StateNum)
-                         {
-                             player.SetPlayerStateNaturally();
-                         }
-                     }
+                     player.ResetPlayerState(stateNum);
                  }
-                                                      );
+                );
             }
 
             public static bool UseRobot(Character player, int robotID)
@@ -141,7 +135,7 @@ namespace Gaming
                             activeSkill.NowPlayerID = robotID;
                         }
                         else return false;
-                        long stateNum = player.SetPlayerState(PlayerStateType.UsingSkill);
+                        long stateNum = player.SetPlayerState(RunningStateType.RunningForcibly, PlayerStateType.UsingSkill);
                         if (stateNum == -1)
                         {
                             activeSkill.NowPlayerID = (int)player.PlayerID;
@@ -250,48 +244,48 @@ namespace Gaming
                 {
                     CraftingBench craftingBench = new(res, player, num);
 
-                    long stateNum = player.SetPlayerState(PlayerStateType.UsingSkill, craftingBench);
+                    long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.UsingSkill, craftingBench);
                     if (stateNum == -1)
                     {
                         ((SummonGolem)activeSkill).DeleteGolem(num);
                         return false;
                     }
 
-                    player.ThreadNum.WaitOne();
-                    if (stateNum != player.StateNum)
-                    {
-                        ((SummonGolem)activeSkill).DeleteGolem(num);
-                        player.ThreadNum.Release();
-                        return false;
-                    }
-
-                    if (actionManager.moveEngine.CheckCollision(craftingBench, res) != null)
-                    {
-                        ((SummonGolem)activeSkill).DeleteGolem(num);
-                        player.ThreadNum.Release();
-                        return false;
-                    }
-                    craftingBench.ParentStateNum = stateNum;
-                    gameMap.Add(craftingBench);
 
                     return ActiveSkillEffect(activeSkill, player, () =>
                     {
+                        player.ThreadNum.WaitOne();
+                        if (!player.StartThread(stateNum, RunningStateType.RunningSleepily))
+                        {
+                            ((SummonGolem)activeSkill).DeleteGolem(num);
+                            player.ThreadNum.Release();
+                        }
+                        else
+                        {
+                            if (actionManager.moveEngine.CheckCollision(craftingBench, res) != null)
+                            {
+                                ((SummonGolem)activeSkill).DeleteGolem(num);
+                                if (player.ResetPlayerState(stateNum))
+                                    player.ThreadNum.Release();
+                            }
+                            else
+                            {
+                                craftingBench.ParentStateNum = stateNum;
+                                gameMap.Add(craftingBench);
+                            }
+                        }
                     },
                     () =>
                     {
-                        lock (player.ActionLock)
+                        if (player.ResetPlayerState(stateNum))
                         {
-                            if (stateNum == player.StateNum)
+                            gameMap.RemoveJustFromMap(craftingBench);
+                            Golem? golem = (Golem?)characterManager.AddPlayer(res, player.TeamID, (num + 1) * GameData.numOfPeople + player.PlayerID, CharacterType.Robot, player);
+                            if (golem == null)
                             {
-                                gameMap.RemoveJustFromMap(craftingBench);
-                                Golem? golem = (Golem?)characterManager.AddPlayer(res, player.TeamID, (num + 1) * GameData.numOfPeople + player.PlayerID, CharacterType.Robot, player);
-                                if (golem == null)
-                                {
-                                    ((SummonGolem)activeSkill).AddGolem(num);
-                                }
-                                player.SetPlayerStateNaturally();
-                                player.ThreadNum.Release();
+                                ((SummonGolem)activeSkill).AddGolem(num);
                             }
+                            player.ThreadNum.Release();
                         }
                     }
                      );
@@ -373,34 +367,36 @@ namespace Gaming
 
             public bool HaveTea(Character player, int angle1000)
             {
-                long stateNum = player.SetPlayerState(PlayerStateType.UsingSkill);
+                long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.UsingSkill);
                 if (stateNum == -1)
                 {
                     return false;
                 }
-                player.ThreadNum.WaitOne();
-
-                XY res = player.Position + new XY(angle1000 / 1000.0, GameData.distanceOfHaveTea);
-                Debugger.Output(res.ToString());
-                if (actionManager.moveEngine.CheckCollision(player, res) != null)
-                {
-                    player.ThreadNum.Release();
-                    return false;
-                }
-                Debugger.Output("NO Collision!");
-                player.ReSetPos(res);
-                lock (player.ActionLock)
-                {
-                    if (player.StateNum == stateNum)
-                    {
-                        player.SetPlayerStateNaturally();
-                    }
-                }
-                player.ThreadNum.Release();
 
                 return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.HaveTea), player, () =>
                 {
-                    Debugger.Output(player, "have tea!");
+                    player.ThreadNum.WaitOne();
+
+                    XY res = player.Position + new XY(angle1000 / 1000.0, GameData.distanceOfHaveTea);
+                    if (!player.StartThread(stateNum, RunningStateType.RunningActively))
+                    {
+                        player.ThreadNum.Release();
+                    }
+                    else
+                    {
+                        if (actionManager.moveEngine.CheckCollision(player, res) != null)
+                        {
+                            player.ThreadNum.Release();
+                        }
+                        else
+                        {
+                            Debugger.Output("NO Collision!");
+                            player.ReSetPos(res);
+                            player.ThreadNum.Release();
+                            player.ResetPlayerState(stateNum);
+                            Debugger.Output(player, "have tea!");
+                        }
+                    }
                 },
                                                       () =>
                                                       { });
@@ -416,13 +412,16 @@ namespace Gaming
                     {
                         foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
+                            lock (character.ActionLock)
                             {
-                                character.SetPlayerState();
-                                character.HP = GameData.RemainHpWhenAddLife;
-                                ((Student)character).TimeOfRescue = 0;
-                                player.AddScore(GameData.StudentScoreRescue);
-                                break;
+                                if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
+                                {
+                                    character.SetPlayerStateNaturally();
+                                    character.HP = GameData.RemainHpWhenAddLife;
+                                    ((Student)character).SetTimeOfRescue(0);
+                                    player.AddScore(GameData.StudentScoreRescue);
+                                    break;
+                                }
                             }
                         }
                     }

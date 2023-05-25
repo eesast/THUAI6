@@ -70,8 +70,8 @@ namespace GameClass.GameObj
             }
         }
 
-        private long openStartTime = 0;
-        public long OpenStartTime
+        private int openStartTime = 0;
+        public int OpenStartTime
         {
             get
             {
@@ -86,7 +86,7 @@ namespace GameClass.GameObj
             {
                 if (isOpen) return false;
                 if (whoLockOrOpen != null) return false;
-                openStartTime = Environment.TickCount64;
+                openStartTime = Environment.TickCount;
                 whoLockOrOpen = character;
                 return true;
             }
@@ -97,7 +97,7 @@ namespace GameClass.GameObj
             {
                 if (whoLockOrOpen != null)
                 {
-                    if ((Environment.TickCount64 - openStartTime) >= GameData.degreeOfLockingOrOpeningTheDoor / whoLockOrOpen.SpeedOfOpeningOrLocking)
+                    if ((Environment.TickCount - openStartTime) >= GameData.degreeOfLockingOrOpeningTheDoor / whoLockOrOpen.SpeedOfOpeningOrLocking)
                         isOpen = true;
                     whoLockOrOpen = null;
                 }
@@ -153,8 +153,22 @@ namespace GameClass.GameObj
             if (character != null)
             {
                 lock (character.ActionLock)
+                {
                     if (character.PlayerState == PlayerStateType.OpeningTheDoor)
-                        character.SetPlayerState();
+                    {
+                        character.ReleaseTool(DoorNum switch
+                        {
+                            3 => PropType.Key3,
+                            5 => PropType.Key5,
+                            _ => PropType.Key6,
+                        });
+                        character.SetPlayerStateNaturally();
+                    }
+                    else if (character.PlayerState == PlayerStateType.LockingTheDoor)
+                    {
+                        character.SetPlayerStateNaturally();
+                    }
+                }
             }
         }
     }

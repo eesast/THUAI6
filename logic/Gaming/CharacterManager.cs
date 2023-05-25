@@ -218,11 +218,8 @@ namespace Gaming
 
             public void BeAddictedToGame(Student player, Ghost ghost)
             {
-                long stateNum = player.SetPlayerState(PlayerStateType.Addicted);
-                if (stateNum == -1)
-                {
-                    return;
-                }
+                long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.Addicted);
+                if (stateNum == -1) return;
 
                 if (player.CharacterType == CharacterType.Robot)
                 {
@@ -278,19 +275,18 @@ namespace Gaming
             public static long BeStunned(Character player, int time)
             {
                 if (player.CharacterType == CharacterType.Robot) return -1;
-                long threadNum = player.SetPlayerState(PlayerStateType.Stunned);
-                if (threadNum == -1) return -1;
+                long stateNum = player.SetPlayerState(RunningStateType.RunningForcibly, PlayerStateType.Stunned);
+                if (stateNum == -1) return -1;
                 new Thread
                     (() =>
                     {
                         Debugger.Output(player, " is stunned for " + time.ToString());
                         Thread.Sleep(time);
-                        if (threadNum == player.StateNum)
-                            player.SetPlayerState();
+                        player.ResetPlayerState(stateNum);
                     }
                     )
                 { IsBackground = true }.Start();
-                return threadNum;
+                return stateNum;
             }
 
             public bool TryBeAwed(Student character, Bullet bullet)
@@ -378,23 +374,14 @@ namespace Gaming
             public bool BackSwing(Character player, int time)
             {
                 if (time <= 0) return false;
-                long stateNum = player.SetPlayerState(PlayerStateType.Swinging);
+                long stateNum = player.SetPlayerState(RunningStateType.RunningForcibly, PlayerStateType.Swinging);
                 if (stateNum == -1) return false;
 
                 new Thread
                         (() =>
                         {
-                            player.ThreadNum.WaitOne();
                             Thread.Sleep(time);
-
-                            lock (player.ActionLock)
-                            {
-                                if (stateNum == player.StateNum)
-                                {
-                                    player.ThreadNum.Release();
-                                    player.SetPlayerStateNaturally();
-                                }
-                            }
+                            player.ResetPlayerState(stateNum);
                         }
                         )
                 { IsBackground = true }.Start();
@@ -428,7 +415,7 @@ namespace Gaming
                             lock (parent.ActionLock)
                             {
                                 if (parent.PlayerState == PlayerStateType.UsingSkill)
-                                    parent.SetPlayerState();
+                                    parent.SetPlayerStateNaturally();
                             }
                         }
                     }

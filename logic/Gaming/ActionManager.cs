@@ -305,11 +305,7 @@ namespace Gaming
                 long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.Rescuing);
                 if (stateNum == -1)
                 {
-                    lock (playerRescued.ActionLock)
-                    {
-                        if (playerRescued.StateNum == stateNumRescued)
-                            player.SetPlayerStateNaturally();
-                    }
+                    playerRescued.ResetPlayerState(stateNumRescued, RunningStateType.RunningForcibly, PlayerStateType.Addicted);
                     return false;
                 }
 
@@ -321,14 +317,14 @@ namespace Gaming
                    if (!player.StartThread(stateNum, RunningStateType.RunningSleepily))
                    {
                        player.ThreadNum.Release();
-                       playerRescued.ResetPlayerState(stateNum);
+                       playerRescued.ResetPlayerState(stateNumRescued, RunningStateType.RunningForcibly, PlayerStateType.Addicted);
                        return;
                    }
 
                    playerRescued.ThreadNum.WaitOne();
                    if (!GameData.ApproachToInteract(playerRescued.Position, player.Position)) return;
 
-                   if (!playerRescued.StartThread(stateNum, RunningStateType.RunningSleepily))
+                   if (!playerRescued.StartThread(stateNumRescued, RunningStateType.RunningSleepily))
                    {
                        playerRescued.ThreadNum.Release();
                        if (!player.ResetPlayerState(stateNum))
@@ -344,7 +340,7 @@ namespace Gaming
                            {
                                if (playerRescued.StateNum == stateNumRescued)
                                {
-                                   if (playerRescued.AddTimeOfRescue(GameData.checkInterval * player.TreatSpeed))
+                                   if (playerRescued.AddTimeOfRescue(GameData.checkInterval))
                                    {
                                        playerRescued.SetPlayerStateNaturally();
                                        playerRescued.HP = playerRescued.MaxHp / 2;
@@ -362,16 +358,11 @@ namespace Gaming
                        .Start();
                    playerRescued.SetTimeOfRescue(0);
 
+                   player.ThreadNum.Release();
+                   playerRescued.ThreadNum.Release();
                    if (player.ResetPlayerState(stateNum)) return;
 
-                   lock (playerRescued.ActionLock)
-                   {
-                       if (playerRescued.StateNum == stateNumRescued)
-                       {
-                           playerRescued.SetPlayerState(RunningStateType.RunningForcibly, PlayerStateType.Addicted);
-                           return;
-                       }
-                   }
+                   playerRescued.ResetPlayerState(stateNumRescued, RunningStateType.RunningForcibly, PlayerStateType.Addicted);
                }
            )
                 { IsBackground = true }.Start();
@@ -428,6 +419,7 @@ namespace Gaming
 
                 return true;
             }
+
             public bool ClimbingThroughWindow(Character player)
             {
                 Window? windowForClimb = (Window?)gameMap.OneForInteractInACross(player.Position, GameObjType.Window);
@@ -501,6 +493,7 @@ namespace Gaming
 
                 return true;
             }
+
             public bool LockDoor(Character player)
             {
                 if (player.CharacterType == CharacterType.Robot) return false;

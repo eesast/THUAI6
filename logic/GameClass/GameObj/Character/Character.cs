@@ -594,14 +594,14 @@ namespace GameClass.GameObj
             }
         }
 
-        public bool ResetPlayerState(long state)
+        public bool ResetPlayerState(long state, RunningStateType running = RunningStateType.Null, PlayerStateType value = PlayerStateType.Null, IGameObj? obj = null)
         {
             lock (actionLock)
             {
                 if (state != stateNum) return false;
-                runningState = RunningStateType.Null;
-                whatInteractingWith = null;
-                playerState = PlayerStateType.Null;
+                this.runningState = running;
+                whatInteractingWith = (GameObj?)obj;
+                playerState = value;
                 ++stateNum;
                 return true;
             }

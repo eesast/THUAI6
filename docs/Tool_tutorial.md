@@ -53,9 +53,12 @@
 #include <chrono>
 int main()
 {
-    auto sec = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    std::cout << "从 1970 年元旦到现在的：秒数" << sec << "；毫秒数：" << msec << std::endl;
+    auto sec = std::chrono::duration_cast<std::chrono::seconds>(
+        std::chrono::system_clock::now().time_since_epoch()).count();
+    auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::system_clock::now().time_since_epoch()).count();
+    std::cout << "从 1970 年元旦到现在的：秒数" << sec << "；毫秒数：" <<
+         msec << std::endl;
     return 0;
 }
 ```
@@ -74,7 +77,8 @@ std::this_thread::sleep_for(std::chrono::milliseconds(20));     // 休眠 20 毫
 std::this_thread::sleep_for(std::chrono::seconds(2));           // 休眠 2 秒
 
 // 下面这个也能休眠 200 毫秒
-std::this_thread::sleep_until(std::chrono::system_clock::now() += std::chrono::milliseconds(200));
+std::this_thread::sleep_until(std::chrono::system_clock::now() 
+    += std::chrono::milliseconds(200));
 ```
 
 休眠过程中，线程将被阻塞，而不继续进行，直到休眠时间结束方继续向下执行。
@@ -113,15 +117,20 @@ std::future<int> f_async()
 int main()
 {
     auto start = std::chrono::system_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(std::chrono::system_clock::now() - start).count() << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(
+        std::chrono::system_clock::now() - start).count() << std::endl;
     auto x = f_async();
-    std::cout << std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(std::chrono::system_clock::now() - start).count() << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(
+        std::chrono::system_clock::now() - start).count() << std::endl;
     std::cout << x.get() << std::endl;
-    std::cout << std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(std::chrono::system_clock::now() - start).count() << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(
+        std::chrono::system_clock::now() - start).count() << std::endl;
     auto y = f_sync();
-    std::cout << std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(std::chrono::system_clock::now() - start).count() << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(
+        std::chrono::system_clock::now() - start).count() << std::endl;
     std::cout << y << std::endl;
-    std::cout << std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(std::chrono::system_clock::now() - start).count() << std::endl;
+    std::cout << std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(
+        std::chrono::system_clock::now() - start).count() << std::endl;
 }
 ```
 

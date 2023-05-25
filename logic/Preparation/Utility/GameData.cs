@@ -142,7 +142,7 @@ namespace Preparation.Utility
             return damage * 100 / basicApOfGhost;
         }
         public const int TrickerScoreStudentBeAddicted = 50;
-        public const int TrickerScoreDestroyRobot = 30;
+        public const int TrickerScoreDestroyRobot = 50;
         public const int TrickerScoreStudentDie = 1000;
         public static int TrickerScoreStudentBeStunned(int time)
         {

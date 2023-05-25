@@ -48,7 +48,7 @@ namespace Gaming
                                  {
                                      foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
                                      {
-                                         if (!person.IsGhost() && player.CharacterType != CharacterType.Robot && !person.NoHp())
+                                         if (!person.IsGhost() && person.CharacterType != CharacterType.Robot && !person.NoHp())
                                          {
                                              double dis = XY.DistanceFloor3(person.Position, player.Position);
                                              if (dis >= player.AlertnessRadius)
@@ -62,7 +62,6 @@ namespace Gaming
                                                  student.GamingAddiction += GameData.checkIntervalWhenShowTime;
                                                  if (student.GamingAddiction == student.MaxGamingAddiction)
                                                  {
-                                                     player.AddScore(GameData.TrickerScoreStudentDie);
                                                      characterManager.Die(student);
                                                  }
                                              }

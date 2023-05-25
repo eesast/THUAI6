@@ -105,7 +105,7 @@ namespace Preparation.Utility
         public const int basicTimeOfRescue = 1000;
 
 #if DEBUG
-        public const int basicStudentMoveSpeed = 3000;// 基本移动速度，单位：s-1
+        public const int basicStudentMoveSpeed = 9000;// 基本移动速度，单位：s-1
 #else
         public const int basicStudentMoveSpeed = 3000;
 #endif

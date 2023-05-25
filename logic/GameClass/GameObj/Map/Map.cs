@@ -73,6 +73,8 @@ namespace GameClass.GameObj
 
         public void MapEscapeStudent()
         {
+            if (Interlocked.Increment(ref numOfRemovedStudent) == GameData.numOfStudent - 1)
+                OpenEmergencyExit();
             if (Interlocked.Increment(ref numOfNoHpStudent) == GameData.numOfStudent)
             {
                 AddScoreFromAddict();
@@ -80,11 +82,11 @@ namespace GameClass.GameObj
                 return;
             }
             Interlocked.Increment(ref numOfEscapedStudent);
-            if (Interlocked.Increment(ref numOfRemovedStudent) == GameData.numOfStudent - 1)
-                OpenEmergencyExit();
         }
         public void MapDieStudent()
         {
+            if (Interlocked.Increment(ref numOfRemovedStudent) == GameData.numOfStudent - 1)
+                OpenEmergencyExit();
             uint noHp = Interlocked.Increment(ref numOfNoHpStudent);
             ghost!.AddScore(GameData.TrickerScoreStudentDie);
             if (noHp == GameData.numOfStudent)
@@ -94,8 +96,6 @@ namespace GameClass.GameObj
                 return;
             }
             Interlocked.Increment(ref numOfDeceasedStudent);
-            if (Interlocked.Increment(ref numOfRemovedStudent) == GameData.numOfStudent - 1)
-                OpenEmergencyExit();
         }
         public void MapAddictStudent()
         {
@@ -130,7 +130,7 @@ namespace GameClass.GameObj
         }
         private void AddScoreFromAddict()
         {
-            ghost.AddScore(GameData.TrickerScoreStudentDie * (GameData.numOfStudent - NumOfRemovedStudent));
+            ghost!.AddScore(GameData.TrickerScoreStudentDie * (GameData.numOfStudent - NumOfRemovedStudent));
         }
 
 

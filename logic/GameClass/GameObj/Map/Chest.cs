@@ -25,7 +25,7 @@ namespace GameClass.GameObj
         public Character? WhoOpen => whoOpen;
         public bool Open(Character character)
         {
-            lock (GameObjReaderWriterLock)
+            lock (gameObjLock)
             {
                 if (whoOpen != null) return false;
                 openStartTime = Environment.TickCount64;
@@ -35,7 +35,7 @@ namespace GameClass.GameObj
         }
         public void StopOpen()
         {
-            lock (GameObjReaderWriterLock)
+            lock (gameObjLock)
             {
                 whoOpen = null;
             }

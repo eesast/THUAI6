@@ -21,7 +21,7 @@ namespace GameClass.GameObj
             uint value = Interlocked.Increment(ref numOfRepairedGenerators);
             if (value == GameData.numOfGeneratorRequiredForEmergencyExit)
             {
-                GameObjLockDict[GameObjType.EmergencyExit].EnterWriteLock();
+                GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
                 try
                 {
                     Random r = new Random(Environment.TickCount);
@@ -31,13 +31,13 @@ namespace GameClass.GameObj
                 }
                 finally
                 {
-                    GameObjLockDict[GameObjType.EmergencyExit].ExitWriteLock();
+                    GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
                 }
             }
             else
                   if (value == GameData.numOfGeneratorRequiredForRepair)
             {
-                GameObjLockDict[GameObjType.Doorway].EnterWriteLock();
+                GameObjLockDict[GameObjType.Doorway].EnterReadLock();
                 try
                 {
                     foreach (Doorway doorway in GameObjDict[GameObjType.Doorway])
@@ -45,7 +45,7 @@ namespace GameClass.GameObj
                 }
                 finally
                 {
-                    GameObjLockDict[GameObjType.Doorway].ExitWriteLock();
+                    GameObjLockDict[GameObjType.Doorway].ExitReadLock();
                 }
             }
         }

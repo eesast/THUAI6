@@ -52,14 +52,7 @@ namespace Gaming
                     {
                         moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection, playerToMove.StateNum);
                         Thread.Sleep(moveTimeInMilliseconds);
-                        lock (playerToMove.ActionLock)
-                        {
-                            lock (playerToMove.ActionLock)
-                            {
-                                if (stateNum == playerToMove.StateNum)
-                                    playerToMove.SetPlayerStateNaturally();
-                            }
-                        }
+                        playerToMove.ResetPlayerState(stateNum);
                     }
                 }
                  )
@@ -664,7 +657,7 @@ namespace Gaming
                                 }
                                 break;
                             case GameObjType.Character:
-                                if (player.FindActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed == 1 && ((Character)collisionObj).IsGhost())
+                                if (player.FindActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && ((Character)collisionObj).IsGhost())
                                 {
                                     if (CharacterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge) > 0)
                                         player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenCharge));

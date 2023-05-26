@@ -106,11 +106,7 @@ namespace Gaming
                               gameMap.AddNumOfRepairedGenerators();
                           if (generatorForFix.DegreeOfRepair == GameData.degreeOfFixedGenerator)
                           {
-                              lock (player.ActionLock)
-                              {
-                                  if (stateNum == player.StateNum)
-                                      player.SetPlayerState(RunningStateType.Null);
-                              }
+                              player.ResetPlayerState(stateNum);
                               return false;
                           }
                           return true;
@@ -211,11 +207,7 @@ namespace Gaming
                 long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.Treating);
                 if (stateNum == -1)
                 {
-                    lock (playerTreated.ActionLock)
-                    {
-                        if (playerTreated.StateNum == stateNumTreated)
-                            player.SetPlayerStateNaturally();
-                    }
+                    playerTreated.ResetPlayerState(stateNumTreated);
                     return false;
                 }
 
@@ -227,11 +219,7 @@ namespace Gaming
                    if (!player.StartThread(stateNum, RunningStateType.RunningActively))
                    {
                        player.ThreadNum.Release();
-                       lock (playerTreated.ActionLock)
-                       {
-                           if (playerTreated.StateNum == stateNumTreated)
-                               playerTreated.SetPlayerStateNaturally();
-                       }
+                       playerTreated.ResetPlayerState(stateNumTreated);
                        return;
                    }
 
@@ -239,11 +227,7 @@ namespace Gaming
                    if (!playerTreated.StartThread(stateNum, RunningStateType.RunningActively))
                    {
                        playerTreated.ThreadNum.Release();
-                       lock (player.ActionLock)
-                       {
-                           if (player.StateNum == stateNum)
-                               player.SetPlayerStateNaturally();
-                       }
+                       player.ResetPlayerState(stateNum);
                        player.ThreadNum.Release();
                        return;
                    }

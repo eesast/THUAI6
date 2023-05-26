@@ -78,7 +78,6 @@ namespace Preparation.Utility
         }
         public static bool ApproachToInteract(XY pos1, XY pos2)
         {
-            if (pos1 == pos2) return false;
             return Math.Abs(PosGridToCellX(pos1) - PosGridToCellX(pos2)) <= 1 && Math.Abs(PosGridToCellY(pos1) - PosGridToCellY(pos2)) <= 1;
         }
         public static bool ApproachToInteractInACross(XY pos1, XY pos2)

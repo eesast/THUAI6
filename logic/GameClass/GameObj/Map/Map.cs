@@ -250,14 +250,14 @@ namespace GameClass.GameObj
             }
             return GameObjForInteract;
         }
-        public Student? StudentForInteract(XY Pos, Student AStudent)
+        public Student? StudentForInteract(Student AStudent)
         {
             GameObjLockDict[GameObjType.Character].EnterReadLock();
             try
             {
                 foreach (Character character in GameObjDict[GameObjType.Character])
                 {
-                    if (!character.IsGhost() && character != AStudent && GameData.ApproachToInteract(character.Position, Pos))
+                    if (!character.IsGhost() && character != AStudent && GameData.ApproachToInteract(character.Position, AStudent.Position))
                     {
                         return (Student)character;
                     }

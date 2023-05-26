@@ -62,14 +62,14 @@ namespace GameClass.GameObj
         {
             lock (gameObjLock)
             {
-                if (openDegree + Environment.TickCount - openStartTime >= GameData.degreeOfOpenedDoorway)
+                if (Environment.TickCount - openStartTime + openDegree >= GameData.degreeOfOpenedDoorway)
                 {
                     openDegree = GameData.degreeOfOpenedDoorway;
                     return true;
                 }
                 else
                 {
-                    openDegree = openDegree + Environment.TickCount - openStartTime;
+                    openDegree = Environment.TickCount - openStartTime + openDegree;
                     openStartTime = 0;
                     return false;
                 }

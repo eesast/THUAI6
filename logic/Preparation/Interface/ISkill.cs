@@ -48,8 +48,8 @@ namespace Preparation.Interface
                     openStartTime = Environment.TickCount;
                     return true;
                 }
-                else return false;
             }
+            return false;
         }
 
         public int isBeingUsed = 0;//实为bool

@@ -30,7 +30,7 @@ namespace Preparation.Interface
         private readonly object skillLock = new();
         public object SkillLock => skillLock;
 
-        private long startTime = 0;
+        private long startTime = Environment.TickCount64 - 600000;
         public long StartTime
         {
             get

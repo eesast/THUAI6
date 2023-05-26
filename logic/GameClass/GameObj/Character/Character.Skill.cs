@@ -42,9 +42,9 @@ namespace GameClass.GameObj
             this.alertnessRadius = Occupation.AlertnessRadius;
             this.viewRange = Occupation.ViewRange;
             this.characterType = characterType;
-            this.SpeedOfOpeningOrLocking = Occupation.SpeedOfOpeningOrLocking;
-            this.SpeedOfClimbingThroughWindows = Occupation.SpeedOfClimbingThroughWindows;
-            this.SpeedOfOpenChest = Occupation.SpeedOfOpenChest;
+            this.speedOfOpeningOrLocking = Occupation.SpeedOfOpeningOrLocking;
+            this.speedOfClimbingThroughWindows = Occupation.SpeedOfClimbingThroughWindows;
+            this.speedOfOpenChest = Occupation.SpeedOfOpenChest;
 
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)
             {

@@ -505,11 +505,11 @@ namespace Gaming
                         (() =>
                         {
                             startSkill();
-                            activeSkill.IsBeingUsed = 1;
+                            activeSkill.IsBeingUsed = true;
                             Thread.Sleep(activeSkill.DurationTime);
 
                             endSkill();
-                            activeSkill.IsBeingUsed = 0;
+                            activeSkill.IsBeingUsed = false;
                             Debugger.Output(player, "return to normal.");
                         }
                         )

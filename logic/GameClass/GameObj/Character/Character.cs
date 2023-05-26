@@ -167,43 +167,22 @@ namespace GameClass.GameObj
         public int ViewRange => viewRange;
         #endregion
         #region 交互相关的基本属性及方法
-        private int speedOfOpeningOrLocking;
+        private readonly int speedOfOpeningOrLocking;
         public int SpeedOfOpeningOrLocking
         {
             get => speedOfOpeningOrLocking;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    speedOfOpeningOrLocking = value;
-                }
-            }
         }
 
-        private int speedOfClimbingThroughWindows;
+        private readonly int speedOfClimbingThroughWindows;
         public int SpeedOfClimbingThroughWindows
         {
             get => speedOfClimbingThroughWindows;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    speedOfClimbingThroughWindows = value;
-                }
-            }
         }
 
-        private int speedOfOpenChest;
+        private readonly int speedOfOpenChest;
         public int SpeedOfOpenChest
         {
             get => speedOfOpenChest;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    speedOfOpenChest = value;
-                }
-            }
         }
         #endregion
         #region 血量相关的基本属性及方法

@@ -664,7 +664,7 @@ namespace Gaming
                                 }
                                 break;
                             case GameObjType.Character:
-                                if (player.FindActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed == 1 && ((Character)collisionObj).IsGhost())
+                                if (player.FindActiveSkill(ActiveSkillType.CanBeginToCharge).IsBeingUsed && ((Character)collisionObj).IsGhost())
                                 {
                                     if (CharacterManager.BeStunned((Character)collisionObj, GameData.timeOfGhostStunnedWhenCharge) > 0)
                                         player.AddScore(GameData.StudentScoreTrickerBeStunned(GameData.timeOfGhostStunnedWhenCharge));

@@ -316,7 +316,7 @@ namespace Gaming
                () =>
                {
                    player.ThreadNum.WaitOne();
-                   if (!player.StartThread(stateNum, RunningStateType.RunningSleepily))
+                   if (!player.StartThread(stateNum, RunningStateType.RunningActively))
                    {
                        player.ThreadNum.Release();
                        playerRescued.ResetPlayerState(stateNumRescued, RunningStateType.RunningForcibly, PlayerStateType.Addicted);
@@ -325,7 +325,7 @@ namespace Gaming
 
                    playerRescued.ThreadNum.WaitOne();
 
-                   if (!playerRescued.StartThread(stateNumRescued, RunningStateType.RunningSleepily))
+                   if (!playerRescued.StartThread(stateNumRescued, RunningStateType.RunningActively))
                    {
                        playerRescued.ThreadNum.Release();
                        if (!player.ResetPlayerState(stateNum))

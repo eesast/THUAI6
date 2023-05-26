@@ -469,8 +469,8 @@ namespace Gaming
                         lock (player.ActionLock)
                         {
                             if (!player.StartThread(stateNum, RunningStateType.RunningActively)) return;
-                            player.ReSetPos(windowToPlayer + windowForClimb.Position);
                             windowForClimb.Enter2Stage(windowForClimb.Position - 2 * windowToPlayer);
+                            player.ReSetPos(windowToPlayer + windowForClimb.Position);
                         }
 
                         player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
@@ -484,6 +484,7 @@ namespace Gaming
                         {
                             if (stateNum == player.StateNum)
                             {
+                                player.ReSetPos(windowForClimb.Stage);
                                 player.SetPlayerStateNaturally();
                                 windowForClimb.FinishClimbing();
                             }

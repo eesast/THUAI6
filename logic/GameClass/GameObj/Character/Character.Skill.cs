@@ -40,7 +40,7 @@ namespace GameClass.GameObj
             this.BulletOfPlayer = this.OriBulletOfPlayer = Occupation.InitBullet;
             this.concealment = Occupation.Concealment;
             this.alertnessRadius = Occupation.AlertnessRadius;
-            this.ViewRange = Occupation.ViewRange;
+            this.viewRange = Occupation.ViewRange;
             this.characterType = characterType;
             this.SpeedOfOpeningOrLocking = Occupation.SpeedOfOpeningOrLocking;
             this.SpeedOfClimbingThroughWindows = Occupation.SpeedOfClimbingThroughWindows;

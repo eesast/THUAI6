@@ -102,10 +102,9 @@ namespace Server
                 }
             }
         }
-        protected void SendGameResult()		// 天梯的 Server 给网站发消息记录比赛结果
+        protected void SendGameResult(int[] scores, bool mode)		// 天梯的 Server 给网站发消息记录比赛结果
         {
-            int[] scores = GetScore();
-            httpSender?.SendHttpRequest(scores).Wait();
+            httpSender?.SendHttpRequest(scores, mode).Wait();
         }
 
         private void OnGameEnd()
@@ -114,7 +113,8 @@ namespace Server
             mwr?.Flush();
             if (options.ResultFileName != DefaultArgumentOptions.FileName)
                 SaveGameResult(options.ResultFileName.EndsWith(".json") ? options.ResultFileName : options.ResultFileName + ".json");
-            SendGameResult();
+            int[] scores = GetScore();
+            SendGameResult(scores, options.Mode);
             this.endGameSem.Release();
         }
         public void ReportGame(GameState gameState, bool requiredGaming = true)

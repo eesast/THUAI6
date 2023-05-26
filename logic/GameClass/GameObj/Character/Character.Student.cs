@@ -32,19 +32,24 @@ namespace GameClass.GameObj
         /// </summary>
         protected readonly int orgFixSpeed;
 
+        private readonly object treatLock = new();
         protected int treatSpeed = GameData.basicTreatSpeed;
         public int TreatSpeed
         {
-            get => treatSpeed;
+            get
+            {
+                lock (treatLock)
+                    return treatSpeed;
+            }
             set
             {
-                lock (gameObjLock)
+                lock (treatLock)
                 {
                     treatSpeed = value;
                 }
             }
         }
-        public int OrgTreatSpeed { get; protected set; }
+        protected readonly int orgTreatSpeed;
 
         public int MaxGamingAddiction { get; protected set; }
         private int gamingAddiction;
@@ -128,7 +133,7 @@ namespace GameClass.GameObj
         public Student(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
             this.orgFixSpeed = this.fixSpeed = ((IStudentType)Occupation).FixSpeed;
-            this.TreatSpeed = this.OrgTreatSpeed = ((IStudentType)Occupation).TreatSpeed;
+            this.TreatSpeed = this.orgTreatSpeed = ((IStudentType)Occupation).TreatSpeed;
             this.MaxGamingAddiction = ((IStudentType)Occupation).MaxGamingAddiction;
         }
     }

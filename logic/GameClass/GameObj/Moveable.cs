@@ -127,7 +127,8 @@ namespace GameClass.GameObj
         /// <summary>
         /// 原初移动速度
         /// </summary>
-        public int OrgMoveSpeed { get; protected set; }
+        protected int orgMoveSpeed;
+        public int OrgMoveSpeed => orgMoveSpeed;
 
         /*       /// <summary>
                /// 复活时数据重置

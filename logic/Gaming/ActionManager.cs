@@ -52,14 +52,7 @@ namespace Gaming
                     {
                         moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection, playerToMove.StateNum);
                         Thread.Sleep(moveTimeInMilliseconds);
-                        lock (playerToMove.ActionLock)
-                        {
-                            lock (playerToMove.ActionLock)
-                            {
-                                if (stateNum == playerToMove.StateNum)
-                                    playerToMove.SetPlayerStateNaturally();
-                            }
-                        }
+                        playerToMove.ResetPlayerState(stateNum);
                     }
                 }
                  )

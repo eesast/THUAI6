@@ -98,6 +98,7 @@ namespace GameClass.GameObj
                 if (whoLockOrOpen != null)
                 {
                     if ((Environment.TickCount64 - openStartTime) >= GameData.degreeOfLockingOrOpeningTheDoor / whoLockOrOpen.SpeedOfOpeningOrLocking)
+                        //现在框架没有问题，但是调用可变的SpeedOfOpeningOrLocking可能死锁
                         isOpen = true;
                     whoLockOrOpen = null;
                 }

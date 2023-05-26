@@ -16,7 +16,7 @@ namespace Preparation.Interface
         public int SkillCD { get; }
         public int DurationTime { get; } //技能持续时间
         public object ActiveSkillUseLock { get; }
-        public int IsBeingUsed { get; set; }
+        public bool IsBeingUsed { get; set; }
     }
 
     public abstract class ActiveSkill : IActiveSkill
@@ -53,10 +53,10 @@ namespace Preparation.Interface
         }
 
         public int isBeingUsed = 0;//实为bool
-        public int IsBeingUsed
+        public bool IsBeingUsed
         {
-            get => Interlocked.CompareExchange(ref isBeingUsed, 0, 0);
-            set => Interlocked.Exchange(ref isBeingUsed, value);
+            get => (Interlocked.CompareExchange(ref isBeingUsed, -1, -1) == 1);
+            set => Interlocked.Exchange(ref isBeingUsed, value ? 1 : 0);
         }
     }
 

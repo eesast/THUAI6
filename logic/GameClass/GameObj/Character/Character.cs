@@ -31,7 +31,15 @@ namespace GameClass.GameObj
                 }
             }
         }
-        public int OrgCD { get; protected set; }
+        private int orgCD;
+        public int OrgCD
+        {
+            get
+            {
+                lock (actionLock)
+                    return orgCD;
+            }
+        }
 
         public readonly BulletType OriBulletOfPlayer;
         private BulletType bulletOfPlayer;
@@ -49,7 +57,7 @@ namespace GameClass.GameObj
                 lock (actionLock)
                 {
                     bulletOfPlayer = value;
-                    cd = OrgCD = (BulletFactory.BulletCD(value));
+                    cd = orgCD = (BulletFactory.BulletCD(value));
                     Debugger.Output(this, string.Format("'s CD has been set to: {0}.", cd));
                     maxBulletNum = bulletNum = (BulletFactory.BulletNum(value));
                 }
@@ -167,43 +175,22 @@ namespace GameClass.GameObj
         public int ViewRange => viewRange;
         #endregion
         #region 交互相关的基本属性及方法
-        private int speedOfOpeningOrLocking;
+        private readonly int speedOfOpeningOrLocking;
         public int SpeedOfOpeningOrLocking
         {
             get => speedOfOpeningOrLocking;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    speedOfOpeningOrLocking = value;
-                }
-            }
         }
 
-        private int speedOfClimbingThroughWindows;
+        private readonly int speedOfClimbingThroughWindows;
         public int SpeedOfClimbingThroughWindows
         {
             get => speedOfClimbingThroughWindows;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    speedOfClimbingThroughWindows = value;
-                }
-            }
         }
 
-        private int speedOfOpenChest;
+        private readonly int speedOfOpenChest;
         public int SpeedOfOpenChest
         {
             get => speedOfOpenChest;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    speedOfOpenChest = value;
-                }
-            }
         }
         #endregion
         #region 血量相关的基本属性及方法

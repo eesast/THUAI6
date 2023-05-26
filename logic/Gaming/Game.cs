@@ -281,7 +281,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return;
-            gameMap.GameObjLockDict[GameObjType.Character].EnterWriteLock();
+            gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
             try
             {
                 foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
@@ -291,7 +291,7 @@ namespace Gaming
             }
             finally
             {
-                gameMap.GameObjLockDict[GameObjType.Character].ExitWriteLock();
+                gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
             }
         }
 

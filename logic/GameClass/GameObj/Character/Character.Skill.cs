@@ -11,7 +11,7 @@ namespace GameClass.GameObj
         private readonly IOccupation occupation;
         public IOccupation Occupation => occupation;
 
-        private Dictionary<ActiveSkillType, ActiveSkill> activeSkillDictionary = new();
+        private readonly Dictionary<ActiveSkillType, ActiveSkill> activeSkillDictionary = new();
         public Dictionary<ActiveSkillType, ActiveSkill> ActiveSkillDictionary => activeSkillDictionary;
 
         public ActiveSkill FindActiveSkill(ActiveSkillType activeSkillType)
@@ -42,9 +42,9 @@ namespace GameClass.GameObj
             this.alertnessRadius = Occupation.AlertnessRadius;
             this.viewRange = Occupation.ViewRange;
             this.characterType = characterType;
-            this.SpeedOfOpeningOrLocking = Occupation.SpeedOfOpeningOrLocking;
-            this.SpeedOfClimbingThroughWindows = Occupation.SpeedOfClimbingThroughWindows;
-            this.SpeedOfOpenChest = Occupation.SpeedOfOpenChest;
+            this.speedOfOpeningOrLocking = Occupation.SpeedOfOpeningOrLocking;
+            this.speedOfClimbingThroughWindows = Occupation.SpeedOfClimbingThroughWindows;
+            this.speedOfOpenChest = Occupation.SpeedOfOpenChest;
 
             foreach (var activeSkill in this.Occupation.ListOfIActiveSkill)
             {

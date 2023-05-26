@@ -20,7 +20,7 @@ namespace Server
         // {
         //     this.SendHttpRequest(new()).Wait();
         // }
-        public async Task SendHttpRequest(int[] scores)
+        public async Task SendHttpRequest(int[] scores, int mode)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace Server
                         new TeamScore() { team_id = 0, score = scores[0], },
                         new TeamScore() { team_id = 1, score = scores[1], },
                     },
-                    mode = 0
+                    mode = mode
                 })))
                 {
                     Console.WriteLine("Send to web successfully!");

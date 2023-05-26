@@ -142,7 +142,7 @@ namespace Gaming
                 int len = availableCellForGenerateProp.Count;
                 Random r = new Random(Environment.TickCount);
 
-                gameMap.GameObjLockDict[GameObjType.Chest].EnterWriteLock();
+                gameMap.GameObjLockDict[GameObjType.Chest].EnterReadLock();
                 try
                 {
                     int cou = 0;
@@ -181,7 +181,7 @@ namespace Gaming
                 }
                 finally
                 {
-                    gameMap.GameObjLockDict[GameObjType.Chest].ExitWriteLock();
+                    gameMap.GameObjLockDict[GameObjType.Chest].ExitReadLock();
                 }
                 /*
                 new Thread

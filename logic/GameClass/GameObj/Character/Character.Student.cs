@@ -51,18 +51,39 @@ namespace GameClass.GameObj
         }
         protected readonly int orgTreatSpeed;
 
-        public int MaxGamingAddiction { get; protected set; }
+        private readonly object addictionLock = new();
+        private int maxGamingAddiction;
+        public int MaxGamingAddiction
+        {
+            get
+            {
+                lock (addictionLock)
+                    return maxGamingAddiction;
+            }
+            protected set
+            {
+                lock (addictionLock)
+                {
+                    if (value < gamingAddiction) gamingAddiction = value;
+                    maxGamingAddiction = value;
+                }
+            }
+        }
         private int gamingAddiction;
         public int GamingAddiction
         {
-            get => gamingAddiction;
+            get
+            {
+                lock (addictionLock)
+                    return gamingAddiction;
+            }
             set
             {
                 if (value > 0)
-                    lock (gameObjLock)
-                        gamingAddiction = value <= MaxGamingAddiction ? value : MaxGamingAddiction;
+                    lock (addictionLock)
+                        gamingAddiction = value <= maxGamingAddiction ? value : maxGamingAddiction;
                 else
-                    lock (gameObjLock)
+                    lock (addictionLock)
                         gamingAddiction = 0;
             }
         }

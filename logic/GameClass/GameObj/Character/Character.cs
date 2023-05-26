@@ -141,23 +141,20 @@ namespace GameClass.GameObj
         }*/
         #endregion
         #region 感知相关的基本属性及方法
-        private Dictionary<BgmType, double> bgmDictionary = new();
+        private readonly object bgmLock = new();
+        private Dictionary<BgmType, double> bgmDictionary = new() { { BgmType.GhostIsComing, 0 }, { BgmType.StudentIsApproaching, 0 }, { BgmType.GeneratorIsBeingFixed, 0 } };
         public Dictionary<BgmType, double> BgmDictionary
         {
-            get => bgmDictionary;
-            private set
+            get
             {
-                lock (gameObjLock)
-                {
-                    bgmDictionary = value;
-                }
+                lock (bgmLock)
+                    return bgmDictionary;
             }
         }
         public void AddBgm(BgmType bgm, double value)
         {
-            if (BgmDictionary.ContainsKey(bgm))
-                BgmDictionary[bgm] = value;
-            else BgmDictionary.Add(bgm, value);
+            lock (bgmLock)
+                bgmDictionary[bgm] = value;
         }
 
         private int alertnessRadius;

@@ -19,8 +19,8 @@ namespace GameClass.GameObj
         private readonly Gadget[] propInChest = new Gadget[GameData.maxNumOfPropInChest] { new NullProp(), new NullProp() };
         public Gadget[] PropInChest => propInChest;
 
-        private int openStartTime = 0;
-        public int OpenStartTime => openStartTime;
+        private long openStartTime = 0;
+        public long OpenStartTime => openStartTime;
         private Character? whoOpen = null;
         public Character? WhoOpen => whoOpen;
         public bool Open(Character character)
@@ -28,7 +28,7 @@ namespace GameClass.GameObj
             lock (GameObjReaderWriterLock)
             {
                 if (whoOpen != null) return false;
-                openStartTime = Environment.TickCount;
+                openStartTime = Environment.TickCount64;
                 whoOpen = character;
             }
             return true;

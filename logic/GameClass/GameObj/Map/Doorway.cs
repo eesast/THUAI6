@@ -39,8 +39,8 @@ namespace GameClass.GameObj
             }
         }
 
-        private int openStartTime = 0;
-        public int OpenStartTime
+        private long openStartTime = 0;
+        public long OpenStartTime
         {
             get
             {
@@ -53,7 +53,7 @@ namespace GameClass.GameObj
             lock (gameObjLock)
             {
                 if (!powerSupply || openStartTime > 0) return false;
-                openStartTime = Environment.TickCount;
+                openStartTime = Environment.TickCount64;
                 return true;
             }
         }
@@ -62,14 +62,14 @@ namespace GameClass.GameObj
         {
             lock (gameObjLock)
             {
-                if (Environment.TickCount - openStartTime + openDegree >= GameData.degreeOfOpenedDoorway)
+                if (Environment.TickCount64 - openStartTime + openDegree >= GameData.degreeOfOpenedDoorway)
                 {
                     openDegree = GameData.degreeOfOpenedDoorway;
                     return true;
                 }
                 else
                 {
-                    openDegree = Environment.TickCount - openStartTime + openDegree;
+                    openDegree = (int)(Environment.TickCount64 - openStartTime) + openDegree;
                     openStartTime = 0;
                     return false;
                 }

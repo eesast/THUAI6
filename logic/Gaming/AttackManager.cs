@@ -30,7 +30,7 @@ namespace Gaming
                     },
                     EndMove: obj =>
                     {
-                        Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount);
+                        Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                         if (obj.CanMove && ((Bullet)obj).TypeOfBullet != BulletType.JumpyDumpty)
                             BulletBomb((Bullet)obj, null);
                         obj.ReSetCanMove(false);

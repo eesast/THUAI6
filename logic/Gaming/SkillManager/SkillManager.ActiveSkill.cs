@@ -162,7 +162,7 @@ namespace Gaming
             {
                 Character? whoAttacked = gameMap.FindPlayerInPlayerID(AttackID);
                 if (whoAttacked == null || whoAttacked.NoHp())
-                    return false; 
+                    return false;
                 ActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.SparksNSplash);
 
                 return ActiveSkillEffect(activeSkill, player, () =>

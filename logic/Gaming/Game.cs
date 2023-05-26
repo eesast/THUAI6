@@ -102,7 +102,7 @@ namespace Gaming
             }
             else
             {
-                ICharacter? playerTreated = gameMap.FindPlayer(playerTreatedID);
+                ICharacter? playerTreated = gameMap.FindPlayerInID(playerTreatedID);
                 if (player != null && playerTreated != null)
                 {
                     if (!playerTreated.IsGhost() && !player.IsGhost())
@@ -123,7 +123,7 @@ namespace Gaming
             }
             else
             {
-                ICharacter? playerRescued = gameMap.FindPlayer(playerRescuedID);
+                ICharacter? playerRescued = gameMap.FindPlayerInID(playerRescuedID);
                 if (player != null && playerRescued != null)
                 {
                     if (!playerRescued.IsGhost() && !player.IsGhost())
@@ -267,7 +267,7 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return false;
-            Character? player = gameMap.FindPlayer(playerID);
+            Character? player = gameMap.FindPlayerInID(playerID);
             if (player != null)
             {
                 if (player.Occupation.ListOfIActiveSkill.Count <= skillNum) return false;

@@ -173,7 +173,7 @@ namespace GameClass.GameObj
             return new OutOfBoundBlock(pos);
         }
 
-        public Character? FindPlayer(long playerID)
+        public Character? FindPlayerInID(long playerID)
         {
             Character? player = null;
             gameObjLockDict[GameObjType.Character].EnterReadLock();
@@ -182,6 +182,27 @@ namespace GameClass.GameObj
                 foreach (Character person in gameObjDict[GameObjType.Character])
                 {
                     if (playerID == person.ID)
+                    {
+                        player = person;
+                        break;
+                    }
+                }
+            }
+            finally
+            {
+                gameObjLockDict[GameObjType.Character].ExitReadLock();
+            }
+            return player;
+        }
+        public Character? FindPlayerInPlayerID(long playerID)
+        {
+            Character? player = null;
+            gameObjLockDict[GameObjType.Character].EnterReadLock();
+            try
+            {
+                foreach (Character person in gameObjDict[GameObjType.Character])
+                {
+                    if (playerID == person.PlayerID)
                     {
                         player = person;
                         break;

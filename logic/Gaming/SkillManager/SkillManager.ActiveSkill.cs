@@ -498,52 +498,18 @@ namespace Gaming
             {
                 lock (activeSkill.ActiveSkillUseLock)
                 {
-                    if (activeSkill.TimeUntilActiveSkillAvailable == 0)
+                    if (activeSkill.StartSkill())
                     {
-                        activeSkill.TimeUntilActiveSkillAvailable = activeSkill.SkillCD;
-
                         new Thread
                         (() =>
                         {
                             startSkill();
                             activeSkill.IsBeingUsed = 1;
-                            new FrameRateTaskExecutor<int>(
-                                () => !player.IsRemoved,
-                                () =>
-                                {
-                                    activeSkill.TimeUntilActiveSkillAvailable -= (int)GameData.frameDuration;
-                                },
-                                timeInterval: GameData.frameDuration,
-                                () => 0,
-                                maxTotalDuration: (long)(activeSkill.DurationTime)
-                            )
-                            {
-                                AllowTimeExceed = true,
-                                MaxTolerantTimeExceedCount = ulong.MaxValue,
-                            }
-                                .Start();
+                            Thread.Sleep(activeSkill.DurationTime);
 
                             endSkill();
                             activeSkill.IsBeingUsed = 0;
                             Debugger.Output(player, "return to normal.");
-
-                            new FrameRateTaskExecutor<int>(
-                                loopCondition: () => activeSkill.TimeUntilActiveSkillAvailable > 0,
-                                loopToDo: () =>
-                                {
-                                    activeSkill.TimeUntilActiveSkillAvailable -= (int)GameData.frameDuration;
-                                },
-                                timeInterval: GameData.frameDuration,
-                                finallyReturn: () => 0
-                            )
-                            {
-                                AllowTimeExceed = true,
-                                MaxTolerantTimeExceedCount = ulong.MaxValue,
-                            }
-                                .Start();
-
-                            activeSkill.TimeUntilActiveSkillAvailable = 0;
-                            Debugger.Output(player, "ActiveSkill is ready.");
                         }
                         )
                         { IsBackground = true }.Start();

@@ -1,5 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using System;
 using System.Threading;
 
 namespace Preparation.Interface
@@ -29,18 +30,25 @@ namespace Preparation.Interface
         private readonly object skillLock = new();
         public object SkillLock => skillLock;
 
-        private int timeUntilActiveSkillAvailable = 0;
-        public int TimeUntilActiveSkillAvailable
+        private int openStartTime = 0;
+        public int OpenStartTime
         {
             get
             {
-                return Interlocked.CompareExchange(ref timeUntilActiveSkillAvailable, 0, 0);
+                lock (skillLock)
+                    return openStartTime;
             }
-            set
+        }
+        public bool StartSkill()
+        {
+            lock (skillLock)
             {
-                if (value < 0) value = 0;
-                else if (value > SkillCD) value = SkillCD;
-                Interlocked.Exchange(ref timeUntilActiveSkillAvailable, value);
+                if (Environment.TickCount - openStartTime >= SkillCD)
+                {
+                    openStartTime = Environment.TickCount;
+                    return true;
+                }
+                else return false;
             }
         }
 

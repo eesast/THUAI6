@@ -15,8 +15,8 @@ namespace Server
                 case Preparation.Utility.GameObjType.Character:
                     Character character = (Character)gameObj;
                     if (character.IsGhost())
-                        return Tricker((Ghost)character);
-                    else return Student((Student)character);
+                        return Tricker((Ghost)character, time);
+                    else return Student((Student)character, time);
                 case Preparation.Utility.GameObjType.Bullet:
                     return Bullet((Bullet)gameObj);
                 case Preparation.Utility.GameObjType.BombedBullet:
@@ -49,7 +49,7 @@ namespace Server
             return objMsg;
         }
 
-        private static MessageOfObj? Student(Student player)
+        private static MessageOfObj? Student(Student player, int time)
         {
             if (player.IsGhost()) return null;
             MessageOfObj msg = new()
@@ -81,7 +81,10 @@ namespace Server
             };
 
             foreach (var keyValue in player.ActiveSkillDictionary)
-                msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value.TimeUntilActiveSkillAvailable);
+            {
+                int progress = keyValue.Value.SkillCD - Environment.TickCount + keyValue.Value.OpenStartTime;
+                msg.StudentMessage.TimeUntilSkillAvailable.Add(progress < 0 ? 0 : progress);
+            }
             for (int i = 0; i < GameData.maxNumOfSkill - player.ActiveSkillDictionary.Count; ++i)
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
 
@@ -97,7 +100,7 @@ namespace Server
             return msg;
         }
 
-        private static MessageOfObj? Tricker(Character player)
+        private static MessageOfObj? Tricker(Character player, int time)
         {
             if (!player.IsGhost()) return null;
             MessageOfObj msg = new()
@@ -122,7 +125,10 @@ namespace Server
                 }
             };
             foreach (var keyValue in player.ActiveSkillDictionary)
-                msg.TrickerMessage.TimeUntilSkillAvailable.Add(keyValue.Value.TimeUntilActiveSkillAvailable);
+            {
+                int progress = keyValue.Value.SkillCD - Environment.TickCount + keyValue.Value.OpenStartTime;
+                msg.TrickerMessage.TimeUntilSkillAvailable.Add(progress < 0 ? 0 : progress);
+            }
             for (int i = 0; i < GameData.maxNumOfSkill - player.ActiveSkillDictionary.Count; ++i)
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(-1);
 

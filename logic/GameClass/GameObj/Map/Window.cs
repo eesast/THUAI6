@@ -48,13 +48,15 @@ namespace GameClass.GameObj
         public bool TryToClimb(ICharacter character)
         {
             lock (gameObjLock)
+            {
                 if (whoIsClimbing == null)
                 {
                     stage = new(0, 0);
                     whoIsClimbing = (Character)character;
                     return true;
                 }
-                else return false;
+            }
+            return false;
         }
         public void FinishClimbing()
         {

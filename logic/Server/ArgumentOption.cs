@@ -76,6 +76,6 @@ namespace Server
         public string StartLockFile { get; set; } = DefaultArgumentOptions.FileName;
         
         [Option("mode", Required = false, HelpText = "Whether to run final competition")]
-        public bool Mode { get; set; } = false;
+        public int Mode { get; set; } = 0;
     }
 }

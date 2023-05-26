@@ -160,8 +160,9 @@ namespace Gaming
 
             public bool SparksNSplash(Character player, int AttackID)
             {
-                Character? whoAttacked = gameMap.FindPlayer(AttackID);
-                if (whoAttacked == null || whoAttacked.NoHp()) return false;
+                Character? whoAttacked = gameMap.FindPlayerInPlayerID(AttackID);
+                if (whoAttacked == null || whoAttacked.NoHp())
+                    return false; 
                 ActiveSkill activeSkill = player.FindActiveSkill(ActiveSkillType.SparksNSplash);
 
                 return ActiveSkillEffect(activeSkill, player, () =>

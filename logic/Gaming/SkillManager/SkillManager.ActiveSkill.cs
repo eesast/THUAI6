@@ -141,7 +141,8 @@ namespace Gaming
                             return false;
                         }
                     }
-                    return ActiveSkillEffect(activeSkill, player, () => { }, () => { });
+                    return ActiveSkillEffect(activeSkill, player, () => { }, () => { }
+                    );
                 }
             }
 

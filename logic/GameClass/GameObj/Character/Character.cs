@@ -157,44 +157,14 @@ namespace GameClass.GameObj
                 bgmDictionary[bgm] = value;
         }
 
-        private int alertnessRadius;
-        public int AlertnessRadius
-        {
-            get => alertnessRadius;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    alertnessRadius = value;
-                }
-            }
-        }
+        private readonly int alertnessRadius;
+        public int AlertnessRadius => alertnessRadius;
 
-        private double concealment;
-        public double Concealment
-        {
-            get => concealment;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    concealment = value;
-                }
-            }
-        }
+        private readonly double concealment;
+        public double Concealment => concealment;
 
-        private int viewRange;
-        public int ViewRange
-        {
-            get => viewRange;
-            set
-            {
-                lock (gameObjLock)
-                {
-                    viewRange = (value > 0) ? value : 0;
-                }
-            }
-        }
+        private readonly int viewRange;
+        public int ViewRange => viewRange;
         #endregion
         #region 交互相关的基本属性及方法
         private int speedOfOpeningOrLocking;

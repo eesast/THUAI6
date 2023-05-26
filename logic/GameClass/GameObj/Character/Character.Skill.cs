@@ -23,25 +23,6 @@ namespace GameClass.GameObj
             return new NullSkill();
         }
 
-        public bool SetTimeUntilActiveSkillAvailable(ActiveSkillType activeSkillType, int timeUntilActiveSkillAvailable)
-        {
-            if (Occupation.ListOfIActiveSkill.Contains(activeSkillType))
-            {
-                ActiveSkillDictionary[activeSkillType].TimeUntilActiveSkillAvailable = (timeUntilActiveSkillAvailable > 0) ? timeUntilActiveSkillAvailable : 0;
-                return true;
-            }
-            return false;
-        }
-        public bool AddTimeUntilActiveSkillAvailable(ActiveSkillType activeSkillType, int addTimeUntilActiveSkillAvailable)
-        {
-            if (Occupation.ListOfIActiveSkill.Contains(activeSkillType))
-            {
-                ActiveSkillDictionary[activeSkillType].TimeUntilActiveSkillAvailable += addTimeUntilActiveSkillAvailable;
-                return true;
-            }
-            return false;
-        }
-
         public bool IsGhost()
         {
             return GameData.IsGhost(CharacterType);

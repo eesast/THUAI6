@@ -33,7 +33,7 @@ namespace Server
                         new TeamScore() { team_id = 0, score = scores[0], },
                         new TeamScore() { team_id = 1, score = scores[1], },
                     },
-                    mode = mode 
+                    mode = mode
                 })))
                 {
                     Console.WriteLine("Send to web successfully!");

@@ -55,7 +55,7 @@ namespace Gaming  // 被动技能开局时就释放，持续到游戏结束
             }
             public void Lucky(Character player)
             {
-                player.PropInventory[0] = PropFactory.GetConsumables((PropType)((4 * Environment.TickCount) % 5 + 4), new XY(0, 0));
+                player.PropInventory[0] = PropFactory.GetConsumables((PropType)((4 * Environment.TickCount64) % 5 + 4), new XY(0, 0));
             }
         }
     }

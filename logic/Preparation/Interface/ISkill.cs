@@ -30,22 +30,22 @@ namespace Preparation.Interface
         private readonly object skillLock = new();
         public object SkillLock => skillLock;
 
-        private int openStartTime = 0;
-        public int OpenStartTime
+        private long startTime = 0;
+        public long StartTime
         {
             get
             {
                 lock (skillLock)
-                    return openStartTime;
+                    return startTime;
             }
         }
         public bool StartSkill()
         {
             lock (skillLock)
             {
-                if (Environment.TickCount - openStartTime >= SkillCD)
+                if (Environment.TickCount64 - startTime >= SkillCD)
                 {
-                    openStartTime = Environment.TickCount;
+                    startTime = Environment.TickCount64;
                     return true;
                 }
             }

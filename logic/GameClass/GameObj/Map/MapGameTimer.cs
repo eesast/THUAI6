@@ -12,8 +12,8 @@ namespace GameClass.GameObj
 
         public class GameTimer : ITimer
         {
-            private int startTime;
-            public int nowTime() => Environment.TickCount - startTime;
+            private long startTime;
+            public int nowTime() => (int)(Environment.TickCount64 - startTime);
 
             private bool isGaming = false;
             public bool IsGaming
@@ -35,7 +35,7 @@ namespace GameClass.GameObj
                     if (isGaming)
                         return false;
                     isGaming = true;
-                    startTime = Environment.TickCount;
+                    startTime = Environment.TickCount64;
                 }
                 Thread.Sleep(timeInMilliseconds);
                 isGaming = false;

@@ -307,7 +307,7 @@ namespace Gaming
                 long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.Rescuing);
                 if (stateNum == -1)
                 {
-                    playerRescued.ResetPlayerState(stateNumRescued, RunningStateType.RunningForcibly, PlayerStateType.Addicted);
+                    playerRescued.ResetPlayerStateInOneThread(stateNumRescued, RunningStateType.RunningForcibly, PlayerStateType.Addicted);
                     return false;
                 }
 
@@ -319,7 +319,7 @@ namespace Gaming
                    if (!player.StartThread(stateNum, RunningStateType.RunningActively))
                    {
                        player.ThreadNum.Release();
-                       playerRescued.ResetPlayerState(stateNumRescued, RunningStateType.RunningForcibly, PlayerStateType.Addicted);
+                       playerRescued.ResetPlayerStateInOneThread(stateNumRescued, RunningStateType.RunningForcibly, PlayerStateType.Addicted);
                        return;
                    }
 
@@ -363,7 +363,7 @@ namespace Gaming
                    playerRescued.ThreadNum.Release();
                    if (player.ResetPlayerState(stateNum)) return;
 
-                   playerRescued.ResetPlayerState(stateNumRescued, RunningStateType.RunningForcibly, PlayerStateType.Addicted);
+                   playerRescued.ResetPlayerStateInOneThread(stateNumRescued, RunningStateType.RunningForcibly, PlayerStateType.Addicted);
                }
            )
                 { IsBackground = true }.Start();

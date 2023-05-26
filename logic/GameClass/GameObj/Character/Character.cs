@@ -607,6 +607,18 @@ namespace GameClass.GameObj
             }
         }
 
+        public bool ResetPlayerStateInOneThread(long state, RunningStateType running = RunningStateType.Null, PlayerStateType value = PlayerStateType.Null, IGameObj? obj = null)
+        {
+            lock (actionLock)
+            {
+                if (state != stateNum) return false;
+                this.runningState = running;
+                whatInteractingWith = (GameObj?)obj;
+                playerState = value;
+                return true;
+            }
+        }
+
         public bool TryToRemoveFromGame(PlayerStateType playerStateType)
         {
             lock (actionLock)

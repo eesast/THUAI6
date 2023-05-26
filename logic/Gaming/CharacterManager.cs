@@ -218,7 +218,7 @@ namespace Gaming
 
             public void BeAddictedToGame(Student player, Ghost ghost)
             {
-                long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.Addicted);
+                long stateNum = player.SetPlayerState(RunningStateType.RunningForcibly, PlayerStateType.Addicted);
                 if (stateNum == -1) return;
 
                 if (player.CharacterType == CharacterType.Robot)

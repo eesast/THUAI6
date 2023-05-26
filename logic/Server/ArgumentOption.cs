@@ -74,5 +74,8 @@ namespace Server
 
         [Option("startLockFile", Required = false, HelpText = "Whether to create a file that identifies whether the game has started")]
         public string StartLockFile { get; set; } = DefaultArgumentOptions.FileName;
+        
+        [Option("mode", Required = false, HelpText = "Whether to run final competition")]
+        public bool Mode { get; set; } = false;
     }
 }

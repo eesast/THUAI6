@@ -82,7 +82,7 @@ namespace Server
 
             foreach (var keyValue in player.ActiveSkillDictionary)
             {
-                int progress = keyValue.Value.SkillCD - Environment.TickCount + keyValue.Value.OpenStartTime;
+                int progress = keyValue.Value.SkillCD - time + keyValue.Value.OpenStartTime;
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(progress < 0 ? 0 : progress);
             }
             for (int i = 0; i < GameData.maxNumOfSkill - player.ActiveSkillDictionary.Count; ++i)
@@ -126,7 +126,7 @@ namespace Server
             };
             foreach (var keyValue in player.ActiveSkillDictionary)
             {
-                int progress = keyValue.Value.SkillCD - Environment.TickCount + keyValue.Value.OpenStartTime;
+                int progress = keyValue.Value.SkillCD - time + keyValue.Value.OpenStartTime;
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(progress < 0 ? 0 : progress);
             }
             for (int i = 0; i < GameData.maxNumOfSkill - player.ActiveSkillDictionary.Count; ++i)

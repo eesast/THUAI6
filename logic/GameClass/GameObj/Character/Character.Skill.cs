@@ -11,7 +11,7 @@ namespace GameClass.GameObj
         private readonly IOccupation occupation;
         public IOccupation Occupation => occupation;
 
-        private Dictionary<ActiveSkillType, ActiveSkill> activeSkillDictionary = new();
+        private readonly Dictionary<ActiveSkillType, ActiveSkill> activeSkillDictionary = new();
         public Dictionary<ActiveSkillType, ActiveSkill> ActiveSkillDictionary => activeSkillDictionary;
 
         public ActiveSkill FindActiveSkill(ActiveSkillType activeSkillType)

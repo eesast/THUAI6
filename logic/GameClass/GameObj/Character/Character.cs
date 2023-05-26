@@ -31,7 +31,15 @@ namespace GameClass.GameObj
                 }
             }
         }
-        public int OrgCD { get; protected set; }
+        private int orgCD;
+        public int OrgCD
+        {
+            get
+            {
+                lock (actionLock)
+                    return orgCD;
+            }
+        }
 
         public readonly BulletType OriBulletOfPlayer;
         private BulletType bulletOfPlayer;
@@ -49,7 +57,7 @@ namespace GameClass.GameObj
                 lock (actionLock)
                 {
                     bulletOfPlayer = value;
-                    cd = OrgCD = (BulletFactory.BulletCD(value));
+                    cd = orgCD = (BulletFactory.BulletCD(value));
                     Debugger.Output(this, string.Format("'s CD has been set to: {0}.", cd));
                     maxBulletNum = bulletNum = (BulletFactory.BulletNum(value));
                 }

@@ -8,7 +8,7 @@ namespace Server
 
     public static class CopyInfo
     {
-        public static MessageOfObj? Auto(GameObj gameObj, int time)
+        public static MessageOfObj? Auto(GameObj gameObj, long time)
         {
             switch (gameObj.Type)
             {
@@ -49,7 +49,7 @@ namespace Server
             return objMsg;
         }
 
-        private static MessageOfObj? Student(Student player, int time)
+        private static MessageOfObj? Student(Student player, long time)
         {
             if (player.IsGhost()) return null;
             MessageOfObj msg = new()
@@ -82,7 +82,7 @@ namespace Server
 
             foreach (var keyValue in player.ActiveSkillDictionary)
             {
-                int progress = (keyValue.Value.OpenStartTime - time) + keyValue.Value.SkillCD;
+                int progress = (int)((keyValue.Value.StartTime - time) + keyValue.Value.SkillCD);
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(progress < 0 ? 0 : progress);
             }
             for (int i = 0; i < GameData.maxNumOfSkill - player.ActiveSkillDictionary.Count; ++i)
@@ -100,7 +100,7 @@ namespace Server
             return msg;
         }
 
-        private static MessageOfObj? Tricker(Character player, int time)
+        private static MessageOfObj? Tricker(Character player, long time)
         {
             if (!player.IsGhost()) return null;
             MessageOfObj msg = new()
@@ -126,7 +126,7 @@ namespace Server
             };
             foreach (var keyValue in player.ActiveSkillDictionary)
             {
-                int progress = keyValue.Value.SkillCD + (keyValue.Value.OpenStartTime - time);
+                int progress = (int)(keyValue.Value.SkillCD + (keyValue.Value.StartTime - time));
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(progress < 0 ? 0 : progress);
             }
             for (int i = 0; i < GameData.maxNumOfSkill - player.ActiveSkillDictionary.Count; ++i)
@@ -225,7 +225,7 @@ namespace Server
             };
             return msg;
         }
-        private static MessageOfObj Gate(Doorway doorway, int time)
+        private static MessageOfObj Gate(Doorway doorway, long time)
         {
             MessageOfObj msg = new()
             {
@@ -235,7 +235,7 @@ namespace Server
                     Y = doorway.Position.y
                 }
             };
-            int progress = ((doorway.OpenStartTime > 0) ? (time - doorway.OpenStartTime) : 0) + doorway.OpenDegree;
+            int progress = ((doorway.OpenStartTime > 0) ? ((int)(time - doorway.OpenStartTime)) : 0) + doorway.OpenDegree;
             msg.GateMessage.Progress = (progress > GameData.degreeOfOpenedDoorway) ? GameData.degreeOfOpenedDoorway : progress;
             return msg;
         }
@@ -267,7 +267,7 @@ namespace Server
             };
             return msg;
         }
-        private static MessageOfObj Chest(Chest chest, int time)
+        private static MessageOfObj Chest(Chest chest, long time)
         {
             MessageOfObj msg = new()
             {
@@ -277,7 +277,7 @@ namespace Server
                     Y = chest.Position.y
                 }
             };
-            int progress = (chest.WhoOpen != null) ? ((time - chest.OpenStartTime) * chest.WhoOpen.SpeedOfOpenChest) : 0;
+            int progress = (chest.WhoOpen != null) ? (((int)(time - chest.OpenStartTime)) * chest.WhoOpen.SpeedOfOpenChest) : 0;
             msg.ChestMessage.Progress = (progress > GameData.degreeOfOpenedChest) ? GameData.degreeOfOpenedChest : progress;
             return msg;
         }

@@ -70,8 +70,8 @@ namespace GameClass.GameObj
             }
         }
 
-        private int openStartTime = 0;
-        public int OpenStartTime
+        private long openStartTime = 0;
+        public long OpenStartTime
         {
             get
             {
@@ -86,7 +86,7 @@ namespace GameClass.GameObj
             {
                 if (isOpen) return false;
                 if (whoLockOrOpen != null) return false;
-                openStartTime = Environment.TickCount;
+                openStartTime = Environment.TickCount64;
                 whoLockOrOpen = character;
                 return true;
             }
@@ -97,7 +97,7 @@ namespace GameClass.GameObj
             {
                 if (whoLockOrOpen != null)
                 {
-                    if ((Environment.TickCount - openStartTime) >= GameData.degreeOfLockingOrOpeningTheDoor / whoLockOrOpen.SpeedOfOpeningOrLocking)
+                    if ((Environment.TickCount64 - openStartTime) >= GameData.degreeOfLockingOrOpeningTheDoor / whoLockOrOpen.SpeedOfOpeningOrLocking)
                         isOpen = true;
                     whoLockOrOpen = null;
                 }

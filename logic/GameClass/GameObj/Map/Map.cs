@@ -250,18 +250,16 @@ namespace GameClass.GameObj
             }
             return GameObjForInteract;
         }
-        public Student? StudentForInteract(XY Pos)
+        public Student? StudentForInteract(XY Pos, Student AStudent)
         {
-            Student? GameObjForInteract = null;
             GameObjLockDict[GameObjType.Character].EnterReadLock();
             try
             {
                 foreach (Character character in GameObjDict[GameObjType.Character])
                 {
-                    if (!character.IsGhost() && GameData.ApproachToInteract(character.Position, Pos))
+                    if (!character.IsGhost() && character != AStudent && GameData.ApproachToInteract(character.Position, Pos))
                     {
-                        GameObjForInteract = (Student)character;
-                        break;
+                        return (Student)character;
                     }
                 }
             }
@@ -269,7 +267,7 @@ namespace GameClass.GameObj
             {
                 GameObjLockDict[GameObjType.Character].ExitReadLock();
             }
-            return GameObjForInteract;
+            return null;
         }
         public GameObj? OneInTheSameCell(XY Pos, GameObjType gameObjType)
         {

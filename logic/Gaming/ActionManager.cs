@@ -205,7 +205,7 @@ namespace Gaming
                 if (player.CharacterType == CharacterType.Robot) return false;
                 if (playerTreated == null)
                 {
-                    playerTreated = gameMap.StudentForInteract(player.Position);
+                    playerTreated = gameMap.StudentForInteract(player);
                     if (playerTreated == null) return false;
                 }
                 else if (!GameData.ApproachToInteract(playerTreated.Position, player.Position)) return false;
@@ -296,7 +296,7 @@ namespace Gaming
 
                 if (playerRescued == null)
                 {
-                    playerRescued = gameMap.StudentForInteract(player.Position);
+                    playerRescued = gameMap.StudentForInteract(player);
                     if (playerRescued == null) return false;
                 }
                 else if (!GameData.ApproachToInteract(playerRescued.Position, player.Position)) return false;

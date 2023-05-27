@@ -111,13 +111,18 @@ namespace GameClass.GameObj
     }
     public class Golem : Student, IGolem
     {
+        private readonly object parentLock = new();
         private Character? parent;  // 主人
         public Character? Parent
         {
-            get => parent;
+            get
+            {
+                lock (parentLock)
+                    return parent;
+            }
             set
             {
-                lock (gameObjLock)
+                lock (parentLock)
                 {
                     parent = value;
                 }

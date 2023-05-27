@@ -57,17 +57,11 @@ namespace GameClass.GameObj
         private int lockDegree = 0;
         public int LockDegree
         {
-            get
-            {
-                lock (gameObjLock)
-                    return lockDegree;
-            }
-            set
-            {
-                value = (value > GameData.degreeOfLockingOrOpeningTheDoor) ? GameData.degreeOfLockingOrOpeningTheDoor : value;
-                lock (gameObjLock)
-                    lockDegree = value;
-            }
+            get => Interlocked.CompareExchange(ref lockDegree, -1, -1);
+        }
+        public int AddLockDegree(int add)
+        {
+            return Interlocked.Add(ref lockDegree, add);
         }
 
         private long openStartTime = 0;
@@ -119,7 +113,7 @@ namespace GameClass.GameObj
             {
                 if (!isOpen) return false;
                 if (whoLockOrOpen != null) return false;
-                lockDegree = 0;
+                Interlocked.Exchange(ref lockDegree, 0);
                 whoLockOrOpen = character;
                 return true;
             }
@@ -128,7 +122,7 @@ namespace GameClass.GameObj
         {
             lock (gameObjLock)
             {
-                if (lockDegree >= GameData.degreeOfLockingOrOpeningTheDoor)
+                if (LockDegree >= GameData.degreeOfLockingOrOpeningTheDoor)
                     isOpen = false;
                 whoLockOrOpen = null;
             }

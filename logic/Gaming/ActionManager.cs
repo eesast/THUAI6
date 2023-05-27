@@ -515,12 +515,13 @@ namespace Gaming
                         }
                         Thread.Sleep(GameData.checkInterval);
                         new FrameRateTaskExecutor<int>(
-                        loopCondition: () => stateNum == player.StateNum && gameMap.Timer.IsGaming && doorToLock.LockDegree < GameData.degreeOfLockingOrOpeningTheDoor,
+                        loopCondition: () => stateNum == player.StateNum && gameMap.Timer.IsGaming,
                         loopToDo: () =>
                         {
                             if ((gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character)) != null)
                                 return false;
-                            doorToLock.LockDegree += GameData.checkInterval * player.SpeedOfOpeningOrLocking;
+                            if (doorToLock.AddLockDegree(GameData.checkInterval * player.SpeedOfOpeningOrLocking) >= GameData.basicSpeedOfOpeningOrLocking)
+                                return false;
                             return true;
                         },
                   timeInterval: GameData.checkInterval,

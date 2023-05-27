@@ -145,7 +145,7 @@ namespace Server
                 semaDict[request.PlayerId].Item1.Wait();
                 try
                 {
-                    if (currentGameInfo != null)
+                    if (currentGameInfo != null && !exitFlag)
                     {
                         await responseStream.WriteAsync(currentGameInfo);
                         //Console.WriteLine("Send!");

@@ -305,6 +305,63 @@ namespace GameClass.GameObj
             }
         }
         public double OriVampire { get; protected set; }
+
+        private readonly object treatLock = new();
+        private int degreeOfTreatment = 0;
+        public int DegreeOfTreatment
+        {
+            get
+            {
+                HPReadWriterLock.EnterReadLock();
+                try
+                {
+                    return degreeOfTreatment;
+                }
+                finally
+                {
+                    HPReadWriterLock.ExitReadLock();
+                }
+            }
+        }
+        public void SetDegreeOfTreatment0()
+        {
+            HPReadWriterLock.EnterWriteLock();
+            try
+            {
+                degreeOfTreatment = 0;
+            }
+            finally
+            {
+                HPReadWriterLock.ExitWriteLock();
+            }
+        }
+        public bool AddDegreeOfTreatment(int value, Student whoTreatYou)
+        {
+            HPReadWriterLock.EnterWriteLock();
+            try
+            {
+                if (value >= maxHp - hp)
+                {
+                    whoTreatYou.AddScore(GameData.StudentScoreTreat(maxHp - hp));
+                    hp = maxHp;
+                    degreeOfTreatment = 0;
+                    return true;
+                }
+                if (value >= GameData.basicTreatmentDegree)
+                {
+                    whoTreatYou.AddScore(GameData.StudentScoreTreat(GameData.basicTreatmentDegree));
+                    hp += GameData.basicTreatmentDegree;
+                    degreeOfTreatment = 0;
+                    return true;
+                }
+                degreeOfTreatment = value;
+            }
+            finally
+            {
+                HPReadWriterLock.ExitWriteLock();
+            }
+            return false;
+        }
         #endregion
         #region 查询状态相关的基本属性与方法
         private PlayerStateType playerState = PlayerStateType.Null;

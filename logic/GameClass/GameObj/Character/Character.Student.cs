@@ -88,44 +88,6 @@ namespace GameClass.GameObj
             }
         }
 
-        private int degreeOfTreatment = 0;
-        public int DegreeOfTreatment
-        {
-            get => degreeOfTreatment;
-            private set
-            {
-                degreeOfTreatment = value;
-            }
-        }
-        public void SetDegreeOfTreatment0()
-        {
-            DegreeOfTreatment = 0;
-        }
-        public bool SetDegreeOfTreatment(int value, Student whoTreatYou)
-        {
-            if (value <= 0) { degreeOfTreatment = 0; return false; }
-            if (value >= MaxHp - HP)
-            {
-                whoTreatYou.AddScore(GameData.StudentScoreTreat(MaxHp - HP));
-                HP = MaxHp;
-                degreeOfTreatment = 0;
-                return true;
-            }
-            if (value >= GameData.basicTreatmentDegree)
-            {
-                whoTreatYou.AddScore(GameData.StudentScoreTreat(GameData.basicTreatmentDegree));
-                HP += GameData.basicTreatmentDegree;
-                DegreeOfTreatment = 0;
-                return true;
-            }
-            DegreeOfTreatment = value;
-            return false;
-        }
-        public bool AddDegreeOfTreatment(int value, Student student)
-        {
-            return SetDegreeOfTreatment(value + degreeOfTreatment, student);
-        }
-
         private int timeOfRescue = 0;
         public int TimeOfRescue
         {

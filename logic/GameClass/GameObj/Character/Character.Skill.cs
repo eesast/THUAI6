@@ -50,9 +50,6 @@ namespace GameClass.GameObj
             {
                 this.ActiveSkillDictionary.Add(activeSkill, SkillFactory.FindActiveSkill(activeSkill));
             }
-
-            // UsePassiveSkill();  //这一过程放到gamestart时进行
-
             Debugger.Output(this, "constructed!");
         }
     }

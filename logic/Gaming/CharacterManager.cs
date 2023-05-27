@@ -393,7 +393,7 @@ namespace Gaming
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {
-                    Gadget? prop = player.UseProp(i);
+                    Gadget? prop = player.ConsumeProp(i);
                     if (prop != null)
                     {
                         prop.ReSetPos(player.Position);

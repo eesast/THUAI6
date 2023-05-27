@@ -305,7 +305,7 @@ namespace Server
         public override Task<BoolRes> UseProp(PropMsg request, ServerCallContext context)
         {
 #if DEBUG
-            Console.WriteLine($"UseProp ID: {request.PlayerId}");
+            Console.WriteLine($"ConsumeProp ID: {request.PlayerId}");
 #endif 
             BoolRes boolRes = new();
             if (request.PlayerId >= spectatorMinPlayerID)

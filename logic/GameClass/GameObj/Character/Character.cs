@@ -306,7 +306,7 @@ namespace GameClass.GameObj
         }
         public double OriVampire { get; protected set; }
         #endregion
-        #region 状态相关的基本属性与方法
+        #region 查询状态相关的基本属性与方法
         private PlayerStateType playerState = PlayerStateType.Null;
         public PlayerStateType PlayerState
         {
@@ -370,6 +370,8 @@ namespace GameClass.GameObj
                            || playerState == PlayerStateType.Stunned || playerState == PlayerStateType.Charmed
                            || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
         }
+        #endregion
+        #region 更改状态相关的属性和方法
         private GameObj? whatInteractingWith = null;
         public GameObj? WhatInteractingWith
         {
@@ -380,19 +382,6 @@ namespace GameClass.GameObj
                     return whatInteractingWith;
                 }
             }
-        }
-
-        public bool StartThread(long stateNum, RunningStateType runningState)
-        {
-            lock (ActionLock)
-            {
-                if (this.StateNum == stateNum)
-                {
-                    this.runningState = runningState;
-                    return true;
-                }
-            }
-            return false;
         }
 
         private long ChangePlayerState(RunningStateType running, PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
@@ -572,6 +561,19 @@ namespace GameClass.GameObj
             }
         }
 
+        public bool StartThread(long stateNum, RunningStateType runningState)
+        {
+            lock (ActionLock)
+            {
+                if (this.StateNum == stateNum)
+                {
+                    this.runningState = runningState;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool TryToRemoveFromGame(PlayerStateType playerStateType)
         {
             lock (actionLock)
@@ -641,7 +643,7 @@ namespace GameClass.GameObj
         /// 使用物品栏中的道具
         /// </summary>
         /// <returns>被使用的道具</returns>
-        public Gadget UseProp(int indexing)
+        public Gadget ConsumeProp(int indexing)
         {
             if (indexing < 0 || indexing >= GameData.maxNumOfPropInPropInventory)
                 return new NullProp();
@@ -654,7 +656,7 @@ namespace GameClass.GameObj
             }
         }
 
-        public Gadget UseProp(PropType propType)
+        public Gadget ConsumeProp(PropType propType)
         {
             if (propType == PropType.Null)
             {
@@ -689,7 +691,7 @@ namespace GameClass.GameObj
             return new NullProp();
         }
 
-        public bool UseTool(PropType propType)
+        public bool UseTool(PropType propType)//占用道具，使其不能重复使用和被消耗
         {
             lock (inventoryLock)
             {

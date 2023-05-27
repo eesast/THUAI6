@@ -52,12 +52,18 @@ namespace GameClass.GameObj
             }
         }
 
-        public override XY FacingDirection
+        protected XY facingDirection = new(1, 0);
+        public XY FacingDirection
         {
             get
             {
                 lock (actionLock)
                     return facingDirection;
+            }
+            set
+            {
+                lock (actionLock)
+                    facingDirection = value;
             }
         }
 

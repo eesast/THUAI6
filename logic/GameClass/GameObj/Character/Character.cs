@@ -17,6 +17,7 @@ namespace GameClass.GameObj
         public object InventoryLock => inventoryLock;
 
         #region 装弹、攻击相关的基本属性及方法
+        private readonly object attackLock = new();
         /// <summary>
         /// 装弹冷却
         /// </summary>
@@ -25,7 +26,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (actionLock)
+                lock (attackLock)
                 {
                     return cd;
                 }
@@ -36,7 +37,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (actionLock)
+                lock (attackLock)
                     return orgCD;
             }
         }
@@ -47,14 +48,14 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (actionLock)
+                lock (attackLock)
                 {
                     return bulletOfPlayer;
                 }
             }
             set
             {
-                lock (actionLock)
+                lock (attackLock)
                 {
                     bulletOfPlayer = value;
                     cd = orgCD = (BulletFactory.BulletCD(value));
@@ -69,7 +70,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (actionLock)
+                lock (attackLock)
                 {
                     return maxBulletNum;
                 }
@@ -80,7 +81,7 @@ namespace GameClass.GameObj
 
         public int UpdateBulletNum(int time)
         {
-            lock (actionLock)
+            lock (attackLock)
             {
                 if (bulletNum < maxBulletNum)
                 {
@@ -98,7 +99,7 @@ namespace GameClass.GameObj
         /// <returns>攻击操作发出的子弹</returns>
         public Bullet? Attack(double angle, int time)
         {
-            lock (actionLock)
+            lock (attackLock)
             {
                 if (bulletOfPlayer == BulletType.Null)
                     return null;
@@ -115,7 +116,7 @@ namespace GameClass.GameObj
                     Bullet? bullet = BulletFactory.GetBullet(this, res, this.bulletOfPlayer);
                     if (bullet == null) return null;
                     if (TryAddAp()) bullet.AddAP(GameData.ApPropAdd);
-                    facingDirection = new(angle, bullet.AttackDistance);
+                    FacingDirection = new(angle, bullet.AttackDistance);
                     return bullet;
                 }
                 else

@@ -8,7 +8,8 @@ namespace GameClass.GameObj
         public override ShapeType Shape => ShapeType.Circle;
         public override bool IsRigid => false;
         public long MappingID { get; }
-        public Bullet bulletHasBombed;
+        public readonly Bullet bulletHasBombed;
+        public readonly XY facingDirection;
 
         public BombedBullet(Bullet bullet) :
             base(bullet.Position, bullet.Radius, GameObjType.BombedBullet)

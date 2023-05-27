@@ -6,6 +6,7 @@ namespace Preparation.Interface
 {
     public interface IMoveable : IGameObj
     {
+        public XY FacingDirection { get; set; }
         object ActionLock { get; }
         public int MoveSpeed { get; }
         public bool IsMoving { get; set; }

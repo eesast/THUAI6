@@ -88,17 +88,6 @@ namespace GameClass.GameObj
             }
         }
 
-        private int selfHealingTimes = 1;//剩余的自愈次数
-        public int SelfHealingTimes
-        {
-            get => selfHealingTimes;
-            set
-            {
-                lock (gameObjLock)
-                    selfHealingTimes = (value > 0) ? value : 0;
-            }
-        }
-
         private int degreeOfTreatment = 0;
         public int DegreeOfTreatment
         {

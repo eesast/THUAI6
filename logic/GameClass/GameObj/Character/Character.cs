@@ -8,14 +8,6 @@ namespace GameClass.GameObj
 {
     public partial class Character : Moveable, ICharacter  // 负责人LHR摆烂终了
     {
-
-        private readonly ReaderWriterLockSlim hpReaderWriterLock = new();
-        public ReaderWriterLockSlim HPReadWriterLock => hpReaderWriterLock;
-        private readonly object vampireLock = new();
-        public object VampireLock => vampire;
-        private readonly object inventoryLock = new();
-        public object InventoryLock => inventoryLock;
-
         #region 装弹、攻击相关的基本属性及方法
         private readonly object attackLock = new();
         /// <summary>
@@ -79,17 +71,17 @@ namespace GameClass.GameObj
         private int bulletNum;
         private int updateTimeOfBulletNum = 0;
 
-        public int UpdateBulletNum(int time)
+        public int UpdateBulletNum(int time)//通过该函数获取真正的bulletNum
         {
             lock (attackLock)
             {
-                if (bulletNum < maxBulletNum)
+                if (bulletNum < maxBulletNum && time - updateTimeOfBulletNum >= cd)
                 {
                     int add = Math.Min(maxBulletNum - bulletNum, (time - updateTimeOfBulletNum) / cd);
                     updateTimeOfBulletNum += add * cd;
                     return (bulletNum += add);
                 }
-                return maxBulletNum;
+                return bulletNum;
             }
         }
 
@@ -195,6 +187,9 @@ namespace GameClass.GameObj
         }
         #endregion
         #region 血量相关的基本属性及方法
+        private readonly ReaderWriterLockSlim hpReaderWriterLock = new();
+        public ReaderWriterLockSlim HPReadWriterLock => hpReaderWriterLock;
+
         private long maxHp;
         public long MaxHp
         {
@@ -284,6 +279,9 @@ namespace GameClass.GameObj
                 HPReadWriterLock.ExitWriteLock();
             }
         }
+
+        private readonly object vampireLock = new();
+        public object VampireLock => vampire;
 
         private double vampire = 0;  // 回血率：0-1之间
         public double Vampire
@@ -620,6 +618,9 @@ namespace GameClass.GameObj
         }
 
         #region 道具和buff相关属性、方法
+        private readonly object inventoryLock = new();
+        public object InventoryLock => inventoryLock;
+
         private Gadget[] propInventory = new Gadget[GameData.maxNumOfPropInPropInventory]
                                                 {new NullProp(), new NullProp(),new NullProp() };
         public Gadget[] PropInventory

@@ -8,7 +8,7 @@ namespace GameClass.GameObj
     {
         protected readonly object actionLock = new();
         public object ActionLock => actionLock;
-        //player.actionLock>其他.actionLock
+        //player.actionLock>其他.actionLock/其他Lock,应当避免两个player的actionlock互锁
         private readonly ReaderWriterLockSlim moveReaderWriterLock = new();
         public ReaderWriterLockSlim MoveReaderWriterLock => moveReaderWriterLock;
         //规定moveReaderWriterLock<actionLock

@@ -90,7 +90,7 @@ namespace Server
                             return;
                         }
                     }
-                    catch (Exception)
+                    catch
                     {
                         // Console.WriteLine(ex);
                     }
@@ -151,7 +151,7 @@ namespace Server
                         //Console.WriteLine("Send!");
                     }
                 }
-                catch (Exception)
+                catch
                 {
                     if (!exitFlag)
                     {

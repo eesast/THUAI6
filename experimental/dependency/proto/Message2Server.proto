@@ -1,0 +1,74 @@
+// Message2Server
+syntax = "proto3";
+package protobuf;
+
+import "MessageType.proto";
+
+message PlayerMsg
+{
+    int64 player_id = 1;
+    oneof job_type
+    {
+        StudentType student_type = 2;
+        TrickerType tricker_type = 3;
+    }
+    PlayerType player_type = 4;
+}
+
+message MoveMsg
+{
+    int64 player_id = 1;
+    double angle = 2;
+    int64 time_in_milliseconds = 3;   
+}
+
+message PropMsg
+{
+    int64 player_id = 1;
+    PropType prop_type = 2;
+}
+
+message SendMsg
+{
+    int64 player_id = 1;
+    int64 to_player_id = 2;
+    string message = 3;
+}
+
+message AttackMsg // 相当于攻击
+{
+    int64 player_id = 1;
+    double angle = 2;
+}
+
+message IDMsg
+{
+    int64 player_id = 1;
+}
+
+message TreatAndRescueMsg
+{
+    int64 player_id = 1;
+    int64 to_player_id = 2;
+}
+
+message SkillMsg
+{
+    int64 player_id = 1;
+    int32 skill_id = 2;
+}
+
+// 基本继承于THUAI5，为了使发送的信息尽可能不被浪费，暂定不发这类大包。
+// message MessageToServer
+// {
+//     MessageType messageType = 1;
+//     int64 playerID = 2; // 消息发送者的playerID
+//     PlayerType playerType = 3;
+//     HumanType humanType= 4;
+//     TrickerType trickerType = 5;
+//     double angle = 6; // messageType为Move, Attack时的角度
+//     PropType propType = 7; // messageType为PickProp时要捡起的道具类型，防止多个道具堆叠时出现问题
+//     int64 timeInMilliseconds = 8;//时间参数
+//     int64 ToPlayerID = 9; // messageType为Send时要发送的对象的ID
+//     string message = 10; // messageType为Send时发送的消息内容
+// }

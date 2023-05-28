@@ -133,7 +133,7 @@ namespace GameClass.GameObj
                 if (!(bouncer?.TeamID == this.TeamID))
                 {
                     if (hasSpear || !HasShield)
-                        _ = TrySubHp(subHP);
+                        _ = SubHp(subHP);
                     if (hp <= 0)
                         TryActivatingLIFE();
                 }
@@ -218,7 +218,8 @@ namespace GameClass.GameObj
                     HPReadWriterLock.ExitWriteLock();
                 }
             }
-        }  // 最大血量
+        }
+        // 最大血量
         protected long hp;
         public long HP
         {
@@ -234,22 +235,23 @@ namespace GameClass.GameObj
                     HPReadWriterLock.ExitReadLock();
                 }
             }
-            set
+        }
+
+        public long SetHP(long value)
+        {
+            HPReadWriterLock.EnterWriteLock();
+            try
             {
-                HPReadWriterLock.EnterWriteLock();
-                try
+                if (value > 0)
                 {
-                    if (value > 0)
-                    {
-                        hp = value <= maxHp ? value : maxHp;
-                    }
-                    else
-                        hp = 0;
+                    return hp = value <= maxHp ? value : maxHp;
                 }
-                finally
-                {
-                    HPReadWriterLock.ExitWriteLock();
-                }
+                else
+                    return hp = 0;
+            }
+            finally
+            {
+                HPReadWriterLock.ExitWriteLock();
             }
         }
 
@@ -257,7 +259,7 @@ namespace GameClass.GameObj
         /// 尝试减血
         /// </summary>
         /// <param name="sub">减血量</param>
-        public long TrySubHp(long sub)
+        public long SubHp(long sub)
         {
             HPReadWriterLock.EnterWriteLock();
             try
@@ -273,6 +275,20 @@ namespace GameClass.GameObj
                     hp -= sub;
                     return sub;
                 }
+            }
+            finally
+            {
+                HPReadWriterLock.ExitWriteLock();
+            }
+        }
+
+        public long AddHP(long add)
+        {
+            HPReadWriterLock.EnterWriteLock();
+            try
+            {
+                long previousHp = hp;
+                return (hp = (hp + add > maxHp) ? maxHp : hp + add) - previousHp;
             }
             finally
             {
@@ -537,13 +553,7 @@ namespace GameClass.GameObj
                         if (value == PlayerStateType.Rescued) return -1;
                         Door door = (Door)lastObj!;
                         door.StopOpen();
-                        ReleaseTool(door.DoorNum switch
-                        {
-                            3 => PropType.Key3,
-                            5 => PropType.Key5,
-                            _ => PropType.Key6,
-                        }
-                        );
+                        ReleaseTool(door.KeyType);
                         return ChangePlayerState(runningState, value, gameObj);
                     case PlayerStateType.UsingSkill:
                         {

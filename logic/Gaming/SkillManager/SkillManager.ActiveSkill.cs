@@ -421,7 +421,7 @@ namespace Gaming
                                 if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
                                 {
                                     character.SetPlayerStateNaturally();
-                                    character.HP = GameData.RemainHpWhenAddLife;
+                                    character.SetHP(GameData.RemainHpWhenAddLife);
                                     ((Student)character).SetTimeOfRescue(0);
                                     player.AddScore(GameData.StudentScoreRescue);
                                     break;
@@ -452,7 +452,7 @@ namespace Gaming
                             if ((character.HP < character.MaxHp) && gameMap.CanSee(player, character))
                             {
                                 player.AddScore(GameData.StudentScoreTreat(GameData.addHpWhenEncourage));
-                                character.HP += GameData.addHpWhenEncourage;
+                                character.AddHP(GameData.addHpWhenEncourage);
                                 ((Student)character).SetDegreeOfTreatment0();
                                 break;
                             }

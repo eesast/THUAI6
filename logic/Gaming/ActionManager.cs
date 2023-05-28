@@ -321,7 +321,7 @@ namespace Gaming
                                    if (playerRescued.AddTimeOfRescue(GameData.checkInterval))
                                    {
                                        playerRescued.SetPlayerStateNaturally();
-                                       playerRescued.HP = playerRescued.MaxHp / 2;
+                                       playerRescued.SetHP(playerRescued.MaxHp / 2);
                                        player.AddScore(GameData.StudentScoreRescue);
                                        return false;
                                    }
@@ -479,19 +479,12 @@ namespace Gaming
                 Door? doorToLock = (Door?)gameMap.OneForInteract(player.Position, GameObjType.Door);
                 if (doorToLock == null) return false;
 
-                PropType propType = doorToLock.DoorNum switch
-                {
-                    3 => PropType.Key3,
-                    5 => PropType.Key5,
-                    _ => PropType.Key6,
-                };
-
-                if (!player.UseTool(propType)) return false;
+                if (!player.UseTool(doorToLock.KeyType)) return false;
 
                 long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.LockingTheDoor, doorToLock);
                 if (stateNum == -1)
                 {
-                    player.ReleaseTool(propType);
+                    player.ReleaseTool(doorToLock.KeyType);
                     return false;
                 }
 
@@ -502,13 +495,13 @@ namespace Gaming
                         player.ThreadNum.WaitOne();
                         if (!player.StartThread(stateNum, RunningStateType.RunningActively))
                         {
-                            player.ReleaseTool(propType);
+                            player.ReleaseTool(doorToLock.KeyType);
                             player.ThreadNum.Release();
                             return;
                         }
                         if (!doorToLock.TryLock(player))
                         {
-                            player.ReleaseTool(propType);
+                            player.ReleaseTool(doorToLock.KeyType);
                             player.ResetPlayerState(stateNum);
                             player.ThreadNum.Release();
                             return;
@@ -529,7 +522,7 @@ namespace Gaming
                   )
                   .Start();
                         doorToLock.StopLock();
-                        player.ReleaseTool(propType);
+                        player.ReleaseTool(doorToLock.KeyType);
                         player.ThreadNum.Release();
                         player.ResetPlayerState(stateNum);
                     }
@@ -542,22 +535,15 @@ namespace Gaming
             public bool OpenDoor(Character player)
             {
                 if (player.CharacterType == CharacterType.Robot) return false;
-                Door? doorToLock = (Door?)gameMap.OneForInteract(player.Position, GameObjType.Door);
-                if (doorToLock == null) return false;
+                Door? doorToOpen = (Door?)gameMap.OneForInteract(player.Position, GameObjType.Door);
+                if (doorToOpen == null) return false;
 
-                PropType propType = doorToLock.DoorNum switch
-                {
-                    3 => PropType.Key3,
-                    5 => PropType.Key5,
-                    _ => PropType.Key6,
-                };
+                if (!player.UseTool(doorToOpen.KeyType)) return false;
 
-                if (!player.UseTool(propType)) return false;
-
-                long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.OpeningTheDoor, doorToLock);
+                long stateNum = player.SetPlayerState(RunningStateType.Waiting, PlayerStateType.OpeningTheDoor, doorToOpen);
                 if (stateNum == -1)
                 {
-                    player.ReleaseTool(propType);
+                    player.ReleaseTool(doorToOpen.KeyType);
                     return false;
                 }
 
@@ -568,13 +554,13 @@ namespace Gaming
                         player.ThreadNum.WaitOne();
                         if (!player.StartThread(stateNum, RunningStateType.RunningSleepily))
                         {
-                            player.ReleaseTool(propType);
+                            player.ReleaseTool(doorToOpen.KeyType);
                             player.ThreadNum.Release();
                             return;
                         }
-                        if (!doorToLock.TryOpen(player))
+                        if (!doorToOpen.TryOpen(player))
                         {
-                            player.ReleaseTool(propType);
+                            player.ReleaseTool(doorToOpen.KeyType);
                             if (player.ResetPlayerState(stateNum))
                                 player.ThreadNum.Release();
                             return;
@@ -583,8 +569,8 @@ namespace Gaming
 
                         if (player.ResetPlayerState(stateNum))
                         {
-                            doorToLock.StopOpen();
-                            player.ReleaseTool(propType);
+                            doorToOpen.StopOpen();
+                            player.ReleaseTool(doorToOpen.KeyType);
                             player.ThreadNum.Release();
                         }
                     }

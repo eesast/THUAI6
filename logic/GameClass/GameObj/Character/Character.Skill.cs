@@ -36,7 +36,7 @@ namespace GameClass.GameObj
             this.buffManager = new BuffManager();
             this.occupation = OccupationFactory.FindIOccupation(characterType);
             this.MaxHp = this.hp = Occupation.MaxHp;
-            this.MoveSpeed = this.OrgMoveSpeed = Occupation.MoveSpeed;
+            this.MoveSpeed = this.orgMoveSpeed = Occupation.MoveSpeed;
             this.BulletOfPlayer = this.OriBulletOfPlayer = Occupation.InitBullet;
             this.concealment = Occupation.Concealment;
             this.alertnessRadius = Occupation.AlertnessRadius;
@@ -50,9 +50,6 @@ namespace GameClass.GameObj
             {
                 this.ActiveSkillDictionary.Add(activeSkill, SkillFactory.FindActiveSkill(activeSkill));
             }
-
-            // UsePassiveSkill();  //这一过程放到gamestart时进行
-
             Debugger.Output(this, "constructed!");
         }
     }

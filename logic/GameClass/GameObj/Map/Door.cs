@@ -13,23 +13,16 @@ namespace GameClass.GameObj
         public Door(XY initPos, PlaceType placeType) :
             base(initPos, GameData.numOfPosGridPerCell / 2, GameObjType.Door)
         {
-            switch (placeType)
+            keyType = placeType switch
             {
-                case PlaceType.Door3:
-                    doorNum = 3;
-                    break;
-                case PlaceType.Door5:
-                    doorNum = 5;
-                    break;
-                case PlaceType.Door6:
-                default:
-                    doorNum = 6;
-                    break;
-            }
+                PlaceType.Door3 => PropType.Key3,
+                PlaceType.Door5 => PropType.Key5,
+                _ => PropType.Key6,
+            };
         }
 
-        private readonly int doorNum;
-        public int DoorNum => doorNum;
+        private readonly PropType keyType;
+        public PropType KeyType => keyType;
 
         public override bool IsRigid => !isOpen;
         public override ShapeType Shape => ShapeType.Square;
@@ -57,17 +50,11 @@ namespace GameClass.GameObj
         private int lockDegree = 0;
         public int LockDegree
         {
-            get
-            {
-                lock (gameObjLock)
-                    return lockDegree;
-            }
-            set
-            {
-                value = (value > GameData.degreeOfLockingOrOpeningTheDoor) ? GameData.degreeOfLockingOrOpeningTheDoor : value;
-                lock (gameObjLock)
-                    lockDegree = value;
-            }
+            get => Interlocked.CompareExchange(ref lockDegree, -1, -1);
+        }
+        public int AddLockDegree(int add)
+        {
+            return Interlocked.Add(ref lockDegree, add);
         }
 
         private long openStartTime = 0;
@@ -119,7 +106,7 @@ namespace GameClass.GameObj
             {
                 if (!isOpen) return false;
                 if (whoLockOrOpen != null) return false;
-                lockDegree = 0;
+                Interlocked.Exchange(ref lockDegree, 0);
                 whoLockOrOpen = character;
                 return true;
             }
@@ -128,7 +115,7 @@ namespace GameClass.GameObj
         {
             lock (gameObjLock)
             {
-                if (lockDegree >= GameData.degreeOfLockingOrOpeningTheDoor)
+                if (LockDegree >= GameData.degreeOfLockingOrOpeningTheDoor)
                     isOpen = false;
                 whoLockOrOpen = null;
             }
@@ -157,12 +144,7 @@ namespace GameClass.GameObj
                 {
                     if (character.PlayerState == PlayerStateType.OpeningTheDoor)
                     {
-                        character.ReleaseTool(DoorNum switch
-                        {
-                            3 => PropType.Key3,
-                            5 => PropType.Key5,
-                            _ => PropType.Key6,
-                        });
+                        character.ReleaseTool(KeyType);
                         character.SetPlayerStateNaturally();
                     }
                     else if (character.PlayerState == PlayerStateType.LockingTheDoor)

@@ -203,7 +203,7 @@ namespace Server
                     Type = Transformation.ToBulletType(bombedBullet.bulletHasBombed.TypeOfBullet),
                     X = bombedBullet.bulletHasBombed.Position.x,
                     Y = bombedBullet.bulletHasBombed.Position.y,
-                    FacingDirection = bombedBullet.FacingDirection.Angle(),
+                    FacingDirection = bombedBullet.facingDirection.Angle(),
                     MappingId = bombedBullet.MappingID,
                     BombRange = bombedBullet.bulletHasBombed.BulletBombRange
                 }

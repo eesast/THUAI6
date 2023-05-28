@@ -326,12 +326,12 @@ namespace Gaming
                 {
                     if (bullet.HasSpear)
                     {
-                        long subHp = student.TrySubHp(bullet.AP);
+                        long subHp = student.SubHp(bullet.AP);
 #if DEBUG
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
 #endif
                         bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
-                        bullet.Parent.HP = (long)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
+                        bullet.Parent.AddHP((long)bullet.Parent.Vampire * subHp);
                     }
                     else return;
                 }
@@ -340,14 +340,14 @@ namespace Gaming
                     long subHp;
                     if (bullet.HasSpear)
                     {
-                        subHp = student.TrySubHp(bullet.AP + GameData.ApSpearAdd);
+                        subHp = student.SubHp(bullet.AP + GameData.ApSpearAdd);
 #if DEBUG
                         Debugger.Output(this, "is being shot with Spear! Now his hp is" + student.HP.ToString());
 #endif
                     }
                     else
                     {
-                        subHp = student.TrySubHp(bullet.AP);
+                        subHp = student.SubHp(bullet.AP);
 #if DEBUG
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
 #endif
@@ -358,7 +358,7 @@ namespace Gaming
                         student.AddScore(subHp * GameData.factorOfScoreWhenTeacherAttacked / GameData.basicApOfGhost / FactorTeacher);
                     }
 
-                    bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
+                    bullet.Parent.AddHP((long)(bullet.Parent.Vampire * subHp));
                 }
                 if (student.HP <= 0)
                     student.TryActivatingLIFE();  // 如果有复活甲
@@ -393,7 +393,7 @@ namespace Gaming
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {
-                    Gadget? prop = player.UseProp(i);
+                    Gadget? prop = player.ConsumeProp(i);
                     if (prop != null)
                     {
                         prop.ReSetPos(player.Position);

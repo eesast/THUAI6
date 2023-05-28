@@ -32,83 +32,60 @@ namespace GameClass.GameObj
         /// </summary>
         protected readonly int orgFixSpeed;
 
+        private readonly object treatLock = new();
         protected int treatSpeed = GameData.basicTreatSpeed;
         public int TreatSpeed
         {
-            get => treatSpeed;
+            get
+            {
+                lock (treatLock)
+                    return treatSpeed;
+            }
             set
             {
-                lock (gameObjLock)
+                lock (treatLock)
                 {
                     treatSpeed = value;
                 }
             }
         }
-        public int OrgTreatSpeed { get; protected set; }
+        protected readonly int orgTreatSpeed;
 
-        public int MaxGamingAddiction { get; protected set; }
+        private readonly object addictionLock = new();
+        private int maxGamingAddiction;
+        public int MaxGamingAddiction
+        {
+            get
+            {
+                lock (addictionLock)
+                    return maxGamingAddiction;
+            }
+            protected set
+            {
+                lock (addictionLock)
+                {
+                    if (value < gamingAddiction) gamingAddiction = value;
+                    maxGamingAddiction = value;
+                }
+            }
+        }
         private int gamingAddiction;
         public int GamingAddiction
         {
-            get => gamingAddiction;
+            get
+            {
+                lock (addictionLock)
+                    return gamingAddiction;
+            }
             set
             {
                 if (value > 0)
-                    lock (gameObjLock)
-                        gamingAddiction = value <= MaxGamingAddiction ? value : MaxGamingAddiction;
+                    lock (addictionLock)
+                        gamingAddiction = value <= maxGamingAddiction ? value : maxGamingAddiction;
                 else
-                    lock (gameObjLock)
+                    lock (addictionLock)
                         gamingAddiction = 0;
             }
-        }
-
-        private int selfHealingTimes = 1;//剩余的自愈次数
-        public int SelfHealingTimes
-        {
-            get => selfHealingTimes;
-            set
-            {
-                lock (gameObjLock)
-                    selfHealingTimes = (value > 0) ? value : 0;
-            }
-        }
-
-        private int degreeOfTreatment = 0;
-        public int DegreeOfTreatment
-        {
-            get => degreeOfTreatment;
-            private set
-            {
-                degreeOfTreatment = value;
-            }
-        }
-        public void SetDegreeOfTreatment0()
-        {
-            DegreeOfTreatment = 0;
-        }
-        public bool SetDegreeOfTreatment(int value, Student whoTreatYou)
-        {
-            if (value <= 0) { degreeOfTreatment = 0; return false; }
-            if (value >= MaxHp - HP)
-            {
-                whoTreatYou.AddScore(GameData.StudentScoreTreat(MaxHp - HP));
-                HP = MaxHp;
-                degreeOfTreatment = 0;
-                return true;
-            }
-            if (value >= GameData.basicTreatmentDegree)
-            {
-                whoTreatYou.AddScore(GameData.StudentScoreTreat(GameData.basicTreatmentDegree));
-                HP += GameData.basicTreatmentDegree;
-                DegreeOfTreatment = 0;
-                return true;
-            }
-            DegreeOfTreatment = value;
-            return false;
-        }
-        public bool AddDegreeOfTreatment(int value, Student student)
-        {
-            return SetDegreeOfTreatment(value + degreeOfTreatment, student);
         }
 
         private int timeOfRescue = 0;
@@ -128,19 +105,24 @@ namespace GameClass.GameObj
         public Student(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
             this.orgFixSpeed = this.fixSpeed = ((IStudentType)Occupation).FixSpeed;
-            this.TreatSpeed = this.OrgTreatSpeed = ((IStudentType)Occupation).TreatSpeed;
+            this.TreatSpeed = this.orgTreatSpeed = ((IStudentType)Occupation).TreatSpeed;
             this.MaxGamingAddiction = ((IStudentType)Occupation).MaxGamingAddiction;
         }
     }
     public class Golem : Student, IGolem
     {
+        private readonly object parentLock = new();
         private Character? parent;  // 主人
         public Character? Parent
         {
-            get => parent;
+            get
+            {
+                lock (parentLock)
+                    return parent;
+            }
             set
             {
-                lock (gameObjLock)
+                lock (parentLock)
                 {
                     parent = value;
                 }

@@ -8,7 +8,7 @@ namespace GameClass.GameObj
     {
         protected readonly object actionLock = new();
         public object ActionLock => actionLock;
-        //player.actionLock>其他.actionLock
+        //player.actionLock>其他.actionLock/其他Lock,应当避免两个player的actionlock互锁
         private readonly ReaderWriterLockSlim moveReaderWriterLock = new();
         public ReaderWriterLockSlim MoveReaderWriterLock => moveReaderWriterLock;
         //规定moveReaderWriterLock<actionLock
@@ -52,12 +52,18 @@ namespace GameClass.GameObj
             }
         }
 
-        public override XY FacingDirection
+        protected XY facingDirection = new(1, 0);
+        public XY FacingDirection
         {
             get
             {
                 lock (actionLock)
                     return facingDirection;
+            }
+            set
+            {
+                lock (actionLock)
+                    facingDirection = value;
             }
         }
 
@@ -127,7 +133,8 @@ namespace GameClass.GameObj
         /// <summary>
         /// 原初移动速度
         /// </summary>
-        public int OrgMoveSpeed { get; protected set; }
+        protected int orgMoveSpeed;
+        public int OrgMoveSpeed => orgMoveSpeed;
 
         /*       /// <summary>
                /// 复活时数据重置

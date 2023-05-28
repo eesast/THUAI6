@@ -26,9 +26,6 @@ namespace GameClass.GameObj
         protected XY position;
         public abstract XY Position { get; }
 
-        protected XY facingDirection = new(1, 0);
-        public abstract XY FacingDirection { get; }
-
         public abstract bool CanMove { get; }
 
         public abstract bool IsRigid { get; }

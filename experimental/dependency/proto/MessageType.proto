@@ -1,0 +1,132 @@
+// MessageType
+syntax = "proto3";
+package protobuf;
+
+enum BulletType
+{
+    NULL_BULLET_TYPE = 0;
+    FLYING_KNIFE = 1;
+    COMMON_ATTACK_OF_TRICKER = 2;
+    BOMB_BOMB = 3;
+    JUMPY_DUMPTY = 4;
+    ATOM_BOMB = 5;
+}
+
+enum PlaceType // 地图中的所有物件类型
+{
+    NULL_PLACE_TYPE = 0;
+    
+    // 地图情况，其中Gate是总体的大门，HiddenGate是地窖
+    LAND = 1;
+    WALL = 2;
+    GRASS = 3;
+    CLASSROOM = 4;
+    GATE = 5;
+    HIDDEN_GATE = 6;
+    WINDOW = 7;
+    DOOR3 = 8;
+    DOOR5 = 9;
+    DOOR6 = 10;
+    CHEST = 11;
+    // 待补充有特殊效果的地形
+}
+
+enum ShapeType // 形状类型
+{
+    NULL_SHAPE_TYPE = 0;
+    CIRCLE = 1; // 人类、屠夫、可拾取道具等为圆形
+    SQUARE = 2; // 地形均为方形
+}
+
+enum PropType // 地图中的可拾取道具类型
+{
+    NULL_PROP_TYPE = 0;
+    ADD_SPEED = 1;
+    ADD_LIFE_OR_CLAIRAUDIENCE = 2;
+    ADD_HP_OR_AP = 3;
+    SHIELD_OR_SPEAR = 4;
+    KEY3 = 5;
+    KEY5 = 6;
+    KEY6 = 7;
+    RECOVERY_FROM_DIZZINESS = 8;
+}
+
+enum StudentBuffType // 人类可用的增益效果类型
+{
+    NULL_SBUFF_TYPE = 0;
+    STUDENT_ADD_SPEED = 1;
+    ADD_LIFE = 2;
+    SHIELD = 3;
+    STUDENT_INVISIBLE = 4;
+}
+
+enum PlayerState
+{
+    NULL_STATUS = 0;
+    IDLE = 1; // 正常状态
+    LEARNING = 2; // 学习状态，相当于在修机器
+    ADDICTED = 3; // 血条归零后原地沉迷游戏
+    QUIT = 4; // 退学状态，相当于寄了
+    GRADUATED = 5; // 毕业状态，相当于逃脱了
+    TREATED = 6;
+    RESCUED = 7;
+    STUNNED = 8;
+    TREATING = 9;
+    RESCUING = 10;
+    SWINGING = 11; // 后摇
+    ATTACKING = 12; // 前摇
+    LOCKING = 13;
+    RUMMAGING = 14;
+    CLIMBING = 15; // 翻窗
+    OPENING_A_CHEST =16;
+    USING_SPECIAL_SKILL = 17;
+    OPENING_A_GATE =18;
+}
+
+enum TrickerBuffType // 屠夫可用的增益效果类型
+{
+    NULL_TBUFF_TYPE = 0;
+    TRICKER_ADD_SPEED = 1;
+    SPEAR = 2;
+    ADD_AP = 3;
+    CLAIRAUDIENCE = 4;
+    TRICKER_INVISIBLE = 5;
+}
+
+// 特别说明：由于Student阵营和Tricker阵营有显著的隔离，且暂定职业、主动技能和被动效果相互绑定，故不按照THUAI5的方式区分ActiveSkillType和CharacterType，而是选择了按照阵营来给不同阵营赋予不同的职业（及技能）。
+
+enum PlayerType
+{
+    NULL_PLAYER_TYPE = 0;
+    STUDENT_PLAYER = 1;
+    TRICKER_PLAYER = 2;
+}
+
+enum StudentType
+{
+    NULL_STUDENT_TYPE = 0;
+    ATHLETE  = 1;
+    TEACHER = 2;
+    STRAIGHT_A_STUDENT = 3;
+    ROBOT = 4;
+    TECH_OTAKU =5;
+    SUNSHINE = 6;
+}
+
+enum TrickerType
+{
+    NULL_TRICKER_TYPE = 0;
+    ASSASSIN = 1;
+    KLEE = 2;
+    A_NOISY_PERSON = 3;
+    IDOL = 4;
+}
+
+// 游戏进行状态
+enum GameState
+{
+    NULL_GAME_STATE = 0;
+    GAME_START = 1;
+    GAME_RUNNING = 2;
+    GAME_END = 3;
+}

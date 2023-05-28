@@ -1,0 +1,33 @@
+syntax = "proto3";
+package protobuf;
+
+import "Message2Clients.proto";
+import "Message2Server.proto";
+
+service AvailableService
+{
+    rpc TryConnection (IDMsg) returns(BoolRes);
+
+    // 游戏开局调用一次的服务
+    rpc AddPlayer (PlayerMsg) returns(stream MessageToClient); // 连接上后等待游戏开始，server会定时通过该服务向所有client发送消息。
+
+    // 游戏过程中玩家执行操作的服务
+    rpc Move (MoveMsg) returns (MoveRes);
+    rpc PickProp (PropMsg) returns (BoolRes);
+    rpc UseProp (PropMsg) returns (BoolRes);
+    rpc ThrowProp (PropMsg) returns (BoolRes);
+    rpc UseSkill (SkillMsg) returns (BoolRes);
+    rpc SendMessage (SendMsg) returns (BoolRes);
+    // rpc GetMessage (IDMsg) returns (stream MsgRes);
+    rpc StartLearning (IDMsg) returns (BoolRes); // 开始修理机器
+    rpc StartRescueMate (TreatAndRescueMsg) returns (BoolRes); // 开始救人
+    rpc StartTreatMate (TreatAndRescueMsg) returns (BoolRes); // 开始治疗
+    rpc Attack (AttackMsg) returns (BoolRes); // 攻击
+    rpc Graduate (IDMsg) returns (BoolRes); // 相当于逃跑
+    rpc OpenDoor (IDMsg) returns (BoolRes); // 开门
+    rpc CloseDoor (IDMsg) returns (BoolRes); // 关门
+    rpc SkipWindow (IDMsg) returns (BoolRes); // 窗户
+    rpc StartOpenGate (IDMsg) returns (BoolRes); // 开闸门
+    rpc StartOpenChest (IDMsg) returns (BoolRes);
+    rpc EndAllAction (IDMsg) returns (BoolRes); // 结束所有动作
+}

@@ -2,4 +2,4 @@
 
 set -e
 
-../../dependency/proto/go_output.sh
+./shell/init.sh

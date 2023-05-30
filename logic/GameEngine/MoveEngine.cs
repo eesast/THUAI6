@@ -102,7 +102,7 @@ namespace GameEngine
             lock (obj.ActionLock)
             {
                 if (!obj.IsAvailableForMove) { EndMove(obj); return; }
-                obj.IsMoving = true;
+                obj.IsMoving.Set(true);
             }
 
             new Thread
@@ -139,7 +139,7 @@ namespace GameEngine
 
                     if (isEnded)
                     {
-                        obj.IsMoving = false;
+                        obj.IsMoving.Set(false);
                         EndMove(obj);
                         return;
                     }
@@ -184,7 +184,7 @@ namespace GameEngine
                         }
                         if (isEnded)
                         {
-                            obj.IsMoving = false;
+                            obj.IsMoving.Set(false);
                             EndMove(obj);
                             return;
                         }
@@ -224,7 +224,7 @@ namespace GameEngine
                                 }
                             } while (flag);
                         }
-                        obj.IsMoving = false;  // 结束移动
+                        obj.IsMoving.Set(false);  // 结束移动
                         EndMove(obj);
                     }
                 }

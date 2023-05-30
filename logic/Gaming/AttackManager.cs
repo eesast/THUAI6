@@ -255,16 +255,12 @@ namespace Gaming
                 }
                 if (bullet != null)
                 {
-#if DEBUG
-                    Console.WriteLine($"playerID:{player.ID} successfully attacked!");
-#endif
+                    Debugger.Output($"playerID:{player.ID} successfully attacked!");
                     return true;
                 }
                 else
                 {
-#if DEBUG
-                    Console.WriteLine($"playerID:{player.ID} has no bullets so that he can't attack!");
-#endif
+                    Debugger.Output($"playerID:{player.ID} has no bullets so that he can't attack!");
                     return false;
                 }
             }

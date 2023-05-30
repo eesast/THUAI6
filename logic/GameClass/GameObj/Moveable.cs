@@ -67,12 +67,7 @@ namespace GameClass.GameObj
             }
         }
 
-        private int isMoving = 0;
-        public bool IsMoving
-        {
-            get => (Interlocked.CompareExchange(ref isMoving, 0, 0) == 1);
-            set => Interlocked.Exchange(ref isMoving, value ? 1 : 0);
-        }
+        public AtomicBool IsMoving { get; } = new(false);
 
         // 移动，改变坐标
         public long MovingSetPos(XY moveVec, long stateNo)

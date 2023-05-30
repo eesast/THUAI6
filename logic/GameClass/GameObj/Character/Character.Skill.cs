@@ -31,7 +31,7 @@ namespace GameClass.GameObj
         protected Character(XY initPos, int initRadius, CharacterType characterType) :
             base(initPos, initRadius, GameObjType.Character)
         {
-            this.ReSetCanMove(true);
+            this.CanMove.Set(true);
             this.score = 0;
             this.buffManager = new BuffManager();
             this.occupation = OccupationFactory.FindIOccupation(characterType);

@@ -10,7 +10,6 @@ namespace Preparation.Interface
         public bool IsRigid { get; }
         public AtomicBool IsRemoved { get; }
         public ShapeType Shape { get; }
-        public bool CanMove { get; }
         public int Radius { get; }  // if Square, Radius equals half length of one side
         public bool IgnoreCollideExecutor(IGameObj targetObj);             // 忽略碰撞，在具体类中实现
     }

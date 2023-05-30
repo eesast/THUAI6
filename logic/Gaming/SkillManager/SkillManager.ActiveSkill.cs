@@ -196,7 +196,7 @@ namespace Gaming
                                  }
                                  if (homingMissile != null)
                                  {
-                                     homingMissile.ReSetCanMove(true);
+                                     homingMissile.CanMove.Set(true);
                                      attackManager.moveEngine.MoveObj(homingMissile, GameData.checkIntervalWhenSparksNSplash - 1, (whoAttacked.Position - homingMissile.Position).Angle(), ++homingMissile.StateNum);
                                  }
                              },

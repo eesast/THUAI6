@@ -9,12 +9,12 @@ namespace Preparation.Interface
         public XY FacingDirection { get; set; }
         object ActionLock { get; }
         public int MoveSpeed { get; }
+        public AtomicBool CanMove { get; }
         public AtomicBool IsMoving { get; }
         public bool IsAvailableForMove { get; }
         public long StateNum { get; }
         public Semaphore ThreadNum { get; }
         public long MovingSetPos(XY moveVec, long stateNum);
-        public void ReSetCanMove(bool value);
         public bool WillCollideWith(IGameObj? targetObj, XY nextPos)  // 检查下一位置是否会和目标物碰撞
         {
             if (targetObj == null)

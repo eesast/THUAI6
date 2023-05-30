@@ -43,7 +43,7 @@ namespace GameClass.GameObj
         public Bullet(Character player, int radius, XY Position) :
             base(Position, radius, GameObjType.Bullet)
         {
-            this.ReSetCanMove(true);
+            this.CanMove.Set(true);
             this.MoveSpeed = this.Speed;
             this.hasSpear = player.TryUseSpear();
             this.Parent = player;

@@ -26,8 +26,6 @@ namespace GameClass.GameObj
         protected XY position;
         public abstract XY Position { get; }
 
-        public abstract bool CanMove { get; }
-
         public abstract bool IsRigid { get; }
 
         public abstract ShapeType Shape { get; }

@@ -647,7 +647,7 @@ namespace GameClass.GameObj
             {
                 if (SetPlayerState(RunningStateType.RunningForcibly, playerStateType) == -1) return false;
                 TryToRemove();
-                ReSetCanMove(false);
+                CanMove.Set(false);
                 position = GameData.PosWhoDie;
             }
             return true;

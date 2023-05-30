@@ -94,27 +94,9 @@ namespace GameClass.GameObj
             }
         }
 
-        private int canMove;
-        public override bool CanMove
-        {
-            get => (Interlocked.CompareExchange(ref canMove, 0, 0) == 1);
-        }
+        public AtomicBool CanMove { get; }
 
-        public void ReSetCanMove(bool value)
-        {
-            Interlocked.Exchange(ref canMove, (value ? 1 : 0));
-        }
-
-        public bool IsAvailableForMove // 是否能接收移动指令
-        {
-            get
-            {
-                lock (actionLock)
-                {
-                    return !IsMoving && CanMove && !IsRemoved;
-                }
-            }
-        }
+        public bool IsAvailableForMove => !IsMoving && CanMove && !IsRemoved; // 是否能接收移动指令
 
         protected int moveSpeed;
         /// <summary>

@@ -67,7 +67,7 @@ namespace Gaming
                         break;
                     case GameObjType.Generator:
                         if (bullet.CanBeBombed(GameObjType.Generator))
-                            ((Generator)objBeingShot).Repair(-bullet.AP * GameData.factorDamageGenerator, (Character)bullet.Parent!);
+                            ((Generator)objBeingShot).Repair(-bullet.AP.Get() * GameData.factorDamageGenerator, (Character)bullet.Parent!);
                         break;
                     case GameObjType.Door:
                         if (bullet.CanBeBombed(GameObjType.Door))

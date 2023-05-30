@@ -11,16 +11,7 @@ namespace GameClass.GameObj
         /// </summary>
         public abstract double BulletBombRange { get; }
         public abstract double AttackDistance { get; }
-        protected int ap;
-        public int AP
-        {
-            get => Interlocked.CompareExchange(ref ap, 0, 0);
-        }
-        public void AddAP(int addAp)
-        {
-            Interlocked.Add(ref ap, addAp);
-        }
-
+        public AtomicInt AP { get; }
         public abstract int Speed { get; }
         public abstract bool IsRemoteAttack { get; }
         public abstract int CastTime { get; }

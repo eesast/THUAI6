@@ -89,7 +89,7 @@ namespace Preparation.Utility
             return Math.Atan2(y, x);
         }
 
-        public override bool Equals(object? obj) => obj is null || obj is XY ? false : this == (XY)obj;
+        public override bool Equals(object? obj) => obj is not null && obj is XY xy && this == xy;
 
         public override int GetHashCode()
         {

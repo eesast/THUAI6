@@ -2,7 +2,6 @@
 
 namespace Preparation.Utility
 {
-
     public struct XY
     {
         public int x;

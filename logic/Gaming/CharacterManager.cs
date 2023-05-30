@@ -326,7 +326,7 @@ namespace Gaming
                 {
                     if (bullet.HasSpear)
                     {
-                        long subHp = student.SubHp(bullet.AP.Get());
+                        long subHp = student.SubHp(bullet.AP);
 #if DEBUG
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
 #endif
@@ -340,14 +340,14 @@ namespace Gaming
                     long subHp;
                     if (bullet.HasSpear)
                     {
-                        subHp = student.SubHp(bullet.AP.Get() + GameData.ApSpearAdd);
+                        subHp = student.SubHp(bullet.AP + GameData.ApSpearAdd);
 #if DEBUG
                         Debugger.Output(this, "is being shot with Spear! Now his hp is" + student.HP.ToString());
 #endif
                     }
                     else
                     {
-                        subHp = student.SubHp(bullet.AP.Get());
+                        subHp = student.SubHp(bullet.AP);
 #if DEBUG
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
 #endif

@@ -32,17 +32,10 @@ namespace GameClass.GameObj
 
         public abstract ShapeType Shape { get; }
 
-        protected int isRemoved = 0;
-        public bool IsRemoved
-        {
-            get
-            {
-                return (Interlocked.CompareExchange(ref isRemoved, 0, 0) == 1);
-            }
-        }
+        public AtomicBool IsRemoved { get; } = new AtomicBool(false);
         public virtual bool TryToRemove()
         {
-            return Interlocked.Exchange(ref isRemoved, 1) == 0;
+            return IsRemoved.TrySet(true);
         }
 
         public int Radius { get; }

@@ -8,7 +8,7 @@ namespace Preparation.Interface
     {
         public XY FacingDirection { get; set; }
         object ActionLock { get; }
-        public int MoveSpeed { get; }
+        public AtomicInt MoveSpeed { get; }
         public AtomicBool CanMove { get; }
         public AtomicBool IsMoving { get; }
         public bool IsAvailableForMove { get; }

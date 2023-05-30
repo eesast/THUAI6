@@ -98,15 +98,10 @@ namespace GameClass.GameObj
 
         public bool IsAvailableForMove => !IsMoving && CanMove && !IsRemoved; // 是否能接收移动指令
 
-        protected int moveSpeed;
         /// <summary>
         /// 移动速度
         /// </summary>
-        public int MoveSpeed
-        {
-            get => Interlocked.CompareExchange(ref moveSpeed, 0, 0);
-            set => Interlocked.Exchange(ref moveSpeed, value);
-        }
+        public AtomicInt MoveSpeed { get; }
         /// <summary>
         /// 原初移动速度
         /// </summary>

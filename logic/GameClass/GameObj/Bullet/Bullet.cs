@@ -44,7 +44,7 @@ namespace GameClass.GameObj
             base(Position, radius, GameObjType.Bullet)
         {
             this.CanMove.Set(true);
-            this.MoveSpeed = this.Speed;
+            this.MoveSpeed.Set(this.Speed);
             this.hasSpear = player.TryUseSpear();
             this.Parent = player;
         }

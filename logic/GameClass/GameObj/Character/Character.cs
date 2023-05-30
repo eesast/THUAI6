@@ -802,7 +802,7 @@ namespace GameClass.GameObj
         }
 
         public void AddMoveSpeed(int buffTime, double add = 1.0) => buffManager.AddMoveSpeed(add, buffTime, newVal =>
-                                                                                                            { MoveSpeed = newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed; },
+                                                                                                            { MoveSpeed.Set(newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed); },
                                                                                              OrgMoveSpeed);
         public bool HasFasterSpeed => buffManager.HasFasterSpeed;
 

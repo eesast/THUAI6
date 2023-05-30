@@ -36,7 +36,7 @@ namespace GameClass.GameObj
             this.buffManager = new BuffManager();
             this.occupation = OccupationFactory.FindIOccupation(characterType);
             this.MaxHp = this.hp = Occupation.MaxHp;
-            this.MoveSpeed = this.orgMoveSpeed = Occupation.MoveSpeed;
+            this.MoveSpeed.Set(this.orgMoveSpeed = Occupation.MoveSpeed);
             this.BulletOfPlayer = this.OriBulletOfPlayer = Occupation.InitBullet;
             this.concealment = Occupation.Concealment;
             this.alertnessRadius = Occupation.AlertnessRadius;

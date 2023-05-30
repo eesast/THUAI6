@@ -450,12 +450,12 @@ namespace Gaming
                             player.ReSetPos(windowToPlayer + windowForClimb.Position);
                         }
 
-                        player.MoveSpeed = player.SpeedOfClimbingThroughWindows;
+                        player.MoveSpeed.Set(player.SpeedOfClimbingThroughWindows);
                         moveEngine.MoveObj(player, (int)(GameData.numOfPosGridPerCell * 3 * 1000 / player.MoveSpeed / 2), (-1 * windowToPlayer).Angle(), stateNum);
 
                         Thread.Sleep((int)(GameData.numOfPosGridPerCell * 3 * 1000 / player.MoveSpeed / 2));
 
-                        player.MoveSpeed = player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed);
+                        player.MoveSpeed.Set(player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed));
 
                         lock (player.ActionLock)
                         {

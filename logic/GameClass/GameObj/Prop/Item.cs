@@ -18,7 +18,7 @@ namespace GameClass.GameObj
             base(initPos, radius, GameObjType.Item)
         {
             this.CanMove.Set(false);
-            this.MoveSpeed = 0;
+            this.MoveSpeed.Set(0);
         }
     }
 

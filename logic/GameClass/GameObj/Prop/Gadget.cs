@@ -25,7 +25,7 @@ namespace GameClass.GameObj
             base(initPos, radius, GameObjType.Gadget)
         {
             this.CanMove.Set(false);
-            this.MoveSpeed = GameData.propMoveSpeed;
+            this.MoveSpeed.Set(GameData.propMoveSpeed);
         }
     }
     public abstract class Tool : Gadget

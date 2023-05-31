@@ -306,9 +306,7 @@ namespace Gaming
             /// <returns>人物在受到攻击后死了吗</returns>
             public void BeAttacked(Student student, Bullet bullet)
             {
-#if DEBUG
                 Debugger.Output(student, "is being shot!");
-#endif
                 if (!bullet.Parent!.IsGhost()) return;
 
                 if (student.CharacterType == CharacterType.StraightAStudent)
@@ -319,17 +317,13 @@ namespace Gaming
 
                 if (student.NoHp()) return;  // 原来已经死了
 
-#if DEBUG
                 Debugger.Output(bullet, " 's AP is " + bullet.AP.ToString());
-#endif
                 if (student.TryUseShield())
                 {
                     if (bullet.HasSpear)
                     {
                         long subHp = student.SubHp(bullet.AP);
-#if DEBUG
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
-#endif
                         bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
                         bullet.Parent.AddHP((long)bullet.Parent.Vampire * subHp);
                     }
@@ -341,16 +335,12 @@ namespace Gaming
                     if (bullet.HasSpear)
                     {
                         subHp = student.SubHp(bullet.AP + GameData.ApSpearAdd);
-#if DEBUG
                         Debugger.Output(this, "is being shot with Spear! Now his hp is" + student.HP.ToString());
-#endif
                     }
                     else
                     {
                         subHp = student.SubHp(bullet.AP);
-#if DEBUG
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
-#endif
                     }
                     bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
                     if (student.CharacterType == CharacterType.Teacher)

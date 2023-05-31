@@ -7,8 +7,6 @@ namespace GameClass.GameObj
 
         public override XY Position => position;
 
-        public override bool CanMove => false;
-
         public Immovable(XY initPos, int initRadius, GameObjType initType) : base(initPos, initRadius, initType)
         {
         }

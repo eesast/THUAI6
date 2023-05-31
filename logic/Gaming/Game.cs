@@ -326,7 +326,7 @@ namespace Gaming
                         {
                             foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
                             {
-                                player.ReSetCanMove(false);
+                                player.CanMove.Set(false);
                             }
                         }
                         gameMap.GameObjDict[keyValuePair.Key].Clear();

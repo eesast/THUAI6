@@ -33,7 +33,7 @@ namespace Gaming
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                         if (obj.CanMove && ((Bullet)obj).TypeOfBullet != BulletType.JumpyDumpty)
                             BulletBomb((Bullet)obj, null);
-                        obj.ReSetCanMove(false);
+                        obj.CanMove.Set(false);
                     }
                 );
                 this.characterManager = characterManager;
@@ -89,7 +89,7 @@ namespace Gaming
             {
                 if (gameMap.Remove(bullet))
                 {
-                    bullet.ReSetCanMove(false);
+                    bullet.CanMove.Set(false);
                     if (bullet.BulletBombRange > 0)
                     {
                         BombedBullet bombedBullet = new(bullet);
@@ -255,16 +255,12 @@ namespace Gaming
                 }
                 if (bullet != null)
                 {
-#if DEBUG
-                    Console.WriteLine($"playerID:{player.ID} successfully attacked!");
-#endif
+                    Debugger.Output($"playerID:{player.ID} successfully attacked!");
                     return true;
                 }
                 else
                 {
-#if DEBUG
-                    Console.WriteLine($"playerID:{player.ID} has no bullets so that he can't attack!");
-#endif
+                    Debugger.Output($"playerID:{player.ID} has no bullets so that he can't attack!");
                     return false;
                 }
             }

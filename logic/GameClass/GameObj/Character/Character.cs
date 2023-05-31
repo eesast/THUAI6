@@ -107,7 +107,7 @@ namespace GameClass.GameObj
                         );
                     Bullet? bullet = BulletFactory.GetBullet(this, res, this.bulletOfPlayer);
                     if (bullet == null) return null;
-                    if (TryAddAp()) bullet.AddAP(GameData.ApPropAdd);
+                    if (TryAddAp()) bullet.AP.Add(GameData.ApPropAdd);
                     FacingDirection = new(angle, bullet.AttackDistance);
                     return bullet;
                 }
@@ -647,7 +647,7 @@ namespace GameClass.GameObj
             {
                 if (SetPlayerState(RunningStateType.RunningForcibly, playerStateType) == -1) return false;
                 TryToRemove();
-                ReSetCanMove(false);
+                CanMove.Set(false);
                 position = GameData.PosWhoDie;
             }
             return true;
@@ -802,7 +802,7 @@ namespace GameClass.GameObj
         }
 
         public void AddMoveSpeed(int buffTime, double add = 1.0) => buffManager.AddMoveSpeed(add, buffTime, newVal =>
-                                                                                                            { MoveSpeed = newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed; },
+                                                                                                            { MoveSpeed.Set(newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed); },
                                                                                              OrgMoveSpeed);
         public bool HasFasterSpeed => buffManager.HasFasterSpeed;
 

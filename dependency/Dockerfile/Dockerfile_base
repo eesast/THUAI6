@@ -1,4 +1,4 @@
-FROM python:3.9.16-bullseye
+FROM python:3.11.3-bullseye
 MAINTAINER eesast
 WORKDIR /usr/local
 RUN apt-get update && apt-get install --no-install-recommends -y gcc g++ make wget ca-certificates cmake autoconf automake libtool curl unzip git

@@ -20,9 +20,21 @@ namespace GameClass.GameObj
         public Gadget[] PropInChest => propInChest;
 
         private long openStartTime = 0;
-        public long OpenStartTime => openStartTime;
+        public long OpenStartTime
+        {
+            get
+            {
+                lock (gameObjLock) return openStartTime;
+            }
+        }
         private Character? whoOpen = null;
-        public Character? WhoOpen => whoOpen;
+        public Character? WhoOpen
+        {
+            get
+            {
+                lock (gameObjLock) return whoOpen;
+            }
+        }
         public bool Open(Character character)
         {
             lock (gameObjLock)

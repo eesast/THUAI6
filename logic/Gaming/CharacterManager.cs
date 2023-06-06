@@ -311,7 +311,7 @@ namespace Gaming
 
                 if (student.CharacterType == CharacterType.StraightAStudent)
                 {
-                    ((WriteAnswers)student.FindActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
+                    ((WriteAnswers)student.FindActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation.Set(0);
                 }
                 student.SetDegreeOfTreatment0();
 

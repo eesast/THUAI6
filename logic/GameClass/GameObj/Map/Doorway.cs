@@ -23,20 +23,7 @@ namespace GameClass.GameObj
             return false;
         }
 
-        private bool powerSupply = false;
-        public bool PowerSupply
-        {
-            get
-            {
-                lock (gameObjLock)
-                    return powerSupply;
-            }
-            set
-            {
-                lock (gameObjLock)
-                    powerSupply = value;
-            }
-        }
+        public AtomicBool PowerSupply { get; } = new(false);
 
         private long openStartTime = 0;
         public long OpenStartTime
@@ -49,9 +36,10 @@ namespace GameClass.GameObj
         }
         public bool TryToOpen()
         {
+            if (!PowerSupply) return false;
             lock (gameObjLock)
             {
-                if (!powerSupply || openStartTime > 0) return false;
+                if (openStartTime > 0) return false;
                 openStartTime = Environment.TickCount64;
                 return true;
             }

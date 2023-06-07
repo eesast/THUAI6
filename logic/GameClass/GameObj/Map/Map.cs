@@ -26,7 +26,7 @@ namespace GameClass.GameObj
                 {
                     Random r = new Random(Environment.TickCount);
                     EmergencyExit emergencyExit = (EmergencyExit)(GameObjDict[GameObjType.EmergencyExit][r.Next(0, GameObjDict[GameObjType.EmergencyExit].Count)]);
-                    emergencyExit.CanOpen = true;
+                    emergencyExit.CanOpen.Set(true);
                     Preparation.Utility.Debugger.Output(emergencyExit, emergencyExit.Position.ToString());
                 }
                 finally
@@ -41,7 +41,7 @@ namespace GameClass.GameObj
                 try
                 {
                     foreach (Doorway doorway in GameObjDict[GameObjType.Doorway])
-                        doorway.PowerSupply = true;
+                        doorway.PowerSupply.Set(true);
                 }
                 finally
                 {

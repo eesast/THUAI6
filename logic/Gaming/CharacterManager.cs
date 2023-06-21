@@ -57,8 +57,8 @@ namespace Gaming
                 }
                 gameMap.Add(newPlayer);
 
-                newPlayer.TeamID = teamID;
-                newPlayer.PlayerID = playerID;
+                newPlayer.TeamID.Set(teamID);
+                newPlayer.PlayerID.Set(playerID);
                 /* #region 人物装弹
                  new Thread
                  (

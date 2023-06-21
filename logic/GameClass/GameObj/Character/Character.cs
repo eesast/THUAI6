@@ -147,38 +147,48 @@ namespace GameClass.GameObj
         }
         public double OriVampire { get; protected set; }
 
-        private AtomicInt degreeOfTreatment = new(0);
+        private readonly object treatLock = new();
+        private int degreeOfTreatment = 0;
         public int DegreeOfTreatment
         {
-            get => degreeOfTreatment;
+            get
+            {
+                lock (treatLock)
+                    return degreeOfTreatment;
+            }
         }
         public void SetDegreeOfTreatment0()
         {
-            degreeOfTreatment.Set(0);
+            lock (treatLock)
+                degreeOfTreatment = 0;
         }
+
         public bool AddDegreeOfTreatment(int value, Student whoTreatYou)
         {
-            value = degreeOfTreatment.Add(value);
-            long addV = HP.TryAddAll(value);
-            if (addV == 0)
+            lock (treatLock)
             {
-                SetDegreeOfTreatment0();
+                degreeOfTreatment += value;
+                long addV = HP.TryAddAll(degreeOfTreatment);
+                if (addV == 0)
+                {
+                    degreeOfTreatment = 0;
+                    return false;
+                }
+                if (addV > 0)
+                {
+                    whoTreatYou.AddScore(GameData.StudentScoreTreat(addV));
+                    degreeOfTreatment = 0;
+                    return true;
+                }
+                if (degreeOfTreatment >= GameData.basicTreatmentDegree)
+                {
+                    whoTreatYou.AddScore(GameData.StudentScoreTreat(GameData.basicTreatmentDegree));
+                    HP.AddPositiveV(GameData.basicTreatmentDegree);
+                    degreeOfTreatment = 0;
+                    return true;
+                }
                 return false;
             }
-            if (addV > 0)
-            {
-                whoTreatYou.AddScore(GameData.StudentScoreTreat(addV));
-                SetDegreeOfTreatment0();
-                return true;
-            }
-            if (value >= GameData.basicTreatmentDegree)
-            {
-                whoTreatYou.AddScore(GameData.StudentScoreTreat(GameData.basicTreatmentDegree));
-                HP.AddPositiveV(GameData.basicTreatmentDegree);
-                SetDegreeOfTreatment0();
-                return true;
-            }
-            return false;
         }
         #endregion
         #region 查询状态相关的基本属性与方法
@@ -475,18 +485,8 @@ namespace GameClass.GameObj
         /// <summary>
         /// 角色所属队伍ID
         /// </summary>
-        private long teamID = long.MaxValue;
-        public long TeamID
-        {
-            get => Interlocked.Read(ref teamID);
-            set => Interlocked.Exchange(ref teamID, value);
-        }
-        private long playerID = long.MaxValue;
-        public long PlayerID
-        {
-            get => Interlocked.Read(ref playerID);
-            set => Interlocked.Exchange(ref playerID, value);
-        }
+        public AtomicLong TeamID { get; } = new AtomicLong(long.MaxValue);
+        public AtomicLong PlayerID { get; } = new AtomicLong(long.MaxValue);
 
         #region 道具和buff相关属性、方法
         private readonly object inventoryLock = new();

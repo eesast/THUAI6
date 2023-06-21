@@ -26,6 +26,27 @@ namespace Preparation.Utility
         /// <returns>返回操作前的值</returns>
         public int CompareExReturnOri(int newV, int compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
     }
+    public struct AtomicLong
+    {
+        private long v;
+        public AtomicLong(long x)
+        {
+            v = x;
+        }
+        public override string ToString() => Interlocked.Read(ref v).ToString();
+        public long Get() => Interlocked.Read(ref v);
+        public static implicit operator long(AtomicLong aint) => Interlocked.Read(ref aint.v);
+        public long Set(long value) => Interlocked.Exchange(ref v, value);
+
+        public long Add(long x) => Interlocked.Add(ref v, x);
+        public long Sub(long x) => Interlocked.Add(ref v, -x);
+        public long Inc() => Interlocked.Increment(ref v);
+        public long Dec() => Interlocked.Decrement(ref v);
+
+        public void CompareExchange(long newV, long compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
+        /// <returns>返回操作前的值</returns>
+        public long CompareExReturnOri(long newV, long compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
+    }
     public struct AtomicBool
     {
         private int v;//v==0为false,v==1为true

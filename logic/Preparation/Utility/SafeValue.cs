@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using System.Timers;
 
 namespace Preparation.Utility
 {
@@ -49,9 +51,12 @@ namespace Preparation.Utility
         public bool And(bool x) => Interlocked.And(ref v, x ? 1 : 0) != 0;
         public bool Or(bool x) => Interlocked.Or(ref v, x ? 1 : 0) != 0;
     }
+
     /// <summary>
     /// 一个能记录Start后完成多少进度的进度条（int），
-    /// 只允许Start时修改needTime，支持TryStop使未完成的进度条清零，支持Set0使进度条强制清零
+    /// 只允许Start时修改needTime（请确保大于0）；
+    /// 支持TrySet0使未完成的进度条终止清零；支持Set0使进度条强制终止清零；
+    /// 不支持暂停
     /// </summary>
     public struct IntProgressContinuously
     {
@@ -60,6 +65,7 @@ namespace Preparation.Utility
 
         public IntProgressContinuously(long needTime)
         {
+            if (needTime <= 0) Debugger.Output("Bug:IntProgressContinuously.needTime (" + needTime.ToString() + ") is less than 0.");
             this.needT = needTime;
         }
         public long GetEndTime() => Interlocked.CompareExchange(ref endT, -2, -2);
@@ -90,6 +96,11 @@ namespace Preparation.Utility
 
         public bool Start(long needTime)
         {
+            if (needTime <= 0)
+            {
+                Debugger.Output("Warning:Start IntProgressContinuously with the needTime (" + needTime.ToString() + ") which is less than 0.");
+                return false;
+            }
             //规定只有Start可以修改needT，且需要先访问endTime，从而避免锁（某种程度上endTime可以认为是needTime的锁）
             if (Interlocked.CompareExchange(ref endT, Environment.TickCount64 + needTime, long.MaxValue) != long.MaxValue) return false;
             if (needTime <= 2) Debugger.Output("Warning:the field of IntProgressContinuously is " + needTime.ToString() + ",which is too small.");
@@ -103,13 +114,18 @@ namespace Preparation.Utility
             return true;
         }
         public void Set0() => Interlocked.Exchange(ref endT, long.MaxValue);
-        public void TryStop()
+        public bool TrySet0()
         {
             if (Environment.TickCount64 < Interlocked.CompareExchange(ref endT, -2, -2))
+            {
                 Interlocked.Exchange(ref endT, long.MaxValue);
+                return true;
+            }
+            return false;
         }
         //增加其他新的写操作可能导致不安全
     }
+
     /// <summary>
     /// 一个保证在[0,maxValue]的可变int，支持可变的maxValue(请确保大于0)
     /// </summary>
@@ -120,7 +136,11 @@ namespace Preparation.Utility
         private readonly object vLock = new();
         public IntWithVariableRange(int value, int maxValue)
         {
-            if (maxValue <= 0) Debugger.Output("Bug:IntWithVariableRange.maxValue (" + maxValue.ToString() + ") is less than 0.");
+            if (maxValue < 0)
+            {
+                Debugger.Output("Warning:Try to set IntWithVariableRange.maxValue to " + maxValue.ToString() + ".");
+                maxValue = 0;
+            }
             v = value < maxValue ? value : maxValue;
             this.maxV = maxValue;
         }
@@ -134,11 +154,26 @@ namespace Preparation.Utility
         public int GetValue() { lock (vLock) return v; }
         public int GetMaxV() { lock (vLock) return maxV; }
 
-        public void SetMaxV(int maxValue)
+        /// <summary>
+        /// 若maxValue<=0则maxValue设为0并返回False
+        /// </summary>
+        public bool SetMaxV(int maxValue)
+        {
+            if (maxValue < 0) maxValue = 0;
+            lock (vLock)
+            {
+                maxV = maxValue;
+                if (v > maxValue) v = maxValue;
+            }
+            return maxValue > 0;
+        }
+        /// <summary>
+        /// 应当保证该maxValue>=0
+        /// </summary>
+        public void SetPositiveMaxV(int maxValue)
         {
             lock (vLock)
             {
-                if (maxValue <= 0) Debugger.Output("Bug:IntWithVariableRange.maxValue (" + maxValue.ToString() + ") is less than 0.");
                 maxV = maxValue;
                 if (v > maxValue) v = maxValue;
             }
@@ -155,9 +190,9 @@ namespace Preparation.Utility
         }
         public int SetV(int value)
         {
+            if (value < 0) value = 0;
             lock (vLock)
             {
-                if (value <= 0) return v = 0;
                 return v = (value > maxV) ? maxV : value;
             }
         }
@@ -193,6 +228,158 @@ namespace Preparation.Utility
                 v += subPositiveV;
                 if (v < 0) return v = 0;
                 return v;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 一个保证在[0,maxNum],每CDms自动更新的可变int，支持可变的CD、maxNum(请确保大于0)
+    /// </summary>
+    public struct IntNumUpdateByCD
+    {
+        private int num;
+        private int maxNum;
+        private int cd;
+        private long updateTime = 0;
+        private object numLock = new();
+        public IntNumUpdateByCD(int num, int maxNum, int cd)
+        {
+            if (num < 0) Debugger.Output("Bug:IntNumUpdateByCD.num (" + num.ToString() + ") is less than 0.");
+            if (maxNum < 0) Debugger.Output("Bug:IntNumUpdateByCD.maxNum (" + maxNum.ToString() + ") is less than 0.");
+            if (cd <= 0) Debugger.Output("Bug:IntNumUpdateByCD.cd (" + cd.ToString() + ") is less than 0.");
+            this.num = num;
+            this.maxNum = maxNum;
+            this.cd = cd;
+            this.updateTime = Environment.TickCount64;
+        }
+        public IntNumUpdateByCD(int maxNum, int cd)
+        {
+            if (maxNum < 0) Debugger.Output("Bug:IntNumUpdateByCD.maxNum (" + maxNum.ToString() + ") is less than 0.");
+            if (cd <= 0) Debugger.Output("Bug:IntNumUpdateByCD.cd (" + cd.ToString() + ") is less than 0.");
+            this.num = this.maxNum = maxNum;
+            this.cd = cd;
+        }
+        public int GetMaxNum() { lock (numLock) return maxNum; }
+        public int GetCD() { lock (numLock) return cd; }
+        public int GetNum(long time)
+        {
+            lock (numLock)
+            {
+                if (num < maxNum && time - updateTime >= cd)
+                {
+                    int add = (int)Math.Min(maxNum - num, (time - updateTime) / cd);
+                    updateTime += add * cd;
+                    return (num += add);
+                }
+                return num;
+            }
+        }
+
+        /// <summary>
+        /// 应当保证该subV>=0
+        /// </summary>
+        public int TrySub(int subV)
+        {
+            if (subV < 0) Debugger.Output("Bug:IntNumUpdateByCD Try to sub " + subV.ToString() + ", which is less than 0.");
+            long time = Environment.TickCount64;
+            lock (numLock)
+            {
+                if (num < maxNum && time - updateTime >= cd)
+                {
+                    int add = (int)Math.Min(maxNum - num, (time - updateTime) / cd);
+                    updateTime += add * cd;
+                    num += add;
+                }
+                if (num == maxNum) updateTime = time;
+                num -= subV = Math.Min(subV, num);
+            }
+            return subV;
+        }
+        /// <summary>
+        /// 应当保证该addV>=0
+        /// </summary>
+        public void TryAdd(int addV)
+        {
+            if (addV < 0) Debugger.Output("Bug:IntNumUpdateByCD Try to add " + addV.ToString() + ", which is less than 0.");
+            lock (numLock)
+            {
+                num += Math.Min(addV, maxNum - num);
+            }
+        }
+        /// <summary>
+        /// 若maxNum<=0则maxNum及Num设为0并返回False
+        /// </summary>
+        public bool SetMaxNumAndNum(int maxNum)
+        {
+            if (maxNum < 0) maxNum = 0;
+            lock (numLock)
+            {
+                this.num = this.maxNum = maxNum;
+            }
+            return maxNum > 0;
+        }
+        /// <summary>
+        /// 应当保证该maxnum>=0
+        /// </summary>
+        public void SetPositiveMaxNumAndNum(int maxNum)
+        {
+            lock (numLock)
+            {
+                this.num = this.maxNum = maxNum;
+            }
+        }
+        /// <summary>
+        /// 应当保证该maxnum>=0
+        /// </summary>
+        public void SetPositiveMaxNum(int maxNum)
+        {
+            lock (numLock)
+            {
+                if ((this.maxNum = maxNum) < num)
+                    num = maxNum;
+            }
+        }
+        /// <summary>
+        /// 若maxNum<=0则maxNum及Num设为0并返回False
+        /// </summary>
+        public bool SetMaxNum(int maxNum)
+        {
+            if (maxNum < 0) maxNum = 0;
+            lock (numLock)
+            {
+                if ((this.maxNum = maxNum) < num)
+                    num = maxNum;
+            }
+            return maxNum > 0;
+        }
+        /// <summary>
+        /// 若num<0则num设为0并返回False
+        /// </summary>
+        public bool SetNum(int num)
+        {
+            lock (numLock)
+            {
+                if (num < 0) { this.num = 0; return false; }
+                this.num = num;
+                return true;
+            }
+        }
+        /// <summary>
+        /// 应当保证该num>=0
+        /// </summary>
+        public void SetPositiveNum(int num)
+        {
+            lock (numLock)
+            {
+                this.num = num;
+            }
+        }
+        public void SetCD(int cd)
+        {
+            lock (numLock)
+            {
+                if (cd <= 0) Debugger.Output("Bug:Set IntNumUpdateByCD.cd to " + cd.ToString() + ".");
+                this.cd = cd;
             }
         }
     }

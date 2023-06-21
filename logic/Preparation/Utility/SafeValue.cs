@@ -28,7 +28,7 @@ namespace Preparation.Utility
     }
     public struct AtomicBool
     {
-        private int v;//v==0为false,v!=0(v==1或v==-1)为true
+        private int v;//v==0为false,v==1为true
         public AtomicBool(bool x)
         {
             v = x ? 1 : 0;
@@ -45,25 +45,24 @@ namespace Preparation.Utility
             return (Interlocked.CompareExchange(ref v, value ? 1 : 0, value ? 0 : 1) ^ (value ? 1 : 0)) != 0;
         }
 
-        public bool Invert() => Interlocked.Add(ref v, -1) != 0;
         public bool And(bool x) => Interlocked.And(ref v, x ? 1 : 0) != 0;
         public bool Or(bool x) => Interlocked.Or(ref v, x ? 1 : 0) != 0;
     }
 
     /// <summary>
-    /// 一个能记录Start后完成多少进度的进度条（int），
+    /// 一个能记录Start后完成多少进度的进度条（long），
     /// 只允许Start时修改needTime（请确保大于0）；
     /// 支持TrySet0使未完成的进度条终止清零；支持Set0使进度条强制终止清零；
     /// 不支持暂停
     /// </summary>
-    public struct IntProgressContinuously
+    public struct LongProgressContinuously
     {
         private long endT = long.MaxValue;
         private long needT;
 
-        public IntProgressContinuously(long needTime)
+        public LongProgressContinuously(long needTime)
         {
-            if (needTime <= 0) Debugger.Output("Bug:IntProgressContinuously.needTime (" + needTime.ToString() + ") is less than 0.");
+            if (needTime <= 0) Debugger.Output("Bug:LongProgressContinuously.needTime (" + needTime.ToString() + ") is less than 0.");
             this.needT = needTime;
         }
         public long GetEndTime() => Interlocked.CompareExchange(ref endT, -2, -2);
@@ -83,6 +82,11 @@ namespace Preparation.Utility
             return Interlocked.CompareExchange(ref needT, -2, -2) - cutime;
         }
         /// <summary>
+        /// <0则表明未开始
+        /// </summary>
+        public static implicit operator long(LongProgressContinuously pLong) => pLong.GetProgress();
+
+        /// <summary>
         /// GetProgressDouble<0则表明未开始
         /// </summary>
         public double GetProgressDouble()
@@ -96,12 +100,12 @@ namespace Preparation.Utility
         {
             if (needTime <= 0)
             {
-                Debugger.Output("Warning:Start IntProgressContinuously with the needTime (" + needTime.ToString() + ") which is less than 0.");
+                Debugger.Output("Warning:Start LongProgressContinuously with the needTime (" + needTime.ToString() + ") which is less than 0.");
                 return false;
             }
             //规定只有Start可以修改needT，且需要先访问endTime，从而避免锁（某种程度上endTime可以认为是needTime的锁）
             if (Interlocked.CompareExchange(ref endT, Environment.TickCount64 + needTime, long.MaxValue) != long.MaxValue) return false;
-            if (needTime <= 2) Debugger.Output("Warning:the field of IntProgressContinuously is " + needTime.ToString() + ",which is too small.");
+            if (needTime <= 2) Debugger.Output("Warning:the field of LongProgressContinuously is " + needTime.ToString() + ",which is too small.");
             Interlocked.Exchange(ref this.needT, needTime);
             return true;
         }
@@ -142,6 +146,7 @@ namespace Preparation.Utility
             v = value < maxValue ? value : maxValue;
             this.maxV = maxValue;
         }
+
         public override string ToString()
         {
             lock (vLock)
@@ -150,6 +155,7 @@ namespace Preparation.Utility
             }
         }
         public int GetValue() { lock (vLock) return v; }
+        public static implicit operator int(IntWithVariableRange aint) => aint.GetValue();
         public int GetMaxV() { lock (vLock) return maxV; }
 
         /// <summary>
@@ -232,6 +238,160 @@ namespace Preparation.Utility
             }
             return subPositiveV;
         }
+
+        /// <summary>
+        /// 试图加到满，如果无法加到maxValue则不加并返回-1
+        /// </summary>
+        public int TryAddAll(int addV)
+        {
+            lock (vLock)
+            {
+                if (maxV - v <= addV)
+                {
+                    addV = maxV - v;
+                    v = maxV;
+                    return addV;
+                }
+                return 0;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 一个保证在[0,maxValue]的可变long，支持可变的maxValue(请确保大于0)
+    /// </summary>
+    public struct LongWithVariableRange
+    {
+        private long v;
+        private long maxV;
+        private readonly object vLock = new();
+        public LongWithVariableRange(long value, long maxValue)
+        {
+            if (maxValue < 0)
+            {
+                Debugger.Output("Warning:Try to set LongWithVariableRange.maxValue to " + maxValue.ToString() + ".");
+                maxValue = 0;
+            }
+            v = value < maxValue ? value : maxValue;
+            this.maxV = maxValue;
+        }
+        public LongWithVariableRange(long maxValue)
+        {
+            if (maxValue < 0)
+            {
+                Debugger.Output("Warning:Try to set LongWithVariableRange.maxValue to " + maxValue.ToString() + ".");
+                maxValue = 0;
+            }
+            v = this.maxV = maxValue;
+        }
+        public override string ToString()
+        {
+            lock (vLock)
+            {
+                return "value:" + v.ToString() + " ,maxValue:" + maxV.ToString();
+            }
+        }
+        public long GetValue() { lock (vLock) return v; }
+        public static implicit operator long(LongWithVariableRange aint) => aint.GetValue();
+        public long GetMaxV() { lock (vLock) return maxV; }
+
+        /// <summary>
+        /// 若maxValue<=0则maxValue设为0并返回False
+        /// </summary>
+        public bool SetMaxV(long maxValue)
+        {
+            if (maxValue < 0) maxValue = 0;
+            lock (vLock)
+            {
+                maxV = maxValue;
+                if (v > maxValue) v = maxValue;
+            }
+            return maxValue > 0;
+        }
+        /// <summary>
+        /// 应当保证该maxValue>=0
+        /// </summary>
+        public void SetPositiveMaxV(long maxValue)
+        {
+            lock (vLock)
+            {
+                maxV = maxValue;
+                if (v > maxValue) v = maxValue;
+            }
+        }
+        /// <summary>
+        /// 应当保证该value>=0
+        /// </summary>
+        public long SetPositiveV(long value)
+        {
+            lock (vLock)
+            {
+                return v = (value > maxV) ? maxV : value;
+            }
+        }
+        public long SetV(long value)
+        {
+            if (value < 0) value = 0;
+            lock (vLock)
+            {
+                return v = (value > maxV) ? maxV : value;
+            }
+        }
+        /// <summary>
+        /// 返回实际改变量
+        /// </summary>
+        public long AddV(long addV)
+        {
+            lock (vLock)
+            {
+                long previousV = v;
+                v += addV;
+                if (v < 0) v = 0;
+                if (v > maxV) v = maxV;
+                return v - previousV;
+            }
+        }
+        /// <summary>
+        /// 应当保证该增加值大于0,返回实际改变量
+        /// </summary>
+        public long AddPositiveV(long addPositiveV)
+        {
+            lock (vLock)
+            {
+                addPositiveV = Math.Min(addPositiveV, maxV - v);
+                v += addPositiveV;
+            }
+            return addPositiveV;
+        }
+        /// <summary>
+        /// 应当保证该减少值大于0,返回实际改变量
+        /// </summary>
+        public long SubPositiveV(long subPositiveV)
+        {
+            lock (vLock)
+            {
+                subPositiveV = Math.Min(subPositiveV, v);
+                v -= subPositiveV;
+            }
+            return subPositiveV;
+        }
+
+        /// <summary>
+        /// 试图加到满，如果无法加到maxValue则不加并返回-1
+        /// </summary>
+        public long TryAddAll(long addV)
+        {
+            lock (vLock)
+            {
+                if (maxV - v <= addV)
+                {
+                    addV = maxV - v;
+                    v = maxV;
+                    return addV;
+                }
+                return -1;
+            }
+        }
     }
 
     /// <summary>
@@ -276,6 +436,7 @@ namespace Preparation.Utility
                 return num;
             }
         }
+        public static implicit operator int(IntNumUpdateByCD aint) => aint.GetNum(Environment.TickCount64);
 
         /// <summary>
         /// 应当保证该subV>=0
@@ -361,8 +522,18 @@ namespace Preparation.Utility
         {
             lock (numLock)
             {
-                if (num < 0) { this.num = 0; return false; }
-                this.num = (num < maxNum) ? num : maxNum;
+                if (num < 0)
+                {
+                    this.num = 0;
+                    updateTime = Environment.TickCount64;
+                    return false;
+                }
+                if (num < maxNum)
+                {
+                    if (this.num == maxNum) updateTime = Environment.TickCount64;
+                    this.num = num;
+                }
+                else this.num = maxNum;
                 return true;
             }
         }
@@ -373,7 +544,12 @@ namespace Preparation.Utility
         {
             lock (numLock)
             {
-                this.num = (num < maxNum) ? num : maxNum;
+                if (num < maxNum)
+                {
+                    if (this.num == maxNum) updateTime = Environment.TickCount64;
+                    this.num = num;
+                }
+                else this.num = maxNum;
             }
         }
         public void SetCD(int cd)

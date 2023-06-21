@@ -10,7 +10,7 @@ namespace GameClass.GameObj
     {
         #region 装弹、攻击相关的基本属性及方法
         private readonly object attackLock = new();
-        public IntNumUpdateByCD BulletNum { get; }
+        public IntNumUpdateByCD BulletNum { get; } = new IntNumUpdateByCD();
         private int orgCD;
         public int OrgCD
         {
@@ -119,114 +119,7 @@ namespace GameClass.GameObj
         }
         #endregion
         #region 血量相关的基本属性及方法
-        private readonly ReaderWriterLockSlim hpReaderWriterLock = new();
-        public ReaderWriterLockSlim HPReadWriterLock => hpReaderWriterLock;
-
-        private long maxHp;
-        public long MaxHp
-        {
-            get
-            {
-                HPReadWriterLock.EnterReadLock();
-                try
-                {
-                    return maxHp;
-                }
-                finally
-                {
-                    HPReadWriterLock.ExitReadLock();
-                }
-            }
-            protected set
-            {
-                HPReadWriterLock.EnterWriteLock();
-                try
-                {
-                    maxHp = value;
-                    if (hp > maxHp) hp = maxHp;
-                }
-                finally
-                {
-                    HPReadWriterLock.ExitWriteLock();
-                }
-            }
-        }
-        // 最大血量
-        protected long hp;
-        public long HP
-        {
-            get
-            {
-                HPReadWriterLock.EnterReadLock();
-                try
-                {
-                    return hp;
-                }
-                finally
-                {
-                    HPReadWriterLock.ExitReadLock();
-                }
-            }
-        }
-
-        public long SetHP(long value)
-        {
-            HPReadWriterLock.EnterWriteLock();
-            try
-            {
-                if (value > 0)
-                {
-                    return hp = value <= maxHp ? value : maxHp;
-                }
-                else
-                    return hp = 0;
-            }
-            finally
-            {
-                HPReadWriterLock.ExitWriteLock();
-            }
-        }
-
-        /// <summary>
-        /// 尝试减血
-        /// </summary>
-        /// <param name="sub">减血量</param>
-        public long SubHp(long sub)
-        {
-            HPReadWriterLock.EnterWriteLock();
-            try
-            {
-                long previousHp = hp;
-                if (hp <= sub)
-                {
-                    hp = 0;
-                    return hp;
-                }
-                else
-                {
-                    hp -= sub;
-                    return sub;
-                }
-            }
-            finally
-            {
-                HPReadWriterLock.ExitWriteLock();
-            }
-        }
-
-        public long AddHP(long add)
-        {
-            HPReadWriterLock.EnterWriteLock();
-            try
-            {
-                long previousHp = hp;
-                return (hp = (hp + add > maxHp) ? maxHp : hp + add) - previousHp;
-            }
-            finally
-            {
-                HPReadWriterLock.ExitWriteLock();
-            }
-        }
+        public LongWithVariableRange HP { get; }
 
         private readonly object vampireLock = new();
         public object VampireLock => vampire;
@@ -254,59 +147,36 @@ namespace GameClass.GameObj
         }
         public double OriVampire { get; protected set; }
 
-        private readonly object treatLock = new();
-        private int degreeOfTreatment = 0;
+        private AtomicInt degreeOfTreatment = new(0);
         public int DegreeOfTreatment
         {
-            get
-            {
-                HPReadWriterLock.EnterReadLock();
-                try
-                {
-                    return degreeOfTreatment;
-                }
-                finally
-                {
-                    HPReadWriterLock.ExitReadLock();
-                }
-            }
+            get => degreeOfTreatment;
         }
         public void SetDegreeOfTreatment0()
         {
-            HPReadWriterLock.EnterWriteLock();
-            try
-            {
-                degreeOfTreatment = 0;
-            }
-            finally
-            {
-                HPReadWriterLock.ExitWriteLock();
-            }
+            degreeOfTreatment.Set(0);
         }
         public bool AddDegreeOfTreatment(int value, Student whoTreatYou)
         {
-            HPReadWriterLock.EnterWriteLock();
-            try
+            value = degreeOfTreatment.Add(value);
+            long addV = HP.TryAddAll(value);
+            if (addV == 0)
             {
-                if (value >= maxHp - hp)
-                {
-                    whoTreatYou.AddScore(GameData.StudentScoreTreat(maxHp - hp));
-                    hp = maxHp;
-                    degreeOfTreatment = 0;
-                    return true;
-                }
-                if (value >= GameData.basicTreatmentDegree)
-                {
-                    whoTreatYou.AddScore(GameData.StudentScoreTreat(GameData.basicTreatmentDegree));
-                    hp += GameData.basicTreatmentDegree;
-                    degreeOfTreatment = 0;
-                    return true;
-                }
-                degreeOfTreatment = value;
+                SetDegreeOfTreatment0();
+                return false;
             }
-            finally
+            if (addV > 0)
             {
-                HPReadWriterLock.ExitWriteLock();
+                whoTreatYou.AddScore(GameData.StudentScoreTreat(addV));
+                SetDegreeOfTreatment0();
+                return true;
+            }
+            if (value >= GameData.basicTreatmentDegree)
+            {
+                whoTreatYou.AddScore(GameData.StudentScoreTreat(GameData.basicTreatmentDegree));
+                HP.AddPositiveV(GameData.basicTreatmentDegree);
+                SetDegreeOfTreatment0();
+                return true;
             }
             return false;
         }
@@ -798,7 +668,7 @@ namespace GameClass.GameObj
             if (buffManager.TryActivatingLIFE())
             {
                 AddScore(GameData.ScorePropRemainHp);
-                hp = GameData.RemainHpWhenAddLife;
+                HP.SetPositiveV(GameData.RemainHpWhenAddLife);
             }
         }
 

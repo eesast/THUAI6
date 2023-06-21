@@ -199,7 +199,7 @@ namespace Gaming
                 }
                 else if (!GameData.ApproachToInteract(playerTreated.Position, player.Position)) return false;
 
-                if (playerTreated.HP == playerTreated.MaxHp) return false;
+                if (playerTreated.HP == playerTreated.HP.GetMaxV()) return false;
 
                 long stateNumTreated = playerTreated.SetPlayerState(RunningStateType.Waiting, PlayerStateType.Treated);
                 if (stateNumTreated == -1) return false;
@@ -321,7 +321,7 @@ namespace Gaming
                                    if (playerRescued.AddTimeOfRescue(GameData.checkInterval))
                                    {
                                        playerRescued.SetPlayerStateNaturally();
-                                       playerRescued.SetHP(playerRescued.MaxHp / 2);
+                                       playerRescued.HP.SetPositiveV(playerRescued.HP.GetMaxV() / 2);
                                        player.AddScore(GameData.StudentScoreRescue);
                                        return false;
                                    }

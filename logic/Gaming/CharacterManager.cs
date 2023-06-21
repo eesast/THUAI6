@@ -322,10 +322,10 @@ namespace Gaming
                 {
                     if (bullet.HasSpear)
                     {
-                        long subHp = student.SubHp(bullet.AP);
+                        long subHp = student.HP.SubPositiveV(bullet.AP);
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
                         bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
-                        bullet.Parent.AddHP((long)bullet.Parent.Vampire * subHp);
+                        bullet.Parent.HP.AddPositiveV((long)bullet.Parent.Vampire * subHp);
                     }
                     else return;
                 }
@@ -334,12 +334,12 @@ namespace Gaming
                     long subHp;
                     if (bullet.HasSpear)
                     {
-                        subHp = student.SubHp(bullet.AP + GameData.ApSpearAdd);
+                        subHp = student.HP.SubPositiveV(bullet.AP + GameData.ApSpearAdd);
                         Debugger.Output(this, "is being shot with Spear! Now his hp is" + student.HP.ToString());
                     }
                     else
                     {
-                        subHp = student.SubHp(bullet.AP);
+                        subHp = student.HP.SubPositiveV(bullet.AP);
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
                     }
                     bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
@@ -348,7 +348,7 @@ namespace Gaming
                         student.AddScore(subHp * GameData.factorOfScoreWhenTeacherAttacked / GameData.basicApOfGhost / FactorTeacher);
                     }
 
-                    bullet.Parent.AddHP((long)(bullet.Parent.Vampire * subHp));
+                    bullet.Parent.HP.AddPositiveV((long)(bullet.Parent.Vampire * subHp));
                 }
                 if (student.HP <= 0)
                     student.TryActivatingLIFE();  // 如果有复活甲

@@ -72,31 +72,6 @@ namespace GameClass.GameObj
                     return null;
             }
         }
-
-        /*
-        /// <summary>
-        /// 攻击被反弹，反弹伤害不会再被反弹
-        /// </summary>
-        /// <param name="subHP"></param>
-        /// <param name="hasSpear"></param>
-        /// <param name="bouncer">反弹伤害者</param>
-        /// <returns>是否因反弹伤害而死</returns>
-        private bool BeBounced(int subHP, bool hasSpear, Character? bouncer)
-        {
-            lock (beAttackedLock)
-            {
-                if (hp <= 0)
-                    return false;
-                if (!(bouncer?.TeamID == this.TeamID))
-                {
-                    if (hasSpear || !HasShield)
-                        _ = SubHp(subHP);
-                    if (hp <= 0)
-                        TryActivatingLIFE();
-                }
-                return hp <= 0;
-            }
-        }*/
         #endregion
         #region 感知相关的基本属性及方法
         private readonly object bgmLock = new();

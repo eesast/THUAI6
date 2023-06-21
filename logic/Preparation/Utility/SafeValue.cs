@@ -194,39 +194,43 @@ namespace Preparation.Utility
                 return v = (value > maxV) ? maxV : value;
             }
         }
+        /// <summary>
+        /// 返回实际改变量
+        /// </summary>
         public int AddV(int addV)
         {
             lock (vLock)
             {
+                int previousV = v;
                 v += addV;
-                if (v < 0) return v = 0;
-                if (v > maxV) return v = maxV;
-                return v;
+                if (v < 0) v = 0;
+                if (v > maxV) v = maxV;
+                return v - previousV;
             }
         }
         /// <summary>
-        /// 应当保证该增加值大于0
+        /// 应当保证该增加值大于0,返回实际改变量
         /// </summary>
         public int AddPositiveV(int addPositiveV)
         {
             lock (vLock)
             {
+                addPositiveV = Math.Min(addPositiveV, maxV - v);
                 v += addPositiveV;
-                if (v > maxV) return v = maxV;
-                return v;
             }
+            return addPositiveV;
         }
         /// <summary>
-        /// 应当保证该减少值大于0
+        /// 应当保证该减少值大于0,返回实际改变量
         /// </summary>
         public int SubPositiveV(int subPositiveV)
         {
             lock (vLock)
             {
-                v += subPositiveV;
-                if (v < 0) return v = 0;
-                return v;
+                subPositiveV = Math.Min(subPositiveV, v);
+                v -= subPositiveV;
             }
+            return subPositiveV;
         }
     }
 
@@ -245,7 +249,7 @@ namespace Preparation.Utility
             if (num < 0) Debugger.Output("Bug:IntNumUpdateByCD.num (" + num.ToString() + ") is less than 0.");
             if (maxNum < 0) Debugger.Output("Bug:IntNumUpdateByCD.maxNum (" + maxNum.ToString() + ") is less than 0.");
             if (cd <= 0) Debugger.Output("Bug:IntNumUpdateByCD.cd (" + cd.ToString() + ") is less than 0.");
-            this.num = num;
+            this.num = (num < maxNum) ? num : maxNum;
             this.maxNum = maxNum;
             this.cd = cd;
             this.updateTime = Environment.TickCount64;
@@ -358,7 +362,7 @@ namespace Preparation.Utility
             lock (numLock)
             {
                 if (num < 0) { this.num = 0; return false; }
-                this.num = num;
+                this.num = (num < maxNum) ? num : maxNum;
                 return true;
             }
         }
@@ -369,7 +373,7 @@ namespace Preparation.Utility
         {
             lock (numLock)
             {
-                this.num = num;
+                this.num = (num < maxNum) ? num : maxNum;
             }
         }
         public void SetCD(int cd)

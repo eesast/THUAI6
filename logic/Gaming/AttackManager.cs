@@ -203,7 +203,7 @@ namespace Gaming
             {                                                    // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
                 if (!player.Commandable()) return false;
 
-                Bullet? bullet = player.Attack(angle, gameMap.Timer.nowTime());
+                Bullet? bullet = player.Attack(angle);
 
                 if (bullet != null)
                 {

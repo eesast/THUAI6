@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using System.Timers;
 
 namespace Preparation.Utility
 {

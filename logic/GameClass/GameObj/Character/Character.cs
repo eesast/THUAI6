@@ -10,20 +10,7 @@ namespace GameClass.GameObj
     {
         #region 装弹、攻击相关的基本属性及方法
         private readonly object attackLock = new();
-        /// <summary>
-        /// 装弹冷却
-        /// </summary>
-        protected int cd;
-        public int CD
-        {
-            get
-            {
-                lock (attackLock)
-                {
-                    return cd;
-                }
-            }
-        }
+        public IntNumUpdateByCD BulletNum { get; }
         private int orgCD;
         public int OrgCD
         {
@@ -50,38 +37,11 @@ namespace GameClass.GameObj
                 lock (attackLock)
                 {
                     bulletOfPlayer = value;
-                    cd = orgCD = (BulletFactory.BulletCD(value));
-                    Debugger.Output(this, string.Format("'s CD has been set to: {0}.", cd));
-                    maxBulletNum = bulletNum = (BulletFactory.BulletNum(value));
+                    orgCD = (BulletFactory.BulletCD(value));
+                    BulletNum.SetCD(orgCD);
+                    Debugger.Output(this, string.Format("'s CD has been set to: {0}.", orgCD));
+                    BulletNum.SetPositiveMaxNumAndNum(BulletFactory.BulletNum(value));
                 }
-            }
-        }
-
-        protected int maxBulletNum;
-        public int MaxBulletNum
-        {
-            get
-            {
-                lock (attackLock)
-                {
-                    return maxBulletNum;
-                }
-            }
-        }
-        private int bulletNum;
-        private int updateTimeOfBulletNum = 0;
-
-        public int UpdateBulletNum(int time)//通过该函数获取真正的bulletNum
-        {
-            lock (attackLock)
-            {
-                if (bulletNum < maxBulletNum && time - updateTimeOfBulletNum >= cd)
-                {
-                    int add = Math.Min(maxBulletNum - bulletNum, (time - updateTimeOfBulletNum) / cd);
-                    updateTimeOfBulletNum += add * cd;
-                    return (bulletNum += add);
-                }
-                return bulletNum;
             }
         }
 
@@ -89,17 +49,14 @@ namespace GameClass.GameObj
         /// 进行一次攻击
         /// </summary>
         /// <returns>攻击操作发出的子弹</returns>
-        public Bullet? Attack(double angle, int time)
+        public Bullet? Attack(double angle)
         {
             lock (attackLock)
             {
                 if (bulletOfPlayer == BulletType.Null)
                     return null;
-                if (UpdateBulletNum(time) > 0)
+                if (BulletNum.TrySub(1) == 1)
                 {
-                    if (bulletNum == maxBulletNum) updateTimeOfBulletNum = time;
-                    --bulletNum;
-
                     XY res = Position + new XY  // 子弹紧贴人物生成。
                         (
                             (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),

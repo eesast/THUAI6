@@ -354,7 +354,7 @@ namespace GameClass.GameObj
 
                     case PlayerStateType.OpeningTheChest:
                         if (value == PlayerStateType.Rescued) return -1;
-                        ((Chest)lastObj!).StopOpen();
+                        ((Chest)lastObj!).OpenProgress.Set0();
                         return ChangePlayerState(runningState, value, gameObj);
                     case PlayerStateType.OpeningTheDoorway:
                         if (value == PlayerStateType.Rescued) return -1;
@@ -382,7 +382,7 @@ namespace GameClass.GameObj
                                         else
                                         {
                                             if (value != PlayerStateType.UsingSkill)
-                                                ((UseRobot)FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID = (int)playerID;
+                                                ((UseRobot)FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID = (int)PlayerID;
                                             return ChangePlayerState(runningState, value, gameObj);
                                         }
                                     }

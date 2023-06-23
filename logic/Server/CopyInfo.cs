@@ -277,8 +277,7 @@ namespace Server
                     Y = chest.Position.y
                 }
             };
-            int progress = (chest.WhoOpen != null) ? (((int)(time - chest.OpenStartTime)) * chest.WhoOpen.SpeedOfOpenChest) : 0;
-            msg.ChestMessage.Progress = (progress > GameData.degreeOfOpenedChest) ? GameData.degreeOfOpenedChest : progress;
+            msg.ChestMessage.Progress = (int)chest.OpenProgress.GetProgress(time);
             return msg;
         }
     }

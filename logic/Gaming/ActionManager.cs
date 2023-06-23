@@ -369,7 +369,7 @@ namespace Gaming
                           return;
                       }
                       else
-                      if (!chestToOpen.Open(player))
+                      if (!chestToOpen.OpenProgress.Start((long)(GameData.degreeOfOpenedChest / player.SpeedOfOpenChest)))
                       {
                           player.ThreadNum.Release();
                           player.SetPlayerStateNaturally();

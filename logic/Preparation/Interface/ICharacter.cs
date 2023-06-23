@@ -4,7 +4,7 @@ namespace Preparation.Interface
 {
     public interface ICharacter : IMoveable
     {
-        public long TeamID { get; }
+        public AtomicLong TeamID { get; }
         public LongWithVariableRange HP { get; }
         public long Score { get; }
         public void AddScore(long add);

@@ -86,6 +86,10 @@ namespace Preparation.Utility
             if (needTime <= 0) Debugger.Output("Bug:LongProgressContinuously.needTime (" + needTime.ToString() + ") is less than 0.");
             this.needT = needTime;
         }
+        public LongProgressContinuously()
+        {
+            this.needT = long.MaxValue;
+        }
         public long GetEndTime() => Interlocked.CompareExchange(ref endT, -2, -2);
         public long GetNeedTime() => Interlocked.CompareExchange(ref needT, -2, -2);
         public override string ToString() => "EndTime:" + Interlocked.CompareExchange(ref endT, -2, -2).ToString() + " ms, NeedTime:" + Interlocked.CompareExchange(ref needT, -2, -2).ToString() + " ms";
@@ -99,6 +103,15 @@ namespace Preparation.Utility
         public long GetProgress()
         {
             long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - Environment.TickCount64;
+            if (cutime <= 0) return Interlocked.CompareExchange(ref needT, -2, -2);
+            return Interlocked.CompareExchange(ref needT, -2, -2) - cutime;
+        }
+        /// <summary>
+        /// GetProgress<0则表明未开始
+        /// </summary>
+        public long GetProgress(long time)
+        {
+            long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - time;
             if (cutime <= 0) return Interlocked.CompareExchange(ref needT, -2, -2);
             return Interlocked.CompareExchange(ref needT, -2, -2) - cutime;
         }
@@ -166,6 +179,22 @@ namespace Preparation.Utility
             }
             v = value < maxValue ? value : maxValue;
             this.maxV = maxValue;
+        }
+        /// <summary>
+        /// 默认使Value=maxValue
+        /// </summary>
+        public IntWithVariableRange(int maxValue)
+        {
+            if (maxValue < 0)
+            {
+                Debugger.Output("Warning:Try to set IntWithVariableRange.maxValue to " + maxValue.ToString() + ".");
+                maxValue = 0;
+            }
+            v = this.maxV = maxValue;
+        }
+        public IntWithVariableRange()
+        {
+            v = this.maxV = int.MaxValue;
         }
 
         public override string ToString()
@@ -296,6 +325,9 @@ namespace Preparation.Utility
             v = value < maxValue ? value : maxValue;
             this.maxV = maxValue;
         }
+        /// <summary>
+        /// 默认使Value=maxValue
+        /// </summary>
         public LongWithVariableRange(long maxValue)
         {
             if (maxValue < 0)
@@ -305,6 +337,11 @@ namespace Preparation.Utility
             }
             v = this.maxV = maxValue;
         }
+        public LongWithVariableRange()
+        {
+            v = this.maxV = long.MaxValue;
+        }
+
         public override string ToString()
         {
             lock (vLock)
@@ -424,7 +461,7 @@ namespace Preparation.Utility
         private int maxNum;
         private int cd;
         private long updateTime = 0;
-        private object numLock = new();
+        private readonly object numLock = new();
         public IntNumUpdateByCD(int num, int maxNum, int cd)
         {
             if (num < 0) Debugger.Output("Bug:IntNumUpdateByCD.num (" + num.ToString() + ") is less than 0.");
@@ -435,6 +472,9 @@ namespace Preparation.Utility
             this.cd = cd;
             this.updateTime = Environment.TickCount64;
         }
+        /// <summary>
+        /// 默认使num=maxNum
+        /// </summary>
         public IntNumUpdateByCD(int maxNum, int cd)
         {
             if (maxNum < 0) Debugger.Output("Bug:IntNumUpdateByCD.maxNum (" + maxNum.ToString() + ") is less than 0.");
@@ -442,6 +482,12 @@ namespace Preparation.Utility
             this.num = this.maxNum = maxNum;
             this.cd = cd;
         }
+        public IntNumUpdateByCD()
+        {
+            this.num = this.maxNum = 0;
+            this.cd = int.MaxValue;
+        }
+
         public int GetMaxNum() { lock (numLock) return maxNum; }
         public int GetCD() { lock (numLock) return cd; }
         public int GetNum(long time)

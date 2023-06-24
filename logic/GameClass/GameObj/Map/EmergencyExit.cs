@@ -17,24 +17,14 @@ namespace GameClass.GameObj
 
         public override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (!canOpen) return true;
+            if (!CanOpen) return true;
             if (!IsOpen) return false;
             if (targetObj.Type != GameObjType.Character)
                 return true;  // 非玩家不碰撞
             return false;
         }
 
-
-        private bool canOpen = false;
-        public bool CanOpen
-        {
-            get => canOpen;
-            set
-            {
-                lock (gameObjLock)
-                    canOpen = value;
-            }
-        }
+        public AtomicBool CanOpen { get; } = new(false);
 
         private bool isOpen = false;
         public bool IsOpen

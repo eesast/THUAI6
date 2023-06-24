@@ -196,7 +196,7 @@ namespace Gaming
                                  }
                                  if (homingMissile != null)
                                  {
-                                     homingMissile.ReSetCanMove(true);
+                                     homingMissile.CanMove.Set(true);
                                      attackManager.moveEngine.MoveObj(homingMissile, GameData.checkIntervalWhenSparksNSplash - 1, (whoAttacked.Position - homingMissile.Position).Angle(), ++homingMissile.StateNum);
                                  }
                              },
@@ -227,7 +227,7 @@ namespace Gaming
                         if (generator.Repair(((WriteAnswers)activeSkill).DegreeOfMeditation, player))
                             gameMap.AddNumOfRepairedGenerators();
                         Debugger.Output(player, "uses WriteAnswers in" + generator.ToString() + "with " + (((WriteAnswers)activeSkill).DegreeOfMeditation).ToString());
-                        ((WriteAnswers)activeSkill).DegreeOfMeditation = 0;
+                        ((WriteAnswers)activeSkill).DegreeOfMeditation.Set(0);
                     }
                 },
                                                       () =>
@@ -421,7 +421,7 @@ namespace Gaming
                                 if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
                                 {
                                     character.SetPlayerStateNaturally();
-                                    character.HP = GameData.RemainHpWhenAddLife;
+                                    character.SetHP(GameData.RemainHpWhenAddLife);
                                     ((Student)character).SetTimeOfRescue(0);
                                     player.AddScore(GameData.StudentScoreRescue);
                                     break;
@@ -452,7 +452,7 @@ namespace Gaming
                             if ((character.HP < character.MaxHp) && gameMap.CanSee(player, character))
                             {
                                 player.AddScore(GameData.StudentScoreTreat(GameData.addHpWhenEncourage));
-                                character.HP += GameData.addHpWhenEncourage;
+                                character.AddHP(GameData.addHpWhenEncourage);
                                 ((Student)character).SetDegreeOfTreatment0();
                                 break;
                             }

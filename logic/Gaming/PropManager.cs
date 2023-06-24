@@ -17,11 +17,11 @@ namespace Gaming
             private readonly CharacterManager characterManager;
             private readonly List<XY> availableCellForGenerateProp;
 
-            public void UseProp(Character player, PropType propType)
+            public void ConsumeProp(Character player, PropType propType)
             {
                 if (player.CharacterType == CharacterType.Robot || player.IsRemoved)
                     return;
-                Gadget prop = player.UseProp(propType);
+                Gadget prop = player.ConsumeProp(propType);
                 switch (prop.GetPropType())
                 {
                     case PropType.ShieldOrSpear:
@@ -46,7 +46,7 @@ namespace Gaming
                         if (!player.IsGhost())
                             if (player.HP < player.MaxHp)
                             {
-                                player.HP += GameData.basicTreatmentDegree / 2;
+                                player.AddHP(GameData.basicTreatmentDegree / 2);
                                 player.AddScore(GameData.ScorePropAddHp);
                             }
                             else player.AddAp(GameData.PropDuration);
@@ -117,7 +117,7 @@ namespace Gaming
             {
                 if (!gameMap.Timer.IsGaming || player.IsRemoved)
                     return;
-                Gadget prop = player.UseProp(propType);
+                Gadget prop = player.ConsumeProp(propType);
                 if (prop.GetPropType() == PropType.Null)
                     return;
 

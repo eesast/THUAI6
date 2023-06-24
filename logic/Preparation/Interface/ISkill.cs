@@ -174,12 +174,7 @@ namespace Preparation.Interface
         public override int SkillCD => GameData.commonSkillCD;
         public override int DurationTime => 0;
 
-        private int degreeOfMeditation = 0;
-        public int DegreeOfMeditation
-        {
-            get => Interlocked.CompareExchange(ref degreeOfMeditation, 0, 0);
-            set => Interlocked.Exchange(ref degreeOfMeditation, value);
-        }
+        public AtomicInt DegreeOfMeditation { get; } = new(0);
     }
 
     public class SummonGolem : ActiveSkill

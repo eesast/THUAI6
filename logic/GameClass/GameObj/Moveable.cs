@@ -8,7 +8,7 @@ namespace GameClass.GameObj
     {
         protected readonly object actionLock = new();
         public object ActionLock => actionLock;
-        //player.actionLock>其他.actionLock
+        //player.actionLock>其他.actionLock/其他Lock,应当避免两个player的actionlock互锁
         private readonly ReaderWriterLockSlim moveReaderWriterLock = new();
         public ReaderWriterLockSlim MoveReaderWriterLock => moveReaderWriterLock;
         //规定moveReaderWriterLock<actionLock
@@ -52,21 +52,22 @@ namespace GameClass.GameObj
             }
         }
 
-        public override XY FacingDirection
+        protected XY facingDirection = new(1, 0);
+        public XY FacingDirection
         {
             get
             {
                 lock (actionLock)
                     return facingDirection;
             }
+            set
+            {
+                lock (actionLock)
+                    facingDirection = value;
+            }
         }
 
-        private int isMoving = 0;
-        public bool IsMoving
-        {
-            get => (Interlocked.CompareExchange(ref isMoving, 0, 0) == 1);
-            set => Interlocked.Exchange(ref isMoving, value ? 1 : 0);
-        }
+        public AtomicBool IsMoving { get; } = new(false);
 
         // 移动，改变坐标
         public long MovingSetPos(XY moveVec, long stateNo)
@@ -93,41 +94,19 @@ namespace GameClass.GameObj
             }
         }
 
-        private int canMove;
-        public override bool CanMove
-        {
-            get => (Interlocked.CompareExchange(ref canMove, 0, 0) == 1);
-        }
+        public AtomicBool CanMove { get; }
 
-        public void ReSetCanMove(bool value)
-        {
-            Interlocked.Exchange(ref canMove, (value ? 1 : 0));
-        }
+        public bool IsAvailableForMove => !IsMoving && CanMove && !IsRemoved; // 是否能接收移动指令
 
-        public bool IsAvailableForMove // 是否能接收移动指令
-        {
-            get
-            {
-                lock (actionLock)
-                {
-                    return !IsMoving && CanMove && !IsRemoved;
-                }
-            }
-        }
-
-        protected int moveSpeed;
         /// <summary>
         /// 移动速度
         /// </summary>
-        public int MoveSpeed
-        {
-            get => Interlocked.CompareExchange(ref moveSpeed, 0, 0);
-            set => Interlocked.Exchange(ref moveSpeed, value);
-        }
+        public AtomicInt MoveSpeed { get; }
         /// <summary>
         /// 原初移动速度
         /// </summary>
-        public int OrgMoveSpeed { get; protected set; }
+        protected int orgMoveSpeed;
+        public int OrgMoveSpeed => orgMoveSpeed;
 
         /*       /// <summary>
                /// 复活时数据重置

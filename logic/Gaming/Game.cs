@@ -238,7 +238,7 @@ namespace Gaming
             Character? player = gameMap.FindPlayerToAction(playerID);
             if (player != null)
             {
-                propManager.UseProp(player, propType);
+                propManager.ConsumeProp(player, propType);
             }
         }
         public void ThrowProp(long playerID, PropType propType = PropType.Null)
@@ -326,7 +326,7 @@ namespace Gaming
                         {
                             foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
                             {
-                                player.ReSetCanMove(false);
+                                player.CanMove.Set(false);
                             }
                         }
                         gameMap.GameObjDict[keyValuePair.Key].Clear();

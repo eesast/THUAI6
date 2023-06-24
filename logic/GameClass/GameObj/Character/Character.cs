@@ -8,15 +8,8 @@ namespace GameClass.GameObj
 {
     public partial class Character : Moveable, ICharacter  // 负责人LHR摆烂终了
     {
-
-        private readonly ReaderWriterLockSlim hpReaderWriterLock = new();
-        public ReaderWriterLockSlim HPReadWriterLock => hpReaderWriterLock;
-        private readonly object vampireLock = new();
-        public object VampireLock => vampire;
-        private readonly object inventoryLock = new();
-        public object InventoryLock => inventoryLock;
-
         #region 装弹、攻击相关的基本属性及方法
+        private readonly object attackLock = new();
         /// <summary>
         /// 装弹冷却
         /// </summary>
@@ -25,7 +18,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (actionLock)
+                lock (attackLock)
                 {
                     return cd;
                 }
@@ -36,7 +29,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (actionLock)
+                lock (attackLock)
                     return orgCD;
             }
         }
@@ -47,14 +40,14 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (actionLock)
+                lock (attackLock)
                 {
                     return bulletOfPlayer;
                 }
             }
             set
             {
-                lock (actionLock)
+                lock (attackLock)
                 {
                     bulletOfPlayer = value;
                     cd = orgCD = (BulletFactory.BulletCD(value));
@@ -69,7 +62,7 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (actionLock)
+                lock (attackLock)
                 {
                     return maxBulletNum;
                 }
@@ -78,17 +71,17 @@ namespace GameClass.GameObj
         private int bulletNum;
         private int updateTimeOfBulletNum = 0;
 
-        public int UpdateBulletNum(int time)
+        public int UpdateBulletNum(int time)//通过该函数获取真正的bulletNum
         {
-            lock (actionLock)
+            lock (attackLock)
             {
-                if (bulletNum < maxBulletNum)
+                if (bulletNum < maxBulletNum && time - updateTimeOfBulletNum >= cd)
                 {
                     int add = Math.Min(maxBulletNum - bulletNum, (time - updateTimeOfBulletNum) / cd);
                     updateTimeOfBulletNum += add * cd;
                     return (bulletNum += add);
                 }
-                return maxBulletNum;
+                return bulletNum;
             }
         }
 
@@ -98,7 +91,7 @@ namespace GameClass.GameObj
         /// <returns>攻击操作发出的子弹</returns>
         public Bullet? Attack(double angle, int time)
         {
-            lock (actionLock)
+            lock (attackLock)
             {
                 if (bulletOfPlayer == BulletType.Null)
                     return null;
@@ -114,8 +107,8 @@ namespace GameClass.GameObj
                         );
                     Bullet? bullet = BulletFactory.GetBullet(this, res, this.bulletOfPlayer);
                     if (bullet == null) return null;
-                    if (TryAddAp()) bullet.AddAP(GameData.ApPropAdd);
-                    facingDirection = new(angle, bullet.AttackDistance);
+                    if (TryAddAp()) bullet.AP.Add(GameData.ApPropAdd);
+                    FacingDirection = new(angle, bullet.AttackDistance);
                     return bullet;
                 }
                 else
@@ -140,7 +133,7 @@ namespace GameClass.GameObj
                 if (!(bouncer?.TeamID == this.TeamID))
                 {
                     if (hasSpear || !HasShield)
-                        _ = TrySubHp(subHP);
+                        _ = SubHp(subHP);
                     if (hp <= 0)
                         TryActivatingLIFE();
                 }
@@ -194,6 +187,9 @@ namespace GameClass.GameObj
         }
         #endregion
         #region 血量相关的基本属性及方法
+        private readonly ReaderWriterLockSlim hpReaderWriterLock = new();
+        public ReaderWriterLockSlim HPReadWriterLock => hpReaderWriterLock;
+
         private long maxHp;
         public long MaxHp
         {
@@ -222,7 +218,8 @@ namespace GameClass.GameObj
                     HPReadWriterLock.ExitWriteLock();
                 }
             }
-        }  // 最大血量
+        }
+        // 最大血量
         protected long hp;
         public long HP
         {
@@ -238,22 +235,23 @@ namespace GameClass.GameObj
                     HPReadWriterLock.ExitReadLock();
                 }
             }
-            set
+        }
+
+        public long SetHP(long value)
+        {
+            HPReadWriterLock.EnterWriteLock();
+            try
             {
-                HPReadWriterLock.EnterWriteLock();
-                try
+                if (value > 0)
                 {
-                    if (value > 0)
-                    {
-                        hp = value <= maxHp ? value : maxHp;
-                    }
-                    else
-                        hp = 0;
+                    return hp = value <= maxHp ? value : maxHp;
                 }
-                finally
-                {
-                    HPReadWriterLock.ExitWriteLock();
-                }
+                else
+                    return hp = 0;
+            }
+            finally
+            {
+                HPReadWriterLock.ExitWriteLock();
             }
         }
 
@@ -261,7 +259,7 @@ namespace GameClass.GameObj
         /// 尝试减血
         /// </summary>
         /// <param name="sub">减血量</param>
-        public long TrySubHp(long sub)
+        public long SubHp(long sub)
         {
             HPReadWriterLock.EnterWriteLock();
             try
@@ -283,6 +281,23 @@ namespace GameClass.GameObj
                 HPReadWriterLock.ExitWriteLock();
             }
         }
+
+        public long AddHP(long add)
+        {
+            HPReadWriterLock.EnterWriteLock();
+            try
+            {
+                long previousHp = hp;
+                return (hp = (hp + add > maxHp) ? maxHp : hp + add) - previousHp;
+            }
+            finally
+            {
+                HPReadWriterLock.ExitWriteLock();
+            }
+        }
+
+        private readonly object vampireLock = new();
+        public object VampireLock => vampire;
 
         private double vampire = 0;  // 回血率：0-1之间
         public double Vampire
@@ -306,8 +321,65 @@ namespace GameClass.GameObj
             }
         }
         public double OriVampire { get; protected set; }
+
+        private readonly object treatLock = new();
+        private int degreeOfTreatment = 0;
+        public int DegreeOfTreatment
+        {
+            get
+            {
+                HPReadWriterLock.EnterReadLock();
+                try
+                {
+                    return degreeOfTreatment;
+                }
+                finally
+                {
+                    HPReadWriterLock.ExitReadLock();
+                }
+            }
+        }
+        public void SetDegreeOfTreatment0()
+        {
+            HPReadWriterLock.EnterWriteLock();
+            try
+            {
+                degreeOfTreatment = 0;
+            }
+            finally
+            {
+                HPReadWriterLock.ExitWriteLock();
+            }
+        }
+        public bool AddDegreeOfTreatment(int value, Student whoTreatYou)
+        {
+            HPReadWriterLock.EnterWriteLock();
+            try
+            {
+                if (value >= maxHp - hp)
+                {
+                    whoTreatYou.AddScore(GameData.StudentScoreTreat(maxHp - hp));
+                    hp = maxHp;
+                    degreeOfTreatment = 0;
+                    return true;
+                }
+                if (value >= GameData.basicTreatmentDegree)
+                {
+                    whoTreatYou.AddScore(GameData.StudentScoreTreat(GameData.basicTreatmentDegree));
+                    hp += GameData.basicTreatmentDegree;
+                    degreeOfTreatment = 0;
+                    return true;
+                }
+                degreeOfTreatment = value;
+            }
+            finally
+            {
+                HPReadWriterLock.ExitWriteLock();
+            }
+            return false;
+        }
         #endregion
-        #region 状态相关的基本属性与方法
+        #region 查询状态相关的基本属性与方法
         private PlayerStateType playerState = PlayerStateType.Null;
         public PlayerStateType PlayerState
         {
@@ -371,6 +443,8 @@ namespace GameClass.GameObj
                            || playerState == PlayerStateType.Stunned || playerState == PlayerStateType.Charmed
                            || playerState == PlayerStateType.Null || playerState == PlayerStateType.Moving);
         }
+        #endregion
+        #region 更改状态相关的属性和方法
         private GameObj? whatInteractingWith = null;
         public GameObj? WhatInteractingWith
         {
@@ -381,19 +455,6 @@ namespace GameClass.GameObj
                     return whatInteractingWith;
                 }
             }
-        }
-
-        public bool StartThread(long stateNum, RunningStateType runningState)
-        {
-            lock (ActionLock)
-            {
-                if (this.StateNum == stateNum)
-                {
-                    this.runningState = runningState;
-                    return true;
-                }
-            }
-            return false;
         }
 
         private long ChangePlayerState(RunningStateType running, PlayerStateType value = PlayerStateType.Null, GameObj? gameObj = null)
@@ -492,13 +553,7 @@ namespace GameClass.GameObj
                         if (value == PlayerStateType.Rescued) return -1;
                         Door door = (Door)lastObj!;
                         door.StopOpen();
-                        ReleaseTool(door.DoorNum switch
-                        {
-                            3 => PropType.Key3,
-                            5 => PropType.Key5,
-                            _ => PropType.Key6,
-                        }
-                        );
+                        ReleaseTool(door.KeyType);
                         return ChangePlayerState(runningState, value, gameObj);
                     case PlayerStateType.UsingSkill:
                         {
@@ -573,13 +628,26 @@ namespace GameClass.GameObj
             }
         }
 
+        public bool StartThread(long stateNum, RunningStateType runningState)
+        {
+            lock (ActionLock)
+            {
+                if (this.StateNum == stateNum)
+                {
+                    this.runningState = runningState;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool TryToRemoveFromGame(PlayerStateType playerStateType)
         {
             lock (actionLock)
             {
                 if (SetPlayerState(RunningStateType.RunningForcibly, playerStateType) == -1) return false;
                 TryToRemove();
-                ReSetCanMove(false);
+                CanMove.Set(false);
                 position = GameData.PosWhoDie;
             }
             return true;
@@ -619,6 +687,9 @@ namespace GameClass.GameObj
         }
 
         #region 道具和buff相关属性、方法
+        private readonly object inventoryLock = new();
+        public object InventoryLock => inventoryLock;
+
         private Gadget[] propInventory = new Gadget[GameData.maxNumOfPropInPropInventory]
                                                 {new NullProp(), new NullProp(),new NullProp() };
         public Gadget[] PropInventory
@@ -639,7 +710,7 @@ namespace GameClass.GameObj
         /// 使用物品栏中的道具
         /// </summary>
         /// <returns>被使用的道具</returns>
-        public Gadget UseProp(int indexing)
+        public Gadget ConsumeProp(int indexing)
         {
             if (indexing < 0 || indexing >= GameData.maxNumOfPropInPropInventory)
                 return new NullProp();
@@ -652,7 +723,7 @@ namespace GameClass.GameObj
             }
         }
 
-        public Gadget UseProp(PropType propType)
+        public Gadget ConsumeProp(PropType propType)
         {
             if (propType == PropType.Null)
             {
@@ -687,7 +758,7 @@ namespace GameClass.GameObj
             return new NullProp();
         }
 
-        public bool UseTool(PropType propType)
+        public bool UseTool(PropType propType)//占用道具，使其不能重复使用和被消耗
         {
             lock (inventoryLock)
             {
@@ -731,7 +802,7 @@ namespace GameClass.GameObj
         }
 
         public void AddMoveSpeed(int buffTime, double add = 1.0) => buffManager.AddMoveSpeed(add, buffTime, newVal =>
-                                                                                                            { MoveSpeed = newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed; },
+                                                                                                            { MoveSpeed.Set(newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed); },
                                                                                              OrgMoveSpeed);
         public bool HasFasterSpeed => buffManager.HasFasterSpeed;
 

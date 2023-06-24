@@ -8,7 +8,7 @@ namespace GameClass.GameObj
         public CommonAttackOfGhost(Character player, XY pos, int radius = GameData.bulletRadius) :
             base(player, radius, pos)
         {
-            ap = GameData.basicApOfGhost;
+            AP.Set(GameData.basicApOfGhost);
         }
         public override double BulletBombRange => 0;
         public override double AttackDistance => GameData.basicAttackShortRange;
@@ -45,7 +45,7 @@ namespace GameClass.GameObj
         public Strike(Character player, XY pos, int radius = GameData.bulletRadius) :
             base(player, radius, pos)
         {
-            ap = GameData.basicApOfGhost * 16 / 15;
+            AP.Set(GameData.basicApOfGhost * 16 / 15);
         }
         public override double BulletBombRange => 0;
         public override double AttackDistance => GameData.basicAttackShortRange * 20 / 22;
@@ -83,7 +83,7 @@ namespace GameClass.GameObj
         public FlyingKnife(Character player, XY pos, int radius = GameData.bulletRadius) :
             base(player, radius, pos)
         {
-            ap = GameData.basicApOfGhost * 4 / 5;
+            AP.Set(GameData.basicApOfGhost * 4 / 5);
         }
         public override double BulletBombRange => 0;
         public override double AttackDistance => GameData.basicRemoteAttackRange * 13;
@@ -123,7 +123,7 @@ namespace GameClass.GameObj
     {
         public BombBomb(Character player, XY pos, int radius = GameData.bulletRadius) : base(player, radius, pos)
         {
-            ap = (int)(GameData.basicApOfGhost * 6.0 / 5);
+            AP.Set((int)(GameData.basicApOfGhost * 6.0 / 5));
         }
         public override double BulletBombRange => GameData.basicBulletBombRange;
         public override double AttackDistance => GameData.basicAttackShortRange;
@@ -163,7 +163,7 @@ namespace GameClass.GameObj
     {
         public JumpyDumpty(Character player, XY pos, int radius = GameData.bulletRadius) : base(player, radius, pos)
         {
-            ap = (int)(GameData.basicApOfGhost * 0.6);
+            AP.Set((int)(GameData.basicApOfGhost * 0.6));
         }
         public override double BulletBombRange => GameData.basicBulletBombRange / 2;
         public override double AttackDistance => GameData.basicAttackShortRange * 18 / 22;

@@ -306,32 +306,26 @@ namespace Gaming
             /// <returns>人物在受到攻击后死了吗</returns>
             public void BeAttacked(Student student, Bullet bullet)
             {
-#if DEBUG
                 Debugger.Output(student, "is being shot!");
-#endif
                 if (!bullet.Parent!.IsGhost()) return;
 
                 if (student.CharacterType == CharacterType.StraightAStudent)
                 {
-                    ((WriteAnswers)student.FindActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation = 0;
+                    ((WriteAnswers)student.FindActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation.Set(0);
                 }
                 student.SetDegreeOfTreatment0();
 
                 if (student.NoHp()) return;  // 原来已经死了
 
-#if DEBUG
                 Debugger.Output(bullet, " 's AP is " + bullet.AP.ToString());
-#endif
                 if (student.TryUseShield())
                 {
                     if (bullet.HasSpear)
                     {
-                        long subHp = student.TrySubHp(bullet.AP);
-#if DEBUG
+                        long subHp = student.SubHp(bullet.AP);
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
-#endif
                         bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
-                        bullet.Parent.HP = (long)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
+                        bullet.Parent.AddHP((long)bullet.Parent.Vampire * subHp);
                     }
                     else return;
                 }
@@ -340,17 +334,13 @@ namespace Gaming
                     long subHp;
                     if (bullet.HasSpear)
                     {
-                        subHp = student.TrySubHp(bullet.AP + GameData.ApSpearAdd);
-#if DEBUG
+                        subHp = student.SubHp(bullet.AP + GameData.ApSpearAdd);
                         Debugger.Output(this, "is being shot with Spear! Now his hp is" + student.HP.ToString());
-#endif
                     }
                     else
                     {
-                        subHp = student.TrySubHp(bullet.AP);
-#if DEBUG
+                        subHp = student.SubHp(bullet.AP);
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
-#endif
                     }
                     bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
                     if (student.CharacterType == CharacterType.Teacher)
@@ -358,7 +348,7 @@ namespace Gaming
                         student.AddScore(subHp * GameData.factorOfScoreWhenTeacherAttacked / GameData.basicApOfGhost / FactorTeacher);
                     }
 
-                    bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * subHp));
+                    bullet.Parent.AddHP((long)(bullet.Parent.Vampire * subHp));
                 }
                 if (student.HP <= 0)
                     student.TryActivatingLIFE();  // 如果有复活甲
@@ -393,7 +383,7 @@ namespace Gaming
 
                 for (int i = 0; i < GameData.maxNumOfPropInPropInventory; i++)
                 {
-                    Gadget? prop = player.UseProp(i);
+                    Gadget? prop = player.ConsumeProp(i);
                     if (prop != null)
                     {
                         prop.ReSetPos(player.Position);

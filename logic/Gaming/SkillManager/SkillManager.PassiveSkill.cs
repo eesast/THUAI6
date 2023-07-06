@@ -26,7 +26,7 @@ namespace Gaming  // 被动技能开局时就释放，持续到游戏结束
                             () =>
                             {
                                 if (player.Commandable() && player.PlayerState != PlayerStateType.Fixing) activeSkill.DegreeOfMeditation.Add(learningDegree * GameData.frameDuration);
-                                else activeSkill.DegreeOfMeditation.Set(0);
+                                else activeSkill.DegreeOfMeditation.SetReturnOri(0);
                                 //Debugger.Output(player, "with " + (((WriteAnswers)activeSkill).DegreeOfMeditation).ToString());
                             },
                             timeInterval: GameData.frameDuration,

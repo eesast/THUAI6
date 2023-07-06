@@ -19,6 +19,7 @@ namespace GameClass.GameObj
         private readonly Gadget[] propInChest = new Gadget[GameData.maxNumOfPropInChest] { new NullProp(), new NullProp() };
         public Gadget[] PropInChest => propInChest;
 
-        public LongProgressContinuously OpenProgress { get; } = new LongProgressContinuously();
+        private LongProgressByTime openProgress = new LongProgressByTime();
+        public LongProgressByTime OpenProgress { get => openProgress; }
     }
 }

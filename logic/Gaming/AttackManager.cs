@@ -33,7 +33,7 @@ namespace Gaming
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                         if (obj.CanMove && ((Bullet)obj).TypeOfBullet != BulletType.JumpyDumpty)
                             BulletBomb((Bullet)obj, null);
-                        obj.CanMove.Set(false);
+                        obj.CanMove.SetReturnOri(false);
                     }
                 );
                 this.characterManager = characterManager;
@@ -89,7 +89,7 @@ namespace Gaming
             {
                 if (gameMap.Remove(bullet))
                 {
-                    bullet.CanMove.Set(false);
+                    bullet.CanMove.SetReturnOri(false);
                     if (bullet.BulletBombRange > 0)
                     {
                         BombedBullet bombedBullet = new(bullet);

@@ -459,7 +459,7 @@ namespace GameClass.GameObj
             {
                 if (SetPlayerState(RunningStateType.RunningForcibly, playerStateType) == -1) return false;
                 TryToRemove();
-                CanMove.Set(false);
+                CanMove.SetReturnOri(false);
                 position = GameData.PosWhoDie;
             }
             return true;
@@ -604,7 +604,7 @@ namespace GameClass.GameObj
         }
 
         public void AddMoveSpeed(int buffTime, double add = 1.0) => buffManager.AddMoveSpeed(add, buffTime, newVal =>
-                                                                                                            { MoveSpeed.Set(newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed); },
+                                                                                                            { MoveSpeed.SetReturnOri(newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed); },
                                                                                              OrgMoveSpeed);
         public bool HasFasterSpeed => buffManager.HasFasterSpeed;
 

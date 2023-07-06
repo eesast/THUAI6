@@ -94,14 +94,16 @@ namespace GameClass.GameObj
             }
         }
 
-        public AtomicBool CanMove { get; }
+        private AtomicBool canMove = new(false);
+        public AtomicBool CanMove { get => canMove; }
 
         public bool IsAvailableForMove => !IsMoving && CanMove && !IsRemoved; // 是否能接收移动指令
 
         /// <summary>
         /// 移动速度
         /// </summary>
-        public AtomicInt MoveSpeed { get; }
+        private AtomicInt moveSpeed = new(0);
+        public AtomicInt MoveSpeed { get => moveSpeed; }
         /// <summary>
         /// 原初移动速度
         /// </summary>

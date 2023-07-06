@@ -31,12 +31,12 @@ namespace GameClass.GameObj
         protected Character(XY initPos, int initRadius, CharacterType characterType) :
             base(initPos, initRadius, GameObjType.Character)
         {
-            this.CanMove.Set(true);
+            this.CanMove.SetReturnOri(true);
             this.score = 0;
             this.buffManager = new BuffManager();
             this.occupation = OccupationFactory.FindIOccupation(characterType);
             this.HP = new(Occupation.MaxHp);
-            this.MoveSpeed.Set(this.orgMoveSpeed = Occupation.MoveSpeed);
+            this.MoveSpeed.SetReturnOri(this.orgMoveSpeed = Occupation.MoveSpeed);
             this.BulletOfPlayer = this.OriBulletOfPlayer = Occupation.InitBullet;
             this.concealment = Occupation.Concealment;
             this.alertnessRadius = Occupation.AlertnessRadius;

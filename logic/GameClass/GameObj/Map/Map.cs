@@ -26,7 +26,7 @@ namespace GameClass.GameObj
                 {
                     Random r = new Random(Environment.TickCount);
                     EmergencyExit emergencyExit = (EmergencyExit)(GameObjDict[GameObjType.EmergencyExit][r.Next(0, GameObjDict[GameObjType.EmergencyExit].Count)]);
-                    emergencyExit.CanOpen.Set(true);
+                    emergencyExit.CanOpen.SetReturnOri(true);
                     Preparation.Utility.Debugger.Output(emergencyExit, emergencyExit.Position.ToString());
                 }
                 finally
@@ -41,7 +41,7 @@ namespace GameClass.GameObj
                 try
                 {
                     foreach (Doorway doorway in GameObjDict[GameObjType.Doorway])
-                        doorway.PowerSupply.Set(true);
+                        doorway.PowerSupply.SetReturnOri(true);
                 }
                 finally
                 {
@@ -228,7 +228,6 @@ namespace GameClass.GameObj
                     {
                         if (person.CharacterType == CharacterType.TechOtaku)
                         {
-                            Debugger.Output(person, person.PlayerID.ToString());
                             foreach (Character character in gameObjDict[GameObjType.Character])
                             {
                                 if (((UseRobot)person.FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID == character.PlayerID)

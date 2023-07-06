@@ -30,7 +30,8 @@ namespace GameClass.GameObj
 
         public abstract ShapeType Shape { get; }
 
-        public AtomicBool IsRemoved { get; } = new AtomicBool(false);
+        private AtomicBool isRemoved = new(false);
+        public AtomicBool IsRemoved { get => isRemoved; }
         public virtual bool TryToRemove()
         {
             return IsRemoved.TrySet(true);

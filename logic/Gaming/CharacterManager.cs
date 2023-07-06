@@ -57,41 +57,8 @@ namespace Gaming
                 }
                 gameMap.Add(newPlayer);
 
-                newPlayer.TeamID.Set(teamID);
-                newPlayer.PlayerID.Set(playerID);
-                /* #region 人物装弹
-                 new Thread
-                 (
-                     () =>
-                     {
-                         while (!gameMap.Timer.IsGaming)
-                             Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
-                         long lastTime = Environment.TickCount64;
-                         new FrameRateTaskExecutor<int>(
-                             loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsRemoved,
-                             loopToDo: () =>
-                             {
-                                 long nowTime = Environment.TickCount64;
-                                 if (newPlayer.BulletNum == newPlayer.MaxBulletNum)
-                                     lastTime = nowTime;
-                                 else if (nowTime - lastTime >= newPlayer.CD)
-                                 {
-                                     _ = newPlayer.TryAddBulletNum();
-                                     lastTime = nowTime;
-                                 }
-                             },
-                             timeInterval: GameData.checkInterval,
-                             finallyReturn: () => 0
-                         )
-                         {
-                             AllowTimeExceed = true,
-                         }
-                             .Start();
-                     }
-                 )
-                 { IsBackground = true }.Start();
-                 #endregion
-     */
+                newPlayer.TeamID.SetReturnOri(teamID);
+                newPlayer.PlayerID.SetReturnOri(playerID);
                 #region BGM,牵制得分更新
                 new Thread
                 (
@@ -311,7 +278,7 @@ namespace Gaming
 
                 if (student.CharacterType == CharacterType.StraightAStudent)
                 {
-                    ((WriteAnswers)student.FindActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation.Set(0);
+                    ((WriteAnswers)student.FindActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation.SetReturnOri(0);
                 }
                 student.SetDegreeOfTreatment0();
 

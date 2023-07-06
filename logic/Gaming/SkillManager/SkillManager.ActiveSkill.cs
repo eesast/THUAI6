@@ -196,7 +196,7 @@ namespace Gaming
                                  }
                                  if (homingMissile != null)
                                  {
-                                     homingMissile.CanMove.Set(true);
+                                     homingMissile.CanMove.SetReturnOri(true);
                                      attackManager.moveEngine.MoveObj(homingMissile, GameData.checkIntervalWhenSparksNSplash - 1, (whoAttacked.Position - homingMissile.Position).Angle(), ++homingMissile.StateNum);
                                  }
                              },
@@ -227,7 +227,7 @@ namespace Gaming
                         if (generator.Repair(((WriteAnswers)activeSkill).DegreeOfMeditation, player))
                             gameMap.AddNumOfRepairedGenerators();
                         Debugger.Output(player, "uses WriteAnswers in" + generator.ToString() + "with " + (((WriteAnswers)activeSkill).DegreeOfMeditation).ToString());
-                        ((WriteAnswers)activeSkill).DegreeOfMeditation.Set(0);
+                        ((WriteAnswers)activeSkill).DegreeOfMeditation.SetReturnOri(0);
                     }
                 },
                                                       () =>

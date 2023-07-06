@@ -5,7 +5,7 @@ namespace Preparation.Utility
 {
     //理论上结构体最好不可变，这里采用了可变结构。
     //其对应属性不应当有set访问器，避免不安全的=赋值
-    public struct AtomicInt
+    public class AtomicInt
     {
         private int v;
         public AtomicInt(int x)
@@ -15,18 +15,17 @@ namespace Preparation.Utility
         public override string ToString() => Interlocked.CompareExchange(ref v, -1, -1).ToString();
         public int Get() => Interlocked.CompareExchange(ref v, -1, -1);
         public static implicit operator int(AtomicInt aint) => Interlocked.CompareExchange(ref aint.v, -1, -1);
-        public int Set(int value) => Interlocked.Exchange(ref v, value);
-
+        /// <returns>返回操作前的值</returns>
+        public int SetReturnOri(int value) => Interlocked.Exchange(ref v, value);
         public int Add(int x) => Interlocked.Add(ref v, x);
         public int Sub(int x) => Interlocked.Add(ref v, -x);
         public int Inc() => Interlocked.Increment(ref v);
         public int Dec() => Interlocked.Decrement(ref v);
-
-        public void CompareExchange(int newV, int compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
         /// <returns>返回操作前的值</returns>
         public int CompareExReturnOri(int newV, int compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
     }
-    public struct AtomicLong
+
+    public class AtomicLong
     {
         private long v;
         public AtomicLong(long x)
@@ -36,18 +35,17 @@ namespace Preparation.Utility
         public override string ToString() => Interlocked.Read(ref v).ToString();
         public long Get() => Interlocked.Read(ref v);
         public static implicit operator long(AtomicLong aint) => Interlocked.Read(ref aint.v);
-        public long Set(long value) => Interlocked.Exchange(ref v, value);
-
+        /// <returns>返回操作前的值</returns>
+        public long SetReturnOri(long value) => Interlocked.Exchange(ref v, value);
         public long Add(long x) => Interlocked.Add(ref v, x);
         public long Sub(long x) => Interlocked.Add(ref v, -x);
         public long Inc() => Interlocked.Increment(ref v);
         public long Dec() => Interlocked.Decrement(ref v);
-
-        public void CompareExchange(long newV, long compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
         /// <returns>返回操作前的值</returns>
         public long CompareExReturnOri(long newV, long compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
     }
-    public struct AtomicBool
+
+    public class AtomicBool
     {
         private int v;//v==0为false,v==1为true
         public AtomicBool(bool x)
@@ -57,36 +55,34 @@ namespace Preparation.Utility
         public override string ToString() => (Interlocked.CompareExchange(ref v, -2, -2) == 0) ? "false" : "true";
         public bool Get() => (Interlocked.CompareExchange(ref v, -1, -1) != 0);
         public static implicit operator bool(AtomicBool abool) => (Interlocked.CompareExchange(ref abool.v, -1, -1) != 0);
-
-        public bool Set(bool value) => (Interlocked.Exchange(ref v, value ? 1 : 0) != 0);
-
+        /// <returns>返回操作前的值</returns>
+        public bool SetReturnOri(bool value) => (Interlocked.Exchange(ref v, value ? 1 : 0) != 0);
         /// <returns>赋值前的值是否与将赋予的值不相同</returns>
         public bool TrySet(bool value)
         {
             return (Interlocked.CompareExchange(ref v, value ? 1 : 0, value ? 0 : 1) ^ (value ? 1 : 0)) != 0;
         }
-
         public bool And(bool x) => Interlocked.And(ref v, x ? 1 : 0) != 0;
         public bool Or(bool x) => Interlocked.Or(ref v, x ? 1 : 0) != 0;
     }
 
     /// <summary>
-    /// 一个能记录Start后完成多少进度的进度条（long），
+    /// 根据时间推算Start后完成多少进度的进度条（long）。
     /// 只允许Start时修改needTime（请确保大于0）；
     /// 支持TrySet0使未完成的进度条终止清零；支持Set0使进度条强制终止清零；
-    /// 不支持暂停
+    /// 通过原子操作实现。
     /// </summary>
-    public struct LongProgressContinuously
+    public class LongProgressByTime
     {
         private long endT = long.MaxValue;
         private long needT;
 
-        public LongProgressContinuously(long needTime)
+        public LongProgressByTime(long needTime)
         {
-            if (needTime <= 0) Debugger.Output("Bug:LongProgressContinuously.needTime (" + needTime.ToString() + ") is less than 0.");
+            if (needTime <= 0) Debugger.Output("Bug:LongProgressByTime.needTime (" + needTime.ToString() + ") is less than 0.");
             this.needT = needTime;
         }
-        public LongProgressContinuously()
+        public LongProgressByTime()
         {
             this.needT = long.MaxValue;
         }
@@ -118,7 +114,7 @@ namespace Preparation.Utility
         /// <summary>
         /// <0则表明未开始
         /// </summary>
-        public static implicit operator long(LongProgressContinuously pLong) => pLong.GetProgress();
+        public static implicit operator long(LongProgressByTime pLong) => pLong.GetProgress();
 
         /// <summary>
         /// GetProgressDouble<0则表明未开始
@@ -134,13 +130,13 @@ namespace Preparation.Utility
         {
             if (needTime <= 0)
             {
-                Debugger.Output("Warning:Start LongProgressContinuously with the needTime (" + needTime.ToString() + ") which is less than 0.");
+                Debugger.Output("Warning:Start LongProgressByTime with the needTime (" + needTime.ToString() + ") which is less than 0.");
                 return false;
             }
             //规定只有Start可以修改needT，且需要先访问endTime，从而避免锁（某种程度上endTime可以认为是needTime的锁）
             if (Interlocked.CompareExchange(ref endT, Environment.TickCount64 + needTime, long.MaxValue) != long.MaxValue) return false;
-            if (needTime <= 2) Debugger.Output("Warning:the field of LongProgressContinuously is " + needTime.ToString() + ",which is too small.");
-            Interlocked.Exchange(ref this.needT, needTime);
+            if (needTime <= 2) Debugger.Output("Warning:the field of LongProgressByTime is " + needTime.ToString() + ",which is too small.");
+            Interlocked.Exchange(ref needT, needTime);
             return true;
         }
         public bool Start()
@@ -149,7 +145,13 @@ namespace Preparation.Utility
             if (Interlocked.CompareExchange(ref endT, Environment.TickCount64 + needTime, long.MaxValue) != long.MaxValue) return false;
             return true;
         }
+        /// <summary>
+        /// 使进度条强制终止清零
+        /// </summary>
         public void Set0() => Interlocked.Exchange(ref endT, long.MaxValue);
+        /// <summary>
+        /// 使未完成的进度条终止清零
+        /// </summary>
         public bool TrySet0()
         {
             if (Environment.TickCount64 < Interlocked.CompareExchange(ref endT, -2, -2))
@@ -162,10 +164,34 @@ namespace Preparation.Utility
         //增加其他新的写操作可能导致不安全
     }
 
+    /*
+    /// <summary>
+    /// 记录（不是根据时间）完成多少进度的进度条（long）。
+    /// </summary>
+    public struct IntProgressByAdding
+    {
+        private int completedProgress = -1;
+        private int requiredProgress;
+        public IntProgressByAdding(int completedProgress, int requiredProgress)
+        {
+            this.completedProgress = completedProgress;
+            this.requiredProgress = requiredProgress;
+        }
+        public IntProgressByAdding(int requiredProgress)
+        {
+            this.requiredProgress = requiredProgress;
+        }
+        public IntProgressByAdding() 
+        {
+            this.requiredProgress=int.MaxValue;
+        }
+    }
+    */
+
     /// <summary>
     /// 一个保证在[0,maxValue]的可变int，支持可变的maxValue(请确保大于0)
     /// </summary>
-    public struct IntWithVariableRange
+    public class IntWithVariableRange
     {
         private int v;
         private int maxV;
@@ -310,7 +336,7 @@ namespace Preparation.Utility
     /// <summary>
     /// 一个保证在[0,maxValue]的可变long，支持可变的maxValue(请确保大于0)
     /// </summary>
-    public struct LongWithVariableRange
+    public class LongWithVariableRange
     {
         private long v;
         private long maxV;
@@ -319,7 +345,7 @@ namespace Preparation.Utility
         {
             if (maxValue < 0)
             {
-                Debugger.Output("Warning:Try to set LongWithVariableRange.maxValue to " + maxValue.ToString() + ".");
+                Debugger.Output("Warning:Try to set SafaValues.LongWithVariableRange.maxValue to " + maxValue.ToString() + ".");
                 maxValue = 0;
             }
             v = value < maxValue ? value : maxValue;
@@ -332,7 +358,7 @@ namespace Preparation.Utility
         {
             if (maxValue < 0)
             {
-                Debugger.Output("Warning:Try to set LongWithVariableRange.maxValue to " + maxValue.ToString() + ".");
+                Debugger.Output("Warning:Try to set SafaValues.LongWithVariableRange.maxValue to " + maxValue.ToString() + ".");
                 maxValue = 0;
             }
             v = this.maxV = maxValue;
@@ -455,7 +481,7 @@ namespace Preparation.Utility
     /// <summary>
     /// 一个保证在[0,maxNum],每CDms自动更新的可变int，支持可变的CD、maxNum(请确保大于0)
     /// </summary>
-    public struct IntNumUpdateByCD
+    public class IntNumUpdateByCD
     {
         private int num;
         private int maxNum;
@@ -623,7 +649,7 @@ namespace Preparation.Utility
         {
             lock (numLock)
             {
-                if (cd <= 0) Debugger.Output("Bug:Set IntNumUpdateByCD.cd to " + cd.ToString() + ".");
+                if (cd <= 0) Debugger.Output("Bug:SetReturnOri IntNumUpdateByCD.cd to " + cd.ToString() + ".");
                 this.cd = cd;
             }
         }

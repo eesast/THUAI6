@@ -84,7 +84,7 @@ namespace Gaming
             else
             {
 #if DEBUG
-                Console.WriteLine($"PlayerID:{playerID} player does not exists!");
+                Console.WriteLine($"playerID:{playerID} player does not exists!");
 #endif
                 return false;
 
@@ -326,7 +326,7 @@ namespace Gaming
                         {
                             foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
                             {
-                                player.CanMove.Set(false);
+                                player.CanMove.SetReturnOri(false);
                             }
                         }
                         gameMap.GameObjDict[keyValuePair.Key].Clear();

@@ -46,7 +46,8 @@ namespace GameClass.GameObj
             }
         }
 
-        public AtomicInt LockDegree { get; } = new AtomicInt(0);
+        private AtomicInt lockDegree = new AtomicInt(0);
+        public AtomicInt LockDegree { get => lockDegree; }
 
         private long openStartTime = 0;
         public long OpenStartTime
@@ -97,7 +98,7 @@ namespace GameClass.GameObj
             {
                 if (!isOpen) return false;
                 if (whoLockOrOpen != null) return false;
-                LockDegree.Set(0);
+                LockDegree.SetReturnOri(0);
                 whoLockOrOpen = character;
                 return true;
             }

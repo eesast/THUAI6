@@ -84,7 +84,7 @@ namespace Preparation.Utility
         }
         public LongProgressByTime()
         {
-            this.needT = long.MaxValue;
+            this.needT = 0;
         }
         public long GetEndTime() => Interlocked.CompareExchange(ref endT, -2, -2);
         public long GetNeedTime() => Interlocked.CompareExchange(ref needT, -2, -2);
@@ -93,6 +93,7 @@ namespace Preparation.Utility
         {
             return Interlocked.CompareExchange(ref endT, -2, -2) <= Environment.TickCount64;
         }
+        public bool IsOpened() => Interlocked.Read(ref endT) != long.MaxValue;
         /// <summary>
         /// GetProgress<0则表明未开始
         /// </summary>
@@ -102,6 +103,13 @@ namespace Preparation.Utility
             if (cutime <= 0) return Interlocked.CompareExchange(ref needT, -2, -2);
             return Interlocked.CompareExchange(ref needT, -2, -2) - cutime;
         }
+        public long GetNonNegativeProgress()
+        {
+            long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - Environment.TickCount64;
+            if (cutime <= 0) return Interlocked.CompareExchange(ref needT, -2, -2);
+            long progress = Interlocked.CompareExchange(ref needT, -2, -2) - cutime;
+            return progress < 0 ? 0 : progress;
+        }
         /// <summary>
         /// GetProgress<0则表明未开始
         /// </summary>
@@ -110,6 +118,13 @@ namespace Preparation.Utility
             long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - time;
             if (cutime <= 0) return Interlocked.CompareExchange(ref needT, -2, -2);
             return Interlocked.CompareExchange(ref needT, -2, -2) - cutime;
+        }
+        public long GetNonNegativeProgress(long time)
+        {
+            long cutime = Interlocked.Read(ref endT) - time;
+            if (cutime <= 0) return Interlocked.CompareExchange(ref needT, -2, -2);
+            long progress = Interlocked.CompareExchange(ref needT, -2, -2) - cutime;
+            return progress < 0 ? 0 : progress;
         }
         /// <summary>
         /// <0则表明未开始
@@ -123,7 +138,17 @@ namespace Preparation.Utility
         {
             long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - Environment.TickCount64;
             if (cutime <= 0) return 1;
-            return 1.0 - ((double)cutime / Interlocked.CompareExchange(ref needT, -2, -2));
+            long needTime = Interlocked.CompareExchange(ref needT, -2, -2);
+            if (needTime == 0) return 0;
+            return 1.0 - ((double)cutime / needTime);
+        }
+        public double GetNonNegativeProgressDouble(long time)
+        {
+            long cutime = Interlocked.Read(ref endT) - time;
+            if (cutime <= 0) return 1;
+            long needTime = Interlocked.CompareExchange(ref needT, -2, -2);
+            if (needTime <= cutime) return 0;
+            return 1.0 - ((double)cutime / needTime);
         }
 
         public bool Start(long needTime)

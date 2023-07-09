@@ -269,16 +269,15 @@ namespace Server
         }
         private static MessageOfObj Chest(Chest chest, long time)
         {
-            MessageOfObj msg = new()
+            return new()
             {
                 ChestMessage = new()
                 {
                     X = chest.Position.x,
-                    Y = chest.Position.y
+                    Y = chest.Position.y,
+                    Progress = (int)(chest.OpenProgress.GetNonNegativeProgressDouble(time) * GameData.degreeOfOpenedChest)
                 }
             };
-            msg.ChestMessage.Progress = (int)chest.OpenProgress.GetProgress(time);
-            return msg;
         }
     }
 }

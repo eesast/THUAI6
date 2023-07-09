@@ -57,41 +57,8 @@ namespace Gaming
                 }
                 gameMap.Add(newPlayer);
 
-                newPlayer.TeamID = teamID;
-                newPlayer.PlayerID = playerID;
-                /* #region 人物装弹
-                 new Thread
-                 (
-                     () =>
-                     {
-                         while (!gameMap.Timer.IsGaming)
-                             Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
-                         long lastTime = Environment.TickCount64;
-                         new FrameRateTaskExecutor<int>(
-                             loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsRemoved,
-                             loopToDo: () =>
-                             {
-                                 long nowTime = Environment.TickCount64;
-                                 if (newPlayer.BulletNum == newPlayer.MaxBulletNum)
-                                     lastTime = nowTime;
-                                 else if (nowTime - lastTime >= newPlayer.CD)
-                                 {
-                                     _ = newPlayer.TryAddBulletNum();
-                                     lastTime = nowTime;
-                                 }
-                             },
-                             timeInterval: GameData.checkInterval,
-                             finallyReturn: () => 0
-                         )
-                         {
-                             AllowTimeExceed = true,
-                         }
-                             .Start();
-                     }
-                 )
-                 { IsBackground = true }.Start();
-                 #endregion
-     */
+                newPlayer.TeamID.SetReturnOri(teamID);
+                newPlayer.PlayerID.SetReturnOri(playerID);
                 #region BGM,牵制得分更新
                 new Thread
                 (
@@ -311,7 +278,7 @@ namespace Gaming
 
                 if (student.CharacterType == CharacterType.StraightAStudent)
                 {
-                    ((WriteAnswers)student.FindActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation.Set(0);
+                    ((WriteAnswers)student.FindActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation.SetReturnOri(0);
                 }
                 student.SetDegreeOfTreatment0();
 
@@ -322,10 +289,10 @@ namespace Gaming
                 {
                     if (bullet.HasSpear)
                     {
-                        long subHp = student.SubHp(bullet.AP);
+                        long subHp = student.HP.SubPositiveV(bullet.AP);
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
                         bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
-                        bullet.Parent.AddHP((long)bullet.Parent.Vampire * subHp);
+                        bullet.Parent.HP.AddPositiveV((long)bullet.Parent.Vampire * subHp);
                     }
                     else return;
                 }
@@ -334,12 +301,12 @@ namespace Gaming
                     long subHp;
                     if (bullet.HasSpear)
                     {
-                        subHp = student.SubHp(bullet.AP + GameData.ApSpearAdd);
+                        subHp = student.HP.SubPositiveV(bullet.AP + GameData.ApSpearAdd);
                         Debugger.Output(this, "is being shot with Spear! Now his hp is" + student.HP.ToString());
                     }
                     else
                     {
-                        subHp = student.SubHp(bullet.AP);
+                        subHp = student.HP.SubPositiveV(bullet.AP);
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
                     }
                     bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
@@ -348,7 +315,7 @@ namespace Gaming
                         student.AddScore(subHp * GameData.factorOfScoreWhenTeacherAttacked / GameData.basicApOfGhost / FactorTeacher);
                     }
 
-                    bullet.Parent.AddHP((long)(bullet.Parent.Vampire * subHp));
+                    bullet.Parent.HP.AddPositiveV((long)(bullet.Parent.Vampire * subHp));
                 }
                 if (student.HP <= 0)
                     student.TryActivatingLIFE();  // 如果有复活甲

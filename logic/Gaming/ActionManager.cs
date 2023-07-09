@@ -199,7 +199,7 @@ namespace Gaming
                 }
                 else if (!GameData.ApproachToInteract(playerTreated.Position, player.Position)) return false;
 
-                if (playerTreated.HP == playerTreated.MaxHp) return false;
+                if (playerTreated.HP == playerTreated.HP.GetMaxV()) return false;
 
                 long stateNumTreated = playerTreated.SetPlayerState(RunningStateType.Waiting, PlayerStateType.Treated);
                 if (stateNumTreated == -1) return false;
@@ -321,7 +321,7 @@ namespace Gaming
                                    if (playerRescued.AddTimeOfRescue(GameData.checkInterval))
                                    {
                                        playerRescued.SetPlayerStateNaturally();
-                                       playerRescued.SetHP(playerRescued.MaxHp / 2);
+                                       playerRescued.HP.SetPositiveV(playerRescued.HP.GetMaxV() / 2);
                                        player.AddScore(GameData.StudentScoreRescue);
                                        return false;
                                    }
@@ -369,7 +369,7 @@ namespace Gaming
                           return;
                       }
                       else
-                      if (!chestToOpen.Open(player))
+                      if (!chestToOpen.OpenProgress.Start((long)(GameData.degreeOfOpenedChest / player.SpeedOfOpenChest)))
                       {
                           player.ThreadNum.Release();
                           player.SetPlayerStateNaturally();
@@ -450,12 +450,12 @@ namespace Gaming
                             player.ReSetPos(windowToPlayer + windowForClimb.Position);
                         }
 
-                        player.MoveSpeed.Set(player.SpeedOfClimbingThroughWindows);
+                        player.MoveSpeed.SetReturnOri(player.SpeedOfClimbingThroughWindows);
                         moveEngine.MoveObj(player, (int)(GameData.numOfPosGridPerCell * 3 * 1000 / player.MoveSpeed / 2), (-1 * windowToPlayer).Angle(), stateNum);
 
                         Thread.Sleep((int)(GameData.numOfPosGridPerCell * 3 * 1000 / player.MoveSpeed / 2));
 
-                        player.MoveSpeed.Set(player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed));
+                        player.MoveSpeed.SetReturnOri(player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed));
 
                         lock (player.ActionLock)
                         {

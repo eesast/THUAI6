@@ -174,7 +174,8 @@ namespace Preparation.Interface
         public override int SkillCD => GameData.commonSkillCD;
         public override int DurationTime => 0;
 
-        public AtomicInt DegreeOfMeditation { get; } = new(0);
+        private AtomicInt degreeOfMeditation = new(0);
+        public AtomicInt DegreeOfMeditation { get => degreeOfMeditation; }
     }
 
     public class SummonGolem : ActiveSkill

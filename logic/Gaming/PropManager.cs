@@ -44,9 +44,9 @@ namespace Gaming
                         break;
                     case PropType.AddHpOrAp:
                         if (!player.IsGhost())
-                            if (player.HP < player.MaxHp)
+                            if (player.HP < player.HP.GetMaxV())
                             {
-                                player.AddHP(GameData.basicTreatmentDegree / 2);
+                                player.HP.AddPositiveV(GameData.basicTreatmentDegree / 2);
                                 player.AddScore(GameData.ScorePropAddHp);
                             }
                             else player.AddAp(GameData.PropDuration);

@@ -11,7 +11,8 @@ namespace GameClass.GameObj
         /// </summary>
         public abstract double BulletBombRange { get; }
         public abstract double AttackDistance { get; }
-        public AtomicInt AP { get; }
+        private AtomicInt ap = new(0);
+        public AtomicInt AP { get => ap; }
         public abstract int Speed { get; }
         public abstract bool IsRemoteAttack { get; }
         public abstract int CastTime { get; }
@@ -43,8 +44,8 @@ namespace GameClass.GameObj
         public Bullet(Character player, int radius, XY Position) :
             base(Position, radius, GameObjType.Bullet)
         {
-            this.CanMove.Set(true);
-            this.MoveSpeed.Set(this.Speed);
+            this.CanMove.SetReturnOri(true);
+            this.MoveSpeed.SetReturnOri(this.Speed);
             this.hasSpear = player.TryUseSpear();
             this.Parent = player;
         }

@@ -196,7 +196,7 @@ namespace Gaming
                                  }
                                  if (homingMissile != null)
                                  {
-                                     homingMissile.CanMove.Set(true);
+                                     homingMissile.CanMove.SetReturnOri(true);
                                      attackManager.moveEngine.MoveObj(homingMissile, GameData.checkIntervalWhenSparksNSplash - 1, (whoAttacked.Position - homingMissile.Position).Angle(), ++homingMissile.StateNum);
                                  }
                              },
@@ -227,7 +227,7 @@ namespace Gaming
                         if (generator.Repair(((WriteAnswers)activeSkill).DegreeOfMeditation, player))
                             gameMap.AddNumOfRepairedGenerators();
                         Debugger.Output(player, "uses WriteAnswers in" + generator.ToString() + "with " + (((WriteAnswers)activeSkill).DegreeOfMeditation).ToString());
-                        ((WriteAnswers)activeSkill).DegreeOfMeditation.Set(0);
+                        ((WriteAnswers)activeSkill).DegreeOfMeditation.SetReturnOri(0);
                     }
                 },
                                                       () =>
@@ -349,7 +349,7 @@ namespace Gaming
                                 || character.PlayerState == PlayerStateType.ClimbingThroughWindows)
                                 && XY.DistanceFloor3(character.Position, player.Position) <= player.ViewRange / 3)
                             {
-                                int stunTime = (GameData.timeOfGhostStunnedWhenPunish + (int)((GameData.factorOfTimeStunnedWhenPunish * (player.MaxHp - player.HP) / GameData.basicApOfGhost))) / characterManager.FactorTeacher;
+                                int stunTime = (GameData.timeOfGhostStunnedWhenPunish + (int)((GameData.factorOfTimeStunnedWhenPunish * (player.HP.GetMaxV() - player.HP) / GameData.basicApOfGhost))) / characterManager.FactorTeacher;
                                 if (CharacterManager.BeStunned(character, stunTime) > 0)
                                     player.AddScore(GameData.StudentScoreTrickerBeStunned(stunTime) / characterManager.FactorTeacher);
                                 break;
@@ -421,7 +421,7 @@ namespace Gaming
                                 if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
                                 {
                                     character.SetPlayerStateNaturally();
-                                    character.SetHP(GameData.RemainHpWhenAddLife);
+                                    character.HP.SetPositiveV(GameData.RemainHpWhenAddLife);
                                     ((Student)character).SetTimeOfRescue(0);
                                     player.AddScore(GameData.StudentScoreRescue);
                                     break;
@@ -449,10 +449,10 @@ namespace Gaming
                     {
                         foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            if ((character.HP < character.MaxHp) && gameMap.CanSee(player, character))
+                            if ((character.HP < character.HP.GetMaxV()) && gameMap.CanSee(player, character))
                             {
                                 player.AddScore(GameData.StudentScoreTreat(GameData.addHpWhenEncourage));
-                                character.AddHP(GameData.addHpWhenEncourage);
+                                character.HP.AddPositiveV(GameData.addHpWhenEncourage);
                                 ((Student)character).SetDegreeOfTreatment0();
                                 break;
                             }

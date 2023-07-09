@@ -844,7 +844,7 @@ namespace Client
                     }
                     foreach (var obj in listOfButcher)
                     {
-                        if (!isDataFixed[obj.PlayerId])
+                        if (obj.PlayerId < GameData.numOfStudent && !isDataFixed[obj.PlayerId])
                         {
                             IGhostType occupation1 = (IGhostType)OccupationFactory.FindIOccupation(Transformation.ToTrickerType(obj.TrickerType));
                             int j = 0;

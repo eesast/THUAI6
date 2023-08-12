@@ -2,6 +2,7 @@ using Protobuf;
 using GameClass.GameObj;
 using Preparation.Utility;
 using Gaming;
+using Preparation.Interface;
 
 namespace Server
 {
@@ -81,10 +82,8 @@ namespace Server
             };
 
             foreach (var keyValue in player.ActiveSkillDictionary)
-            {
-                int progress = (int)((keyValue.Value.StartTime - time) + keyValue.Value.SkillCD);
-                msg.StudentMessage.TimeUntilSkillAvailable.Add(progress < 0 ? 0 : progress);
-            }
+                msg.StudentMessage.TimeUntilSkillAvailable.Add(keyValue.Value.SkillCD.GetRemainingTime());
+
             for (int i = 0; i < GameData.maxNumOfSkill - player.ActiveSkillDictionary.Count; ++i)
                 msg.StudentMessage.TimeUntilSkillAvailable.Add(-1);
 
@@ -124,11 +123,9 @@ namespace Server
                     BulletType = Transformation.ToBulletType((Preparation.Utility.BulletType)player.BulletOfPlayer)
                 }
             };
+
             foreach (var keyValue in player.ActiveSkillDictionary)
-            {
-                int progress = (int)(keyValue.Value.SkillCD + (keyValue.Value.StartTime - time));
-                msg.TrickerMessage.TimeUntilSkillAvailable.Add(progress < 0 ? 0 : progress);
-            }
+                msg.TrickerMessage.TimeUntilSkillAvailable.Add(keyValue.Value.SkillCD.GetRemainingTime());
             for (int i = 0; i < GameData.maxNumOfSkill - player.ActiveSkillDictionary.Count; ++i)
                 msg.TrickerMessage.TimeUntilSkillAvailable.Add(-1);
 

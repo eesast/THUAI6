@@ -513,7 +513,7 @@ namespace Gaming
                         {
                             if ((gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character)) != null)
                                 return false;
-                            if (doorToLock.LockDegree.Add(GameData.checkInterval * player.SpeedOfOpeningOrLocking) >= GameData.basicSpeedOfOpeningOrLocking)
+                            if (doorToLock.LockDegree.Add(GameData.checkInterval * player.SpeedOfOpeningOrLocking) >= GameData.degreeOfLockingOrOpeningTheDoor)
                                 return false;
                             return true;
                         },

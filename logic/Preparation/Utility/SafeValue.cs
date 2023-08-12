@@ -504,7 +504,7 @@ namespace Preparation.Utility
     }
 
     /// <summary>
-    /// 一个保证在[0,maxNum],每CDms自动更新的可变int，支持可变的CD、maxNum(请确保大于0)
+    /// 一个保证在[0,maxNum],每CDms自动+1的int，支持可变的CD、maxNum(请确保大于0)
     /// </summary>
     public class IntNumUpdateByCD
     {
@@ -677,6 +677,102 @@ namespace Preparation.Utility
                 if (cd <= 0) Debugger.Output("Bug:SetReturnOri IntNumUpdateByCD.cd to " + cd.ToString() + ".");
                 this.cd = cd;
             }
+        }
+    }
+
+    /// <summary>
+    /// 一个每CDms自动更新冷却的bool，支持可变的无锁CD，不支持查看当前进度，初始为True
+    /// </summary>
+    public class BoolCoolingDownByCD
+    {
+        private long cd;
+        private long nextUpdateTime = 0;
+        public BoolCoolingDownByCD(int cd)
+        {
+            if (cd <= 1) Debugger.Output("Bug:IntNumUpdateByCD.cd (" + cd.ToString() + ") is less than 1.");
+            this.cd = cd;
+        }
+        public BoolCoolingDownByCD(long cd)
+        {
+            if (cd <= 1) Debugger.Output("Bug:IntNumUpdateByCD.cd (" + cd.ToString() + ") is less than 1.");
+            this.cd = cd;
+        }
+        public BoolCoolingDownByCD(long cd, long startTime)
+        {
+            if (cd <= 1) Debugger.Output("Bug:IntNumUpdateByCD.cd (" + cd.ToString() + ") is less than 1.");
+            this.cd = cd;
+            this.nextUpdateTime = startTime;
+        }
+
+        public long GetCD() => Interlocked.Read(ref cd);
+
+        public bool TryUse()
+        {
+            long needTime = Interlocked.Exchange(ref nextUpdateTime, long.MaxValue);
+            if (needTime <= Environment.TickCount64)
+            {
+                Interlocked.Exchange(ref nextUpdateTime, Environment.TickCount64 + Interlocked.Read(ref cd));
+                return true;
+            }
+            Interlocked.Exchange(ref nextUpdateTime, needTime);
+            return false;
+        }
+        public void SetCD(int cd)
+        {
+            if (cd <= 1) Debugger.Output("Bug:SetReturnOri IntNumUpdateByCD.cd to " + cd.ToString() + ".");
+            Interlocked.Exchange(ref this.cd, cd);
+        }
+    }
+
+    /// <summary>
+    /// 一个每CDms自动更新的进度条，支持可变的CD，初始为满
+    /// </summary>
+    public class LongProgressCoolingDownByCD
+    {
+        private int isusing = 0;
+        private long cd;
+        private long nextUpdateTime = 0;
+        public LongProgressCoolingDownByCD(int cd)
+        {
+            if (cd <= 1) Debugger.Output("Bug:IntNumUpdateByCD.cd (" + cd.ToString() + ") is less than 1.");
+            this.cd = cd;
+        }
+        public LongProgressCoolingDownByCD(long cd)
+        {
+            if (cd <= 1) Debugger.Output("Bug:IntNumUpdateByCD.cd (" + cd.ToString() + ") is less than 1.");
+            this.cd = cd;
+        }
+        public LongProgressCoolingDownByCD(long cd, long startTime)
+        {
+            if (cd <= 1) Debugger.Output("Bug:IntNumUpdateByCD.cd (" + cd.ToString() + ") is less than 1.");
+            this.cd = cd;
+            this.nextUpdateTime = startTime;
+        }
+
+        public long GetRemainingTime()
+        {
+            long v = Interlocked.Read(ref nextUpdateTime) - Environment.TickCount64;
+            return v < 0 ? 0 : v;
+        }
+        public long GetCD() => Interlocked.Read(ref cd);
+
+        public bool TryUse()
+        {
+            if (Interlocked.Exchange(ref isusing, 1) == 1) return false;
+            long needTime = Interlocked.Read(ref nextUpdateTime);
+            if (needTime <= Environment.TickCount64)
+            {
+                Interlocked.Exchange(ref nextUpdateTime, Environment.TickCount64 + Interlocked.Read(ref cd));
+                Interlocked.Exchange(ref isusing, 0);
+                return true;
+            }
+            Interlocked.Exchange(ref isusing, 0);
+            return false;
+        }
+        public void SetCD(int cd)
+        {
+            if (cd <= 1) Debugger.Output("Bug:SetReturnOri IntNumUpdateByCD.cd to " + cd.ToString() + ".");
+            Interlocked.Exchange(ref this.cd, cd);
         }
     }
 }

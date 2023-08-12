@@ -499,7 +499,7 @@ namespace Gaming
             {
                 lock (activeSkill.ActiveSkillUseLock)
                 {
-                    if (activeSkill.StartSkill())
+                    if (activeSkill.SkillCD.TryUse())
                     {
                         new Thread
                         (() =>

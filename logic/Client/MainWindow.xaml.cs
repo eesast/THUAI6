@@ -836,7 +836,7 @@ namespace Client
                             foreach (var skill in occupation.ListOfIActiveSkill)
                             {
                                 var iActiveSkill = SkillFactory.FindActiveSkill(skill);
-                                coolTime[i, obj.PlayerId] = iActiveSkill.SkillCD;
+                                coolTime[i, obj.PlayerId] = (int)(iActiveSkill.SkillCD.GetCD());
                                 ++i;
                             }
                             isDataFixed[obj.PlayerId] = true;
@@ -844,14 +844,14 @@ namespace Client
                     }
                     foreach (var obj in listOfButcher)
                     {
-                        if (obj.PlayerId < GameData.numOfStudent && !isDataFixed[obj.PlayerId])
+                        if (obj.PlayerId < GameData.numOfPeople && !isDataFixed[obj.PlayerId])
                         {
                             IGhostType occupation1 = (IGhostType)OccupationFactory.FindIOccupation(Transformation.ToTrickerType(obj.TrickerType));
                             int j = 0;
                             foreach (var skill in occupation1.ListOfIActiveSkill)
                             {
                                 var iActiveSkill = SkillFactory.FindActiveSkill(skill);
-                                coolTime[j, GameData.numOfStudent] = iActiveSkill.SkillCD;
+                                coolTime[j, GameData.numOfStudent] = (int)(iActiveSkill.SkillCD.GetCD());
                                 ++j;
                             }
                             isDataFixed[obj.PlayerId] = true;

@@ -4,7 +4,7 @@ jobs:
   clang-format-checking:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: DoozyX/clang-format-lint-action@v0.15
       with:
         source: '.'
@@ -16,7 +16,7 @@ jobs:
   dotnet-format-checking:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3
       with:

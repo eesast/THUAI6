@@ -301,9 +301,7 @@ namespace Preparation.Utility
                 return v = (value > maxV) ? maxV : value;
             }
         }
-        /// <summary>
-        /// 返回实际改变量
-        /// </summary>
+        /// <returns>返回实际改变量</returns>
         public int AddV(int addV)
         {
             lock (vLock)
@@ -316,8 +314,9 @@ namespace Preparation.Utility
             }
         }
         /// <summary>
-        /// 应当保证该增加值大于0,返回实际改变量
+        /// 应当保证增加值大于0
         /// </summary>
+        /// <returns>返回实际改变量</returns>
         public int AddPositiveV(int addPositiveV)
         {
             lock (vLock)

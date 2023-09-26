@@ -101,22 +101,13 @@ namespace GameClass.GameObj
         #endregion
         #region 交互相关的基本属性及方法
         private readonly int speedOfOpeningOrLocking;
-        public int SpeedOfOpeningOrLocking
-        {
-            get => speedOfOpeningOrLocking;
-        }
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         private readonly int speedOfClimbingThroughWindows;
-        public int SpeedOfClimbingThroughWindows
-        {
-            get => speedOfClimbingThroughWindows;
-        }
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
         private readonly int speedOfOpenChest;
-        public int SpeedOfOpenChest
-        {
-            get => speedOfOpenChest;
-        }
+        public int SpeedOfOpenChest => speedOfOpenChest;
         #endregion
         #region 血量相关的基本属性及方法
         public LongWithVariableRange HP { get; }

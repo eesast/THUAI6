@@ -10,7 +10,7 @@ namespace GameClass.GameObj
     {
         #region 装弹、攻击相关的基本属性及方法
         private readonly object attackLock = new();
-        public IntNumUpdateByCD BulletNum { get; } = new IntNumUpdateByCD();
+        public IntNumUpdateEachCD BulletNum { get; } = new IntNumUpdateEachCD();
         private int orgCD;
         public int OrgCD
         {

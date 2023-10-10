@@ -159,7 +159,7 @@ namespace GameClass.GameObj
             lock (treatLock)
             {
                 degreeOfTreatment += value;
-                long addV = HP.TryAddAll(degreeOfTreatment);
+                long addV = HP.TryAddToMaxV(degreeOfTreatment);
                 if (addV == 0)
                 {
                     degreeOfTreatment = 0;

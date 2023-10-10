@@ -3,8 +3,8 @@ using System.Threading;
 
 namespace Preparation.Utility
 {
-
     //其对应属性不应当有set访问器，避免不安全的=赋值
+
     /// <summary>
     /// 一个保证在[0,maxValue]的可变int，支持可变的maxValue（请确保大于0）
     /// </summary>
@@ -171,13 +171,14 @@ namespace Preparation.Utility
         /// <returns>返回实际改变量</returns>
         public int SubV(int subV)
         {
-
             lock (vLock)
             {
-                subPositiveV = Math.Min(subPositiveV, v);
-                v -= subPositiveV;
+                int previousV = v;
+                v -= subV;
+                if (v < 0) v = 0;
+                if (v > maxV) v = maxV;
+                return v - previousV;
             }
-            return subPositiveV;
         }
         /// <summary>
         /// 应当保证该减少值大于0
@@ -197,7 +198,7 @@ namespace Preparation.Utility
         /// 试图加到满，如果无法加到maxValue则不加并返回-1
         /// </summary>
         /// <returns>返回实际改变量</returns>
-        public int TryAddAll(int addV)
+        public int TryAddToMaxV(int addV)
         {
             lock (vLock)
             {
@@ -263,13 +264,20 @@ namespace Preparation.Utility
         /// </summary>
         public bool SetMaxV(long maxValue)
         {
-            if (maxValue < 0) maxValue = 0;
+            if (maxValue <= 0)
+            {
+                lock (vLock)
+                {
+                    v = maxV = 0;
+                    return false;
+                }
+            }
             lock (vLock)
             {
                 maxV = maxValue;
                 if (v > maxValue) v = maxValue;
             }
-            return maxValue > 0;
+            return true;
         }
         /// <summary>
         /// 应当保证该maxValue>=0
@@ -283,6 +291,19 @@ namespace Preparation.Utility
             }
         }
         /// <summary>
+        /// 如果当前值大于maxValue,则更新maxValue失败
+        /// </summary>
+        public bool TrySetMaxV(long maxValue)
+        {
+            lock (vLock)
+            {
+                if (v > maxValue) return false;
+                maxV = maxValue;
+                return true;
+            }
+        }
+
+        /// <summary>
         /// 应当保证该value>=0
         /// </summary>
         public long SetPositiveV(long value)
@@ -294,15 +315,19 @@ namespace Preparation.Utility
         }
         public long SetV(long value)
         {
-            if (value < 0) value = 0;
+            if (value <= 0)
+            {
+                lock (vLock)
+                {
+                    return v = 0;
+                }
+            }
             lock (vLock)
             {
                 return v = (value > maxV) ? maxV : value;
             }
         }
-        /// <summary>
-        /// 返回实际改变量
-        /// </summary>
+        /// <returns>返回实际改变量</returns>
         public long AddV(long addV)
         {
             lock (vLock)
@@ -315,8 +340,9 @@ namespace Preparation.Utility
             }
         }
         /// <summary>
-        /// 应当保证该增加值大于0,返回实际改变量
+        /// 应当保证增加值大于0
         /// </summary>
+        /// <returns>返回实际改变量</returns>
         public long AddPositiveV(long addPositiveV)
         {
             lock (vLock)
@@ -326,9 +352,46 @@ namespace Preparation.Utility
             }
             return addPositiveV;
         }
+        public void MulV(long mulV)
+        {
+            if (mulV <= 0)
+            {
+                lock (vLock) v = 0;
+                return;
+            }
+            lock (vLock)
+            {
+                v *= mulV;
+                if (v > maxV) v = maxV;
+            }
+        }
         /// <summary>
-        /// 应当保证该减少值大于0,返回实际改变量
+        /// 应当保证乘数大于0
         /// </summary>
+        public void MulPositiveV(long mulPositiveV)
+        {
+            lock (vLock)
+            {
+                v *= mulPositiveV;
+                if (v > maxV) v = maxV;
+            }
+        }
+        /// <returns>返回实际改变量</returns>
+        public long SubV(long subV)
+        {
+            lock (vLock)
+            {
+                long previousV = v;
+                v -= subV;
+                if (v < 0) v = 0;
+                if (v > maxV) v = maxV;
+                return v - previousV;
+            }
+        }
+        /// <summary>
+        /// 应当保证该减少值大于0
+        /// </summary>
+        /// <returns>返回实际改变量</returns>
         public long SubPositiveV(long subPositiveV)
         {
             lock (vLock)
@@ -342,7 +405,8 @@ namespace Preparation.Utility
         /// <summary>
         /// 试图加到满，如果无法加到maxValue则不加并返回-1
         /// </summary>
-        public long TryAddAll(long addV)
+        /// <returns>返回实际改变量</returns>
+        public long TryAddToMaxV(long addV)
         {
             lock (vLock)
             {

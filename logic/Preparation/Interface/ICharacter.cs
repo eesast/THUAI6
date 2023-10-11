@@ -5,10 +5,10 @@ namespace Preparation.Interface
     public interface ICharacter : IMoveable
     {
         public AtomicLong TeamID { get; }
-        public LongWithVariableRange HP { get; }
+        public LongInTheVariableRange HP { get; }
         public long Score { get; }
         public void AddScore(long add);
-        public double Vampire { get; }
+        public DoubleInTheVariableRange Vampire { get; }
         public PlayerStateType PlayerState { get; }
         public BulletType BulletOfPlayer { get; set; }
         public CharacterType CharacterType { get; }

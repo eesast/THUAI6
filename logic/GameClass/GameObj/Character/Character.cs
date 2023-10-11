@@ -110,32 +110,9 @@ namespace GameClass.GameObj
         public int SpeedOfOpenChest => speedOfOpenChest;
         #endregion
         #region 血量相关的基本属性及方法
-        public LongWithVariableRange HP { get; }
+        public LongInTheVariableRange HP { get; }
 
-        private readonly object vampireLock = new();
-        public object VampireLock => vampire;
-
-        private double vampire = 0;  // 回血率：0-1之间
-        public double Vampire
-        {
-            get
-            {
-                lock (vampireLock)
-                    return vampire;
-            }
-            set
-            {
-                lock (vampireLock)
-                {
-                    if (value > 1)
-                        vampire = 1;
-                    else if (value < 0)
-                        vampire = 0;
-                    else
-                        vampire = value;
-                }
-            }
-        }
+        public DoubleInTheVariableRange Vampire { get; } = new DoubleInTheVariableRange(0, 1);
         public double OriVampire { get; protected set; }
 
         private readonly object treatLock = new();

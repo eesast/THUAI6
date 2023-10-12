@@ -236,6 +236,14 @@ namespace Preparation.Utility
             }
             return false;
         }
+
+        public bool IsMaxV()
+        {
+            lock (vLock)
+            {
+                return v == maxV;
+            }
+        }
     }
 
     /// <summary>
@@ -469,6 +477,14 @@ namespace Preparation.Utility
             }
             return false;
         }
+
+        public bool IsMaxV()
+        {
+            lock (vLock)
+            {
+                return v == maxV;
+            }
+        }
     }
 
     /// <summary>
@@ -701,6 +717,14 @@ namespace Preparation.Utility
                 }
             }
             return false;
+        }
+
+        public bool IsMaxV()
+        {
+            lock (vLock)
+            {
+                return v == maxV;
+            }
         }
     }
 }

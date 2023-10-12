@@ -7,106 +7,24 @@ namespace GameClass.GameObj
 {
     public class Student : Character
     {
-        private readonly object fixLock = new();
-        protected int fixSpeed;
-        /// <summary>
-        /// 修理电机速度
-        /// </summary>
-        public int FixSpeed
-        {
-            get
-            {
-                lock (fixLock)
-                    return fixSpeed;
-            }
-            set
-            {
-                lock (fixLock)
-                {
-                    fixSpeed = value;
-                }
-            }
-        }
+        public AtomicInt FixSpeed { get; } = new AtomicInt(0);
         /// <summary>
         /// 原初修理电机速度
         /// </summary>
         protected readonly int orgFixSpeed;
 
-        private readonly object treatLock = new();
-        protected int treatSpeed = GameData.basicTreatSpeed;
-        public int TreatSpeed
-        {
-            get
-            {
-                lock (treatLock)
-                    return treatSpeed;
-            }
-            set
-            {
-                lock (treatLock)
-                {
-                    treatSpeed = value;
-                }
-            }
-        }
+        public AtomicInt TreatSpeed { get; } = new AtomicInt(GameData.basicTreatSpeed);
         protected readonly int orgTreatSpeed;
 
-        private readonly object addictionLock = new();
-        private int maxGamingAddiction;
-        public int MaxGamingAddiction
-        {
-            get
-            {
-                lock (addictionLock)
-                    return maxGamingAddiction;
-            }
-            protected set
-            {
-                lock (addictionLock)
-                {
-                    if (value < gamingAddiction) gamingAddiction = value;
-                    maxGamingAddiction = value;
-                }
-            }
-        }
-        private int gamingAddiction;
-        public int GamingAddiction
-        {
-            get
-            {
-                lock (addictionLock)
-                    return gamingAddiction;
-            }
-            set
-            {
-                if (value > 0)
-                    lock (addictionLock)
-                        gamingAddiction = value <= maxGamingAddiction ? value : maxGamingAddiction;
-                else
-                    lock (addictionLock)
-                        gamingAddiction = 0;
-            }
-        }
+        public IntInTheVariableRange GamingAddiction { get; } = new IntInTheVariableRange(0, 0);
 
-        private int timeOfRescue = 0;
-        public int TimeOfRescue
-        {
-            get => Interlocked.CompareExchange(ref timeOfRescue, -1, -1);
-        }
-        public bool AddTimeOfRescue(int value)
-        {
-            return Interlocked.Add(ref timeOfRescue, value) >= GameData.basicTimeOfRescue;
-        }
-        public void SetTimeOfRescue(int value)
-        {
-            Interlocked.Exchange(ref timeOfRescue, value);
-        }
+        public AtomicInt TimeOfRescue { get; } = new AtomicInt(0);
 
         public Student(XY initPos, int initRadius, CharacterType characterType) : base(initPos, initRadius, characterType)
         {
-            this.orgFixSpeed = this.fixSpeed = ((IStudentType)Occupation).FixSpeed;
-            this.TreatSpeed = this.orgTreatSpeed = ((IStudentType)Occupation).TreatSpeed;
-            this.MaxGamingAddiction = ((IStudentType)Occupation).MaxGamingAddiction;
+            this.FixSpeed.SetReturnOri(this.orgFixSpeed = ((IStudentType)Occupation).FixSpeed);
+            this.TreatSpeed.SetReturnOri(this.orgTreatSpeed = ((IStudentType)Occupation).TreatSpeed);
+            this.GamingAddiction.SetPositiveMaxV(((IStudentType)Occupation).MaxGamingAddiction);
         }
     }
     public class Golem : Student, IGolem

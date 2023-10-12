@@ -196,9 +196,9 @@ namespace Gaming
                 if (player.GamingAddiction > 0)
                 {
                     if (player.GamingAddiction < GameData.BeginGamingAddiction)
-                        player.GamingAddiction = GameData.BeginGamingAddiction;
+                        player.GamingAddiction.SetV(GameData.BeginGamingAddiction);
                     else if (player.GamingAddiction < GameData.MidGamingAddiction)
-                        player.GamingAddiction = GameData.MidGamingAddiction;
+                        player.GamingAddiction.SetV(GameData.MidGamingAddiction);
                     else
                     {
                         Die(player);
@@ -214,16 +214,16 @@ namespace Gaming
                         Debugger.Output(player, " is addicted ");
 
                         new FrameRateTaskExecutor<int>(
-                            () => stateNum == player.StateNum && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
+                            () => stateNum == player.StateNum && !player.GamingAddiction.IsMaxV() && gameMap.Timer.IsGaming,
                             () =>
                             {
-                                player.GamingAddiction += (player.PlayerState == PlayerStateType.Addicted) ? GameData.frameDuration : 0;
+                                if (player.PlayerState == PlayerStateType.Addicted) player.GamingAddiction.AddPositiveV(GameData.frameDuration);
                             },
                             timeInterval: GameData.frameDuration,
                             () =>
                             {
                                 gameMap.MapRescueStudent();
-                                if (player.GamingAddiction == player.MaxGamingAddiction && gameMap.Timer.IsGaming)
+                                if (player.GamingAddiction.IsMaxV() && gameMap.Timer.IsGaming)
                                 {
                                     Die(player);
                                 }

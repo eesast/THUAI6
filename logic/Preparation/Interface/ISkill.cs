@@ -13,7 +13,7 @@ namespace Preparation.Interface
     }
     public interface IActiveSkill : ISkill
     {
-        public LongProgressCoolingDownByCD SkillCD { get; }
+        public LongProgressUpdateEachCD SkillCD { get; }
         public int DurationTime { get; } //技能持续时间
         public object ActiveSkillUseLock { get; }
         public bool IsBeingUsed { get; set; }
@@ -21,7 +21,7 @@ namespace Preparation.Interface
 
     public abstract class ActiveSkill : IActiveSkill
     {
-        public abstract LongProgressCoolingDownByCD SkillCD { get; }
+        public abstract LongProgressUpdateEachCD SkillCD { get; }
         public abstract int DurationTime { get; }
 
         private readonly object activeSkillUseLock = new();
@@ -40,79 +40,79 @@ namespace Preparation.Interface
 
     public class CanBeginToCharge : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD * 2);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD * 2);
         public override int DurationTime => GameData.commonSkillTime * 3 / 10;
     }
 
     public class BecomeInvisible : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD * 4 / 3);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD * 4 / 3);
         public override int DurationTime => GameData.commonSkillTime;
     }
 
     public class Punish : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD * 45 / 30);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD * 45 / 30);
         public override int DurationTime => 0;
     }
 
     public class HaveTea : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD * 3);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD * 3);
         public override int DurationTime => 0;
     }
 
     public class Rouse : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD * 4);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD * 4);
         public override int DurationTime => 0;
     }
 
     public class Encourage : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD * 4);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD * 4);
         public override int DurationTime => 0;
     }
 
     public class Inspire : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD * 4);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD * 4);
         public override int DurationTime => 0;
     }
 
     public class Howl : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD * 25 / 30);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD * 25 / 30);
         public override int DurationTime => 0;
     }
 
     public class ShowTime : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD * 8 / 3);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD * 8 / 3);
         public override int DurationTime => GameData.commonSkillTime;
     }
 
     public class JumpyBomb : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD / 2);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD / 2);
         public override int DurationTime => GameData.commonSkillTime * 3 / 10;
     }
 
     public class SparksNSplash : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD * 45 / 30);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD * 45 / 30);
         public override int DurationTime => GameData.commonSkillTime;
     }
 
     public class UseKnife : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD);
         public override int DurationTime => GameData.commonSkillTime / 10;
     }
 
     public class UseRobot : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD / 300);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD / 300);
         public override int DurationTime => 0;
 
         private int nowPlayerID;
@@ -149,7 +149,7 @@ namespace Preparation.Interface
 
     public class WriteAnswers : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD);
         public override int DurationTime => 0;
 
         private AtomicInt degreeOfMeditation = new(0);
@@ -158,7 +158,7 @@ namespace Preparation.Interface
 
     public class SummonGolem : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD * 4 / 3);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD * 4 / 3);
         public override int DurationTime => 6000;
 
         private int[] golemStateArray = new int[GameData.maxSummonedGolemNum] { 0, 0, 0 };
@@ -211,7 +211,7 @@ namespace Preparation.Interface
 
     public class NullSkill : ActiveSkill
     {
-        public override LongProgressCoolingDownByCD SkillCD { get; } = new(GameData.commonSkillCD);
+        public override LongProgressUpdateEachCD SkillCD { get; } = new(GameData.commonSkillCD);
         public override int DurationTime => GameData.commonSkillTime;
     }
 

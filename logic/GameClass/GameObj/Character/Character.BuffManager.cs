@@ -177,19 +177,6 @@ namespace GameClass.GameObj
                 return false;
             }
 
-            public bool TryDeleteInvisible()
-            {
-                if (HasInvisible)
-                {
-                    lock (buffListLock[(int)BuffType.Invisible])
-                    {
-                        buffList[(int)BuffType.Invisible].RemoveFirst();
-                    }
-                    return true;
-                }
-                return false;
-            }
-
             public void AddClairaudience(int shieldTime) => AddBuff(0, shieldTime, BuffType.Clairaudience, () =>
             { });
             public bool HasClairaudience
@@ -214,6 +201,18 @@ namespace GameClass.GameObj
                         return buffList[(int)BuffType.Invisible].Count != 0;
                     }
                 }
+            }
+            public bool TryDeleteInvisible()
+            {
+                if (HasInvisible)
+                {
+                    lock (buffListLock[(int)BuffType.Invisible])
+                    {
+                        buffList[(int)BuffType.Invisible].RemoveFirst();
+                    }
+                    return true;
+                }
+                return false;
             }
 
             /// <summary>

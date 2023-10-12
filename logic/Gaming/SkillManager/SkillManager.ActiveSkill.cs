@@ -59,8 +59,8 @@ namespace Gaming
                                              else if (dis >= player.ViewRange)
                                              {
                                                  Student student = (Student)person;
-                                                 student.GamingAddiction += GameData.checkIntervalWhenShowTime;
-                                                 if (student.GamingAddiction == student.MaxGamingAddiction)
+                                                 student.GamingAddiction.AddPositiveV(GameData.checkIntervalWhenShowTime);
+                                                 if (student.GamingAddiction.IsMaxV())
                                                  {
                                                      characterManager.Die(student);
                                                  }
@@ -422,7 +422,7 @@ namespace Gaming
                                 {
                                     character.SetPlayerStateNaturally();
                                     character.HP.SetPositiveV(GameData.RemainHpWhenAddLife);
-                                    ((Student)character).SetTimeOfRescue(0);
+                                    ((Student)character).TimeOfRescue.SetReturnOri(0);
                                     player.AddScore(GameData.StudentScoreRescue);
                                     break;
                                 }

@@ -318,7 +318,7 @@ namespace Gaming
                            {
                                if (playerRescued.StateNum == stateNumRescued)
                                {
-                                   if (playerRescued.AddTimeOfRescue(GameData.checkInterval))
+                                   if (playerRescued.TimeOfRescue.Add(GameData.checkInterval) >= GameData.basicTimeOfRescue)
                                    {
                                        playerRescued.SetPlayerStateNaturally();
                                        playerRescued.HP.SetPositiveV(playerRescued.HP.GetMaxV() / 2);
@@ -334,7 +334,7 @@ namespace Gaming
                        finallyReturn: () => 0
                    )
                        .Start();
-                   playerRescued.SetTimeOfRescue(0);
+                   playerRescued.TimeOfRescue.SetReturnOri(0);
 
                    player.ThreadNum.Release();
                    playerRescued.ThreadNum.Release();

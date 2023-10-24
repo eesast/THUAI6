@@ -13,6 +13,7 @@ namespace Preparation.Utility
         private int v;
         private int maxV;
         private readonly object vLock = new();
+        #region 构造与读取
         public IntInTheVariableRange(int value, int maxValue)
         {
             if (maxValue < 0)
@@ -50,7 +51,10 @@ namespace Preparation.Utility
         public int GetValue() { lock (vLock) return v; }
         public static implicit operator int(IntInTheVariableRange aint) => aint.GetValue();
         public int GetMaxV() { lock (vLock) return maxV; }
+        public bool IsMaxV() { lock (vLock) return v == maxV; }
+        #endregion
 
+        #region 普通设置MaxV与Value的值的方法
         /// <summary>
         /// 若maxValue<=0则maxValue设为0并返回False
         /// </summary>
@@ -82,29 +86,7 @@ namespace Preparation.Utility
                 if (v > maxValue) v = maxValue;
             }
         }
-        /// <summary>
-        /// 如果当前值大于maxValue,则更新maxValue失败
-        /// </summary>
-        public bool TrySetMaxV(int maxValue)
-        {
-            lock (vLock)
-            {
-                if (v > maxValue) return false;
-                maxV = maxValue;
-                return true;
-            }
-        }
 
-        /// <summary>
-        /// 应当保证该value>=0
-        /// </summary>
-        public int SetPositiveV(int value)
-        {
-            lock (vLock)
-            {
-                return v = (value > maxV) ? maxV : value;
-            }
-        }
         public int SetV(int value)
         {
             if (value <= 0)
@@ -119,6 +101,19 @@ namespace Preparation.Utility
                 return v = (value > maxV) ? maxV : value;
             }
         }
+        /// <summary>
+        /// 应当保证该value>=0
+        /// </summary>
+        public int SetPositiveV(int value)
+        {
+            lock (vLock)
+            {
+                return v = (value > maxV) ? maxV : value;
+            }
+        }
+        #endregion
+
+        #region 普通运算
         /// <returns>返回实际改变量</returns>
         public int AddV(int addV)
         {
@@ -193,30 +188,26 @@ namespace Preparation.Utility
             }
             return subPositiveV;
         }
+        #endregion
 
+        #region 特殊条件的设置MaxV与Value的值的方法
         /// <summary>
-        /// 试图加到满，如果无法加到maxValue则不加并返回-1
+        /// 如果当前值大于maxValue,则更新maxValue失败
         /// </summary>
-        /// <returns>返回实际改变量</returns>
-        public int TryAddToMaxV(int addV)
+        public bool TrySetMaxV(int maxValue)
         {
             lock (vLock)
             {
-                if (maxV - v <= addV)
-                {
-                    addV = maxV - v;
-                    v = maxV;
-                    return addV;
-                }
-                return -1;
+                if (v > maxValue) return false;
+                maxV = maxValue;
+                return true;
             }
         }
-
-        public bool Set0IfNotMax()
+        public bool Set0IfNotMaxor0()
         {
             lock (vLock)
             {
-                if (v < maxV)
+                if (v < maxV && v > 0)
                 {
                     v = 0;
                     return true;
@@ -236,14 +227,27 @@ namespace Preparation.Utility
             }
             return false;
         }
+        #endregion
 
-        public bool IsMaxV()
+        #region 特殊条件的运算
+        /// <summary>
+        /// 试图加到满，如果无法加到maxValue则不加并返回-1
+        /// </summary>
+        /// <returns>返回实际改变量</returns>
+        public int TryAddToMaxV(int addV)
         {
             lock (vLock)
             {
-                return v == maxV;
+                if (maxV - v <= addV)
+                {
+                    addV = maxV - v;
+                    v = maxV;
+                    return addV;
+                }
+                return -1;
             }
         }
+        #endregion
     }
 
     /// <summary>
@@ -254,6 +258,7 @@ namespace Preparation.Utility
         private long v;
         private long maxV;
         private readonly object vLock = new();
+        #region 构造与读取
         public LongInTheVariableRange(long value, long maxValue)
         {
             if (maxValue < 0)
@@ -291,7 +296,16 @@ namespace Preparation.Utility
         public long GetValue() { lock (vLock) return v; }
         public static implicit operator long(LongInTheVariableRange aint) => aint.GetValue();
         public long GetMaxV() { lock (vLock) return maxV; }
+        public bool IsMaxV()
+        {
+            lock (vLock)
+            {
+                return v == maxV;
+            }
+        }
+        #endregion
 
+        #region 普通设置MaxV与Value的值的方法
         /// <summary>
         /// 若maxValue<=0则maxValue设为0并返回False
         /// </summary>
@@ -323,29 +337,7 @@ namespace Preparation.Utility
                 if (v > maxValue) v = maxValue;
             }
         }
-        /// <summary>
-        /// 如果当前值大于maxValue,则更新maxValue失败
-        /// </summary>
-        public bool TrySetMaxV(long maxValue)
-        {
-            lock (vLock)
-            {
-                if (v > maxValue) return false;
-                maxV = maxValue;
-                return true;
-            }
-        }
 
-        /// <summary>
-        /// 应当保证该value>=0
-        /// </summary>
-        public long SetPositiveV(long value)
-        {
-            lock (vLock)
-            {
-                return v = (value > maxV) ? maxV : value;
-            }
-        }
         public long SetV(long value)
         {
             if (value <= 0)
@@ -360,6 +352,19 @@ namespace Preparation.Utility
                 return v = (value > maxV) ? maxV : value;
             }
         }
+        /// <summary>
+        /// 应当保证该value>=0
+        /// </summary>
+        public long SetPositiveV(long value)
+        {
+            lock (vLock)
+            {
+                return v = (value > maxV) ? maxV : value;
+            }
+        }
+        #endregion
+
+        #region 普通运算
         /// <returns>返回实际改变量</returns>
         public long AddV(long addV)
         {
@@ -434,22 +439,19 @@ namespace Preparation.Utility
             }
             return subPositiveV;
         }
+        #endregion
 
+        #region 特殊条件的设置MaxV与Value的值的方法
         /// <summary>
-        /// 试图加到满，如果无法加到maxValue则不加并返回-1
+        /// 如果当前值大于maxValue,则更新maxValue失败
         /// </summary>
-        /// <returns>返回实际改变量</returns>
-        public long TryAddToMaxV(long addV)
+        public bool TrySetMaxV(long maxValue)
         {
             lock (vLock)
             {
-                if (maxV - v <= addV)
-                {
-                    addV = maxV - v;
-                    v = maxV;
-                    return addV;
-                }
-                return -1;
+                if (v > maxValue) return false;
+                maxV = maxValue;
+                return true;
             }
         }
 
@@ -477,14 +479,27 @@ namespace Preparation.Utility
             }
             return false;
         }
+        #endregion
 
-        public bool IsMaxV()
+        #region 特殊条件的运算
+        /// <summary>
+        /// 试图加到满，如果无法加到maxValue则不加并返回-1
+        /// </summary>
+        /// <returns>返回实际改变量</returns>
+        public long TryAddToMaxV(long addV)
         {
             lock (vLock)
             {
-                return v == maxV;
+                if (maxV - v <= addV)
+                {
+                    addV = maxV - v;
+                    v = maxV;
+                    return addV;
+                }
+                return -1;
             }
         }
+        #endregion
     }
 
     /// <summary>
@@ -495,6 +510,7 @@ namespace Preparation.Utility
         private double v;
         private double maxV;
         private readonly object vLock = new();
+        #region 构造与读取
         public DoubleInTheVariableRange(double value, double maxValue)
         {
             if (maxValue < 0)
@@ -532,7 +548,16 @@ namespace Preparation.Utility
         public double GetValue() { lock (vLock) return v; }
         public static implicit operator double(DoubleInTheVariableRange adouble) => adouble.GetValue();
         public double GetMaxV() { lock (vLock) return maxV; }
+        public bool IsMaxV()
+        {
+            lock (vLock)
+            {
+                return v == maxV;
+            }
+        }
+        #endregion
 
+        #region 普通设置MaxV与Value的值的方法
         /// <summary>
         /// 若maxValue<=0则maxValue设为0并返回False
         /// </summary>
@@ -564,29 +589,7 @@ namespace Preparation.Utility
                 if (v > maxValue) v = maxValue;
             }
         }
-        /// <summary>
-        /// 如果当前值大于maxValue,则更新maxValue失败
-        /// </summary>
-        public bool TrySetMaxV(double maxValue)
-        {
-            lock (vLock)
-            {
-                if (v > maxValue) return false;
-                maxV = maxValue;
-                return true;
-            }
-        }
 
-        /// <summary>
-        /// 应当保证该value>=0
-        /// </summary>
-        public double SetPositiveV(double value)
-        {
-            lock (vLock)
-            {
-                return v = (value > maxV) ? maxV : value;
-            }
-        }
         public double SetV(double value)
         {
             if (value <= 0)
@@ -601,6 +604,19 @@ namespace Preparation.Utility
                 return v = (value > maxV) ? maxV : value;
             }
         }
+        /// <summary>
+        /// 应当保证该value>=0
+        /// </summary>
+        public double SetPositiveV(double value)
+        {
+            lock (vLock)
+            {
+                return v = (value > maxV) ? maxV : value;
+            }
+        }
+        #endregion
+
+        #region 普通运算
         /// <returns>返回实际改变量</returns>
         public double AddV(double addV)
         {
@@ -675,22 +691,19 @@ namespace Preparation.Utility
             }
             return subPositiveV;
         }
+        #endregion
 
+        #region 特殊条件的设置MaxV与Value的值的方法
         /// <summary>
-        /// 试图加到满，如果无法加到maxValue则不加并返回-1
+        /// 如果当前值大于maxValue,则更新maxValue失败
         /// </summary>
-        /// <returns>返回实际改变量</returns>
-        public double TryAddToMaxV(double addV)
+        public bool TrySetMaxV(double maxValue)
         {
             lock (vLock)
             {
-                if (maxV - v <= addV)
-                {
-                    addV = maxV - v;
-                    v = maxV;
-                    return addV;
-                }
-                return -1;
+                if (v > maxValue) return false;
+                maxV = maxValue;
+                return true;
             }
         }
 
@@ -718,13 +731,26 @@ namespace Preparation.Utility
             }
             return false;
         }
+        #endregion
 
-        public bool IsMaxV()
+        #region 特殊条件的运算
+        /// <summary>
+        /// 试图加到满，如果无法加到maxValue则不加并返回-1
+        /// </summary>
+        /// <returns>返回实际改变量</returns>
+        public double TryAddToMaxV(double addV)
         {
             lock (vLock)
             {
-                return v == maxV;
+                if (maxV - v <= addV)
+                {
+                    addV = maxV - v;
+                    v = maxV;
+                    return addV;
+                }
+                return -1;
             }
         }
+        #endregion
     }
 }

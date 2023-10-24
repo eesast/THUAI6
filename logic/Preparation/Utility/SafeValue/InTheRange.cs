@@ -152,6 +152,19 @@ namespace Preparation.Utility
                 else v *= mulV;
             }
         }
+        public void MulV(double mulV)
+        {
+            if (mulV <= 0)
+            {
+                lock (vLock) v = 0;
+                return;
+            }
+            lock (vLock)
+            {
+                if (v > maxV / mulV) v = maxV; //避免溢出
+                else v = (int)(v * mulV);
+            }
+        }
         /// <summary>
         /// 应当保证乘数大于0
         /// </summary>
@@ -161,6 +174,17 @@ namespace Preparation.Utility
             {
                 if (v > maxV / mulPositiveV) v = maxV; //避免溢出
                 else v *= mulPositiveV;
+            }
+        }
+        /// <summary>
+        /// 应当保证乘数大于0
+        /// </summary>
+        public void MulPositiveV(double mulPositiveV)
+        {
+            lock (vLock)
+            {
+                if (v > maxV / mulPositiveV) v = maxV; //避免溢出
+                else v = (int)(v * mulPositiveV);
             }
         }
         /// <returns>返回实际改变量</returns>
@@ -403,6 +427,19 @@ namespace Preparation.Utility
                 else v *= mulV;
             }
         }
+        public void MulV(double mulV)
+        {
+            if (mulV <= 0)
+            {
+                lock (vLock) v = 0;
+                return;
+            }
+            lock (vLock)
+            {
+                if (v > maxV / mulV) v = maxV; //避免溢出
+                else v = (long)(v * mulV);
+            }
+        }
         /// <summary>
         /// 应当保证乘数大于0
         /// </summary>
@@ -412,6 +449,17 @@ namespace Preparation.Utility
             {
                 if (v > maxV / mulPositiveV) v = maxV; //避免溢出
                 else v *= mulPositiveV;
+            }
+        }
+        /// <summary>
+        /// 应当保证乘数大于0
+        /// </summary>
+        public void MulPositiveV(double mulPositiveV)
+        {
+            lock (vLock)
+            {
+                if (v > maxV / mulPositiveV) v = maxV; //避免溢出
+                else v = (long)(v * mulPositiveV);
             }
         }
         /// <returns>返回实际改变量</returns>

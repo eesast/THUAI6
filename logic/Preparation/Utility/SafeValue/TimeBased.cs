@@ -321,13 +321,12 @@ namespace Preparation.Utility
         }
     }*/
 
+    /*
     public class TimeBasedProgressAtVariableSpeed
     {
-        private long progress = 0;
-        private long lastStartT = long.MaxValue;
-        private readonly object progressLock = new();
-        private long needProgress;
-        private double speed;
+        public LongInTheVariableRange progress;
+        public StartTime startTime = new(); 
+        private  speed =1.0;
 
         public TimeBasedProgressAtVariableSpeed(long needProgress, double speed)
         {
@@ -491,6 +490,7 @@ namespace Preparation.Utility
             return false;
         }
     }
+    */
 
     /// <summary>
     /// 冷却时间为可变的CDms的bool，不支持查看当前进度，初始为True

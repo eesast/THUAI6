@@ -4,7 +4,11 @@ using System.Threading;
 namespace Preparation.Utility
 {
     //其对应属性不应当有set访问器，避免不安全的=赋值
-    public class AtomicInt
+    public abstract class Atomic
+    {
+    }
+
+    public class AtomicInt : Atomic
     {
         private int v;
         public AtomicInt(int x)
@@ -24,7 +28,7 @@ namespace Preparation.Utility
         public int CompareExReturnOri(int newV, int compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
     }
 
-    public class AtomicLong
+    public class AtomicLong : Atomic
     {
         private long v;
         public AtomicLong(long x)
@@ -44,7 +48,7 @@ namespace Preparation.Utility
         public long CompareExReturnOri(long newV, long compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
     }
 
-    public class AtomicDouble
+    public class AtomicDouble : Atomic
     {
         private double v;
         public AtomicDouble(double x)
@@ -60,7 +64,7 @@ namespace Preparation.Utility
         public double CompareExReturnOri(double newV, double compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
     }
 
-    public class AtomicBool
+    public class AtomicBool : Atomic
     {
         private int v;//v&1==0为false,v&1==1为true
         public AtomicBool(bool x)

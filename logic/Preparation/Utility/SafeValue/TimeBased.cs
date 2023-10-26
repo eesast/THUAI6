@@ -18,14 +18,20 @@ namespace Preparation.Utility
         }
         public StartTime() { _time = long.MaxValue; }
         public long Get() => Interlocked.CompareExchange(ref _time, -2, -2);
+        public override string ToString() => Get().ToString();
         /// <returns>返回操作前的值</returns>
         public long Start() => Interlocked.CompareExchange(ref _time, Environment.TickCount64, long.MaxValue);
         /// <returns>返回操作前的值</returns>
         public long Stop() => Interlocked.Exchange(ref _time, long.MaxValue);
-        public void StopIfPassing(long passedTime)
+        /// <returns>返回时间差,<0意味着未开始</returns>
+        public long StopIfPassing(long passedTime)
         {
-            if (Environment.TickCount64 - Interlocked.CompareExchange(ref _time, -2, -2) > passedTime)
+            long ans = Environment.TickCount64 - Interlocked.CompareExchange(ref _time, -2, -2);
+            if (ans > passedTime)
+            {
                 Interlocked.Exchange(ref _time, long.MaxValue);
+            }
+            return ans;
         }
     }
 
@@ -151,306 +157,53 @@ namespace Preparation.Utility
         }
         //增加其他新的写操作可能导致不安全
     }
-    /*
-    public class TimeBasedProgressAtVariableSpeed
-    {
-        private long progress = 0;
-        private long lastStartT = long.MaxValue;
-        private readonly object progressLock = new();
-        private long needProgress;
 
-        public TimeBasedProgressAtVariableSpeed(long needProgress)
-        {
-            if (needProgress <= 0) Debugger.Output("Bug:TimeBasedProgressAtVariableSpeed.needProgress (" + needProgress.ToString() + ") is less than 0.");
-            this.needProgress = needProgress;
-        }
-        public TimeBasedProgressAtVariableSpeed()
-        {
-            this.needProgress = 0;
-        }
-        public long GetNeedProgress() 
-        {
-            lock (progressLock) return needProgress; 
-        }
-        public override string ToString()
-        {
-            lock (progressLock)  
-            {
-                return "NeedProgress:" + Interlocked.CompareExchange(ref needProgress, -2, -2).ToString() + " ms, "
-                            + "FinishedProgress:" + progress.ToString() +"ms, "
-                            + "lastStartTime:" +lastStartT.ToString() +"ms";
-            }
-        }
-        public long GetProgressNow() 
-        {
-            lock (progressLock)
-            {
-                if (lastStartT==long.MaxValue) return progress;
-                long progressNow = progress + Environment.TickCount64 - lastStartT;
-                if (progressNow>= needProgress)
-                {
-                    lastStartT = long.MaxValue;
-                    return progress = needProgress;
-                }
-                return progressNow;
-            }
-        }
-
-        public bool IsFinished()
-        {
-            lock (progressLock)
-            {
-                if (progress >= needProgress) return true;
-                if (progress + Environment.TickCount64 - lastStartT >= needProgress)
-                {
-                    lastStartT = long.MaxValue;
-                    progress = needProgress;
-                    return true;
-                }
-                return false;
-            }
-        }
-        public bool IsProgressing() 
-        {
-            lock (progressLock)
-            {
-                if (lastStartT==long.MaxValue) return false;
-                if (progress + Environment.TickCount64 - lastStartT >= needProgress)
-                {
-                    lastStartT = long.MaxValue;
-                    progress = needProgress;
-                    return false;
-                }
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// GetProgress<0则表明未开始
-        /// </summary>
-        public long GetProgress()
-        {
-            long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - Environment.TickCount64;
-            if (cutime <= 0) return Interlocked.CompareExchange(ref needProgress, -2, -2);
-            return Interlocked.CompareExchange(ref needProgress, -2, -2) - cutime;
-        }
-        public long GetNonNegativeProgress()
-        {
-            long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - Environment.TickCount64;
-            if (cutime <= 0) return Interlocked.CompareExchange(ref needProgress, -2, -2);
-            long progress = Interlocked.CompareExchange(ref needProgress, -2, -2) - cutime;
-            return progress < 0 ? 0 : progress;
-        }
-        /// <summary>
-        /// GetProgress<0则表明未开始
-        /// </summary>
-        public long GetProgress(long time)
-        {
-            long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - time;
-            if (cutime <= 0) return Interlocked.CompareExchange(ref needProgress, -2, -2);
-            return Interlocked.CompareExchange(ref needProgress, -2, -2) - cutime;
-        }
-        public long GetNonNegativeProgress(long time)
-        {
-            long cutime = Interlocked.Read(ref endT) - time;
-            if (cutime <= 0) return Interlocked.CompareExchange(ref needProgress, -2, -2);
-            long progress = Interlocked.CompareExchange(ref needProgress, -2, -2) - cutime;
-            return progress < 0 ? 0 : progress;
-        }
-        /// <summary>
-        /// <0则表明未开始
-        /// </summary>
-        public static implicit operator long(TimeBasedProgressAtVariableSpeed pLong) => pLong.GetProgress();
-
-        /// <summary>
-        /// GetProgressDouble<0则表明未开始
-        /// </summary>
-        public double GetProgressDouble()
-        {
-            long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - Environment.TickCount64;
-            if (cutime <= 0) return 1;
-            long needTime = Interlocked.CompareExchange(ref needProgress, -2, -2);
-            if (needTime == 0) return 0;
-            return 1.0 - ((double)cutime / needTime);
-        }
-        public double GetNonNegativeProgressDouble(long time)
-        {
-            long cutime = Interlocked.Read(ref endT) - time;
-            if (cutime <= 0) return 1;
-            long needTime = Interlocked.CompareExchange(ref needProgress, -2, -2);
-            if (needTime <= cutime) return 0;
-            return 1.0 - ((double)cutime / needTime);
-        }
-
-        public bool Start(long needTime)
-        {
-            if (needTime <= 2)
-            {
-                Debugger.Output("Warning:Start TimeBasedProgressAtVariableSpeed with the needProgress (" + needTime.ToString() + ") which is less than 0.");
-                return false;
-            }
-            //规定只有Start可以修改needT，且需要先访问startTime，从而避免锁（某种程度上endTime可以认为是needTime的锁）
-            if (Interlocked.CompareExchange(ref lastStartT, Environment.TickCount64, long.MaxValue) != long.MaxValue) return false;
-            Interlocked.Exchange(ref needProgress, needTime);
-            return true;
-        }
-        public bool Start()
-        {
-            return Interlocked.CompareExchange(ref lastStartT, Environment.TickCount64, long.MaxValue) == long.MaxValue;
-        }
-        /// <summary>
-        /// 使进度条强制终止清零
-        /// </summary>
-        public void Set0()
-        {
-            Interlocked.Exchange(ref lastStartT, long.MaxValue);
-            Interlocked.Exchange(ref progress, 0);
-        }
-        /// <summary>
-        /// 使进度条暂停
-        /// </summary>
-        public bool Pause()
-        {
-            Interlocked.CompareExchange(ref lastStartT, -2, -2)
-            if (Environment.TickCount64 < )
-            {
-                Interlocked.Exchange(ref endT, long.MaxValue);
-                return true;
-            }
-            return false;
-        }
-    }*/
-
-    /*
     public class TimeBasedProgressAtVariableSpeed
     {
         public LongInTheVariableRange progress;
-        public StartTime startTime = new(); 
-        private  speed =1.0;
+        public StartTime startTime = new();
+        public AtomicDouble speed;
 
+        #region 构造 
         public TimeBasedProgressAtVariableSpeed(long needProgress, double speed)
         {
             if (needProgress <= 0) Debugger.Output("Bug:TimeBasedProgressAtVariableSpeed.needProgress (" + needProgress.ToString() + ") is less than 0.");
-            this.needProgress = needProgress;
-            this.speed = speed;
+            this.progress = new(0, needProgress);
+            this.speed = new(speed);
         }
         public TimeBasedProgressAtVariableSpeed()
         {
-            this.needProgress = 0;
+            this.progress = new(0, 0);
+            this.speed = new(1.0);
         }
-        public long GetNeedProgress()
-        {
-            lock (progressLock) return needProgress;
-        }
+        #endregion
+
+        #region 读取
         public override string ToString()
         {
-            lock (progressLock)
-            {
-                return "NeedProgress:" + Interlocked.CompareExchange(ref needProgress, -2, -2).ToString() + " ms, "
-                            + "FinishedProgress:" + progress.ToString() + "ms, "
-                            + "lastStartTime:" + lastStartT.ToString() + "ms";
-            }
+            return "ProgressStored: " + progress.ToString()
+                        + " ; LastStartTime: " + startTime.ToString() + "ms"
+                        + " ; Speed: " + speed.ToString();
         }
-        public long GetProgressNow()
-        {
-            lock (progressLock)
-            {
-                if (lastStartT == long.MaxValue) return progress;
-                long progressNow = progress + Environment.TickCount64 - lastStartT;
-                if (progressNow >= needProgress)
-                {
-                    lastStartT = long.MaxValue;
-                    return progress = needProgress;
-                }
-                return progressNow;
-            }
-        }
+        public long GetProgressNow() => progress.TryAddToMaxV(startTime, (double)speed).Item1;
+        public (long, long, long) GetProgressNowAndNeedTimeAndLastStartTime() => progress.TryAddToMaxV(startTime, (double)speed);
+        public long GetProgressStored() => progress.GetValue();
+        public (long, long) GetProgressStoredAndNeedTime() => progress.GetValueAndMaxV();
+        public (long, long, long) GetProgressStoredAndNeedTimeAndLastStartTime() => progress.GetValueAndMaxV(startTime);
 
         public bool IsFinished()
         {
-            lock (progressLock)
-            {
-                if (progress >= needProgress) return true;
-                if (progress + Environment.TickCount64 - lastStartT >= needProgress)
-                {
-                    lastStartT = long.MaxValue;
-                    progress = needProgress;
-                    return true;
-                }
-                return false;
-            }
+            long progressNow, needTime;
+            (progressNow, needTime, _) = progress.TryAddToMaxV(startTime);
+            return progressNow == needTime;
         }
         public bool IsProgressing()
         {
-            lock (progressLock)
-            {
-                if (lastStartT == long.MaxValue) return false;
-                if (progress + Environment.TickCount64 - lastStartT >= needProgress)
-                {
-                    lastStartT = long.MaxValue;
-                    progress = needProgress;
-                    return false;
-                }
-                return true;
-            }
+            long progressNow, needTime, startT;
+            (progressNow, needTime, startT) = progress.TryAddToMaxV(startTime);
+            return (startT != long.MaxValue && progressNow != needTime);
         }
-
-        /// <summary>
-        /// GetProgress<0则表明未开始
-        /// </summary>
-        public long GetProgress()
-        {
-            long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - Environment.TickCount64;
-            if (cutime <= 0) return Interlocked.CompareExchange(ref needProgress, -2, -2);
-            return Interlocked.CompareExchange(ref needProgress, -2, -2) - cutime;
-        }
-        public long GetNonNegativeProgress()
-        {
-            long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - Environment.TickCount64;
-            if (cutime <= 0) return Interlocked.CompareExchange(ref needProgress, -2, -2);
-            long progress = Interlocked.CompareExchange(ref needProgress, -2, -2) - cutime;
-            return progress < 0 ? 0 : progress;
-        }
-        /// <summary>
-        /// GetProgress<0则表明未开始
-        /// </summary>
-        public long GetProgress(long time)
-        {
-            long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - time;
-            if (cutime <= 0) return Interlocked.CompareExchange(ref needProgress, -2, -2);
-            return Interlocked.CompareExchange(ref needProgress, -2, -2) - cutime;
-        }
-        public long GetNonNegativeProgress(long time)
-        {
-            long cutime = Interlocked.Read(ref endT) - time;
-            if (cutime <= 0) return Interlocked.CompareExchange(ref needProgress, -2, -2);
-            long progress = Interlocked.CompareExchange(ref needProgress, -2, -2) - cutime;
-            return progress < 0 ? 0 : progress;
-        }
-        /// <summary>
-        /// <0则表明未开始
-        /// </summary>
-        public static implicit operator long(TimeBasedProgressAtVariableSpeed pLong) => pLong.GetProgress();
-
-        /// <summary>
-        /// GetProgressDouble<0则表明未开始
-        /// </summary>
-        public double GetProgressDouble()
-        {
-            long cutime = Interlocked.CompareExchange(ref endT, -2, -2) - Environment.TickCount64;
-            if (cutime <= 0) return 1;
-            long needTime = Interlocked.CompareExchange(ref needProgress, -2, -2);
-            if (needTime == 0) return 0;
-            return 1.0 - ((double)cutime / needTime);
-        }
-        public double GetNonNegativeProgressDouble(long time)
-        {
-            long cutime = Interlocked.Read(ref endT) - time;
-            if (cutime <= 0) return 1;
-            long needTime = Interlocked.CompareExchange(ref needProgress, -2, -2);
-            if (needTime <= cutime) return 0;
-            return 1.0 - ((double)cutime / needTime);
-        }
+        #endregion
 
         public bool Start(long needTime)
         {
@@ -459,38 +212,30 @@ namespace Preparation.Utility
                 Debugger.Output("Warning:Start TimeBasedProgressAtVariableSpeed with the needProgress (" + needTime.ToString() + ") which is less than 0.");
                 return false;
             }
-            //规定只有Start可以修改needT，且需要先访问startTime，从而避免锁（某种程度上endTime可以认为是needTime的锁）
-            if (Interlocked.CompareExchange(ref lastStartT, Environment.TickCount64, long.MaxValue) != long.MaxValue) return false;
-            Interlocked.Exchange(ref needProgress, needTime);
+            if (startTime.Start() != long.MaxValue) return false;
+            progress.SetMaxV(needTime);
             return true;
         }
         public bool Start()
         {
-            return Interlocked.CompareExchange(ref lastStartT, Environment.TickCount64, long.MaxValue) == long.MaxValue;
+            return startTime.Start() == long.MaxValue;
         }
         /// <summary>
         /// 使进度条强制终止清零
         /// </summary>
         public void Set0()
         {
-            Interlocked.Exchange(ref lastStartT, long.MaxValue);
-            Interlocked.Exchange(ref progress, 0);
+            startTime.Stop();
+            progress.SetPositiveV(0);
         }
         /// <summary>
         /// 使进度条暂停
         /// </summary>
         public bool Pause()
         {
-            Interlocked.CompareExchange(ref lastStartT, -2, -2)
-            if (Environment.TickCount64 < )
-            {
-                Interlocked.Exchange(ref endT, long.MaxValue);
-                return true;
-            }
-            return false;
+            return progress.AddV(startTime, (double)speed) != 0;
         }
     }
-    */
 
     /// <summary>
     /// 冷却时间为可变的CDms的bool，不支持查看当前进度，初始为True

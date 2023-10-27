@@ -6,22 +6,52 @@ namespace Preparation.Utility
     //其对应属性不应当有set访问器，避免不安全的=赋值
 
     /// <summary>
+    /// 记录上次Start的时间，尚未Start则为long.MaxValue
+    /// 当前不为long.MaxValue则不能Start
+    /// </summary>
+    public class StartTime
+    {
+        private long _time;
+        public StartTime(long time)
+        {
+            _time = time;
+        }
+        public StartTime() { _time = long.MaxValue; }
+        public long Get() => Interlocked.CompareExchange(ref _time, -2, -2);
+        public override string ToString() => Get().ToString();
+        /// <returns>返回操作前的值</returns>
+        public long Start() => Interlocked.CompareExchange(ref _time, Environment.TickCount64, long.MaxValue);
+        /// <returns>返回操作前的值</returns>
+        public long Stop() => Interlocked.Exchange(ref _time, long.MaxValue);
+        /// <returns>返回时间差,<0意味着未开始</returns>
+        public long StopIfPassing(long passedTime)
+        {
+            long ans = Environment.TickCount64 - Interlocked.CompareExchange(ref _time, -2, -2);
+            if (ans > passedTime)
+            {
+                Interlocked.Exchange(ref _time, long.MaxValue);
+            }
+            return ans;
+        }
+    }
+
+    /// <summary>
     /// 根据时间推算Start后完成多少进度的进度条（long）。
     /// 只允许Start（清零状态的进度条才可以Start）时修改needTime（请确保大于0）；
     /// 支持InterruptToSet0使未完成的进度条终止清零；支持Set0使进度条强制终止清零；
     /// 通过原子操作实现。
     /// </summary>
-    public class TimeBasedProgressForInterrupting
+    public class TimeBasedProgressOptimizedForInterrupting
     {
         private long endT = long.MaxValue;
         private long needT;
 
-        public TimeBasedProgressForInterrupting(long needTime)
+        public TimeBasedProgressOptimizedForInterrupting(long needTime)
         {
-            if (needTime <= 0) Debugger.Output("Bug:TimeBasedProgressForInterrupting.needTime (" + needTime.ToString() + ") is less than 0.");
+            if (needTime <= 0) Debugger.Output("Bug:TimeBasedProgressOptimizedForInterrupting.needProgress (" + needTime.ToString() + ") is less than 0.");
             this.needT = needTime;
         }
-        public TimeBasedProgressForInterrupting()
+        public TimeBasedProgressOptimizedForInterrupting()
         {
             this.needT = 0;
         }
@@ -32,7 +62,7 @@ namespace Preparation.Utility
         {
             return Interlocked.CompareExchange(ref endT, -2, -2) <= Environment.TickCount64;
         }
-        public bool IsOpened() => Interlocked.Read(ref endT) != long.MaxValue;
+        public bool IsStarted() => Interlocked.Read(ref endT) != long.MaxValue;
         /// <summary>
         /// GetProgress<0则表明未开始
         /// </summary>
@@ -68,7 +98,7 @@ namespace Preparation.Utility
         /// <summary>
         /// <0则表明未开始
         /// </summary>
-        public static implicit operator long(TimeBasedProgressForInterrupting pLong) => pLong.GetProgress();
+        public static implicit operator long(TimeBasedProgressOptimizedForInterrupting pLong) => pLong.GetProgress();
 
         /// <summary>
         /// GetProgressDouble<0则表明未开始
@@ -94,12 +124,12 @@ namespace Preparation.Utility
         {
             if (needTime <= 0)
             {
-                Debugger.Output("Warning:Start TimeBasedProgressForInterrupting with the needTime (" + needTime.ToString() + ") which is less than 0.");
+                Debugger.Output("Warning:Start TimeBasedProgressOptimizedForInterrupting with the needProgress (" + needTime.ToString() + ") which is less than 0.");
                 return false;
             }
             //规定只有Start可以修改needT，且需要先访问endTime，从而避免锁（某种程度上endTime可以认为是needTime的锁）
             if (Interlocked.CompareExchange(ref endT, Environment.TickCount64 + needTime, long.MaxValue) != long.MaxValue) return false;
-            if (needTime <= 2) Debugger.Output("Warning:the field of TimeBasedProgressForInterrupting is " + needTime.ToString() + ",which is too small.");
+            if (needTime <= 2) Debugger.Output("Warning:the field of TimeBasedProgressOptimizedForInterrupting is " + needTime.ToString() + ",which is too small.");
             Interlocked.Exchange(ref needT, needTime);
             return true;
         }
@@ -126,6 +156,85 @@ namespace Preparation.Utility
             return false;
         }
         //增加其他新的写操作可能导致不安全
+    }
+
+    public class TimeBasedProgressAtVariableSpeed
+    {
+        public LongInTheVariableRange progress;
+        public StartTime startTime = new();
+        public AtomicDouble speed;
+
+        #region 构造 
+        public TimeBasedProgressAtVariableSpeed(long needProgress, double speed)
+        {
+            if (needProgress <= 0) Debugger.Output("Bug:TimeBasedProgressAtVariableSpeed.needProgress (" + needProgress.ToString() + ") is less than 0.");
+            this.progress = new(0, needProgress);
+            this.speed = new(speed);
+        }
+        public TimeBasedProgressAtVariableSpeed()
+        {
+            this.progress = new(0, 0);
+            this.speed = new(1.0);
+        }
+        #endregion
+
+        #region 读取
+        public override string ToString()
+        {
+            return "ProgressStored: " + progress.ToString()
+                        + " ; LastStartTime: " + startTime.ToString() + "ms"
+                        + " ; Speed: " + speed.ToString();
+        }
+        public long GetProgressNow() => progress.TryAddToMaxV(startTime, (double)speed).Item1;
+        public (long, long, long) GetProgressNowAndNeedTimeAndLastStartTime() => progress.TryAddToMaxV(startTime, (double)speed);
+        public long GetProgressStored() => progress.GetValue();
+        public (long, long) GetProgressStoredAndNeedTime() => progress.GetValueAndMaxV();
+        public (long, long, long) GetProgressStoredAndNeedTimeAndLastStartTime() => progress.GetValueAndMaxV(startTime);
+
+        public bool IsFinished()
+        {
+            long progressNow, needTime;
+            (progressNow, needTime, _) = progress.TryAddToMaxV(startTime);
+            return progressNow == needTime;
+        }
+        public bool IsProgressing()
+        {
+            long progressNow, needTime, startT;
+            (progressNow, needTime, startT) = progress.TryAddToMaxV(startTime);
+            return (startT != long.MaxValue && progressNow != needTime);
+        }
+        #endregion
+
+        public bool Start(long needTime)
+        {
+            if (needTime <= 2)
+            {
+                Debugger.Output("Warning:Start TimeBasedProgressAtVariableSpeed with the needProgress (" + needTime.ToString() + ") which is less than 0.");
+                return false;
+            }
+            if (startTime.Start() != long.MaxValue) return false;
+            progress.SetMaxV(needTime);
+            return true;
+        }
+        public bool Start()
+        {
+            return startTime.Start() == long.MaxValue;
+        }
+        /// <summary>
+        /// 使进度条强制终止清零
+        /// </summary>
+        public void Set0()
+        {
+            startTime.Stop();
+            progress.SetPositiveV(0);
+        }
+        /// <summary>
+        /// 使进度条暂停
+        /// </summary>
+        public bool Pause()
+        {
+            return progress.AddV(startTime, (double)speed) != 0;
+        }
     }
 
     /// <summary>

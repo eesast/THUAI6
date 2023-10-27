@@ -18,7 +18,7 @@ namespace GameClass.GameObj
         private readonly Gadget[] propInChest = new Gadget[GameData.maxNumOfPropInChest] { new NullProp(), new NullProp() };
         public Gadget[] PropInChest => propInChest;
 
-        private TimeBasedProgressForInterrupting openProgress = new TimeBasedProgressForInterrupting();
-        public TimeBasedProgressForInterrupting OpenProgress { get => openProgress; }
+        private TimeBasedProgressOptimizedForInterrupting openProgress = new TimeBasedProgressOptimizedForInterrupting();
+        public TimeBasedProgressOptimizedForInterrupting OpenProgress { get => openProgress; }
     }
 }

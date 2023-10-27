@@ -16,16 +16,26 @@ namespace GameClass.GameObj
         {
             get
             {
-                lock (objOfCharacterReaderWriterLock)
+                objOfCharacterReaderWriterLock.EnterReadLock();
+                try
                 {
                     return parent;
+                }
+                finally
+                {
+                    objOfCharacterReaderWriterLock.ExitReadLock();
                 }
             }
             set
             {
-                lock (objOfCharacterReaderWriterLock)
+                objOfCharacterReaderWriterLock.EnterWriteLock();
+                try
                 {
                     parent = value;
+                }
+                finally
+                {
+                    objOfCharacterReaderWriterLock.ExitWriteLock();
                 }
             }
         }

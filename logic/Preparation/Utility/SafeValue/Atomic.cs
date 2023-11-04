@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Google.Protobuf.WellKnownTypes;
+using System;
 using System.Threading;
 
 namespace Preparation.Utility
@@ -10,7 +11,7 @@ namespace Preparation.Utility
 
     public class AtomicInt : Atomic
     {
-        private int v;
+        protected int v;
         public AtomicInt(int x)
         {
             v = x;
@@ -19,33 +20,173 @@ namespace Preparation.Utility
         public int Get() => Interlocked.CompareExchange(ref v, -1, -1);
         public static implicit operator int(AtomicInt aint) => Interlocked.CompareExchange(ref aint.v, -1, -1);
         /// <returns>返回操作前的值</returns>
-        public int SetReturnOri(int value) => Interlocked.Exchange(ref v, value);
-        public int Add(int x) => Interlocked.Add(ref v, x);
-        public int Sub(int x) => Interlocked.Add(ref v, -x);
-        public int Inc() => Interlocked.Increment(ref v);
+        public virtual int SetReturnOri(int value) => Interlocked.Exchange(ref v, value);
+        public virtual int Add(int x) => Interlocked.Add(ref v, x);
+        /// <summary>
+        /// 注意：确保参数为非负数
+        /// </summary>
+        public virtual int AddPositive(int x) => Interlocked.Add(ref v, x);
+        public virtual int Sub(int x) => Interlocked.Add(ref v, -x);
+        /// <summary>
+        /// 注意：确保参数为非负数
+        /// </summary>
+        public virtual int SubPositive(int x) => Interlocked.Add(ref v, -x);
+        public virtual int Inc() => Interlocked.Increment(ref v);
         public int Dec() => Interlocked.Decrement(ref v);
         /// <returns>返回操作前的值</returns>
-        public int CompareExReturnOri(int newV, int compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
+        public virtual int CompareExReturnOri(int newV, int compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
+    }
+
+    /// <summary>
+    /// 参数要求倍率speed（默认1）以及AtomicInt类的Score，
+    /// 在发生正向的变化时，自动给Score加上正向变化的差乘以speed。
+    /// 注意：AtomicIntOnlyAddScore本身为AtomicInt，提供的Score可能构成环而死锁。
+    /// </summary>
+    public class AtomicIntOnlyAddScore : AtomicInt
+    {
+        public AtomicInt Score { get; set; };
+        public AtomicDouble speed;
+        public AtomicIntOnlyAddScore(int x, AtomicInt Score, double speed = 1.0) : base(x)
+        {
+            this.Score = Score;
+            this.speed = new(speed);
+        }
+        /// <returns>返回操作前的值</returns>
+        public override int SetReturnOri(int value)
+        {
+            int previousV = Interlocked.Exchange(ref v, value);
+            if (value - previousV > 0)
+                Score.AddPositive((int)(speed * (value - previousV)));
+            return previousV;
+        }
+        public override int Add(int x)
+        {
+            if (x > 0) Score.AddPositive((int)(speed * x));
+            return Interlocked.Add(ref v, x);
+        }
+        /// <summary>
+        /// 注意：确保参数为非负数
+        /// </summary>
+        public override int AddPositive(int x)
+        {
+            Score.AddPositive((int)(speed * x));
+            return Interlocked.Add(ref v, x);
+        }
+        public override int Sub(int x)
+        {
+            if (x < 0) Score.AddPositive((int)(speed * -x));
+            return Interlocked.Add(ref v, -x);
+        }
+        /// <summary>
+        /// 注意：确保参数为非负数
+        /// </summary>
+        public override int SubPositive(int x)
+        {
+            return Interlocked.Add(ref v, -x);
+        }
+        public override int Inc()
+        {
+            Score.AddPositive((int)(speed));
+            return Interlocked.Increment(ref v);
+        }
+        /// <returns>返回操作前的值</returns>
+        public override int CompareExReturnOri(int newV, int compareTo)
+        {
+            int previousV = Interlocked.CompareExchange(ref v, newV, compareTo);
+            if (newV - previousV > 0)
+                Score.AddPositive((int)(speed * (newV - previousV)));
+            return previousV;
+        }
     }
 
     public class AtomicLong : Atomic
     {
-        private long v;
+        protected long v;
         public AtomicLong(long x)
         {
             v = x;
         }
-        public override string ToString() => Interlocked.Read(ref v).ToString();
-        public long Get() => Interlocked.Read(ref v);
-        public static implicit operator long(AtomicLong along) => Interlocked.Read(ref along.v);
+        public override string ToString() => Interlocked.CompareExchange(ref v, -1, -1).ToString();
+        public long Get() => Interlocked.CompareExchange(ref v, -1, -1);
+        public static implicit operator long(AtomicLong along) => Interlocked.CompareExchange(ref along.v, -1, -1);
         /// <returns>返回操作前的值</returns>
-        public long SetReturnOri(long value) => Interlocked.Exchange(ref v, value);
-        public long Add(long x) => Interlocked.Add(ref v, x);
-        public long Sub(long x) => Interlocked.Add(ref v, -x);
-        public long Inc() => Interlocked.Increment(ref v);
+        public virtual long SetReturnOri(long value) => Interlocked.Exchange(ref v, value);
+        public virtual long Add(long x) => Interlocked.Add(ref v, x);
+        /// <summary>
+        /// 注意：确保参数为非负数
+        /// </summary>
+        public virtual long AddPositive(long x) => Interlocked.Add(ref v, x);
+        public virtual long Sub(long x) => Interlocked.Add(ref v, -x);
+        /// <summary>
+        /// 注意：确保参数为非负数
+        /// </summary>
+        public virtual long SubPositive(long x) => Interlocked.Add(ref v, -x);
+        public virtual long Inc() => Interlocked.Increment(ref v);
         public long Dec() => Interlocked.Decrement(ref v);
         /// <returns>返回操作前的值</returns>
-        public long CompareExReturnOri(long newV, long compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
+        public virtual long CompareExReturnOri(long newV, long compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
+    }
+
+    /// <summary>
+    /// 参数要求倍率speed（默认1）以及AtomicLong类的Score，
+    /// 在发生正向的变化时，自动给Score加上正向变化的差乘以speed。
+    /// 注意：AtomicLongOnlyAddScore本身为AtomicLong，提供的Score可能构成环而死锁。
+    /// </summary>
+    public class AtomicLongOnlyAddScore : AtomicLong
+    {
+        public AtomicInt Score { get; set; };
+        public AtomicDouble speed;
+        public AtomicLongOnlyAddScore(long x, AtomicLong Score, double speed = 1.0) : base(x)
+        {
+            this.Score = Score;
+            this.speed = new(speed);
+        }
+        /// <returns>返回操作前的值</returns>
+        public override long SetReturnOri(long value)
+        {
+            long previousV = Interlocked.Exchange(ref v, value);
+            if (value - previousV > 0)
+                Score.AddPositive((long)(speed * (value - previousV)));
+            return previousV;
+        }
+        public override long Add(long x)
+        {
+            if (x > 0) Score.AddPositive((long)(speed * x));
+            return Interlocked.Add(ref v, x);
+        }
+        /// <summary>
+        /// 注意：确保参数为非负数
+        /// </summary>
+        public override long AddPositive(long x)
+        {
+            Score.AddPositive((long)(speed * x));
+            return Interlocked.Add(ref v, x);
+        }
+        public override long Sub(long x)
+        {
+            if (x < 0) Score.AddPositive((long)(speed * -x));
+            return Interlocked.Add(ref v, -x);
+        }
+        /// <summary>
+        /// 注意：确保参数为非负数
+        /// </summary>
+        public override long SubPositive(long x)
+        {
+            return Interlocked.Add(ref v, -x);
+        }
+        public override long Inc()
+        {
+            Score.AddPositive((long)(speed));
+            return Interlocked.Increment(ref v);
+        }
+        /// <returns>返回操作前的值</returns>
+        public override long CompareExReturnOri(long newV, long compareTo)
+        {
+            long previousV = Interlocked.CompareExchange(ref v, newV, compareTo);
+            if (newV - previousV > 0)
+                Score.AddPositive((long)(speed * (newV - previousV)));
+            return previousV;
+        }
     }
 
     public class AtomicDouble : Atomic

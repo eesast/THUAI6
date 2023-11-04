@@ -327,7 +327,7 @@ namespace GameClass.GameObj
                     case PlayerStateType.OpeningTheDoorway:
                         if (value == PlayerStateType.Rescued) return -1;
                         Doorway doorway = (Doorway)lastObj!;
-                        doorway.StopOpenning();
+                        doorway.ProgressOfDoorway.TryStop();
                         return ChangePlayerState(runningState, value, gameObj);
                     case PlayerStateType.OpeningTheDoor:
                         if (value == PlayerStateType.Rescued) return -1;

@@ -232,8 +232,7 @@ namespace Server
                     Y = doorway.Position.y
                 }
             };
-            int progress = ((doorway.OpenStartTime > 0) ? ((int)(time - doorway.OpenStartTime)) : 0) + doorway.OpenDegree;
-            msg.GateMessage.Progress = (progress > GameData.degreeOfOpenedDoorway) ? GameData.degreeOfOpenedDoorway : progress;
+            msg.GateMessage.Progress = (int)doorway.ProgressOfDoorway.GetProgressNow();
             return msg;
         }
         private static MessageOfObj HiddenGate(EmergencyExit Exit)

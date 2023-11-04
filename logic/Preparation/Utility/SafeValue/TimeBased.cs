@@ -35,6 +35,197 @@ namespace Preparation.Utility
         }
     }
 
+    public class LongInTheVariableRangeWithStartTime : LongInTheVariableRange
+    {
+        public StartTime startTime = new();
+        public LongInTheVariableRangeWithStartTime(long value, long maxValue) : base(value, maxValue) { }
+        /// <summary>
+        /// 默认使Value=maxValue
+        /// </summary>
+        public LongInTheVariableRangeWithStartTime(long maxValue) : base(maxValue) { }
+        public LongInTheVariableRangeWithStartTime() : base() { }
+
+        #region 读取
+        public (long, long) GetValueWithStartTime()
+        {
+            lock (vLock)
+            {
+                return (v, startTime.Get());
+            }
+        }
+        public (long, long, long) GetValueAndMaxVWithStartTime()
+        {
+            lock (vLock)
+            {
+                return (v, maxV, startTime.Get());
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// 试图加到满，如果加上时间差*速度可以达到MaxV，则加上并使startTime变为long.MaxValue
+        /// 如果无法加到maxValue则不加
+        /// </summary>
+        /// <returns>返回试图加到的值与最大值</returns>
+        public (long, long, long) AddStartTimeToMaxV(double speed = 1.0)
+        {
+            lock (vLock)
+            {
+                long addV = (long)(startTime.StopIfPassing(maxV - v) * speed);
+                if (addV < 0) return (v, maxV, startTime.Get());
+                if (maxV - v < addV) return (v = maxV, maxV, startTime.Get());
+                return (v + addV, maxV, startTime.Get());
+            }
+        }
+
+        /// <summary>
+        /// 增加量为时间差*速度，并将startTime变为long.MaxValue
+        /// </summary>
+        /// <returns>返回实际改变量</returns>
+        public long AddStartTime(double speed = 1.0)
+        {
+            lock (vLock)
+            {
+                long previousV = v;
+                long addV = (Environment.TickCount64 - startTime.Stop());
+                if (addV < 0) v += (long)(addV * speed);
+                else return 0;
+                if (v > maxV) v = maxV;
+                return v - previousV;
+            }
+        }
+
+        /// <summary>
+        /// 试图加到满，如果加上时间差*速度可以达到MaxV，则加上
+        /// 如果无法加到maxValue则清零
+        /// 无论如何startTime变为long.MaxValue
+        /// </summary>
+        /// <returns>返回是否清零</returns>
+        public bool Set0IfNotAddStartTimeToMaxV(double speed = 1.0)
+        {
+            lock (vLock)
+            {
+                if (v == maxV) return false;
+                long addV = (long)(startTime.Stop() * speed);
+                if (addV < 0)
+                {
+                    v = 0;
+                    return true;
+                }
+                if (maxV - v < addV)
+                {
+                    v = maxV;
+                    return false;
+                }
+                v = 0;
+                return false;
+            }
+        }
+
+        public void SetAndStop(long value = 0)
+        {
+            lock (vLock)
+            {
+                this.v = value;
+                startTime.Stop();
+            }
+        }
+    }
+
+    public class TimeBasedProgressAtVariableSpeed
+    {
+        private LongInTheVariableRangeWithStartTime progress;
+        public AtomicDouble speed;
+
+        #region 构造 
+        public TimeBasedProgressAtVariableSpeed(long needProgress, double speed = 1.0)
+        {
+            progress = new LongInTheVariableRangeWithStartTime(0, needProgress);
+            if (needProgress <= 0) Debugger.Output("Bug:TimeBasedProgressAtVariableSpeed.needProgress (" + needProgress.ToString() + ") is less than 0.");
+            this.speed = new(speed);
+        }
+        public TimeBasedProgressAtVariableSpeed()
+        {
+            progress = new LongInTheVariableRangeWithStartTime(0, 0);
+            this.speed = new(1.0);
+        }
+        #endregion
+
+        #region 读取
+        public override string ToString()
+        {
+            long progressStored, lastStartTime;
+            (progressStored, lastStartTime) = progress.GetValueWithStartTime();
+            return "ProgressStored: " + progressStored.ToString()
+                        + " ; LastStartTime: " + lastStartTime.ToString() + "ms"
+                        + " ; Speed: " + speed.ToString();
+        }
+        public long GetProgressNow() => progress.AddStartTimeToMaxV((double)speed).Item1;
+        public (long, long, long) GetProgressNowAndNeedTimeAndLastStartTime() => progress.AddStartTimeToMaxV((double)speed);
+        public long GetProgressStored() => progress.GetValue();
+        public (long, long) GetProgressStoredAndNeedTime() => progress.GetValueAndMaxV();
+        public (long, long, long) GetProgressStoredAndNeedTimeAndLastStartTime() => progress.GetValueAndMaxVWithStartTime();
+
+        public bool IsFinished()
+        {
+            long progressNow, needTime;
+            (progressNow, needTime, _) = progress.AddStartTimeToMaxV((double)speed);
+            return progressNow == needTime;
+        }
+        public bool IsProgressing()
+        {
+            long progressNow, needTime, startT;
+            (progressNow, needTime, startT) = progress.AddStartTimeToMaxV((double)speed);
+            return (startT != long.MaxValue && progressNow != needTime);
+        }
+        #endregion
+
+        public bool Start(long needTime)
+        {
+            if (needTime <= 2)
+            {
+                Debugger.Output("Warning:Start TimeBasedProgressAtVariableSpeed with the needProgress (" + needTime.ToString() + ") which is less than 0.");
+                return false;
+            }
+            if (progress.startTime.Start() != long.MaxValue) return false;
+            progress.SetMaxV(needTime);
+            return true;
+        }
+        public bool Start()
+        {
+            return progress.startTime.Start() == long.MaxValue;
+        }
+        /// <summary>
+        /// 使进度条强制终止清零
+        /// </summary>
+        public void Set0()
+        {
+            progress.SetAndStop();
+        }
+        /// <summary>
+        /// 如果进度条加上时间差不能为满，使进度条强制终止清零
+        /// </summary>
+        public void TryStop()
+        {
+            progress.Set0IfNotAddStartTimeToMaxV(speed);
+        }
+        /// <summary>
+        /// 使进度条暂停
+        /// </summary>
+        public bool Pause()
+        {
+            return progress.AddStartTime((double)speed) != 0;
+        }
+        /// <summary>
+        /// 使进度条进度为满
+        /// </summary>
+        public void Finish()
+        {
+            progress.SetVToMaxV();
+            progress.startTime.Stop();
+        }
+    }
+
     /// <summary>
     /// 根据时间推算Start后完成多少进度的进度条（long）。
     /// 只允许Start（清零状态的进度条才可以Start）时修改needTime（请确保大于0）；
@@ -156,85 +347,6 @@ namespace Preparation.Utility
             return false;
         }
         //增加其他新的写操作可能导致不安全
-    }
-
-    public class TimeBasedProgressAtVariableSpeed
-    {
-        public LongInTheVariableRange progress;
-        public StartTime startTime = new();
-        public AtomicDouble speed;
-
-        #region 构造 
-        public TimeBasedProgressAtVariableSpeed(long needProgress, double speed)
-        {
-            if (needProgress <= 0) Debugger.Output("Bug:TimeBasedProgressAtVariableSpeed.needProgress (" + needProgress.ToString() + ") is less than 0.");
-            this.progress = new(0, needProgress);
-            this.speed = new(speed);
-        }
-        public TimeBasedProgressAtVariableSpeed()
-        {
-            this.progress = new(0, 0);
-            this.speed = new(1.0);
-        }
-        #endregion
-
-        #region 读取
-        public override string ToString()
-        {
-            return "ProgressStored: " + progress.ToString()
-                        + " ; LastStartTime: " + startTime.ToString() + "ms"
-                        + " ; Speed: " + speed.ToString();
-        }
-        public long GetProgressNow() => progress.TryAddToMaxV(startTime, (double)speed).Item1;
-        public (long, long, long) GetProgressNowAndNeedTimeAndLastStartTime() => progress.TryAddToMaxV(startTime, (double)speed);
-        public long GetProgressStored() => progress.GetValue();
-        public (long, long) GetProgressStoredAndNeedTime() => progress.GetValueAndMaxV();
-        public (long, long, long) GetProgressStoredAndNeedTimeAndLastStartTime() => progress.GetValueAndMaxV(startTime);
-
-        public bool IsFinished()
-        {
-            long progressNow, needTime;
-            (progressNow, needTime, _) = progress.TryAddToMaxV(startTime);
-            return progressNow == needTime;
-        }
-        public bool IsProgressing()
-        {
-            long progressNow, needTime, startT;
-            (progressNow, needTime, startT) = progress.TryAddToMaxV(startTime);
-            return (startT != long.MaxValue && progressNow != needTime);
-        }
-        #endregion
-
-        public bool Start(long needTime)
-        {
-            if (needTime <= 2)
-            {
-                Debugger.Output("Warning:Start TimeBasedProgressAtVariableSpeed with the needProgress (" + needTime.ToString() + ") which is less than 0.");
-                return false;
-            }
-            if (startTime.Start() != long.MaxValue) return false;
-            progress.SetMaxV(needTime);
-            return true;
-        }
-        public bool Start()
-        {
-            return startTime.Start() == long.MaxValue;
-        }
-        /// <summary>
-        /// 使进度条强制终止清零
-        /// </summary>
-        public void Set0()
-        {
-            startTime.Stop();
-            progress.SetPositiveV(0);
-        }
-        /// <summary>
-        /// 使进度条暂停
-        /// </summary>
-        public bool Pause()
-        {
-            return progress.AddV(startTime, (double)speed) != 0;
-        }
     }
 
     /// <summary>

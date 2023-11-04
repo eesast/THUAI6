@@ -2,6 +2,7 @@
 using System.Threading;
 using GameClass.GameObj;
 using GameEngine;
+using Preparation.Interface;
 using Preparation.Utility;
 using Timothy.FrameRateTask;
 
@@ -148,11 +149,11 @@ namespace Gaming
                       player.ThreadNum.Release();
                       return;
                   }
-                  Thread.Sleep(GameData.degreeOfOpenedDoorway - doorwayToOpen.OpenDegree);
+                  Thread.Sleep(GameData.degreeOfOpenedDoorway - (int)doorwayToOpen.ProgressOfDoorway.GetProgressNow());
 
                   if (player.ResetPlayerState(stateNum))
                   {
-                      doorwayToOpen.FinishOpenning();
+                      doorwayToOpen.ProgressOfDoorway.Finish();
                       player.ThreadNum.Release();
                   }
               }
@@ -168,7 +169,7 @@ namespace Gaming
                     return false;
 
                 Doorway? doorwayForEscape = (Doorway?)gameMap.OneForInteract(player.Position, GameObjType.Doorway);
-                if (doorwayForEscape != null && doorwayForEscape.IsOpen())
+                if (doorwayForEscape != null && doorwayForEscape.ProgressOfDoorway.IsProgressing())
                 {
                     if (!player.TryToRemoveFromGame(PlayerStateType.Escaped)) return false;
                     player.AddScore(GameData.StudentScoreEscape);

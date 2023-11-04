@@ -24,8 +24,8 @@ namespace Preparation.Utility
     /// </summary>
     public class IntInTheVariableRange : InTheVariableRange
     {
-        private int v;
-        private int maxV;
+        protected int v;
+        protected int maxV;
         #region 构造与读取
         public IntInTheVariableRange(int value, int maxValue) : base()
         {
@@ -155,6 +155,13 @@ namespace Preparation.Utility
                 if (v > maxValue) return false;
                 maxV = maxValue;
                 return true;
+            }
+        }
+        public void SetVToMaxV()
+        {
+            lock (vLock)
+            {
+                v = maxV;
             }
         }
         public bool Set0IfNotMaxor0()
@@ -397,6 +404,32 @@ namespace Preparation.Utility
                 return v - previousV;
             }
         }
+
+        /// <summary>
+        /// 试图加到满，如果加上时间差*速度可以达到MaxV，则加上并使startTime变为long.MaxValue
+        /// 如果无法加到maxValue则清零
+        /// </summary>
+        /// <returns>返回是否清零</returns>
+        public bool Set0IfNotAddToMaxV(StartTime startTime, double speed = 1.0)
+        {
+            lock (vLock)
+            {
+                if (v == maxV) return false;
+                int addV = (int)(startTime.StopIfPassing(maxV - v) * speed);
+                if (addV < 0)
+                {
+                    v = 0;
+                    return true;
+                }
+                if (maxV - v < addV)
+                {
+                    v = maxV;
+                    return false;
+                }
+                v = 0;
+                return false;
+            }
+        }
         #endregion
     }
 
@@ -405,8 +438,8 @@ namespace Preparation.Utility
     /// </summary>
     public class LongInTheVariableRange : InTheVariableRange
     {
-        private long v;
-        private long maxV;
+        protected long v;
+        protected long maxV;
         #region 构造与读取
         public LongInTheVariableRange(long value, long maxValue) : base()
         {
@@ -451,23 +484,6 @@ namespace Preparation.Utility
             lock (vLock)
             {
                 return v == maxV;
-            }
-        }
-        #endregion
-
-        #region 内嵌读取（在锁的情况下读取内容同时读取其他更基本的外部数据）
-        public (long, long) GetValue(StartTime startTime)
-        {
-            lock (vLock)
-            {
-                return (v, startTime.Get());
-            }
-        }
-        public (long, long, long) GetValueAndMaxV(StartTime startTime)
-        {
-            lock (vLock)
-            {
-                return (v, maxV, startTime.Get());
             }
         }
         #endregion
@@ -645,6 +661,13 @@ namespace Preparation.Utility
                 return true;
             }
         }
+        public void SetVToMaxV()
+        {
+            lock (vLock)
+            {
+                v = maxV;
+            }
+        }
 
         public bool Set0IfNotMax()
         {
@@ -709,22 +732,6 @@ namespace Preparation.Utility
             }
         }
 
-        /// <summary>
-        /// 增加量为时间差*速度，并将startTime变为long.MaxValue
-        /// </summary>
-        /// <returns>返回实际改变量</returns>
-        public long AddV(StartTime startTime, double speed = 1.0)
-        {
-            lock (vLock)
-            {
-                long previousV = v;
-                long addV = (Environment.TickCount64 - startTime.Stop());
-                if (addV < 0) v += (long)(addV * speed);
-                else return 0;
-                if (v > maxV) v = maxV;
-                return v - previousV;
-            }
-        }
         #endregion
     }
 
@@ -733,8 +740,8 @@ namespace Preparation.Utility
     /// </summary>
     public class DoubleInTheVariableRange : InTheVariableRange
     {
-        private double v;
-        private double maxV;
+        protected double v;
+        protected double maxV;
         #region 构造与读取
         public DoubleInTheVariableRange(double value, double maxValue) : base()
         {
@@ -779,23 +786,6 @@ namespace Preparation.Utility
             lock (vLock)
             {
                 return v == maxV;
-            }
-        }
-        #endregion
-
-        #region 内嵌读取（在锁的情况下读取内容同时读取其他更基本的外部数据）
-        public (double, long) GetValue(StartTime startTime)
-        {
-            lock (vLock)
-            {
-                return (v, startTime.Get());
-            }
-        }
-        public (double, double, long) GetValueAndMaxValue(StartTime startTime)
-        {
-            lock (vLock)
-            {
-                return (v, maxV, startTime.Get());
             }
         }
         #endregion
@@ -947,6 +937,13 @@ namespace Preparation.Utility
                 if (v > maxValue) return false;
                 maxV = maxValue;
                 return true;
+            }
+        }
+        public void SetVToMaxV()
+        {
+            lock (vLock)
+            {
+                v = maxV;
             }
         }
 

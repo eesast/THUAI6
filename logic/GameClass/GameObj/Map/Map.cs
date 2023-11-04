@@ -24,7 +24,7 @@ namespace GameClass.GameObj
                 GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
                 try
                 {
-                    Random r = new Random(Environment.TickCount);
+                    Random r = new(Environment.TickCount);
                     EmergencyExit emergencyExit = (EmergencyExit)(GameObjDict[GameObjType.EmergencyExit][r.Next(0, GameObjDict[GameObjType.EmergencyExit].Count)]);
                     emergencyExit.CanOpen.SetReturnOri(true);
                     Preparation.Utility.Debugger.Output(emergencyExit, emergencyExit.Position.ToString());

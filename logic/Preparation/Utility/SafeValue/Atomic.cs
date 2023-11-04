@@ -32,19 +32,19 @@ namespace Preparation.Utility
         /// </summary>
         public virtual int SubPositive(int x) => Interlocked.Add(ref v, -x);
         public virtual int Inc() => Interlocked.Increment(ref v);
-        public int Dec() => Interlocked.Decrement(ref v);
+        public virtual int Dec() => Interlocked.Decrement(ref v);
         /// <returns>返回操作前的值</returns>
         public virtual int CompareExReturnOri(int newV, int compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
     }
 
     /// <summary>
     /// 参数要求倍率speed（默认1）以及AtomicInt类的Score，
-    /// 在发生正向的变化时，自动给Score加上正向变化的差乘以speed。
+    /// 在发生正向的变化时，自动给Score加上正向变化的差乘以speed取整。
     /// 注意：AtomicIntOnlyAddScore本身为AtomicInt，提供的Score可能构成环而死锁。
     /// </summary>
     public class AtomicIntOnlyAddScore : AtomicInt
     {
-        public AtomicInt Score { get; set; };
+        public AtomicInt Score { get; set; }
         public AtomicDouble speed;
         public AtomicIntOnlyAddScore(int x, AtomicInt Score, double speed = 1.0) : base(x)
         {
@@ -99,6 +99,72 @@ namespace Preparation.Utility
         }
     }
 
+    /// <summary>
+    /// 参数要求倍率speed（默认1）以及AtomicInt类的Score，
+    /// 在发生变化时，自动给Score加上变化的差乘以speed取整。
+    /// 注意：AtomicIntChangeAffectScore本身为AtomicInt，提供的Score可能构成环而死锁。
+    /// </summary>
+    public class AtomicIntChangeAffectScore : AtomicInt
+    {
+        public AtomicInt Score { get; set; }
+        public AtomicDouble speed;
+        public AtomicIntChangeAffectScore(int x, AtomicInt Score, double speed = 1.0) : base(x)
+        {
+            this.Score = Score;
+            this.speed = new(speed);
+        }
+        /// <returns>返回操作前的值</returns>
+        public override int SetReturnOri(int value)
+        {
+            int previousV = Interlocked.Exchange(ref v, value);
+            Score.Add((int)(speed * (value - previousV)));
+            return previousV;
+        }
+        public override int Add(int x)
+        {
+            Score.Add((int)(speed * x));
+            return Interlocked.Add(ref v, x);
+        }
+        /// <summary>
+        /// 注意：确保参数为非负数
+        /// </summary>
+        public override int AddPositive(int x)
+        {
+            Score.AddPositive((int)(speed * x));
+            return Interlocked.Add(ref v, x);
+        }
+        public override int Sub(int x)
+        {
+            Score.Sub((int)(speed * x));
+            return Interlocked.Add(ref v, -x);
+        }
+        /// <summary>
+        /// 注意：确保参数为非负数
+        /// </summary>
+        public override int SubPositive(int x)
+        {
+            Score.SubPositive((int)(speed * x));
+            return Interlocked.Add(ref v, -x);
+        }
+        public override int Inc()
+        {
+            Score.AddPositive((int)(speed));
+            return Interlocked.Increment(ref v);
+        }
+        public override int Dec()
+        {
+            Score.SubPositive((int)(speed));
+            return Interlocked.Decrement(ref v);
+        }
+        /// <returns>返回操作前的值</returns>
+        public override int CompareExReturnOri(int newV, int compareTo)
+        {
+            int previousV = Interlocked.CompareExchange(ref v, newV, compareTo);
+            Score.Add((int)(speed * (newV - previousV)));
+            return previousV;
+        }
+    }
+
     public class AtomicLong : Atomic
     {
         protected long v;
@@ -122,23 +188,23 @@ namespace Preparation.Utility
         /// </summary>
         public virtual long SubPositive(long x) => Interlocked.Add(ref v, -x);
         public virtual long Inc() => Interlocked.Increment(ref v);
-        public long Dec() => Interlocked.Decrement(ref v);
+        public virtual long Dec() => Interlocked.Decrement(ref v);
         /// <returns>返回操作前的值</returns>
         public virtual long CompareExReturnOri(long newV, long compareTo) => Interlocked.CompareExchange(ref v, newV, compareTo);
     }
 
     /// <summary>
     /// 参数要求倍率speed（默认1）以及AtomicLong类的Score，
-    /// 在发生正向的变化时，自动给Score加上正向变化的差乘以speed。
+    /// 在发生正向的变化时，自动给Score加上正向变化的差乘以speed取整。
     /// 注意：AtomicLongOnlyAddScore本身为AtomicLong，提供的Score可能构成环而死锁。
     /// </summary>
     public class AtomicLongOnlyAddScore : AtomicLong
     {
-        public AtomicInt Score { get; set; };
+        public AtomicLong Score { get; set; }
         public AtomicDouble speed;
-        public AtomicLongOnlyAddScore(long x, AtomicLong Score, double speed = 1.0) : base(x)
+        public AtomicLongOnlyAddScore(long x, AtomicLong score, double speed = 1.0) : base(x)
         {
-            this.Score = Score;
+            this.Score = score;
             this.speed = new(speed);
         }
         /// <returns>返回操作前的值</returns>

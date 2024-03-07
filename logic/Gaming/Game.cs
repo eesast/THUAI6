@@ -281,17 +281,9 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return;
-            gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-            try
+            foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
             {
-                foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
-                {
-                    skillManager.UseAllPassiveSkill(player);
-                }
-            }
-            finally
-            {
-                gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                skillManager.UseAllPassiveSkill(player);
             }
         }
 
@@ -319,22 +311,14 @@ namespace Gaming
             {
                 if (!GameData.NeedCopy(keyValuePair.Key))
                 {
-                    gameMap.GameObjLockDict[keyValuePair.Key].EnterWriteLock();
-                    try
+                    if (keyValuePair.Key == GameObjType.Character)
                     {
-                        if (keyValuePair.Key == GameObjType.Character)
+                        foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
                         {
-                            foreach (Character player in gameMap.GameObjDict[GameObjType.Character])
-                            {
-                                player.CanMove.SetReturnOri(false);
-                            }
+                            player.CanMove.SetReturnOri(false);
                         }
-                        gameMap.GameObjDict[keyValuePair.Key].Clear();
                     }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[keyValuePair.Key].ExitWriteLock();
-                    }
+                    gameMap.GameObjDict[keyValuePair.Key].Clear();
                 }
             }
         }
@@ -350,15 +334,7 @@ namespace Gaming
             {
                 if (GameData.NeedCopy(keyValuePair.Key))
                 {
-                    gameMap.GameObjLockDict[keyValuePair.Key].EnterReadLock();
-                    try
-                    {
-                        gameObjList.AddRange(gameMap.GameObjDict[keyValuePair.Key]);
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[keyValuePair.Key].ExitReadLock();
-                    }
+                    gameObjList.AddRange(gameMap.GameObjDict[keyValuePair.Key].ToNewList());
                 }
             }
             return gameObjList;

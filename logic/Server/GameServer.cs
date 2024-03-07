@@ -173,17 +173,9 @@ namespace Server
         }
         private bool playerDeceased(int playerID)
         {
-            game.GameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-            try
+            foreach (Character character in game.GameMap.GameObjDict[GameObjType.Character])
             {
-                foreach (Character character in game.GameMap.GameObjDict[GameObjType.Character])
-                {
-                    if (character.PlayerID == playerID && character.PlayerState == PlayerStateType.Deceased) return true;
-                }
-            }
-            finally
-            {
-                game.GameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                if (character.PlayerID == playerID && character.PlayerState == PlayerStateType.Deceased) return true;
             }
             return false;
         }
@@ -191,19 +183,10 @@ namespace Server
         public override int[] GetScore()
         {
             int[] score = new int[2]; // 0代表Student，1代表Tricker
-            game.GameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-            try
+            foreach (Character character in game.GameMap.GameObjDict[GameObjType.Character])
             {
-                foreach (Character character in game.GameMap.GameObjDict[GameObjType.Character])
-                {
-                    if (!character.IsGhost()) score[0] += (int)character.Score;
-                    else score[1] += (int)character.Score;
-                }
-
-            }
-            finally
-            {
-                game.GameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                if (!character.IsGhost()) score[0] += (int)character.Score;
+                else score[1] += (int)character.Score;
             }
             return score;
         }

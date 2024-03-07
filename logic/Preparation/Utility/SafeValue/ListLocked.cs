@@ -1,24 +1,26 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
 namespace Preparation.Utility
 {
-    public class LockedClassList<T> where T : class
+    public class LockedClassList<T> : IEnumerable
+        where T : class
     {
         private readonly ReaderWriterLockSlim listLock = new();
         private List<T> list;
 
         #region 构造
-        public LockedList()
+        public LockedClassList()
         {
             list = new List<T>();
         }
-        public LockedList(int capacity)
+        public LockedClassList(int capacity)
         {
             list = new List<T>(capacity);
         }
-        public LockedList(IEnumerable<T> collection)
+        public LockedClassList(IEnumerable<T> collection)
         {
             list = new List<T>(collection);
         }
@@ -141,6 +143,17 @@ namespace Preparation.Utility
             return ReadLock(() => { return list.IndexOf(item); });
         }
 
+        public Array ToArray()
+        {
+            return ReadLock(() => { return list.ToArray(); });
+        }
+
+        public List<T> ToNewList()
+        {
+            List<T> lt = new();
+            return ReadLock(() => { lt.AddRange(list); return lt; });
+        }
+
         public bool Contains(T item)
         {
             return ReadLock(() => { return list.Contains(item); });
@@ -159,6 +172,11 @@ namespace Preparation.Utility
         public int FindIndex(Predicate<T> match) => ReadLock(() => { return list.FindIndex(match); });
 
         public void ForEach(Action<T> action) => ReadLock(() => { list.ForEach(action); });
+
+        public IEnumerator GetEnumerator()
+        {
+            return ReadLock(() => { return list.GetEnumerator(); });
+        }
         #endregion
     }
 }

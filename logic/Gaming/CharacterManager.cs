@@ -71,96 +71,72 @@ namespace Gaming
                         bool noise = false;
                         if (!newPlayer.IsGhost())
                         {
-                            gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                            try
+                            foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
                             {
-                                foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
+                                if (person.IsGhost())
                                 {
-                                    if (person.IsGhost())
+                                    if (person.CharacterType == CharacterType.ANoisyPerson)
                                     {
-                                        if (person.CharacterType == CharacterType.ANoisyPerson)
-                                        {
-                                            noise = true;
-                                            newPlayer.AddBgm(BgmType.GhostIsComing, 1411180);
-                                            newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, 154991);
-                                        }
+                                        noise = true;
+                                        newPlayer.AddBgm(BgmType.GhostIsComing, 1411180);
+                                        newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, 154991);
                                     }
                                 }
-                            }
-                            finally
-                            {
-                                gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                             }
                         }
                         new FrameRateTaskExecutor<int>(
                         loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsRemoved,
                         loopToDo: () =>
                         {
-                            gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                            try
+                            if (newPlayer.IsGhost())
                             {
-                                if (newPlayer.IsGhost())
+                                double bgmVolume = 0;
+                                foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
                                 {
-                                    double bgmVolume = 0;
-                                    foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
+                                    if (!person.IsGhost() && XY.DistanceFloor3(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
                                     {
-                                        if (!person.IsGhost() && XY.DistanceFloor3(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                        {
-                                            if ((double)newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position) > bgmVolume)
-                                                bgmVolume = newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position);
-                                        }
-                                    }
-                                    newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
-                                }
-                                else
-                                {
-                                    foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
-                                    {
-                                        if (person.IsGhost())
-                                        {
-                                            if (!noise)
-                                            {
-                                                if (XY.DistanceFloor3(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                                    newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position));
-                                                else newPlayer.AddBgm(BgmType.GhostIsComing, 0);
-                                            }
-                                            if (newPlayer.CharacterType != CharacterType.Teacher && newPlayer.CharacterType != CharacterType.Robot && newPlayer.CanPinDown() && XY.DistanceFloor3(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
-                                            {
-                                                TimePinningDown += GameData.checkInterval;
-                                                newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
-                                                ScoreAdded = GameData.StudentScorePinDown(TimePinningDown);
-                                            }
-                                            else TimePinningDown = ScoreAdded = 0;
-                                            break;
-                                        }
+                                        if ((double)newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position) > bgmVolume)
+                                            bgmVolume = newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position);
                                     }
                                 }
+                                newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
                             }
-                            finally
+                            else
                             {
-                                gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                                foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
+                                {
+                                    if (person.IsGhost())
+                                    {
+                                        if (!noise)
+                                        {
+                                            if (XY.DistanceFloor3(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
+                                                newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position));
+                                            else newPlayer.AddBgm(BgmType.GhostIsComing, 0);
+                                        }
+                                        if (newPlayer.CharacterType != CharacterType.Teacher && newPlayer.CharacterType != CharacterType.Robot && newPlayer.CanPinDown() && XY.DistanceFloor3(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
+                                        {
+                                            TimePinningDown += GameData.checkInterval;
+                                            newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
+                                            ScoreAdded = GameData.StudentScorePinDown(TimePinningDown);
+                                        }
+                                        else TimePinningDown = ScoreAdded = 0;
+                                        break;
+                                    }
+                                }
                             }
 
                             if (!noise)
                             {
-                                gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
-                                try
+                                double bgmVolume = 0;
+                                foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
                                 {
-                                    double bgmVolume = 0;
-                                    foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
+                                    if (XY.DistanceFloor3(newPlayer.Position, generator.Position) <= newPlayer.AlertnessRadius)
                                     {
-                                        if (XY.DistanceFloor3(newPlayer.Position, generator.Position) <= newPlayer.AlertnessRadius)
-                                        {
-                                            if (generator.NumOfFixing > 0 && (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.DistanceFloor3(newPlayer.Position, generator.Position) > bgmVolume)
-                                                bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.DistanceFloor3(newPlayer.Position, generator.Position);
-                                        }
+                                        if (generator.NumOfFixing > 0 && (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.DistanceFloor3(newPlayer.Position, generator.Position) > bgmVolume)
+                                            bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.DistanceFloor3(newPlayer.Position, generator.Position);
                                     }
-                                    newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, bgmVolume);
                                 }
-                                finally
-                                {
-                                    gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
-                                }
+                                newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, bgmVolume);
                             }
                         },
                         timeInterval: GameData.checkInterval,

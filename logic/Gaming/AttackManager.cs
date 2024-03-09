@@ -168,20 +168,11 @@ namespace Gaming
                 {
                     if (bullet.CanBeBombed(kvp.Key))
                     {
-                        gameMap.GameObjLockDict[kvp.Key].EnterReadLock();
-                        try
-                        {
-                            foreach (var item in gameMap.GameObjDict[kvp.Key])
-                                if (bullet.CanAttack((GameObj)item))
-                                {
-                                    beAttackedList.Add(item);
-                                }
-
-                        }
-                        finally
-                        {
-                            gameMap.GameObjLockDict[kvp.Key].ExitReadLock();
-                        }
+                        foreach (var item in gameMap.GameObjDict[kvp.Key])
+                            if (bullet.CanAttack((GameObj)item))
+                            {
+                                beAttackedList.Add((IGameObj)item);
+                            }
                     }
                 }
 

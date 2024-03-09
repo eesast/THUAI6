@@ -43,34 +43,26 @@ namespace Gaming
                        loopCondition: () => player.Commandable() && gameMap.Timer.IsGaming,
                              loopToDo: () =>
                              {
-                                 gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                                 try
+                                 foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
                                  {
-                                     foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
+                                     if (!person.IsGhost() && person.CharacterType != CharacterType.Robot && !person.NoHp())
                                      {
-                                         if (!person.IsGhost() && person.CharacterType != CharacterType.Robot && !person.NoHp())
+                                         double dis = XY.DistanceFloor3(person.Position, player.Position);
+                                         if (dis >= player.AlertnessRadius)
                                          {
-                                             double dis = XY.DistanceFloor3(person.Position, player.Position);
-                                             if (dis >= player.AlertnessRadius)
+                                             person.AddMoveSpeed(GameData.checkIntervalWhenShowTime, dis / player.AlertnessRadius);
+                                             actionManager.MovePlayerWhenStunned(person, GameData.checkIntervalWhenShowTime, (player.Position - person.Position).Angle());
+                                         }
+                                         else if (dis >= player.ViewRange)
+                                         {
+                                             Student student = (Student)person;
+                                             student.GamingAddiction.AddPositiveV(GameData.checkIntervalWhenShowTime);
+                                             if (student.GamingAddiction.IsMaxV())
                                              {
-                                                 person.AddMoveSpeed(GameData.checkIntervalWhenShowTime, dis / player.AlertnessRadius);
-                                                 actionManager.MovePlayerWhenStunned(person, GameData.checkIntervalWhenShowTime, (player.Position - person.Position).Angle());
-                                             }
-                                             else if (dis >= player.ViewRange)
-                                             {
-                                                 Student student = (Student)person;
-                                                 student.GamingAddiction.AddPositiveV(GameData.checkIntervalWhenShowTime);
-                                                 if (student.GamingAddiction.IsMaxV())
-                                                 {
-                                                     characterManager.Die(student);
-                                                 }
+                                                 characterManager.Die(student);
                                              }
                                          }
                                      }
-                                 }
-                                 finally
-                                 {
-                                     gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                                  }
                              },
                              timeInterval: GameData.checkIntervalWhenShowTime,
@@ -178,21 +170,14 @@ namespace Gaming
                              loopToDo: () =>
                              {
                                  dis = ((homingMissile == null || homingMissile.IsRemoved) ? double.MaxValue : XY.DistanceFloor3(homingMissile.Position, whoAttacked.Position));
-                                 gameMap.GameObjLockDict[GameObjType.Bullet].EnterReadLock();
-                                 try
+
+                                 foreach (Bullet bullet in gameMap.GameObjDict[GameObjType.Bullet])
                                  {
-                                     foreach (Bullet bullet in gameMap.GameObjDict[GameObjType.Bullet])
+                                     if (!bullet.CanMove && XY.DistanceFloor3(bullet.Position, whoAttacked.Position) < dis && bullet.TypeOfBullet == BulletType.JumpyDumpty)
                                      {
-                                         if (!bullet.CanMove && XY.DistanceFloor3(bullet.Position, whoAttacked.Position) < dis && bullet.TypeOfBullet == BulletType.JumpyDumpty)
-                                         {
-                                             homingMissile = bullet;
-                                             dis = XY.DistanceFloor3(bullet.Position, whoAttacked.Position);
-                                         }
+                                         homingMissile = bullet;
+                                         dis = XY.DistanceFloor3(bullet.Position, whoAttacked.Position);
                                      }
-                                 }
-                                 finally
-                                 {
-                                     gameMap.GameObjLockDict[GameObjType.Bullet].ExitReadLock();
                                  }
                                  if (homingMissile != null)
                                  {
@@ -309,21 +294,13 @@ namespace Gaming
                 if ((!player.Commandable())) return false;
                 return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.Howl), player, () =>
                 {
-                    gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                    try
+                    foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                     {
-                        foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                        if (!character.IsGhost() && !character.NoHp() && XY.DistanceFloor3(character.Position, player.Position) <= player.ViewRange)
                         {
-                            if (!character.IsGhost() && !character.NoHp() && XY.DistanceFloor3(character.Position, player.Position) <= player.ViewRange)
-                            {
-                                if (CharacterManager.BeStunned(character, GameData.timeOfStudentStunnedWhenHowl) > 0)
-                                    player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStudentStunnedWhenHowl));
-                            }
+                            if (CharacterManager.BeStunned(character, GameData.timeOfStudentStunnedWhenHowl) > 0)
+                                player.AddScore(GameData.TrickerScoreStudentBeStunned(GameData.timeOfStudentStunnedWhenHowl));
                         }
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
                     characterManager.BackSwing(player, GameData.timeOfGhostSwingingAfterHowl);
                     Debugger.Output(player, "howled!");
@@ -337,28 +314,20 @@ namespace Gaming
                 if ((!player.Commandable())) return false;
                 return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.Punish), player, () =>
                 {
-                    gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                    try
+                    foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                     {
-                        foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                        if (character.IsGhost() &&
+                            (character.PlayerState == PlayerStateType.TryingToAttack || character.PlayerState == PlayerStateType.Swinging
+                            || character.PlayerState == PlayerStateType.UsingSkill
+                            || character.PlayerState == PlayerStateType.LockingTheDoor || character.PlayerState == PlayerStateType.OpeningTheDoor
+                            || character.PlayerState == PlayerStateType.ClimbingThroughWindows)
+                            && XY.DistanceFloor3(character.Position, player.Position) <= player.ViewRange / 3)
                         {
-                            if (character.IsGhost() &&
-                                (character.PlayerState == PlayerStateType.TryingToAttack || character.PlayerState == PlayerStateType.Swinging
-                                || character.PlayerState == PlayerStateType.UsingSkill
-                                || character.PlayerState == PlayerStateType.LockingTheDoor || character.PlayerState == PlayerStateType.OpeningTheDoor
-                                || character.PlayerState == PlayerStateType.ClimbingThroughWindows)
-                                && XY.DistanceFloor3(character.Position, player.Position) <= player.ViewRange / 3)
-                            {
-                                int stunTime = (GameData.timeOfGhostStunnedWhenPunish + (int)((GameData.factorOfTimeStunnedWhenPunish * (player.HP.GetMaxV() - player.HP) / GameData.basicApOfGhost))) / characterManager.FactorTeacher;
-                                if (CharacterManager.BeStunned(character, stunTime) > 0)
-                                    player.AddScore(GameData.StudentScoreTrickerBeStunned(stunTime) / characterManager.FactorTeacher);
-                                break;
-                            }
+                            int stunTime = (GameData.timeOfGhostStunnedWhenPunish + (int)((GameData.factorOfTimeStunnedWhenPunish * (player.HP.GetMaxV() - player.HP) / GameData.basicApOfGhost))) / characterManager.FactorTeacher;
+                            if (CharacterManager.BeStunned(character, stunTime) > 0)
+                                player.AddScore(GameData.StudentScoreTrickerBeStunned(stunTime) / characterManager.FactorTeacher);
+                            break;
                         }
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
                     Debugger.Output(player, "uses punishing!");
                 },
@@ -411,27 +380,19 @@ namespace Gaming
                 if ((!player.Commandable())) return false;
                 return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.Rouse), player, () =>
                 {
-                    gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                    try
+                    foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                     {
-                        foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                        lock (character.ActionLock)
                         {
-                            lock (character.ActionLock)
+                            if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
                             {
-                                if ((character.PlayerState == PlayerStateType.Addicted) && gameMap.CanSee(player, character))
-                                {
-                                    character.SetPlayerStateNaturally();
-                                    character.HP.SetPositiveV(GameData.RemainHpWhenAddLife);
-                                    ((Student)character).TimeOfRescue.SetReturnOri(0);
-                                    player.AddScore(GameData.StudentScoreRescue);
-                                    break;
-                                }
+                                character.SetPlayerStateNaturally();
+                                character.HP.SetPositiveV(GameData.RemainHpWhenAddLife);
+                                ((Student)character).TimeOfRescue.SetReturnOri(0);
+                                player.AddScore(GameData.StudentScoreRescue);
+                                break;
                             }
                         }
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
                     Debugger.Output(player, "rouse someone!");
                 },
@@ -444,23 +405,15 @@ namespace Gaming
                 if ((!player.Commandable())) return false;
                 return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.Encourage), player, () =>
                 {
-                    gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                    try
+                    foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                     {
-                        foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                        if ((character.HP < character.HP.GetMaxV()) && gameMap.CanSee(player, character))
                         {
-                            if ((character.HP < character.HP.GetMaxV()) && gameMap.CanSee(player, character))
-                            {
-                                player.AddScore(GameData.StudentScoreTreat(GameData.addHpWhenEncourage));
-                                character.HP.AddPositiveV(GameData.addHpWhenEncourage);
-                                ((Student)character).SetDegreeOfTreatment0();
-                                break;
-                            }
+                            player.AddScore(GameData.StudentScoreTreat(GameData.addHpWhenEncourage));
+                            character.HP.AddPositiveV(GameData.addHpWhenEncourage);
+                            ((Student)character).SetDegreeOfTreatment0();
+                            break;
                         }
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
                     Debugger.Output(player, "encourage someone!");
                 },
@@ -473,21 +426,13 @@ namespace Gaming
                 if ((!player.Commandable())) return false;
                 return ActiveSkillEffect(player.FindActiveSkill(ActiveSkillType.Inspire), player, () =>
                 {
-                    gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                    try
+                    foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
                     {
-                        foreach (Character character in gameMap.GameObjDict[GameObjType.Character])
+                        if (gameMap.CanSee(player, character) && !character.IsGhost())
                         {
-                            if (gameMap.CanSee(player, character) && !character.IsGhost())
-                            {
-                                player.AddScore(GameData.ScoreInspire);
-                                character.AddMoveSpeed(GameData.timeOfAddingSpeedWhenInspire, GameData.addedTimeOfSpeedWhenInspire);
-                            }
+                            player.AddScore(GameData.ScoreInspire);
+                            character.AddMoveSpeed(GameData.timeOfAddingSpeedWhenInspire, GameData.addedTimeOfSpeedWhenInspire);
                         }
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                     }
                     Debugger.Output(player, "inspires!");
                 },

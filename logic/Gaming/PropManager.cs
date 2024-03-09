@@ -83,23 +83,15 @@ namespace Gaming
                 }
                 else
                 {
-                    gameMap.GameObjLockDict[GameObjType.Gadget].EnterReadLock();
-                    try
+                    foreach (Gadget prop in gameMap.GameObjDict[GameObjType.Gadget])
                     {
-                        foreach (Gadget prop in gameMap.GameObjDict[GameObjType.Gadget])
+                        if (prop.GetPropType() == propType)
                         {
-                            if (prop.GetPropType() == propType)
+                            if (GameData.IsInTheSameCell(prop.Position, player.Position) && prop.CanMove == false)
                             {
-                                if (GameData.IsInTheSameCell(prop.Position, player.Position) && prop.CanMove == false)
-                                {
-                                    pickProp = player.PropInventory[indexing] = prop;
-                                }
+                                pickProp = player.PropInventory[indexing] = prop;
                             }
                         }
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjType.Gadget].ExitReadLock();
                     }
                 }
 
@@ -142,46 +134,38 @@ namespace Gaming
                 int len = availableCellForGenerateProp.Count;
                 Random r = new Random(Environment.TickCount);
 
-                gameMap.GameObjLockDict[GameObjType.Chest].EnterReadLock();
-                try
+                int cou = 0;
+                while (cou < GameData.numOfKeyEachArea)
                 {
-                    int cou = 0;
-                    while (cou < GameData.numOfKeyEachArea)
-                    {
-                        ++cou;
-                        Chest chest = GetChest(r);
-                        chest.PropInChest[1] = new Key3(chest.Position);
-                        chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
-                    }
-                    cou = 0;
-                    while (cou < GameData.numOfKeyEachArea)
-                    {
-                        ++cou;
-                        Chest chest = GetChest(r);
-                        chest.PropInChest[1] = new Key5(chest.Position);
-                        chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
-                    }
-                    cou = 0;
-                    while (cou < GameData.numOfKeyEachArea)
-                    {
-                        ++cou;
-                        Chest chest = GetChest(r);
-                        chest.PropInChest[1] = new Key6(chest.Position);
-                        chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
-                    }
-
-                    foreach (Chest chest in gameMap.GameObjDict[GameObjType.Chest])
-                    {
-                        if (chest.PropInChest[0].GetPropType() == PropType.Null)
-                        {
-                            chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
-                            chest.PropInChest[1] = ProduceOnePropNotKey(r, chest.Position);
-                        }
-                    }
+                    ++cou;
+                    Chest chest = GetChest(r);
+                    chest.PropInChest[1] = new Key3(chest.Position);
+                    chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
                 }
-                finally
+                cou = 0;
+                while (cou < GameData.numOfKeyEachArea)
                 {
-                    gameMap.GameObjLockDict[GameObjType.Chest].ExitReadLock();
+                    ++cou;
+                    Chest chest = GetChest(r);
+                    chest.PropInChest[1] = new Key5(chest.Position);
+                    chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
+                }
+                cou = 0;
+                while (cou < GameData.numOfKeyEachArea)
+                {
+                    ++cou;
+                    Chest chest = GetChest(r);
+                    chest.PropInChest[1] = new Key6(chest.Position);
+                    chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
+                }
+
+                foreach (Chest chest in gameMap.GameObjDict[GameObjType.Chest])
+                {
+                    if (chest.PropInChest[0].GetPropType() == PropType.Null)
+                    {
+                        chest.PropInChest[0] = ProduceOnePropNotKey(r, chest.Position);
+                        chest.PropInChest[1] = ProduceOnePropNotKey(r, chest.Position);
+                    }
                 }
                 /*
                 new Thread

@@ -3,6 +3,7 @@ using System.Threading;
 using Preparation.Interface;
 using Preparation.Utility;
 using System;
+using System.Collections.Concurrent;
 
 namespace GameClass.GameObj
 {
@@ -21,32 +22,18 @@ namespace GameClass.GameObj
             uint value = Interlocked.Increment(ref numOfRepairedGenerators);
             if (value == GameData.numOfGeneratorRequiredForEmergencyExit)
             {
-                GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
-                try
-                {
-                    Random r = new(Environment.TickCount);
-                    EmergencyExit emergencyExit = (EmergencyExit)(GameObjDict[GameObjType.EmergencyExit][r.Next(0, GameObjDict[GameObjType.EmergencyExit].Count)]);
-                    emergencyExit.CanOpen.SetReturnOri(true);
-                    Preparation.Utility.Debugger.Output(emergencyExit, emergencyExit.Position.ToString());
-                }
-                finally
-                {
-                    GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
-                }
+                Random r = new(Environment.TickCount);
+                EmergencyExit emergencyExit = (EmergencyExit)(GameObjDict[GameObjType.EmergencyExit][r.Next(0, GameObjDict[GameObjType.EmergencyExit].Count)]);
+                emergencyExit.CanOpen.SetReturnOri(true);
+                Preparation.Utility.Debugger.Output(emergencyExit, emergencyExit.Position.ToString());
             }
             else
                   if (value == GameData.numOfGeneratorRequiredForRepair)
             {
-                GameObjLockDict[GameObjType.Doorway].EnterReadLock();
-                try
+                GameObjDict[GameObjType.Doorway].ForEach(delegate (IGameObj doorway)
                 {
-                    foreach (Doorway doorway in GameObjDict[GameObjType.Doorway])
-                        doorway.PowerSupply.SetReturnOri(true);
-                }
-                finally
-                {
-                    GameObjLockDict[GameObjType.Doorway].ExitReadLock();
-                }
+                    ((Doorway)doorway).PowerSupply.SetReturnOri(true);
+                });
             }
         }
 
@@ -113,20 +100,10 @@ namespace GameClass.GameObj
 
         private void OpenEmergencyExit()
         {
-            GameObjLockDict[GameObjType.EmergencyExit].EnterReadLock();
-            try
-            {
-                foreach (EmergencyExit emergencyExit in GameObjDict[GameObjType.EmergencyExit])
-                    if (emergencyExit.CanOpen)
-                    {
-                        emergencyExit.IsOpen = true;
-                        break;
-                    }
-            }
-            finally
-            {
-                GameObjLockDict[GameObjType.EmergencyExit].ExitReadLock();
-            }
+            EmergencyExit? emergencyExit =
+            (EmergencyExit?)GameObjDict[GameObjType.EmergencyExit].Find(gameObj => ((EmergencyExit)gameObj).CanOpen);
+            if (emergencyExit != null)
+                emergencyExit.IsOpen = true;
         }
         private void AddScoreFromAddict()
         {
@@ -134,10 +111,8 @@ namespace GameClass.GameObj
         }
 
 
-        private Dictionary<GameObjType, IList<IGameObj>> gameObjDict;
-        public Dictionary<GameObjType, IList<IGameObj>> GameObjDict => gameObjDict;
-        private Dictionary<GameObjType, ReaderWriterLockSlim> gameObjLockDict;
-        public Dictionary<GameObjType, ReaderWriterLockSlim> GameObjLockDict => gameObjLockDict;
+        private Dictionary<GameObjType, LockedClassList<IGameObj>> gameObjDict;
+        public Dictionary<GameObjType, LockedClassList<IGameObj>> GameObjDict => gameObjDict;
 
         public readonly uint[,] protoGameMap;
         public uint[,] ProtoGameMap => protoGameMap;
@@ -175,182 +150,55 @@ namespace GameClass.GameObj
 
         public Character? FindPlayerInID(long playerID)
         {
-            Character? player = null;
-            gameObjLockDict[GameObjType.Character].EnterReadLock();
-            try
-            {
-                foreach (Character person in gameObjDict[GameObjType.Character])
-                {
-                    if (playerID == person.ID)
-                    {
-                        player = person;
-                        break;
-                    }
-                }
-            }
-            finally
-            {
-                gameObjLockDict[GameObjType.Character].ExitReadLock();
-            }
-            return player;
+            return (Character?)GameObjDict[GameObjType.Character].Find(gameObj => (playerID == ((Character)gameObj).ID));
         }
         public Character? FindPlayerInPlayerID(long playerID)
         {
-            Character? player = null;
-            gameObjLockDict[GameObjType.Character].EnterReadLock();
-            try
-            {
-                foreach (Character person in gameObjDict[GameObjType.Character])
-                {
-                    if (playerID == person.PlayerID)
-                    {
-                        player = person;
-                        break;
-                    }
-                }
-            }
-            finally
-            {
-                gameObjLockDict[GameObjType.Character].ExitReadLock();
-            }
-            return player;
+            return (Character?)GameObjDict[GameObjType.Character].Find(gameObj => (playerID == ((Character)gameObj).PlayerID));
         }
         public Ghost? ghost = null;
         public Character? FindPlayerToAction(long playerID)
         {
-            Character? player = null;
-            gameObjLockDict[GameObjType.Character].EnterReadLock();
-            try
-            {
-                foreach (Character person in gameObjDict[GameObjType.Character])
-                {
-                    if (playerID == person.ID)
-                    {
-                        if (person.CharacterType == CharacterType.TechOtaku)
-                        {
-                            foreach (Character character in gameObjDict[GameObjType.Character])
-                            {
-                                if (((UseRobot)person.FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID == character.PlayerID)
-                                {
-                                    player = character;
-                                    break;
-                                }
-                            }
-                        }
-                        else player = person;
-                        break;
-                    }
-                }
-            }
-            finally
-            {
-                gameObjLockDict[GameObjType.Character].ExitReadLock();
-            }
+
+            Character? player = (Character?)GameObjDict[GameObjType.Character].Find(gameObj => (playerID == ((Character)gameObj).ID));
+            if (player == null) return null;
+            if (player.CharacterType == CharacterType.TechOtaku)
+                player = (Character?)GameObjDict[GameObjType.Character].Find(
+                    gameObj => (
+                                    ((UseRobot)player.FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID == ((Character)gameObj).PlayerID
+                                    )
+                    );
             return player;
         }
 
         public GameObj? OneForInteract(XY Pos, GameObjType gameObjType)
         {
-            GameObj? GameObjForInteract = null;
-            GameObjLockDict[gameObjType].EnterReadLock();
-            try
-            {
-                foreach (GameObj gameObj in GameObjDict[gameObjType])
-                {
-                    if (GameData.ApproachToInteract(gameObj.Position, Pos))
-                    {
-                        GameObjForInteract = gameObj;
-                        break;
-                    }
-                }
-            }
-            finally
-            {
-                GameObjLockDict[gameObjType].ExitReadLock();
-            }
-            return GameObjForInteract;
+            return (GameObj?)GameObjDict[gameObjType].Find(gameObj => GameData.ApproachToInteract(gameObj.Position, Pos));
         }
         public Student? StudentForInteract(Student AStudent)
         {
-            GameObjLockDict[GameObjType.Character].EnterReadLock();
-            try
+            return (Student?)GameObjDict[GameObjType.Character].Find(gameObj =>
             {
-                foreach (Character character in GameObjDict[GameObjType.Character])
-                {
-                    if (!character.IsGhost() && character != AStudent && GameData.ApproachToInteract(character.Position, AStudent.Position))
-                    {
-                        return (Student)character;
-                    }
-                }
-            }
-            finally
-            {
-                GameObjLockDict[GameObjType.Character].ExitReadLock();
-            }
-            return null;
+                Character character = (Character)gameObj;
+                return !character.IsGhost() && character != AStudent && GameData.ApproachToInteract(character.Position, AStudent.Position);
+            });
         }
         public GameObj? OneInTheSameCell(XY Pos, GameObjType gameObjType)
         {
-            GameObj? GameObjForInteract = null;
-            GameObjLockDict[gameObjType].EnterReadLock();
-            try
-            {
-                foreach (GameObj gameObj in GameObjDict[gameObjType])
-                {
-                    if (GameData.IsInTheSameCell(gameObj.Position, Pos))
-                    {
-                        GameObjForInteract = gameObj;
-                        break;
-                    }
-                }
-            }
-            finally
-            {
-                GameObjLockDict[gameObjType].ExitReadLock();
-            }
-            return GameObjForInteract;
+            return (GameObj?)GameObjDict[gameObjType].Find(gameObj =>
+                GameData.IsInTheSameCell(gameObj.Position, Pos)
+            );
         }
         public GameObj? PartInTheSameCell(XY Pos, GameObjType gameObjType)
         {
-            GameObj? GameObjForInteract = null;
-            GameObjLockDict[gameObjType].EnterReadLock();
-            try
-            {
-                foreach (GameObj gameObj in GameObjDict[gameObjType])
-                {
-                    if (GameData.PartInTheSameCell(gameObj.Position, Pos))
-                    {
-                        GameObjForInteract = gameObj;
-                        break;
-                    }
-                }
-            }
-            finally
-            {
-                GameObjLockDict[gameObjType].ExitReadLock();
-            }
-            return GameObjForInteract;
+            return (GameObj?)GameObjDict[gameObjType].Find(gameObj =>
+    GameData.PartInTheSameCell(gameObj.Position, Pos)
+);
         }
         public GameObj? OneForInteractInACross(XY Pos, GameObjType gameObjType)
         {
-            GameObj? GameObjForInteract = null;
-            GameObjLockDict[gameObjType].EnterReadLock();
-            try
-            {
-                foreach (GameObj gameObj in GameObjDict[gameObjType])
-                {
-                    if (GameData.ApproachToInteractInACross(gameObj.Position, Pos))
-                    {
-                        GameObjForInteract = gameObj;
-                        break;
-                    }
-                }
-            }
-            finally
-            {
-                GameObjLockDict[gameObjType].ExitReadLock();
-            }
-            return GameObjForInteract;
+            return (GameObj?)GameObjDict[gameObjType].Find(gameObj =>
+                GameData.ApproachToInteractInACross(gameObj.Position, Pos));
         }
 
         public bool CanSee(Character player, GameObj gameObj)
@@ -403,70 +251,35 @@ namespace GameClass.GameObj
 
         public bool Remove(GameObj gameObj)
         {
-            GameObj? ToDel = null;
-            GameObjLockDict[gameObj.Type].EnterWriteLock();
-            try
+            if (GameObjDict[gameObj.Type].RemoveOne(obj => gameObj.ID == obj.ID))
             {
-                foreach (GameObj obj in GameObjDict[gameObj.Type])
-                {
-                    if (gameObj.ID == obj.ID)
-                    {
-                        ToDel = obj;
-                        break;
-                    }
-                }
-                if (ToDel != null)
-                {
-                    GameObjDict[gameObj.Type].Remove(ToDel);
-                    ToDel.TryToRemove();
-                }
+                gameObj.TryToRemove();
+                return true;
             }
-            finally
-            {
-                GameObjLockDict[gameObj.Type].ExitWriteLock();
-            }
-            return ToDel != null;
+            return false;
         }
         public bool RemoveJustFromMap(GameObj gameObj)
         {
-            GameObjLockDict[gameObj.Type].EnterWriteLock();
-            try
+            if (GameObjDict[gameObj.Type].Remove(gameObj))
             {
-                if (GameObjDict[gameObj.Type].Remove(gameObj))
-                {
-                    gameObj.TryToRemove();
-                    return true;
-                }
-                return false;
+                gameObj.TryToRemove();
+                return true;
             }
-            finally
-            {
-                GameObjLockDict[gameObj.Type].ExitWriteLock();
-            }
+            return false;
         }
         public void Add(GameObj gameObj)
         {
-            GameObjLockDict[gameObj.Type].EnterWriteLock();
-            try
-            {
-                GameObjDict[gameObj.Type].Add(gameObj);
-            }
-            finally
-            {
-                GameObjLockDict[gameObj.Type].ExitWriteLock();
-            }
+            GameObjDict[gameObj.Type].Add(gameObj);
         }
 
         public Map(uint[,] mapResource)
         {
-            gameObjDict = new Dictionary<GameObjType, IList<IGameObj>>();
-            gameObjLockDict = new Dictionary<GameObjType, ReaderWriterLockSlim>();
+            gameObjDict = new Dictionary<GameObjType, LockedClassList<IGameObj>>();
             foreach (GameObjType idx in Enum.GetValues(typeof(GameObjType)))
             {
                 if (idx != GameObjType.Null)
                 {
-                    gameObjDict.Add(idx, new List<IGameObj>());
-                    gameObjLockDict.Add(idx, new ReaderWriterLockSlim());
+                    gameObjDict.TryAdd(idx, new LockedClassList<IGameObj>());
                 }
             }
 

@@ -19,7 +19,7 @@ then
     if [ $? -ne 0 ]; then
         flag=0
     fi
-    mv ./compile_log.txt $output/compile_log.txt
+    mv ./$base_name.txt $output/$base_name.txt
 else
     flag=0
 fi

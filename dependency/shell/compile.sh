@@ -16,7 +16,7 @@ then
     cp -f $bind/$filename $workdir/API/src/AI.cpp
     cmake ./CMakeLists.txt && make -j$(nproc) >$base_name.txt 2>&1
     mv ./capi $output/$base_name
-    if [ $? -eq 0 ]; then
+    if [ $? -ne 0 ]; then
         flag=0
     fi
     mv ./compile_log.txt $output/compile_log.txt

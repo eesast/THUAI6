@@ -25,7 +25,7 @@
     <PackageReference Include="ICSharpCode.SharpZipLib.dll" Version="0.85.4.369" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Tencent.QCloud.Cos.Sdk" Version="5.4.36" />
+    <PackageReference Include="Tencent.QCloud.Cos.Sdk" Version="5.4.37" />
   </ItemGroup>
 
 </Project>

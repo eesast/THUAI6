@@ -2,7 +2,7 @@
 # WORKDIR /usr/local/PlayerCode/CAPI/cpp
 workdir=/usr/local/PlayerCode/CAPI/cpp
 bind=/usr/local/code
-output=/usr/local/output
+output=/usr/local/code
 
 flag=1
 

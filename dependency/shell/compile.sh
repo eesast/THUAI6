@@ -25,7 +25,7 @@ else
 fi
 
 if [ $flag -eq 1 ]; then
-    curl $URL -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"compile_status":"Success"}' > $output/$base_name.curl.log
+    curl $URL -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"compile_status":"Completed"}' > $output/$base_name.curl.log
 else
     curl $URL -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"compile_status":"Failed"}' > $output/$base_name.curl.log
 fi

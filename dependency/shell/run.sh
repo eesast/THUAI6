@@ -184,6 +184,7 @@ elif [ "$TERMINAL" = "CLIENT" ]; then
                     echo "find ./$code_name"
 
                     command="nice -0 ./$code_name -I $CONNECT_IP -P $PORT -p $j > $playback_dir/team$k-player$j.log 2>&1"
+                    retry_command "$command" &
 
                     ps -aux |grep $code_name
 
@@ -202,7 +203,7 @@ elif [ "$TERMINAL" = "CLIENT" ]; then
 
                 command="nice -0 python3 $python_main_dir$i/PyAPI/main.py -I $CONNECT_IP -P $PORT -p $j > $playback_dir/team$k-player$j.log 2>&1"
 
-                retry_command "$command"
+                retry_command "$command" &
 
                 ps -aux |grep main.py
             elif [ -f "./$code_name" ]; then
@@ -210,7 +211,7 @@ elif [ "$TERMINAL" = "CLIENT" ]; then
 
                 command="nice -0 ./$code_name -I $CONNECT_IP -P $PORT -p $j > $playback_dir/team$k-player$j.log 2>&1"
 
-                retry_command "$command"
+                retry_command "$command" &
 
                 ps -aux |grep $code_name
             else
@@ -220,7 +221,7 @@ elif [ "$TERMINAL" = "CLIENT" ]; then
 
         # curl $CONNECT_IP:$PORT
 
-        sleep $((GAME_TIME * 2))
+        sleep $((GAME_TIME + 90))
 
     popd
 else

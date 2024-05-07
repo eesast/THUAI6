@@ -118,10 +118,10 @@ if [ "$TERMINAL" = "SERVER" ]; then
         read_array get_current_team_label $TEAM_LABELS
         if [[ "${current_team_label}" == "Student" ]]; then
             echo "Parse Success: 1st team is Student"
-            finish_payload='{"result": {"status": "Finished", "scores": ['${score0}', '${score1}']}}'
+            finish_payload='{"status": "Finished", "scores": ['${score0}', '${score1}']}'
         elif [[ "${current_team_label}" == "Tricker" ]]; then
             echo "Parse Success: 1st team is Tricker"
-            finish_payload='{"result": {"status": "Finished", "scores": ['${score1}', '${score0}']}}'
+            finish_payload='{"status": "Finished", "scores": ['${score1}', '${score0}']}'
         else
             echo "Parse Failure: 1st team is Unknown"
             finish_payload='{"result": {"status": "Crashed", "scores": [0, 0]}}'

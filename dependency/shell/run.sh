@@ -54,9 +54,9 @@ read_array() {
 
 function retry_command {
     local command="$1"
-    local max_attempts=2
+    local max_attempts=10
     local attempt_num=1
-    local sleep_seconds=10
+    local sleep_seconds=5
 
     while [ $attempt_num -le $max_attempts ]; do
         echo "Attempt $attempt_num / $max_attempts to run command: $command"
@@ -67,11 +67,11 @@ function retry_command {
         sleep $sleep_seconds
 
         if kill -0 $PID 2>/dev/null; then
-            echo "Connected to server successfully."
-            return 0
-        else
             echo "Failed to connect to server. Retrying..."
             ((attempt_num++))
+        else
+            echo "Connected to server successfully."
+            return 0
         fi
     done
 
@@ -93,7 +93,7 @@ if [ "$TERMINAL" = "SERVER" ]; then
     echo "FINISH URL: $FINISH_URL"
 
     echo "waiting..."
-    sleep 30 # wait connection time
+    sleep 60 # wait connection time
     echo "watching..."
 
     if [ -f $playback_dir/start.lock ]; then

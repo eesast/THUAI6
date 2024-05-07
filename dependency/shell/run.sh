@@ -124,7 +124,7 @@ if [ "$TERMINAL" = "SERVER" ]; then
             finish_payload='{"status": "Finished", "scores": ['${score1}', '${score0}']}'
         else
             echo "Parse Failure: 1st team is Unknown"
-            finish_payload='{"result": {"status": "Crashed", "scores": [0, 0]}}'
+            finish_payload='{"status": "Crashed", "scores": [0, 0]}'
         fi
 
         if [[ -n $finish_payload ]]; then
@@ -143,7 +143,7 @@ if [ "$TERMINAL" = "SERVER" ]; then
         touch temp.lock
         mv -f temp.lock $playback_dir/playback.thuaipb
         kill -9 $server_pid
-        finish_payload='{"result": {"status": "Crashed", "scores": [0, 0]}}'
+        finish_payload='{"status": "Crashed", "scores": [0, 0]}'
         curl $FINISH_URL -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d "${finish_payload}" > $playback_dir/send.log 2>&1
     fi
 

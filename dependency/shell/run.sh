@@ -118,13 +118,13 @@ if [ "$TERMINAL" = "SERVER" ]; then
         read_array get_current_team_label $TEAM_LABELS
         if [[ "${current_team_label}" == "Student" ]]; then
             echo "Parse Success: 1st team is Student"
-            finish_payload='{"result": {"status": "Finished", "scores": ['${score0}', '${score1}']}}'
+            finish_payload='{"status": "Finished", "scores": ['${score0}', '${score1}']}'
         elif [[ "${current_team_label}" == "Tricker" ]]; then
             echo "Parse Success: 1st team is Tricker"
-            finish_payload='{"result": {"status": "Finished", "scores": ['${score1}', '${score0}']}}'
+            finish_payload='{"status": "Finished", "scores": ['${score1}', '${score0}']}'
         else
             echo "Parse Failure: 1st team is Unknown"
-            finish_payload='{"result": {"status": "Crashed", "scores": [0, 0]}}'
+            finish_payload='{"status": "Crashed", "scores": [0, 0]}'
         fi
 
         if [[ -n $finish_payload ]]; then
@@ -143,7 +143,7 @@ if [ "$TERMINAL" = "SERVER" ]; then
         touch temp.lock
         mv -f temp.lock $playback_dir/video.thuaipb
         kill -9 $server_pid
-        finish_payload='{"result": {"status": "Crashed", "scores": [0, 0]}}'
+        finish_payload='{"status": "Crashed", "scores": [0, 0]}'
         curl $FINISH_URL -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d "${finish_payload}" > $playback_dir/send.log 2>&1
     fi
 

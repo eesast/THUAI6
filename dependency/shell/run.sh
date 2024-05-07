@@ -84,7 +84,7 @@ function retry_command {
 if [ "$TERMINAL" = "SERVER" ]; then
     map_path=$map_dir/$MAP_ID.txt
     # allow spectator always.
-    nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --resultFileName $playback_dir/result --gameTimeInSecond $GAME_TIME --mode $MODE_NUM --mapResource $map_path --url $SCORE_URL --token $TOKEN --fileName $playback_dir/video --startLockFile $playback_dir/start.lock > $playback_dir/server.log 2>&1 &
+    nice -10 ./Server --port 8888 --studentCount 4 --trickerCount 1 --resultFileName $playback_dir/result --gameTimeInSecond $GAME_TIME --mode $MODE_NUM --mapResource $map_path --url $SCORE_URL --token $TOKEN --fileName $playback_dir/playback --startLockFile $playback_dir/start.lock > $playback_dir/server.log 2>&1 &
     server_pid=$!
     echo "server pid: $server_pid"
     ls $playback_dir
@@ -139,9 +139,9 @@ if [ "$TERMINAL" = "SERVER" ]; then
         echo "Finish!"
     else
         echo "Failed to start game."
-        touch $playback_dir/finish.lock
+        # touch $playback_dir/finish.lock
         touch temp.lock
-        mv -f temp.lock $playback_dir/video.thuaipb
+        mv -f temp.lock $playback_dir/playback.thuaipb
         kill -9 $server_pid
         finish_payload='{"result": {"status": "Crashed", "scores": [0, 0]}}'
         curl $FINISH_URL -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d "${finish_payload}" > $playback_dir/send.log 2>&1

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using Preparation.Utility;
 
@@ -9,8 +10,7 @@ namespace Preparation.Interface
         ITimer Timer { get; }
 
         // the two dicts must have same keys
-        Dictionary<GameObjType, IList<IGameObj>> GameObjDict { get; }
-        Dictionary<GameObjType, ReaderWriterLockSlim> GameObjLockDict { get; }
+        Dictionary<GameObjType, LockedClassList<IGameObj>> GameObjDict { get; }
 
         public uint[,] ProtoGameMap { get; }
         public PlaceType GetPlaceType(IGameObj obj);

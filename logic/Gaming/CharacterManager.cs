@@ -57,41 +57,8 @@ namespace Gaming
                 }
                 gameMap.Add(newPlayer);
 
-                newPlayer.TeamID = teamID;
-                newPlayer.PlayerID = playerID;
-                /* #region 人物装弹
-                 new Thread
-                 (
-                     () =>
-                     {
-                         while (!gameMap.Timer.IsGaming)
-                             Thread.Sleep(Math.Max(newPlayer.CD, GameData.checkInterval));
-                         long lastTime = Environment.TickCount64;
-                         new FrameRateTaskExecutor<int>(
-                             loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsRemoved,
-                             loopToDo: () =>
-                             {
-                                 long nowTime = Environment.TickCount64;
-                                 if (newPlayer.BulletNum == newPlayer.MaxBulletNum)
-                                     lastTime = nowTime;
-                                 else if (nowTime - lastTime >= newPlayer.CD)
-                                 {
-                                     _ = newPlayer.TryAddBulletNum();
-                                     lastTime = nowTime;
-                                 }
-                             },
-                             timeInterval: GameData.checkInterval,
-                             finallyReturn: () => 0
-                         )
-                         {
-                             AllowTimeExceed = true,
-                         }
-                             .Start();
-                     }
-                 )
-                 { IsBackground = true }.Start();
-                 #endregion
-     */
+                newPlayer.TeamID.SetReturnOri(teamID);
+                newPlayer.PlayerID.SetReturnOri(playerID);
                 #region BGM,牵制得分更新
                 new Thread
                 (
@@ -104,96 +71,72 @@ namespace Gaming
                         bool noise = false;
                         if (!newPlayer.IsGhost())
                         {
-                            gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                            try
+                            foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
                             {
-                                foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
+                                if (person.IsGhost())
                                 {
-                                    if (person.IsGhost())
+                                    if (person.CharacterType == CharacterType.ANoisyPerson)
                                     {
-                                        if (person.CharacterType == CharacterType.ANoisyPerson)
-                                        {
-                                            noise = true;
-                                            newPlayer.AddBgm(BgmType.GhostIsComing, 1411180);
-                                            newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, 154991);
-                                        }
+                                        noise = true;
+                                        newPlayer.AddBgm(BgmType.GhostIsComing, 1411180);
+                                        newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, 154991);
                                     }
                                 }
-                            }
-                            finally
-                            {
-                                gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
                             }
                         }
                         new FrameRateTaskExecutor<int>(
                         loopCondition: () => gameMap.Timer.IsGaming && !newPlayer.IsRemoved,
                         loopToDo: () =>
                         {
-                            gameMap.GameObjLockDict[GameObjType.Character].EnterReadLock();
-                            try
+                            if (newPlayer.IsGhost())
                             {
-                                if (newPlayer.IsGhost())
+                                double bgmVolume = 0;
+                                foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
                                 {
-                                    double bgmVolume = 0;
-                                    foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
+                                    if (!person.IsGhost() && XY.DistanceFloor3(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
                                     {
-                                        if (!person.IsGhost() && XY.DistanceFloor3(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                        {
-                                            if ((double)newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position) > bgmVolume)
-                                                bgmVolume = newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position);
-                                        }
-                                    }
-                                    newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
-                                }
-                                else
-                                {
-                                    foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
-                                    {
-                                        if (person.IsGhost())
-                                        {
-                                            if (!noise)
-                                            {
-                                                if (XY.DistanceFloor3(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
-                                                    newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position));
-                                                else newPlayer.AddBgm(BgmType.GhostIsComing, 0);
-                                            }
-                                            if (newPlayer.CharacterType != CharacterType.Teacher && newPlayer.CharacterType != CharacterType.Robot && newPlayer.CanPinDown() && XY.DistanceFloor3(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
-                                            {
-                                                TimePinningDown += GameData.checkInterval;
-                                                newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
-                                                ScoreAdded = GameData.StudentScorePinDown(TimePinningDown);
-                                            }
-                                            else TimePinningDown = ScoreAdded = 0;
-                                            break;
-                                        }
+                                        if ((double)newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position) > bgmVolume)
+                                            bgmVolume = newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position);
                                     }
                                 }
+                                newPlayer.AddBgm(BgmType.StudentIsApproaching, bgmVolume);
                             }
-                            finally
+                            else
                             {
-                                gameMap.GameObjLockDict[GameObjType.Character].ExitReadLock();
+                                foreach (Character person in gameMap.GameObjDict[GameObjType.Character])
+                                {
+                                    if (person.IsGhost())
+                                    {
+                                        if (!noise)
+                                        {
+                                            if (XY.DistanceFloor3(newPlayer.Position, person.Position) <= (newPlayer.AlertnessRadius / person.Concealment))
+                                                newPlayer.AddBgm(BgmType.GhostIsComing, (double)newPlayer.AlertnessRadius / XY.DistanceFloor3(newPlayer.Position, person.Position));
+                                            else newPlayer.AddBgm(BgmType.GhostIsComing, 0);
+                                        }
+                                        if (newPlayer.CharacterType != CharacterType.Teacher && newPlayer.CharacterType != CharacterType.Robot && newPlayer.CanPinDown() && XY.DistanceFloor3(newPlayer.Position, person.Position) <= GameData.PinningDownRange)
+                                        {
+                                            TimePinningDown += GameData.checkInterval;
+                                            newPlayer.AddScore(GameData.StudentScorePinDown(TimePinningDown) - ScoreAdded);
+                                            ScoreAdded = GameData.StudentScorePinDown(TimePinningDown);
+                                        }
+                                        else TimePinningDown = ScoreAdded = 0;
+                                        break;
+                                    }
+                                }
                             }
 
                             if (!noise)
                             {
-                                gameMap.GameObjLockDict[GameObjType.Generator].EnterReadLock();
-                                try
+                                double bgmVolume = 0;
+                                foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
                                 {
-                                    double bgmVolume = 0;
-                                    foreach (Generator generator in gameMap.GameObjDict[GameObjType.Generator])
+                                    if (XY.DistanceFloor3(newPlayer.Position, generator.Position) <= newPlayer.AlertnessRadius)
                                     {
-                                        if (XY.DistanceFloor3(newPlayer.Position, generator.Position) <= newPlayer.AlertnessRadius)
-                                        {
-                                            if (generator.NumOfFixing > 0 && (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.DistanceFloor3(newPlayer.Position, generator.Position) > bgmVolume)
-                                                bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.DistanceFloor3(newPlayer.Position, generator.Position);
-                                        }
+                                        if (generator.NumOfFixing > 0 && (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.DistanceFloor3(newPlayer.Position, generator.Position) > bgmVolume)
+                                            bgmVolume = (double)newPlayer.AlertnessRadius * generator.DegreeOfRepair / GameData.degreeOfFixedGenerator / XY.DistanceFloor3(newPlayer.Position, generator.Position);
                                     }
-                                    newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, bgmVolume);
                                 }
-                                finally
-                                {
-                                    gameMap.GameObjLockDict[GameObjType.Generator].ExitReadLock();
-                                }
+                                newPlayer.AddBgm(BgmType.GeneratorIsBeingFixed, bgmVolume);
                             }
                         },
                         timeInterval: GameData.checkInterval,
@@ -229,9 +172,9 @@ namespace Gaming
                 if (player.GamingAddiction > 0)
                 {
                     if (player.GamingAddiction < GameData.BeginGamingAddiction)
-                        player.GamingAddiction = GameData.BeginGamingAddiction;
+                        player.GamingAddiction.SetV(GameData.BeginGamingAddiction);
                     else if (player.GamingAddiction < GameData.MidGamingAddiction)
-                        player.GamingAddiction = GameData.MidGamingAddiction;
+                        player.GamingAddiction.SetV(GameData.MidGamingAddiction);
                     else
                     {
                         Die(player);
@@ -247,16 +190,16 @@ namespace Gaming
                         Debugger.Output(player, " is addicted ");
 
                         new FrameRateTaskExecutor<int>(
-                            () => stateNum == player.StateNum && player.GamingAddiction < player.MaxGamingAddiction && gameMap.Timer.IsGaming,
+                            () => stateNum == player.StateNum && !player.GamingAddiction.IsMaxV() && gameMap.Timer.IsGaming,
                             () =>
                             {
-                                player.GamingAddiction += (player.PlayerState == PlayerStateType.Addicted) ? GameData.frameDuration : 0;
+                                if (player.PlayerState == PlayerStateType.Addicted) player.GamingAddiction.AddPositiveV(GameData.frameDuration);
                             },
                             timeInterval: GameData.frameDuration,
                             () =>
                             {
                                 gameMap.MapRescueStudent();
-                                if (player.GamingAddiction == player.MaxGamingAddiction && gameMap.Timer.IsGaming)
+                                if (player.GamingAddiction.IsMaxV() && gameMap.Timer.IsGaming)
                                 {
                                     Die(player);
                                 }
@@ -311,7 +254,7 @@ namespace Gaming
 
                 if (student.CharacterType == CharacterType.StraightAStudent)
                 {
-                    ((WriteAnswers)student.FindActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation.Set(0);
+                    ((WriteAnswers)student.FindActiveSkill(ActiveSkillType.WriteAnswers)).DegreeOfMeditation.SetReturnOri(0);
                 }
                 student.SetDegreeOfTreatment0();
 
@@ -322,10 +265,10 @@ namespace Gaming
                 {
                     if (bullet.HasSpear)
                     {
-                        long subHp = student.SubHp(bullet.AP);
+                        long subHp = student.HP.SubPositiveV(bullet.AP);
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
                         bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp) + GameData.ScorePropUseSpear);
-                        bullet.Parent.AddHP((long)bullet.Parent.Vampire * subHp);
+                        bullet.Parent.HP.AddPositiveV((long)bullet.Parent.Vampire * subHp);
                     }
                     else return;
                 }
@@ -334,12 +277,12 @@ namespace Gaming
                     long subHp;
                     if (bullet.HasSpear)
                     {
-                        subHp = student.SubHp(bullet.AP + GameData.ApSpearAdd);
+                        subHp = student.HP.SubPositiveV(bullet.AP + GameData.ApSpearAdd);
                         Debugger.Output(this, "is being shot with Spear! Now his hp is" + student.HP.ToString());
                     }
                     else
                     {
-                        subHp = student.SubHp(bullet.AP);
+                        subHp = student.HP.SubPositiveV(bullet.AP);
                         Debugger.Output(this, "is being shot! Now his hp is" + student.HP.ToString());
                     }
                     bullet.Parent.AddScore(GameData.TrickerScoreAttackStudent(subHp));
@@ -348,7 +291,7 @@ namespace Gaming
                         student.AddScore(subHp * GameData.factorOfScoreWhenTeacherAttacked / GameData.basicApOfGhost / FactorTeacher);
                     }
 
-                    bullet.Parent.AddHP((long)(bullet.Parent.Vampire * subHp));
+                    bullet.Parent.HP.AddPositiveV((long)(bullet.Parent.Vampire * subHp));
                 }
                 if (student.HP <= 0)
                     student.TryActivatingLIFE();  // 如果有复活甲

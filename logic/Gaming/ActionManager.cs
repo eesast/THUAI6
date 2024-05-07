@@ -2,6 +2,7 @@
 using System.Threading;
 using GameClass.GameObj;
 using GameEngine;
+using Preparation.Interface;
 using Preparation.Utility;
 using Timothy.FrameRateTask;
 
@@ -148,11 +149,11 @@ namespace Gaming
                       player.ThreadNum.Release();
                       return;
                   }
-                  Thread.Sleep(GameData.degreeOfOpenedDoorway - doorwayToOpen.OpenDegree);
+                  Thread.Sleep(GameData.degreeOfOpenedDoorway - (int)doorwayToOpen.ProgressOfDoorway.GetProgressNow());
 
                   if (player.ResetPlayerState(stateNum))
                   {
-                      doorwayToOpen.FinishOpenning();
+                      doorwayToOpen.ProgressOfDoorway.Finish();
                       player.ThreadNum.Release();
                   }
               }
@@ -168,7 +169,7 @@ namespace Gaming
                     return false;
 
                 Doorway? doorwayForEscape = (Doorway?)gameMap.OneForInteract(player.Position, GameObjType.Doorway);
-                if (doorwayForEscape != null && doorwayForEscape.IsOpen())
+                if (doorwayForEscape != null && doorwayForEscape.ProgressOfDoorway.IsProgressing())
                 {
                     if (!player.TryToRemoveFromGame(PlayerStateType.Escaped)) return false;
                     player.AddScore(GameData.StudentScoreEscape);
@@ -199,7 +200,7 @@ namespace Gaming
                 }
                 else if (!GameData.ApproachToInteract(playerTreated.Position, player.Position)) return false;
 
-                if (playerTreated.HP == playerTreated.MaxHp) return false;
+                if (playerTreated.HP == playerTreated.HP.GetMaxV()) return false;
 
                 long stateNumTreated = playerTreated.SetPlayerState(RunningStateType.Waiting, PlayerStateType.Treated);
                 if (stateNumTreated == -1) return false;
@@ -318,10 +319,10 @@ namespace Gaming
                            {
                                if (playerRescued.StateNum == stateNumRescued)
                                {
-                                   if (playerRescued.AddTimeOfRescue(GameData.checkInterval))
+                                   if (playerRescued.TimeOfRescue.Add(GameData.checkInterval) >= GameData.basicTimeOfRescue)
                                    {
                                        playerRescued.SetPlayerStateNaturally();
-                                       playerRescued.SetHP(playerRescued.MaxHp / 2);
+                                       playerRescued.HP.SetPositiveV(playerRescued.HP.GetMaxV() / 2);
                                        player.AddScore(GameData.StudentScoreRescue);
                                        return false;
                                    }
@@ -334,7 +335,7 @@ namespace Gaming
                        finallyReturn: () => 0
                    )
                        .Start();
-                   playerRescued.SetTimeOfRescue(0);
+                   playerRescued.TimeOfRescue.SetReturnOri(0);
 
                    player.ThreadNum.Release();
                    playerRescued.ThreadNum.Release();
@@ -369,7 +370,7 @@ namespace Gaming
                           return;
                       }
                       else
-                      if (!chestToOpen.Open(player))
+                      if (!chestToOpen.OpenProgress.Start((long)(GameData.degreeOfOpenedChest / player.SpeedOfOpenChest)))
                       {
                           player.ThreadNum.Release();
                           player.SetPlayerStateNaturally();
@@ -450,12 +451,12 @@ namespace Gaming
                             player.ReSetPos(windowToPlayer + windowForClimb.Position);
                         }
 
-                        player.MoveSpeed.Set(player.SpeedOfClimbingThroughWindows);
+                        player.MoveSpeed.SetReturnOri(player.SpeedOfClimbingThroughWindows);
                         moveEngine.MoveObj(player, (int)(GameData.numOfPosGridPerCell * 3 * 1000 / player.MoveSpeed / 2), (-1 * windowToPlayer).Angle(), stateNum);
 
                         Thread.Sleep((int)(GameData.numOfPosGridPerCell * 3 * 1000 / player.MoveSpeed / 2));
 
-                        player.MoveSpeed.Set(player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed));
+                        player.MoveSpeed.SetReturnOri(player.ReCalculateBuff(BuffType.AddSpeed, player.OrgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed));
 
                         lock (player.ActionLock)
                         {
@@ -513,7 +514,7 @@ namespace Gaming
                         {
                             if ((gameMap.PartInTheSameCell(doorToLock.Position, GameObjType.Character)) != null)
                                 return false;
-                            if (doorToLock.LockDegree.Add(GameData.checkInterval * player.SpeedOfOpeningOrLocking) >= GameData.basicSpeedOfOpeningOrLocking)
+                            if (doorToLock.LockDegree.Add(GameData.checkInterval * player.SpeedOfOpeningOrLocking) >= GameData.degreeOfLockingOrOpeningTheDoor)
                                 return false;
                             return true;
                         },

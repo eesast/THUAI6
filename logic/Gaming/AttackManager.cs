@@ -33,7 +33,7 @@ namespace Gaming
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                         if (obj.CanMove && ((Bullet)obj).TypeOfBullet != BulletType.JumpyDumpty)
                             BulletBomb((Bullet)obj, null);
-                        obj.CanMove.Set(false);
+                        obj.CanMove.SetReturnOri(false);
                     }
                 );
                 this.characterManager = characterManager;
@@ -89,7 +89,7 @@ namespace Gaming
             {
                 if (gameMap.Remove(bullet))
                 {
-                    bullet.CanMove.Set(false);
+                    bullet.CanMove.SetReturnOri(false);
                     if (bullet.BulletBombRange > 0)
                     {
                         BombedBullet bombedBullet = new(bullet);
@@ -168,20 +168,11 @@ namespace Gaming
                 {
                     if (bullet.CanBeBombed(kvp.Key))
                     {
-                        gameMap.GameObjLockDict[kvp.Key].EnterReadLock();
-                        try
-                        {
-                            foreach (var item in gameMap.GameObjDict[kvp.Key])
-                                if (bullet.CanAttack((GameObj)item))
-                                {
-                                    beAttackedList.Add(item);
-                                }
-
-                        }
-                        finally
-                        {
-                            gameMap.GameObjLockDict[kvp.Key].ExitReadLock();
-                        }
+                        foreach (var item in gameMap.GameObjDict[kvp.Key])
+                            if (bullet.CanAttack((GameObj)item))
+                            {
+                                beAttackedList.Add((IGameObj)item);
+                            }
                     }
                 }
 
@@ -203,7 +194,7 @@ namespace Gaming
             {                                                    // 子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
                 if (!player.Commandable()) return false;
 
-                Bullet? bullet = player.Attack(angle, gameMap.Timer.nowTime());
+                Bullet? bullet = player.Attack(angle);
 
                 if (bullet != null)
                 {

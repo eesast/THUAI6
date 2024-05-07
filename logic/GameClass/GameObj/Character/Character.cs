@@ -10,20 +10,7 @@ namespace GameClass.GameObj
     {
         #region 装弹、攻击相关的基本属性及方法
         private readonly object attackLock = new();
-        /// <summary>
-        /// 装弹冷却
-        /// </summary>
-        protected int cd;
-        public int CD
-        {
-            get
-            {
-                lock (attackLock)
-                {
-                    return cd;
-                }
-            }
-        }
+        public IntNumUpdateEachCD BulletNum { get; } = new IntNumUpdateEachCD();
         private int orgCD;
         public int OrgCD
         {
@@ -50,38 +37,11 @@ namespace GameClass.GameObj
                 lock (attackLock)
                 {
                     bulletOfPlayer = value;
-                    cd = orgCD = (BulletFactory.BulletCD(value));
-                    Debugger.Output(this, string.Format("'s CD has been set to: {0}.", cd));
-                    maxBulletNum = bulletNum = (BulletFactory.BulletNum(value));
+                    orgCD = (BulletFactory.BulletCD(value));
+                    BulletNum.SetCD(orgCD);
+                    Debugger.Output(this, string.Format("'s CD has been set to: {0}.", orgCD));
+                    BulletNum.SetPositiveMaxNumAndNum(BulletFactory.BulletNum(value));
                 }
-            }
-        }
-
-        protected int maxBulletNum;
-        public int MaxBulletNum
-        {
-            get
-            {
-                lock (attackLock)
-                {
-                    return maxBulletNum;
-                }
-            }
-        }
-        private int bulletNum;
-        private int updateTimeOfBulletNum = 0;
-
-        public int UpdateBulletNum(int time)//通过该函数获取真正的bulletNum
-        {
-            lock (attackLock)
-            {
-                if (bulletNum < maxBulletNum && time - updateTimeOfBulletNum >= cd)
-                {
-                    int add = Math.Min(maxBulletNum - bulletNum, (time - updateTimeOfBulletNum) / cd);
-                    updateTimeOfBulletNum += add * cd;
-                    return (bulletNum += add);
-                }
-                return bulletNum;
             }
         }
 
@@ -89,17 +49,14 @@ namespace GameClass.GameObj
         /// 进行一次攻击
         /// </summary>
         /// <returns>攻击操作发出的子弹</returns>
-        public Bullet? Attack(double angle, int time)
+        public Bullet? Attack(double angle)
         {
             lock (attackLock)
             {
                 if (bulletOfPlayer == BulletType.Null)
                     return null;
-                if (UpdateBulletNum(time) > 0)
+                if (BulletNum.TrySub(1) == 1)
                 {
-                    if (bulletNum == maxBulletNum) updateTimeOfBulletNum = time;
-                    --bulletNum;
-
                     XY res = Position + new XY  // 子弹紧贴人物生成。
                         (
                             (int)(Math.Abs((Radius + BulletFactory.BulletRadius(bulletOfPlayer)) * Math.Cos(angle))) * Math.Sign(Math.Cos(angle)),
@@ -115,31 +72,6 @@ namespace GameClass.GameObj
                     return null;
             }
         }
-
-        /*
-        /// <summary>
-        /// 攻击被反弹，反弹伤害不会再被反弹
-        /// </summary>
-        /// <param name="subHP"></param>
-        /// <param name="hasSpear"></param>
-        /// <param name="bouncer">反弹伤害者</param>
-        /// <returns>是否因反弹伤害而死</returns>
-        private bool BeBounced(int subHP, bool hasSpear, Character? bouncer)
-        {
-            lock (beAttackedLock)
-            {
-                if (hp <= 0)
-                    return false;
-                if (!(bouncer?.TeamID == this.TeamID))
-                {
-                    if (hasSpear || !HasShield)
-                        _ = SubHp(subHP);
-                    if (hp <= 0)
-                        TryActivatingLIFE();
-                }
-                return hp <= 0;
-            }
-        }*/
         #endregion
         #region 感知相关的基本属性及方法
         private readonly object bgmLock = new();
@@ -169,157 +101,18 @@ namespace GameClass.GameObj
         #endregion
         #region 交互相关的基本属性及方法
         private readonly int speedOfOpeningOrLocking;
-        public int SpeedOfOpeningOrLocking
-        {
-            get => speedOfOpeningOrLocking;
-        }
+        public int SpeedOfOpeningOrLocking => speedOfOpeningOrLocking;
 
         private readonly int speedOfClimbingThroughWindows;
-        public int SpeedOfClimbingThroughWindows
-        {
-            get => speedOfClimbingThroughWindows;
-        }
+        public int SpeedOfClimbingThroughWindows => speedOfClimbingThroughWindows;
 
         private readonly int speedOfOpenChest;
-        public int SpeedOfOpenChest
-        {
-            get => speedOfOpenChest;
-        }
+        public int SpeedOfOpenChest => speedOfOpenChest;
         #endregion
         #region 血量相关的基本属性及方法
-        private readonly ReaderWriterLockSlim hpReaderWriterLock = new();
-        public ReaderWriterLockSlim HPReadWriterLock => hpReaderWriterLock;
+        public LongInTheVariableRange HP { get; }
 
-        private long maxHp;
-        public long MaxHp
-        {
-            get
-            {
-                HPReadWriterLock.EnterReadLock();
-                try
-                {
-                    return maxHp;
-                }
-                finally
-                {
-                    HPReadWriterLock.ExitReadLock();
-                }
-            }
-            protected set
-            {
-                HPReadWriterLock.EnterWriteLock();
-                try
-                {
-                    maxHp = value;
-                    if (hp > maxHp) hp = maxHp;
-                }
-                finally
-                {
-                    HPReadWriterLock.ExitWriteLock();
-                }
-            }
-        }
-        // 最大血量
-        protected long hp;
-        public long HP
-        {
-            get
-            {
-                HPReadWriterLock.EnterReadLock();
-                try
-                {
-                    return hp;
-                }
-                finally
-                {
-                    HPReadWriterLock.ExitReadLock();
-                }
-            }
-        }
-
-        public long SetHP(long value)
-        {
-            HPReadWriterLock.EnterWriteLock();
-            try
-            {
-                if (value > 0)
-                {
-                    return hp = value <= maxHp ? value : maxHp;
-                }
-                else
-                    return hp = 0;
-            }
-            finally
-            {
-                HPReadWriterLock.ExitWriteLock();
-            }
-        }
-
-        /// <summary>
-        /// 尝试减血
-        /// </summary>
-        /// <param name="sub">减血量</param>
-        public long SubHp(long sub)
-        {
-            HPReadWriterLock.EnterWriteLock();
-            try
-            {
-                long previousHp = hp;
-                if (hp <= sub)
-                {
-                    hp = 0;
-                    return hp;
-                }
-                else
-                {
-                    hp -= sub;
-                    return sub;
-                }
-            }
-            finally
-            {
-                HPReadWriterLock.ExitWriteLock();
-            }
-        }
-
-        public long AddHP(long add)
-        {
-            HPReadWriterLock.EnterWriteLock();
-            try
-            {
-                long previousHp = hp;
-                return (hp = (hp + add > maxHp) ? maxHp : hp + add) - previousHp;
-            }
-            finally
-            {
-                HPReadWriterLock.ExitWriteLock();
-            }
-        }
-
-        private readonly object vampireLock = new();
-        public object VampireLock => vampire;
-
-        private double vampire = 0;  // 回血率：0-1之间
-        public double Vampire
-        {
-            get
-            {
-                lock (vampireLock)
-                    return vampire;
-            }
-            set
-            {
-                lock (vampireLock)
-                {
-                    if (value > 1)
-                        vampire = 1;
-                    else if (value < 0)
-                        vampire = 0;
-                    else
-                        vampire = value;
-                }
-            }
-        }
+        public DoubleInTheVariableRange Vampire { get; } = new DoubleInTheVariableRange(0, 1);
         public double OriVampire { get; protected set; }
 
         private readonly object treatLock = new();
@@ -328,55 +121,42 @@ namespace GameClass.GameObj
         {
             get
             {
-                HPReadWriterLock.EnterReadLock();
-                try
-                {
+                lock (treatLock)
                     return degreeOfTreatment;
-                }
-                finally
-                {
-                    HPReadWriterLock.ExitReadLock();
-                }
             }
         }
         public void SetDegreeOfTreatment0()
         {
-            HPReadWriterLock.EnterWriteLock();
-            try
-            {
+            lock (treatLock)
                 degreeOfTreatment = 0;
-            }
-            finally
-            {
-                HPReadWriterLock.ExitWriteLock();
-            }
         }
+
         public bool AddDegreeOfTreatment(int value, Student whoTreatYou)
         {
-            HPReadWriterLock.EnterWriteLock();
-            try
+            lock (treatLock)
             {
-                if (value >= maxHp - hp)
+                degreeOfTreatment += value;
+                long addV = HP.TryAddToMaxV(degreeOfTreatment);
+                if (addV == 0)
                 {
-                    whoTreatYou.AddScore(GameData.StudentScoreTreat(maxHp - hp));
-                    hp = maxHp;
+                    degreeOfTreatment = 0;
+                    return false;
+                }
+                if (addV > 0)
+                {
+                    whoTreatYou.AddScore(GameData.StudentScoreTreat(addV));
                     degreeOfTreatment = 0;
                     return true;
                 }
-                if (value >= GameData.basicTreatmentDegree)
+                if (degreeOfTreatment >= GameData.basicTreatmentDegree)
                 {
                     whoTreatYou.AddScore(GameData.StudentScoreTreat(GameData.basicTreatmentDegree));
-                    hp += GameData.basicTreatmentDegree;
+                    HP.AddPositiveV(GameData.basicTreatmentDegree);
                     degreeOfTreatment = 0;
                     return true;
                 }
-                degreeOfTreatment = value;
+                return false;
             }
-            finally
-            {
-                HPReadWriterLock.ExitWriteLock();
-            }
-            return false;
         }
         #endregion
         #region 查询状态相关的基本属性与方法
@@ -542,12 +322,12 @@ namespace GameClass.GameObj
 
                     case PlayerStateType.OpeningTheChest:
                         if (value == PlayerStateType.Rescued) return -1;
-                        ((Chest)lastObj!).StopOpen();
+                        ((Chest)lastObj!).OpenProgress.Set0();
                         return ChangePlayerState(runningState, value, gameObj);
                     case PlayerStateType.OpeningTheDoorway:
                         if (value == PlayerStateType.Rescued) return -1;
                         Doorway doorway = (Doorway)lastObj!;
-                        doorway.StopOpenning();
+                        doorway.ProgressOfDoorway.TryStop();
                         return ChangePlayerState(runningState, value, gameObj);
                     case PlayerStateType.OpeningTheDoor:
                         if (value == PlayerStateType.Rescued) return -1;
@@ -570,7 +350,7 @@ namespace GameClass.GameObj
                                         else
                                         {
                                             if (value != PlayerStateType.UsingSkill)
-                                                ((UseRobot)FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID = (int)playerID;
+                                                ((UseRobot)FindActiveSkill(ActiveSkillType.UseRobot)).NowPlayerID = (int)PlayerID;
                                             return ChangePlayerState(runningState, value, gameObj);
                                         }
                                     }
@@ -647,7 +427,7 @@ namespace GameClass.GameObj
             {
                 if (SetPlayerState(RunningStateType.RunningForcibly, playerStateType) == -1) return false;
                 TryToRemove();
-                CanMove.Set(false);
+                CanMove.SetReturnOri(false);
                 position = GameData.PosWhoDie;
             }
             return true;
@@ -673,18 +453,8 @@ namespace GameClass.GameObj
         /// <summary>
         /// 角色所属队伍ID
         /// </summary>
-        private long teamID = long.MaxValue;
-        public long TeamID
-        {
-            get => Interlocked.Read(ref teamID);
-            set => Interlocked.Exchange(ref teamID, value);
-        }
-        private long playerID = long.MaxValue;
-        public long PlayerID
-        {
-            get => Interlocked.Read(ref playerID);
-            set => Interlocked.Exchange(ref playerID, value);
-        }
+        public AtomicLong TeamID { get; } = new AtomicLong(long.MaxValue);
+        public AtomicLong PlayerID { get; } = new AtomicLong(long.MaxValue);
 
         #region 道具和buff相关属性、方法
         private readonly object inventoryLock = new();
@@ -802,7 +572,7 @@ namespace GameClass.GameObj
         }
 
         public void AddMoveSpeed(int buffTime, double add = 1.0) => buffManager.AddMoveSpeed(add, buffTime, newVal =>
-                                                                                                            { MoveSpeed.Set(newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed); },
+                                                                                                            { MoveSpeed.SetReturnOri(newVal < GameData.characterMaxSpeed ? newVal : GameData.characterMaxSpeed); },
                                                                                              OrgMoveSpeed);
         public bool HasFasterSpeed => buffManager.HasFasterSpeed;
 
@@ -866,7 +636,7 @@ namespace GameClass.GameObj
             if (buffManager.TryActivatingLIFE())
             {
                 AddScore(GameData.ScorePropRemainHp);
-                hp = GameData.RemainHpWhenAddLife;
+                HP.SetPositiveV(GameData.RemainHpWhenAddLife);
             }
         }
 

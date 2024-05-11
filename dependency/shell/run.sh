@@ -54,9 +54,9 @@ read_array() {
 
 function retry_command {
     local command="$1"
-    local max_attempts=10
+    local max_attempts=5
     local attempt_num=1
-    local sleep_seconds=5
+    local sleep_seconds=10
 
     while [ $attempt_num -le $max_attempts ]; do
         echo "Attempt $attempt_num / $max_attempts to run command: $command"
@@ -174,7 +174,7 @@ elif [ "$TERMINAL" = "CLIENT" ]; then
                     cp -r $python_main_dir $python_main_dir$i
                     cp -f ./$code_name.py $python_main_dir$i/PyAPI/AI.py
 
-                    command="nice -0 python3 $python_main_dir$i/PyAPI/main.py -I $CONNECT_IP -P $PORT -p $j > $playback_dir/team$k-player$j.log 2>&1"
+                    command="nice -0 python3 $python_main_dir$i/PyAPI/main.py -I $CONNECT_IP -P $PORT -p $j > $playback_dir/team$k-player$j.log 2>&1 &"
 
                     retry_command "$command" &
 
@@ -183,7 +183,7 @@ elif [ "$TERMINAL" = "CLIENT" ]; then
                 elif [ -f "./$code_name" ]; then
                     echo "find ./$code_name"
 
-                    command="nice -0 ./$code_name -I $CONNECT_IP -P $PORT -p $j > $playback_dir/team$k-player$j.log 2>&1"
+                    command="nice -0 ./$code_name -I $CONNECT_IP -P $PORT -p $j > $playback_dir/team$k-player$j.log 2>&1 &"
                     retry_command "$command" &
 
                     ps -aux |grep $code_name
@@ -201,7 +201,7 @@ elif [ "$TERMINAL" = "CLIENT" ]; then
                 cp -r $python_main_dir $python_main_dir$i
                 cp -f ./$code_name.py $python_main_dir$i/PyAPI/AI.py
 
-                command="nice -0 python3 $python_main_dir$i/PyAPI/main.py -I $CONNECT_IP -P $PORT -p $j > $playback_dir/team$k-player$j.log 2>&1"
+                command="nice -0 python3 $python_main_dir$i/PyAPI/main.py -I $CONNECT_IP -P $PORT -p $j > $playback_dir/team$k-player$j.log 2>&1 &"
 
                 retry_command "$command" &
 
@@ -209,7 +209,7 @@ elif [ "$TERMINAL" = "CLIENT" ]; then
             elif [ -f "./$code_name" ]; then
                 echo "find ./$code_name"
 
-                command="nice -0 ./$code_name -I $CONNECT_IP -P $PORT -p $j > $playback_dir/team$k-player$j.log 2>&1"
+                command="nice -0 ./$code_name -I $CONNECT_IP -P $PORT -p $j > $playback_dir/team$k-player$j.log 2>&1 &"
 
                 retry_command "$command" &
 
